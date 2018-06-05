@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>comb - 操作字符串的利器</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="comb - 操作字符串的利器" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/comb-%E6%93%8D%E4%BD%9C%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%88%A9%E5%99%A8/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>comb - 操作字符串的利器</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/02/03</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<p>comb - 操作字符串的利器</p>
+
+<h2 id="comb-子例程">comb 子例程</h2>
+
+<p>comb 子例程的定义为：</p>
+
+<pre><code class="language-perl6">multi sub    comb(Regex $matcher, Str(Cool) $input, $limit = *) returns List:D
+multi method comb(Regex $matcher,                   $limit = *) returns List:D
+</code></pre>
+
+<p>用法：</p>
+
+<pre><code class="language-perl6">comb /PATTERN/, STRING, LIMIT?  # 子例程形式
+STRING.comb(/PATTERN/, LIMIT?)  # 方法形式
+</code></pre>
+
+<p>返回调用者（方法形式）的所有（或者至多 $limit 个，如果提供了的话）匹配，或者返回第二个参数（sub 形式）与 Regex 相匹配的字符串列表。</p>
+
+<pre><code class="language-perl6">say &quot;6 or 12&quot;.comb(/\d+/).join(&quot;, &quot;); # 6, 12
+</code></pre>
+
+<h2 id="str-类中的-comb">Str 类中的 comb</h2>
+
+<pre><code class="language-perl6">multi sub    comb(Str:D   $matcher, Str:D $input, $limit = Inf)
+multi sub    comb(Regex:D $matcher, Str:D $input, $limit = Inf, Bool :$match)
+multi sub    comb(Int:D $size, Str:D $input, $limit = Inf)
+
+multi method comb(Str:D $input:)
+multi method comb(Str:D $input: Str:D   $matcher, $limit = Inf)
+multi method comb(Str:D $input: Regex:D $matcher, $limit = Inf, Bool :$match)
+multi method comb(Str:D $input: Int:D $size, $limit = Inf)
+</code></pre>
+
+<p>在 <code>$input</code> 中搜索 <code>$matcher</code> 并返回所有匹配（默认是 Str，或者是 Match 对象，如果 <code>$match</code> 为真的话）的一个列表。<code>$limit</code> 表示至多返回 <code>$limit</code> 个匹配。</p>
+
+<p>如果没有提供 <code>$matcher</code>(匹配器)， 那么会返回字符串中的所有字符的列表。等价于使用了 <code>$matcher = rx/./</code>。</p>
+
+<p>例子：</p>
+
+<pre><code class="language-perl6">comb(/\w/, &quot;a;b;c&quot;).perl;        # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;).list
+comb(/\N/, &quot;a;b;c&quot;).perl;        # (&quot;a&quot;, &quot;;&quot;, &quot;b&quot;, &quot;;&quot;, &quot;c&quot;).list
+comb(/\w/, &quot;a;b;c&quot;, 2).perl;     # (&quot;a&quot;, &quot;b&quot;).list
+comb(/\w\;\w/, &quot;a;b;c&quot;, 2).perl; # (&quot;a;b&quot;,).list
+
+&quot;123abc456def&quot;.comb(3)           # (123 abc 456 def)
+&quot;123abc456def&quot;.comb(3,2);        # (123 abc)
+</code></pre>
+
+<p>如果匹配器（matcher）是一个整数值，那么它被认为和 <code>/. ** matcher/</code> 类似，但是这个快了 30 倍。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84s%E6%93%8D%E4%BD%9C%E7%AC%A6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的 S/// 操作符">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/2016-02-05-perl-6-grammars/" data-toggle="tooltip" data-placement="top" title="Grammars">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

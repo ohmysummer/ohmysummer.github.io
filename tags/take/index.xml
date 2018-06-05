@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Take on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/take/</link>
+    <description>Recent content in Take on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 26 Oct 2016 16:41:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/take/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>第 10000 个素数</title>
+      <link>https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/</link>
+      <pubDate>Wed, 26 Oct 2016 16:41:13 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/</guid>
+      <description>到目前为止(2016.10.26), Perl 6 的速度相比 Perl 5/Python 的差距还是很大的。以打印从 1 开始计数的第 10000 个素数为例, 使用如下版本的 Rakudo:
+ This is Rakudo version 2016.07.1 built on MoarVM version 2016.07 implementing Perl 6.c.
+ 从程序执行耗费的时间来看, Perl 6 实在慢的如蜗牛。
+并发打印第10000个素数 sub find-prime($count) { my $channel = Channel.new; my $promise = start { for ^$count { $channel.send($_) if .is-prime; } LEAVE $channel.close unless $channel.closed; } return $channel.list but role :: { method channel { $channel } };; } my @primes = find-prime(110000); #for @primes { # @primes.</description>
+    </item>
+    
+    <item>
+      <title>gather-take</title>
+      <link>https://ohmysummer.github.io/post/2016-09-28-gather-take/</link>
+      <pubDate>Wed, 28 Sep 2016 17:48:14 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-09-28-gather-take/</guid>
+      <description>控制流 gather/take gather 是一个语句或者能返回一序列值的 block 前缀。该值来自于 gather 块中的动态作用域的 take 调用。
+my $a = gather { take 1; take 5; take 42; } say join &#39;, &#39;, @$a; # 1, 5, 42  gather/take 能根据上下文按需(惰性地)生成值。如果你想强制惰性求值则使用 lazy 子例程或方法。绑定到一个标量或无符号的容器上也会强制惰性求值。 举个例子:
+my @vals = lazy gather { take 1; say &amp;quot;Produced a value&amp;quot;; take 2; } say @vals[0]; say &#39;between consumption of two values&#39;; say @vals[1]; # OUTPUT: # 1 # between consumption of two values # Produced a value # 2  gather/take 是动态作用域的, 所以你可以从 gather 内部所调用的 subs 或方法中调用 take:</description>
+    </item>
+    
+    <item>
+      <title>这些是你的键吗</title>
+      <link>https://ohmysummer.github.io/post/2016-09-26-%E8%BF%99%E4%BA%9B%E6%98%AF%E4%BD%A0%E7%9A%84%E9%94%AE%E5%90%97/</link>
+      <pubDate>Mon, 26 Sep 2016 12:01:22 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-09-26-%E8%BF%99%E4%BA%9B%E6%98%AF%E4%BD%A0%E7%9A%84%E9%94%AE%E5%90%97/</guid>
+      <description>Are these your keys? are these your keys
+在键是常量的散列中我经常打错键的名字。通过混合一个重载方法 AT-KEY 的 role 让键限制在一个给定的字符串列表中并不困难。但是那会是一个运行时错误并且用一个运行时错误代替另一个运行时错误。
+枚举确实拥有一组常量值的键并提供散列能使用的同一性。Perl 6 的确允许枚举作为键的约束并且如果我们查询了一个没有定义为枚举的键的话会在编译时抛出异常。 然而, 如果我们把散列限制为一组给定的键, 我们可能想要输出所有可能的键, 而不仅仅是有关联值的那些键。我们可以通过混进一个 role 来解决它。
+enum Noms(&amp;lt;Greenstuff Walkingstuff Syntetics&amp;gt;); (my %eaten{Noms} is default(0)) does role :: { method keys { Noms::.values } method kv { gather for self.keys -&amp;gt; \k { take k, self.{k} } } }; %eaten{Greenstuff}++; dd %eaten; # Hash[Any,Noms]+{&amp;lt;anon|75781152&amp;gt;} %eaten = (my Any %{Noms} = Noms::Greenstuff =&amp;gt; 1) dd %eaten.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第九天 – HTTP and Web Sockets with Cro</title>
+  <meta property="og:title" content="第九天 – HTTP and Web Sockets with Cro" />
+  <meta name="twitter:title" content="第九天 – HTTP and Web Sockets with Cro" />
+  <meta name="description" content="Day 9 – HTTP and Web Sockets with Cro 礼物不仅仅是圣诞节的时候才有。今年夏天，在瑞士 Perl 工作室 - 精美地坐落在阿尔卑斯山 - 我有幸透露了 Cro。 Cro 是一组用于在 Perl 6 中构建服务的库，以及一些用于 stub，run 和跟踪服务的开发工具。 Cro 主要关注使用 HTTP（包括HTTP/2.0）和 Web 套接字构建服务，但可以提供对 ZeroMQ 的早期支持，并计划在未来推出一系列其他选项。
+响应式管道 Cro 遵循 Perl 的设计原则，使简单的事情变得简单，并且让困难的事情变得可能。就像 Git 一样，Cro 可以被认为是具有瓷器（使简单的事情变得简单）和管道（使困难的事情成为可能）。管道水平由组成管道的组件组成。这些组件具有不同的形状，例如源，传输和下沉。这是一个将 HTTP 请求转换为 HTTP 响应的转换：
+use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does Cro::Transform { method consumes() { Cro::HTTP::Request } method produces() { Cro::HTTP::Response } method transformer(Supply $pipeline --&gt; Supply) { supply whenever $pipeline -&gt; $request { given Cro::HTTP::Response.">
+  <meta property="og:description" content="Day 9 – HTTP and Web Sockets with Cro 礼物不仅仅是圣诞节的时候才有。今年夏天，在瑞士 Perl 工作室 - 精美地坐落在阿尔卑斯山 - 我有幸透露了 Cro。 Cro 是一组用于在 Perl 6 中构建服务的库，以及一些用于 stub，run 和跟踪服务的开发工具。 Cro 主要关注使用 HTTP（包括HTTP/2.0）和 Web 套接字构建服务，但可以提供对 ZeroMQ 的早期支持，并计划在未来推出一系列其他选项。
+响应式管道 Cro 遵循 Perl 的设计原则，使简单的事情变得简单，并且让困难的事情变得可能。就像 Git 一样，Cro 可以被认为是具有瓷器（使简单的事情变得简单）和管道（使困难的事情成为可能）。管道水平由组成管道的组件组成。这些组件具有不同的形状，例如源，传输和下沉。这是一个将 HTTP 请求转换为 HTTP 响应的转换：
+use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does Cro::Transform { method consumes() { Cro::HTTP::Request } method produces() { Cro::HTTP::Response } method transformer(Supply $pipeline --&gt; Supply) { supply whenever $pipeline -&gt; $request { given Cro::HTTP::Response.">
+  <meta name="twitter:description" content="Day 9 – HTTP and Web Sockets with Cro 礼物不仅仅是圣诞节的时候才有。今年夏天，在瑞士 Perl 工作室 - 精美地坐落在阿尔卑斯山 - 我有幸透露了 Cro。 Cro 是一组用于在 Perl 6 中构建服务的库，以及一些用于 stub，run 和跟踪服务的开发工具。 Cro 主要关注使用 HTTP（包括HTTP/2.0）和 Web 套接字构建服务， …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第九天 – HTTP and Web Sockets with Cro</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2017/09/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="day-9-http-and-web-sockets-with-cro-https-perl6advent-wordpress-com-2017-12-09-http-and-web-sockets-with-cro"><a href="https://perl6advent.wordpress.com/2017/12/09/http-and-web-sockets-with-cro/">Day 9 – HTTP and Web Sockets with Cro</a></h1>
+
+<p>礼物不仅仅是圣诞节的时候才有。今年夏天，在瑞士 Perl 工作室 - 精美地坐落在阿尔卑斯山 - 我有幸透露了 <a href="http://cro.services/">Cro</a>。 Cro 是一组用于在 Perl 6 中构建服务的库，以及一些用于 stub，run 和跟踪服务的开发工具。 Cro 主要关注使用 HTTP（包括HTTP/2.0）和 Web 套接字构建服务，但可以提供对 ZeroMQ 的早期支持，并计划在未来推出一系列其他选项。</p>
+
+<h2 id="响应式管道">响应式管道</h2>
+
+<p>Cro 遵循 Perl 的设计原则，使简单的事情变得简单，并且让困难的事情变得可能。就像 Git 一样，Cro 可以被认为是具有瓷器（使简单的事情变得简单）和管道（使困难的事情成为可能）。管道水平由组成管道的组件组成。这些组件具有不同的形状，例如源，传输和下沉。这是一个将 HTTP 请求转换为 HTTP 响应的转换：</p>
+
+<pre><code class="language-perl6">use Cro;
+use Cro::HTTP::Request;
+use Cro::HTTP::Response;
+
+class MuskoxApp does Cro::Transform {
+    method consumes() { Cro::HTTP::Request }
+    method produces() { Cro::HTTP::Response }
+    method transformer(Supply $pipeline --&gt; Supply) {
+        supply whenever $pipeline -&gt; $request {
+            given Cro::HTTP::Response.new(:$request, :200status) {
+                .append-header: &quot;Content-type&quot;, &quot;text/html&quot;;
+                .set-body: &quot;Muskox Rocks!\n&quot;.encode('ascii');
+                .emit;
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>现在，让我们用一个 TCP 监听器，一个 HTTP 请求解析器和一个 HTTP 响应序列化器来编写它：</p>
+
+<pre><code class="language-perl6">use Cro::TCP;
+use Cro::HTTP::RequestParser;
+use Cro::HTTP::ResponseSerializer;
+
+my $server = Cro.compose:
+    Cro::TCP::Listener.new(:port(4242)),
+    Cro::HTTP::RequestParser.new,
+    MuskoxApp,
+    Cro::HTTP::ResponseSerializer;
+</code></pre>
+
+<p>这将返回一个Cro :: Service，我们现在可以启动，并在Ctrl + C时停止：</p>
+
+<pre><code class="language-perl6">$server.start;
+react whenever signal(SIGINT) {
+    $server.stop;
+    exit;
+}
+</code></pre>
+
+<p>运行。然后 <code>curl</code> 它。</p>
+
+<pre><code>$ curl http://localhost:4242/
+Muskox Rocks!
+</code></pre>
+
+<p>不错。但是如果我们想要一个HTTPS服务器呢？如果我们有方便的关键和证书文件，这只是一个用TLS监听器替换TCP监听器的例子：</p>
+
+<pre><code class="language-perl6">use Cro::TLS;
+
+my $server = Cro.compose:
+    Cro::TLS::Listener.new(
+        :port(4242),
+        :certificate-file('certs-and-keys/server-crt.pem'),
+        :private-key-file('certs-and-keys/server-key.pem')
+    ),
+    Cro::HTTP::RequestParser.new,
+    MuskoxApp,
+    Cro::HTTP::ResponseSerializer;
+</code></pre>
+
+<p>运行。然后 <code>curl -k</code> 它。</p>
+
+<pre><code>$ curl -k https://localhost:4242/
+Muskox Rocks!
+</code></pre>
+
+<p>和中间件？这只是构成管道的另一个组成部分。或者，从另一个角度来看，对于Cro，一切都是中间件。即使请求解析器或响应序列化器可以很容易地被替换，如果需要的话（这听起来像是一件奇怪的事情需要，但这实际上是实现FastCGI会涉及的）。</p>
+
+<p>所以，这就是克罗的方式。它还需要大量的样板才能在此级别上工作。带上瓷器！</p>
+
+<h2 id="http-服务器-简单的方法">HTTP 服务器，简单的方法</h2>
+
+<p>Cro::HTTP::Server 类摆脱了构建 HTTP 处理管道的样板。从前面的例子变成：</p>
+
+<pre><code class="language-perl6">use Cro;
+use Cro::HTTP::Server;
+
+class MuskoxApp does Cro::Transform {
+    method consumes() { Cro::HTTP::Request }
+    method produces() { Cro::HTTP::Response }
+    method transformer(Supply $pipeline --&gt; Supply) {
+        supply whenever $pipeline -&gt; $request {
+            given Cro::HTTP::Response.new(:$request, :200status) {
+                .append-header: &quot;Content-type&quot;, &quot;text/html&quot;;
+                .set-body: &quot;Muskox Rocks!\n&quot;.encode('ascii');
+                .emit;
+            }   
+        }
+    }
+}
+
+my $server = Cro::HTTP::Server.new: :port(4242), :application(MuskoxApp);
+$server.start;
+react whenever signal(SIGINT) {
+    $server.stop;
+    exit;
+}
+</code></pre>
+
+<p>这里没有魔法;它真的只是一个更方便的方式来组成一条管线。虽然这只是对HTTP / 1. *的节省，但HTTP / 2.0管道涉及更多的组件，而支持这两者的管道仍然更为复杂。相比之下，配置Cro :: HTTP :: Server可以轻松地完成支持HTTP / 1.1和HTTP / 2.0的HTTPS：</p>
+
+<pre><code class="language-perl6">my %tls =
+    :certificate-file('certs-and-keys/server-crt.pem'),
+    :private-key-file('certs-and-keys/server-key.pem');
+my $server = Cro::HTTP::Server.new: :port(4242), :application(MuskoxApp),
+    :%tls, :http&lt;1.1 2&gt;;
+</code></pre>
+
+<h2 id="通向幸福的途径">通向幸福的途径</h2>
+
+<p>Cro中的Web应用程序最终总是将HTTP请求转换为HTTP响应的转换。然而，想要以完全相同的方式处理所有请求的情况非常罕见。通常，不同的URL应该路由到不同的处理程序。输入Cro :: HTTP :: Router：</p>
+
+<pre><code class="language-perl6">use Cro::HTTP::Router;
+use Cro::HTTP::Server;
+
+my $application = route {
+    get -&gt; {
+        content 'text/html', 'Do you like dugongs?';
+    }
+}
+
+my $server = Cro::HTTP::Server.new: :port(4242), :$application;
+$server.start;
+react whenever signal(SIGINT) {
+    $server.stop;
+    exit;
+}
+</code></pre>
+
+<p>路由块返回的对象执行Cro :: Transform角色，这意味着它可以很好地与Cro.compose（&hellip;）配合使用。然而，使用路由器编写应用程序会更方便一些！让我们看看更仔细一点：</p>
+
+<pre><code class="language-perl6">get -&gt; {
+    content 'text/html', 'Do you like dugongs?';
+}
+</code></pre>
+
+<p>在这里，get是说这个处理程序只处理HTTP GET请求。尖头块的空签名意味着不需要URL段，所以该路由仅适用于/。然后，而不是必须做一个响应对象实例，添加一个头，并编码一个字符串，内容函数完成这一切。</p>
+
+<p>路由器是为了利用Perl 6签名而建立的，同时也可以让Perl 6程序员感觉自然。路由段通过声明参数来建立，而文字串段恰好匹配：</p>
+
+<pre><code class="language-perl6">get -&gt; 'product', $id {
+    content 'application/json', {
+        id =&gt; $id,
+        name =&gt; 'Arctic fox photo on canvas'
+    }
+}
+</code></pre>
+
+<p>使用curl进行快速检查表明，它还负责为我们序列化JSON：</p>
+
+<pre><code class="language-perl6">$ curl http://localhost:4242/product/42
+{&quot;name&quot;: &quot;Arctic fox photo on canvas&quot;,&quot;id&quot;: &quot;42&quot;}
+</code></pre>
+
+<p>JSON正文序列化程序由内容类型激活。这是可能的，也很简单，可以实现并插入自己的身体序列器。</p>
+
+<p>想要捕获多个网址段？ Slurpy参数也可以工作，这对于服务静态资产时可以很方便地与静态结合使用，也许深层次的多级目录：</p>
+
+<pre><code class="language-perl6">get -&gt; 'css', *@path {
+    static 'assets/css', @path;
+}
+</code></pre>
+
+<p>可选参数适用于可能提供或可能不提供的段。使用子集类型来限制允许的值也可以。 Int只接受URL段中的值以整数形式解析的请求：</p>
+
+<pre><code class="language-perl6">get -&gt; 'product', Int $id {
+    content 'application/json', {
+        id =&gt; $id,
+        name =&gt; 'Arctic fox photo on canvas'
+    }
+}
+</code></pre>
+
+<p>命名参数用于接收查询字符串参数：</p>
+
+<pre><code class="language-perl6">get -&gt; 'search', :$query {
+    content 'text/plain', &quot;You searched for $query&quot;;
+}
+</code></pre>
+
+<p>这将填充在这样的请求中：</p>
+
+<pre><code class="language-perl6">$ curl http://localhost:4242/search?query=llama
+You searched for llama
+</code></pre>
+
+<p>这些也可以是类型约束和/或需要的（命名参数在Perl 6中默认是可选的）。 Cro路由器试图帮助你做好HTTP，方法是给出一个404错误来匹配一个URL段，405（方法不允许），当段匹配但是使用了错误的方法时，400当方法和段很好时，但查询字符串有问题。通过使用is标头并且是cookie特征的命名参数也可以用于接受和/或限制标头和cookie。</p>
+
+<p>路由器将所有路由编译成Perl 6语法，而不是一次一个地浏览路由。这意味着路线将使用NFA进行匹配，而不是一次一个地突破。此外，这意味着应用Perl 6最长的文字前缀规则，因此：</p>
+
+<pre><code class="language-perl6">get -&gt; 'product', 'index' { ... }
+get -&gt; 'product', $what { ... }
+</code></pre>
+
+<p>即使您按照相反的顺序编写了这些请求，它们总是会优先选择这两项中的第一项作为/ product / index的请求：</p>
+
+<pre><code class="language-perl6">get -&gt; 'product', $what { ... }
+get -&gt; 'product', 'index' { ... }
+</code></pre>
+
+<h2 id="中间件变得更容易">中间件变得更容易</h2>
+
+<p>有趣的是，HTTP中间件只是一个Cro :: Transform，但如果Cro是所有产品的话，那么写起来会不太有趣。令人高兴的是，有一些更简单的选择。路径块可以包含块之前和之后的块，这些块将在块中的任何路由处理之前和之后运行。因此，可以将HSTS标头添加到所有响应中：</p>
+
+<pre><code class="language-perl6">my $application = route {
+    after {
+        header 'Strict-transport-security', 'max-age=31536000; includeSubDomains';
+    }
+    # Routes here...
+}
+</code></pre>
+
+<p>或者对没有授权标头的所有请求使用HTTP 403 Forbidden进行响应：</p>
+
+<pre><code class="language-perl6">my $application = route {
+    before {
+        unless .has-header('Authorization') {
+            forbidden 'text/plain', 'Missing authorization';
+        }
+    }
+    # Routes here...
+}
+</code></pre>
+
+<p>其行为如下所示：</p>
+
+<pre><code>$ curl http://localhost:4242/
+Missing authorization
+$ curl -H&quot;Authorization: Token 123&quot; http://localhost:4242/
+&lt;strong&gt;Do you like dugongs?&lt;/strong&gt;
+</code></pre>
+
+<h2 id="这只是一个供应链-supply-chain">这只是一个供应链(Supply chain)</h2>
+
+<p>所有的Cro实际上只是构建一系列Perl 6 Supply对象的一种方式。尽管中间件块之前和之后都很方便，但将中间件作为转换编写，无论何时使用语法，都可以访问Perl 6电源的全部功能。因此，如果您需要使用会话令牌进行请求并对会话数据库进行异步调用，并且只有发出请求才能进行进一步处理（或者重定向到登录页面），则可以这样做 - 阻止其他请求（包括同一连接上的请求）。</p>
+
+<p>事实上，Cro完全是根据更高级别的Perl 6并发功能构建的。没有明确的线程，也没有明确的锁定。相反，所有并发都是以Perl 6 Supply和Promise的形式表示的，并且由Perl 6运行时库决定，以便在多个线程上扩展应用程序。</p>
+
+<h2 id="哦-和websockets">哦，和WebSockets？</h2>
+
+<p>事实证明，Perl 6提供的地图非常适合网络套接字。事实上，很好，Cro在API方面的增加相对较少。以下是一个（过度）简单的聊天服务器后端的外观：</p>
+
+<pre><code class="language-perl6">my $chat = Supplier.new;
+get -&gt; 'chat' {
+    # For each request for a web socket...
+    web-socket -&gt; $incoming {
+        # We start this bit of reactive logic...
+        supply {
+            # Whenever we get a message on the socket, we emit it into the
+            # $chat Supplier
+            whenever $incoming -&gt; $message {
+                $chat.emit(await $message.body-text);
+            }
+            # Whatever is emitted on the $chat Supplier (shared between all)
+            # web sockets), we send on this web socket.
+            whenever $chat -&gt; $text {
+                emit $text;
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>请注意，这样做需要使用Cro :: HTTP :: Router :: WebSocket;导入提供网络套接字功能的模块。</p>
+
+<h2 id="综上所述">综上所述</h2>
+
+<p>这只是对Cro所提供的内容的一瞥。没有空间讨论HTTP和Web套接字客户端，用于存根和运行项目的cro命令行工具，提供用于执行相同操作的Web UI的Cro Web工具，或者如果您将CRO_TRACE = 1粘贴到您的环境中，您可以获得大量有关请求和响应处理的多汁调试细节。</p>
+
+<p>要了解更多信息，请查看Cro文档，其中包括关于构建单页应用程序的教程。如果你有更多的问题，最近在Freenode上创建了#cro IRC频道</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/" data-toggle="tooltip" data-placement="top" title="第八天 – Adventures in NQP Land: Hacking the Rakudo Compiler">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-12-10-%E7%AC%AC%E5%8D%81%E5%A4%A9wrapping-rats/" data-toggle="tooltip" data-placement="top" title="第十天 – Wrapping Rats">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

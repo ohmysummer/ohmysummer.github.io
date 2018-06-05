@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>class-List</title>
+  <meta property="og:title" content="class-List" />
+  <meta name="twitter:title" content="class-List" />
+  <meta name="description" content="my class List is Iterable does Positional { .. }  List 以序列化的方式存储 items并且潜在是惰性的。
+默认列表和数组的索引从 0 开始。
+你可以给列表中的元素赋值如果它们是容器的话。使用数组以使列表中的每个元素存储在容器中。
+Items, Flattening and Sigils 在 Perl 6 中, 把 List 赋值给一个标量变量不会丢死信息。不同之处在于迭代通常会把标量中的列表(或其它任何像列表的东西, 例如 Parcel 和 数组)当作单个元素。
+my @a = 1, 2, 3; for @a { } # 三次迭代  my $s = @a; for $s { } # 一次迭代 for @a.item { } # 一次迭代 for $s.list { } # 三次迭代  Lists 通常会插值(展开)除非它们通过一个 item(scalar)容器访问:(GLR 的影响？)">
+  <meta property="og:description" content="my class List is Iterable does Positional { .. }  List 以序列化的方式存储 items并且潜在是惰性的。
+默认列表和数组的索引从 0 开始。
+你可以给列表中的元素赋值如果它们是容器的话。使用数组以使列表中的每个元素存储在容器中。
+Items, Flattening and Sigils 在 Perl 6 中, 把 List 赋值给一个标量变量不会丢死信息。不同之处在于迭代通常会把标量中的列表(或其它任何像列表的东西, 例如 Parcel 和 数组)当作单个元素。
+my @a = 1, 2, 3; for @a { } # 三次迭代  my $s = @a; for $s { } # 一次迭代 for @a.item { } # 一次迭代 for $s.list { } # 三次迭代  Lists 通常会插值(展开)除非它们通过一个 item(scalar)容器访问:(GLR 的影响？)">
+  <meta name="twitter:description" content="my class List is Iterable does Positional { .. }  List 以序列化的方式存储 items并且潜在是惰性的。
+默认列表和数组的索引从 0 开始。
+你可以给列表中的元素赋值如果它们是容器的话。使用数组以使列表中的每个元素存储在容器中。
+Items, Flattening and Sigils 在 Perl 6 中, 把 List 赋值给一个标量变量不 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-06-10-class-list/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-06-10-class-list/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>class-List</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/10/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<pre><code class="language-perl6">my class List is Iterable does Positional { .. }
+</code></pre>
+
+<p><strong>List</strong> 以序列化的方式存储 items并且潜在是惰性的。</p>
+
+<p>默认列表和数组的索引从 0 开始。</p>
+
+<p>你可以给列表中的元素赋值如果它们是容器的话。使用数组以使列表中的每个元素存储在容器中。</p>
+
+<h4 id="items-flattening-and-sigils">Items, Flattening and Sigils</h4>
+
+<p>在 Perl 6 中, 把 <strong>List</strong> 赋值给一个标量变量不会丢死信息。不同之处在于迭代通常会把标量中的列表(或其它任何像列表的东西, 例如 Parcel 和 数组)当作单个元素。</p>
+
+<pre><code class="language-perl6">
+my @a = 1, 2, 3;
+for @a { }      # 三次迭代
+
+</code></pre>
+
+<pre><code class="language-perl6">
+my $s = @a;
+for $s { }      # 一次迭代
+for @a.item { } # 一次迭代
+for $s.list { } # 三次迭代
+
+</code></pre>
+
+<p><strong>Lists</strong> 通常会插值(展开)除非它们通过一个 item(scalar)容器访问:(GLR 的影响？)</p>
+
+<pre><code class="language-perl6">
+my @a = 1, 2, 3;
+my @flat   = @a, @a;           # two elements
+my @nested = @a.item, @a.item; # two elements
+
+</code></pre>
+
+<p><code>.item</code> 通常能被写为 <code>$( ... )</code>, 而在数组变量上甚至写为  <code>$@a</code>。</p>
+
+<h4 id="methods">Methods</h4>
+
+<h5 id="elems">elems</h5>
+
+<pre><code class="language-perl6">multi sub    elems($list)  returns Int:D
+multi method elems(List:D:) returns Int:D
+</code></pre>
+
+<p>返回列表中元素的个数。</p>
+
+<h5 id="end">end</h5>
+
+<pre><code class="language-perl6">multi sub    end($list)  returns Int:D
+multi method end(List:D:) returns Int:D
+</code></pre>
+
+<p>返回列表中最后一个元素的索引</p>
+
+<h5 id="keys">keys</h5>
+
+<pre><code class="language-perl6">multi sub    keys($list)  returns List:D
+multi method keys(List:D:) returns List:D
+</code></pre>
+
+<p>返回一个索引列表( 例如 <code>0..(@list.elems-1)</code> )</p>
+
+<h5 id="values">values</h5>
+
+<pre><code class="language-perl6">multi sub    values($list)  returns List:D
+multi method values(List:D:) returns List:D
+</code></pre>
+
+<p>返回列表的一份拷贝。</p>
+
+<h5 id="kv">kv</h5>
+
+<pre><code class="language-perl6">multi sub    kv($list)  returns List:D
+multi method kv(List:D:) returns List:D
+</code></pre>
+
+<p>返回索引和值的交替的列表。 例如：</p>
+
+<pre><code class="language-perl6">&lt;a b c&gt;.kv
+</code></pre>
+
+<p>返回</p>
+
+<pre><code class="language-perl6">0, 'a', 1, 'b', 2, 'c'
+</code></pre>
+
+<h5 id="pairs">pairs</h5>
+
+<pre><code class="language-perl6">multi sub    pairs($list)   returns List:D
+multi method pairs(List:D:) returns List:D
+</code></pre>
+
+<p>返回一个 pairs 的列表, 使用索引作为键, 列表值作为键值。</p>
+
+<pre><code class="language-perl6">&lt;a b c&gt;.pairs   # 0 =&gt; 'a', 1 =&gt; 'b', 2 =&gt; 'c'
+</code></pre>
+
+<h5 id="join">join</h5>
+
+<pre><code class="language-perl6">multi sub    join($separator, *@list) returns Str:D
+multi method join(List:D: $separator) returns Str:D
+</code></pre>
+
+<p>把列表中元素当作字符串, 在元素之间插入 <code>$separator</code> 并把所有东西连接成单个字符串。</p>
+
+<p>例如:</p>
+
+<pre><code class="language-perl6">join ', ', &lt;a b c&gt;;     # 'a, b, c'
+</code></pre>
+
+<h5 id="map">map</h5>
+
+<pre><code class="language-perl6">multi sub    map(&amp;code, *@elems) returns List:D
+multi method map(List:D: &amp;code) returns List:D
+</code></pre>
+
+<p>对每个元素调用 <code>&amp;code</code> 并且把值收集到另外一个列表中并返回它。这个过程是惰性的。 <code>&amp;code</code>只在返回值被访问的时候调用。</p>
+
+<p>例子:</p>
+
+<pre><code class="language-perl6">&gt; ('hello', 1, 22/7, 42, 'world').map: { .WHAT.perl }
+Str Int Rat Int Str
+&gt; map *.Str.chars, 'hello', 1, 22/7, 42, 'world'
+5 1 8 2 5
+</code></pre>
+
+<h5 id="grep">grep</h5>
+
+<pre><code class="language-perl6">multi sub    grep(Mu $matcher, *@elems) returns List:D
+multi method grep(List:D:  Mu $matcher) returns List:D
+</code></pre>
+
+<p>返回一个使用 <code>$matcher</code> 智能匹配的惰性列表。元素是以出现在原列表中的顺序返回的。</p>
+
+<p>例子:</p>
+
+<pre><code class="language-perl6">&gt; ('hello', 1, 22/7, 42, 'world').grep: Int
+1 42
+&gt; grep { .Str.chars &gt; 3 }, 'hello', 1, 22/7, 42, 'world'
+hello 3.142857 world
+</code></pre>
+
+<h5 id="first">first</h5>
+
+<pre><code class="language-perl6">multi sub    first(Mu $matcher, *@elems)
+multi method first(List:D:  Mu $matcher)
+</code></pre>
+
+<p>返回列表中第一个匹配 $matcher 的元素, 当没有匹配值时, 失败。</p>
+
+<p>例子:</p>
+
+<pre><code class="language-perl6">say (1, 22/7, 42).first: * &gt; 5;     # 42
+say $f = ('hello', 1, 22/7, 42, 'world').first: Complex;
+</code></pre>
+
+<pre><code class="language-perl6">&gt;  ('hello', 1, 22/7, 42, 'world',1+2i).first: Complex;
+1+2i
+say $f.perl; #  Failure.new(exception =&gt; X::AdHoc.new(payload =&gt; &quot;No values matched&quot;))
+</code></pre>
+
+<h5 id="classify">classify</h5>
+
+<pre><code class="language-perl6">multi sub    classify(&amp;mapper, *@values) returns Hash:D
+multi method classify(List:D: &amp;mapper)   returns Hash:D
+</code></pre>
+
+<p>根据映射器把一列值转换成代表那些值的类别的散列; 散列的每个键代表着将要归入列表的一个或多个值的类别。比如字符个数， 元素多少， 键值就是根据 mapper 得到的这个类别下的元素， 它来自于原始列表：</p>
+
+<p>例子：</p>
+
+<pre><code class="language-perl6">say classify { $_ %% 2 ?? 'even' !! 'odd' }, (1, 7, 6, 3, 2);
+# (&quot;odd&quot; =&gt; [1, 7, 3], &quot;even&quot; =&gt; [6, 2]).hash;
+
+say ('hello', 1, 22/7, 42, 'world').classify: { .Str.chars };
+# (&quot;5&quot; =&gt; [&quot;hello&quot;, &quot;world&quot;], &quot;1&quot; =&gt; [1], &quot;8&quot; =&gt; [22/7], &quot;2&quot; =&gt; [42]).hash
+</code></pre>
+
+<h5 id="bool">Bool</h5>
+
+<pre><code class="language-perl6">multi method Bool(List:D:) returns Bool:D
+</code></pre>
+
+<p>如果列表至少含有一个元素则返回 True, 如果列表为空则返回 False。</p>
+
+<h5 id="str">Str</h5>
+
+<pre><code class="language-perl6">multi method Str(List:D:) returns Str:D
+</code></pre>
+
+<p>字符串化列表中的元素并使用空格把这些元素连接起来。( 和 <code>.join(' ')</code> 一样)。</p>
+
+<h5 id="int">Int</h5>
+
+<pre><code class="language-perl6">multi method Int(List:D:) return Int:D
+</code></pre>
+
+<p>返回列表中元素的数量(和 <code>.elems</code> 一样)</p>
+
+<h5 id="pick">pick</h5>
+
+<pre><code class="language-perl6">multi sub    pick($count, *@list) returns List:D
+multi method pick(List:D: $count = 1)
+</code></pre>
+
+<p>从调用者身上随机返回 $count 个不重复的元素。 如果 * 作为 $count 传递进来或 $count 大于或等于列表的大小, 那么就以随机序列的方式返回列表中的所有元素。</p>
+
+<p>例子:</p>
+
+<pre><code class="language-perl6">say &lt;a b c d e&gt;.pick;           # b
+say &lt;a b c d e&gt;.pick: 3;        # c a e
+say  &lt;a b c d e&gt;.pick: *;       # e d a b c
+</code></pre>
+
+<h5 id="roll">roll</h5>
+
+<pre><code class="language-perl6">multi sub    roll($count, *@list) returns List:D
+multi method roll(List:D: $count = 1)
+</code></pre>
+
+<p>返回一个 $count 个元素的惰性列表, 每个元素都从列表中随机选择。每个随机选择都是独立的.</p>
+
+<p>如果给 $count 传递了* 号, 则返回一个惰性的, 从原列表中随机选取元素的无限列表。</p>
+
+<pre><code class="language-perl6">say &lt;a b c d e&gt;.roll;       # b
+say &lt;a b c d e&gt;.roll: 3;    # c c e
+say roll 8, &lt;a b c d e&gt;;    # b a e d a e b c
+</code></pre>
+
+<pre><code class="language-perl6">my $random_digits := (^10).roll(*);1;
+say $random_digits[^15];    # 3 8 7 6 0 1 3 2 0 8 8 5 8 0 5
+</code></pre>
+
+<h5 id="eager">eager</h5>
+
+<pre><code class="language-perl6">multi method eager(List:D:) returns List:D
+</code></pre>
+
+<p>急切地计算列表中的所有元素, 并返回调用者。如果列表标示它是&rdquo;konw inifinite&rdquo; 的, 急切求值可以停止在探测到的无限的点上。</p>
+
+<h5 id="reverse">reverse</h5>
+
+<pre><code class="language-perl6">multi sub    reverse(*@list ) returns List:D
+multi method reverse(List:D:) returns List:D
+</code></pre>
+
+<p>以相反的顺序返回一个含有相同元素的列表。
+注意 reverse 总是指反转列表中的元素, 如果你想反转字符串中的字符, 那么使用 flip。
+例子：</p>
+
+<pre><code class="language-perl6">say &lt;hello world!&gt;.reverse      #  world! hello
+say reverse ^10                 # 9 8 7 6 5 4 3 2 1 0
+</code></pre>
+
+<h5 id="rotate">rotate</h5>
+
+<pre><code class="language-perl6">multi sub    rotate(@list,  Int:D $n = 1) returns List:D
+multi method rotate(List:D: Int:D $n = 1) returns List:D
+</code></pre>
+
+<p>以 $n 个元素旋转列表, 这把原列表分成两部分, 旋转中心就是在这两部分之间:</p>
+
+<pre><code class="language-perl6">&lt;a b c d e&gt;.rotate(2);   # &lt;c d e a b&gt;
+&lt;a b c d e&gt;.rotate(-1);  # &lt;e a b c d&gt;
+</code></pre>
+
+<h5 id="sort">sort</h5>
+
+<pre><code class="language-perl6">multi sub    sort(*@elems)      returns List:D
+multi sub    sort(&amp;by, *@elems) returns List:D
+multi method sort(List:D:)      returns List:D
+multi method sort(List:D:, &amp;by) returns List:D
+</code></pre>
+
+<p>列表排序, 最小的元素首先。默认使用 <code>infix:&lt;cmp&gt;</code> 排序列表中的元素。
+如果提供了 <code>&amp;by</code>, 那么它接收两个参数, 它由列表元素对儿调用, 并且应该返回 Order::Increase, Order::Same 或 Order::Decrease.
+如果 <code>&amp;by</code>只接受一个参数, 那么列表元素是通过 <code>by($a)  cmp by($b)</code> 来排序的。<code>&amp;by</code> 的返回值被缓存起来,  以使每个列表元素只调用一次 <code>&amp;by</code>。</p>
+
+<pre><code class="language-perl6">say (3, -4, 7, -1, 2, 0).sort;                  # -4 -1 0 2 3 7
+say (3, -4, 7, -1, 2, 0).sort: *.abs;           # 0 -1 2 3 -4 7
+say (3, -4, 7, -1, 2, 0).sort: { $^b leg $^a }; # 7 3 2 0 -4 -1
+</code></pre>
+
+<h5 id="reduce">reduce</h5>
+
+<pre><code class="language-perl6">multi sub    reduce(&amp;with, *@elems)
+multi method reduce(List:D: &amp;with)
+</code></pre>
+
+<p>把 <code>&amp;with</code> 应用到列表中的第一个和第二个值上, 然后把 <code>&amp;with</code>应用到那个计算的结果值和第三个值上, 以此类推。按照那种方式生成单个项。
+注意 reduce 是一个隐式的循环。</p>
+
+<pre><code class="language-perl6">say (1, 2, 3).reduce: * - *;    # -4
+</code></pre>
+
+<h5 id="splice">splice</h5>
+
+<pre><code class="language-perl6">multi sub    splice(@list,  $start, $elems?, *@replacement) returns List:D
+multi method splice(List:D: $start, $elems?, *@replacement) returns List:D
+</code></pre>
+
+<p>从列表中删除从 $start 索引开始的 $elems 个元素, 返回删除的元素并用 @replacement 来代替它。如果省略了 $elems, 所有从 $index 开始的元素都被删除。</p>
+
+<pre><code class="language-perl6">my @foo = &lt;a b c d e f g&gt;;
+say @foo.splice(2, 3, &lt;M N O P&gt;);       # c d e
+say @foo;                               # a b M N O P f g
+</code></pre>
+
+<h5 id="pop">pop</h5>
+
+<pre><code class="language-perl6">multi sub    pop(List:D )
+multi method pop(List:D:)
+</code></pre>
+
+<p>从列表中移除并返回最后一项。如果列表为空则失败。</p>
+
+<pre><code class="language-perl6">&gt; my @foo = &lt;a b&gt;;
+&gt; @foo.pop;  # b
+&gt; pop @foo   # a
+&gt; pop @foo   # Element popped from empty list
+</code></pre>
+
+<h5 id="push">push</h5>
+
+<pre><code class="language-perl6">multi sub    push(List:D, *@values) returns List:D
+multi method push(List:D: *@values) returns List:D
+</code></pre>
+
+<p>把 <code>@values</code> 添加到列表的末尾, 并返回修改后的列表。 如果列表是无限列表则失败。
+例子:</p>
+
+<pre><code class="language-perl6">my @foo = &lt;a b c&gt;;
+@foo.push: 1, 3 ... 11;
+say @foo;                   # a b c 1 3 5 7 9 11
+</code></pre>
+
+<h5 id="shift">shift</h5>
+
+<pre><code class="language-perl6">multi sub    shift(List:D )
+multi method shift(List:D:)
+</code></pre>
+
+<p>从列表中移除并返回第一项元素。 如果列表为空则失败。</p>
+
+<pre><code class="language-perl6">my @foo = &lt;a b&gt;;
+say @foo.shift;     # a
+say @foo.shift;     # b
+say @foo.shift;     # Element shifted from empty list
+</code></pre>
+
+<h5 id="unshift">unshift</h5>
+
+<pre><code class="language-perl6">multi sub    unshift(List:D, *@values) returns List:D
+multi method unshift(List:D: *@values) returns List:D
+</code></pre>
+
+<p>添加 @values 到列表的开头, 并返回修改后的列表。 如果列表是无限列表则失败。</p>
+
+<pre><code class="language-perl6">my @foo = &lt;a b c&gt;;
+@foo.unshift: 1, 3 ... 11;
+say @foo;                   # 1 3 5 7 9 11 a b c
+</code></pre>
+
+<h5 id="combinations">combinations</h5>
+
+<pre><code class="language-perl6">multi method combinations (List:D: Int:D $of)          returns List:D
+multi method combinations (List:D: Range:D $of = 0..*) returns List:D
+multi sub    combinations ($n, $k)                     returns List:D
+</code></pre>
+
+<p>Int 变体返回调用者列表所有的 $of-combinations 组合。例如:</p>
+
+<pre><code class="language-perl6">say .join('|') for &lt;a b c&gt;.combinations(2);
+</code></pre>
+
+<p>打印</p>
+
+<pre><code>a|b
+a|c
+b|c
+</code></pre>
+
+<p>因为  &lsquo;a&rsquo;, &lsquo;b&rsquo;, &lsquo;c&rsquo; 的所有 2-combinations 是  [&lsquo;a&rsquo;, &lsquo;b&rsquo;], [&lsquo;a&rsquo;, &lsquo;c&rsquo;], [&lsquo;b&rsquo;, &lsquo;c&rsquo;].</p>
+
+<p>Range 变体把所有单独的组合组合到单个列表中, 所以:</p>
+
+<pre><code class="language-perl6">say .join('|') for &lt;a b c&gt;.combinations(2..3);
+</code></pre>
+
+<p>打印</p>
+
+<pre><code>a|b
+a|c
+b|c
+a|b|c
+</code></pre>
+
+<p>因为那是一个所有 2-和3-combinations 组合的列表。
+子例程 <code>combinations($n, $k)</code> 等价于 <code>(^$n).combinations($k)</code>, 所以：</p>
+
+<pre><code class="language-perl6">.say for combinations(4, 2)
+</code></pre>
+
+<p>打印</p>
+
+<pre><code>0 1
+0 2
+0 3
+1 2
+1 3
+2 3
+</code></pre>
+
+<h5 id="permutations">permutations</h5>
+
+<pre><code class="language-perl6">multi method permutations(List:D:) returns List:D
+multi sub    permutations($n)      returns List:D
+</code></pre>
+
+<p>返回列表所有可能的组合作为数组的列表。所以:</p>
+
+<pre><code class="language-perl6">say .join('|') for &lt;a b c&gt;.permutations
+</code></pre>
+
+<p>打印</p>
+
+<pre><code>a|b|c
+a|c|b
+b|a|c
+b|c|a
+c|a|b
+c|b|a
+</code></pre>
+
+<p>permutations 把所有列表元素当作可区别的, 所以 (1, 1, 2).permutations 仍旧返回 6 个元素的列表, 即使只有 3 个不同的排列。
+<code>permutations($n)</code> 等价于 <code>(^$n).permutations</code>, 所以:</p>
+
+<pre><code class="language-perl6">.say for permutations 3;
+</code></pre>
+
+<p>打印</p>
+
+<pre><code>1 2 3
+1 3 2
+2 1 3
+2 3 1
+3 1 2
+3 2 1
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/list/">List</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-05-19-slip%E4%B8%80%E4%BE%8B/" data-toggle="tooltip" data-placement="top" title="Slip一例">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-06-14-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80%E4%BE%8B/" data-toggle="tooltip" data-placement="top" title="正则表达式一例">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

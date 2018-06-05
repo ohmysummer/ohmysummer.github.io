@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Block on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/block/</link>
+    <description>Recent content in Block on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 19 Oct 2016 19:12:22 +0000</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/block/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Perl6 模块分析 - 并行查找文件</title>
+      <link>https://ohmysummer.github.io/post/2016-10-19-perl6%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Wed, 19 Oct 2016 19:12:22 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-19-perl6%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/</guid>
+      <description>并行查找文件 如果你没有使用 panda 或 zef 安装该模块, 你可以下载到本地：
+use v6; use lib &amp;quot;C:\\Users\\Administrator\\perl6-concurrent-file-find\\lib&amp;quot;; use Concurrent::File::Find;  下面来看具体代码：
+class X::IO::NotADirectory does X::IO is export { has $.path; method message { &amp;quot;«$.path» is not a directory&amp;quot; } } class X::IO::CanNotAccess does X::IO is export { has $.path; method message { &amp;quot;Cannot access «$.path»: permission denied&amp;quot; } } class X::IO::StaleSymlink does X::IO is export { has $.path; method message { &amp;quot;Stale symlink «$.path»&amp;quot; } }  上面的代码自定义了 3 个与 IO 错误相关的类并导出, 每个类中有一个 $.</description>
+    </item>
+    
+    <item>
+      <title>Perl 6 中的 Block</title>
+      <link>https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84block/</link>
+      <pubDate>Wed, 19 Oct 2016 00:22:27 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84block/</guid>
+      <description>Perl 6 中的 Block class Block is Code { }  Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
+如果没有显式的签名或占位符参数，那么 Block 会把 $_ 作为位置参数：
+my $block = { uc $_; }; say $block.WHAT; # (Block) say $block(&#39;hello&#39;); # HELLO  Block 和 -&amp;gt; 或 &amp;lt;-&amp;gt; 之间还可以拥有签名:
+my $add = -&amp;gt; $a, $b { $a + $b }; say $add(38, 4); # 42  如果用 &amp;lt;-&amp;gt; 引入签名, 那么参数默认标记为 rw:
+my $swap = &amp;lt;-&amp;gt; $a, $b { ($a, $b) = ($b, $a) }; my ($a, $b) = (2, 4); $swap($a, $b); say $a; # 4  类型不是 Routine（它是 Block 的子类）的 Blocks 对于 return是透明的。</description>
+    </item>
+    
+    <item>
+      <title>It&#39;s blocks all the way down</title>
+      <link>https://ohmysummer.github.io/post/2016-07-07-its-blocks-all-the-way-down/</link>
+      <pubDate>Thu, 07 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-07-07-its-blocks-all-the-way-down/</guid>
+      <description>It’s blocks all the way down
+当我在 glot.io 上玩 Perl 6 的时候我知道它们真的很像带有简单程序的 docker：
+dir(&#39;/&#39;)&amp;gt;&amp;gt;.Str.say;  我想知道递归到目录里面是否还有更好的方法。 IO::Path.dir 会返回一个 IO::Path 对象的 Seq 序列。那就是为什么 &amp;gt;&amp;gt;. 超运算符会有效。它当然不会递归因为没有用来进行递归的子例程, 经过一段时间的冥思苦想我找到了我找了很久的东西。
+在 Perl 6 中带有一个位置参数的 block 块是可调用的(Callable)。那个参数被绑定给主题变量 $_。 那是我们为什么能做:
+for 1,2,3 {.say}  递归到目录中会很容易如果我们把 Str &#39;/&#39; 变成 IO::Path 对象并且检测我们是否得到了一个目录并且使用那个元素调用那个 block 块。那个 block 块需要一个名字, 这个我们可以通过使用 my &amp;amp;block = {Nil} 做到, 或者我们使用编译时变量 &amp;amp;?BLOCK。
+for &#39;.&#39; { .Str.say when !.IO.d; .IO.dir()&amp;gt;&amp;gt;.&amp;amp;?BLOCK.IO.d }  .&amp;amp;?BLOCK 形式会把调用看作像方法调用一样, 这意味着 . 号左侧的对象会成为调用的第一个参数, 在调用者所属的地方。</description>
+    </item>
+    
+  </channel>
+</rss>

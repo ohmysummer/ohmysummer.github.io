@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Introspection</title>
+  <meta property="og:title" content="Introspection" />
+  <meta name="twitter:title" content="Introspection" />
+  <meta name="description" content="Perl 6 支持&rdquo;泛型, roles 和 多重分发&rdquo;, 它们都是很好的特点, 并且已经在其它 advent calendar 中发布过了。
+但是今天我们要看的是 MOP。 &ldquo;MOP&rdquo;代表着元对象协议(&ldquo;Meta-Object Protocol&rdquo;)。那意味着, 它们实际上是你能从用户那边改变的一部分, 而不是对象、类等定义语言的东西。
+实际上, 在 Perl 6中, 你可以为类型添加方法, 移除某个方法, 包裹方法, 使用更多能力增强类(OO::Actors 和 OO::Monitors 就是两个这样的例子), 或者你可以完全重定义它(并且, 例如, 使用 Ruby-like 的对象系统。这儿有个例子)。
+但是今天, 我们首先看一下第一部分: 自省。在类型创建完之后查看它的类型, 了解它, 并使用这些信息。
+我们将要创建的模块是基于 Sixcheck 模块(一个 QuickCheck-like 模块)的需求: 为某个类型生成一些随机数据, 然后把数据喂给我们正测试的函数, 并检查某些后置条件(post-condition)。
+所以, 我们先写出第一个版本:
+my %special-cases{Mu} = (Int) =&gt; -&gt; { (1..50).pick }, (Str) =&gt; -&gt; { (&#39;a&#39;..&#39;z&#39;).pick(50).join(&#39;&#39;) }, ; sub generate-data(Mu:U \t) { %special-cases{t} ?? %special-cases{t}() !">
+  <meta property="og:description" content="Perl 6 支持&rdquo;泛型, roles 和 多重分发&rdquo;, 它们都是很好的特点, 并且已经在其它 advent calendar 中发布过了。
+但是今天我们要看的是 MOP。 &ldquo;MOP&rdquo;代表着元对象协议(&ldquo;Meta-Object Protocol&rdquo;)。那意味着, 它们实际上是你能从用户那边改变的一部分, 而不是对象、类等定义语言的东西。
+实际上, 在 Perl 6中, 你可以为类型添加方法, 移除某个方法, 包裹方法, 使用更多能力增强类(OO::Actors 和 OO::Monitors 就是两个这样的例子), 或者你可以完全重定义它(并且, 例如, 使用 Ruby-like 的对象系统。这儿有个例子)。
+但是今天, 我们首先看一下第一部分: 自省。在类型创建完之后查看它的类型, 了解它, 并使用这些信息。
+我们将要创建的模块是基于 Sixcheck 模块(一个 QuickCheck-like 模块)的需求: 为某个类型生成一些随机数据, 然后把数据喂给我们正测试的函数, 并检查某些后置条件(post-condition)。
+所以, 我们先写出第一个版本:
+my %special-cases{Mu} = (Int) =&gt; -&gt; { (1..50).pick }, (Str) =&gt; -&gt; { (&#39;a&#39;..&#39;z&#39;).pick(50).join(&#39;&#39;) }, ; sub generate-data(Mu:U \t) { %special-cases{t} ?? %special-cases{t}() !">
+  <meta name="twitter:description" content="Perl 6 支持&rdquo;泛型, roles 和 多重分发&rdquo;, 它们都是很好的特点, 并且已经在其它 advent calendar 中发布过了。
+但是今天我们要看的是 MOP。 &ldquo;MOP&rdquo;代表着元对象协议(&ldquo;Meta-Object Protocol&rdquo;)。那意味着, 它们实际上是你能从用户那边改变的一部分, 而不是对象、类等定义语言 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-07-25-introspection/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-07-25-introspection/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Introspection</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/25/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Perl 6 支持&rdquo;泛型, roles 和 多重分发&rdquo;, 它们都是很好的特点, 并且已经在其它 advent calendar 中发布过了。</p>
+
+<p>但是今天我们要看的是 <strong>MOP</strong>。 &ldquo;MOP&rdquo;代表着元对象协议(&ldquo;Meta-Object Protocol&rdquo;)。那意味着, 它们实际上是你能从用户那边改变的一部分, 而不是对象、类等定义语言的东西。</p>
+
+<p>实际上, 在 Perl 6中, 你可以为类型添加方法, 移除某个方法, 包裹方法, 使用更多能力增强类(<a href="https://github.com/jnthn/oo-actors">OO::Actors</a>  和 <a href="https://github.com/jnthn/oo-monitors">OO::Monitors</a> 就是两个这样的例子), 或者你可以完全重定义它(并且, 例如, 使用 Ruby-like 的对象系统。<a href="https://github.com/edumentab/rakudo-and-nqp-internals-course">这儿有个例子</a>)。</p>
+
+<p>但是今天, 我们首先看一下第一部分: 自省。在类型创建完之后查看它的类型, 了解它, 并使用这些信息。</p>
+
+<p>我们将要创建的模块是基于 <a href="https://github.com/vendethiel/sixcheck">Sixcheck</a> 模块(一个 <a href="https://en.wikipedia.org/wiki/QuickCheck">QuickCheck-like</a> 模块)的需求: 为某个类型生成一些随机数据, 然后把数据喂给我们正测试的函数, 并检查某些后置条件(post-condition)。</p>
+
+<p>所以, 我们先写出第一个版本:</p>
+
+<pre><code class="language-perl6">my %special-cases{Mu} =
+  (Int) =&gt; -&gt; { (1..50).pick },
+  (Str) =&gt; -&gt; { ('a'..'z').pick(50).join('') },
+;
+
+sub generate-data(Mu:U \t) {
+    %special-cases{t} ?? %special-cases{t}() !! t.new;
+}
+
+generate-data(Int);
+</code></pre>
+
+<p>注意以下几点:</p>
+
+<ul>
+<li>我们给 %special-cases 指定了键的类型。那是因为默认地, 键的类型为 <strong>Str</strong>。显然地, 我们不想让我们的类型字符串化。我们实际上做的是指定它们为&rdquo;Mu&rdquo;的子类(这在类型&rdquo;食物链&rdquo;的顶端)。</li>
+<li>我们在 <strong>Int</strong> 和 <strong>Str</strong> 周围放上圆括号, 以避免字符串化。</li>
+<li>我们在函数参数类型中使用了 <code>:U</code>。那意味着那个值必须是未定义的(undefined)。类型对象(就像 Int、Str 等等)是未定义的, 所以它能满足我们(你可能见过一个叫 Nil 的不同的未知值)。</li>
+<li>类型对象实际上是对象, 就像其它任何对象一样。这就是为什么我们在类型对象上调用 <code>.new</code>方法, 例如, 它和直接调用 <code>Int.new</code>相同(那对一致性和 <a href="https://design.perl6.org/S09.html#Autovivification">autovivification</a> 很有用)。</li>
+<li>我们为 <em>Int</em> 和 <em>Str</em> 提供了fallback, 因为调用 <em>Int.new</em> 和 <em>Str.new</em> ( 0 和 &ldquo;&rdquo; )不会在我们创建的数据中给我们任何随机化。</li>
+<li>Perl 6 在函数中自动返回最后一个表达式。所以不需要在那儿放上一个 *return*。</li>
+</ul>
+
+<p>我们用代码生成数据, 公平且公正。但是我们需要生成更多那样简单的数据。</p>
+
+<p>我们至少需要支持带有属性的类: 我们想查看属性列表, 为它们的类型生成数据, 并把它们喂给构造器。</p>
+
+<p>我们要能够看到类的内部。用 Perl 6 的术语来说, 我们将要到达的是元对象协议(<a href="https://perl6advent.wordpress.com/2010/12/22/day-22-the-meta-object-protocol/">Meta-Object Protocol</a>)。首先我们定义一个类:</p>
+
+<pre><code class="language-perl6">class Article {
+    has Str $.title;
+    has Str $.content;
+    has Int $.view-count;
+}
+
+# 我们可以这样手动创建一个实例
+Article.new(title      =&gt; &quot;Perl 6 Advent, 第 19 天&quot;,
+            content    =&gt; &quot;Magic!&quot;,
+            view-count =&gt; 0
+            );
+</code></pre>
+
+<p>但是我们不想亲手创建那个文章 (article)。我们想把那个 <strong>class</strong> Article 传递给我们的 <em>generate-data</em> 函数, 并返回一个 Article(里面带有随机数据)。让我们回到我们的 <em>REPL</em>&hellip;</p>
+
+<pre><code class="language-perl6">say Article.^attributes;         # (Str $!title Str $!content Int $!view-count)
+say Article.^attributes[0].WHAT; # (Attribute)
+</code></pre>
+
+<p>如果你点击了 MOP 链接, 你不会对我们得到一个含有 3 个元素的数组感到惊讶。如果你仍旧对该语法感到惊讶, 那么 <code>.^</code>是元方法调用。意思是 <code>a.^b</code>会被转换为 <code>a.HOW.b(a)</code>。</p>
+
+<p>如果我们想知道我们可以访问到什么, 我们问它就是了(移除了匿名的那些):</p>
+
+<pre><code class="language-perl6">Attribute.^methods.grep(*.name ne '&lt;anon&gt;');
+# (compose apply_handles get_value set_value
+#      container readonly package inlined WHY set_why Str gist)
+
+Attribute.^attributes # Method 'gist' not found for invocant of class 'BOOTSTRAPATTR'
+</code></pre>
+
+<p>哎吆… 看起来这有点太 meta 了。幸好, 我们能使用 Rakudo 的一个非常好的属性: 它的大部分都是用 Perl 6写的! 要查看我们可以得到什么, 我们查看<a href="https://github.com/rakudo/rakudo/blob/nom/src/core/Attribute.pm">源代码</a>就好了:</p>
+
+<pre><code class="language-perl6"># has Str $!name;
+...
+# has Mu $!type;
+</code></pre>
+
+<p>我们得到了键的名字, 还有去生成值的类型。让我们看看&hellip;</p>
+
+<pre><code class="language-perl6">&gt; say Article.^attributes.map(*.name)
+($!title $!content $!view-count)
+&gt; say Article.^attributes.map(*.type)
+((Str) (Str) (Int))
+</code></pre>
+
+<p>天才! 看起来是正确的。(如果你想知道为什么我们得到 <code>$!</code>（私有的） twigils, 那是因为 <code>$.</code>只意味着将会生成的一个 getter 方法)。属性本身仍然是私有的, 并且在类中是可访问的。</p>
+
+<p>现在, 我们唯一要做的事情就是创建一个循环&hellip;</p>
+
+<pre><code class="language-perl6">my %args;
+
+for Article.^attributes -&gt; $attr {
+    %args{$attr.name.substr(2)} = generate-data($attr.type);
+}
+say %args.perl;
+</code></pre>
+
+<p>这是一个将会打印什么的例子:</p>
+
+<pre><code class="language-perl6">{:content(&quot;muenglhaxrvykfdjzopqbtwisc&quot;), :title(&quot;rfpjndgohmasuwkyzebixqtvcl&quot;), :view-count(45)}
+</code></pre>
+
+<p>每次你运行你的代码你都会得到不同的结果(然而我不认为它会创建一篇值得阅读的文章…)。剩下唯一要做的就是把它们传递给 Article 的构造函数:</p>
+
+<pre><code class="language-perl6">say Article.new(|%args);
+</code></pre>
+
+<p>(前缀 <code>|</code>允许我们把 <em>%args</em> 作为具名参数传递, 而不是单个位置参数)。再次, 你应该会打印这些东西:</p>
+
+<pre><code class="language-perl6">Article.new(title =&gt; &quot;kyvphxqmejtuicrbsnfoldgzaw&quot;, content =&gt; &quot;jqbtcyovxlngpwikdszfmeuahr&quot;, view-count =&gt; 26)
+</code></pre>
+
+<p>呀! 我们设法在不了解 Article 的情况下胡乱地(blindly)创建了一个 Article 实例。 我们的代码能够用于为任何期望传递它的类属性的构造函数生成数据。好了!</p>
+
+<p>PS: 留个作业! 移动到 generate-data 函数, 以至于我们能给 Article 添加一个 User $.author 属性, 并且构建好这个函数。祝你好运!</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/introspection/">Introspection</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/%E8%87%AA%E7%9C%81/">自省</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-07-16-%E5%85%83%E5%AF%B9%E8%B1%A1%E5%8D%8F%E8%AE%AE/" data-toggle="tooltip" data-placement="top" title="元对象协议">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-08-05-perl-6%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2015/" data-toggle="tooltip" data-placement="top" title="Perl 6 圣诞月历-(2015)">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

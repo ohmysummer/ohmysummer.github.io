@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 Dispatch 解密</title>
+  <meta property="og:title" content="Perl 6 Dispatch 解密" />
+  <meta name="twitter:title" content="Perl 6 Dispatch 解密" />
+  <meta name="description" content="But Here&#39;s My Dispatch, So callwith Maybe">
+  <meta property="og:description" content="But Here&#39;s My Dispatch, So callwith Maybe">
+  <meta name="twitter:description" content="But Here&#39;s My Dispatch, So callwith Maybe">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 Dispatch 解密</h1>
+                
+                  
+                    <h2 class="post-subheading">But Here&#39;s My Dispatch, So callwith Maybe</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2017/02/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>Perl 6 的一个很好的特性是 <em>multi-dispatch</em>, 即多重分派。它允许你在函数, 方法或 <a href="https://docs.perl6.org/language/grammars">Grammar</a> token 中使用相同的名字并让它们所处理的数据的类型来决定执行哪一个。下面是一个 <a href="https://en.wikipedia.org/wiki/Factorial">factorial</a> postfix 操作符, 用两个 multies 来实现:</p>
+
+<pre><code class="language-perl6">multi postfix:&lt;!&gt; (0) { 1 }
+multi postfix:&lt;!&gt; (UInt \n) { n × samewith n − 1 }
+
+say 5!
+
+# OUTPUT: 120
+</code></pre>
+
+<p>虽然 multi-dispatch 的主题很明显并且它还有一些说明<a href="https://docs.perl6.org/language/functions#Multi-dispatch">文档</a>, 我今天想讲的是 7 个特殊的子例程, 让你能够行走在 dispatch 迷宫中。它们是 <code>nextwith</code>, <code>nextsame</code>, <code>samewith</code>, <code>callwith</code>, <code>callsame</code>, <code>nextcallee</code> 和 <code>lastcall</code>.</p>
+
+<h2 id="设立实验室">设立实验室</h2>
+
+<p>Multies 从最窄到最广的候选者进行排序，并且当一个 multi 被调用时，绑定器尝试找到一个匹配并调用第一个匹配的候选者。 有时，您可能希望调用或简单地移动到链中的下一个匹配候选者，可选地使用不同的参数。 为了观察这些操作的效果，我们将使用以下设置：</p>
+
+<pre><code class="language-perl6">class Wide             { }
+class Middle is Wide   { }
+class Narrow is Middle { }
+
+multi foo (Narrow $v) { say 'Narrow ', $v; 'from Narrow' }
+multi foo (Middle $v) { say 'Middle ', $v; 'from Middle' }
+multi foo (Wide   $v) { say 'Wide   ', $v; 'from Wide'   }
+
+foo Narrow; # OUTPUT: Narrow (Narrow)
+foo Middle; # OUTPUT: Middle (Middle)
+foo Wide;   # OUTPUT: Wide   (Wide)
+</code></pre>
+
+<p>我们有三个类，每个类都继承自前一个类，所以我们的 <code>Narrow</code> 类 可以适应 <code>Middle</code> 和 <code>Wide</code>  multi 候选者; <code>Middle</code> 也可以适应 <code>Wide</code>，但不能适应 <code>Narrow</code>; 而 <code>Narrow</code> 既不适用于 <code>Middle</code>，也不适用于 <code>Narrow</code>。请记住，Perl 6 中的所有类也都是 <a href="https://docs.perl6.org/type/Any">Any</a> 类型，因此也适用于任何接受 <a href="https://docs.perl6.org/type/Any">Any</a> 的候选者。</p>
+
+<p>对于我们的 <a href="https://docs.perl6.org/type/Callable.html">Callables</a>，我们在 foo 子例程上使用三个 multi 候选者：每个类一个。在类的主体中，我们打印什么我们所调用的 multi 的类型，以及作为参数传递的值。对于它们的返回值，我们只使用一个字符串来告诉我们返回值来自哪个 multi;我们稍后会使用这些。</p>
+
+<p>最后，我们使用三个类型的对象与我们的自定义类进行三次调用。从输出来看，我们可以看到三个候选者中的每一个候选者都按预期被调用了。</p>
+
+<p>这一切都是平淡而无聊的。但是，我们可以调味！在这些例程的内部，我们可以随时调用 <code>nextsame</code>，<code>samewith</code>，<code>callwith</code> 或 <code>callame</code> 来调用具有相同或不同参数的另一个候选者。但首先，我们来弄清楚它们都做什么？</p>
+
+<h2 id="主题">主题</h2>
+
+<p>我们要测试的前 5 个例程的命名遵循如下约定:</p>
+
+<ul>
+<li><code>call____</code> — <strong>调用</strong>链中的下一个匹配的候选者并回到此处</li>
+<li><code>next____</code> - 跳转到链中的<strong>下一个</strong>匹配的候选者并且不回到此处</li>
+<li><code>____same</code> - 使用 <strong>同一个</strong>参数就像用于当前候选者一样</li>
+<li><code>____with</code> - 使用提供的这些新参数进行操作</li>
+<li><code>samewith</code> - 从头开始一个<strong>同样的</strong>调用, 遵循一个新的分派链, 使用这些新的参数并且回到此处</li>
+</ul>
+
+<p><code>samesame</code> 不是什么稀奇的东西, 这种情况最好由常规循环代替。主要的外卖是“call”，就是说你调用候选者并回到原地, 使用它的返回值或做更多的事情; “next”意味着前往下一个候选者，并使用其返回值作为当前候选者的返回值; 然而末尾的 <code>same</code> 和 <code>with</code> 仅仅控制你是否想要使用同样的参数就像你在当前候选者中使用的那样, 或者提供一个新的集合。</p>
+
+<p>让我们来玩玩这些东西吧！</p>
+
+<h2 id="it-s-all-called-the-same">It&rsquo;s all called the same&hellip;</h2>
+
+<p>我们尝试的第一个例程是 <code>callsame</code>。它使用和当前候选者<strong>同样的</strong>参数<strong>调用</strong>下一个匹配的候选者并返回该候选者的返回值。</p>
+
+<p>让我们来修改下我们的 <code>Middle</code> 候选者以调用 <code>callsame</code> 然后打印出它的返回值:</p>
+
+<pre><code class="language-perl6">calss Wide             {}
+calss Middle is Wide   {}
+class Narrow is Middle {}
+
+multi foo(Narrow $v) { say 'Narrow', $v, 'from Narrow' }
+multi foo(Middle $v) {
+    say 'Middle', $v;
+
+    my $result = callsame;
+    say &quot;We're back! The Return value is $result&quot;;
+
+    'from Middle'
+}
+
+multi foo(Wide $v) { say 'Wide ', $v; 'from Wide' }
+
+foo Middle;
+
+# OUTPUT:
+# Middle (Middle)
+# Wide   (Middle)
+# We're back! The return value is from Wide
+</code></pre>
+
+<p>现在可以看到我们的单个 <code>foo</code> 调用导致了两次调用。第一次到了 <code>Middle</code>, 因为它是我们给  <code>foo</code> 调用的类型对象。第二次到了 <code>Wide</code>, 因为它是下一个能接收 <code>Middle</code> 类型的候选者; 在输出中我们看到 <code>Wide</code> 被调用时仍旧使用了我们原来的  <code>Middle</code> 类型对象。最后, 我们回到了我们的 <code>Middle</code> 候选者中, 并把 <code>Wide</code> 候选者的返回值设置给 <code>$result</code> 变量。</p>
+
+<p>目前为止非常清晰, 让我们试试修改下参数!</p>
+
+<h2 id="have-you-tried-to-call-them-with">Have you tried to call them with&hellip;</h2>
+
+<p>正如我们所知, <code>__with</code> 变体允许我们使用不同的参数。我会使用和之前的例子相同的代码, 区别就是现在我会执行 <code>callwith</code>, 并使用 <code>Narrow</code> 类型对象作为新的参数:</p>
+
+<pre><code class="language-perl6">class Wide             {}
+class Middle is Wide   {}
+class Narrow is Middle {}
+multi foo(Narrow $v) { say 'Narrow', $v; 'from Narrow' }
+multi foo(Middle $v) {
+    say 'Middle', $v;
+
+    my $result = callwith Narrow;
+    say &quot;We're back! The return value is $result&quot;;
+
+    'from Middle'
+}
+multi foo(Wide $v) { say 'Wide ', $v; 'from Wide' }
+
+foo Middle;
+
+# OUTPUT:
+# Middle (Middle)
+# Wide   (Narrow)
+# We're back! The return value is from Wide
+</code></pre>
+
+<p>输出的第一部分很清楚: 我们仍旧使用 <code>Middle</code> 调用 <code>foo</code>,   并且先击中 <code>Middle</code> 候选者。然而, 下一行输出有点古怪。我们在 <code>callwith</code> 中使用了 <code>Narrow</code> 参数, 所以究竟 <code>Wide</code> 候选者是怎么得到调用的而不是调用 <code>Narrow</code> 候选者呢?</p>
+
+<p>原因是 <code>call____</code> 和 <code>next____</code> 例程使用与原始调用相同的调度链。由于 <code>Narrow</code> 候选者比 <code>Middle</code> 候选者更窄, 所以被拒绝, 在当前的链条中不会被考虑。下一个 <code>callwith</code> 将会调用的候选者将是下一个匹配 <code>Middle</code> 的候选者 &ndash; 而不是笔误：<code>Middle</code> 是我们用于发起调度的参数, 因此下一个候选者将是仍然可以接受该原始调用的参数的候选者。一旦发现下一个候选者，传递给 <code>callwith</code> 的新参数就会绑定到它身上, 这是你的工作, 以确保它们可以。</p>
+
+<p>让我们在实战中看一个更复杂的例子。</p>
+
+<h2 id="kicking-it-up-a-notch">Kicking It Up a Notch</h2>
+
+<p>我们会使用更多的 multies 和类型来扩展我们原来的例子:</p>
+
+<pre><code class="language-perl6">class Wide             {}
+class Middle is Wide   {}
+class Narrow is Middle {}
+
+subset Prime where .?is-prime;
+subset NotPrime where not .?is-prime;
+
+multi foo(Narrow   $v) { say 'Narrow   ', $v; 'from Narrow'  }
+multi foo(Middle   $v) { say 'Middle   ', $v; 'from Middle'  }
+multi foo(Wide     $v) { say 'Wide     ', $v; 'from Wide'    }
+multi foo(Prime    $v) { say 'Prime    ', $v; 'from Prime'   }
+multi foo(NotPrime $v) { say 'Non-Prime', $v; 'from Prime'   }
+
+foo Narrow; # OUTPUT: Narrow    (Narrow)
+foo Middle; # OUTPUT: Middle    (Middle)
+foo Wide;   # OUTPUT: Wide      (Wide)
+foo 42;     # OUTPUT: Non-Prime 42
+foo 31337;  # OUTPUT: Prime     31337
+</code></pre>
+
+<p>我们原来的三个类都是 <strong>Any</strong> 类型并且我们还创建了两个 <strong>Any</strong> 的子集(subset): <code>Prime</code> 和 <code>NotPrime</code>。其中  <code>Prime</code> 在类型上匹配素数而 <code>NotPrime</code> 在类型上匹配不是素数的数字或者匹配不含 <code>.is-prime</code> 方法的数字。因为我们的三个自定义类没有 <code>.is-prime</code> 方法, 所以它们都在类型上匹配 <code>NotPrime</code>。</p>
+
+<p>如果我们使用这种新格局重建之前的例子, 我们会得到和之前同样的结果:</p>
+
+<pre><code class="language-perl6">class Wide             { }
+class Middle is Wide   { }
+class Narrow is Middle { }
+
+subset    Prime where     .?is-prime;
+subset NotPrime where not .?is-prime;
+
+multi foo (Narrow   $v) { say 'Narrow    ', $v; 'from Narrow'   }
+multi foo (Middle   $v) {
+    say 'Middle    ', $v;
+
+    my $result = callwith Narrow;
+    say &quot;We're back! The return value is $result&quot;;
+
+    'from Middle'
+}
+multi foo (Wide     $v) { say 'Wide      ', $v; 'from Wide'     }
+multi foo (Prime    $v) { say 'Prime     ', $v; 'from Prime'    }
+multi foo (NotPrime $v) { say 'Non-Prime ', $v; 'from NotPrime' }
+
+foo Middle;
+
+# OUTPUT:
+# Middle    (Middle)
+# Wide      (Narrow)
+# We're back! The return value is from Wide
+</code></pre>
+
+<p>原来的调用来到 <code>Middle</code> 候选者，它用 <code>Narrow</code> 类型对象 <code>callwith</code> 到 <code>Wide</code> 候选者中。</p>
+
+<p>现在，我们来混合一下, 用 <code>42</code> 而不是 <code>Narrow</code> 来调用。我们确实有一个 <code>NotPrime</code> 候选者。 <code>42</code> 和原来的 <code>Middle</code> 都可以适应这个候选者。而且比原来的 <code>Middle</code> 候选者更宽, 并且它还处在调度链的上游。这可能会出错!</p>
+
+<pre><code class="language-perl6">class Wide             { }
+class Middle is Wide   { }
+class Narrow is Middle { }
+
+subset    Prime where     .?is-prime;
+subset NotPrime where not .?is-prime;
+
+multi foo (Narrow   $v) { say 'Narrow    ', $v; 'from Narrow'   }
+multi foo (Middle   $v) {
+    say 'Middle    ', $v;
+
+    my $result = callwith 42;
+    say &quot;We're back! The return value is $result&quot;;
+
+    'from Middle'
+}
+multi foo (Wide     $v) { say 'Wide      ', $v; 'from Wide'     }
+multi foo (Prime    $v) { say 'Prime     ', $v; 'from Prime'    }
+multi foo (NotPrime $v) { say 'Non-Prime ', $v; 'from NotPrime' }
+
+foo Middle;
+
+# OUTPUT:
+# Middle    (Middle)
+# Type check failed in binding to $v; expected Wide but got Int (42)
+#   in sub foo at z2.p6 line 15
+#   in sub foo at z2.p6 line 11
+#   in block &lt;unit&gt; at z2.p6 line 19
+</code></pre>
+
+<p>哦，对，那个！我们给 <code>callwith</code> 的新参数不会影响调度, 所以尽管有一个候选者可以在调用链中进一步地处理我们的新参数, 但不是下一个候选者可以处理<strong>原始的 args</strong>, 这是 <code>callwith</code> 所调用的。结果是抛出异常, 由于我们的新参数绑定给下一个调用者时失败了。</p>
+
+<h2 id="谁是下一个">谁是下一个?</h2>
+
+<p>这个能让我们在调度链上抓住下一个匹配的候选者的趁手的小子例程是 <code>nextcallee</code>。它不仅返回该候选者的 <code>Callable</code>，而且它将其从链上移出，以便下一个 <code>next____</code> 和 <code>call____</code> 会进入下一个候选者，下一个 <code>nextcallee</code> 将会移出并返回 next-next 候选者。所以, 让我们回到我们之前的例子, 作点弊！</p>
+
+<pre><code class="language-perl6">class Wide             { }
+class Middle is Wide   { }
+class Narrow is Middle { }
+
+subset    Prime where     .?is-prime;
+subset NotPrime where not .?is-prime;
+
+multi foo (Narrow   $v) { say 'Narrow    ', $v; 'from Narrow'   }
+multi foo (Middle   $v) {
+    say 'Middle    ', $v;
+
+    nextcallee;
+    my $result = callwith 42;
+    say &quot;We're back! The return value is $result&quot;;
+
+    'from Middle'
+}
+multi foo (Wide     $v) { say 'Wide      ', $v; 'from Wide'     }
+multi foo (Prime    $v) { say 'Prime     ', $v; 'from Prime'    }
+multi foo (NotPrime $v) { say 'Non-Prime ', $v; 'from NotPrime' }
+
+foo Middle;
+
+# OUTPUT:
+# Middle    (Middle)
+# Non-Prime 42
+# We're back! The return value is from NotPrime
+</code></pre>
+
+<p>啊哈！有用！代码几乎完全一样。唯一的变化是我们在调用 <code>callwith</code> 之前弹出了 <code>nextcallee</code> 调用。它移除了无法处理新的 <code>42</code> 参数的 <code>Wide</code> 候选者，所以，从输出可以看出，我们的调用进入了 <code>NotPrime</code> 候选者。</p>
+
+<p><code>nexcallee</code> 是精湛的，所以循环是一个挑战，因为它会使用循环或thunk的调度程序来查找被调用者。所以它最常见和最简单的用法是获得&hellip;下一个被调用者。如果你需要传递下一个被调用者, 你得先这样做:</p>
+
+<pre><code class="language-perl6">multi pick-winner (Int \s) {
+    my &amp;nextone = nextcallee;
+    Promise.in(π²).then: { nextone s }
+}
+multi pick-winner { say &quot;Woot! $^w won&quot; }
+
+with pick-winner ^5 .pick -&gt; \result {
+    say &quot;And the winner is...&quot;;
+    await result;
+}
+
+# OUTPUT:
+# And the winner is...
+# Woot! 3 won
+</code></pre>
+
+<p><code>Int</code> 候选者接收 <code>nextcallee</code> 然后启动一个会被并行执行的 <strong>Promise</strong>, 在超时后返回。我们不能在这儿使用 <code>nextsame</code>, 因为它会尝试 <code>nextsame</code> <a href="https://docs.perl6.org/language/concurrency">Promise</a> 的代码块而非我们原来的子例程, 因此, <code>nextcallee</code> 节省了我们一整天时间。</p>
+
+<p>我想我们已经到达了令人眼花缭乱的例子的巅峰，我可以听到观众的呼喊。 “这种东西有什么用呢，反正？只是制造了更多的 subs, 而不是混乱的 multis!“ 所以，让我们来看看更多的真实世界的例子，以及接下来遇见的 <code>nextsame</code> 和 <code>nextwith</code>！</p>
+
+<h2 id="next-one-in-line-please">Next one in line, please</h2>
+
+<p>我们来写一个类！一个能做事的类！</p>
+
+<pre><code class="language-perl6">role Things {
+    multi method do-it($place) {
+        say &quot;I am {&lt;eating sleeping coding weeping&gt;.pick} at $place&quot;
+    }
+}
+
+class Doer does Things {}
+
+Doer.do-it: 'home' # 输出: I am coding at home
+</code></pre>
+
+<p>我们碰不到<a href="https://docs.perl6.org/language/objects#Roles">role</a>，因为它是别人为我们而做的，保持它们本来的面目吧。但是，我们希望我们的 class 能做更多的事情！对于某些<code>$place</code>，我们希望它告诉我们一些更具体的东西。另外，如果这个地方是 <code>my new place</code>，我们想知道哪些地方是新的。以下是代码：</p>
+
+<pre><code class="language-perl6">role Things {
+    multi method do-it($place) {
+        say &quot;I am {&lt;eating sleeping coding weeping&gt;.pick} at $place&quot;
+    }
+}
+
+class Doer does Things {
+    multi method do-it($place where .contains: 'home') {
+        nextsame if $place.contains: 'large';
+        nextwith &quot;home with $&lt;color&gt; roof&quot;
+          if $place ~~ /$&lt;color&gt;=[red|green|blue]/;
+
+        samewith method 'my new place';
+    }
+
+    multi method do-it('my new place') {
+        nextwith 'red home'
+    }
+}
+
+Doer.do-it: 'the bus';       # OUTPUT: I am eating at the bus
+Doer.do-it: 'home';          # OUTPUT: I am sleeping at red home
+Doer.do-it: 'large home';    # OUTPUT: I am sleeping at large home
+Doer.do-it: 'red home';      # OUTPUT: I am eating at home with red roof
+Doer.do-it: 'some new home'; # OUTPUT: I am eating at red home
+Doer.do-it: 'my new place';  # OUTPUT: I am coding at red home
+</code></pre>
+
+<p>多了一点额外的代码，并且没有对提供该方法的 role 进行单个更改，我们添加了一大堆新功能。我们来看看我们使用的三个新的调度更改例程。</p>
+
+<p><code>nextsame</code> 和 <code>nextwith</code> 函数与它们的 <code>callsame</code> 和 <code>callwith</code> 对应函数非常相似，除了<strong>它们不回到被调用的位置</strong>，它们的返回值将被用作当前例程的返回值。所以使用 <code>nextsame</code> 就像使用 <code>return callsame</code>，但是使用较少的键入，并且编译器能够进行更多的优化。</p>
+
+<p>我们添加到类中的第一个 multi 方法被调度到 <code>$place</code> .contains 单词 <code>home</code> 的位置。在方法的主体中，如果 <code>$place</code> 也包含单词 <code>large</code>，我们使用 <code>nextsame</code>，即使用与当前方法相同的参数调用下一个匹配的候选者。这是这里的关键。我们不能全部再次调用我们的方法，因为它将进入无限循环重新分派给自己。然而，由于 <code>nextsame</code> 在同一个调度链中使用下一个候选者，所以没有循环发生，我们正好得到 <code>role Things</code> 中的候选者。</p>
+
+<p>往下读代码中，<code>nextwith</code> 也随之而来。当 <code>$place</code> 提到三种颜色之一时，我们使用它。类似于 <code>nextsame</code>，它去下一个候选者，除了我们给它一个新的参数使用之外。</p>
+
+<p>最后，我们来到 <code>samewith</code>。与以前使用的例程不同，这个家伙从头开始<strong>重新</strong>启动调度，所以它基本上就像再次调用该方法一样，除了你不必知道或使用它的实际名称。我们用一组新的参数来调用 <code>samewith</code>，从输出中我们可以看到新的调度路径通过我们添加到我们的类中的第二个 multi 路径，而不是继续从 role 的 multi，就像我们的 <code>next____</code> 版本所做的那样。</p>
+
+<h2 id="last-call">Last Call！</h2>
+
+<p>包中的最后一个方法是 <code>lastcall</code>。调用它截断当前的调度链，以便 <code>next____</code> 和 <code>call____</code> 例程不会有其它任何地方可去。以下是一个例子：</p>
+
+<pre><code class="language-perl6">multi foo (Int $_) {
+    say &quot;Int: $_&quot;;
+    lastcall   when *.is-prime;
+    nextsame   when *  %% 2;
+    samewith 6 when * !%% 2;
+}
+multi foo (Any $x) { say &quot;Any $x&quot; }
+
+foo 6; say '----';
+foo 2; say '----';
+foo 1;
+
+# OUTPUT:
+# Int: 6
+# Any 6
+# ----
+# Int: 2
+# ----
+# Int: 1
+# Int: 6
+# Any 6
+</code></pre>
+
+<p>我们所有的对 <code>foo</code> 的调用都会首先进入 <code>Int</code> 候选者。当数字为 .is-prime，我们调用 <code>lastcall</code>; 当它是一个偶数，我们调用 <code>nextsame</code>; 而当这是一个奇数时，我们使用 <code>6</code> 作为参数来调用<code>samewith</code>。</p>
+
+<p>我们调用 <code>foo</code> 的第一个数字是6，这不是素数，所以 <code>lastcall</code> 从不被调用。这是一个偶数，所以我们调用 <code>nextsame</code>，从输出我们看到，我们已经达到<a href="https://docs.perl6.org/type/Any">Any</a>候选者。</p>
+
+<p>接下来，当我们使用 <code>2</code> 调用 <code>foo</code> 时，这是一个素数和偶数，我们调用 <code>lastcall</code> 和 <code>nextcall</code>。然而，因为 <code>lastcall</code> 被调用并截断了调度链，所以 <code>nextcall</code> 从不会看到 Any 候选者，所以我们只有在输出中调用 <code>Int</code> 候选者。</p>
+
+<p>在最后一个例子中，我们再次使用一个素数，所以 <code>lastcall</code> 再一次被调用。然而，数字是一个奇数，所以我们使用 <code>samewith</code> 而不是 <code>nextwith</code>。由于 <code>samewith</code> 从头开始重新调度，它不在乎我们用 <code>lastcall</code> 截断了以前的链。因此，输出显示我们经过 <code>Int</code> 候选者两次，第二次调用使用 <code>nextsame</code> 到达 Any 候选者，因为 <code>samewith</code> 上使用的数字不是素数，而是偶数。</p>
+
+<h2 id="wrapping-it-up">Wrapping It Up</h2>
+
+<p>为了整理这篇文章，我们将考察另一个领域，我们学到的例程可以派上用场：包装东西！以下是代码：</p>
+
+<pre><code class="language-perl6">use soft;
+
+sub meower (\ッ, |c) {
+    nextwith &quot;🐱 says {ッ}&quot;, |c when ッ.gist.contains: 'meow';
+    nextsame
+}
+
+&amp;say.wrap: &amp;meower;
+say 'chirp';
+say 'moo';
+say 'meows!';
+
+# OUTPUT:
+# chirp
+# moo
+# 🐱 says meows!
+</code></pre>
+
+<p>我们使用 <code>soft</code> pragma 来禁止内联，所以我们的包装是理智的。我们有一个 <code>meower</code> sub 来修改第一个参数，如果它 .contains 单词 <code>meow</code>，传递其余的参数，如果有的话，通过一个 <a href="https://docs.perl6.org/type/Capture">Capture</a>（就是 <code>|c</code> 这个东西）未修改。所有剩下的调用都是使用 <code>nextsame</code> 原样传递的，我们 <strong>.wrap</strong> <code>meower</code> 到 <code>say</code> 程序上，从输出可以看出，一切都按照我们的意愿工作。</p>
+
+<p>这是代码的主要功能：<code>meower</code> <strong>不知道什么 sub 被包装了！</strong> 然而，它仍然可以在不发生问题的情况下设法调用它。</p>
+
+<p>在这里，我们把它放在 <a href="https://docs.perl6.org/routine/put">put</a> 例程上，而且它没有任何修改就可以正常工作：</p>
+
+<pre><code class="language-perl6">use soft;
+
+sub meower (\ッ, |c) {
+    nextwith &quot;🐱 says {ッ}&quot;, |c when ッ.gist.contains: 'meow';
+    nextsame
+}
+
+&amp;put.wrap: &amp;meower;
+put 'chirp';
+put 'moo';
+put 'meows!';
+
+# OUTPUT:
+# chirp
+# moo
+# 🐱 says meows!
+</code></pre>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>今天，我们学到了一些强大的例程，让您可以从其他候选者中重用现有的多个候选者。 <code>callsame</code> 和 <code>callwith</code> 允许您调用当前调度链中的下一个匹配候选者，使用相同的参数或新集合。<code>nextsame</code> 和 <code>nextwith</code> 完成同样的事情，而不返回到调用现场。</p>
+
+<p><code>samewith</code> 子让您从头开始重新启动调度链，而无需知道当前例程的名称。而 <code>lastcall</code> 和 <code>nextcallee</code> 可以通过截断当前的调度链，或者移出和操作下一个被调用者来操作当前的调度链。</p>
+
+<p>好好使用它们吧！</p>
+
+<p>-Ofun</p>
+
+<p>原文：</p>
+
+<p><a href="https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe">Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe</a></p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/nextwith/">nextwith</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/nextsame/">nextsame</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/samewith/">samewith</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/callwith/">callwith</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/callsame/">callsame</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/nextcallee/">nextcallee</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/lastcall/">lastcall</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-03-18-regexes/" data-toggle="tooltip" data-placement="top" title="Regexes">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/" data-toggle="tooltip" data-placement="top" title="Perl 6 Sheet">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

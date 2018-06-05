@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Learning Perl 6 - sets</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.18.1" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Learning Perl 6 - sets" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/Learning%20Perl%206%20-%20sets/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io">
+              <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Learning Perl 6 - sets</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/09/19</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h2 id="quick-tip-8-perl-6-sets-https-www-learningperl6-com-2016-11-23-quick-tip-8-perl-6-sets"><a href="https://www.learningperl6.com/2016/11/23/quick-tip-8-perl-6-sets/">Quick Tip #8: Perl 6 sets</a></h2>
+
+<p><a href="https://docs.perl6.org/type/Set">Set</a> – a collection of unique thingys
+<a href="https://docs.perl6.org/type/Bag">Bag</a> - a collection of unique thingys,but weighted for the count of the number of times something is put the bag
+<a href="https://docs.perl6.org/type/Mix">Mix</a> - a bag that allows fractional weights</p>
+
+<p>这些是不可变类型。一旦生成就不可变了。每一个都有一个 <em>Hash</em> 版本以允许你更改成员, 但是我会忽略这些。</p>
+
+<!-- more -->
+
+<pre><code class="language-perl6">$ perl6
+&gt; my $set = set( 1, 2, 3, 4 )
+set(4, 3, 1, 2)
+&gt; 4 ∈ $set                      # member of
+True
+&gt; 5 ∈ $set                      # member of
+False
+&gt; 5 ∉ $set                      # not member of
+True
+&gt; set( 2, 3 ) ⊆ $set            # subset of
+True
+&gt; set( 2, 6 ) ⊆ $set            # subset of
+False
+</code></pre>
+
+<p>集合是一种更自然的查看一个值是否存在于一个值的列表中的方式。你可能每一个哈希和使用 <code>:exists</code> 来检查键，但集合会这样做（尽管那就是 Perl 6 集合现在在幕后为你所做的）：</p>
+
+<pre><code class="language-perl6">my $set  = set( &lt;a b c d&gt; );
+my $item = 'h';
+say &quot;$item is in set&quot; if $item ∈ $set;
+</code></pre>
+
+<p>Perl  6拥有将两个列表转换为集合的操作符:</p>
+
+<pre><code class="language-perl6">$ perl6
+&gt; ( 1, 2, 3 ) ∪ ( 4, 5 )        # 并集
+set(5, 4, 3, 1, 2)
+&gt; ( 1, 2, 4 ) ∩ ( 1,  2, 3 )     # 交集
+set(1, 2)
+&gt; ( 1, 2, 4 ) ∖ ( 1, 2, 3 )      # 差集
+set(4)
+&gt; ( 1, 2, 4 ) ⊖ ( 1, 2, 3 )      # 对称差分
+set(4, 3)
+</code></pre>
+
+<p>到目前为止，我使用了你在集合数学中看到的奇怪的 Unicode 字符，但每个都有<a href="https://docs.perl6.org/language/unicode_texas">德克萨斯（ASCII）</a>版本：</p>
+
+<pre><code>Texas	Fancy	Codepoint (hex)	Operation
+(elem)	∈	U+2208	member of, $a ∈ $set or $a (elem) $set
+!(elem)	∉	U+2209	not a member of, $a ∉ $set or $a !(elem) $set
+(cont)	∋	U+220B	contains,
+!(cont)	∌	U+220C	does not contain
+(&lt;=)	⊆	U+2286	subset of or equal to,
+!(&lt;=)	⊈	U+2288	not subset of nor equal to,
+(&lt;)	⊂	U+2282	subset of
+!(&lt;)	⊄	U+2284	not subset of
+(&gt;=)	⊇	U+2287	superset of or equal to,
+!(&gt;=)	⊉	U+2289	not superset of nor equal to,
+(&gt;)	⊃	U+2283	superset of
+!(&gt;)	⊅	U+2285	not superset of
+(&lt;+)	≼	U+227C	baggy subset
+!(&gt;+)	≽	U+227D	not baggy subset
+</code></pre>
+
+<p>有从两个列表中返回集合的操作符：</p>
+
+<pre><code>Texas	Fancy	Codepoint (hex)	Operation
+(|)	∪	U+222A	union
+(&amp;)	∩	U+2229	intersection
+(-)	∖	U+2216	difference
+(^)	⊖	U+2296	symmetric difference
+(.)	⊍	U+228D	baggy multiplication
+(+)	⊎	U+228E	baggy addition
+</code></pre>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/2016-09-19-Python-Vs-Perl6/" data-toggle="tooltip" data-placement="top" title="Python Vs Perl 6">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/2016-09-24-Perl6%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的冒号">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.ioindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2017
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.18.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

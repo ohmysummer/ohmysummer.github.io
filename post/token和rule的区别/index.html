@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>token 和 rule 的区别</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="token 和 rule 的区别" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/token%E5%92%8Crule%E7%9A%84%E5%8C%BA%E5%88%AB/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>token 和 rule 的区别</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/03/11</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<p>在 grammar 中, 有两个 regex 的变体, <code>rule</code> 和 <code>token</code>。rule 默认不会回溯.  rule 与 token 的一个重要区别就是, <code>rule</code> 这样的正则采取了 <code>:sigspace</code> 修饰符。 <code>rule</code> 实际上是</p>
+
+<pre><code>    regex :ratchet :sigspace { ... }
+</code></pre>
+
+<p>的简写.  ratchet 这个单词的意思是: (防倒转的)棘齿, 意思它是不能回溯的!  而 <code>:sigspace</code> 表明正则中的空白是<code>有意义的</code>, 而 <code>token</code> 实际上是</p>
+
+<pre><code>    regex :ratchet { ... }
+</code></pre>
+
+<p>的简写。 所以在 token 中, 若不是显式的写上 <code>\s</code>、<code>\h</code>、<code>\n</code> 等空白符号, 其它情况下就好像空白隐身了一样, 虽然你写了, 但是编译器却视而不见。</p>
+
+<pre><code class="language-perl">use v6;
+use Grammar::Debugger;
+grammar Token::Rule::Difference {
+    # 下面三者等价
+    # rule TOP { [\w+]+ % ' ' | [\d+]+ % ' '   }  等价于
+    # rule TOP { | [\w+]+ % ' ' | [\d+]+ % ' ' }  等价于
+    rule TOP { | [\w+]+ % ' '
+               | [\d+]+ % ' '
+             }
+}
+
+# $=finish.lines 中的每一行末尾都没有换行符
+for $=finish.lines -&gt; $line {
+    print($line);
+    say Token::Rule::Difference.parse($line)
+}
+
+=finish
+token takes whitespace invisible unless with sigspace
+rule is a token without sigspace
+2015 12 25
+2016 01 07
+</code></pre>
+
+<p>说明在 rule 中, <code>|</code> 左右两边的空格会被忽略, 这通常是为了使格式对齐, 看起来不乱。另外 rule 中, 开头和末尾的空白也会被忽略。</p>
+
+<p>如果每一行都带有换行符呢？</p>
+
+<pre><code class="language-perl">use v6;
+use Grammar::Debugger;
+grammar Token::Rule::Difference {
+
+    # token TOP { ^ [&lt;line&gt;\n]+ $ }
+    # token line {
+    #     | [\w+]+ % ' '
+    #     | [\d+]+ % ' '
+    # }
+
+# 等价于
+
+    rule TOP { ^ &lt;wrap&gt;+ $}
+    token wrap { &lt;line&gt; }
+    rule line {
+         [\w+]+ % ' ' | [\d+]+ % &lt;[-\s:]&gt;
+    }
+}
+
+my $str = q:to/EOF/;
+token takes whitespace invisible unless with sigspace
+rule is a token without sigspace
+2015-12-25 12:23
+2016-01-07 13:45
+EOF
+
+my $parse = Token::Rule::Difference.parse($str);
+say $parse;
+</code></pre>
+
+<h2 id="token-vs-rule">token vs. rule</h2>
+
+<hr />
+
+<blockquote>
+<p>When we use rule in place of token, any whitespace after anatom is turned into a non-capturing call to ws</p>
+</blockquote>
+
+<p>这句话是说, 在 <code>rule</code> 中, 任何跟在原子(atom)后面的空白会变成非捕获的<code>ws</code>调用, 即 <code>&lt;.ws&gt;</code>,</p>
+
+<pre><code class="language-perl">rule entry { &lt;key&gt; '=' &lt;value&gt; }
+</code></pre>
+
+<p>等价于:</p>
+
+<pre><code class="language-perl">token entry { &lt;key&gt; &lt;.ws&gt; '=' &lt;.ws&gt; &lt;value&gt; &lt;.ws&gt; } # .抑制了捕获
+</code></pre>
+
+<p>在 grammar 中, 我们继承了默认的 <code>ws</code>, 但是我们也可以提供自己的 ws:</p>
+
+<pre><code class="language-perl">token ws { \h* } # 匹配水平空白, 不包括换行
+</code></pre>
+
+<p>rule 中空白的使用:</p>
+
+<pre><code class="language-perl">my $str = &quot;Swift          is hard    to  learn&quot;;
+my token word { \w+ }
+my rule  line { &lt;word&gt;+ % [',' ] }
+$str ~~ m:g/ &lt;line&gt; /;
+</code></pre>
+
+<p>逗号附近的方括号保证了 <code>&lt;.ws&gt;</code> 调用产生的空白作为分割符的一部分。这利用了 <code>&lt;.ws&gt;</code> 的一个特点：</p>
+
+<p>在两个 <code>\w</code> 之间解释为 <code>\s+</code>, 其它地方解释为 <code>\s*</code>。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的模式匹配">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl-6-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2009/" data-toggle="tooltip" data-placement="top" title="Perl 6 圣诞月历-(2009)">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

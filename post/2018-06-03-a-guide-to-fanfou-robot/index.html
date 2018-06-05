@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>饭否机器人教程</title>
+  <meta property="og:title" content="饭否机器人教程" />
+  <meta name="twitter:title" content="饭否机器人教程" />
+  <meta name="description" content="Write fanfou robot in Perl 6">
+  <meta property="og:description" content="Write fanfou robot in Perl 6">
+  <meta name="twitter:description" content="Write fanfou robot in Perl 6">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-06-03-a-guide-to-fanfou-robot/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-06-03-a-guide-to-fanfou-robot/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>饭否机器人教程</h1>
+                
+                  
+                    <h2 class="post-subheading">Write fanfou robot in Perl 6</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2018/03/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="使用-perl-6-轻松活泼地写饭否机器人">使用 Perl 6 轻松活泼地写饭否机器人</h1>
+
+<p><img src="http://photo1.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/qm/xd_368058.jpg@596w_1l.jpg" alt="img" /></p>
+
+<h2 id="安装-perl-6">安装 Perl 6</h2>
+
+<p><a href="https://perl6.org">Perl 6</a> 是一门很有趣的语言。</p>
+
+<p>目前支持 Windows, macOS, Linux 主流操作系统, 首先去官网下载对应的<a href="https://rakudo.org/files">安装包</a>, 然后安装。安装完成后在终端/命令行提示符中输入</p>
+
+<pre><code class="language-shell">perl6 -v
+</code></pre>
+
+<p>它会打印出 Perl 6 的版本信息：</p>
+
+<pre><code>This is Rakudo Star version 2018.04.1 built on MoarVM version 2018.04.1
+implementing Perl 6.c.
+</code></pre>
+
+<p>Rakudo Star 自带了模块管理工具 <a href="https://github.com/ugexe/zef">Zef</a>, 你可以使用 <code>zef --help</code> 查看 zef 的帮助。如果提示 <em>command not found</em> 请检查是否设置好了 <code>PATH</code> 路径。我们会用 Zef 来安装饭否客户端模块。</p>
+
+<h2 id="perl-6-入门">Perl 6 入门</h2>
+
+<p>在开始写机器人之前, 需要先了解一点 Perl 6 的基础语法。</p>
+
+<p><a href="http://zh.perl6intro.com">Perl 6 入门</a>是 Perl 6 入门的简明教程, 涵盖了写机器人所需要的基础知识。</p>
+
+<p>想了解更多, 请查看<a href="https://perl6.org">官方文档</a>, 或者在 <a href="https://stackoverflow.com/questions/tagged/perl6">stackoverflow</a> 上提问。</p>
+
+<h2 id="创建应用">创建应用</h2>
+
+<p>首先需要创建一个新的应用, 去<a href="https://fanfou.com/apps">饭否开放平台</a>申请一个饭否应用。在<strong>创建应用列表</strong>下面可以查看你创建的所有应用, 如果是第一次创建应用, 那么点击<code>创建新应用</code>按钮:</p>
+
+<p><img src="http://photo2.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/ty/6a_476257.jpg@596w_1l.jpg" alt="img" /></p>
+
+<p>在跳转后的<strong>新建一个应用</strong>页面下, 标红星 <code>*</code> 的是必填项：</p>
+
+<ul>
+<li>应用名称, 给机器人起一个好听的酷酷的名字。</li>
+<li>应用类型, 选择机器人应用。</li>
+<li>主页, 点击<strong>我的主页</strong>, 复制地址栏中的链接, 就是你的主页。</li>
+<li>描述, 说明你这个应用是做什么用途的。</li>
+</ul>
+
+<p><img src="http://photo3.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/ty/6b_476256.jpg@596w_1l.jpg" alt="img" /></p>
+
+<p>创建完成后会显示如下信息：</p>
+
+<table>
+<thead>
+<tr>
+<th>条目</th>
+<th>值</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Consumer key</td>
+<td>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
+</tr>
+
+<tr>
+<td>Consumer secret</td>
+<td>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
+</tr>
+
+<tr>
+<td>Request token URL</td>
+<td><a href="https://fanfou.com/oauth/request_token">https://fanfou.com/oauth/request_token</a></td>
+</tr>
+
+<tr>
+<td>Access token URL</td>
+<td><a href="https://fanfou.com/oauth/access_token">https://fanfou.com/oauth/access_token</a></td>
+</tr>
+
+<tr>
+<td>Authorize URL</td>
+<td><a href="https://fanfou.com/oauth/authorize">https://fanfou.com/oauth/authorize</a></td>
+</tr>
+</tbody>
+</table>
+
+<p>注意不要把你的 <strong>Consumer key</strong> 和 <strong>Consumer secret</strong> 泄漏出去, 写饭否机器人的时候会用到这两个东西。</p>
+
+<h2 id="安装模块">安装模块</h2>
+
+<pre><code>zef install FanFou
+</code></pre>
+
+<h2 id="饭否机器人">饭否机器人</h2>
+
+<p>新建一个名为 <code>ai-fan.pl6</code> 的脚本, 内容如下:</p>
+
+<pre><code class="language-perl6">use FanFou; # 加载模块
+my %oauth_consumer = key =&gt; 'your_consumer_key', secret =&gt; 'your_secret_key';
+
+# 获取 client
+my $client = FanFou::XAuth.new(
+    oauth_consumer =&gt; %oauth_consumer, # 保存 Consumer key 和 Consumer secret 的散列
+    username       =&gt; 'your_username', # 用户名
+    password       =&gt; 'your_password'  # 密码
+);
+
+# 打印首页时间线的消息
+my $resp = from-json await $client.request('/statuses/home_timeline', 'GET').body-text;
+say $resp.perl;
+
+# 发送消息
+my %body = 'status' =&gt; &quot;Hi, fan, I'm a robot written in Perl 6.&quot;;
+$client.request('/statuses/update', 'POST', %body);
+</code></pre>
+
+<p>拿到 <code>$client</code> 之后, 就可以使用饭否的 <a href="https://github.com/FanfouAPI/FanFouAPIDoc/wiki">API</a> 了。</p>
+
+<p>运行：</p>
+
+<pre><code class="language-shell">perl6 ai-fan.pl6
+</code></pre>
+
+<p>刷新饭否, 就可以看见刚才发的这条消息了。</p>
+
+<p>-OFun :)</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/robot/">robot</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-05-10-%E9%A5%AD%E5%90%A6%E5%AE%A2%E6%88%B7%E7%AB%AF/" data-toggle="tooltip" data-placement="top" title="饭否客户端">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

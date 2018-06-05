@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>匿名状态变量的工作原理</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="匿名状态变量的工作原理" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/%E5%8C%BF%E5%90%8D%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8F%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>匿名状态变量的工作原理</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/03/12</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h2 id="anonymous-state-variables-and-how-they-work">Anonymous State Variables And How They Work</h2>
+
+<p>当调试代码的时候, 我经常添加一个计数变量以用于循环, 所以我能跟踪发生了什么, 或我能在代码片段中处理正迭代的部分数据集:</p>
+
+<pre><code class="language-perl6">my $event-no = 0;
+for get_events() -&gt; $event {
+    $event-no++;
+    process-event($event);
+    last if $event-no &gt;= 5;
+}
+</code></pre>
+
+<p>如果你正在调试, 或者你正尝试在单行中节省空间, Perl  6 实际上有一个匿名状态变量(<em>anonymous state variables</em>)标记, 用不含名字的 <code>$</code>符号来标示(你还可以在很多可迭代对象身上使用 kv 方法来完成类似的东西, 但是匿名的 <code>$</code> 更普遍。)</p>
+
+<pre><code class="language-perl6">for get_events() -&gt; $event {
+    process-event($event);
+    last if ++$ &gt;= 5;
+}
+</code></pre>
+
+<p>然而, 注意; 下面这样的用法是没有效果的:</p>
+
+<pre><code class="language-perl6">for get_events() -&gt; $event {
+    process-event($event);
+    $++;
+    last if $ &gt;= 5;
+}
+</code></pre>
+
+<p>好了, 为什么是那样的？</p>
+
+<h2 id="use-the-source">Use the Source</h2>
+
+<p>好吧, 让我们来看看 Rakudo 源代码, 可以吗?</p>
+
+<p>如你所想, 在 Perl 6 Grammar 中查找 <code>$</code> 是怎样被解析的将会是一个很困难的任务。所以我们让编译器自己来帮助我们! 我们会使用一个小例子:</p>
+
+<pre><code class="language-perl6">for ^10 { $++ }
+</code></pre>
+
+<p>并让 Rakudo 吐出它生成的 <strong>AST</strong>, 专门用于查找变量:</p>
+
+<pre><code class="language-perl">  $ perl6 --target=ast -e 'for ^10 { $++ }' | grep Var
+      - QAST::Var(attribute $!do)
+      - QAST::Var(attribute $!do)
+    - QAST::Var(local __args__ :decl(param))
+          - QAST::Var(lexical $¢ :decl(contvar))
+          - QAST::Var(lexical $! :decl(contvar))
+          - QAST::Var(lexical $/ :decl(contvar))
+          - QAST::Var(lexical $_ :decl(contvar))
+          - QAST::Var(lexical GLOBALish :decl(static))
+          - QAST::Var(lexical EXPORT :decl(static))
+          - QAST::Var(lexical $?PACKAGE :decl(static))
+          - QAST::Var(lexical ::?PACKAGE :decl(static))
+          - QAST::Var(lexical $=finish :decl(static))
+                - QAST::Var(lexical $ANON_VAR__1 :decl(statevar))
+                - QAST::Var(lexical $_ :decl(param))
+                      - QAST::Var(lexical $ANON_VAR__1) :BY&lt;EXPR/POSTFIX W&gt; :nosink&lt;?&gt; :WANTED $
+                        - QAST::Var(lexical $ANON_VAR__1) :BY&lt;EXPR/POSTFIX W&gt; :nosink&lt;?&gt; :WANTED $
+          - QAST::Var(lexical $=pod :decl(static))
+          - QAST::Var(lexical !UNIT_MARKER :decl(static))
+            - QAST::Var(local ctxsave :decl(var))
+            - QAST::Var(contextual $*CTXSAVE)
+              - QAST::Var(local ctxsave)
+                - QAST::Var(local ctxsave)
+                - QAST::Var(local ctxsave)
+</code></pre>
+
+<p>你可能不会立即看到它, 但是那儿有一个可疑的声明: <code>$ANON_VAR__1</code>。现在我们有了一个搜索字符串并想得到更多相关的结果, 用 <a href="http://beyondgrep.com/">ack</a> 这样的工具搜索源代码, 我们会找到 <code>src/Perl6/Actions.nqp</code>这个文件。让我们深入进去!</p>
+
+<pre><code class="language-perl"># taken from rakudo@85d20f3
+sub declare_variable($/, $past, $sigil, $twigil, $desigilname, $trait_list, $shape?, :@post) {
+    ...
+    elsif $desigilname eq '' {
+        if $twigil {
+            $/.CURSOR.panic(&quot;Cannot have an anonymous variable with a twigil&quot;);
+        }
+        $name    := QAST::Node.unique($sigil ~ 'ANON_VAR_');
+        $varname := $sigil;
+    }
+    ...
+}
+</code></pre>
+
+<p>所以这部分代码(搜索 <code>ANON_VAR</code> 时唯一的结果)告诉我们当我们声明一个符号后面没有名字的变量时, 我们应该生成一个唯一的名字。</p>
+
+<h2 id="how-did-we-get-here">How Did We Get Here?</h2>
+
+<p>那很好, 但是我们怎么从 grammar 中到达那里? 这种情况下我使用的小技巧就是抛出一个异常并查看回溯发生在哪?</p>
+
+<pre><code class="language-perl">sub declare_variable($/, $past, $sigil, $twigil, $desigilname, $trait_list, $shape?, :@post) {
+    ...
+    elsif $desigilname eq '' {
+        if $twigil {
+            $/.CURSOR.panic(&quot;Cannot have an anonymous variable with a twigil&quot;);
+        }
++       if nqp::atkey(nqp::getenvhash(), 'ROB_DEBUG') {
++           $/.CURSOR.panic(&quot;here I am!&quot;);
++       }
+        $name    := QAST::Node.unique($sigil ~ 'ANON_VAR_');
+        $varname := $sigil;
+    }
+    ...
+}
+</code></pre>
+
+<p>重新编译之后, 打开 <code>ROB_DEBUG</code> 环境变量并运行,  并使用 <code>--ll-exception</code>, 来确保内部构件被包含进了堆栈跟踪中:</p>
+
+<pre><code class="language-perl6">$ ROB_DEBUG=1 perl6 --ll-exception -e 'for ^10 { $++ }'
+</code></pre>
+
+<p>我不会临时包含这个堆栈跟踪, 但是你可以自己生成它如果你愿意追随的话。通过查看出现在提到 <code>Actions.nqp:3160</code>（我插入异常的地方） 后面提到 <code>Grammar.nqp</code> 的第一个堆栈跟踪项, 我们来到 <code>Grammar.nqp</code>中的 <code>token variable</code>:</p>
+
+<pre><code class="language-perl"># also taken from rakudo@85d20f3
+token variable {
+    :my $*IN_META := '';
+    [
+    | :dba('infix noun') '&amp;[' ~ ']' &lt;infixish('[]')&gt;
+    | &lt;sigil&gt; &lt;twigil&gt;? &lt;desigilname&gt;
+      [ &lt;?{ !$*IN_DECL &amp;&amp; $*VARIABLE &amp;&amp; $*VARIABLE eq $&lt;sigil&gt; ~ $&lt;twigil&gt; ~ $&lt;desigilname&gt; }&gt;
+        { self.typed_panic: 'X::Syntax::Variable::Initializer', name =&gt; $*VARIABLE } ]?
+    | &lt;special_variable&gt;
+    | &lt;sigil&gt; $&lt;index&gt;=[\d+]                              [&lt;?{ $*IN_DECL }&gt; &lt;.typed_panic: &quot;X::Syntax::Variable::Numeric&quot;&gt;]?
+    | &lt;sigil&gt; &lt;?[&lt;]&gt; &lt;postcircumfix&gt;                      [&lt;?{ $*IN_DECL }&gt; &lt;.typed_panic('X::Syntax::Variable::Match')&gt;]?
+    | &lt;?before &lt;sigil&gt; &lt;?[ ( [ { ]&gt;&gt; &lt;!RESTRICTED&gt; &lt;?{ !$*IN_DECL }&gt; &lt;contextualizer&gt;
+    | $&lt;sigil&gt;=['$'] $&lt;desigilname&gt;=[&lt;[/_!¢]&gt;]
+    | {} &lt;sigil&gt; &lt;!{ $*QSIGIL }&gt; &lt;?MARKER('baresigil')&gt;   # try last, to allow sublanguages to redefine sigils (like &amp; in regex)
+    ]
+    [ &lt;?{ $&lt;twigil&gt; &amp;&amp; $&lt;twigil&gt; eq '.' }&gt;
+        [ &lt;.unsp&gt; | '\\' | &lt;?&gt; ] &lt;?[(]&gt; &lt;!RESTRICTED&gt; &lt;arglist=.postcircumfix&gt;
+    ]?
+    { $*LEFTSIGIL := nqp::substr(self.orig(), self.from, 1) unless $*LEFTSIGIL }
+}
+</code></pre>
+
+<p>这段代码对你没有什么意义如果你初学 Perl 6的话, 更不用说 Rakudo 源代码了。我认为这一句是最重要的:</p>
+
+<pre><code class="language-perl6">| {} &lt;sigil&gt; &lt;!{ $*QSIGIL }&gt; &lt;?MARKER('baresigil')&gt; # try last, to allow sublanguages to redefine sigils (like &amp; in regex)
+</code></pre>
+
+<p>这个分支接受由符号唯一组成的变量。所以 <code>token variable</code> 匹配源代码中的每个裸的 <code>$</code> 实例, 并且每次发生都会调用 <code>Actions::declare_variable</code>, 生成不同的变量, 我用这个片段来说没明:</p>
+
+<pre><code class="language-perl6">for ^3 {
+    say ++$;
+    say ++$;
+}
+=output
+1
+1
+2
+2
+3
+3
+</code></pre>
+
+<p>所以, 对于匿名状态变量你只能执行非常简单的操作。记住你也可以使用匿名数组或匿名散列变量来处理东西:</p>
+
+<pre><code class="language-perl">for ^10 {
+    say((@).push($_));
+}
+</code></pre>
+
+<p>但是在正式代码中不建议这么用。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/perl-6-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2009/" data-toggle="tooltip" data-placement="top" title="Perl 6 圣诞月历-(2009)">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/using-perl-6%E4%BA%8C/" data-toggle="tooltip" data-placement="top" title="Using Perl 6(二)">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

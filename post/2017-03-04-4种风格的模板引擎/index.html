@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>4 种风格的模板引擎</title>
+  <meta property="og:title" content="4 种风格的模板引擎" />
+  <meta name="twitter:title" content="4 种风格的模板引擎" />
+  <meta name="description" content="Grammar and closure">
+  <meta property="og:description" content="Grammar and closure">
+  <meta name="twitter:description" content="Grammar and closure">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-03-04-4%E7%A7%8D%E9%A3%8E%E6%A0%BC%E7%9A%84%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-03-04-4%E7%A7%8D%E9%A3%8E%E6%A0%BC%E7%9A%84%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>4 种风格的模板引擎</h1>
+                
+                  
+                    <h2 class="post-subheading">Grammar and closure</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2017/04/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="4-种风格的模板引擎-带基准测试">4 种风格的模板引擎. 带基准测试！</h1>
+
+<p>这一次在博客上，我将告诉你如何编写自己的模板引擎 - 根据需要为你量身定制语法和行为。 我们将以四种不同的方式来分析每种方法的优缺点，以及代码速度和复杂性。 我们今天的示例任务是为用户撰写密码提醒文本，然后可以通过电子邮件发送。</p>
+
+<pre><code class="language-perl6">use v6;
+
+my $template = q{
+    Hi [VARIABLE person]!
+
+    You can change your password by visiting [VARIABLE link] .
+    
+    Best regards.
+};
+
+my %fields = (
+    'person' =&gt; 'John',
+    'link' =&gt; 'http://example.com'
+);
+</code></pre>
+
+<p>所以由我们决定我们的模板语法应该是什么样子的，对于初学者，我们会有一些小的变量（虽然这不是很精确的名称，因为模板中的变量几乎总是不变的）。
+我们还有用于填充模板字段的数据。 让我们开始吧！</p>
+
+<h2 id="substitutions">Substitutions</h2>
+
+<pre><code class="language-perl6">sub substitutions ( $template is copy, %fields ) {
+    for %fields.kv -&gt; $key, $value {
+        $template ~~ s:g/'[VARIABLE ' $key ']'/$value/;
+    }
+    return $template;
+}
+
+say substitutions($template, %fields);
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code>Hi John!
+
+You can change your password by visiting http://example.com .
+
+Best regards.
+</code></pre>
+
+<p>现在是时候进行基准测试了，以获得不同方法的基准：</p>
+
+<pre><code class="language-perl6">use Bench;
+
+my $template_short = $template;
+my %fields_short = %fields;
+
+my $template_long = join(
+    ' lorem ipsum ', map( { '[VARIABLE ' ~ $_ ~ ']' }, 'a' .. 'z')
+) x 100;
+my %fields_long = ( 'a' .. 'z' ) Z=&gt; ( 'lorem ipsum' xx * );
+
+my $b = Bench.new;
+$b.timethese(
+    1000,
+    {
+        'substitutions_short' =&gt; sub {
+            substitutions( $template_short, %fields_short )
+        },
+        'substitutions_long' =&gt; sub {
+            substitutions( $template_long, %fields_long )
+        },
+    }
+);
+</code></pre>
+
+<p>这篇文章中的基准测试会在两种情况下测试每种方法。 一种情况是&rdquo;短&rdquo;模板。一种是&rdquo;长&rdquo;模板。 长模板大小为62KB, 包含 2599 个文本片段和 2600 个变量，由26个字段填充。 所以这里的结果为：</p>
+
+<pre><code>Timing 1000 iterations of substitutions_long, substitutions_short...
+substitutions_long: 221.1147 wallclock secs @ 4.5225/s (n=1000)
+substitutions_short: 0.1962 wallclock secs @ 5097.3042/s (n=1000)
+</code></pre>
+
+<p>哇！ 长模板拖后腿了。 原因是因为这段代码有三个严重的缺陷 - 原始模板在变量求值期间被销毁，因此每次我们想要重用它时必须复制它，因此模板文本被解析多次，并且每次填充每个变量之后输出被重写。 但我们可以做得更好&hellip;</p>
+
+<h2 id="substitution">Substitution</h2>
+
+<pre><code class="language-perl6">sub substitution ( $template is copy, %fields ) {
+    $template ~~ s:g/'[VARIABLE ' (\w+) ']'/{ %fields{$0} }/;
+    return $template;
+}
+</code></pre>
+
+<p>这次我们只有单个替换。变量名被捕获，我们可以用它来动态获取字段值。 基准测试：</p>
+
+<pre><code>Timing 1000 iterations of substitution_long, substitution_short...
+substitution_long: 71.6882 wallclock secs @ 13.9493/s (n=1000)
+substitution_short: 0.1359 wallclock secs @ 7356.3411/s (n=1000)
+</code></pre>
+
+<p>速度没有提升多少。 长模板的解析时间下降了不少，因为文本不会被多次解析。 然而，来自先前方法的剩余缺陷仍然适用，并且正则表达式引擎仍然必须对被替换的每个模板文本执行大量的内存重分配。</p>
+
+<p>此外，在未来它不会允许我们的模板引擎获得新的功能，如条件或循环，因为它很难在单个正则表达式中解析嵌套标签。 是时候另辟蹊径了..</p>
+
+<h2 id="grammars-和-actions">Grammars 和 Actions</h2>
+
+<p>如果你不熟悉 Perl 6 的 Grammar 和抽象语法树概念，你应该首先学习<a href="https://docs.perl6.org/language/grammars.html">官方文档</a>。</p>
+
+<pre><code class="language-perl6">grammar Grammar {
+  regex TOP      {^ [ | ]* $ }
+  regex text     { &lt;-[[]]&gt;+ }
+  regex variable { '[VARIABLE ' $=(\w+) ']' }
+}
+
+class Actions {
+  has %.fields is required;
+  
+  method TOP ($/) {
+    make [~]( map {.made}, $/{'chunk'} );
+  }
+  
+  method text($/) { 
+    make ~$/; 
+  }
+  
+  method variable ($/) { 
+    make %.fields{$/{'name'}} 
+  }
+}
+
+sub grammar_actions_direct ( $template, %fields ) {
+    my $actions = Actions.new( fields =&gt; %fields );
+    return Grammar.parse($template, :$actions).made;
+}
+</code></pre>
+
+<p>最重要的是将我们的模板语法定义为 grammar。Grammar 只是一组可以互相调用的命名正则表达式。在&rdquo;TOP&rdquo;（解析开始的地方）里，我们看到我们的模板是由块组成的。每个块可以是文本或变量。 <em>text</em> 这个正则表达式匹配一切，直到它命中变量 开头（&rsquo;[&lsquo;字符，让我们假设它在 <em>text</em> 中是禁止的以使事情变得更简单）。<em>variable</em> 这个正则表达式看起来应该和之前的方法类似，但是现在我们以命名方式而不是位置方式捕获变量名。</p>
+
+<p>每当相应名字的正则表达式匹配时, Action 类中的同名方法就会被调用。当被调用时，方法从这个正则表达式获得匹配对象（<code>$ /</code>），并可以从该匹配对象中合成(&ldquo;make&rdquo;)某些东西。上层方法在被调用时可以看到这个被合成(&ldquo;made&rdquo;)的某个东西。例如我们的 &ldquo;TOP&rdquo; regexp调 用 &ldquo;text&rdquo; regexp 匹配模板的 &ldquo;Hi&rdquo; 部分和调用 &ldquo;text&rdquo; 方法。这个 &ldquo;text&rdquo; 方法只是 &ldquo;make&rdquo; 这个匹配的字符串供以后使用。然后 &ldquo;TOP&rdquo; regexp 调用与模板的 &ldquo;[VARIABLE name]&rdquo; 部分匹配的 &ldquo;variable&rdquo; regexp。然后调用 &ldquo;variable&rdquo; 方法，并在匹配对象中检查变量名称，并从 %fields 散列值中&rdquo;make&rdquo;这个变量的值供以后使用。这将持续到模板字符串结束。然后匹配 &ldquo;TOP&rdquo; 正则表达式，并调用 &ldquo;TOP&rdquo; 方法。这个 &ldquo;TOP&rdquo; 方法可以访问匹配对象中的文本或变量&rdquo;块&rdquo;的数组，并查看先前为那些块 &ldquo;make&rdquo; 了什么。所以它所要做的就是把(&ldquo;make&rdquo;)这些值连接在一起。最后，我们从 &ldquo;parse&rdquo; 方法中获得这个 &ldquo;made&rdquo; 模板。让我们来看看基准测试：</p>
+
+<pre><code>Timing 1000 iterations of grammar_actions_direct_long, grammar_actions_direct_short...
+grammar_actions_direct_long: 149.5412 wallclock secs @ 6.6871/s (n=1000)
+grammar_actions_direct_short: 0.2405 wallclock secs @ 4158.1981/s (n=1000)
+</code></pre>
+
+<p>我们摆脱了以前方法的两个缺陷。 填充字段时原始模板不会被损坏，这意味着更少的内存复制。 在每个字段的替换期间也没有重新分配内存，因为现在每个 action 方法只是让(&ldquo;make&rdquo;)字符串在稍后被连接。 我们可以轻松通过添加循环，条件和更多的功能来扩展我们的模板语法，只需将一些正则表达式引入 grammar 并在 action 中定义相应的行为。 不幸的是，我们看到一些性能回归，这是因为每次解析模板时，都会创建匹配对象，构建解析树，它必须跟踪所有那些 &ldquo;make&rdquo;/&ldquo;made&rdquo; 值，当它折叠到最终输出。 但这还没完..</p>
+
+<h2 id="grammars-和-closure-actions">Grammars 和 closure Actions</h2>
+
+<p>最后，我们达到&rdquo;boss级&rdquo;，我们必须消灭最后和最大的缺陷 - 重新解析。
+我的想法是使用之前方法中的 grammars 和 actions，但这一次，我们想生成可执行和可重用的代码，而不是得到直接输出，工作原理如下：</p>
+
+<pre><code class="language-perl6">sub ( %fields ) {
+    return join '',
+        sub ( %fields ) { return &quot;Hi &quot;}.( %fields ),
+        sub ( %fields ) { return %fields{'person'} }.( %fields ),
+        ...
+}
+</code></pre>
+
+<p>没错，我们将把我们的模板主体转换为子程序级联。
+每次调用这个级联时，它将获取并把%fields传播到更深的子程序中。
+并且每个子例程负责处理由 grammar 中的单个正则表达式匹配的模板片段。 我们可以重用之前方法中的 grammar，只修改 actions：</p>
+
+<pre><code class="language-perl6">class Actions {
+    
+    method TOP ( $/ ) {
+        my @chunks = $/{'chunk'};
+        make sub ( %fields ) {
+           return [~]( map { .made.( %fields ) }, @chunks );
+        };
+    }
+    method text ( $/ ) {
+        my $text = ~$/;
+        make sub ( %fields ) {
+            return $text;
+        };
+    }
+    method variable ( $/ ) {
+        my $name = $/{'name'};
+        make sub ( %fields  ) {
+            return %fields{$name}
+        };
+    }
+    
+}
+
+sub grammar_actions_closures ( $template, %fields ) {
+    state %cache{Str};
+    my $closure = %cache{$template} //= Grammar.parse(
+        $template, actions =&gt; Actions.new
+    ).made;
+    return $closure( %fields );
+}
+</code></pre>
+
+<p>现在每个 action 方法使子程序获得 %fields 并在稍后执行最终输出而不是直接最终输出。 要生成这个子程序级联,模板必须只解析一次。 一旦我们得到它，我们可以用不同的 %fields 组来填充我们的模板变量。 注意如何使用 <a href="https://docs.perl6.org/type/Hash#index-entry-object_hash">Object Hash</a> %cache来确定对于给定的 $ template 我们是否已经有子程序树。 再罗嗦一句，我们来做下基准测试：</p>
+
+<pre><code>Timing 1000 iterations of grammar_actions_closures_long, grammar_actions_closures_short...
+grammar_actions_closures_long: 22.0476 wallclock secs @ 45.3563/s (n=1000)
+grammar_actions_closures_short: 0.0439 wallclock secs @ 22778.8885/s (n=1000)
+</code></pre>
+
+<p>很好的结果！ 我们有可扩展的模板引擎，对于短模板它快了4倍，对于长模板它快了10倍。 是的，登峰造极了&hellip;</p>
+
+<h2 id="grammars-and-closure-actions-in-parallel">Grammars and closure Actions in parallel</h2>
+
+<p>最后一种方法开辟了一种新的优化可能性。 如果我们有了生成模板的子程序那么为什么不并行运行它们呢？ 因此，让我们修改我们的 action &ldquo;TOP&rdquo; 方法来同时处理文本和变量块：</p>
+
+<pre><code class="language-perl6">method TOP ( $/ ) {
+    my @chunks = $/{'chunk'};
+    make sub ( %fields ) {
+       return [~]( @chunks.hyper.map( {.made.( %fields ) } ).list );
+    };
+}
+</code></pre>
+
+<p>如果你的模板引擎必须做一些冗长的操作来生成最终的输出块，例如执行重型数据库查询或调用一些API，这样的优化会诱人。在运行时要求数据填充模板是完全正确的，因为在功能丰富的模板引擎中，您可能无法预测并生成完整的数据集，就像我们对 %fields 所做的那样。明智地使用此优化 - 对于快速子程序，您将看到性能下降，因为只是在单核上串行执行它们发送和检索块到/从线程的成本将更高。</p>
+
+<h3 id="我应该使用哪种方法来实现我自己的模板引擎">我应该使用哪种方法来实现我自己的模板引擎？</h3>
+
+<p>这取决于你可以重用模板的程度。例如，如果您每天发送一个密码提醒 - 就使用简单的 substitution , 如果你需要更复杂的功能就使用带有直接 actions 操作的 grammar。但是如果你在PSGI进程中使用模板来为不同的用户每秒显示数百页，那么 grammar 和 closure actions 会更适合。</p>
+
+<p>你可以在<a href="https://gist.github.com/bbkr/8728a26ef6ee12eaf4e91f8210318d88">这里</a>下载所有方法与基准测试的单个文件。</p>
+
+<h3 id="未完待续">未完待续？</h3>
+
+<p>如果你喜欢这个简单的模板引擎介绍，并希望看到更复杂的功能，如条件循环的实现, 请在 blogs.perl.org 的这篇文章下留言或发送私人消息到 irc.freenode.net#perl6 通道(昵称：bbkr）。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-02-04-whatever-star-vs.-_-vs-/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的 *, $_ 和 $">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-03-05-%E4%BD%BF%E7%94%A8grammar%E7%9A%84%E6%A8%A1%E5%9D%97/" data-toggle="tooltip" data-placement="top" title="通过模块学习 Grammar">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的 *, $_ 和 $</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.18.1" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 中的 *, $_ 和 $" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/2017-02-04-Whatever%20Star%20vs.%20$_%20vs%20$/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io">
+              <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 中的 *, $_ 和 $</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2017/02/04</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h2 id="cale2-问了一个很难的问题">cale2 问了一个很难的问题</h2>
+
+<p>今天卡尔2<a href="https://irclog.perlgeek.de/perl6/2017-02-01#i_14028041">拒绝</a>问简单的问题。我们来看它今天问了什么难题：</p>
+
+<blockquote>
+<p><cale2> 我需要一份关于 * vs $_ vs $ 的指南。</p>
+</blockquote>
+
+<p>这个问题问得多么好。那三种东西都是语法糖, 因为上下文转换, 它们能很好地避免折行和更少的 bugs。</p>
+
+<!-- more -->
+
+<p>我们从我们的老朋友主题变量 <code>$_</code> 开始。在 Perl 5 中它刚好出现在每个 sub 的外面。在 Perl 6 中它出现在块的默认值之外。</p>
+
+<pre><code class="language-perl6">my &amp;block =  { 'oi?' };
+&amp;block.signature.say;
+# OUTPUT?(;; $_? is raw)??
+
+</code></pre>
+
+<p>块的默认签名是一个名为 <code>$_</code> 的位置参数。因此每个块都有一个主题变量 <code>$_</code>。还有其他设置 <code>$_</code> 主题变量的语句，而不引入一个新的块，像 <em>with</em> 和 <em>given</em> （<em>given</em> 的确引入了一个块，但它是特殊的，我在这里不说明细节）。</p>
+
+<pre><code class="language-perl6">say $_ with 42;
+# OUTPUT ?42??
+</code></pre>
+
+<p>因为它是默认的, Perl 6 会在很多地方期待它的出现。最突出的是当没有对象方法调用时。</p>
+
+<pre><code class="language-perl6">$_ = 42; say 'oi?' when 42;
+.say;
+# OUTPUT?oi??42??
+</code></pre>
+
+<p>一个单独的 <code>$</code> 实际上是两个（有一点）的东西。在签名中，它是一个我们永远不能使用的位置参数标记（也许是因为我们不在乎），因为它没有名字，因此在它所应用的例程中不引入符号。它对于 protos 和免费的浮点签名很有用。它的第二个用途实际上引入了一个容器，也没有符号。它也是一个状态变量，它的初始化器（如果有一个）不被处理为状态，并将被调用多于一次。我们可以使用匿名状态变量来计数东西。</p>
+
+<pre><code>my @a = &lt;a b c d&gt;;
+for @a { say @a[$++] };
+
+# OUTPUT?a?b?c?d??
+</code></pre>
+
+<p>我们可以滥用匿名变量 <code>$</code> 在列表赋值中跳过我们不想要的值。当我们从一个子例程中得到一个短的列表时会很简洁。</p>
+
+<pre><code class="language-perl6">my ($,$,$c) = &lt;a b c d&gt;;
+say $c;
+# OUTPUT?c??
+</code></pre>
+
+<p>我很享受这样的事实，我懒得给一次性变量起名字。认知负荷越小越好。</p>
+
+<p>Whatever <code>*</code> 是问题的难点。有时它是一个语法糖标记，我们用它来告诉 Perl 6 我们不关心什么将被选中。在其他时候，它意味着 Inf, 意思是它们中的所有。</p>
+
+<pre><code class="language-perl6">my @a = &lt;a b c d&gt;;
+put @a.pick(*);
+
+# OUTPUT?c d b a??
+</code></pre>
+
+<p>如果在参数列表中使用一个单独的 <code>*</code>，它将变成单例 Whatever。由于我们可以要求签名中的值，我们可以为 <code>muiti</code>s 提供接口。</p>
+
+<pre><code>multi sub foo(Int $i){ $i * 42 };
+multi sub foo(Whatever){ &lt;42 oi? ?&gt;.pick };
+say foo(*);
+# OUTPUT???? (your results may vary)
+</code></pre>
+
+<p>如果我们在包含运算符或调用的语句中使用 <code>*</code>，它会形成一个没有作用域的块，并像一个占位符变量一样运行，而不会丢失该块由 <code>*</code> 生成的信息。生成的 Callable 的类型是 Wh??ateverCode 并且当提供了 Sub 或方法时, 例程可以在它上面采取不同的行动。与真正的占位符变量相反, Whatever 可以用在 where 子句中。</p>
+
+<pre><code class="language-perl6">sub foo($a where * &lt; 10){}
+</code></pre>
+
+<p>对于他的问题, 这不是一个完整的答案。这就是为什么我建议卡尔2去阅读文档。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/2017-01-02-stackoverflow/" data-toggle="tooltip" data-placement="top" title="2017 StackOverFlow-sort,deepmap,flat">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/4%E7%A7%8D%E9%A3%8E%E6%A0%BC%E7%9A%84%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E/" data-toggle="tooltip" data-placement="top" title="4 种风格的模板引擎">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.ioindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2017
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.18.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

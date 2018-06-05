@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的 Role</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 中的 Role" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/perl6%E4%B8%AD%E7%9A%84role/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 中的 Role</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/07/15</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<ul>
+<li>Composition and mix-ins</li>
+<li>Sigils</li>
+<li>Typed data structures</li>
+<li>Traits</li>
+</ul>
+
+<p>所以到底什么是 <code>role</code> 呢？ role 是零个或多个方法和属性的集合。</p>
+
+<p>role 不像 class，它不能被实例化（如果你尝试了，会生成一个 class）。Perl 6 中 Classes 是可变的，而 roles 是不可变的。</p>
+
+<h2 id="申明-roles-就像申明-class-一样">申明 Roles 就像申明 Class 一样：</h2>
+
+<hr />
+
+<p>使用关键字 <code>role</code>来引入 role, 在 role 中声明属性和方法就像在 Perl 6 的类中声明属性和方法那样。</p>
+
+<pre><code class="language-perl6">role DebugLog {
+    has @.log_lines;
+    has $.log_size is rw = 100;
+    method log_message($message) {
+        @!log_lines.shift if
+        @!log_lines.elems &gt;= $!log_size;
+        @!log_lines.push($message);
+    }
+}
+</code></pre>
+
+<h2 id="role-composition">Role Composition</h2>
+
+<hr />
+
+<ul>
+<li>使用 <code>does</code> trait 将 role 组合到 Class 中：</li>
+</ul>
+
+<pre><code class="language-perl6">class WebCrawler does DebugLog {
+    ...
+}
+</code></pre>
+
+<ul>
+<li>这会把方法和属性添加到 class WebCrawler 里面去。</li>
+<li>结果就像它们起初被写到 class 中一样。</li>
+</ul>
+
+<h2 id="mix-ins">Mix-ins</h2>
+
+<hr />
+
+<ul>
+<li>允许 role 的功能被添加到每个对象的根基上</li>
+<li>不影响其它的类实例</li>
+<li>role 中的方法总是覆盖对象中已经存在的方法</li>
+</ul>
+
+<h2 id="mix-ins-example">Mix-ins Example</h2>
+
+<hr />
+
+<ul>
+<li>假设我们想跟踪某个对象发生了什么</li>
+<li>Mix in the DebugLog role</li>
+</ul>
+
+<pre><code class="language-perl6">$acount does DebugLog;
+</code></pre>
+
+<ul>
+<li>然后, 我们可以输出被登记的行</li>
+</ul>
+
+<pre><code class="language-perl6">$account.log_lines».say;
+</code></pre>
+
+<ul>
+<li>现在我们只需给<code>log_message</code>方法添加调用</li>
+<li>我们可以使用<code>.?</code>操作符, 这会调用某个方法, 如果方法存在的话</li>
+</ul>
+
+<pre><code class="language-perl6">class Account {
+    method change_password($new) {
+        self.?log_message(
+            &quot;changing password to $new&quot;;
+        )
+        ...
+    }
+}
+</code></pre>
+
+<h2 id="sigil-接口协定">Sigil = 接口协定</h2>
+
+<hr />
+
+<ul>
+<li>在 Perl 6 中, 符号表明接口协定</li>
+<li>这个接口协定由 role 定义</li>
+<li>你可以只把东西放在带有符号的变量中, 如果该变量遵守(<code>does</code>)了要求的 role 的话</li>
+<li>例外: 带有 <code>$</code>的变量可以存储任何东西(如果没有使用类型约束的话)</li>
+</ul>
+
+<h2 id="positional">@ = Positional</h2>
+
+<hr />
+
+<ul>
+<li><code>@</code>符号表明它是一个 <code>Positional</code>role</li>
+<li>保证会有一个方法后环缀让你能调用</li>
+<li>This is that gets called when you do an index positionally into something</li>
+</ul>
+
+<pre><code class="language-perl6">say @fact[1];
+say @fact.postcircumfix:&lt;[ ]&gt;(1);
+</code></pre>
+
+<ul>
+<li>注意: 优化器(如果有的话)可能发出更轻量级的东西</li>
+</ul>
+
+<h2 id="associative">% = Associative</h2>
+
+<hr />
+
+<ul>
+<li><code>%</code> 表明它是一个关联型(Associative)的 role</li>
+<li>要有一个方法后环缀 <code>postcircumfix:&lt;{}&gt;</code>让你调用</li>
+<li>This is that gets called when you do an index associatively into something</li>
+</ul>
+
+<pre><code class="language-perl6">say %price&lt;Cheese&gt;;
+say %price.postcircumfix:&lt;{ }&gt;('Cheese');
+</code></pre>
+
+<h2 id="callable">&amp; = Callable</h2>
+
+<hr />
+
+<ul>
+<li><code>&amp;</code>表明它是一个 Callable 的 role</li>
+<li>东西要能被调用</li>
+<li>这个 role 被诸如 <code>Block</code>、<code>Sub</code>、<code>Method</code>之类的东西遵守</li>
+<li>要求实现后环缀 <code>postcircumfix:&lt;()&gt;</code></li>
+</ul>
+
+<p>使用带有 block 的 class 关键字引入一个类：</p>
+
+<pre><code class="language-perl6">class Puppy {
+    ...
+}
+</code></pre>
+
+<p> 或使用</p>
+
+<pre><code class="language-perl6">class Puppy;
+
+...
+
+1;
+</code></pre>
+
+<p>把类相关的东西单独写进一个文件</p>
+
+<h2 id="role-也可以被初始化">Role 也可以被初始化</h2>
+
+<hr />
+
+<pre><code class="language-perl">
+role BarChart {
+    has Int @.bar-values;
+    has $.b is rw;
+    method plot {
+        say @.bar-values;
+    }
+}
+
+my $chart = BarChart.new(bar-values =&gt; [1,2,3], b =&gt; &quot;Camelia&quot;);
+say $chart.b;
+say $chart.bar-values;
+$chart.b = &quot;Rakudo&quot;;
+say $chart.b;
+say BarChart.^methods;
+</code></pre>
+
+<p>如果你初始化了 role, 那么它就变为类了。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/perl-6-rotor--%E5%88%97%E8%A1%A8%E6%93%8D%E4%BD%9C%E4%B9%8B%E7%8E%8B/" data-toggle="tooltip" data-placement="top" title="Perl 6 rotor--列表操作之王">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/%E5%85%83%E5%AF%B9%E8%B1%A1%E5%8D%8F%E8%AE%AE/" data-toggle="tooltip" data-placement="top" title="元对象协议">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

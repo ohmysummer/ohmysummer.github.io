@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的正则表达式(三)</title>
+  <meta property="og:title" content="Perl 6 中的正则表达式(三)" />
+  <meta name="twitter:title" content="Perl 6 中的正则表达式(三)" />
+  <meta name="description" content="预定义 Subrules 下面这些是为任意 grammar 或 regex 预定义好的 subrules:
+ ident   匹配一个标识符.
+ upper   匹配单个大写字符.
+ lower   匹配单个小写字符.
+ alpha   匹配单个字母字符, 或者是一个下划线.
+要匹配不带下划线的 Unicode 字母字符, 使用 &lt;:alpha&gt;.
+ digit   匹配单个数字.
+ xdigit   匹配单个十六进制数字.
+ print   匹配单个可打印字符.
+ graph   匹配单个图形字符.
+ cntrl   匹配单个控制字符. (等价于 &lt;:Cc&gt; 属性). 控制字符通常不产生输出, 相反, 它们以某种方式控制末端:例如换行符和退格符都是控制字符. 所有使用 ord() 之后小于 32 的字符通常归类为控制字符.">
+  <meta property="og:description" content="预定义 Subrules 下面这些是为任意 grammar 或 regex 预定义好的 subrules:
+ ident   匹配一个标识符.
+ upper   匹配单个大写字符.
+ lower   匹配单个小写字符.
+ alpha   匹配单个字母字符, 或者是一个下划线.
+要匹配不带下划线的 Unicode 字母字符, 使用 &lt;:alpha&gt;.
+ digit   匹配单个数字.
+ xdigit   匹配单个十六进制数字.
+ print   匹配单个可打印字符.
+ graph   匹配单个图形字符.
+ cntrl   匹配单个控制字符. (等价于 &lt;:Cc&gt; 属性). 控制字符通常不产生输出, 相反, 它们以某种方式控制末端:例如换行符和退格符都是控制字符. 所有使用 ord() 之后小于 32 的字符通常归类为控制字符.">
+  <meta name="twitter:description" content="预定义 Subrules 下面这些是为任意 grammar 或 regex 预定义好的 subrules:
+ ident   匹配一个标识符.
+ upper   匹配单个大写字符.
+ lower   匹配单个小写字符.
+ alpha   匹配单个字母字符, 或者是一个下划线.
+要匹配不带下划线的 Unicode 字母字符, 使用 &lt;:alpha&gt;.
+ digit   匹配单个数字. …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-11-05-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%89/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-11-05-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%89/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 中的正则表达式(三)</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/05/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="预定义-subrules">预定义 Subrules</h1>
+
+<p>下面这些是为任意 grammar 或 regex 预定义好的 <code>subrules</code>:</p>
+
+<ul>
+<li>ident </li>
+</ul>
+
+<p>匹配一个标识符.</p>
+
+<ul>
+<li>upper </li>
+</ul>
+
+<p>匹配单个大写字符.</p>
+
+<ul>
+<li>lower </li>
+</ul>
+
+<p>匹配单个小写字符.</p>
+
+<ul>
+<li>alpha </li>
+</ul>
+
+<p>匹配单个字母字符, 或者是一个下划线.</p>
+
+<p>要匹配不带下划线的 Unicode 字母字符, 使用 <code>&lt;:alpha&gt;</code>.</p>
+
+<ul>
+<li>digit </li>
+</ul>
+
+<p>匹配单个数字.</p>
+
+<ul>
+<li>xdigit </li>
+</ul>
+
+<p>匹配单个十六进制数字.</p>
+
+<ul>
+<li>print </li>
+</ul>
+
+<p>匹配单个可打印字符.</p>
+
+<ul>
+<li>graph </li>
+</ul>
+
+<p>匹配单个图形字符.</p>
+
+<ul>
+<li>cntrl </li>
+</ul>
+
+<p>匹配单个控制字符. (等价于 &lt;:Cc&gt; 属性). 控制字符通常不产生输出, 相反, 它们以某种方式控制末端:例如换行符和退格符都是控制字符. 所有使用 <code>ord()</code> 之后小于 32 的字符通常归类为控制字符. 就像 ord() 的值为 127 的字符是控制字符(DEL) 一样, 128 到 159 之间的也是控制字符.</p>
+
+<ul>
+<li>punct </li>
+</ul>
+
+<p>匹配单个标点符号字符(即, 任何来自于 Unicode General Category &ldquo;Punctuation&rdquo; 的字符).</p>
+
+<ul>
+<li>alnum </li>
+</ul>
+
+<p>匹配单个字母数字字符. 那等价于 <code>&lt;+alpha +digit&gt;</code> .</p>
+
+<ul>
+<li>wb </li>
+</ul>
+
+<p>在单词边界匹配成功并返回一个零宽匹配.  一个单词边界是这样一个点, 它的一边是一个 <code>\w</code>, 另一边是一个 <code>\W</code>. (以任一顺序),  字符串的开头和结尾被看作为匹配 <code>\W</code>.</p>
+
+<ul>
+<li>ww </li>
+</ul>
+
+<p>在两个单词字符之间匹配(零宽匹配).</p>
+
+<ul>
+<li>ws </li>
+</ul>
+
+<p>在两个单词字符之间匹配要求的空白, 否则匹配可选的空白. 这等价于 <code>\s*</code> (<code>ws</code> 不要求使用 <code>ww</code> subrule).</p>
+
+<ul>
+<li>space </li>
+</ul>
+
+<p>匹配单个空白字符character (和 <code>\s 相同 </code>).</p>
+
+<ul>
+<li>blank </li>
+</ul>
+
+<p>匹配单个 &ldquo;blank&rdquo; 字符 &ndash; 在大部分区域, 这相当于 <code>space</code> 和 <code>tab</code>.</p>
+
+<ul>
+<li>before <code>pattern</code></li>
+</ul>
+
+<p>执行向前查看&ndash; 例如, 检查我们是否在某个能匹配的位置. 如果匹配成功返回一个零宽 Match 对象.</p>
+
+<ul>
+<li>after <code>pattern</code></li>
+</ul>
+
+<p>执行向后查看 &ndash;例如,检查当前位置之前的字符串是否匹配 <code>&lt;pattern&gt;</code>(在结尾锚定). 如果匹配成功就返回一个零宽 Match 对象. </p>
+
+<ul>
+<li>&lt;?&gt; </li>
+</ul>
+
+<p>匹配一个 null 字符串,即, 总是返回真. </p>
+
+<ul>
+<li>&lt;!&gt; </li>
+</ul>
+
+<p><code>&lt;?&gt;</code> 的反转, 总是返回假
+<a href="https://github.com/perl6/roast/blob/master/S05-mass/stdrules.t#L310-L326"><code>S05-mass/stdrules.t lines 310–326</code></a></p>
+
+<p>​</p>
+
+<h1 id="反斜线改良">反斜线改良</h1>
+
+<ul>
+<li><p>很多 <code>\p</code> 和 <code>\P</code> 属性变成诸如 <code>&lt;alpha&gt;</code> 和 <code>&lt;-alpha&gt;</code> 等内在的 grammar rules. 它们可以使用上面提到的字符类标记法进行组合.<code>&lt;[-]+alpha+digit&gt;</code>. 不管高层级字符类的名字, 所有的低层级 Unicode 属性总是可以使用一个前置冒号访问, 即, 在尖括号中使用 pair 标记法.因此 <code>&lt;+:Lu+:Lt&gt;</code> 等价于 <code>&lt;+upper+title&gt;</code>.</p></li>
+
+<li><p> <code>\L...\E</code>, <code>\U...\E</code>, 和 <code>\Q...\E</code> 序列被废弃了. 单个字符的大小写修饰符 <code>\l</code> 和 <code>\u</code> 也被废弃了. 在极少需要使用它们的地方, 你可以使用 <code>&lt;{ lc $regex }&gt;</code>, <code>&lt;{tc $word}&gt;</code>, 等.</p></li>
+
+<li><p>就像上面提到的, <code>\b</code> 和 <code>\B</code> 单词边界断言被废弃了, 并且被 <code>&lt;|w&gt;</code> (或 <code>&lt;wb&gt;</code>) 和 <code>&lt;!|w&gt;</code> (或 <code>&lt;!wb&gt;</code>) 零宽断言代替.</p></li>
+
+<li><p><code>\G</code>  序列也没有了. 使用 <code>:p</code> 代替. (注意, 虽然, 在模式内使用 <code>:p</code> 没有影响, 因为每个内部模式都被隐式的锚定到当前位置) 查看下面的 at 断言.</p></li>
+
+<li><p>向后引用 (例如. <code>\1</code>, <code>\2</code>, 等.) 都没有了; 可以使用 <code>$0</code>, <code>$1</code>, 等代替. 因为正则中变量不再进行插值.
+<a href="https://github.com/perl6/roast/blob/master/S05-capture/dot.t#L56-L61"><code>S05-capture/dot.t lines 56–61</code></a>
+​
+数字变量被假定是每次都会改变的, 因此被看作是程序化的, 不像普通变量那样.
+​</p></li>
+
+<li><p> 新的反斜线序列, <code>\h</code> 和 <code>\v</code>, 分别匹配水平空白和垂直空白, 包括 Unicode. 水平空白被定义为任何匹配 <code>\s</code> 并且不匹配 <code>\v</code> 的东西. 垂直空白被定义为下面的任一方式:</p></li>
+</ul>
+
+<pre><code>U+000A  LINE FEED (LF)
+U+000B  LINE TABULATION
+U+000C  FORM FEED (FF)
+U+000D  CARRIAGE RETURN (CR)
+U+0085  NEXT LINE (NEL)
+U+2028  LINE SEPARATOR
+U+2029  PARAGRAPH SEPARATOR
+</code></pre>
+
+<p>​
+注意 <code>U+000D</code> (CARRIAGE RETURN) 被认为是垂直空白.
+ ​
+- <code>\s</code> 现在匹配任何 Unicode 空白字符.
+- 新的反斜线序列和 <code>\N</code> 匹配除逻辑换行符之外的任何字符, 它是 <code>\n</code> 的否定.
+- 其它新的大写的反斜线序列也都是它们小写身份的反义:</p>
+
+<ul>
+<li><code>\H</code> 匹配任何非水平空白字符.</li>
+<li><code>\V</code> 匹配任何非垂直空白字符.</li>
+<li><code>\T</code> 匹配任何非 tab 字符.</li>
+<li><code>\R</code> 匹配任何非 return 字符.</li>
+<li><code>\F</code> 匹配任何非格式字符.</li>
+<li><code>\E</code> 匹配任何非转义字符.</li>
+<li><code>\X...</code> 匹配任何非指定的(指定为十六进制)字符.</li>
+<li>在普通字符串中反斜线转义字面字符串在 regexes 中是允许的(\a, \x 等等). 然而, 这个规则的例外是 <code>\b</code>., 它被禁用了,为了避免跟之前作为单词边界断言冲突. 要匹配字面反斜线, 使用 <code>\c8</code>, <code>\x8</code>或双引号引起的 <code>\b</code>.</li>
+</ul>
+
+<h1 id="便捷的字符类">便捷的字符类</h1>
+
+<p>因为历史原因和使用方便, 下面的字符类可以作为反斜线序列使用:</p>
+
+<pre><code>\d      &lt;digit&gt;    A digit
+\D      &lt;-digit&gt;   A nondigit
+\w      &lt;alnum&gt;    A word character
+\W      &lt;-alnum&gt;   A non-word character
+\s      &lt;sp&gt;       A whitespace character
+\S      &lt;-sp&gt;      A non-whitespace character
+\h                 A horizontal whitespace
+\H                 A non-horizontal whitespace
+\v                 A vertical whitespace
+\V                 A non-vertical whitespace
+</code></pre>
+
+<h1 id="regexes构成一等语言">Regexes构成一等语言</h1>
+
+<p>而不仅仅是字符串.</p>
+
+<ul>
+<li><p>Perl 5 的 <code>qr/pattern/</code> 正则构造器滚蛋了.</p></li>
+
+<li><p>Perl 6 中的正则构造:</p></li>
+</ul>
+
+<pre><code class="language-perl6">regex { pattern }    # 总是把 {...} 作为模式分隔符
+rx    / pattern /    # 几乎能使用任何字符作为模式分割符
+</code></pre>
+
+<p><a href="https://github.com/perl6/roast/blob/master/S05-metasyntax/delimiters.t#L6-L20"><code>S05-metasyntax/delimiters.t lines 6–20</code></a></p>
+
+<p>你不能使用空格或字母数字作为分隔符.你可以使用圆括号作为你的 rx 分隔符, 但是这只有当你插入空格时才行(标识符后面直接跟着圆括号会被认为是函数调用):</p>
+
+<pre><code class="language-perl6">rx ( pattern )      # okay
+rx( 1,2,3 )         # 尝试调用 rx 函数
+</code></pre>
+
+<p>(在 Perl 6 中 这对所有类似 quotelike 的结构都适用.)</p>
+
+<p> <code>//</code> 匹配能使用的地方 <code>rx</code> 这种形式也能直接作为模式使用. <code>regex</code> 这种形式实际上是一个方法定义, 必须用于 grammar 类中.</p>
+
+<ul>
+<li>如果 <code>regex</code> 或 <code>rx</code> 需要修饰符, 就把修饰符直接放在开放分隔符前面:</li>
+</ul>
+
+<pre><code class="language-perl6">$regex = regex :s:i { my name is (.*) };
+$regex = rx:s:i     / my name is (.*) /;    # same thing
+</code></pre>
+
+<p>如果使用任何括号字符作为分隔符, 那么最后的修饰符之后是需要空格的. ( 否则, 它会被看作修饰符的参数)</p>
+
+<ul>
+<li>不能使用冒号作为分隔符. 修饰符之间可以有空格:</li>
+</ul>
+
+<pre><code class="language-perl6">$regex = rx :s :i / my name is (.*) /;
+</code></pre>
+
+<ul>
+<li><p>正则构建器的名字是从 qr 修改而来, 因为它不再是一个能插值的 quote-like 操作符. <code>rx</code> 是 <code>regex</code> 的简写形式.(不要对regular expressions 感到困惑, 除了它们是的时候 )</p></li>
+
+<li><p>像语法指示的那样, 它现在跟 <code>sub { ... }</code> 构建器很像. 实际上, 这种类似物深深根植于 Perl 6 中.</p></li>
+
+<li><p>就像一个原始的 <code>{...}</code>现在总是一个闭包 (它仍然能在特定上下文中被立即执行并在其它上下文中作为对象传递), 所以原始的 <code>/.../</code> 总是一个 <code>Regex</code> 对象(它可能仍然在特定上下文中被立即匹配并在其它上下文中作为对象传递.)</p></li>
+
+<li><p>特别地, 在 value 上下文(<code>sink</code>, <code>Boolean</code>, <code>string</code> 或 <code>numeric</code>),或它是 <code>~~</code> 的显式参数时, <code>/.../</code>会立即匹配. 否则, 它就是一个跟显式的 regex 形式同一的<code>Regex</code> 构建器, 所以这个:</p></li>
+</ul>
+
+<pre><code class="language-perl6">$var = /pattern/;
+</code></pre>
+
+<p>不再进行匹配并把结果设置为 <code>$var</code>. 相反, 它把一个 <code>Regex</code> 对象赋值给 <code>$var</code>.</p>
+
+<ul>
+<li>这种情况总是可以使用 <code>m{...}</code> 或 <code>rx{...}</code>进行区分:</li>
+</ul>
+
+<pre><code class="language-perl6">$match = m{pattern};    # 立刻匹配 regex, 然后把匹配结果赋值给变量
+$regex = rx{pattern};   # Assign regex expression itself
+</code></pre>
+
+<ul>
+<li>注意前面有个像这样魔法般的用法:</li>
+</ul>
+
+<pre><code class="language-perl6">@list = split /pattern/, $str;
+</code></pre>
+
+<p>现在来看就是理所当然的了.</p>
+
+<ul>
+<li>就是现在, 建立一个像 grep 那样的用户自定义子例程也成为可能:</li>
+</ul>
+
+<pre><code class="language-perl6">sub my_grep($selector, *@list) {
+  given $selector {
+    when Regex { ... }
+    when Code  { ... }
+    when Hash  { ... }
+    # etc.
+  }
+}
+</code></pre>
+
+<p>当你调用 <code>my_grep</code> 时, 第一个参数被绑定到 item 上下文, 所以传递 <code>{...}</code> 或 <code>/.../</code> 产生 <code>Code</code> 或 <code>Regex</code> 对象,  switch 语句随后选中它作为条件.(正常的 grep 只是让智能匹配操作符做了所有的工作)</p>
+
+<ul>
+<li>就像 <code>rx</code> 拥有变体一样, <code>regex</code> 声明符也有. 特别地, regex 有两个用在 grammars 中的变体: <code>token</code> 和 <code>rule</code>.</li>
+</ul>
+
+<p>token声明长这样:</p>
+
+<pre><code class="language-perl6">token ident { [ &lt;alpha&gt; | \- ] \w* }
+</code></pre>
+
+<p>默认<strong>从不回溯</strong>. 即, 它倾向于保留任何目前位置扫描到的东西.所以,上面的代码等价于:</p>
+
+<pre><code class="language-perl6">regex ident { [ &lt;alpha&gt;: | \-: ]: \w*: }
+</code></pre>
+
+<p>但是相当易读. 在 token 中裸的 <code>*</code>, <code>+</code> 和 <code>?</code> 量词绝不回溯. 在普通的 regexes 中, 使用 <code>*:</code>, <code>+:</code>, 或 <code>?:</code> 阻止量词的回溯. 如果你确实要回溯, 在量词后面添加 <code>?</code> 或 <code>!</code>.  <code>?</code> 像平常一样进行非懒惰匹配, 而 <code>!</code> 强制进行贪婪匹配. <code>token</code> 声明符就是</p>
+
+<pre><code class="language-perl6">regex :ratchet { ... }
+</code></pre>
+
+<p>的简写.</p>
+
+<p>另外一个是 <code>rule</code> 声明符, 像 token 一样, 它默认也不会回溯. 此外, 一个 <code>rule</code> 这样的正则表达式也采取了 <code>:sigspace</code> 修饰符. <code>rule</code> 实际上是</p>
+
+<pre><code class="language-perl6">regex :ratchet :sigspace { ... }
+</code></pre>
+
+<p>的简写.  ratchet 这个单词的意思是: (防倒转的)棘齿, 意思它是不能回溯的!</p>
+
+<ul>
+<li> Perl 5 的 <code>?...?</code> 语法(成功一次)极少使用, 并且现在能使用 <code>state</code> 变量以更清晰的方式模拟:</li>
+</ul>
+
+<pre><code class="language-perl6">$result = do { state $x ||= m/ pattern /; }    # 只在第一次匹配
+</code></pre>
+
+<p>要重置模式, 仅仅让 <code>$x = 0</code> 尽管你想要 <code>$x</code> 可见, 你还是必须避免使用 block:</p>
+
+<pre><code>$result = state $x ||= m/ pattern /;
+...
+$x = 0;
+</code></pre>
+
+<h1 id="回溯控制">回溯控制</h1>
+
+<p>在这些被认为是程序的而非陈述性的模式的部分中, 你可以控制回溯行为.</p>
+
+<ul>
+<li><p>默认的, 在 <code>rx</code>,<code>m</code>, <code>s</code> 中的回溯是贪婪的. 在普通的 regex 声明中它们也是贪婪的. 在 rule 和 token 声明中, 回溯必须是显式的.</p></li>
+
+<li><p>为了强制前面的原子执行节俭回溯(有时也是所谓的&rdquo;急切的匹配&rdquo; 或 &ldquo;最少化的匹配&rdquo;), 要在原子后面追加一个 <code>:?</code> 或 <code>?</code>. 如果前面的 token 是一个量词, <code>:</code> 就可以被省略, 所以 <code>*?</code> 就像在 Perl 5 中那样起作用.</p></li>
+
+<li><p>为了强制前面的原子执行贪婪回溯, 在原子后面追加一个 <code>:!</code>.  如果前面的 token 是一个量词, <code>:</code> 可以被省略. (Perl 5 没有对应的结构, 因为在 Perl 5 中回溯默认是贪婪的.)</p></li>
+
+<li><p>为了强制前面的原子不执行回溯, 使用不带 <code>?</code> 或 <code>!</code> 的单个 <code>:</code>.  单个冒号让正则引擎不再重试前面的原子:
+<a href="https://github.com/perl6/roast/blob/master/S05-mass/rx.t#L8-L32"><code>S05-mass/rx.t lines 8–32</code></a></p></li>
+</ul>
+
+<pre><code class="language-perl6">ms/ \( &lt;expr&gt; [ , &lt;expr&gt; ]*: \) /
+</code></pre>
+
+<p>(i.e. there&rsquo;s no point trying fewer `` matches, if there&rsquo;s no closing parenthesis on the horizon)</p>
+
+<p>当修饰一个量词的时候,  可以使用 <code>+</code> 代替 <code>:</code>, 这种情况下, 量词常常是所谓的占有量词.</p>
+
+<pre><code>ms/ \( &lt;expr&gt; [ , &lt;expr&gt; ]*+ \) /  # same thing
+</code></pre>
+
+<p>为了强制表达式中所有的原子默认不去回溯, 要使用 <code>:ratchet</code> 或 <code>rule</code> 或 <code>token</code>.</p>
+
+<ul>
+<li>对双冒号进行求值会抛弃当前 LTM 备选分支中所有保存的选择点。
+<a href="https://github.com/perl6/roast/blob/master/S05-mass/rx.t#L33-L51">S05-mass/rx.t lines 33–51</a>
+​
+<code>perl6
+ms/ [ if :: &lt;expr&gt; &lt;block&gt;
+| for :: &lt;list&gt; &lt;block&gt;
+| loop :: &lt;loop_controls&gt;? &lt;block&gt;
+]
+/
+</code>
+​
+到目前为止 2016.4.29 ，(<code>::</code>) 还没有实现。</li>
+</ul>
+
+<p><code>::</code> 还有通过 <code>|</code> 从「最长 token」中隐藏右侧的任何陈述性匹配的效果。为了确定性，只有 <code>::</code> 左侧的东西被求值。</p>
+
+<p>如果没有当前 LTM 备选分支，那么 <code>::</code> 什么也不会做。「当前」是被动态地定义的，而非词法地。<em>subrule</em> 中的 <code>::</code> 会影响闭合的备选分支。
+​  ​
+- 对<code>::&gt;</code>进行求值会抛弃当前最里面的临时备选分支中所有保存的选择点。它因此表现得像 &ldquo;then&rdquo; 那样。</p>
+
+<pre><code class="language-perl6">ms/ [
+    || &lt;?{ $a == 1 }&gt; ::&gt; &lt;foo&gt;
+    || &lt;?{ $a == 2 }&gt; ::&gt; &lt;bar&gt;
+    || &lt;?{ $a == 3 }&gt; ::&gt; &lt;baz&gt;
+    ]
+/
+</code></pre>
+
+<p>这儿省略了一部分还没实现的内容。</p>
+
+<h1 id="regex-子例程-具名和匿名">Regex 子例程, 具名和匿名</h1>
+
+<ul>
+<li><p><code>sub</code> 和 <code>regex</code> 之间的类推更为相似.</p></li>
+
+<li><p>就像你可以有匿名子例程和具名子例程&hellip;</p></li>
+
+<li><p>所以你也可以有匿名正则和具名正则(还有 tokens 和 rules)</p></li>
+</ul>
+
+<pre><code class="language-perl6">token ident { [&lt;alpha&gt;|\-] \w* }
+# 然后...
+@ids = grep /&lt;ident&gt;/, @strings;
+</code></pre>
+
+<ul>
+<li>就像上面的例子标示的那样, 引用具名正则也是可以的, 例如:</li>
+</ul>
+
+<pre><code class="language-perl6">regex serial_number { &lt;[A..Z]&gt; \d**8 }
+token type { alpha | beta | production | deprecated | legacy }
+</code></pre>
+
+<p>在其它作为具名断言的正则表达式中:</p>
+
+<pre><code class="language-perl6">rule identification { [soft|hard]ware &lt;type&gt; &lt;serial_number&gt; }
+</code></pre>
+
+<p>这些使用关键字声明的 regexes 官方类型为 <code>method</code>, 是从 <code>Routine</code> 派生出来的.
+​
+通常, 任何 subrule 的锚定是由它的调用上下文控制的. 当 regex, token, 或 rule 方法被作为 subrule 调用时, 前面被锚定到当前位置(与 <code>:p</code> 一样), 而后面没有被锚定, 因为调用上下文可能会继续解析. 然而, 当这样一个方法被直接智能匹配, 它会自动的锚定两端到字符串的开始和结尾. 因此, 你可以使用一个匿名的 regex 子例程作为单独的模式来直接模式匹配:
+  ​</p>
+
+<pre><code class="language-perl6">$string ~~ regex { \d+ }
+$string ~~ token { \d+ }
+$string ~~ rule  { \d+ }
+</code></pre>
+
+<p>它们等价于</p>
+
+<pre><code class="language-perl6">$string ~~ m/^ \d+ $/;
+$string ~~ m/^ \d+: $/;
+$string ~~ m/^ &lt;.ws&gt; \d+: &lt;.ws&gt; $/;
+</code></pre>
+
+<p>基本经验就是关键字定义的方法绝对不会做 <code>.*?</code> 那样的扫描, 而如引号那种形式的 <code>m//</code>和<code>s///</code> 在缺少显式锚定的时候会做这样的扫描.</p>
+
+<p><code>rx//</code> 和<code>//</code> 这两种形式, 怎么扫描都可以: 当被直接用在智能匹配或布尔上下文中时, 但是当它被作为一个 subrule 间接被调用时,就不会扫描. 即, 当直接使用时, <code>rx//</code> 返回的对象表现的像 <code> m//</code>, 但是用作 subrule 时, 表现的就像 <code>regex {}</code>:</p>
+
+<pre><code class="language-perl6">$pattern = rx/foo/;
+$string ~~ $pattern;                  # 等价于 m/foo/;
+$string ~~ /'[' &lt;$pattern&gt; ']'/       # 等价于 /'[foo]'/
+</code></pre>
+
+<h1 id="空模式是非法的">空模式是非法的</h1>
+
+<p><a href="https://github.com/perl6/roast/blob/master/S05-mass/rx.t#L2378-L2392"><code>S05-mass/rx.t lines 2378–2392</code></a>
+<a href="https://github.com/perl6/roast/blob/master/S05-metasyntax/null.t#L17-L25"><code>S05-metasyntax/null.t lines 17–25</code></a></p>
+
+<p>在 Perl 6 中, <code>Null regex</code> 是非法的：</p>
+
+<pre><code class="language-perl6">//
+</code></pre>
+
+<p>要匹配一个零宽字符, 需要显式地表示 null 匹配：</p>
+
+<pre><code class="language-perl6"> / '' /;
+ / &lt;?&gt; /;
+</code></pre>
+
+<p>例如：</p>
+
+<pre><code class="language-perl6">split /''/, $string
+</code></pre>
+
+<p> 分割字符串。所以这样也行：</p>
+
+<pre><code class="language-perl6">split '', $string
+</code></pre>
+
+<p>同样地，匹配一个空的分支，使用这个：</p>
+
+<pre><code class="language-perl6"> /a|b|c|&lt;?&gt;/
+ /a|b|c|''/
+</code></pre>
+
+<p>更容易捕获错误：</p>
+
+<pre><code class="language-perl6">/a|b|c|/
+</code></pre>
+
+<p> 作为一种特殊情况, 匹配中的第一个 null 分支会被忽略：</p>
+
+<pre><code class="language-perl6">ms/ [
+         | if :: &lt;expr&gt; &lt;block&gt;
+         | for :: &lt;list&gt; &lt;block&gt;
+         | loop :: &lt;loop_controls&gt;? &lt;block&gt;
+    ]
+  /
+</code></pre>
+
+<p>这在格式化 regex 时会有用。</p>
+
+<p>但是注意, 只有<code>第一个分支</code>是特殊的, 如果你这样写：</p>
+
+<pre><code class="language-perl6">ms/ [
+             if :: &lt;expr&gt; &lt;block&gt;              |
+             for :: &lt;list&gt; &lt;block&gt;             |
+             loop :: &lt;loop_controls&gt;? &lt;block&gt;  |
+    ]
+  /
+</code></pre>
+
+<p> 就是错的。因为最后一个分支是 null 。
+ 然而, non-null句法结构有一种退化的情况能匹配 null 字符串:</p>
+
+<pre><code class="language-perl6">$something = &quot;&quot;;
+/a|b|c|$something/;
+</code></pre>
+
+<p>特别地,  <code>&lt;?&gt;</code> 总是成功地匹配 null 字符串,  并且 <code>&lt;!&gt;</code> 总是让任何匹配都会失败.</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-10-29-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammar/" data-toggle="tooltip" data-placement="top" title="从正则表达式到 Grammar">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-11-05-d%E5%9C%A8perl6%E4%B8%AD%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D/" data-toggle="tooltip" data-placement="top" title="D 在 Perl 6 中是什么意思">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

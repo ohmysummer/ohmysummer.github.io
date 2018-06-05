@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 圣诞月历-(2014)</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.18.1" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 圣诞月历-(2014)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/Perl-6%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-%282014%29/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io">
+              <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 圣诞月历-(2014)</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2014/12/19</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h1 id="2014">2014</h1>
+
+<hr />
+
+<h2 id="data-munging-in-perl-6-vs-perl-5">Data munging in Perl 6 vs Perl 5</h2>
+
+<hr />
+
+<p>案例学习: 生成成绩报告单</p>
+
+<pre><code class="language-perl6">example.txt
+STDOUT
+Peter   B
+Celine  A-
+Zsófia  B+
+João    F
+Maryam  B+
+秀英  B-
+Finn    D+
+Aarav   A
+Emma    F
+Omar    B
+</code></pre>
+
+<p>输出报告单：</p>
+
+<!-- more -->
+
+<pre><code class="language-perl6">Zsófia's grade: B+
+List of students with a failing grade:
+  João, Emma
+Distribution of grades by letter:
+  A: 2 students
+  B: 5 students
+  D: 1 student
+  F: 2 students
+</code></pre>
+
+<p>example.txt 是一个文本文件， 每行一个学生姓名和分数，中间用空格分割。
+我们希望我们的脚本能解析这样的文件并打印含有如下信息的报告：</p>
+
+<p>学生名为 “Zsófia”的成绩
+所有不及格学生的名字 (i.e. worse than D-),
+根据字母( 不带 +/- ) 把成绩分组。得到学生成绩的分布。
+让我们一步步来：</p>
+
+<p>Part 1: 样板</p>
+
+<p>Perl 5</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perluse warnings;
+use strict;use feature 'say';
+use utf8;
+binmode STDOUT, ':utf8';
+</code></pre>
+
+<p>Perl 6</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+</code></pre>
+
+<p>在 Perl 6 中所有这些都为我们做好了。</p>
+
+<p>Part 2: 读取并解析输入</p>
+
+<p>Perl 5</p>
+
+<pre><code class="language-perl6">open my $fh, '&lt;:utf8', &quot;grades.txt&quot;
+    or die &quot;Failed to open file: $!&quot;;
+my %grade;
+while (&lt;$fh&gt;) {
+    m/^(\w+) \s+ ([A-F][+-]?)$/x
+        or die &quot;Can't parse line '$_'&quot;;
+   $grade{$1} = $2;
+};
+</code></pre>
+
+<p>Perl 6</p>
+
+<pre><code class="language-perl6">my %grade = &quot;grades.txt&quot;.IO.lines.map: {
+   m:s/^(\w+) (&lt;[A..F]&gt;&lt;[+-]&gt;?)$/
+        or die &quot;Can't parse line '$_'&quot;;
+    ~$0 =&gt; ~$1
+};
+</code></pre>
+
+<p>在 Perl 6 中， 对文件名字符串调用 .IO 方法会返回一个代表文件系统路径的对象， 我们可以继续在这个对象上调用  .lines 方法，得到文件的所有行的一个惰性列表。 “Lazy” 意味着它只会从磁盘中按需读取新行，当我们使用 .map 方法遍历列表元素的时候， 这样能使用单个赋值操作就能优雅地初始化一个散列。
+我们不需要让文件句柄识别 Unicode ，也不用管文件句柄是否正确关闭， 这在 Perl 6 中都是默认发生的。
+ .method: &hellip; 语法也可以写为  .method(&hellip;),  前者使 map 看起来更像一个 block 语句，并减少了括号凌乱。
+ :s (“sigspace”) 正则修饰符使解析 tokens 间的空白更优雅。 但 Perl 6 中的字符类比 Perl 5 复杂了一丢丢。
+正则捕获结果变量($0, $1, …) 返回一个完整的  Match 对象 - 它为复杂使用场景增加了很多灵活性， 但是这里我们只想保留字符串， 所以使用 ~ 前置操作符字符串化了匹配对象。</p>
+
+<p>Part 3: 查看数据的特定项</p>
+
+<p>Perl 5</p>
+
+<pre><code class="language-perl6">say &quot;Zsófia's grade: $grade{Zsófia}&quot;;
+</code></pre>
+
+<p>Perl 6</p>
+
+<pre><code class="language-perl6">say &quot;Zsófia's grade: %grade&lt;Zsófia&gt;&quot;;
+</code></pre>
+
+<p>Perl 6 总是把散列中的 <code>{ }</code>  中的东西解析为表达式， 使用 <code>&lt; &gt;</code> 表示字面值。</p>
+
+<p>Part 4: 过滤数据</p>
+
+<p>Perl 5</p>
+
+<pre><code class="language-perl6">say &quot;List of students with a failing grade:&quot;;
+say &quot;  &quot; . join &quot;, &quot;,  grep { $grade{$_} ge &quot;E&quot; } keys %grade;
+</code></pre>
+
+<p>Perl 6</p>
+
+<pre><code class="language-perl6">say &quot;List of students with a failing grade:&quot;;
+say &quot;  &quot; ~ %grade.grep(*.value ge &quot;E&quot;)».key.join(&quot;, &quot;);
+</code></pre>
+
+<p>Perl 6 中允许我们按执行顺序把一些列方法写为链式操作。有一个重要区别：Perl 6 能让我们直接遍历散列的项， 散列中每一项都是一个 Pair 对象（Pair 对象能使用 .key 和.value 方法)。</p>
+
+<p>The <code>*</code>   Whatever star 用于定义一个简单的回调，而不用写一个花括号块。
+The <code>».</code> hyper operator 用于对 .grep 返回的 Pairs  的每个 Pair 上调用 一次 .key  方法，得出姓名列表</p>
+
+<p>Part 5: 从数据中创建频率分布</p>
+
+<p>Perl 5</p>
+
+<pre><code class="language-perl6">say &quot;Distribution of grades by letter:&quot;;
+my %freq;
+$freq{substr $grade{$_}, 0, 1}++ for keys %grade;
+say &quot;  $_: $freq{$_} student&quot;.($freq{$_} != 1 ? &quot;s&quot; : &quot;&quot;)    for sort keys %freq;
+</code></pre>
+
+<p>Perl 6</p>
+
+<pre><code class="language-perl6">say &quot;Distribution of grades by letter:&quot;;
+say &quot;  {.key}: {+.value} student{&quot;s&quot; if .value != 1}&quot;
+    for %grade.classify(*.value.comb[0]).sort(*.key);
+</code></pre>
+
+<p>计数和分组实在太常见了， Perl 6 提供了 <code>.classify</code>  方法。
+classify 方法里需要指定要分组的项（这里是 代表 <code>%grade</code> 条目的 Pair 对象 ）， 这些项应该根据什么规则进行分组（这里是根据第一个字母的值， 它代表分数（没有 +/-））。
+这生成一个匿名的散列，散列的值是匿名数组。</p>
+
+<pre><code class="language-perl6">%(&quot;B&quot; =&gt; [&quot;Peter&quot; =&gt; &quot;B&quot;, &quot;Zsófia&quot; =&gt; &quot;B+&quot;, &quot;Maryam&quot; =&gt; &quot;B+&quot;,
+ &quot;秀英&quot; =&gt; &quot;B-&quot;, &quot;Omar&quot; =&gt; &quot;B&quot;],  &quot;A&quot; =&gt; [&quot;Celine&quot; =&gt; &quot;A-&quot;, &quot;Aarav&quot; =&gt; &quot;A&quot;],  &quot;F&quot; =&gt; [&quot;João&quot; =&gt; &quot;F&quot;, &quot;Emma&quot; =&gt; &quot;F&quot;],  &quot;D&quot; =&gt; [&quot;Finn&quot; =&gt; &quot;D+&quot;])
+</code></pre>
+
+<p>因为我们只对每组元素的个数感兴趣， 我们使用 + 前置操作符数字化每个值然后打印它， 在数组前面添加 + 符号会得到数组元素的个数。
+在 term 位置上一个 单独的 .method  方法等价于 <code>$_.method</code>,  意思是对当前循环变量调用该方法。
+任意代码的返回值能使用花括号 {} 插值到字符串中。
+if 语句能被用作表达式 - 当条件为 false 时，返回空列表，然后被字符串化为空字符串。
+对字符串调用不带参数的 <code>.comb</code>  会生成该字符串的一个字符列表。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/Using-Perl-6%28%E4%B8%80%29/" data-toggle="tooltip" data-placement="top" title="Using Perl 6(一)">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.ioindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2017
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.18.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Smartmatch on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/smartmatch/</link>
+    <description>Recent content in Smartmatch on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 19 Oct 2016 19:12:22 +0000</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/smartmatch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Perl6 模块分析 - 并行查找文件</title>
+      <link>https://ohmysummer.github.io/post/2016-10-19-perl6%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Wed, 19 Oct 2016 19:12:22 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-19-perl6%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/</guid>
+      <description>并行查找文件 如果你没有使用 panda 或 zef 安装该模块, 你可以下载到本地：
+use v6; use lib &amp;quot;C:\\Users\\Administrator\\perl6-concurrent-file-find\\lib&amp;quot;; use Concurrent::File::Find;  下面来看具体代码：
+class X::IO::NotADirectory does X::IO is export { has $.path; method message { &amp;quot;«$.path» is not a directory&amp;quot; } } class X::IO::CanNotAccess does X::IO is export { has $.path; method message { &amp;quot;Cannot access «$.path»: permission denied&amp;quot; } } class X::IO::StaleSymlink does X::IO is export { has $.path; method message { &amp;quot;Stale symlink «$.path»&amp;quot; } }  上面的代码自定义了 3 个与 IO 错误相关的类并导出, 每个类中有一个 $.</description>
+    </item>
+    
+    <item>
+      <title>智能匹配</title>
+      <link>https://ohmysummer.github.io/post/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/</link>
+      <pubDate>Wed, 03 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/</guid>
+      <description>智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上. 在下面的表格中, $_ 代表 ~~ 操作符的左侧, 或者作为 given 的参数, 或者作为其它主题化的参数. X 代表 ~~ 操作符右侧要匹配的模式, 或者在 when 后面的模式.(实际上, ~~ 操作符充当着一个小型的主题; 即, 为了右侧的计算, 它把 $_ 绑定到左侧的值上. 使用底层的 .ACCEPTS 形式来避免这种主题化.)
+第一节包含了含有享有特权的语法; 如果匹配能通过那些条目之一完成, 那它就会那样做. 这些特别的语法是通过它们的形式而非它们的类型进行分派的. 否则就使用表格中的剩余部分,并且匹配会根据普通的方法分派规则进行分派. 允许优化器(optimizer)假定编译时之后没有定义额外的匹配操作符, 所以, 如果在编译时模式类型就显而易见的, 那么跳转表(jump table)可以被优化. 然而, 这部分表格的语法仍然有点特权的, 跟 ~~ 操作符一样, 是 Perl 中少有的几个不使用多重分派的操作符之一. 相反, 基于类型的智能匹配会被单个地分派给属于 X 模式对象的底层方法.
+换句话说, 智能匹配首先根据模式(pattern)的形式或类型(下面的X)进行分派(dispatch), 然后那个模式自身决定是否和怎样注意主题($_)的类型. 所以, 下面表格中的第二列就是初始列. 第一列中的 Any 条目标示了模式要么不关心主题的类型, 要么把那个条目作为默认值, 因为上面列出的更具体的类型不匹配.
+$_ X Type of Match Implied Match if (given $_) ====== ===== ===================== =================== Any True ~~ True (parsewarn on literal token) Any False ~~ False match (parsewarn on literal token) Any Match ~~ Successful match (parsewarn on literal token) Any Nil ~~ Benign failure (parsewarn on literal token) Any Failure Failure type check (okay, matches against type) Any * block signature match block successfully binds to |$_ Any Callable:($) item sub truth X($_) S03-smartmatch/any-callable.</description>
+    </item>
+    
+  </channel>
+</rss>

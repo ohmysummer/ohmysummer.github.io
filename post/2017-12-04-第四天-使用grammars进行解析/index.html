@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第四天-使用 Grammars 进行解析</title>
+  <meta property="og:title" content="第四天-使用 Grammars 进行解析" />
+  <meta name="twitter:title" content="第四天-使用 Grammars 进行解析" />
+  <meta name="description" content="Parsing with Grammars (Book Extract)">
+  <meta property="og:description" content="Parsing with Grammars (Book Extract)">
+  <meta name="twitter:description" content="Parsing with Grammars (Book Extract)">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第四天-使用 Grammars 进行解析</h1>
+                
+                  
+                    <h2 class="post-subheading">Parsing with Grammars (Book Extract)</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2017/04/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="第四天-使用-grammars-进行解析">第四天-使用 Grammars 进行解析</h1>
+
+<p>下面是从 <a href="https://www.apress.com/us/book/9781484232279">Parsing with Perl 6 Regexes and Grammars: A Recursive Descent into Parsing</a> 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。</p>
+
+<p>这本书马上就要出版了。至少该书的电子版这个月应该可以购买, 纸质版的可以在 <a href="https://smile.amazon.com/dp/1484232275/">亚马逊</a> 预定了。原本最迟会在 2018 年元月发出, 但是幸运的是, 圣诞节你就可以看到了。</p>
+
+<p>下面你会看到第九章, 使用 Grammars 进行解析。前面的章节详细探讨了创建正则表达式块儿、正则表达式怎么和 Perl 6 代码进行交互、匹配对象、正则力学、常用正则技术，还有重用和组合正则。你可以通过阅读<a href="https://docs.perl6.org/language/regexes">正则表达式官方文档</a>来获取更多关于正则的背景。</p>
+
+<p>后面的章节涵盖了 action 类和对象, 怎么报告高质量的解析错误, Unicode 支持, 最后还有三个案例研究。</p>
+
+<p>现在, 尽情享受吧！</p>
+
+<p>Grammar 是众人皆知的用于解析的瑞士军刀。</p>
+
+<p>在本章中，我们将更详细地探讨它们。 最重要的是，我们将讨论如何利用他们的威力。</p>
+
+<h2 id="理解-grammars">理解 Grammars</h2>
+
+<p>Grammars 实现了自顶向下的解析方法。 入口点，通常是 <code>TOP</code> regex 正则表达式，它知道粗粒度的结构，并调用下降到繁复细节的更深一步的正则表达式。 也会涉及到递归。 例如，如果解析算术表达式，则操作符可以是一对括号内的任意表达式。</p>
+
+<p>这是一个自顶向下的结构，或者更确切地说是一个<a href="https://en.wikipedia.org/wiki/Recursive_descent_parser">递归下降分析方法</a>。 如果不涉及回溯，我们称之为*预测分析法*，因为在字符串中的每个位置，我们确切地知道我们在寻找什么 - 我们可以预测下一个 token 将会是什么（即使我们只能预测它可能是一组可选分支的其中之一）。</p>
+
+<p>结果匹配树在结构上完全对应于 grammar 中正则表达式的调用结构。 让我们考虑解析一个只包含运算符 <code>*</code>，<code>+</code>和用于分组的括号的算术表达式：</p>
+
+<pre><code class="language-perl">grammar MathExpression {
+    token TOP    { &lt;sum&gt; }
+    rule sum     { &lt;product&gt;+ %  '+' }
+    rule product { &lt;term&gt;+ % '*' }
+    rule term    { &lt;number&gt; | &lt;group&gt; }
+    rule group   { '(' &lt;sum&gt; ')' }
+    token number { \d+ }
+}
+
+say MathExpression.parse('2 + 4 * 5 * (1 + 3)');
+</code></pre>
+
+<p>从 Grammar 本身，你已经可以看到递归的可能性：<code>sum</code> 调用 <code>product</code>，<code>product</code> 调用 <code>term</code>，<code>term</code> 调用 <code>group</code>，<code>group</code> 再次调用 <code>sum</code>。 这允许解析任意深度的嵌套表达式。</p>
+
+<p>解析上面的例子产生下面的匹配对象：</p>
+
+<pre><code>⌜2 + 4 * 5 * (1 + 3)⌟
+ sum =&gt; ⌜2 + 4 * 5 * (1 + 3)⌟
+  product =&gt; ⌜2 ⌟
+   term =&gt; ⌜2 ⌟
+    number =&gt; ⌜2⌟
+  product =&gt; ⌜4 * 5 * (1 + 3)⌟
+   term =&gt; ⌜4 ⌟
+    number =&gt; ⌜4⌟
+   term =&gt; ⌜5 ⌟
+    number =&gt; ⌜5⌟
+   term =&gt; ⌜(1 + 3)⌟
+    group =&gt; ⌜(1 + 3)⌟
+     sum =&gt; ⌜1 + 3⌟
+      product =&gt; ⌜1 ⌟
+       term =&gt; ⌜1 ⌟
+        number =&gt; ⌜1⌟
+      product =&gt; ⌜3⌟
+       term =&gt; ⌜3⌟
+        number =&gt; ⌜3⌟
+</code></pre>
+
+<p>如果你想知道某个特定的数字是如何解析的，你可以通过查找当前行上缩进较少的行来追踪路径。 例如，数字 <code>1</code> 由 token <code>number</code>解析，调用自 <code>term</code>，再调用自 <code>product</code>，以此类推。</p>
+
+<p>我们可以通过从 token <code>number</code> 引发异常来验证这一点：</p>
+
+<pre><code class="language-perl">    token number {
+        (\d+)
+        { die &quot;how did I get here?&quot; if $0 eq '1' }
+    }
+</code></pre>
+
+<p>这确实显示了回溯中的调用链，其中最直接的上下文是：</p>
+
+<pre><code>how did I get here?
+  in regex number at bt.p6 line 9
+  in regex term at bt.p6 line 5
+  in regex product at bt.p6 line 4
+  in regex sum at bt.p6 line 3
+  in regex group at bt.p6 line 6
+  in regex term at bt.p6 line 5
+  in regex product at bt.p6 line 4
+  in regex sum at bt.p6 line 3
+  in regex TOP at bt.p6 line 2
+  in block &lt;unit&gt; at bt.p6 line 13
+</code></pre>
+
+<p>这个语法只使用 tokens 和 rules，所以不涉及回溯，而 grammar 是一个预测分析法。 这是相当典型的。 没有回溯或在几个地方有回溯时, 许多 grammars 都工作正常。</p>
+
+<h2 id="递归下降分析法和优先级">递归下降分析法和优先级</h2>
+
+<p><code>MathExpression</code> grammar 有两个结构相同的 rules：</p>
+
+<pre><code class="language-perl">rule sum { &lt;product&gt;+ %  '+' }
+rule product { &lt;term&gt;+ % '*' }
+</code></pre>
+
+<p>但是, 我们也可以写成:</p>
+
+<pre><code class="language-perl">rule  expression { &lt;operator&gt;+ % &lt;term&gt; }
+token operator   {  '*' | '+' }
+</code></pre>
+
+<p>或者甚至使用前一章讨论的 <code>proto token</code> 构造来解析不同的操作符。我选择第一种更重复的方法的原因是它使匹配结构对应于运算符 <code>*</code> 和 <code>+</code> 的优先级。</p>
+
+<p>当计算数学表达式 <code>1 + 2 * 5</code> 时，数学家和大多数编程语言首先计算 <code>2 * 5</code>，因为 <code>*</code> 运算符的优先级高于 <code>+</code>。然后将结果代入表达式，成为 <code>1 + 10</code>，最后得到 <code>11</code>。</p>
+
+<p>当用 grammar 的第一个版本解析这样的表达式的时候，解析树的结构表示这个分组：它具有 - 作为最高级 - 单个 sum，操作数是 <code>1</code> 和 <code>2 * 5</code>。</p>
+
+<p>这是有代价的：对于每个优先级我们需要一个单独的 rule 和名字，并且所产生的结果匹配对象的嵌套层级, 每个优先级至少有一级。而且，稍后增加更多的优先级并不是微不足道的，而且很难通用。如果您不愿意接受这些成本，则可以使用具有单个 token 的平级模型来解析所有运算符。如果您需要能反映优先级的结构，则可以编写代码将列表转换为树。这通常被称为<a href="https://en.wikipedia.org/wiki/Operator-precedence_parser">运算符优先级解析器</a>。</p>
+
+<h2 id="左递归和其他陷阱">左递归和其他陷阱</h2>
+
+<p>为了避免无限递归，你必须注意，每个可能的递归循环至少将游标位置推进了一个字符。在 <code>MathExpression</code> grammar 中，唯一可能的递归循环是 <code>sum</code>→<code>product</code>→<code>term</code>→<code>group</code>→<code>sum</code>，并且 <code>group</code> 只有在消耗了一个初始开口圆括号 <code>(</code> 时才匹配。</p>
+
+<p>如果递归不消耗字符，则它被称为*左递归*，并且需要特殊的语言支持, 这个 Perl 6 并不支持。一个例子是：</p>
+
+<pre><code class="language-perl">token a { &lt;a&gt;? 'a' }
+</code></pre>
+
+<p>它本该与正则表达式 <code>a+</code> 匹配相同的输入，但是却无限循环而不前进。</p>
+
+<p>避免左递归的一个常用技巧是有一个可以按照从通用（这里是 <code>sum</code>）到特定（<code>number</code>）顺序排序正则表达式的结构。当正则表达式偏离该顺序时（例如 <code>group</code>调用 <code>sum</code>），你只需要关心并检查消耗的字符。</p>
+
+<p>无限循环的另一个潜在来源是在量词化能匹配空字符串的正则表达式时。在解析允许某些内容为空的语言时可能会发生这种情况。例如，在 UNIX shell 中，你可以在给变量赋值的时候把右侧置空：</p>
+
+<pre><code class="language-perl">VAR1=value
+VAR2=
+</code></pre>
+
+<p>在为 UNIX shell 命令编写 grammar 时，编写一个可能匹配空字符串的 <code>token string { \w* }</code> 可能会很冒险。 在允许多于一个字符串字面值的情况下，<code>&lt;string&gt;+</code> 就会挂起，因为实际的正则表达式 <code>[\w*]+</code> 试图无限次地匹配一个零宽度的字符串。</p>
+
+<p>一旦你意识到了这个问题，解决方案就变得非常简单：将 token 更改为不允许空字符串（<code>token string { \w+ }</code>），并显式地处理允许空字符串的情况：</p>
+
+<pre><code class="language-perl">    token assignment {
+        &lt;variable&gt; '=' &lt;string&gt;?
+    }
+</code></pre>
+
+<h2 id="始于简单">始于简单</h2>
+
+<p>即使 grammar 是自上而下工作的，但是开发的时候最好开自下而上。 一开始，grammar 的总体结构往往是不明显的，但是你通常知道<em>末端</em> token：那些能直接匹配文本而不需要调用其他 subrules 的 token。</p>
+
+<p>在前面的解析数学表达式的例子中，你可能一开始不知道如何安排解析 sums 和 products 的 rules，但你很可能知道必须在某个时候解析数字，所以一开始你可以这样写：</p>
+
+<pre><code class="language-perl">grammar MathExpression {
+    token number { \d+ }
+}
+</code></pre>
+
+<p>这并不是很多，但也不是很复杂，这是程序员有时在遇到新问题领域时克服挑战的一种很好的方式。 当然，一旦你有了 token，就可以开始写一些测试了：</p>
+
+<pre><code class="language-perl">grammar MathExpression {
+    token number { \d+ }
+}
+
+multi sub MAIN(Bool :$test!) {
+    use Test;
+    plan 2;
+    ok MathExpression.parse('1234', :rule&lt;number&gt;),
+        '&lt;number&gt; parses 1234';
+    nok MathExpression.parse('1+4', :rule&lt;number&gt;),
+        '&lt;number&gt; does not parse 1+4';
+}
+</code></pre>
+
+<p>现在，您可以以自己的方式创建更复杂的表达式：</p>
+
+<pre><code class="language-perl">grammar MathExpression {
+    token number { \d+ }
+    rule product { &lt;number&gt;+ % '*' }
+}
+
+multi sub MAIN(Bool :$test!) {
+    use Test;
+    plan 5;
+    ok MathExpression.parse('1234', :rule&lt;number&gt;),
+        '&lt;number&gt; parses 1234';
+    nok MathExpression.parse('1+4', :rule&lt;number&gt;),
+        '&lt;number&gt; does not parse 1+4';
+
+    ok MathExpression.parse('1234', :rule&lt;product&gt;),
+        '&lt;product&gt; can parse a simple number';
+    ok MathExpression.parse('1*3*4', :rule&lt;product&gt;),
+        '&lt;product&gt; can parse three terms';
+    ok MathExpression.parse('1 * 3', :rule&lt;product&gt;),
+        '&lt;product&gt; and whitespace';
+}
+</code></pre>
+
+<p>在测试的早期包含空白是值得的。 上面的例子看起来是无害的，但最后那个测试实际上失败了。 没有 rule 匹配 <code>1</code> 和 <code>*</code> 之间的空格。 在 <code>&lt;number&gt;</code> 和 <code>+</code> 量词之间的正则表达式中添加一个空格使测试再次通过，因为空格插入了一个隐式的 <code>&lt;.ws&gt;</code> 调用。</p>
+
+<p>如果你从最简单的开始，尽快抓住这些细节，就很容易理解。 如果不是从上到下写下整个 grammar，你就会花很多时间去调试为什么一些看起来很简单的东西会导致解析失败, 比如额外的空格。</p>
+
+<h2 id="组装完整的-grammars">组装完整的 Grammars</h2>
+
+<p>一旦你为词法分析编写了基本的 tokens，你可以进行合并。 通常，tokens 不会在匹配的边界处解析空白，因此组合它们的 rules 会这样做。</p>
+
+<p>在上一节的 <code>MathExpression</code> 示例中，<code>rule product</code> 直接地调用了 <code>number</code>, 即使我们现在知道最终版本使用了一个中间步骤，也就是 rule <code>term</code>，它也可以解析用圆括号围起来的表达式。 引入这个额外的步骤不会使我们为 <code>product</code> 编写的测试失效，因为它在早期版本中匹配的字符串仍然匹配。 从处理语言子集的 grammar 开始，引入更多层是自然发生的，稍后将扩展。</p>
+
+<h2 id="调试-grammars">调试 Grammars</h2>
+
+<p>对于正则表达式或 Grammar，有两种失败模式：它们可以匹配，当它不应该匹配（误报）时，或者它应该匹配（错误否定）时可能匹配失败。通常，误报更容易理解，因为您可以检查生成的匹配对象，并查看哪些正则表达式匹配了字符串的哪一部分。</p>
+
+<p>有一个方便的工具来调试误报：<code>Grammar::Tracer</code> 模块。如果将模块加载到包含 grammar 的文件中，则运行该 grammar 会生成诊断信息，以帮助您找出匹配出错的位置。</p>
+
+<p>请注意，这只是开发人员的诊断工具; 如果你想给终端用户更好的错误信息，请阅读第 11 章的改进建议。</p>
+
+<p>您需要安装 Perl 6 的 <code>Grammar::Debugger</code> 模块，其中还包含 <code>Grammar::Tracer</code>。如果您使用 <code>moritzlenz/perl6-regex-alpine</code> 的 docker 镜像，这已经为您完成了。如果您通过其他方法安装了Perl 6，则需要在命令行上运行：</p>
+
+<pre><code class="language-perl">zef install Grammar::Debugger
+</code></pre>
+
+<p>如果尚未安装 <code>zef</code>，请按照 <a href="https://github.com/ugexe/zef#installation">zef GitHub页面</a> 上的安装说明进行操作。</p>
+
+<p>让我们来看一下 TadeuszSośnierz 写的 Perl 6 模块 <a href="https://github.com/tadzik/perl6-Config-INI">Config::INI</a>。 它包含以下 <a href="https://github.com/tadzik/perl6-Config-INI/blob/master/lib/Config/INI.pm">grammar</a>（这儿稍微重新格式化了）：</p>
+
+<pre><code class="language-perl">grammar INI {
+    token TOP {
+        ^ &lt;.eol&gt;* &lt;toplevel&gt;?  &lt;sections&gt;* &lt;.eol&gt;* $
+            }
+    token toplevel { &lt;keyval&gt;* }
+    token sections { &lt;header&gt; &lt;keyval&gt;* }
+    token header   { ^^ \h* '[' ~ ']' $&lt;text&gt;=&lt;-[ \] \n ]&gt;+
+                     \h* &lt;.eol&gt;+ }
+    token keyval   { ^^ \h* &lt;key&gt; \h* '=' \h* &lt;value&gt;? \h*
+                     &lt;.eol&gt;+ }
+    regex key      { &lt;![#\[]&gt; &lt;-[;=]&gt;+ }
+    regex value    { [ &lt;![#;]&gt; \N ]+ }
+    token eol      { [ &lt;[#;]&gt; \N* ]? \n }
+}
+</code></pre>
+
+<p>假设我们想知道为什么它不解析下面的一段输入文本：</p>
+
+<pre><code class="language-perl">a = b
+[foo]
+c: d
+</code></pre>
+
+<p>所以, 在该 grammar 之前, 我们插入下面这一行：</p>
+
+<pre><code class="language-perl">use Grammar::Tracer;
+</code></pre>
+
+<p>之后，添加一小段调用该 grammar 的 <code>.parse</code> 方法的代码：</p>
+
+<pre><code class="language-perl">INI.parse(q:to/EOF/);
+a = b
+[foo]
+c: d
+EOF
+</code></pre>
+
+<p>这产生了一个可观的，但相当丰富的输出。</p>
+
+<p>每个条目由一个正则表达式的名称组成，比如 <code>TOP</code> 或者 <code>eol</code>（&rdquo;end of line&rdquo; 的缩写），后面跟着它调用的正则表达式的缩进后的输出。 每个正则表达式后面都有一个包含星号（<code>*</code>）和 <code>MATCH</code> 后跟正则表达式匹配到的字符串片段这样的行; 如果正则表达式失败，则 <code>*</code> 号后面跟的是 <code>FAIL</code>。</p>
+
+<p>让我们一块一块地查看输出，即使它成块地出现：</p>
+
+<pre><code>TOP
+|  eol
+|  * FAIL
+|  toplevel
+|  |  keyval
+|  |  |  key
+|  |  |  * MATCH &quot;a &quot;
+|  |  |  value
+|  |  |  * MATCH &quot;b&quot;
+|  |  |  eol
+|  |  |  * MATCH &quot;\n&quot;
+|  |  |  eol
+|  |  |  * FAIL
+|  |  * MATCH &quot;a = b\n&quot;
+|  |  keyval
+|  |  |  key
+|  |  |  * FAIL
+|  |  * FAIL
+|  * MATCH &quot;a = b\n&quot;
+</code></pre>
+
+<p>这告诉我们，<code>TOP</code> 调用了 <code>eol</code>，它没有匹配。 由于 <code>eol</code> 的调用是用 <code>*</code> 量化的，所以这不会导致 <code>TOP</code> 的匹配失败。 <code>TOP</code> 然后调用了 <code>key</code>, 匹配到文本 &ldquo;a&rdquo;, 调用 <code>value</code>, 匹配到文本 &ldquo;b&rdquo;。 然后 <code>eol</code> 正则表达式继续匹配换行符，在第二次尝试时失败（因为在一行中没有两个换行符）。 这会导致初始的 <code>keyval</code> token 匹配成功。 第二次调用 <code>keyval</code> 匹配很快（在调用 <code>key</code> 中）。 然后，<code>toplevel</code> token 的匹配成功进行，消耗了字符串 &ldquo;a = b \ n&rdquo;。</p>
+
+<p>到目前为止，这一切看起来都和预期的一样。 现在我们来看看第二部分的输出：</p>
+
+<pre><code>|  sections
+|  |  header
+|  |  |  eol
+|  |  |  * MATCH &quot;\n&quot;
+|  |  |  eol
+|  |  |  * FAIL
+|  |  * MATCH &quot;[foo]\n&quot;
+|  |  keyval
+|  |  |  key
+|  |  |  * MATCH &quot;c: d\n&quot;
+|  |  * FAIL
+|  * MATCH &quot;[foo]\n&quot;
+</code></pre>
+
+<p><code>TOP</code> 接下来调用 <code>sections</code>，其中 token <code>header</code> 成功匹配了字符串 <code>&quot;[foo] \ n&quot;</code>。 然后，<code>keyval</code> 调用 <code>key</code>，它匹配了 <code>&quot;c: d\n&quot;</code> 整行。 等等，这是不对的，是吗？ 我们可能期望 <code>key</code> 只匹配 <code>c</code>。 我当然不希望它匹配最后的换行符。 输入中缺少等号会导致 regex 引擎永远不会调用 regex <code>value</code>。 但是由于 <code>keyval</code> 再次用星号 <code>*</code> 量词进行量化，因此调用正则表达式 <code>sections</code> 的匹配成功地匹配了 header <code>&quot;[foo]\n&quot;</code>。</p>
+
+<p><code>Grammar::Tracer</code> 输出的最后一部分如下所示：</p>
+
+<pre><code>|  sections
+|  |  header
+|  |  * FAIL
+|  * FAIL
+|  eol
+|  * FAIL
+* FAIL
+</code></pre>
+
+<p>从这里开始都是 <code>FAIL</code>。第二次调用 <code>sections</code> 再次尝试解析 header，但其下一个输入仍然是 <code>&quot;c: d\n&quot;</code>，所以失败了。正如 token <code>TOP</code> 中字符串末尾的锚点 <code>$</code> 一样，在 <code>parse</code> 方法中总体匹配失败。</p>
+
+<p>所以我们已经知道正则表达式 <code>key</code> 匹配整行 <code>c: d\n</code>，但是因为没有等号（<code>=</code>）跟在后面，所以 token <code>keyval</code> 解析不了这一行。由于没有其他正则表达式（特别是没有 <code>header</code>）匹配它，这是匹配失败的地方。</p>
+
+<p>从这个例子中你可以看到，<code>Grammar::Tracer</code> 使我们能够精确定位解析失败发生的位置，尽管我们必须仔细查看它的输出以找到它。在终端中运行时，会自动获取彩色输出，其中 <code>FAIL</code> 为红色，<code>MATCH</code> 为绿色背景，token 名称以粗体白色（而不是通常的灰色）输出。这样可以更容易地从底部扫描（失败的匹配通常会留下一条红色的 <code>FAIL</code>），直到尾部成功的匹配，然后在匹配和失败之间的边界附近查看。</p>
+
+<p>由于调试带来了巨大的精神负担，而且 <code>Grammar::Tracer</code> 的输出趋向于快速增长，所以通常建议将失败的输入减少到最小的样本。在上述情况下，我们可以删除输入字符串的第一行，并保存十行 <code>Grammar::Tracer</code> 输出来查看。</p>
+
+<h2 id="解析空白和注释">解析空白和注释</h2>
+
+<p>如前所述，解析无关紧要的空格的惯用方法是调用 <code>&lt;.ws&gt;</code>，通常隐式地使用 rule 中的空格。 默认的 <code>ws</code> 实现 <code>&lt;!ww&gt;\s*</code> 对许多语言都适用，但是它有其局限性。</p>
+
+<p>在数量惊人的文件格式和计算机语言中，也有 <code>&lt;.ws&gt;</code> 占用的空白是有意义的。 这些包括 INI 文件（换行符通常表示一个新的键/值对），Python 和 YAML（缩进用于分组），CSV（换行符表示新记录）以及 Makefile（缩进要求是制表符）。</p>
+
+<p>在这些情况下，最好的做法在你自己的 grammar 中重写 <code>ws</code> 来匹配只有不重要的空格。 让我们来看看第二个简约的 INI 解析器，它是从上一节中描述的独立开发的：</p>
+
+<pre><code class="language-perl">grammar INIFile {
+    token TOP { &lt;section&gt;* }
+    token section {
+        &lt;header&gt;
+        &lt;keyvalue&gt;*
+    }
+    rule header {
+        '['  &lt;-[ \] \n ]&gt;+ ']' &lt;.eol&gt;
+    }
+    rule keyvalue {
+        ^^
+        $&lt;key&gt;=[\w+]
+        &lt;[:=]&gt;
+        $&lt;value&gt;=[&lt;-[\n;#]&gt;*]
+        &lt;.eol&gt;
+    }
+    token ws { &lt;!ww&gt; \h* }
+    token eol {
+        \n [\h*\n]*
+    }
+}
+</code></pre>
+
+<p>它解析简单的 INI 配置文件就像这样：</p>
+
+<pre><code>[db]
+driver: mysql
+host: db01.example.com
+port: 122
+username: us123
+password: s3kr1t
+</code></pre>
+
+<p>注意这个 grammar 如何使用两条路径来解析空格：自定义的 <code>ws</code> token 只匹配水平空白（空格和制表符），单独的 <code>eol</code> token 匹配(significant)换行符。 <code>eol</code> token 还吞噬了只包含空格的更多行。</p>
+
+<p>如果语言支持注释，并且不希望它们出现在解析树中，则可以使用 <code>ws</code> token 或 <code>eol</code>（或其等价物）来解析它们。 哪一个取决于哪里允许注释。 在 INI 文件中，它们只允许出现在键值对之后，或者它们自己单独占一行，所以 <code>eol</code> 将是合适的地方。 相比之下，SQL 允许在每个允许空格的地方进行注释，所以在 <code>ws</code> 中解析它们是很自然的：</p>
+
+<pre><code class="language-perl"># comment parsing for SQL:
+token ws { &lt;!ww&gt; \s* [ '--' \N* \n ]* }
+
+# comment parsing for INI files:
+token eol { [ [ &lt;[#;]&gt; \N* ]? \n ]+ }
+</code></pre>
+
+<h2 id="保存状态">保存状态</h2>
+
+<p>一些更有趣的数据格式和语言要求解析器存储事物（至少暂时）以便能够正确地解析它们。 一个恰当的例子是C编程语言，另一个例子是受其语法启发的（例如C ++和Java）。 这样的语言允许表单类型variable = initial_value的变量声明，如下所示：</p>
+
+<pre><code class="language-perl">int x = 42;
+</code></pre>
+
+<p>这是有效的语法，但只有当第一个单词是一个类型名称。 相反，这将是无效的，因为x不是一个类型：</p>
+
+<pre><code class="language-perl">int x = 42;
+x y = 23;
+</code></pre>
+
+<p>从这些例子中可以清楚地看到，解析器必须有它所知道的所有类型的记录。 由于用户也可以在他们的代码文件中声明类型，解析器必须能够更新这个记录。</p>
+
+<p>许多语言还要求在引用符号（变量，类型和函数）之前进行声明。 这也需要语法来跟踪已经声明的内容和没有的内容。 这个已经声明的记录（以及什么是一个类型，也可能不是其他元信息）被称为符号表。</p>
+
+<p>我们不考虑解析完整的C语言，而是考虑一种极简主义语言，它只允许分配数字列表和变量给变量：</p>
+
+<pre><code class="language-perl">a = 1
+b = 2
+c = a, 5, b
+</code></pre>
+
+<p>如果我们不强加声明规则，写一个语法是很容易的：</p>
+
+<pre><code class="language-perl">grammar VariableLists {
+    token TOP        { &lt;statement&gt;* }
+    rule  statement  { &lt;identifier&gt; '=' &lt;termlist&gt; \n }
+    rule  termlist   { &lt;term&gt; * % ',' }
+    token term       { &lt;identifier&gt; | &lt;number&gt; }
+    token number     { \d+ }
+    token identifier { &lt;:alpha&gt; \w* }
+    token ws         { &lt;!ww&gt; \h* }
+}
+</code></pre>
+
+<p>现在我们要求变量只能在赋值之后才能使用，所以下面的输入将是无效的，因为在第二行中没有声明b的地方：</p>
+
+<pre><code class="language-perl">a = 1
+c = a, 5, b
+b = 2
+</code></pre>
+
+<p>为了维护一个符号表，我们需要三个新的元素：符号表的声明，一些代码，当赋值语句被解析时，将一个变量名添加到符号表中，最后检查一个变量是否已经被声明 我们在一个术语列表中遇到它：</p>
+
+<pre><code class="language-perl">grammar VariableLists {
+    token TOP {
+        :my %*SYMBOLS;
+        &lt;statement&gt;*
+    }
+    token ws { &lt;!ww&gt; \h* }
+    rule statement {
+        &lt;identifier&gt;
+        { %*SYMBOLS{ $&lt;identifier&gt; } = True }
+        '=' &lt;termlist&gt;
+        \n
+    }
+    rule termlist { &lt;term&gt; * % ',' }
+    token term { &lt;variable&gt; | &lt;number&gt; }
+    token variable {
+        &lt;identifier&gt;
+        &lt;?{ %*SYMBOLS{ $&lt;identifier&gt; } }&gt;
+    }
+    token number { \d+ }
+    token identifier { &lt;:alpha&gt; \w* }
+}
+</code></pre>
+
+<p>在令牌TOP中，：my％* SYMBOLS声明一个变量。 正则表达式中的声明以冒号（:)开始，以分号（;）结尾。 在它们之间，它们看起来像Perl 6中的正常声明。％sigil表示该变量是一个散列 - 一个字符串键到值的映射。 *使它成为一个动态变量 - 一个变量，不仅限于当前范围，而且对于从当前范围调用的代码（或正则表达式，也是代码）也是可见的。 由于这是一个非常大的范围，所以在大写字母中选择一个变量是自定义的。</p>
+
+<p>第二部分，在符号表中添加一个符号，发生在规则声明中：</p>
+
+<pre><code class="language-perl">    rule statement {
+        &lt;identifier&gt;
+        { %*SYMBOLS{ $&lt;identifier&gt; } = True }
+        '=' &lt;termlist&gt;
+        \n
+    }
+</code></pre>
+
+<p>大括号内是常规的（非正则表达式）Perl 6代码，所以我们可以使用它来操作哈希％* SYMBOLS。 表达式$ <identifier>访问变量name2的捕获。 因此，如果此规则解析变量a，则此语句将设置％* SYMBOLS {&lsquo;a&rsquo;} = True。</p>
+
+<p>代码块的位置是相关的。 把它放在调用termlist之前意味着当术语列表被解析时变量已经是已知的，所以它接受像a = 2，a这样的输入。 如果我们首先调用termlist，这种输入被拒绝。</p>
+
+<p>说到拒绝，这部分发生在令牌变量。 term现在调用新的标记变量（以前它直接称为标识符），并且变量验证该符号是在之前声明的：</p>
+
+<pre><code class="language-perl">    token term { &lt;variable&gt; | &lt;number&gt; }
+    token variable {
+        &lt;identifier&gt;
+        &lt;?{ %*SYMBOLS{ $&lt;identifier&gt; } }&gt;
+    }
+</code></pre>
+
+<p>你可能还记得在前面的例子中，&lt;？{&hellip;}&gt;执行一段Perl 6代码，如果它返回一个假值，则解析失败。 如果$ <identifier>不在％SYMBOLS中，这正是发生的情况。 在这个时候，令牌的非回溯性是很重要的。 如果被解析的变量是abc，并且变量a在％* SYMBOLS中，则回溯将尝试<identifier>的较短匹配，直到它碰到a，然后成功3。</p>
+
+<p>由于在标记TOP中声明了％* SYMBOLS，所以当您尝试从语法外调用除TOP之外的其他规则时，必须复制此声明。 没有像我的％* SYMBOLS ;,一个像这样的调用声明</p>
+
+<pre><code class="language-perl">VariableLists.parse('abc', rule =&gt; 'variable');
+</code></pre>
+
+<p>dies with:</p>
+
+<pre><code class="language-perl">Dynamic variable %*SYMBOLS not found
+</code></pre>
+
+<h2 id="使用动态变量实现词法作用域">使用动态变量实现词法作用域</h2>
+
+<p>许多编程语言都有一个词汇范围的概念。 范围是程序中符号可见的区域。 如果范围仅由文本的结构（而不是程序的运行时功能）决定，我们称之为范围词法。</p>
+
+<p>范围通常可以嵌套。 在一个作用域中声明的变量在这个作用域中是可见的，在所有的内部嵌套作用域中（除非内部作用域声明了一个名称相同的变量，在这种情况下，内部声明隐藏了外部作用域）。</p>
+
+<p>回到列表和作业的玩具语言，我们可以引入一对花括号来表示一个新的范围，所以这是有效的：</p>
+
+<pre><code class="language-perl">a = 1
+b = 2
+{
+    c = a, 5, b
+}
+</code></pre>
+
+<p>但下一个例子是无效的，因为它只在内部范围内声明b，所以它在外部范围内是不可见的：</p>
+
+<pre><code class="language-perl">a = 1
+{
+    b = 2
+}
+c = a, 5, b
+</code></pre>
+
+<p>为了在语法中实现这些规则，我们可以利用一个重要的观察：语法中的动态范围对应于它分析的文本中的词法范围。 如果我们有一个正则表达式块来解析范围的分隔符以及范围内的事物，那么它的动态范围就局限于它所调用的所有正则表达式（直接或间接），这也是它的范围 匹配输入文本。</p>
+
+<p>我们来看看如何实现动态范围：</p>
+
+<pre><code class="language-perl">grammar VariableLists {
+    token TOP {
+        :my %*SYMBOLS;
+        &lt;statement&gt;*
+    }
+    token ws { &lt;!ww&gt; \h* }
+    token statement {
+        | &lt;declaration&gt;
+        |  &lt;block&gt;
+    }
+    rule declaration {
+        &lt;identifier&gt;
+        { %*SYMBOLS{ $&lt;identifier&gt; } = True; }
+        '=' &lt;termlist&gt;
+        \n
+    }
+    rule block {
+        :my %*SYMBOLS = CALLERS::&lt;%*SYMBOLS&gt;;
+        '{' \n*
+            &lt;statement&gt;*
+        '}' \n*
+    }
+    rule termlist { &lt;term&gt; * % ',' }
+    token term { &lt;variable&gt; | &lt;number&gt; }
+    token variable {
+        &lt;identifier&gt;
+        &lt;?{ %*SYMBOLS{ $&lt;identifier&gt; } }&gt;
+    }
+    token number { \d+ }
+    token identifier { &lt;:alpha&gt; \w* }
+}
+</code></pre>
+
+<p>这个语法的前一个版本有一些变化：规则语句已被重命名为声明，新的规则语句分析声明或块。</p>
+
+<p>所有有趣的位都发生在块规则中。 该行：my％* SYMBOLS = CALLERS :: &lt;％* SYMBOLS&gt;; 声明一个新的动态变量％* SYMBOLS并用该变量的前一个值初始化它。 CALLERS :: &lt;％* SYMBOLS&gt;通过调用者和调用者的调用者等查找变量％* SYMBOLS，从而查找对应于外部作用域的值。 初始化创建散列的副本，以便对一个副本的更改不会影响其他副本。</p>
+
+<p>让我们来看看当这个语法解析下面的输入时会发生什么：</p>
+
+<pre><code class="language-perl">a = 1
+b = 2
+{
+    c = a, 5, b
+}
+</code></pre>
+
+<p>在前两行之后，％* SYMBOLS的值为{a =&gt; True，b =&gt; True}。 当规则块解析第三行的开放大括号时，它会创建％* SYMBOLS的副本。 第四行的c的声明将对c =&gt; True插入到％* SYMBOLS的副本中。 在规则块解析最后一行的结束大括号之后，它将成功退出，并且％* SYMBOLS的副本将超出范围。 这给我们留下了早期版本的％* SYMBOLS（只有键a和b），当TOP退出时，它们超出了范围。</p>
+
+<p>通过显式符号表进行范围确定</p>
+
+<p>使用动态变量来管理符号表通常工作得很好，但是有一些边缘情况下更明确的方法效果更好。 这样的边缘情况包括那些符号太多以至于复制变得非常昂贵的情况，或者必须检查多于最顶端的范围的情况，或者复制符号表是不切实际的。</p>
+
+<p>因此，可以为符号表编写一个类（在最简单的情况下，它使用一个数组作为范围的堆栈），在进入和离开范围时，在声明一个变量时，以及为了检查一个变量是否为 在一个范围内已知：</p>
+
+<pre><code class="language-perl">class SymbolTable {
+    has @!scopes = {}, ;
+    method enter-scope() {
+        @!scopes.push({})
+    }
+    method leave-scope() {
+        @!scopes.pop();
+    }
+    method declare($variable) {
+        @!scopes[*-1]{$variable} = True
+    }
+    method check-declared($variable) {
+        for @!scopes.reverse -&gt; %scope {
+            return True if %scope{$variable};
+        }
+        return False;
+    }
+}
+
+grammar VariableLists {
+    token TOP {
+        :my $*ST = SymbolTable.new();
+        &lt;statement&gt;*
+    }
+    token ws { &lt;!ww&gt; \h* }
+    token statement {
+        | &lt;declaration&gt;
+        |  &lt;block&gt;
+    }
+    rule declaration {
+        &lt;identifier&gt;
+        { $*ST.declare( $&lt;identifier&gt; ) }
+        '=' &lt;termlist&gt;
+        \n
+    }
+    rule block {
+        '{' \n*
+            { $*ST.enter-scope() }
+            &lt;statement&gt;*
+            { $*ST.leave-scope() }
+        '}' \n*
+    }
+    rule termlist { &lt;term&gt; * % ',' }
+    token term { &lt;variable&gt; | &lt;number&gt; }
+    token variable {
+        &lt;identifier&gt;
+        &lt;?{ $*ST.check-declared($&lt;identifier&gt;) }&gt;
+    }
+    token number { \d+ }
+    token identifier { &lt;:alpha&gt; \w* }
+}
+</code></pre>
+
+<p>SymbolTable类具有私有数组属性@！作用域，它使用包含单个空散列的列表进行初始化。输入一个作用域意味着在这个数组的顶部推一个空的散列，当离开这个作用域的时候，它会通过pop方法调用再次被删除。变量声明将其名称添加到最顶端的散列@ @ scopes [* - 1]。</p>
+
+<p>检查变量的存在不能只考虑最顶端的散列，因为变量被继承到内部作用域。在这里，我们以相反的顺序遍历所有的范围，从最内层到最外层的范围。遍历的顺序与简单的布尔检查无关，但是如果您需要查找与该变量相关的信息，则遵守此顺序以引用正确的顺序非常重要。</p>
+
+<p>令牌TOP创建类SymbolTable的新对象，声明调用声明方法，令牌变量调用方法检查声明。规则块在解析语句列表之前调用进入范围，之后保留范围。这个工作，但只有当语句列表可以被成功解析;如果不是，规则块在管理调用离开范围之前失败。</p>
+
+<p>对于这种情况，Perl 6有一个安全特性：如果在LEAVE语句前添加一个语句，那么在例程退出时，Perl 6可以在所有可能的情况下调用它（即使抛出异常）。由于LEAVE相位器只能在正则代码中使用，而不能在正则表达式中使用，所以我们需要将正则表达式包装在一个方法中：</p>
+
+<pre><code class="language-perl">    method block {
+        $*ST.enter-scope();
+        LEAVE $*ST.leave-scope();
+        self.block_wrapped();
+    }
+    rule block_wrapped {
+        '{' \n*
+            &lt;statement&gt;*
+        '}' \n*
+    }
+</code></pre>
+
+<p>现在我们拥有与动态变量相同的鲁棒性，并且以更多的代码和更多的努力为代价，可以更灵活地向符号表添加额外的代码。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>Perl 6 的 Grammar 是编写递归下降解析器的一种声明方式。 如果没有回溯，他们就是可预测的; 在每一个时刻，我们都知道我们想要的 token 列表。</p>
+
+<p>Grammar 的递归性带来了左递归的风险，即递归路径不消耗任何字符的情况，从而导致无限循环。</p>
+
+<p>尽管 Grammar 是自上而下的，但是他们通常是从下到上写出来的：从词法分析开始，然后转向解析更大的结构。</p>
+
+<p>复杂语言成功和精确的解析需要额外的状态。 我们已经看到了如何在 grammar 中使用动态变量来保存状态，它们的作用域如何对应于输入的词法作用域，以及如何将符号表写入并集成到 grammars 中。</p>
+
+<p>1、就像一把瑞士军刀一样，但是功能更强大。
+2、在这一点上，<code>identifier</code> 不会解析其周围的空白是至关重要的。 因此，token 不关心空白的原则和调用这些 token 的 rules 解析空白。
+3、在这种情况下，这将是无害的，因为没有其他 rule 可以匹配变量的其余部分，导致解析错误。 但是在更复杂的情况下，这种无意的回溯会导致语法维护人员非常困惑的错误。</p>
+
+<p><a href="https://perl6advent.wordpress.com/2017/12/04/day-08-parsing-with-grammars-book-extract/">Day 4 – Parsing with Grammars</a></p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/grammars/">Grammars</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/" data-toggle="tooltip" data-placement="top" title="第三天 – LetterOps with Perl6">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/" data-toggle="tooltip" data-placement="top" title="第五天 - 使用 Perl 6 签名解构参数">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

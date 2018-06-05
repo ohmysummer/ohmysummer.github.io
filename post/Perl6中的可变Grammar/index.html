@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl6 中的可变 Grammar</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl6 中的可变 Grammar" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/perl6%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98grammar/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl6 中的可变 Grammar</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/11/16</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h2 id="a-mutable-grammar-for-perl-6">## A Mutable Grammar For Perl 6</h2>
+
+<h3 id="rules">Rules</h3>
+
+<hr />
+
+<p><code>Rules</code> 就像 perl5的 <code>regexes</code>，并且更好。它们像子例程和方法那样申明，并且还能调用其它 rules</p>
+
+<p>下面是一个解析 Perl 6 基本变量名的例子：</p>
+
+<pre><code class="language-perl6">grammar Perl6 {  
+# among other stuff:
+
+    # token alpha 是一个预定义好的 rule
+    token identifier {           
+       &lt;alpha&gt; \w+     
+    }    
+    
+   # 匹配一个全限定名标识符
+    # [ ... ]  是非捕获组
+    token name {        
+        &lt;identifier&gt;         
+        [ '::' &lt;identifier&gt; ] *     
+    }
+     # .. | .. 是分支. 最长匹配胜出.
+    token sigil {        
+       '$' | '@' | '&amp;' | '%' | '::'    
+    }    
+    # &lt;rule&gt; 调用命名 rule, 隐式地锚定在当前位置
+    token variable {      
+        &lt;sigil&gt; &lt;name&gt;  
+    }
+
+} 
+</code></pre>
+
+<h3 id="grammars">Grammars</h3>
+
+<hr />
+
+<p><code>Grammar</code> 跟类很像，含有 <code>rules</code> 而不是 methods。 grammars 是 <code>rules</code> 的集合并支持<code>继承</code>。</p>
+
+<p>如果要求 Perl 6 中变量的名字必须大写：</p>
+
+<pre><code class="language-perl6"># 我们继承原来那个 grammar
+grammar PERL6 is Perl6 {    
+    # ... 重写我们想改变的解析规则
+    token identifier {        
+   # Perl 6 中的字符类现在写作 &lt;[ ... ]&gt;         
+       &lt;[A..Z]&gt; &lt;[A..Z0..9_]&gt;*   }
+}
+</code></pre>
+
+<p>现在我们只需告诉编译器使用 <code>PERL6</code> 这个 grammar 而非默认 grammar 。还记得类中的方法调用顺序吗？ 先从本类开始， 沿着继承树从下而上到父类&hellip; 。 grammar 与之类似。</p>
+
+<p>然而有一个缺陷。假设你想更改一个符号， 例如把 <code>$</code> 更改 为 <code>¢</code>（因为你没有足够的 <code>$$$</code> 来买下所有的变量，不是吗？）看起来很简单：</p>
+
+<pre><code class="language-perl6">grammar LowBudgetPerl6 is Perl6 {
+    # token 就像类中的方法一样, 继承后可以修改
+    token sigil { '¢' | '@' | '&amp;' | '%' | '::' }
+}
+</code></pre>
+
+<p>新的 grammar 解析工作的很好， 但是那之后的所有东西肯定会失败。当编译器在解析树里看见 <code>sigil</code> 匹配时，它得找出到底是哪一个 - 这意味着它必须要检查匹配文本的字面值， 而它并不知道怎么处理 <code>¢</code></p>
+
+<p>所以，我们需要更多的技能&hellip;</p>
+
+<h2 id="proto-regexes">Proto Regexes</h2>
+
+<hr />
+
+<p> <code>proto regex</code> 是一套有着相同名字的 regexes/rules，当前的 <a href="http://svn.pugscode.org/pugs/src/perl6/STD.pm">Perl 6 grammar</a> 使用这个结构：</p>
+
+<pre><code class="language-perl6">proto token sigil {*}
+# ...
+token sigil:sym&lt;$&gt;  { &lt;sym&gt; }
+token sigil:sym&lt;@&gt;  { &lt;sym&gt; }
+token sigil:sym&lt;%&gt;  { &lt;sym&gt; }
+token sigil:sym&lt;&amp;&gt;  { &lt;sym&gt; }
+token sigil:sym&lt;::&gt; { &lt;sym&gt; }
+
+</code></pre>
+
+<p>这创建了一个叫做 <code>sigil</code> 的组(<code>proto</code>)，组里面有使用 <code>sym</code> 标识符参数化的5 个规则(rules)（它们属于这个组因为它们跟组的名字相同）。 第一个把 <code>sym</code> 设置为 <code>$</code> 然后匹配这个符号(使用<code>&lt;sym&gt;</code>). 第二个匹配 <code>@</code>等等。现在如果调用规则 <code>&lt;sigil&gt;</code> ,你会得到一个含有上述所有 5 个规则的列表，列表元素之间是<code>或</code>的关系。所以它依然跟正则 <code>'$' | '@' | '%' | '&amp;' | '::'</code> 匹配相同的东西， 但是更容易扩展。</p>
+
+<p>如果你想添加一个新的符号，  grammar 中唯一要修改的就是添加另外一个 <code>sigil</code>规则： </p>
+
+<pre><code class="language-perl6">grammar SigilRichP6 is Perl6 {
+    token sigil:sym&lt;ħ&gt; { &lt;sym&gt; } # 物理学家会很爱你
+}
+</code></pre>
+
+<p>回到原来那个例子， 你可以重写已存在的规则：</p>
+
+<pre><code class="language-perl6">grammar LowBudgetPerl6 is Perl6 {
+    token sigil:sym&lt;$&gt; { '¢' }
+}
+
+</code></pre>
+
+<p>现在这个 grammar 为标量使用了一个不同的符号， 但是它和原来的 grammar 有着相同的规则和相同的参数(<code>sigil:sym&lt;$&gt;</code>) ， 编译器仍然知道怎么处理它。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/roles%E5%86%B2%E7%AA%81/" data-toggle="tooltip" data-placement="top" title="roles冲突">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/reddit-guess-who/" data-toggle="tooltip" data-placement="top" title="Guess Who">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

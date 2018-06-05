@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>从正则表达式到 Grammar</title>
+  <meta property="og:title" content="从正则表达式到 Grammar" />
+  <meta name="twitter:title" content="从正则表达式到 Grammar" />
+  <meta name="description" content="「原文链接」
+如果你是正则表达式新人(至少当它们用于 Perl 6 中时), 那我建议你从这个系列的第一部分开始。那些掌握了一定正则表达式的人可以跳过上周的文章。现在, 继续演示!
+上周轶事 我们开始开发一个接收诸如
+var a = 3; console.log(&quot;Hey, did you konw a = &quot; &#43; a &#43; &quot;?&quot;);  Javascript 表达式的 Perl 6 编译器, 并把这段代码转换为 Rakudo Perl 那样的编译器能运行的 Perl 6 代码。在我们开始之前, 想想转换后的 Perl 6 代码看起来是什么样的可能会是个好主意。如果你已经知道了 Perl 5, 那么你应该熟悉这样的代码。
+my $a = 3; say &quot;Hey, did you konw a = &quot; ~ $a ~ &quot;?&quot;;  我们将需要确保我们的正则表达式捕获到了 Javascript 的要素。如果你还记得上一次, 我们使用这样一组正则表达式来捕获我们的文本:
+my rule Number { \d&#43; }; my rule Variable { \w&#43; }; my rule String { &#39;&quot;&#39; &lt;-[&quot; ]&gt;&#43; &#39;&quot;&#39; }; my rule Assignment-Expression { var &lt;Variable&gt; &#39;=&#39; &lt;Number&gt; }; my rule Function-Call { console &#39;.">
+  <meta property="og:description" content="「原文链接」
+如果你是正则表达式新人(至少当它们用于 Perl 6 中时), 那我建议你从这个系列的第一部分开始。那些掌握了一定正则表达式的人可以跳过上周的文章。现在, 继续演示!
+上周轶事 我们开始开发一个接收诸如
+var a = 3; console.log(&quot;Hey, did you konw a = &quot; &#43; a &#43; &quot;?&quot;);  Javascript 表达式的 Perl 6 编译器, 并把这段代码转换为 Rakudo Perl 那样的编译器能运行的 Perl 6 代码。在我们开始之前, 想想转换后的 Perl 6 代码看起来是什么样的可能会是个好主意。如果你已经知道了 Perl 5, 那么你应该熟悉这样的代码。
+my $a = 3; say &quot;Hey, did you konw a = &quot; ~ $a ~ &quot;?&quot;;  我们将需要确保我们的正则表达式捕获到了 Javascript 的要素。如果你还记得上一次, 我们使用这样一组正则表达式来捕获我们的文本:
+my rule Number { \d&#43; }; my rule Variable { \w&#43; }; my rule String { &#39;&quot;&#39; &lt;-[&quot; ]&gt;&#43; &#39;&quot;&#39; }; my rule Assignment-Expression { var &lt;Variable&gt; &#39;=&#39; &lt;Number&gt; }; my rule Function-Call { console &#39;.">
+  <meta name="twitter:description" content="「原文链接」
+如果你是正则表达式新人(至少当它们用于 Perl 6 中时), 那我建议你从这个系列的第一部分开始。那些掌握了一定正则表达式的人可以跳过上周的文章。现在, 继续演示!
+上周轶事 我们开始开发一个接收诸如
+var a = 3; console.log(&quot;Hey, did you konw a = &quot; &#43; a &#43; &quot;?&quot;);  Javascript …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-10-29-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammar/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-10-29-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammar/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>从正则表达式到 Grammar</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/29/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>「<a href="http://theperlfisher.blogspot.fr/2016/02/from-regular-expressions-to-grammars-pt_28.html">原文链接</a>」</p>
+
+<p>如果你是正则表达式新人(至少当它们用于 Perl 6 中时), 那我建议你从这个系列的<a href="http://theperlfisher.blogspot.ro/2016/02/from-regular-expressions-to-grammars-pt.html">第一部分</a>开始。那些掌握了一定正则表达式的人可以跳过<a href="http://theperlfisher.blogspot.ro/2016/02/from-regular-expressions-to-grammars-pt_20.html">上周</a>的文章。现在, 继续演示!</p>
+
+<h2 id="上周轶事">上周轶事</h2>
+
+<p>我们开始开发一个接收诸如</p>
+
+<pre><code class="language-javascript">var a = 3; console.log(&quot;Hey, did you konw a = &quot; + a + &quot;?&quot;);
+</code></pre>
+
+<p>Javascript 表达式的 Perl 6 编译器, 并把这段代码转换为 <a href="http://perl6.org/">Rakudo Perl</a> 那样的编译器能运行的 Perl 6 代码。在我们开始之前, 想想转换后的 Perl 6 代码看起来是什么样的可能会是个好主意。如果你已经知道了 Perl 5, 那么你应该熟悉这样的代码。</p>
+
+<pre><code class="language-perl"> my $a = 3;
+ say &quot;Hey, did you konw a = &quot; ~ $a ~ &quot;?&quot;;
+</code></pre>
+
+<p>我们将需要确保我们的正则表达式捕获到了 Javascript 的要素。如果你还记得上一次, 我们使用这样一组正则表达式来捕获我们的文本:</p>
+
+<pre><code class="language-perl6"> my rule Number                { \d+                                                          };
+ my rule Variable              { \w+                                                          };
+ my rule String                { '&quot;' &lt;-[&quot; ]&gt;+ '&quot;'                                             };
+ my rule Assignment-Expression { var &lt;Variable&gt; '=' &lt;Number&gt;                                  };
+ my rule Function-Call         { console '.' log '(' &lt;String&gt; '+' &lt;Variable&gt; '+' &lt;String&gt; ')' };
+
+ say 'var a = 3; console.log(&quot;Hey, did you konw a = &quot; + a + &quot;?&quot;);' ~~ rule { &lt;Assignment-Expression&gt; ';'  &lt;Function-Call&gt; ';' };
+</code></pre>
+
+<p>如果你把这段代码放到一个 Perl 6 源文件中并运行它, 那么它的输出第一次看起来可能会有点奇怪:</p>
+
+<pre><code>｢var a = 3; console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; );｣
+ Assignment-Expression =&gt; ｢var a = 3｣
+    Variable =&gt; ｢a ｣
+    Number =&gt; ｢3｣
+ Function-Call =&gt; ｢console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; )｣
+    String =&gt; ｢&quot;Hey, did you know a = &quot; ｣
+    Variable =&gt; ｢a ｣
+    String =&gt; ｢&quot;?&quot; ｣
+</code></pre>
+
+<p>如果你愿意暂时忽略  「」  标记, 你会看到匹配被缩进了, 几乎像资源管理器窗口一样, &lsquo;<Assignment-Expression>&rsquo; 作为目录, &lsquo;Variable&rsquo; 和 &lsquo;Number&rsquo; 作为目录里面的文件。实际上, 那离真相不远了。 当我看到这种结构时, 我发现使用一点添加的语法能帮助我们像这样来观察它:</p>
+
+<pre><code>$/ =&gt; ｢var a = 3; console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; );｣
+ &lt;Assignment-Expression&gt; =&gt; ｢var a = 3｣
+    &lt;Variable&gt; =&gt; ｢a ｣
+    &lt;Number&gt; =&gt; ｢3｣
+ &lt;Function-Call&gt; =&gt; ｢console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; )｣
+    &lt;String&gt; =&gt; ｢&quot;Hey, did you know a = &quot; ｣
+    &lt;Variable&gt; =&gt; ｢a ｣
+    &lt;String&gt; =&gt; ｢&quot;?&quot; ｣
+</code></pre>
+
+<p>这几乎让怎么打印出文本变得更容易, 并在我们的正则表达式中指出了一个小问题。我们来打印给变量 <em>a</em> 所赋的数字, 从这儿开始。第一行告诉我们目录的根, 或者匹配树是 <code>$/</code>。 如果你在测试文件的末尾添加上 <code>say $/;</code> 并返回它, 那么你会看到整个表达式被打印出了 2 次。 那一定意味着 <code>$/</code> 就是整个匹配。</p>
+
+<p>每向下推进一层就是把 <code>=&gt;</code> 箭头的左侧的东西添加到 <code>$/</code> 的右边。把之前的 <code>say</code> 语句修改为 <code>say  $/&lt;Assignment-Expression&gt;;</code>, 并看看输出发生了什么改变。它现在看起来应该像这样:</p>
+
+<pre><code>｢var a = 3｣
+  Variable =&gt; ｢a ｣
+  Number =&gt; ｢3｣
+</code></pre>
+
+<p>让我们把把标记(不可见)添加进来, 所以我们能知道到了哪里&hellip;</p>
+
+<pre><code>$/&lt;Assignment-Expression&gt; =&gt; ｢var a = 3｣
+  &lt;Variable&gt; =&gt; ｢a ｣
+  &lt;Number&gt; =&gt; ｢3｣
+</code></pre>
+
+<p>我们现在能看到我们的目标, 数字 3, 仅仅实在更下面的一层。和上次一样, 我们能够添加表达式左侧的东西, 所以我们就动手吧。</p>
+
+<pre><code class="language-perl6">say $/&lt;Assignment-Expression&gt;&lt;Number&gt;;
+  ｢3｣
+</code></pre>
+
+<p>我们几乎得到我们想要的了。 「」  挡道, 所以我们在这儿把值转换回数字。我把转换(cast)用引号扩起来, 因为它不是C/C++ 程序员那样认为的&rdquo;casting&rdquo;。我们想做的大约等价于 <code>sscanf(str,&quot;%d&quot;,&amp;num)</code>, 但是在 Perl 6 中, 这个操作符更加简单:</p>
+
+<pre><code class="language-perl6">say +$/&lt;Assignment-Expression&gt;&lt;Number&gt;;
+  3
+</code></pre>
+
+<p>如果不深入更多细节, 那么 <code>$/</code> 是一个里面藏着隐式数字、字符串和布尔值的对象。前面添加的 <code>+</code> 把隐藏在 <code>$/</code> 对象中的数字显示出来了。</p>
+
+<h2 id="从-javascript-到-perl">从 Javascript 到 Perl</h2>
+
+<p>我们离从 Javascript 生成 Perl 6 代码不远了。让我们使用上面所学的开始我们的第一个语句, 赋值语句。</p>
+
+<pre><code class="language-perl6">say 'my $' ~ $/&lt;Assignment-Expression&gt;&lt;Variable&gt; ~ ' = ' ~
+      $/&lt;Assignment-Expression&gt;&lt;Number&gt; ~ ';';
+
+my $a = 3;
+
+</code></pre>
+
+<p>我们仅仅使用了 7 行 Perl 6 就把代码从一种语言转换为另外一种语言。并且大部分的 Perl 6 代码都是可重用的, 因为字符串, 数字, 和 Javascript/C/Java 风格的变量名在大部分语言之间是通用的。</p>
+
+<p>上次, 我们学习了怎么使用正则表达式来创建匹配。这次我们学会了怎么使用我们说匹配到的东西, 还有怎么在 <em>say</em> 语句中找出我们想要的东西。 不可见的匹配标记相当有用, 我可能会写一个模块来把它们放回到匹配表达式中, 那应该不难。</p>
+
+<p>那个方案有一个问题, 如果我们看一下 <code>&lt;Function-Call&gt;</code> 匹配, 会很容易发现那个问题。</p>
+
+<pre><code class="language-perl6">$/&lt;Function-Call&gt; =&gt; ｢console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; )｣
+  &lt;String&gt; =&gt; ｢&quot;Hey, did you know a = &quot; ｣
+  &lt;Variable&gt; =&gt; ｢a ｣
+  &lt;String&gt; =&gt; ｢&quot;?&quot; ｣
+</code></pre>
+
+<p>当我们写了 <code>say $/&lt;Function-Call&gt;&lt;String&gt;;</code> 时, 我们会获取哪个 <code>&lt;String&gt;</code>? 在你运行这段代码之前, 先猜测一下。会是第一个吗, 因为一旦匹配对象被创建,  Perl 6 就不会把它替换掉? 会是最后一个吗, 因为最后一个&rdquo;覆盖&rdquo;了第一个? 编译器会仅仅&rdquo;感到困惑&rdquo;然后什么也不打印吗? 运行一下看看!</p>
+
+<p>它实际上以一个列表的形式把两个匹配都返回了, 所以你可以引用任何一个。 我们的不可见标记现在看起来长这样:</p>
+
+<pre><code>$/&lt;Function-Call&gt; =&gt; ｢console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; )｣
+  &lt;String&gt;[0] =&gt; ｢&quot;Hey, did you know a = &quot; ｣
+  &lt;Variable&gt; =&gt; ｢a ｣
+  &lt;String&gt;[1] =&gt; ｢&quot;?&quot; ｣
+</code></pre>
+
+<p>所以, 如果我们想打印第一个字符串, 我们可以写上 <code>say $/&lt;Function-Call&gt;&lt;String&gt;[0];</code> 并得到含有时髦的日语标记的   「&rdquo;Hey, did you know a = &ldquo; 」。幸运的是有一种便捷方式来避免那些日语标记, 就像数字 3 中的那样:</p>
+
+<pre><code class="language-perl6">say ~$/&lt;Function-Call&gt;&lt;String&gt;[0];
+ &quot;Hey, did you know a = &quot;
+</code></pre>
+
+<p><strong>~</strong> 操作符使匹配字符串化, 就像 <code>+</code> 让返回的匹配数字化一样。所以你可能自己把最后一行写作:</p>
+
+<pre><code class="language-perl6">say 'say ' ~ $/&lt;Function-Call&gt;&lt;String&gt;[0] ~ ' ~ '
+  ' $' ~ $/&lt;Function-Call&gt;&lt;Variable&gt; ~ ' ~ '
+  $&lt;Function-Call&gt;&lt;String&gt;[1] ~ ';';
+
+say &quot;Hey, did you know a = &quot; ~ $a ~ &quot;?&quot;;
+</code></pre>
+
+<p>我们已经把我们的两行 Javascript 代码编译成 Perl 6 代码了。</p>
+
+<h2 id="重构">重构</h2>
+
+<p>现在已经能工作了, 但是有很多重复。目前我们得到是:</p>
+
+<pre><code class="language-perl6">my rule Variable               { \w+                                                          };
+my rule String                 { '&quot;' &lt;-[ &quot; ]&gt;+ '&quot;'                                            };
+my rule Assignment-Expression  { var &lt;Variable&gt; '=' &lt;Number&gt;                                  };
+my rule Function-Call          { console '.' log '(' &lt;String&gt; '+' &lt;Variable&gt; '+' &lt;String&gt; ')' };
+
+'var a = 3; console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; );' ~~ rule { &lt;Assignment-Expression&gt; ';' &lt;Function-Call&gt; ';' }
+
+say 'my $' ~ $/&lt;Assignment-Expression&gt;&lt;Variable&gt; ~ ' = ' ~ $/&lt;Assignment-Expression&gt;&lt;Number&gt; ~ ';';
+say 'say ' ~ $/&lt;Function-Call&gt;&lt;String&gt;[0] ~ ' ~ $' ~ $/&lt;Function-Call&gt;&lt;Variable&gt; ~  ' ~ ' ~ $/&lt;Function-Call&gt;&lt;String&gt;[1] ~  ';';
+</code></pre>
+
+<p>那些 rules 看起来相当好,  <code>&lt;String&gt;</code> 和 <code>&lt;Variable&gt;</code> 的重复也是不可避免的。 但是看看 <code>say</code> 语句, 你会看到 <code>&lt;Assignment-Expression&gt;</code> 和 <code>&lt;Function-Call&gt;</code> 重复了自身好几次。避免这种重复的一种方法是创建一个临时变量, 但是那可能会变得丑陋。</p>
+
+<pre><code class="language-perl6">my $assignment-expression = $/&lt;Assignment-Expression&gt;;
+say 'my $' ~ $assignment-expression&lt;Variable&gt; ~ ' = ' ~  $assignment-expression&lt;Number&gt; ~ ';'
+</code></pre>
+
+<p>相反, 我们利用 Perl 6 的子例程签名, 并且重用 <code>$/</code> 变量名以使我们能重用上面所写的代码, 然后拿掉 <Assignment-Expression> 部分。 我会把子例程的名字命名为 rule 的名字, 只是为了直接了当。(你会在之后看到为什么这样做。)</p>
+
+<pre><code class="language-perl6">sub  assignment-expression($/) {
+    'my $' ~ $/&lt;Variable&gt; ~ ' = ' ~ $/&lt;Number&gt; ~ ';'
+}
+
+say assignment-expression( $/&lt;Assignment-Expression&gt; );
+</code></pre>
+
+<p>让我们对 <Function-Call> 也做同样的事情, 创建一个含有 <code>$/</code> 子例程签名的同名函数。 它现在写在一行里面就很整洁了, 并且只重复 <em><String></em> 部分, 因为它不得不重复。</p>
+
+<pre><code class="language-perl6">sub function-call( $/ ) {
+     'say ' ~ $/&lt;String&gt;[0] ~ ' ~ ' ~ $/&lt;Variable&gt; ~ ' ~ ' ~ $/&lt;String&gt;[1] ~ ';'
+}
+
+say function-call( $/&lt;Function-Call&gt; );
+</code></pre>
+
+<h2 id="对象化">对象化</h2>
+
+<p>一路上我做了相当多的选择,让我们到达这里。这就是我们上次重构的地方:</p>
+
+<pre><code class="language-perl6">my rule Number                { \d+                                                          };
+my rule Variable              { \w+                                                          };
+my rule String                { '&quot;' &lt;-[ &quot; ]&gt;+ '&quot;'                                            };
+my rule Assignment-Expression { var &lt;Variable&gt; '=' &lt;Number&gt;                                  };
+my rule Function-Call         { console '.' log '(' &lt;String&gt; '+' &lt;Variable&gt; '+' &lt;String&gt; ')' };
+
+'var a = 3; console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; );' ~~ rule { &lt;Assignment-Expression&gt; ';' &lt;Function-Call&gt; ';' }
+
+sub assignment-expression( $/ ) {
+    'my $' ~ $/&lt;Variable&gt; ~ ' = ' ~ $/&lt;Number&gt; ~ ';'
+}
+
+sub function-call( $/ ) {
+    'say ' ~ $/&lt;String&gt;[0] ~ ' ~ $' ~ $/&lt;Variable&gt; ~ ' ~ ' ~ $/&lt;String&gt;[1] ~ ';';
+}
+say assignment-expression( $/&lt;Assignment-Expression&gt; );
+say function-call( $/&lt;Function-Call&gt; );
+</code></pre>
+
+<p>这就是我们的回报。我们先捡起最后那两个 <code>say</code> 语句。 我们还没有给顶层 rule 一个名字, 所以我们就叫它&hellip; 好吧, 现在还是叫 &lsquo;top&rsquo; 吧。</p>
+
+<pre><code class="language-perl6">sub top( $/ ) { assignment-expression( $/ ) ~ function-call( $/ ) }
+</code></pre>
+
+<h2 id="收回你的吐槽">收回你的吐槽</h2>
+
+<p>我们暂时还没有对处于文件顶层的 rules 做太多处理, 所以让我们开始工作吧。 在 Perl 6 中, 就一般编程而言, 把你的代码打包复用是不错的注意。而 Perl 6 让我们使用 <code>class</code> 关键字将我们的程序打包, 我们拥有的那些 rules 从任何意义上来说实际上不是 &ldquo;代码&rdquo;。而它们能够用于代码中, 并且我们确实使用了它们, 它们自身实际上并没有做出任何决定。</p>
+
+<p>所以我们不应该使用 <code>class</code> 关键字来把它们打包到一块。相反, 有另外一种便捷的类型用于把一堆正则表达式和 rules 打包到一块儿, 它叫做 <code>grammar</code>。
+它的语法就像声明一个 「rule」 那样。</p>
+
+<pre><code class="language-perl6">grammar Javascript {
+    rule Number                { \d+                                                          };
+    rule Variable              { \w+                                                          };
+    rule String                { '&quot;' &lt;-[ &quot; ]&gt;+ '&quot;'                                            };
+    rule Assignment-Expression { var &lt;Variable&gt; '=' &lt;Number&gt;                                  };
+    rule Function-Call         { console '.' log '(' &lt;String&gt; '+' &lt;Variable&gt; '+' &lt;String&gt; ')' };      
+
+    rule TOP                   { &lt;Assignment-Expression&gt; ';' &lt;Function-Call&gt; ';'              };
+}
+</code></pre>
+
+<p>你会注意到, 我们给我们的顶层 rule 也起了个名字, 并且暂时把它叫做 「TOP」 吧。 如果你正在家独自玩耍, 你可能已经做出更改并想知道 「&rsquo;var a = 3;&hellip;&rsquo; ~~ rule { &hellip; }」 是怎么起作用的, 因为键入诸如 「&rsquo;var a = 3;&hellip;&rsquo; ~~ JavaScript;」这样的东西可能不会那么有作用。</p>
+
+<p>Grammars 就像类一样, 在里面它们实际上是一块可能的代码。 它们本身不会工作, 它们必须从潜在的转换为动态的代码。我们可以像你在类中做的那样:</p>
+
+<pre><code class="language-perl6">my $JavaScript = JavaScript.new;
+</code></pre>
+
+<p>现在我们拥有了一个可以工作的变量。 现在, 让我们来使用它。所有的 grammar 类都有一个内置的 「parse()」 方法, 以使我们能得到 grammar 中的正则表达式。 我们来修改我们的匹配语句以利用 parse() 方法:</p>
+
+<pre><code class="language-perl6">$JavaScript.parse('var a = 3; console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; );');
+</code></pre>
+
+<p>我们的代码应该又能工作了。</p>
+
+<h2 id="接收动作">接收动作</h2>
+
+<p>现在我们已经把我们所有的匹配的东西打包到一个小型的类里面了, 如果我们能对那些子例程做同样的处理将会很棒。 我们在这儿试试, 把我们的子例程放到它们自己的命名空间中, 就像我们对 rule 做的那样。 我们必须从 「sub」 修改为 「method」, 而我们的 「top」 方法将会使用 「self.」 去调用其它方法。</p>
+
+<pre><code class="language-perl6">class Actions {
+    method assignment-expression( $/ ) {
+        'my $' ~ $/&lt;Variable&gt; ~ ' = ' ~ $/&lt;Number&gt; ~ ';'
+    }
+
+    method function-call( $/ ) {
+        'say ' ~ $/&lt;String&gt;[0] ~ ' ~ $' ~ $/&lt;Variable&gt; ~ ' ~ ' ~ $/&lt;String&gt;[1] ~ ';';
+    }
+
+    method top( $/ ) {
+        self.assignment-expression( $/&lt;Assignment-Expression&gt; ) ~
+        self.function-call( $/&lt;Function-Call&gt; )
+    }
+}
+</code></pre>
+
+<p>就像之前那样, 我们可以在一行里面创建 Actions 对象:</p>
+
+<pre><code class="language-perl6">my $actions = Actions.new;
+</code></pre>
+
+<p>并且调用 top 几乎像我们之前做的那样:</p>
+
+<pre><code class="language-perl6">say $actions.top( $/ );
+</code></pre>
+
+<p>我们已经修改了很多东西了, 所以我们来看看到哪了。</p>
+
+<pre><code class="language-perl6">grammar JavaScript {
+  rule Number                { \d+                                                          };
+  rule Variable              { \w+                                                          };
+  rule String                { '&quot;' &lt;-[ &quot; ]&gt;+ '&quot;'                                            };
+  rule Assignment-Expression { var &lt;Variable&gt; '=' &lt;Number&gt;                                  };
+  rule Function-Call         { console '.' log '(' &lt;String&gt; '+' &lt;Variable&gt; '+' &lt;String&gt; ')' };
+  rule TOP                   { &lt;Assignment-Expression&gt; ';' &lt;Function-Call&gt; ';'              }
+}
+my $j = JavaScript.new;
+
+$j.parse('var a = 3; console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; );');
+
+class Actions {
+    method assignment-expression( $/ ) {
+      'my $' ~ $/&lt;Variable&gt; ~ ' = ' ~ $/&lt;Number&gt; ~ ';'
+    }
+
+    method function-call( $/ ) {
+      'say ' ~ $/&lt;String&gt;[0] ~ ' ~ $' ~ $/&lt;Variable&gt; ~ ' ~ ' ~ $/&lt;String&gt;[1] ~ ';';
+    }
+
+    method top( $/ ) {
+      self.assignment-expression( $/&lt;Assignment-Expression&gt; ) ~
+      self.function-call( $/&lt;Function-Call&gt; )
+    }
+}
+
+my $actions = Actions.new;
+say $actions.top($/);
+</code></pre>
+
+<p>不用担心, 我们快要到了。既然我们有了一个单独的类来处理 Actions, 我们把方法重命名为 grammar 中所匹配的 rule 的名字, 以使我们不会忘记它们是什么。</p>
+
+<pre><code class="language-perl6">class Actions {
+    method Assignment-Expression( $/ ) {
+        'my $' ~ $/&lt;Variable&gt; ~ ' = ' ~ $/&lt;Number&gt; ~ ';'
+    }
+
+    method Function-Call( $/ ) {
+        'say ' ~ $/&lt;String&gt;[0] ~ ' ~$' ~ $/&lt;Variable&gt; ~ ' ~ ' ~ $/&lt;String&gt;[1] ~ ';';
+    }
+
+    method TOP( $/ ) {
+        self.Assignment-Expression( $/&lt;Assignment-Expression&gt; ) ~
+        self.Function-Call( $/&lt;Function-Call&gt; )
+
+    }
+}
+</code></pre>
+
+<p>更进一步, 我们还有最后一点魔法能够利用。 我们将把 $javascript 和 $actions 对象像这样组合在一块。</p>
+
+<pre><code class="language-perl6">say $javascript.parse('...', :actions($actions) );
+</code></pre>
+
+<p>「:actions(&hellip;)」 给 「parse()」方法声明的可选参数。我们正告诉正则表达式引擎, 任何时候, 像 <Function-Call> 或 <TOP> 这样的 rule 匹配时, 我们会在我们的类中让它调用对应的同名方法。</p>
+
+<p>这几乎是按原样工作的, 但是如果你运行修改后的代码,  你会发现解析返回了原来的匹配对象, 带着日语引用标记。所以看起来好像我们又回到了原地。不完全是。</p>
+
+<p>继续, 我们在其中之一的方法中添加一个临时的 &ldquo;say &lsquo;Hello&rsquo;;&rdquo; 语句, 仅仅是为了确认它们正被调用。这是正则引擎正在工作并且可能正解析它所going over 的一个重要证据。 你甚至可以使用某些我们上面已经学到的技巧然后写上 「say $/<Variable>;」 来查看匹配是否正像你想的那样运行。继续运行并玩玩, 做完的时候再回到这儿。</p>
+
+<h2 id="混合信号-mixed-signals">混合信号(Mixed Signals)</h2>
+
+<p>正发生的是方法正被调用, 但是它们的输出被丢弃。我们来捕获输出然后使用 grammar 的最后一个特性, 抽象语法树。现在,  这可能会勾起坐在教室里看黑板上画出的盒子和线段的场景, 但是也没有那么糟糕了。我们已经看到了一个, 实际上 <strong>say()</strong> 的输出就是一个 AST。</p>
+
+<p>我们来看下其它语法树, 我们在后台创建的那个。在 &ldquo;$javascript.parse(&hellip;)&rdquo; 调用的末尾添加上 「.ast」, 这会给我们展示我们自己创建的语法树。</p>
+
+<p>如果你这样做了, 你会看到它打印了(Any), 这通常等价于「匹配失败」, 单是我们从之前的测试中知道匹配没有失败。所以这儿发生了什么? 当我们的方法运行的时候, 它们返回输出, 但是 Perl  6 不知道怎么处理这些输出, 或者说它不知道把输出安装到它所创建的 AST中的哪个位置。</p>
+
+<p>关键是一个叫做 「make」的小东西。在方法的开头, 把这个添加到过去我们放置 「say」的地方。</p>
+
+<pre><code class="language-perl6">class Actions {
+    method Assignment-Expression( $/ ) {
+      make 'my $' ~ $/&lt;Variable&gt; ~ ' = ' ~ $/&lt;Number&gt; ~ ';'
+    }
+
+    method Function-Call( $/ ) {
+      make 'say ' ~ $/&lt;String&gt;[0] ~ ' ~ $' ~ $/&lt;Variable&gt; ~ ' ~ ' ~ $/&lt;String&gt;[1] ~ ';'
+    }
+
+    method TOP( $/ ) {
+      make $/&lt;Assignment-Expression&gt;.ast ~ $/&lt;Function-Call&gt;.ast
+    }
+}
+</code></pre>
+
+<p>还有, 因为 Perl 6 为我们调用方法, 我们不需要自己来调用 self.Function-Call(&hellip;), 我们需要做的全部工作就是查看 Function-Call(&hellip;)返回给我们的语法树。 最终我们做到了。一个完整, 虽然微小的编译器。为了防止你在编辑时迷失, 这儿有一个最终的结果。</p>
+
+<pre><code class="language-perl6">grammar JavaScript {
+  rule Number                { \d+                                                          };
+  rule Variable              { \w+                                                          };
+  rule String                { '&quot;' &lt;-[ &quot; ]&gt;+ '&quot;'                                            };
+  rule Assignment-Expression { var &lt;Variable&gt; '=' &lt;Number&gt;                                  };
+  rule Function-Call         { console '.' log '(' &lt;String&gt; '+' &lt;Variable&gt; '+' &lt;String&gt; ')' };
+  rule TOP                   { &lt;Assignment-Expression&gt; ';' &lt;Function-Call&gt; ';'              }
+}
+
+class Actions {
+  method Assignment-Expression( $/ ) {
+    make 'my $' ~ $/&lt;Variable&gt; ~ ' = ' ~ $/&lt;Number&gt; ~ ';'
+  }
+
+  method Function-Call( $/ ) {
+    make 'say ' ~ $/&lt;String&gt;[0] ~ ' ~ $' ~ $/&lt;Variable&gt; ~ ' ~ ' ~ $/&lt;String&gt;[1] ~ ';';
+   }
+
+  method TOP( $/ ) {
+    make $/&lt;Assignment-Expression&gt;.ast ~ $/&lt;Function-Call&gt;.ast }
+  }
+
+my $j = JavaScript.new;
+my $a = Actions.new;
+say $j.parse(
+   'var a = 3; console.log( &quot;Hey, did you know a = &quot; + a + &quot;?&quot; );',
+   :actions($a)).ast;
+</code></pre>
+
+<h2 id="到哪里去">到哪里去</h2>
+
+<p>一个简单但整洁的更改是你可以扩展 Assignment-Expression 来既接收数字又接收字符串。上次我们谈论了 rules 中的轮试,所以这个提示应该足够让你开始了:</p>
+
+<pre><code class="language-perl6">rule Assignment-Expression { var &lt;Variable&gt; '=' (&lt;Number&gt; | &lt;String&gt;) }
+</code></pre>
+
+<p>你必须修改下 Assignment-Expression 方法以使它起作用。或者你可以狡猾一点然后发现( <Number> | <String> ) 可以转换为它自己的小的普通的 &ldquo;Term&rdquo; rule, &ldquo;rule Term { <Number> | <String> }&ldquo;, 然后添加一个 action &ldquo;method Term($/) { make $/<Number> or $/<String>}&rdquo; 而只在 Assignment-Expression 中修改一个东西。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/actions/">Actions</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-10-11-io%E6%93%8D%E4%BD%9C/" data-toggle="tooltip" data-placement="top" title="IO 操作">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-11-05-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%89/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的正则表达式(三)">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

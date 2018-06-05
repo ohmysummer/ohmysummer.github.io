@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 时间戳转换器命令行版</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 时间戳转换器命令行版" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/perl-6-%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%89%88/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 时间戳转换器命令行版</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/12/31</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h1 id="perl-6-by-example-datetime-conversion-for-the-command-line">Perl 6 By Example: Datetime Conversion for the Command Line</h1>
+
+<p>我偶尔会在数据库中存储 UNIX 时间戳, 即从 1970-01-01 开始的秒数。我在按照日期查询数据库中的数据时, 需要将 UNIX 时间戳转换为人类可读的时间, 所以我写了个很小的工具来帮助我在 UNIX  时间戳和日期/时间之间来回转换:</p>
+
+<pre><code class="language-perl6">$ autotime 2015-12-24
+1450915200
+$ autotime 2015-12-24 11:23:00
+1450956180
+$ autotime 1450915200
+2015-12-24
+$ autotime 1450956180
+2015-12-24 11:23:00
+</code></pre>
+
+<h2 id="使用库">使用库</h2>
+
+<p>Perl 6 的 <a href="https://docs.perl6.org/type/DateTime">DateTime</a> 和 <a href="https://docs.perl6.org/type/Date">Date</a> 模块会做实际的转换。
+<code>DateTime.new</code> 构造函数有一个接收单个整数作为 UNIX 时间戳的变体:</p>
+
+<pre><code class="language-perl6">$ perl6 -e &quot;say DateTime.new(1480915200)&quot;
+2016-12-05T05:20:00Z
+</code></pre>
+
+<p>看起来我们已经完成了一个方向的转换,对吗?</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+sub MAIN (Int $timestamp) {
+    say DateTime.new($timestamp)
+}
+</code></pre>
+
+<p>我们来运行它:</p>
+
+<pre><code class="language-perl6">$ autotime 1450915200
+Invalid DateTime string '1450915200'; use an ISO 8601 timestamp (yyyy-mm-ddThh:mm:ssZ or yyyy-mm-ddThh:mm:ss+01:00) instead
+  in sub MAIN at autotime line 2
+  in block &lt;unit&gt; at autotime line 2
+</code></pre>
+
+<p>发生了什么？看起来 <code>DateTime</code> 构造函数把参数当作了字符串, 尽管 <code>sub MAIN</code> 的参数被声明为 <code>Int</code>。怎么会变成那样呢? 我们添加一些调试输出:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+sub MAIN(Int $timestamp) {
+    say $timestamp.^name;
+    say DateTime.new($timestamp)
+}
+</code></pre>
+
+<p>打印出:</p>
+
+<pre><code class="language-perl6">IntStr
+</code></pre>
+
+<p><code>$thing.^name</code> 是 $thing 所属类的名字。 <a href="https://docs.perl6.org/type/IntStr">IntStr</a> 是 <code>Int</code> 和 <code>Str</code> 类的子类, 这就是为什么 <code>DateTime</code> 构造函数正常地认为 $timestamp 是一个 <code>Str</code> 的原因。</p>
+
+<p>长话短说, 我们可以在参数前添加一个 <code>+</code> 前缀使参数强制为 &ldquo;真&rdquo; 整数, 这也是将字符串转为数值的通用机制:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+sub MAIN(Int $timestamp) {
+    say DateTime.new(+$timestamp)
+}
+</code></pre>
+
+<p>这一次它真的工作了:</p>
+
+<pre><code class="language-perl6">$ ./autotime-01.p6 1450915200
+2015-12-24T00:00:00Z
+</code></pre>
+
+<p>输出是 ISO 8601 样式的时间戳格式, 对眼睛不太友好。对于小时,分钟和秒数都为 0 的日期, 我们真正想要的只有日期:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+sub MAIN(Int $timestamp) {
+    my $dt = DateTime.new(+$timestamp);
+    if $dt.hour == 0 &amp;&amp; $dt.minute == 0 &amp;&amp; $dt.second == 0 {
+        say $dt.Date;
+    }
+    else {
+        say $dt;
+    }
+}
+</code></pre>
+
+<p>这样看起来更好一点:</p>
+
+<pre><code class="language-perl6">$ ./autotime 1450915200
+2015-12-24
+</code></pre>
+
+<p>但是上面那种三个比较都为 0 的写法实在太丑了, 如果是 4 个, 5 个, 6 个&hellip; 那就是又丑又长。Perl 6 有一个 <code>all</code> Junction:</p>
+
+<pre><code class="language-perl6">if all($dt.hour, $dt.minute, $dt.second) == 0 {
+    say $dt.Date;
+}
+</code></pre>
+
+<p><code>all(...)</code> 创建了一个 <a href="https://docs.perl6.org/type/Junction">Junction</a>, 它是几个其他值的组合值, 它也存储了一个逻辑模式。当你比较一个 junction 和其他值的时候, 那个比较会自动地应用到该 junction 中的所有值上。<code>if</code> 语句在布尔上下文中对该 junction 进行求值, 在这个例子中, 当所有的比较为 <code>True</code> 时, if 也返回 <code>True</code>。</p>
+
+<p>其他类型的 junction 还有 <code>any</code>, <code>all</code>, <code>none</code>。考虑到在布尔上下文中, 0 是唯一一个求值为 false 的整数, 我们甚至可以把上面的例子写为:</p>
+
+<pre><code class="language-perl6">if none($dt.hour, $dt.minute, $dt.second) {
+    say $dt.Date;
+}
+</code></pre>
+
+<p>但是也可能没有必要搞得那么复杂,  如果 <code>$dt</code> 这个 Datetime 对象转换为 <code>Date</code>  然后再转换为 DateTime 而不丢失信息, 那么它肯定是一个 Date:</p>
+
+<pre><code class="language-perl6">if $dt.Date.DateTime == $dt {
+    say $dt.Date;
+}
+else {
+    say $dt;
+}
+</code></pre>
+
+<h2 id="datetime-格式化">DateTime 格式化</h2>
+
+<p>如果时间戳没有被解析为整天, 那么当前我们的脚本的输出就会像这样:</p>
+
+<pre><code class="language-perl6">2015-12-24T00:00:01Z
+</code></pre>
+
+<p>其中的 &ldquo;Z&rdquo; 表示 UTC 或 &ldquo;Zulu&rdquo; 时区。</p>
+
+<p><code>DateTime</code> 类支持自定义格式化, 所以我们来写一个:</p>
+
+<pre><code class="language-perl6">sub MAIN(Int $timestamp) {
+    my $dt = DateTime.new(+$timestamp, formatter =&gt; sub ($o) {
+            sprintf '%04d-%02d-%02d %02d:%02d:%02d',
+                    $o.year, $o.month,  $o.day,
+                    $o.hour, $o.minute, $o.second,
+    });
+    if $dt.Date.DateTime == $dt {
+        say $dt.Date;
+    }
+    else {
+        say $dt.Str;
+    }
+}
+</code></pre>
+
+<p>现在输出看起来更好看了:</p>
+
+<pre><code class="language-perl6">./autotime 1450915201
+2015-12-24 00:00:01
+</code></pre>
+
+<p>语法 <code>formatter =&gt; ...</code> 在参数上下文中表示具名参数。
+这样的代码我不喜欢, 因为在 <code>DateTime.new</code> 调用中它是内联的, 这并不清晰。</p>
+
+<p>我们来单独写一个例程:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+sub MAIN(Int $timestamp) {
+    sub formatter($o) {
+        sprintf '%04d-%02d-%02d %02d:%02d:%02d',
+                $o.year, $o.month,  $o.day,
+                $o.hour, $o.minute, $o.second,
+    }
+    my $dt = DateTime.new(+$timestamp, formatter =&gt; &amp;formatter);
+    if $dt.Date.DateTime == $dt {
+        say $dt.Date;
+    }
+    else {
+        say $dt.Str;
+    }
+}
+</code></pre>
+
+<p>是的, 你可以把一个子例程声明放在另一个子例程声明的正文中; 子例程只是一个普通的词法符号,就像一个用 <code>my</code> 声明的变量。</p>
+
+<p>在行 <code>my $dt = DateTime.new(+$timestamp,formatter =&gt; &amp;formatter);</code> 中, 语法 <code>&amp;formatter</code> 引用子例程作为一个对象,而不调用它。</p>
+
+<p>这是 Perl 6, <code>formatter =&gt; &amp;formatter</code> 有一个简写: <code>&amp;formatter</code>。
+作为一般规则,如果要填充一个名称为变量名称并且其值为变量值的命名参数, 可以通过写入 <code>:$variable</code> 创建它。 作为扩展, <code>:thing</code> 是 <code>thing =&gt; True</code> 的缩写。</p>
+
+<h2 id="寻找其他途径">寻找其他途径</h2>
+
+<p>现在, 从时间戳到日期和时间的转换工作的很好, 让我们看另一种途径。
+我们的小工具需要解析输入, 并决定输入的是时间戳还是日期和可选的时间。</p>
+
+<p>一种无聊的方式是使用条件:</p>
+
+<pre><code class="language-perl6">sub MAIN($input) {
+    if $input ~~ / ^ \d+ $ / {
+        # convert from timestamp to date/datetime
+    }
+    else {
+        # convert from date to timestamp
+
+    }
+}
+</code></pre>
+
+<p>但我讨厌无聊, 所以我想看看一个更令人兴奋的（端可扩展）方法。</p>
+
+<p>Perl 6 支持多重分派。这意味着您可以有多个具有相同名称但不同签名的子例程。
+Perl 6 自动决定要调用哪一个。 您必须通过编写 <code>multi sub</code> 而不是 <code>sub</code> 来显式地启用此功能, 以便 Perl 6 可以捕获意外的重新声明。</p>
+
+<p>让我们看看它在实际中的运用:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+multi sub MAIN(Int $timestamp) {
+    sub formatter($o) {
+        sprintf '%04d-%02d-%02d %02d:%02d:%02d',
+                $o.year, $o.month,  $o.day,
+                $o.hour, $o.minute, $o.second,
+    }
+    my $dt = DateTime.new(+$timestamp, :&amp;formatter);
+    if $dt.Date.DateTime == $dt {
+        say $dt.Date;
+    }
+    else {
+        say $dt.Str;
+    }
+}
+
+
+multi sub MAIN(Str $date) {
+    say Date.new($date).DateTime.posix
+}
+</code></pre>
+
+<p>我们看一下效果:</p>
+
+<pre><code class="language-perl6">$ ./autotime 2015-12-24
+1450915200
+$ ./autotime 1450915200
+Ambiguous call to 'MAIN'; these signatures all match:
+:(Int $timestamp)
+:(Str $date)
+  in block &lt;unit&gt; at ./autotime line 17
+</code></pre>
+
+<p>不是我所想象的。问题又是整数参数自动被转换为了 <code>IntStr</code>, Int 和 Str <code>multi</code>（或候选）都接受它作为参数。</p>
+
+<p>避免这种错误的最简单的方法是缩小 Str 候选者接受的字符串的种类。
+经典的方法是用一个正则表达式粗略验证传入的参数:</p>
+
+<pre><code class="language-perl6">multi sub MAIN(Str $date where /^ \d+ \- \d+ \- \d+ $ /) {
+    say Date.new($date).DateTime.posix
+}
+</code></pre>
+
+<p>它确实能工作, 但为什么重复 Date.new 已经有用于验证日期字符串的逻辑？
+如果你传递一个看起来不像日期的字符串参数,你会得到这样的错误：</p>
+
+<pre><code class="language-perl6">Invalid Date string 'foobar'; use yyyy-mm-dd instead
+</code></pre>
+
+<p>我们可以使用这种行为约束 <code>MAIN multi</code> 候选者的字符串参数：</p>
+
+<pre><code class="language-perl6">multi sub MAIN(Str $date where { try Date.new($_) }) {
+    say Date.new($date).DateTime.posix
+}
+</code></pre>
+
+<p>在这里额外的 <code>try</code> 是因为子类型约束后面的 <code>where</code> 不应该抛出异常, 而只是返回一个假值。</p>
+
+<p>现在它的工作得像预期的一样:</p>
+
+<pre><code class="language-perl6">$ ./autotime 2015-12-24;
+1450915200
+$ ./autotime 1450915200
+2015-12-24
+</code></pre>
+
+<h2 id="处理时间">处理时间</h2>
+
+<p>剩下要实现的功能是把日期和时间转换为时间戳。换句话说, 我们想这样调用 <code>autotime 2015-12-24 11:23:00</code>:</p>
+
+<pre><code class="language-perl6">multi sub MAIN(Str $date where { try Date.new($_) }, Str $time?) {
+    my $d = Date.new($date);
+    if $time {
+        my ( $hour, $minute, $second ) = $time.split(':');
+        say DateTime.new(date =&gt; $d, :$hour, :$minute, :$second).posix;
+    }
+    else {
+        say $d.DateTime.posix;
+    }
+}
+</code></pre>
+
+<p>凭借尾部的?, 新的第二个参数是可选的 。 如果存在第二个参数, 我们用冒号将时间字符串分割成小时,分钟和秒。 我写的第一个本能是使用较短的变量名称, <code>my($h, $m, $s) = $time.split(':')</code>, 但然后调用 <code>DateTime</code> 构造函数看起来像这样：</p>
+
+<pre><code class="language-perl6">DateTime.new(date =&gt; $d, hour =&gt; $h, minute =&gt; $m, second =&gt; $s);
+</code></pre>
+
+<p>所以构造函数的命名参数使我选择更多的自解释变量名。</p>
+
+<p>所以, 这个可以工作:</p>
+
+<pre><code class="language-perl6">./autotime 2015-12-24 11:23:00
+1450956180
+</code></pre>
+
+<p>而且我们还可以检测它的原形:</p>
+
+<pre><code class="language-perl6">$ ./autotime 1450956180
+2015-12-24 11:23:00
+</code></pre>
+
+<h2 id="系好你的安全带">系好你的安全带</h2>
+
+<p>Perl 6 的隐式变量或主题变量:</p>
+
+<pre><code class="language-perl6">for 1..3 {
+    .say
+}
+</code></pre>
+
+<p>产生如下输出:</p>
+
+<p>[source]</p>
+
+<pre><code class="language-perl6">1
+2
+3
+</code></pre>
+
+<p>这个例子中没有显式的迭代变量, 所以 Perl 隐式地把当前循环的值绑定给叫做 <code>$_</code> 的变量。方法调用 <code>.say</code> 是 <code>$_.say</code> 的缩写。由于我们有一个子例程在同一个变量上调用了 6 个方法, 所以使用 <code>$_</code> 会有很好的可视效果:</p>
+
+<pre><code class="language-perl6">sub formatter($_) {
+    sprintf '%04d-%02d-%02d %02d:%02d:%02d',
+            .year, .month,  .day,
+            .hour, .minute, .second,
+}
+</code></pre>
+
+<p>如果你不想求助于函数定义在词法作用域中设置 <code>$_</code>, 那么你可以使用 <code>given VALUE BLOCK</code> 结构:</p>
+
+<pre><code class="language-perl6">given DateTime.new(+$timestamp, :&amp;formatter) {
+    if .Date.DateTime == $_ {
+        say .Date;
+    }
+    else {
+        .say;
+    }
+}
+</code></pre>
+
+<p>Perl 6 还提供了对 <code>$_</code> 变量的条件语句的快捷方式,可以用作一个通用的switch语句：</p>
+
+<pre><code class="language-perl6">given DateTime.new(+$timestamp, :&amp;formatter) {
+    when .Date.DateTime == $_ { say .Date }
+    default { .say }
+}
+</code></pre>
+
+<p>如果你有一个只读的变量或参数, 那么你可以不使用 <code>$</code> 符号, 虽然你可以在声明时使用反斜线:</p>
+
+<pre><code class="language-perl6">multi sub MAIN(Int \timestamp) {
+    ...
+    given DateTime.new(+timestamp, :&amp;formatter) {
+    ...
+    }
+}
+</code></pre>
+
+<p>所以现在完整的代码看起来像这样:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+multi sub MAIN(Int \timestamp) {
+    sub formatter($_) {
+        sprintf '%04d-%02d-%02d %02d:%02d:%02d',
+                .year, .month,  .day,
+                .hour, .minute, .second,
+    }
+    given DateTime.new(+timestamp, :&amp;formatter) {
+        when .Date.DateTime == $_ { say .Date }
+        default { .say }
+    }
+}
+
+multi sub MAIN(Str $date where { try Date.new($_) }, Str $time?) {
+    my $d = Date.new($date);
+    if $time {
+        my ( $hour, $minute, $second ) = $time.split(':');
+        say DateTime.new(date =&gt; $d, :$hour, :$minute, :$second).posix;
+    }
+    else {
+        say $d.DateTime.posix;
+    }
+}
+</code></pre>
+
+<h2 id="main-魔法">MAIN 魔法</h2>
+
+<p>为我们调用 <code>sub MAIN</code> 的魔法还为我们提供了一个自动化的用法消息, 如果我们用不匹配任何 <code>multi</code> 的参数调用 MAIN, 例如调用时不提供参数:</p>
+
+<pre><code class="language-perl6">$ ./autotime
+Usage:
+  ./autotime &lt;timestamp&gt;
+  ./autotime &lt;date&gt; [&lt;time&gt;]
+</code></pre>
+
+<p>我们可以通过在 MAIN subs 之前添加语义注释来为这些用法行添加简短描述:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+#| Convert timestamp to ISO date
+multi sub MAIN(Int \timestamp) {
+    ...
+}
+
+#| Convert ISO date to timestamp
+multi sub MAIN(Str $date where { try Date.new($_) }, Str $time?) {
+    ...
+}
+</code></pre>
+
+<p>现在用法信息变为了:</p>
+
+<pre><code class="language-perl6">$ ./autotime
+Usage:
+  ./autotime &lt;timestamp&gt; -- Convert timestamp to ISO date
+  ./autotime &lt;date&gt; [&lt;time&gt;] -- Convert ISO date to timestamp
+</code></pre>
+
+<h2 id="总结">总结</h2>
+
+<p>我们已经看到了一些 Date 和 DateTime 算法, 但令人兴奋的部分是 multi dispatch, 命名参数,带有 where 从句的子类型约束, given/ when 和 隐式 $_ 变量, 以及一些魔法, 当涉及到 MAIN subs 时。</p>
+
+<p>原文请参见 <a href="https://perlgeek.de/blog-en/perl-6/2016-book-timestamp-converter.html">Perl 6 By Example: Datetime Conversion for the Command Line</a></p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/2016-%E5%B9%B4%E6%9C%AB%E6%80%BB%E7%BB%93/" data-toggle="tooltip" data-placement="top" title="2016 年末总结">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl-6-tips---%E5%88%9B%E5%BB%BA%E5%8F%AF%E9%87%8D%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" data-toggle="tooltip" data-placement="top" title="Perl 6 Tips - 创建可重用的数据类型">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl6 Weekly(二)</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl6 Weekly(二)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/perl6weekly%E7%AC%AC%E4%BA%8C%E6%9C%9F/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl6 Weekly(二)</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/08/22</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h2 id="my-foo-的作用域和用途"><code>:my $foo</code> 的作用域和用途</h2>
+
+<p>在 *regex*、<em>token</em> 或 <em>rule</em> 中, 定义像下面这样的变量是可能的:</p>
+
+<pre><code class="language-perl6">token directive {
+    :my $foo = &quot;in command&quot;;
+    &lt;command&gt; &lt;subject&gt; &lt;value&gt;?
+}
+</code></pre>
+
+<p>在中提到了一点有关该变量的东西, 我引用过来:</p>
+
+<blockquote>
+<p>任何 grammar regex 实际上是一种<code>方法</code>, 并且你可以在这样一个子例程中使用一个冒号跟着任何作用域声明符来声明一个变量, 这些声明符包括 <code>my</code>, <code>our</code>, <code>state</code> 和 <code>constant</code> (作为类似的声明符, temp 和 let 也能被识别). 单个语句(直到结尾的分号或行末尾的闭括号为止) 被解析为普通的 Perl 6 代码:</p>
+</blockquote>
+
+<pre><code class="language-perl6">token prove-nondeterministic-parsing {
+    :my $threshold = rand;
+    'maybe' \s+ &lt;it($threshold)&gt;
+}
+</code></pre>
+
+<p>有谁能解释下这段代码的应用场景吗？</p>
+
+<h3 id="what-scope-does-my-foo-have">what scope does <code>:my $foo;</code> have?</h3>
+
+<p><code>:my $foo</code> 在它所出现的 rule/token/regex 中拥有词法作用域(lexical scope)。你所得到的作用域要么很大要么很小:</p>
+
+<pre><code class="language-perl6">grammar g {
+    regex r1 {
+        { my $foo; ...} # `$foo` 在该 block 的结尾超出作用域。
+        ...
+        { say $foo;   } # `$foo` 不在作用域中。
+    }
+}
+
+grammar i {
+    my $foo;
+    regex r1   { ... } # 在 `r1` 内部, `$foo` 被识别出。
+    ...
+    regex r999 { ... } # 但是在 r999 中也是。
+}
+</code></pre>
+
+<h3 id="它的用途">它的用途?</h3>
+
+<p>使用 <code>:my $foo;</code> 形式的变量声明以在 rule/token/regex 中声明本地作用域的变量, 如果没有进一步的声明, 那么这些变量能在 rule/token/regex 中的任何地方通过所声明的名字来引用。举个例子, 你可以看看 Rakudo 的 Grammar.nqp 源代码中的 <a href="http://github.com/rakudo/rakudo/blob/nom/src/Perl6/Grammar.nqp#L108"><code>token babble</code></a> 中声明的 <code>@extra_tweaks</code> 变量的用法。</p>
+
+<p>使用 <code>:my $*foo;</code> 形式的变量声明来声明动态的词法变量。动态变量能够, 在没有进一步声明的情况下, 在闭合词法作用域和闭合动态作用域中通过它们声明的名字来引用。作为说明, 请查看 <a href="http://github.com/rakudo/rakudo/blob/nom/src/Perl6/Grammar.nqp#L4861">the declaration of <code>@*nibbles</code> in Rakudo&rsquo;s Grammar module</a> 和 <a href="http://github.com/rakudo/rakudo/blob/nom/src/Perl6/Actions.nqp#L8943">its use in Rakudo&rsquo;s Actions module</a> 。</p>
+
+<h3 id="一般的使用场景">一般的使用场景</h3>
+
+<p>在 <a href="https://en.wikipedia.org/wiki/Regular_expression">regular expressions</a> 中一般不使用 <code>:…</code> 风格的声明。<code>:...;</code> 结构通常用在特别复杂和庞大的 grammars 中。对于这些使用场景, 依靠 Perl 6 的正则表达式和闭包的一致性是合适的。正是这使得 rule/token/regex 级别的 <code>:...;</code> 变量声明变得正当。</p>
+
+<h3 id="regexes-和-closures-的一致性">Regexes 和 closures 的一致性</h3>
+
+<p>很多 grammars 都是<a href="http://trevorjim.com/python-is-not-context-free/">上下文有关的</a>.</p>
+
+<p>Perl 6 使 regexes 和 closures 统一了:</p>
+
+<pre><code class="language-perl6">say Regex.^mro; (Regex) (Method) (Routine) (Block) (Code) ...
+</code></pre>
+
+<p>mro 是方法解析顺序, 这足以说明 regex 实际上是一种特殊类型的方法(就像方法是一种特殊类型的子例程一样)。</p>
+
+<h2 id="perl6-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop-http-stackoverflow-com-questions-36117329-perl6-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop"><a href="http://stackoverflow.com/questions/36117329/perl6-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop">Perl6: is there a phaser that runs only when you fall out of a loop?</a></h2>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+use v6.c;
+
+ROLL:
+for 1..10 -&gt; $r {
+    given (1..6).roll {
+        when 6 {
+            say &quot;Roll $r: you win!&quot;;
+            last ROLL;
+        }
+        default {
+            say &quot;Roll $r: sorry...&quot;;
+        }
+    }
+    LAST {
+        say &quot;You either won or lost - this runs either way&quot;;
+    }
+}
+
+</code></pre>
+
+<p>更优雅的写法:</p>
+
+<pre><code class="language-perl6">constant N = 5;
+for flat (1..6).roll xx * Z 1..N -&gt; $_, $n {
+    print &quot;roll $n: $_ &quot;;
+
+    when 6 {
+        put &quot;(won)&quot;;
+        last;
+    }
+
+    default {
+        put &quot;(lost)&quot;;
+    }
+
+    LAST {
+        print &quot;result: &quot;;
+        when 6 { put &quot;winner :)&quot; }
+        default { put &quot;loser :(&quot; }
+    }
+}
+</code></pre>
+
+<h2 id="怎么从命令行传递一个复数给-sub-main-http-stackoverflow-com-questions-35872082-how-do-i-pass-a-complex-number-from-the-command-line-to-sub-main"><a href="http://stackoverflow.com/questions/35872082/how-do-i-pass-a-complex-number-from-the-command-line-to-sub-main">怎么从命令行传递一个复数给 sub MAIN?</a></h2>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+use v6.c;
+
+sub MAIN($x)
+{
+    say &quot;$x squared is { $x*$x }&quot;;
+}
+</code></pre>
+
+<p>我要在命令行中传递一个复数给 MAIN:</p>
+
+<blockquote>
+<pre><code>&gt; % ./square i
+&gt; ```
+
+</code></pre>
+
+<p>Cannot convert string to number: base-10 number must begin with valid digits or &lsquo;.&rsquo; in &lsquo;⏏i&rsquo; (indicated by ⏏)
+  in sub MAIN at ./square line 7
+  in block <unit> at ./square line 5</p>
+</blockquote>
+
+<p>Actually thrown at:
+  in sub MAIN at ./square line 7
+  in block <unit> at ./square line 5</p>
+
+<pre><code>
+当我把脚本变为:
+
+```perl6
+#!/usr/bin/env perl6
+
+use v6.c;
+
+sub MAIN(Complex $x)
+{
+    say &quot;$x squared is { $x*$x }&quot;;
+}
+</code></pre>
+
+<p>它竟然彻底罢工了:</p>
+
+<pre><code class="language-perl">% ./square i
+Usage:
+  square &lt;x&gt;
+
+% ./square 1
+Usage:
+  square &lt;x&gt;
+</code></pre>
+
+<p>一种方法是使用 <a href="http://design.perl6.org/S02.html#Coercive_type_declarations">Coercive type declaration</a> (强制类型声明), 从 Str 到 Complex:</p>
+
+<pre><code class="language-perl6">sub MAIN(Complex(Str) $x) {
+    say &quot;$x 的平方为 { $x * $x }&quot;;
+}
+</code></pre>
+
+<p>那么:</p>
+
+<pre><code>% ./squared.pl 1
+1+0i 的平方为 1+0i
+% ./squared.pl 1+2i
+1+2i 的平方为 -3+4i
+</code></pre>
+
+<p>但是:</p>
+
+<pre><code>$ ./test.pl6 2
+Usage:
+  ./test.p6 &lt;x&gt;
+</code></pre>
+
+<p>所以你真正需要的是把其它 Numeric 类型强转为 Complex 类型:</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+use v6.c;
+
+sub MAIN ( Complex(Real) $x ) {
+    say &quot;$x squared is { $x*$x }&quot;;
+}
+</code></pre>
+
+<p>我使用 Real 而非 Numeric, 因为 Complex 已经涵盖了其它的了。</p>
+
+<h2 id="blessing-a-hash-into-an-object-https-www-reddit-com-r-perl6-comments-4aoi82-blessing-a-hash-into-an-object"><a href="https://www.reddit.com/r/perl6/comments/4aoi82/blessing_a_hash_into_an_object/">Blessing a Hash into an object</a></h2>
+
+<p>为什么我写的这段代码不对呢？</p>
+
+<pre><code class="language-perl6">class WordCount {
+  has %!words; # Tried with both . and !
+  method new($string) {
+    my %words;
+    my @sentence = split(/\s+/, $string);
+    for @sentence -&gt; $word {
+      %words{$word}++;
+    }
+    return self.bless(:%words);
+  }
+
+  method sayCounts() {
+    my @keys = keys(%!words);
+    for @keys -&gt; $key {
+      say $key ~ &quot; &quot; ~ %!words{$key};
+    }
+  }
+}
+
+sub MAIN {
+  my $sentence = &quot;the boy jumped over the dog&quot;;
+  my $wordCount = WordCount.new($sentence);
+  $wordCount.sayCounts();
+}
+</code></pre>
+
+<p>Perl6-ify:</p>
+
+<pre><code class="language-perl6">use v6;
+
+class WordCount {
+  has Int %.words is default(0);
+
+  method new($string) {
+    my Int %words;
+    for $string.split(/\s+/) -&gt; $word {
+      %words{$word}++;
+    }
+
+    self.bless(:%words)
+  }
+
+  method gist {
+    %.words.map({.value ~ &quot; &quot; ~ .key}).join(&quot;\n&quot;)
+  }
+}
+
+my $word-count = WordCount.new('the boy jumped over the dog');
+say $word-count;
+</code></pre>
+
+<p>散列中的每一项都是一个 <strong>Pair</strong>:</p>
+
+<pre><code class="language-perl6">my %w = a =&gt; 1;
+%w.map({ say $_.^name }) # OUTPUT«Pair␤»
+</code></pre>
+
+<p>所以:</p>
+
+<pre><code class="language-perl6">%.words.map({.value ~ &quot; &quot; ~ .key}).join(&quot;\n&quot;)
+</code></pre>
+
+<p>等价于:</p>
+
+<pre><code class="language-perl6">%.words.kv.map( -&gt; $word, $count { &quot;$word $count&quot; } ).join(&quot;\n&quot;)
+</code></pre>
+
+<p>你还可以使用 sub-signature(子签名)来解构 <code>.map</code> 提供的 <code>Pair</code>：</p>
+
+<pre><code class="language-perl6">%.words.map( -&gt; (:key($word), :value($count)) { &quot;$word $count&quot; } ).join(&quot;\n&quot;)
+</code></pre>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/%E5%9C%A8perl6%E4%B8%AD%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%B1%BB%E6%B7%BB%E5%8A%A0%E4%B8%8B%E6%A0%87subscripts/" data-toggle="tooltip" data-placement="top" title="在 Perl 6 中为自定义的类添加下标(subscripts)">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E5%BC%95%E5%8F%B7/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的引号">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

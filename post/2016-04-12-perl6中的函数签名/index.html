@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的签名</title>
+  <meta property="og:title" content="Perl 6 中的签名" />
+  <meta name="twitter:title" content="Perl 6 中的签名" />
+  <meta name="description" content="Parameter list pattern">
+  <meta property="og:description" content="Parameter list pattern">
+  <meta name="twitter:description" content="Parameter list pattern">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-04-12-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-04-12-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 中的签名</h1>
+                
+                  
+                    <h2 class="post-subheading">Parameter list pattern</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2016/12/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="签名-http-doc-perl6-org-type-signature-也是对象"><a href="http://doc.perl6.org/type/Signature">签名</a>也是对象</h2>
+
+<pre><code class="language-perl6">class Signature {}
+</code></pre>
+
+<p>签名是代码对象<a href="https://docs.perl6.org/type/Parameter">参数</a>列表的静态描述。即, 签名描述了你需要什么参数和多少参数传递给代码或函数以调用它们。</p>
+
+<p>传递参数给签名把包含在 <strong><a href="https://docs.perl6.org/type/Capture">Capture</a></strong> 中的参数绑定到了签名上。</p>
+
+<pre><code class="language-perl6">&gt; sub a($a, $b) {};
+&gt; &amp;a.signature.perl.say
+:($a, $b)
+&gt; my $b = -&gt; $a, $b {};
+&gt; $b.signature.perl.say
+:($a, $b)
+</code></pre>
+
+<p>签名是一个对象, 就像 Perl 6 中的任何其它东西一样。 任何 <strong>Callable</strong> 类型中都有签名, 并且它能使用 <code>.signature</code>方法获取到。</p>
+
+<pre><code class="language-perl6">class Signature { ... }
+</code></pre>
+
+<h2 id="签名字面量">签名字面量</h2>
+
+<p>签名出现在<a href="https://docs.perl6.org/type/Sub">子例程</a>和<a href="https://docs.perl6.org/type/Method">方法</a>名后面的圆括号中, 对于 blocks 签名出现在 <code>-&gt;</code>或 <code>&lt;-&gt;</code> 箭头后面, 或者作为<a href="https://docs.perl6.org/language/variables#Variable_Declarators_and_Scope">变量声明符</a>(例如 <code>[my](https://docs.perl6.org/syntax/my)</code> )的输入, 或者以冒号开头作为单独的项。</p>
+
+<pre><code class="language-perl6">sub f($x) { }
+#    ^^^^ sub f 的签名
+method x() { }
+#       ^^ 方法 x 的签名
+my $s = sub (*@a) { }
+#           ^^^^^ 匿名函数的签名
+
+for &lt;a b c&gt; -&gt; $x { }
+#              ^^    Block 的签名
+
+my ($a, @b) = 5, (6,7,8);
+#  ^^^^^^^^ 变量声明符的签名
+
+my $sig = :($a, $b);
+#          ^^^^^^^^ 独立的签名对象
+</code></pre>
+
+<p>签名字面量可以用于定义回调或闭包的签名。</p>
+
+<pre><code class="language-perl6">sub f(&amp;c:(Int))    {}
+sub will-work(Int) {}
+sub won't-work(Str){}
+f(&amp;will-work);
+
+f(&amp;won't-work);
+CATCH { default { put .^name, ': ', .Str } };
+# OUTPUT: «X::TypeCheck::Binding::Parameter: Constraint type check failed in binding to parameter '&amp;c'␤»
+
+f(-&gt; Int { 'this works too' } );
+</code></pre>
+
+<p>支持签名和列表(List)间的智能匹配。</p>
+
+<pre><code class="language-perl6">my $sig = :(Int $i, Str $s);
+say (10, 'answer') ~~ $sig; # OUTPUT: «True␤» 
+
+my $sub = sub ( Str $s, Int $i ) { return $s xx $i };
+say $sub.signature ~~ :( Str, Int ); # OUTPUT: «True␤» 
+
+given $sig {
+    when :(Str, Int) { say 'mismatch' }
+    when :($, $)     { say 'match' }
+    default          { say 'no match' }
+}
+# OUTPUT: «match␤» 
+</code></pre>
+
+<p>它匹配第二个 <code>when</code> 从句，因为 <code>:($, $)</code> 表示带有两个标量, 匿名参数的 <code>Signature</code>，它是 <code>$sig</code> 的更一版版本。</p>
+
+<p>当和散列智能匹配时, 签名被认为由散列的键组成。</p>
+
+<pre><code class="language-perl6">my %h = left =&gt; 1, right =&gt; 2;
+say %h ~~ :(:$left, :$right);
+# OUTPUT
+# True
+</code></pre>
+
+<h3 id="参数分隔符">参数分隔符</h3>
+
+<p>签名由逗号分割的 0 个或多个<a href="https://docs.perl6.org/type/Parameter">形式参数</a>组成。</p>
+
+<pre><code class="language-perl6">my $sig = :($a, @b, %c)
+sub add ($a, $b) { $a + $b }
+</code></pre>
+
+<p>作为一个例外, 签名中的第一个参数的后面可以跟着一个冒号而非逗号来标记方法的调用者。调用者是用来调用方法的对象, 其通常绑定到 <a href="https://docs.perl6.org/routine/self">self</a>。 通过在签名中指定调用者，你可以更改它绑定到的变量名称。</p>
+
+<pre><code class="language-perl6">method ($a: @b, %c){}  # 第一个参数是调用者
+
+class Foo {
+    method whoami ($me:) {
+        &quot;Well I'm class $me.^name(), of course!&quot;
+    }
+}
+
+say Foo.whoami; # Well I'm class Foo, of course!
+</code></pre>
+
+<h3 id="类型约束">类型约束</h3>
+
+<p>参数可以可选地拥有一个类型约束(默认为 <code>[Any](https://docs.perl6.org/type/Any)</code>)。这些能用于限制函数允许的输入。</p>
+
+<pre><code class="language-perl6">my $sig = :(Int $a, Str $b)
+</code></pre>
+
+<pre><code class="language-perl6">sub divisors (Int $n) { $_ if $n %% $_ for 1..$n }
+divisors 2.5; # !!! Calling 'divisors' will never work with argument types (Rat)
+# ===SORRY!=== Error while compiling: 
+# Calling divisors(Rat) will never work with declared signature (Int $n) 
+</code></pre>
+
+<p>匿名参数也行, 如果参数只需要它的类型约束的话。</p>
+
+<pre><code class="language-perl6">my $sig = :($, @, %a)         # 两个匿名参数和一个 &quot;正常的(有名字的)&quot;参数
+$sig = :(Int, Positional)     # 只有类型也行(两个参数)
+sub baz (Str) {&quot;Got passed a Str&quot;}
+</code></pre>
+
+<p>类型约束也可以是类型捕获(<a href="http://doc.perl6.org/type/Signature#Type_Captures">type captures</a>)。</p>
+
+<p>除了这些名义上的类型之外, 额外的约束可以以代码块的形式加到参数上, 代码块必须返回一个真值以通过类型检测。</p>
+
+<pre><code class="language-perl6">sub f(Real $x where { $x &gt; 0 }, Real $y where { $y &gt;= $x }) { }
+</code></pre>
+
+<p><code>where</code> 子句中的代码有一些限制：任何会产生副作用的东西（例如，打印输出，从迭代器中拉取或递增状态变量）都不受支持，如果使用了，可能会产生令人惊讶的结果。此外，在某些实现中，<code>where</code> 子句的代码可能会针对单个类型检查运行多次。</p>
+
+<p><code>where</code> 子句不需要是代码块，<code>where</code> 子句右侧的任何内容都将用于和参数<a href="https://docs.perl6.org/language/operators#infix_~~">智能匹配</a>。所以你也可以写：</p>
+
+<pre><code class="language-perl6">multi factorial(Int $ where 0) { 1 }
+multi factorial(Int $x)        { $x * factorial($x - 1) }
+</code></pre>
+
+<p>第一个还能简化为</p>
+
+<pre><code class="language-perl6">multi factorial(0) { 1 }
+</code></pre>
+
+<p>你可以直接把字面量用作类型并把值约束到匿名参数上。</p>
+
+<p><strong>提示</strong>：注意不要在你有几个条件时不小心离开区块：</p>
+
+<pre><code class="language-perl6">-&gt; $y where   .so &amp;&amp; .name    {}( sub one   {} ); # WRONG!! 
+-&gt; $y where { .so &amp;&amp; .name }  {}( sub two   {} ); # OK! 
+-&gt; $y where   .so &amp;  .name.so {}( sub three {} ); # Also good 
+</code></pre>
+
+<p>第一个版本是错误的，会发出一个关于 sub 对象强制转换为字符串的警告。原因是表达式相当于 <code>($y ~~ ($y.so &amp;&amp; $y.name));</code> 那就是“调用 <code>.so</code>，如果它为 <code>True</code>，调用 <code>.name</code>; 如果这也是 <code>True</code>，则使用它的值进行smartmatching &hellip;”。这是 <code>(.so &amp;&amp; .name)</code> 的结果将被智能匹配，但我们要检查 <code>.so</code> 和 <code>.name</code> 是否为真值。这就是为什么明确的 Block 或者 <a href="https://docs.perl6.org/type/Junction">Junction</a> 是正确的版本。</p>
+
+<p>在<code>签名</code>中不是子签名(sub-signature)的一部分的所有先前的参数都可以在参数后面的 <code>where</code> 从句中访问。 因此，最后一个参数的 where 从句可以访问不是子签名一部分的签名的所有参数。 对于子签名，把 where 从句放在子签名中。</p>
+
+<pre><code class="language-perl6">sub foo($a, $b where * == $a ** 2) { say &quot;$b is a square of $a&quot; }
+foo 2, 4; # OUTPUT: «4 is a square of 2␤»» 
+# foo 2, 3; 
+# OUTPUT: «Constraint type check failed in binding to parameter '$b'…» 
+
+sub one-of-them(:$a, :$b, :$c where { $a.defined ^^ $b.defined ^^ $c.defined }) {
+    $a // $b // $c
+};
+say one-of-them(c=&gt;42);
+# OUTPUT«42␤»
+</code></pre>
+
+<h3 id="约束可选参数">约束可选参数</h3>
+
+<p><a href="https://docs.perl6.org/type/Signature#Optional_and_Mandatory_Parameters">可选参数</a>也可以拥有约束。任何参数 <code>where</code> 从句都将被执行, 即使它是可选的，而且不是由调用者提供。在这种情况下，您可能必须防止 where 从句中的未定义值。</p>
+
+<pre><code class="language-perl6">sub f(Int $a, UInt $i? where { !$i.defined or $i &gt; 5 } ) { ... }
+</code></pre>
+
+<h4 id="约束吞噬参数">约束吞噬参数</h4>
+
+<p><a href="https://docs.perl6.org/type/Slurpy_(A$FULL_STOPK$FULL_STOPA$FULL_STOP_Variadic)_Parameters">吞噬参数</a>不能拥有类型约束。一个 where 从句连同一个 <a href="https://docs.perl6.org/type/Junction">Junction</a>可以达到同样的那个效果。</p>
+
+<pre><code class="language-perl6">sub f(*@a where { $_.all ~~ Int }) { say @a };
+f(42);
+f(&lt;a&gt;);
+# OUTPUT«[42] Constraint type check failed for parameter '@a'  in sub f at ...»
+</code></pre>
+
+<h4 id="约束定义值和未定义值">约束定义值和未定义值</h4>
+
+<p>通常, 类型约束只检查传递的值是否是正确的<strong>类型</strong>。</p>
+
+<pre><code class="language-perl6">sub limit-lines (Str $s, Int $limit) {
+    my @lines = $s.lines;
+    @lines[0 ..^ min @lines.elems, $limit].join(&quot;\n&quot;)
+}
+say (limit-lines &quot;a \n b \n c \n d \n&quot;, 3).perl; # &quot;a \n b \n c &quot;
+say limit-lines Str,      3;  # Uh-oh. Dies with &quot;Cannot call 'lines';&quot;
+CATCH { default { put .^name, ': ', .Str } };
+# OUTPUT: «X::Multi::NoMatch: Cannot resolve caller lines(Str: ); none of these signatures match:
+#     (Cool:D $: |c is raw)
+#     (Str:D $: :$count!, *%_)
+#     (Str:D $: $limit, *%_)
+#     (Str:D $: *%_)»
+
+say limit-lines &quot;a \n b&quot;, Int # Always returns the max number of lines
+</code></pre>
+
+<p>这样的情况, 我们其实只想处理定义了的字符串。要这样做, 我们使用 <code>:D</code>类型约束。</p>
+
+<pre><code class="language-perl6">sub limit-lines (Str:D $s, Int $limit) {
+    ...
+}
+
+say limit-lines Str, 3;
+CATCH { default { put .^name, .Str } };
+# OUTPUT«X::AdHocParameter '$s' requires an instance of type Str, but a
+# type object was passed.  Did you forget a .new?»
+# Dies with &quot;参数 '$s' 需要一个实例, 但是函数 limit-lines 中却传递了一个类型对象。
+</code></pre>
+
+<p>如果传递一个诸如 <strong>Str</strong> 这样的类型对象进去, 那么就会报错。这样的失败方式比以前更好了, 因为失败的原因更清晰了。</p>
+
+<p>也有可能未定义的类型是子例程唯一有意义的接收值。这可以使用 <code>:U</code>类型约束来约束它。例如, 我们可以把 <code>&amp;limit-lines</code>转换成 multi 函数以使用 <code>:U</code>约束。</p>
+
+<pre><code class="language-perl6">multi  limit-lines (Str $s, Int:D $limit) {
+    my @lines = $s.lines;
+    @lines[0 ..^ min @lines.elems, $limit].join(&quot;\n&quot;);
+}
+
+multi limit-lines (Str $s, Int:U $) {$s} # 如果传递给我一个未定义的类型对象, 就返回整个字符串
+
+say limit-lines &quot;a \n b \n c&quot;, Int;      # &quot;a \n b \n c&quot;
+</code></pre>
+
+<p>为了显式地标示常规的行为,  可以使用<code>:_</code>,  但这不是必须的。 <code>:(Num:_ $)</code> 和 <code>:(Num $)</code>相同。</p>
+
+<h4 id="约束-callables-的签名">约束 Callables 的签名</h4>
+
+<p>要基于 block和子例程的签名约束 block 和子例程引用, 参数名要写在签名的后面。</p>
+
+<pre><code class="language-perl6">sub f(&amp;c:(Int, Str))  { say c(10, 'ten') };
+sub g(Int $i, Str $s) { $s ~ $i          };
+f(&amp;g);
+# OUTPUT
+ten10
+</code></pre>
+
+<h4 id="约束返回类型">约束返回类型</h4>
+
+<p><code>--&gt;</code>标记后面跟着一个类型会强制在子例程执行成功时进行类型检测。返回类型箭头必须放在参数列表的后面。跟在签名声明后面的 <code>returns</code> 关键字有同样的功能。<code>Nil</code>在类型检测中被认为是定义了的。这允许沿着调用链返回和传递 <a href="https://docs.perl6.org/type/Failure">Failure</a>。</p>
+
+<pre><code class="language-perl6">sub (--&gt; Int)   { my Int $i; $i};
+sub (--&gt; Int:D)    { 1 };
+sub () returns Int { 1 };
+
+sub foo(--&gt; Int) { 1 };
+sub foo() returns Int { 1 };        # 同上
+sub does-not-work(--&gt; Int) { &quot;&quot; }; # throws X::TypeCheck::Return
+</code></pre>
+
+<p>如果类型约束是一个常量表达式, 那么它被用于子例程的<strong>返回值</strong>。那个子例程中的任何<strong>return</strong>语句必须是不含参数的。</p>
+
+<pre><code class="language-perl6">sub foo(--&gt; 123) { return }
+</code></pre>
+
+<p><code>Nil</code>和 <code>Failure</code>总是被允许作为返回<strong>类型</strong>, 不管类型约束是什么。</p>
+
+<pre><code class="language-perl6">sub foo(--&gt; Int) { Nil };
+say foo.perl; # Nil
+</code></pre>
+
+<p>不支持类型捕获和强制类型。</p>
+
+<h4 id="强制类型">强制类型</h4>
+
+<p>要接受一个类型但是强制它自动地转为另一种类型, 使用接受的类型作为目标类型的参数。如果接受的类型是 Any, 那么它可以被省略。</p>
+
+<pre><code class="language-perl6">sub f(Int(Str) $want-int, Str() $want-str) { say $want-int.WHAT, $want-str.WHAT }
+f '10', 10;
+# OUTPUT
+# (Int)(Str)
+</code></pre>
+
+<h3 id="吞噬参数-或长度可变参数">吞噬参数(或长度可变参数)</h3>
+
+<p>数组或散列参数可以通过前置一个星号(s)被标记为吞噬参数, 这意味着它可以被绑定给任意数量的参数(0 个或 多个)。</p>
+
+<p>它们被叫做吞噬参数, 因为它们吞完函数中的任何剩余参数, 就像有些人吞吃面条那样。</p>
+
+<pre><code class="language-perl6">$ = :($a, @b)  # 正好两个参数, 而第二个参数必须是 Positional 的
+$ = :($a, *@b) # 至少一个参数, @b 吞噬完任何剩余的参数
+$ = :(*%h)     # 没有位置参数, 除了任意数量的具名参数
+</code></pre>
+
+<pre><code class="language-perl6">sub one-arg (@)  { }
+sub slurpy  (*@) { }
+one-arg (5, 6, 7);   # ok, same as one-arg((5, 6, 7))
+slurpy  (5, 6, 7);   # ok
+slurpy   5, 6, 7 ;   # ok
+# one-arg(5, 6, 7) ; # X::TypeCheck::Argument
+# one-arg  5, 6, 7 ; # X::TypeCheck::Argument
+
+sub named-names (*%named-args) { %named-args.keys };
+say named-names :foo(42) :bar&lt;baz&gt;; # foo bar
+</code></pre>
+
+<p>注意位置参数不允许出现在吞噬参数的后面。</p>
+
+<pre><code class="language-perl6">:(*@args, $last);
+CATCH { when X::Parameter::WrongOrder { put .^name, ': ', .Str } }
+# OUTPUT«X::Parameter::WrongOrder: 不能把必要参数放在可变长度参数的后面»
+</code></pre>
+
+<p>带有一个星号的吞噬参数会通过消融一层或多层裸的可迭代对象来展平参数。 带有两个星号的吞噬参数不会展平参数：</p>
+
+<pre><code class="language-perl6">sub a(*@a)  { @a.join(&quot;|&quot;).say };
+sub b(**@b) { @b.join(&quot;|&quot;).say };
+
+a(1,[1,2],([3,4],5));    #  1|1|2|3|4|5
+b(1,[1,2],([3,4],5));    # 1|1 2|3 4 5
+
+</code></pre>
+
+<p>通常, 吞噬参数会创建一个数组, 为每个 argument 创建一个标量容器, 并且把每个参数的值赋值给那些标量。如果在该过程中原参数也有一个中间的标量分量, 那么它在调用函数中是访问不到的。</p>
+
+<p>吞噬参数在和某些<a href="http://doc.perl6.org/type/Signature#Parameter_Traits_and_Modifiers">traits and modifiers</a>组合使用时会有特殊行为, 像下面描述的那样。</p>
+
+<h3 id="single-argument-rule-slurpy">Single Argument Rule Slurpy</h3>
+
+<p>The single argument rule allows to treat arguments to subroutines, for-loops and list constructors based on context. Many methods on positional types can work with a single arguments the same way as with a list or arguments. Using +@ as a sigil in a Signature provides syntactic sugar to make that task a little easier. Any single argument of a non-positional type will be promoted to a list with a single item.</p>
+
+<pre><code class="language-perl6">sub f(+@a){ dd @a };
+f(1);
+# OUTPUT«[1]␤»
+f(1, 2, 3);
+# OUTPUT«[1, 2, 3]␤»
+my @b = &lt;a b c&gt;;
+f @b;
+# OUTPUT«[&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]␤»
+</code></pre>
+
+<h3 id="类型捕获">类型捕获</h3>
+
+<p>类型捕获允许把类型约束的说明推迟到函数被调用时。它们允许签名和函数体中的类型都可以引用。</p>
+
+<pre><code class="language-perl6">sub f(::T $p1, T $p2, ::C) {
+    # $p1 和 $p2 的类型都为 T, 但是我们还不知道具体类型是什么
+    # C 将会保存一个源于类型对象或值的类型
+    my C $closure = $p1 / $p2;
+    return sub (T $p1) {
+        $closure * $p1;
+    }
+}
+
+# 第一个参数是 Int 类型, 所以第二个参数也是
+# 我们从调用用于 &amp;f 中的操作符导出第三个类型
+my &amp;s = f(10,2, Int.new / Int.new);
+say s(2);  # 10 / 2 * 2  == 10
+</code></pre>
+
+<h3 id="positional-vs-named">Positional vs. Named</h3>
+
+<p>参数可以是跟位置有关的或者是具名的。所有的参数都是 positional 的, 除了吞噬型散列参数和有前置冒号标记的参数:</p>
+
+<pre><code class="language-perl6">$ = :($a)   # 位置参数
+$ = :(:$a)  # 名字为 a 的具名参数
+$ = :(*@a)  # 吞噬型位置参数
+$ = :(*%h)  # 吞噬型具名参数
+</code></pre>
+
+<p>在调用者这边, 位置参数的传递顺序和它们声明顺序相同。</p>
+
+<pre><code class="language-perl6">sub pos($x, $y) { &quot;x = $x y = $y&quot; };
+pos(4, 5); #  x = 4 y = 5
+</code></pre>
+
+<p>对于具名实参和具名形参, 只用名字用于将实参映射到形参上。</p>
+
+<pre><code class="language-perl6">sub named(:$x, :$y) { &quot;x=$x y=$y&quot; }
+named( y =&gt; 5, x =&gt; 4);
+</code></pre>
+
+<p>具名参数也可以和变量的名字不同:</p>
+
+<pre><code class="language-perl6">sub named(:official($private)) { &quot;公务&quot; if $private }
+named :official;
+</code></pre>
+
+<p>别名也是那样做的:</p>
+
+<pre><code class="language-perl6">sub ( :color(:colour($c)) ) { } # 'color' 和 'colour' 都可以
+sub ( :color(:$colour) )    { } # same API for the caller
+</code></pre>
+
+<p>带有具名参数的函数可以被动态地调用, 使用 <code>|</code>非关联化一个 Pair 来把它转换为一个具名参数。</p>
+
+<pre><code class="language-perl6">multi f(:$named) { note &amp;?ROUTINE.signature };
+multi f(:$also-named) { note &amp;?ROUTINE.signature };
+
+for 'named', 'also-named' -&gt; $n {
+    f(|($n =&gt; rand))      # «(:$named)␤(:$also-named)␤»
+}
+
+my $pair = :named(1);
+f |$pair; # «(:$named)␤»
+</code></pre>
+
+<p>同样的语法也可以用于将散列转换为具名参数：</p>
+
+<pre><code class="language-perl6">my %pairs = also-named =&gt; 4;
+sub f(|c) {};
+f |%pairs;        # (:$also-named)
+</code></pre>
+
+<h3 id="可选参数和强制参数">可选参数和强制参数</h3>
+
+<p>Positional 参数默认是强制的,  也可以用默认值或结尾的问号使参数成为可选的:</p>
+
+<pre><code class="language-perl6">$ = :(Str $id)         # 必要参数 required parameter
+$ = :($base = 10)      # 可选参数, 默认为 10
+$ = :(Int $x?)         # 可选参数, 默认为 Int 类型的对象
+</code></pre>
+
+<p>具名参数默认是可选的, 可以通过在参数末尾加上一个感叹号使它变成强制参数:</p>
+
+<pre><code class="language-perl6">$ = :(:%config)        # 可选参数
+$ = :(:$debug = False) # 可选参数, 默认为 False
+$ = :(:$name!)         # 名为 name 的强制具名参数
+</code></pre>
+
+<p>默认值可以依靠之前的参数, 并且每次调用都会被重新计算。</p>
+
+<pre><code class="language-perl6">$ = :($goal, $accuracy = $goal / 100);
+$ = :(:$excludes = ['.', '..']); # a new Array for every call
+</code></pre>
+
+<h3 id="解构参数">解构参数</h3>
+
+<p>参数后面可以跟着一个由括号括起来的 <code>sub-signature</code>, 子签名会解构给定的参数。列表解构成它的元素:</p>
+
+<pre><code class="language-perl6">sub first (@array ($first, *@rest)) { $first }
+</code></pre>
+
+<p>或</p>
+
+<pre><code class="language-perl6">sub first ([$first, *@]) { $first }
+</code></pre>
+
+<p>而散列解构成它的键值对儿(pairs):</p>
+
+<pre><code class="language-perl6">sub all-dimensions (% (:length(:$x), :width(:$y), :depth(:$z))) {
+    $x andthen $y andthen $z andthen True
+}
+</code></pre>
+
+<p><code>andthen</code> 返回第一个未定义的值, 否则返回最后一个元素。短路操作符。<code>andthen</code> 左侧的结果被绑定给 <code>$_</code> 用于右侧, 或者作为参数传递, 如果右侧是一个 <code>block</code> 或 <code>pointy block</code> 的话。</p>
+
+<p>一般地, 对象根据它的属性解构。通用的惯用法是在 <em>for</em> 循环中解包一个 <code>[Pair](https://docs.perl6.org/type/Pair)</code>的键和值:</p>
+
+<pre><code class="language-perl6">for &lt;Peter Paul Merry&gt;.pairs -&gt; (:key($index), :value($guest)) {
+    ...
+}
+</code></pre>
+
+<p>但是, 将对象解包为属性只是默认行为。要使对象以不同方式解构，请更改其 <a href="https://docs.perl6.org/routine/Capture">Capture</a> 方法。</p>
+
+<h3 id="子签名">子签名</h3>
+
+<p>要匹配复合参数，请在圆括号中的参数名后面使用子签名。</p>
+
+<pre><code class="language-perl6">sub foo(|c(Int, Str)){
+   put &quot;called with {c.perl}&quot;
+};
+foo(42, &quot;answer&quot;);
+# OUTPUT«called with \(42, &quot;answer&quot;)»
+</code></pre>
+
+<h3 id="长名字">长名字</h3>
+
+<p>为了在多重分派中排除特定参数, 使用一个双分号来分割它们。</p>
+
+<pre><code class="language-perl6">multi sub f(Int $i, Str $s;; :$b) { dd $i, $s, $b };
+f(10, 'answer');
+# OUTPUT«10 &quot;answer&quot;Any $b = Any»
+</code></pre>
+
+<h3 id="捕获参数">捕获参数</h3>
+
+<p>在参数前前置一个垂直的 <code>|</code>会让参数变为 <a href="https://docs.perl6.org/type/Capture">Capture</a>, 并使用完所有剩下的位置参数和具名参数。</p>
+
+<p>这常用在 <code>proto</code>定义中( 像 <code>proto foo (|) {*}</code> ) 来标示例程的 <a href="https://docs.perl6.org/routine/multi">multi 定义</a>可以拥有任何<a href="https://docs.perl6.org/type/Signature#Type_Constraints">类型约束</a>。</p>
+
+<p>如果绑定到变量参数，则可以使用 slip 运算符 <code>|</code> 作为整体转发。</p>
+
+<pre><code class="language-perl6">sub a(Int $i, Str $s) { say $i.WHAT, $s.WHAT }
+sub b(|c) { say c.WHAT; a(|c) }
+b(42, &quot;answer&quot;);
+# OUTPUT«(Capture)␤(Int)(Str)␤»
+</code></pre>
+
+<h3 id="参数特性和修饰符">参数特性和修饰符</h3>
+
+<p>默认地, 形式参数被绑定到它们的实参上并且被标记为只读。你可以使用 traits 特性更改参数的只读特性。</p>
+
+<p><code>is copy</code>特性让参数被复制, 并允许在子例程内部修改参数的值。</p>
+
+<pre><code class="language-perl6">sub count-up ($x is copy) {
+    $x = Inf if $x ~~ Whatever;
+    .say for 1..$x;
+}
+</code></pre>
+
+<p><code>is rw</code>特性让参数只绑定到变量上(或其它可写的容器)。 赋值给参数会改变调用一侧的变量的值。</p>
+
+<pre><code class="language-perl6">sub swap($x is rw, $y is rw) {
+    ($x, $y) = ($y, $x);
+}
+</code></pre>
+
+<p>对于吞噬参数, <code>is rw</code> 由语言设计者保留做将来之用</p>
+
+<h2 id="方法">方法</h2>
+
+<h3 id="params-方法">params 方法</h3>
+
+<pre><code class="language-perl6">method params(Signature:D:) returns Positional
+</code></pre>
+
+<p>返回 <code>Parameter</code>对象列表以组成签名。</p>
+
+<h3 id="arity-方法">arity 方法</h3>
+
+<pre><code class="language-perl6">method arity(Signature:D:) returns Int:D
+</code></pre>
+
+<p>返回所必须的最小数量的满足签名的位置参数</p>
+
+<h3 id="count-方法">count 方法</h3>
+
+<pre><code class="language-perl6">method count(Signature:D:) returns Real:D
+</code></pre>
+
+<p>返回能被绑定给签名的最大数量的位置参数。如果有吞噬位置参数则返回 <code>Inf</code>。</p>
+
+<h3 id="returns-方法">returns 方法</h3>
+
+<p>签名返回的任意约束是:</p>
+
+<pre><code class="language-perl6">:($a, $b --&gt; Int).returns # Int
+</code></pre>
+
+<h3 id="accepts-方法">ACCEPTS 方法</h3>
+
+<pre><code class="language-perl6">multi method ACCEPTS(Signature:D: Capture $topic)
+multi method ACCEPTS(Signature:D: @topic)
+multi method ACCEPTS(Signature:D: %topic)
+multi method ACCEPTS(Signature:D: Signature $topic)
+</code></pre>
+
+<p>前三个方法会看参能否绑定给 capture, 例如, 如果带有那个 Signature 的函数能使用 <code>$topic</code>调用:</p>
+
+<pre><code class="language-perl6">(1,2, :foo) ~~ :($a, $b, :foo($bar)) # true
+&lt;a b c d&gt; ~~ :(Int $a)               # False
+</code></pre>
+
+<p>最后一个会为真如果 <code>$topic</code>能接收的任何东西也能被 <code>Signature</code>接收。</p>
+
+<pre><code class="language-perl6">:($a, $b) ~~ :($foo, $bar, $baz?)   # True
+:(Int $n) ~~ :(Str)                 # False
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/signature/">signature</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/%E7%AD%BE%E5%90%8D/">签名</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-04-12-reddit%E7%BC%96%E7%A8%8B%E9%A2%98-%E8%A9%B9%E5%A6%AE%E7%9A%84%E6%B0%B4%E6%9E%9C%E7%AF%AE/" data-toggle="tooltip" data-placement="top" title="reddit编程题-詹妮的水果篮">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-04-22-perl6%E4%B8%AD%E7%9A%84%E7%89%B9%E6%80%A7%E4%B8%80/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的特性(一)">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

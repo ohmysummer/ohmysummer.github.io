@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Grammars generating grammars</title>
+  <meta property="og:title" content="Grammars generating grammars" />
+  <meta name="twitter:title" content="Grammars generating grammars" />
+  <meta name="description" content="现在你可能已经习惯了 Perl 6 中到处出现的前缀&rdquo;meta&rdquo;。Metaclasses, Metaobjects, Metaoperators, 还有迷一般的 Meta-Object 协议。听起来一点也不可怕, 你都见过了不是吗？今天, 在 Perl 6 Advent Calendar 上, 我们将进行完全的 meta 化(full meta)。我们将拥有能解析 grammars 的 grammars, 然后生成将用于解析 grammars 的 grammars。
+Grammars 无疑是 Perl 6 的杀手级功能。我们拥有了正则表达式曾经没有的东西: 可读性、可组合性当然还有解析 Perl 6 自身的能力。— 如果这不能展示它的强大, 那我不知道什么能够!
+为预定义好的 grammars(例如以 Bachus-Naur 形式)写解析器总是有点无趣, 几乎和复制粘贴一样。如果你曾经坐下来重头开始写一个解析器(或者期间温习一遍那本优秀的&rdquo;让我们构建一个编译器&rdquo;图书), 你可能会意识到模式是如此相似:从你的 grammar 中拿出单个 rule, 为它写一个子例程, 让它调用(可能是递归的)其它类似的为其它 grmmars rules 定义的子例程, 清洗, 重复。现在我们有了Perl 6 Grammars! 在这个新世界中, 我们不必为每个 token 写上子例程来完成工作了。 现在我们写 grammar 类, 里面放上 *tokens*、*rules*、regexes 标志。在标志里写正则表达式(或代码)并引用(可能是递归的) Perl 6 gramamr 中的其它标志。如果你曾经使用过这些东西, 你肯定会意识到 Perl 6 中的 gramamrs 是多么的方便。">
+  <meta property="og:description" content="现在你可能已经习惯了 Perl 6 中到处出现的前缀&rdquo;meta&rdquo;。Metaclasses, Metaobjects, Metaoperators, 还有迷一般的 Meta-Object 协议。听起来一点也不可怕, 你都见过了不是吗？今天, 在 Perl 6 Advent Calendar 上, 我们将进行完全的 meta 化(full meta)。我们将拥有能解析 grammars 的 grammars, 然后生成将用于解析 grammars 的 grammars。
+Grammars 无疑是 Perl 6 的杀手级功能。我们拥有了正则表达式曾经没有的东西: 可读性、可组合性当然还有解析 Perl 6 自身的能力。— 如果这不能展示它的强大, 那我不知道什么能够!
+为预定义好的 grammars(例如以 Bachus-Naur 形式)写解析器总是有点无趣, 几乎和复制粘贴一样。如果你曾经坐下来重头开始写一个解析器(或者期间温习一遍那本优秀的&rdquo;让我们构建一个编译器&rdquo;图书), 你可能会意识到模式是如此相似:从你的 grammar 中拿出单个 rule, 为它写一个子例程, 让它调用(可能是递归的)其它类似的为其它 grmmars rules 定义的子例程, 清洗, 重复。现在我们有了Perl 6 Grammars! 在这个新世界中, 我们不必为每个 token 写上子例程来完成工作了。 现在我们写 grammar 类, 里面放上 *tokens*、*rules*、regexes 标志。在标志里写正则表达式(或代码)并引用(可能是递归的) Perl 6 gramamr 中的其它标志。如果你曾经使用过这些东西, 你肯定会意识到 Perl 6 中的 gramamrs 是多么的方便。">
+  <meta name="twitter:description" content="现在你可能已经习惯了 Perl 6 中到处出现的前缀&rdquo;meta&rdquo;。Metaclasses, Metaobjects, Metaoperators, 还有迷一般的 Meta-Object 协议。听起来一点也不可怕, 你都见过了不是吗？今天, 在 Perl 6 Advent Calendar 上, 我们将进行完全的 meta 化(full meta)。 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-04-15-grammars-generating-grammars/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-04-15-grammars-generating-grammars/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Grammars generating grammars</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/15/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>现在你可能已经习惯了 Perl 6 中到处出现的前缀&rdquo;meta&rdquo;。<strong>Metaclasses</strong>, <strong>Metaobjects</strong>, <strong>Metaoperators</strong>, 还有迷一般的 Meta-Object 协议。听起来一点也不可怕, 你都见过了不是吗？今天, 在 Perl 6 Advent Calendar 上, 我们将进行完全的 <strong>meta</strong> 化(full meta)。我们将拥有能解析 grammars 的 grammars, 然后生成将用于解析 grammars 的 grammars。</p>
+
+<p>Grammars 无疑是 Perl 6 的杀手级功能。我们拥有了正则表达式曾经没有的东西: 可读性、可组合性当然还有解析 Perl 6 自身的能力。— 如果这不能展示它的强大, 那我不知道什么能够!</p>
+
+<p>为预定义好的 grammars(例如以 <a href="https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form">Bachus-Naur</a> 形式)写解析器总是有点无趣, 几乎和复制粘贴一样。如果你曾经坐下来重头开始写一个解析器(或者期间温习一遍那本优秀的&rdquo;让我们构建一个编译器&rdquo;图书), 你可能会意识到模式是如此相似:从你的 grammar 中拿出单个 rule, 为它写一个子例程, 让它调用(可能是递归的)其它类似的为其它 grmmars rules 定义的子例程, 清洗, 重复。现在我们有了Perl 6 Grammars! 在这个新世界中, 我们不必为每个 token 写上子例程来完成工作了。 现在我们写 <strong>grammar</strong> 类, 里面放上 *tokens*、*rules*、<em>regexes</em> 标志。在标志里写正则表达式(或代码)并引用(可能是递归的) Perl 6 gramamr 中的其它标志。如果你曾经使用过这些东西, 你肯定会意识到 Perl 6 中的 gramamrs 是多么的方便。</p>
+
+<p>但是假如我们已经有了一个 grammar, 例如之前提到过的 BNF? 我们所做的就是小心地把已经存在的 grammar(实际上在我们头脑中解析它)重新键入到一个新的 Perl 6  Grammar 中以代表同样的一个东西, 但是那确实有一个可作为可执行代码的优势。对大多数人来说, 那都不是事儿。我们不是普通人, 我们是程序员。我们拥有资源。它们会让这些 Grammars 变得有意义。</p>
+
+<p>绝妙的是 Perl 6 gramamrs 和语言的其它元素没什么两样。Grammars 就像类那样也是头等公民, 可以内省, 扩展。实际上, 你可以查看编译器源代码自身, 你会注意到<strong><a href="https://github.com/rakudo/rakudo/blob/nom/src/Perl6/Metamodel/GrammarHOW.nqp">Grammars 就是一种特定种类的类</a></strong>。它们遵守和类一样的规则, 允许我们就地创建 gramamrs, 就地给 gramamrs 添加 tokens, 最终完结这个 gramamr 以拥有一个合适的能实例化的类对象。现在既然我们能解析 BNF gramamrs(因为它们就是普通的文本)并从代码中创建 Perl 6 grammars, 让我们把这些片段放在一起并写点能手动把 BNF gramamr 转化为 Perl 6 grammar 的东西。</p>
+
+<h4 id="解析-bnf-grammar-的-grammar">解析 BNF grammar 的 grammar</h4>
+
+<pre><code class="language-perl6">
+grammar Grammar::BNF {
+    token TOP { \s* &lt;rule&gt;+ \s* }
+
+    token rule {
+        &lt;opt-ws&gt; '&lt;' &lt;rule-name&gt; '&gt;' &lt;opt-ws&gt; '::=' &lt;opt-ws&gt; &lt;expression&gt; &lt;line-end&gt;
+    }
+
+    token expression {
+        &lt;list-of-terms&gt; +% [\s* '|' &lt;opt-ws&gt;]
+    }
+
+    token term {
+        &lt;literal&gt; | '&lt;' &lt;rule-name&gt; '&gt;'
+    }
+
+    token list-of-terms { &lt;term&gt; +% &lt;opt-ws&gt;                }
+    token rule-name     { &lt;-[&gt;]&gt;+                           }
+    token opt-ws        { \h*                               }
+    token line-end      { [ &lt;opt-ws&gt; \n ]+                  }
+    token literal       { '&quot;' &lt;-[&quot;]&gt;* '&quot;' | &quot;'&quot; &lt;-[']&gt;* &quot;'&quot; }
+
+    ...
+}
+
+</code></pre>
+
+<p>最上层的 3 个 tokens 发生了有意思的事情。<em>rule</em> 是 BNF grammar 的核心构造块: 一个 <code>&lt;symbol&gt; ::=  &lt;expression&gt;</code> 块儿, 后面跟着一个换行符。整个 grammar 就是一列 rules。每个表达式是一列项、或可能的和它们的备选分支。每个项要么是一个字面值, 或一个由尖括号包围的标志名。足够了! 那涵盖了解析部分。让我们看一下生成自身。我们的确有一种&rdquo;为 grammar 中的每个 token 做某事&rdquo;的机制, 以 <strong>Actions</strong>的形式, 让我们继续并使用它:</p>
+
+<pre><code class="language-perl6">my class Actions {
+    has $.name = 'BNFGrammar';
+    method TOP($/) {
+        my $grmr := Metamodel::GrammarHOW.new_type(:$.name);
+        $grmr.^add_method('TOP',
+            EVAL 'token { &lt;' ~ $&lt;rule&gt;[0].ast.key ~ '&gt; }');
+        for $&lt;rule&gt;.map(*.ast) -&gt; $rule {
+            $grmr.^add_method($rule.key, $rule.value);
+        }
+        $grmr.^compose;
+        make $grmr;
+    }
+
+    method expression($/) {
+        make EVAL 'token { ' ~ ~$/ ~ ' }';
+    }
+
+    method rule($/) {
+        make ~$&lt;rule-name&gt; =&gt; $&lt;expression&gt;.ast;
+    }
+}
+</code></pre>
+
+<p><strong>TOP</strong>方法毫无疑问是最魔幻和最恐怖的, 所以擒贼先擒王, 其它小喽啰就无关紧要了。基本上, *TOP*那儿发生了三件事:</p>
+
+<p>1、我们创建了一个新的 grammar, 作为一个新的 Perl 6 类型
+2、我们使用 <code>^add_method</code>方法为 grammar 添加 tokens
+3、我们使用 <code>^compose</code>方法定型该 grammar</p>
+
+<p>虽然 Perl 6 指定名为 <strong>TOP</strong> 的 token 是解析开始的地方, 在 BNF 中第一个 rule 总是开始点。为了彼此适应,  我们精巧地制作了一个假的 <strong>TOP</strong> token, 它正是调用了 BNF grammar 中指定的第一个 rule。不可避免地, 恐怖又令人失望的 <strong>EVAL</strong> 引起了我们的注意, 就像它说了&rdquo;这儿发生了可怕的事情&rdquo; 一样。它那样说并不是完全错误的, 但是因为我们没有其它程序化构建单独正则的方法, 我们不得不接受这点不适。</p>
+
+<p><strong>TOP</strong>之后我们继续为我们的 grammar 添加 BNF rules 的剩余部分, 这一次保留它们原来的名字, 然后 <code>^compose</code>整个东西, 最后让它(make)成为解析的结果: 一个做好的解析类。</p>
+
+<p>在 <em>expression</em> 方法中我们把解析过的 BNF 元素粘贴到一块以产生合法的 Perl 6 代码。这变得特别容易, 因为那俩个单独的标志带有空格, 使用管道符号来轮试备选分支, 并使用尖括号包围标志名。目前为止, 一个 rule 看起来像这样:</p>
+
+<pre><code class="language-perl6">&lt;foo&gt; ::= 'bar' | &lt;baz&gt;
+</code></pre>
+
+<p>我们求值(EVAL)的 Perl 6 代码变为:</p>
+
+<pre><code class="language-perl6">token { 'bar' | &lt;baz&gt; }
+</code></pre>
+
+<p>因为我们已经在我们代码的 grammar 部分检测我们解析的 BNF 是正确的, 没有什么能够阻止我们传递解析整个表达式字面值到我们的代码中并使用一个 <code>token  { }</code>来包裹它, 所以让我们继续。</p>
+
+<p>最后, 对于我们解析的每一个 BNF rule, 我们产生了一个很不错的 <em>Pair</em>, 所以我们的 <strong>TOP</strong> 方法很愉快地处理它们中的每个。</p>
+
+<p>看起来我们好像在这儿结束了, 但是仅仅是为了方便使用者, 让我们写一个更好的方法, 接收一个 BNF grammar, 并为我们生成一个准备好使用的类型对象。我们记得, grammars 就是类, 所以我们没有什么能阻止我们直接为我们的 gramamr 添加它:</p>
+
+<pre><code class="language-perl6">grammar Grammar::BNF {
+    ...
+    method generate($source, :$name = 'BNFGrammar') {
+        my $actions = Actions.new(:$name);
+        my $ret = self.new.parse($source, :$actions).ast;
+        return $ret.WHAT;
+    }
+}
+</code></pre>
+
+<p>这儿看起来很不错! 在你开始往你自己的项目中复制粘贴所有这些之前, 记得  <a href="https://github.com/tadzik/Grammar-BNF/">Grammar::BNF</a> 是一个可在  <a href="http://modules.perl6.org/">Perl 6 Module Ecosystem</a>获得的 Perl 6 模块, 使用你喜欢的模块管理器安装。</p>
+
+<p>假设你确实花费时间查看了开头的 post, 你可能会记得我许诺过我们将有 grammars(第一条)来解析 grammars(第二条), 然后生成 grammars(第三条), 使用生成的 grammars 来解析 grammars(第四条)。目前为止， 我们已经看到过 BNF::Grammar  grammar(那是第一条), 并解析一个 BNF grammar(那是第二条), 以类对象的形式来生成 Perl 6 grammar(第三条)。 就这些。我们仍旧缺乏最后一部分, 使用整个东西来解析 grammars。 我们只完成了 75% 的 meta化, 今天足够了。为什么现在停止? 为什么不拿一个 BNF grammar , 使用 Perl 6 grammar 来解析 grammar, 使用 Perl 6 BNF grammar 的结果来解析我们原来的 BNF Grammar? 那不是很好吗？ 是的, 那很好, 我们只是留了一个练习给你。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-04-15-perl-6%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2012/" data-toggle="tooltip" data-placement="top" title="Perl 6圣诞月历-(2012)">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-04-27-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammars-part-1/" data-toggle="tooltip" data-placement="top" title="从正则表达式到Grammars - Part 1">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

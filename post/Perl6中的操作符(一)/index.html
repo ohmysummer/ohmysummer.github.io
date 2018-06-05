@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的操作符(一)</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.18.1" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 中的操作符(一)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/Perl6%E4%B8%AD%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6%28%E4%B8%80%29/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io">
+              <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 中的操作符(一)</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/08/31</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h1 id="操作符优先级">操作符优先级</h1>
+
+<p><a href="https://github.com/perl6/roast/blob/master/S03-operators/arith.t#L46-L342">S03-operators/arith.t lines 46–342</a></p>
+
+<p><a href="https://github.com/perl6/roast/blob/master/S03-operators/precedence.t#L5-L200">S03-operators/precedence.t  lines 5–200</a></p>
+
+<p>Perl 6 拥有和 Perl 5 同等数量的优先级级别，但是它们散布在不同的地方。这儿，我们列出了从最紧凑到最松散的级别，每一级别还有几个例子：</p>
+
+<p>最高优先级到最低优先级：</p>
+
+<pre><code class="language-perl6">
+A  Level             Examples
+=  =====             ========
+N  Terms             42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbose @$array
+L  Method postfix    .meth .+ .? .* .() .[] .{} .&lt;&gt; .«» .:: .= .^ .:
+N  Autoincrement     ++ --
+R  Exponentiation    **
+L  Symbolic unary    ! + - ~ ? | || +^ ~^ ?^ ^
+L  Multiplicative    * / % %% +&amp; +&lt; +&gt; ~&amp; ~&lt; ~&gt; ?&amp; div mod gcd lcm
+L  Additive          + - +| +^ ~| ~^ ?| ?^
+L  Replication       x xx
+X  Concatenation     ~
+X  Junctive and      &amp; (&amp;) ∩
+X  Junctive or       | ^ (|) (^) ∪ (-)
+L  Named unary       temp let
+N  Structural infix  but does &lt;=&gt; leg cmp .. ..^ ^.. ^..^
+C  Chaining infix    != == &lt; &lt;= &gt; &gt;= eq ne lt le gt ge ~~ === eqv !eqv (&lt;) (elem)
+X  Tight and         &amp;&amp;
+X  Tight or          || ^^ // min max
+R  Conditional       ?? !! ff fff
+R  Item assignment   = =&gt; += -= **= xx= .=
+L  Loose unary       so not
+X  Comma operator    , :
+X  List infix        Z minmax X X~ X* Xeqv ...
+R  List prefix       print push say die map substr ... [+] [*] any Z=
+X  Loose and         and andthen
+X  Loose or          or xor orelse
+X  Sequencer         &lt;== ==&gt; &lt;&lt;== ==&gt;&gt;
+N  Terminator        ; {...} unless extra ) ] }
+
+</code></pre>
+
+<!-- more -->
+
+<p>下面使用的两个 <code>!</code> 符号通常表示任意一对儿拥有相同优先级的操作符， 上表指定的二元操作符的结合性解释如下(其中 A 代表<strong>结合性</strong>， associativities )：</p>
+
+<pre><code class="language-perl6">
+    结合性     Meaning of $a ! $b ! $c
+    =====     =========================
+L   left      ($a ! $b) ! $c
+R   right     $a ! ($b ! $c)
+N   non       ILLEGAL
+C   chain     ($a ! $b) and ($b ! $c)
+X   list      infix:&lt;!&gt;($a; $b; $c)
+
+</code></pre>
+
+<p>对于一元操作符， 这解释为:</p>
+
+<pre><code class="language-perl6">
+    结合性     Meaning of !$a!
+    =====     =========================
+L   left      (!$a)!
+R   right     !($a!)
+N   non       ILLEGAL
+
+</code></pre>
+
+<p>(在标准 Perl 中没有能利用结合性的一元操作符，因为在每一优先级级别中， 标准操作符要么一贯地是前缀，要么是后缀。)</p>
+
+<p>注意列表结合性（X）只在同一操作符之间有效。如果两个拥有不同列表结合性的操作符拥有相同的优先级，它们彼此间就会被认为是非结合性的，必须使用圆括号来消除歧义。</p>
+
+<p><a href="https://github.com/perl6/roast/blob/master/S03-operators/precedence.t#L211-L245">S03-operators/precedence.t lines 211–245</a></p>
+
+<p>例如， <code>X</code> 交叉操作符和 <code>Z</code> <strong>拉链操作符</strong> 都有 &ldquo;list infix&rdquo; 优先级，但是：</p>
+
+<pre><code class="language-perl6">@a X @b Z @c
+</code></pre>
+
+<p>是非法的，它必须写成下面的任意一种：</p>
+
+<pre><code class="language-perl6">(@a X @b) Z @c
+@a X (@b Z @c)
+</code></pre>
+
+<p>如果仅有的列表结合性操作符的实现是二进制的, 那么它会被当作是右结合性的。
+标准的优先级层级尝试和它们的结合性相一致, 但是用户定义的操作符和优先级级别可以在同一优先级级别上混合右结合性和左结合性操作符。如果在同一个表达式中不小心使用了有冲突的操作符, 那么操作符彼此之间会被认为是非结合性的, 并且必须使用圆括号来消除歧义。</p>
+
+<p>如果你没有在上面看见你喜欢的操作符, 下面的章节会包含所有按优先级排列的操作符。这儿描述了基本的操作符。</p>
+
+<h4 id="term-precedence">Term precedence</h4>
+
+<p>这实际上不真的是优先级, 但是它在这里是因为没有操作符的优先级比 term 高. 查看 S02 获取各种 terms 的更详尽的描述. 这里有一些例子:</p>
+
+<ul>
+<li>Int 字面量</li>
+</ul>
+
+<pre><code class="language-perl6">42
+</code></pre>
+
+<ul>
+<li>Num 字面量</li>
+</ul>
+
+<pre><code class="language-perl6">3.14
+</code></pre>
+
+<ul>
+<li>不能插值的 Str 字面量</li>
+</ul>
+
+<pre><code class="language-perl6">'$100'
+</code></pre>
+
+<ul>
+<li>能插值的 Str 字面量</li>
+</ul>
+
+<pre><code class="language-perl6">&quot;Answer = $answer\n&quot;
+</code></pre>
+
+<ul>
+<li>通用的 Str 字面量</li>
+</ul>
+
+<pre><code class="language-perl6">q[&quot;$100&quot;]
+qq[&quot;$answer&quot;]
+</code></pre>
+
+<ul>
+<li>Heredoc</li>
+</ul>
+
+<pre><code class="language-perl6">qq:to/END/
+    Dear $recipient:
+    Thanks!
+    Sincerely,
+    $me
+    END
+</code></pre>
+
+<ul>
+<li>数组构造器</li>
+</ul>
+
+<pre><code class="language-perl6">    [1,2,3]
+</code></pre>
+
+<p><code>[ ]</code> 里面提供了列表上下文. 技术上讲, 它实际上提供了一个  <code>semilist</code> 上下文, 即一系列分号分割的语句, 每条语句都在列表上下文中解释, 然后被连接成最终的列表.</p>
+
+<ul>
+<li>散列构造器</li>
+</ul>
+
+<pre><code class="language-perl6">
+    { }
+    { a =&gt; 42 }
+
+</code></pre>
+
+<p><code>{ }</code> 里面要么是空的, 要么是以 pair 或 散列 开头的单个列表, 否则你必须使用 <code>hash( )</code> 或 <code>%( )</code> 代替.</p>
+
+<ul>
+<li>Closure</li>
+</ul>
+
+<pre><code class="language-perl6">{ ... }
+</code></pre>
+
+<p>如果出现在语句那儿, 会立即执行。 否则会延迟内部作用域的求值。</p>
+
+<ul>
+<li>捕获构造器</li>
+</ul>
+
+<pre><code class="language-perl6">\(@a,$b,%c)
+</code></pre>
+
+<p>代表还不知道它的上下文的参数列表的抽取,</p>
+
+<ul>
+<li>符号化变量</li>
+</ul>
+
+<pre><code class="language-perl6">$x
+@y
+%z
+$^a
+$?FILE
+&amp;func
+&amp;div:(Int, Int --&gt; Int)
+</code></pre>
+
+<ul>
+<li>符号作为上下文化函数</li>
+</ul>
+
+<pre><code class="language-perl6">$()
+@()
+%()
+&amp;()
+</code></pre>
+
+<ul>
+<li>quote-like 记号中的 Regexes</li>
+</ul>
+
+<pre><code class="language-perl6">/abc/
+rx:i[abc]
+s/foo/bar/
+</code></pre>
+
+<ul>
+<li>转换</li>
+</ul>
+
+<pre><code class="language-perl6">tr/a..z/A..Z/
+</code></pre>
+
+<p>注意范围使用 <code>..</code> 而非 <code>-</code>.</p>
+
+<ul>
+<li>类型名</li>
+</ul>
+
+<pre><code class="language-perl6">Num
+::Some::Package
+</code></pre>
+
+<ul>
+<li>由圆括号环绕的子表达式</li>
+</ul>
+
+<pre><code class="language-perl6">(1+2)
+</code></pre>
+
+<ul>
+<li>带括号的函数调用</li>
+</ul>
+
+<pre><code class="language-perl6">a(1)
+</code></pre>
+
+<p>一个项后面立即跟着一个圆括号化的表达式总是被当作函数调用，　即使那个标识符也含有前缀意义，　所以那种情况下你从来不用担心优先级。因此：</p>
+
+<pre><code class="language-perl6">not($x) + 1         # means (not $x) + 1
+</code></pre>
+
+<ul>
+<li>Pair 构造器</li>
+</ul>
+
+<pre><code class="language-perl6">:limit(5)
+:!verbose
+</code></pre>
+
+<ul>
+<li>签名字面量</li>
+</ul>
+
+<pre><code class="language-perl6">:(Dog $self:)
+</code></pre>
+
+<ul>
+<li>使用隐式调用者的方法调用</li>
+</ul>
+
+<pre><code class="language-perl6">.meth       # call on $_
+.=meth      # modify $_
+</code></pre>
+
+<p>注意这只能出现在需要项(term)的地方。需要后缀的地方它就是后缀。如果需要中缀操作符（即, 在项后面, 之间是空格）, .meth 就是语法错误。(.meth 形式在那儿是被允许的因为有一个和方法调用形式在语义上等价但是允许在 = 号和方法名之间于空格存在的特殊 .= 中缀赋值操作符)。</p>
+
+<ul>
+<li>Listop (leftward)</li>
+</ul>
+
+<pre><code class="language-perl6">4,3, sort 2,1       # 4,3,1,2
+</code></pre>
+
+<p>就像 Perl 5 中一样, 列表操作符对于它左侧的表达式看起来像一个项(term), 所以它比左侧的逗号绑定的紧凑点, 比右侧的逗号绑定的松散点。&ndash; 查看下面的列表前缀优先级。</p>
+
+<h4 id="方法后缀优先级">方法后缀优先级</h4>
+
+<p>所有的方法后缀都以一个点开头, 尽管对于下标来说, 点号是可选的. 因为这些是最紧密的操作符,  你可以看到一系列方法调用作为单独的项, 这个项仅仅要表达一个复杂的名字.</p>
+
+<ul>
+<li>标准的单个分发方法调用</li>
+</ul>
+
+<pre><code class="language-perl6">$obj.meth
+</code></pre>
+
+<ul>
+<li>标准单个分发方法调用的变体</li>
+</ul>
+
+<pre><code class="language-perl6">$obj.+meth
+$obj.?meth
+$obj.*meth
+</code></pre>
+
+<p>除了普通的 <code>.</code> 方法调用之外, 还有 <code>.*</code>, <code>.?</code>, 和 <code>.+</code> 变体来控制如何处理多个同名的相关方法.</p>
+
+<ul>
+<li>类限定的方法调用</li>
+</ul>
+
+<pre><code class="language-perl6">$obj.::Class::meth
+$obj.Class::meth    # same thing, 假设预先定义了 Class
+</code></pre>
+
+<p>就跟 Perl 5 一样, 告诉分发器(dispatcher)从哪个类开始搜索, 而不正好是那个被调用的方法。</p>
+
+<ul>
+<li>可变方法调用</li>
+</ul>
+
+<pre><code class="language-perl6">$obj.=meth
+</code></pre>
+
+<p>.= 操作符执行了对左侧对象的就地修改。</p>
+
+<ul>
+<li>元方法调用</li>
+</ul>
+
+<pre><code class="language-perl6">$obj.^meth
+</code></pre>
+
+<p><code>.^</code> 操作符调用了类的元方法(class metamethod); <strong>foo.^bar</strong> 是 <code>foo.HOW.bar</code> 的简写。</p>
+
+<ul>
+<li>像方法一样的后环缀</li>
+</ul>
+
+<pre><code class="language-perl6">$routine.()
+$array.[]
+$hash.{}
+$hash.&lt;&gt;
+$hash.«»
+</code></pre>
+
+<p>不带点的这些形式有同样的优先级.</p>
+
+<ul>
+<li>带点形式的其它后缀操作符</li>
+</ul>
+
+<pre><code class="language-perl6">$x.++         # postfix:&lt;++&gt;($x)
+</code></pre>
+
+<ul>
+<li>带点形式的其它前缀操作符</li>
+</ul>
+
+<pre><code class="language-perl6">$x.:&lt;++&gt;       # prefix:&lt;++&gt;($x)
+</code></pre>
+
+<ul>
+<li>有一个特殊的非中缀操作符 infix:&lt;.&gt; 所以</li>
+</ul>
+
+<pre><code class="language-perl6">$foo . $bar
+</code></pre>
+
+<p>总是会返回编译时错误来标示用户应该使用中缀操作符 infix&lt;~&gt; 代替。这用于捕获正在学习 Perl 6 的 Perl 5 程序员可能会犯的错误。</p>
+
+<h4 id="自增优先级">自增优先级</h4>
+
+<p>就像在 C 中一样，这些操作符增加或减少正在谈论的那个对象的值，根据操作符在前面还是在后面。还是像 C 中一样，在同一个表达式中多个对单个可变对象的引用可能导致未定义行为除非显式地插入了某些序列操作符。请查看 &ldquo;Sequence points&rdquo;。</p>
+
+<p>至于 Perl 6 中得所有后缀操作符，项(term) 和它的后缀之间不允许有空格。请查看 S02 来了解为什么，还有怎么使用 &ldquo;unspace&rdquo; 来应急这个约束。</p>
+
+<p>和可变方法一样，所有这些操作符被分派为操作符数的类型并返回一个同类型的结果，但是只有（不可变的）值存储在可变容器中时，它们在值类型上才是合法的。然而，为了支持通用的习语，一个裸的未定义值（在一个合适的标量容器中）是被允许把自身修改成 Int 类型的：</p>
+
+<pre><code class="language-perl6">say $x unless %seen{$x}++;
+</code></pre>
+
+<p>Str (在一个合适的容器中)的增加和 Perl 5 类似，但是被稍微推广了一点。Perl 6 会扫描前面不是 &lsquo;.&rsquo; 字符的字符串中得最后的字母数字序列。不像 Perl 5 那样，这个字母数字序列不需要锚定到字符串的开头，也不需要以字母数字符开头；字符串中匹配 <code>&lt;!after '.'&gt; &lt;rangechar&gt;+</code> 字母数字的最后的序列被增加而不管它前面是什么。</p>
+
+<p><code>&lt;rangechar&gt;</code> 字符类被定义为那种字符的子集(subset)，Perl 知道怎么在范围(range)中增加它，就像下面定义的那样：
+额外的匹配增加了两个好处：对于典型的增长文件名的用法，你不必担心路径名或扩展名：</p>
+
+<pre><code class="language-perl6">$file = &quot;/tmp/pix000.jpg&quot;;
+$file++;                 # /tmp/pix001.jpg, 不是 /tmp/pix000.jph
+</code></pre>
+
+<p>也许更重要的是, 如果你恰好增长了一个以小数结尾的字符串，Perl 6 也能应对自如：</p>
+
+<pre><code class="language-perl6">$num = &quot;123.456&quot;;
+$num++;             # 124.456, not 123.457
+</code></pre>
+
+<p>字符位置增加自然范围内任何Unicode范围被认为代表了数字0 . .9或被认为是一个完整的周期性字母的(一例)(Unicode)脚本。只在codepoints脚本,代表他们的字母表,形成一个周期独立于其他字母可能使用。(此规范延缓这种脚本的用户,以确定适当的周期的信件)。我们任意定义ASCII字母不相交与其他脚本,使用范围的字符,但是字母点缀ASCII字母是不允许的。</p>
+
+<p>如果在这样一个范围中当前字符是字符串位置中最后的字符,它包装的第一个字符范围和发送一个“携带”的位置了,然后那个位置是增加的范围。当且仅当最左边的位置是筋疲力尽的范围,一个额外的字符相同的范围是插入到持有套利以相同的方式作为Perl 5,所以递增(zz99)“变成”(aaa00)zz和递增(99)“变成”(100 aa)”。</p>
+
+<pre><code class="language-perl6">&gt; my $a = &quot;99zz&quot;
+&gt; $a++           # 99zz
+&gt; $a++           # 100aa
+
+&gt; my $b = 'zz99'
+&gt; $b++           # zz99
+&gt; $b++           # aaa00
+</code></pre>
+
+<p>下面的 Unicode  范围是某些可能的 rangechar 范围。对于字母我们有这样的范围：</p>
+
+<pre><code class="language-perl6">A..Z        # ASCII uc
+a..z        # ASCII lc
+'Α'..'Ω'    # Greek uc
+α..ω        # Greek lc (presumably skipping C&lt;U+03C2&gt;, final sigma)
+א..ת        # 希伯来
+  etc.      # (XXX out of my depth here)
+</code></pre>
+
+<pre><code class="language-perl6">&gt; my @a =  'Α'..'Ω'  # Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ ΢ Σ Τ Υ Φ Χ Ψ Ω
+</code></pre>
+
+<p>对于数字我们有这样的范围：</p>
+
+<pre><code class="language-perl6">    0..9         # ASCII
+    ٠..٩         # 阿拉伯语-印度语
+    ०..९         # 天城文
+    ০..৯         # 孟加拉语
+    '੦'..'੯'    # 古木基文
+    ૦..૯        # 古吉拉特文
+    ୦..୯        # 奥里亚语
+</code></pre>
+
+<p>等等.</p>
+
+<pre><code class="language-perl6">&gt; my @b =    '੦'..'੯'   #  ੦ ੧ ੨ ੩ ੪ ੫ ੬ ੭ ੮ ੯
+</code></pre>
+
+<p>某些其它非书写用的 0..9 范围也可以被增长，例如：</p>
+
+<pre><code class="language-perl6">    ⁰..⁹        # 上标 (note, cycle includes latin-1 chars)
+    '₀'..'₉'    # 下标
+    ０..９      # 全角数字
+</code></pre>
+
+<pre><code class="language-perl6">&gt; my @f = '₀'..'₉' # ₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉
+</code></pre>
+
+<pre><code class="language-perl6">    Ⅰ..Ⅻ        # clock roman numerals uc
+    ⅰ..ⅻ        # clock roman numerals lc
+    ⓪..㊿       # circled digits/numbers 0..50
+    ⒜..⒵        # parenthesized lc
+    ⚀..⚅        # die faces 1..6
+    '❶'..'❿'        # dingbat negative circled 1..10
+</code></pre>
+
+<p>etc.</p>
+
+<p>注意: 对于 Perl 中实际的范围， 你需要把上面的字符用引号括起来：</p>
+
+<pre><code class="language-perl6">'⓪'..'㊿'   # circled digits/numbers 0..50
+</code></pre>
+
+<pre><code class="language-perl6">my @d = '⓪'..'⓾'
+</code></pre>
+
+<pre><code class="language-perl6">⓪ ⓫ ⓬ ⓭ ⓮ ⓯ ⓰ ⓱ ⓲ ⓳ ⓴ ⓵ ⓶ ⓷ ⓸ ⓹ ⓺ ⓻ ⓼ ⓽ ⓾
+</code></pre>
+
+<pre><code class="language-perl6">my @e = '❶'..'❿' # ❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿
+</code></pre>
+
+<p>If you want to future-proof the top end of your range against further Unicode additions, you may specify it as &ldquo;whatever&rdquo;:</p>
+
+<pre><code>'⓪'..*      # circled digits/numbers up to current known Unicode max
+</code></pre>
+
+<p>prefix:&lt;|&gt;,  将对象展开为参数列表</p>
+
+<pre><code>| $capture
+</code></pre>
+
+<p>把Capture 值的内容(或 Capture-like)插值进当前的参数列表中, 就像它们被字面地指定那样。</p>
+
+<p>prefix:&lt;||&gt;,  将对象展开为分号列表</p>
+
+<pre><code>|| $parcel
+</code></pre>
+
+<p>把 Parcel(或其它有顺序的值)的元素插值到当前参数列表中就像它们被字面地指定一样, 由分号分割, 即, 以多维级别。在列表中的列表上下文之外使用该操作符是错误的; 换句话说, 它必须被绑定到 <code>**</code>(slice)参数上而非吞噬参数<code>*</code>上。</p>
+
+<p>infix:<div>, 整除</p>
+
+<pre><code>$numerator div $denominator
+</code></pre>
+
+<pre><code class="language-perl">&gt; 3 div 2     # 1
+&gt; 13 div 2    # 6
+</code></pre>
+
+<p>而</p>
+
+<pre><code class="language-perl">&gt; 13 div 2.4
+</code></pre>
+
+<p>报错：</p>
+
+<pre><code class="language-perl">Cannot call infix:&lt;div&gt;(Int, Rat); none of these signatures match:
+    (Int:D \a, Int:D \b)
+    (int $a, int $b --&gt; int)
+  in block &lt;unit&gt; at &lt;unknown file&gt;:1
+</code></pre>
+
+<p>infix:&lt;%&gt;, modulo</p>
+
+<pre><code>$x % $y
+</code></pre>
+
+<h2 id="重复操作符">重复操作符</h2>
+
+<p>infix:<x>, 字符串/缓冲区 复制(或者重复/拷贝)</p>
+
+<pre><code class="language-perl6">$string x $count
+</code></pre>
+
+<p>在字符串上下文中计算左边的参数，重复结果字符串值由右侧参数指定的倍数次，然后不管上下文，把结果作为单个连接好的字符串返回。</p>
+
+<p>如果重复次数小于 1，则返回空字符串。重复次数不可以是 <code>*</code>，因为 Perl 6 不支持无穷字符串。（至少，还没有&hellip;）然而注意，有一天无穷字符串可能使用 cat(<code>$string xx *</code>) 来模仿，在这种情况下，<code>$string x *</code>  可能是它的简写。</p>
+
+<pre><code class="language-perl6">'a' x *;              # WhateverCode.new()
+my $a = 'a' x *;      # WhateverCode.new()
+say $a;               # WhateverCode.new()
+say $a(12);           # 可以传递参数！, 结果为 aaaaaaaaaaaa
+</code></pre>
+
+<p>infix:<xx>, 表达式重复操作符</p>
+
+<pre><code class="language-perl6">@list xx $count  # 如果 $count  是 * ，则返回一个无限列表 （懒惰的，因为列表默认是懒惰的 ）
+</code></pre>
+
+<pre><code>rand xx *;                # infinite supply of random numbers
+[ 0 xx $cols ] xx $rows   # distinct arrays, not the same row replicated
+</code></pre>
+
+<pre><code class="language-perl">&gt; my @random= rand xx *;
+&gt; @random[0]                # 0.510689533871727
+&gt; @random[0]                # 0.510689533871727
+&gt; @random[1]                # 0.993102039714483
+&gt; @random[2]                # 0.177400471499773
+&gt; @random[12]
+</code></pre>
+
+<h2 id="字符串连接">字符串连接</h2>
+
+<p>infix:&lt;~&gt;, 字符串 /缓冲 连接</p>
+
+<pre><code>$x ~ $y
+</code></pre>
+
+<h2 id="范围对象创建">范围对象创建</h2>
+
+<pre><code>$min .. $max
+$min ^.. $max
+$min ..^ $max
+$min ^..^ $max
+</code></pre>
+
+<h2 id="逗号操作符优先级-https-desgin-perl6-org-s03-html-comma-operator-precedence"><a href="https://desgin.perl6.org/S03.html#Comma_operator_precedence">逗号操作符优先级</a></h2>
+
+<ul>
+<li>infix:&lt;,&gt;  参数分隔符</li>
+</ul>
+
+<pre><code class="language-perl6">1, 2, 3, @many
+</code></pre>
+
+<p>不像 Perl5 ，逗号操作符从来不返回最后一个值（在标量上下文中它返回一个列表）</p>
+
+<ul>
+<li>infix:&lt;:&gt;, 调用者标记</li>
+</ul>
+
+<pre><code class="language-perl">say $*OUT: &quot;howdy, world&quot;  # howdy, world
+say($*OUT: &quot;howdy, world&quot;) # howdy, world
+push @array: 1,2,3
+push(@array: 1,2,3)
+\($object: 1,2,3, :foo, :!bar)
+</code></pre>
+
+<p>冒号操作符就像逗号那样解析，但是它把左边的参数标记为调用者，这会把函数调用转换为方法调用。它只能在参数列表或捕获的第一个参数身上使用，用在其它地方会解析失败。当用在捕获中时，尚不知道捕获会被绑定到哪个签名上；如果绑定到一个非方法的签名身上，调用者仅仅转换成第一个位置参数，就像冒号是一个逗号一样。</p>
+
+<p>为了避免和其它的冒号形式混淆，冒号中缀操作符后面必须跟上空格或终止符。它前面可以有空格也可以没有空格。</p>
+
+<p>注意：在下面把中缀操作符和冒号区别开:</p>
+
+<pre><code class="language-perl6">@array.push: 1,2,3
+@array.push(1,2,3): 4,5,6
+push(@array, 1,2,3): 4,5,6
+</code></pre>
+
+<p>这是把普通函数或方法转换为列表操作符的特殊形式。 这种特殊形式只在点语法形式的方法调用后被识别， 或者在方法或函数调用的右圆括号之后被识别。这种特殊形式不允许其间有空格，但是下一个参数的前面要有空格。如果可能的话在所有其它情况下，冒号会被解析为副词的开始，否则会被解析为调用者标记（上面描述的中缀操作符。）</p>
+
+<p>这种特殊形式不允许介于中间的空格， 但是允许在下一个参数之前有空格。 在所有情况下， 冒号会被尽可能地解析为副词的开头，或者调用者标记者（上面描述的中缀）</p>
+
+<p>冒号的另一种特殊方式是, 允许正好在参数列表的右侧圆括号之后为圆括号括住的参数列表添加 listop 参数，附带条件是你被允许把 <code>.foo(): 1,2,3</code> 缩短为 <code>.foo: 1,2,3</code>.(但是仅限于方法调用， 因为普通的函数不需要把处于第一个位置的冒号转换为 listop， 空格就够了。 如果你尝试使用冒号扩展函数名最好把它看作标签。)</p>
+
+<pre><code class="language-perl6">foo $obj.bar: 1,2,3     # special, means foo($obj.bar(1,2,3))
+foo $obj.bar(): 1,2,3   # special, means foo($obj.bar(1,2,3))
+foo $obj.bar(1): 2,3    # special, means foo($obj.bar(1,2,3))
+foo $obj.bar(1,2): 3    # special, means foo($obj.bar(1,2,3))
+foo($obj.bar): 1,2,3    # special, means foo($obj.bar, 1,2,3)
+foo($obj.bar, 1): 2,3   # special, means foo($obj.bar, 1,2,3)
+foo($obj.bar, 1,2): 3   # special, means foo($obj.bar, 1,2,3)
+foo $obj.bar : 1,2,3    # infix:&lt;:&gt;, means $obj.bar.foo(1,2,3)
+foo ($obj.bar): 1,2,3   # infix:&lt;:&gt;, means $obj.bar.foo(1,2,3)
+foo $obj.bar:1,2,3      # 语法错误
+foo $obj.bar :1,2,3     # 语法错误
+foo $obj.bar :baz       # 副词, means foo($obj.bar(:baz))
+foo ($obj.bar) :baz     # 副词, means foo($obj.bar, :baz)
+foo $obj.bar:baz        # extended identifier, foo( $obj.'bar:baz' )
+foo $obj.infix:&lt;+&gt;      # extended identifier, foo( $obj.'infix:&lt;+&gt;' )
+foo: 1,2,3              # label at statement start, else infix
+</code></pre>
+
+<p>这个故事的寓意是：如果你不知道冒号是怎样结合的，就使用空格或圆括号让它清晰。</p>
+
+<ul>
+<li>List infix precedence 列表中缀优先级</li>
+</ul>
+
+<p>列表中缀操作符都有列表结合性，这意味着，同一个中缀操作符是同步起作用的，而不是一个接着一个。不同的操作符被认为是非结合性的，为了明确，必须用括号括起来。</p>
+
+<ul>
+<li>infix:<Z>,  the zip operator</li>
+</ul>
+
+<pre><code class="language-perl">    1,2 Z 3,4   # (1,3),(2,4)
+</code></pre>
+
+<pre><code class="language-perl">&gt; 2,5,7 [Zmin] 3,4,5     # 两两比较, 2 4 5
+&gt; my @a=3,6,9            # 3 6 9
+&gt; my @b=4,5,10           # 4 5 10
+&gt; @a [Zmin] @b           # 3 5 9
+&gt; my @a = (1,2,9,3,5)    # 1 2 9 3 5
+&gt; my @b = (2,3,5,1,9)    # 2 3 5 1 9
+&gt; my @c = (2,3,4,5,1)    # 2 3 4 5 1
+&gt; @a [Zmin] @b [Zmin] @c # 1 2 4 1 1
+&gt; @a [Zmax] @b [Zmax] @c # 2 3 9 5 9
+</code></pre>
+
+<ul>
+<li>infix:<minmax>,  minmax 操作符</li>
+</ul>
+
+<pre><code>@a minmax @b
+</code></pre>
+
+<p>返回@a和@b中最小值和最大值的一个范围。</p>
+
+<pre><code class="language-perl">&gt; my @a = 2,4,6,8;
+&gt; my @b = 1,3,5,7,9;
+&gt; @a minmax @b         # 1..9
+</code></pre>
+
+<ul>
+<li>infix:<X>,  交叉操作符</li>
+</ul>
+
+<p>S03-metaops/cross.t lines 6–19</p>
+
+<pre><code class="language-perl">1,2 X 3,4          # (1,3), (1,4), (2,3), (2,4)
+</code></pre>
+
+<p>和 zip 操作符相比， X 操作符返回元素交叉后的列表。例如，如果只有 2 个列表，第一个列表中取一个元素和第二个列表中取一个元素组成 pair 对儿，第二个元素变化的最迅速。</p>
+
+<p>最右边的列表先遍历完。因此， 你写：</p>
+
+<pre><code class="language-perl">&lt;a b&gt; X &lt;1 2&gt;
+</code></pre>
+
+<p>你会得到：</p>
+
+<pre><code class="language-perl">('a', '1'), ('a', '2'), ('b', '1'), ('b', '2')
+</code></pre>
+
+<p>这在平的上下文会变成一个展平的列表，在 list of list 上下文中会变成列表中的列表</p>
+
+<pre><code class="language-perl">say flat(&lt;a b&gt; X &lt;1 2&gt;).perl    #  (&quot;a&quot;, &quot;1&quot;, &quot;a&quot;, &quot;2&quot;, &quot;b&quot;, &quot;1&quot;, &quot;b&quot;, &quot;2&quot;).list
+say lol(&lt;a b&gt; X &lt;1 2&gt;).perl     # ((&quot;a&quot;, &quot;1&quot;), (&quot;a&quot;, &quot;2&quot;), (&quot;b&quot;, &quot;1&quot;), (&quot;b&quot;, &quot;2&quot;))
+</code></pre>
+
+<p>这个操作符是列表结合性的，所以：</p>
+
+<pre><code class="language-perl">1,2 X 3,4 X 5,6
+</code></pre>
+
+<p>生成</p>
+
+<pre><code class="language-perl">(1,3,5),(1,3,6),(1,4,5),(1,4,6),(2,3,5),(2,3,6),(2,4,5),(2,4,6)
+</code></pre>
+
+<p>另一方面，如果任一列表为空，你会得到一个空列表。</p>
+
+<p>尽管X两边的列表可能是无限的，在操作符 X的右边使用无限列表可能会产生意想不到的结果，例如：</p>
+
+<pre><code class="language-perl">&lt;a b&gt; X 0..*
+</code></pre>
+
+<p>会产生</p>
+
+<pre><code class="language-perl">('a',0), ('a',1), ('a',2), ('a',3), ('a',4), ('a',5), ...
+</code></pre>
+
+<p>并且你绝对不会到达 &lsquo;b&rsquo;。如果你左侧的列表只包含单个元素，然而，这可能有用，尤其是如果 X 用作元操作符时。看下面。</p>
+
+<pre><code class="language-perl">say lol(&lt;a b&gt; X &lt;1 2&gt;).perl    # (&quot;a&quot;, &quot;1&quot;, &quot;a&quot;, &quot;2&quot;, &quot;b&quot;, &quot;1&quot;, &quot;b&quot;, &quot;2&quot;)
+</code></pre>
+
+<p>Cross metaoperators 交叉操作符</p>
+
+<pre><code class="language-perl">@files X~ '.' X~ @extensions
+1..10 X* 1..10
+@x Xeqv @y
+</code></pre>
+
+<p>等等</p>
+
+<p>一个常见的用法是让一个列表只含有单个元素在操作符 X 的一边或另一边：</p>
+
+<pre><code class="language-Perl6">@vector X* 2;                 # 每个元素都乘以 2
+$prefix X~ @infinitelist;     # 在无限列表的每个元素前面前置一个元素
+</code></pre>
+
+<pre><code class="language-perl">&gt; my $prefix = ' - '
+&gt; my @a =&lt;1 2 3 4 5&gt;
+&gt; $prefix X~ @a       #  - 1  - 2  - 3  - 4  - 5
+</code></pre>
+
+<p>这时右边有一个无限列表是可以的。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/%E6%8E%A2%E7%B4%A2Perl6%E7%9A%84Signatures,%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/" data-toggle="tooltip" data-placement="top" title="探索Perl6的Signatures,第二部分">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/Perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%28%E5%9B%9B%29/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的正则表达式(四)">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.ioindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2017
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.18.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

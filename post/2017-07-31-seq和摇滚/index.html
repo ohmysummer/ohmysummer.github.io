@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Seq 和摇滚</title>
+  <meta property="og:title" content="Seq 和摇滚" />
+  <meta name="twitter:title" content="Seq 和摇滚" />
+  <meta name="description" content="How to make your very own Iterator object">
+  <meta property="og:description" content="How to make your very own Iterator object">
+  <meta name="twitter:description" content="How to make your very own Iterator object">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-07-31-seq%E5%92%8C%E6%91%87%E6%BB%9A/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-07-31-seq%E5%92%8C%E6%91%87%E6%BB%9A/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Seq 和摇滚</h1>
+                
+                  
+                    <h2 class="post-subheading">How to make your very own Iterator object</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2017/31/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>这是这个系列的第二部分！请确保你已经阅读过<a href="https://perl6.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll">第一部分</a>, 在那里我们讨论了什么是 <a href="https://docs.perl6.org/type/Seq">Seq</a>, 并且怎么来缓存它们。</p>
+
+<p>今天, 我们把 <a href="https://docs.perl6.org/type/Seq">Seq</a> 单独拎出来, 看看里面到底有什么; 是什么驱动的它; 并且怎样让它实现我们的想法。</p>
+
+<h2 id="第二部分-快速迭代">第二部分: 快速迭代</h2>
+
+<p>使 Seq 做事情的主要部分是遵循 <a href="https://docs.perl6.org/type/Iterator">Iterator</a> 角色的对象。 这个对象知道如何生成下一个值，什么时候从 Seq 中提取一个值，或者将其所有值推送到某个地方，或者简单地丢弃所有剩余的值。</p>
+
+<p>请记住，当使用 Seq 作为值的来源时，您不需要直接使用 Iterator 的方法。 它们被间接称为各种 Perl 6 结构。 自己调用这些方法的场景通常是我们制作一个由另一个 Iterator 提供的迭代器的时候，就像我们会看到的那样。</p>
+
+<h2 id="pull-my-finger">Pull my finger</h2>
+
+<p>在最基本的形式中, 一个 Iterator 对象需要提供的只有一个方法: <code>.pull-one</code></p>
+
+<pre><code class="language-perl6">my $seq := Seq.new: class :: does Iterator {
+    method pull-one {
+        return $++ if $++ &lt; 4;
+        IterationEnd
+    }
+}.new;
+
+.say for $seq;
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code># OUTPUT:
+# 0
+# 1
+# 2
+# 3
+</code></pre>
+
+<p>上面的例子中, 我们使用 Seq 的 <code>.new</code> <a href="https://docs.perl6.org/type/Seq#method_new">方法</a>创建了一个 <code>Seq</code>, 该方法需要一个实例化的 <a href="https://docs.perl6.org/type/Iterator">Iterator</a>，我们使用一个匿名类来行使 <a href="https://docs.perl6.org/type/Iterator">Iterator</a> 角色，并提供一个使用一对匿名状态变量生成4个数字的单个 <code>.pull-one</code> 方法 ，每个调用一个，然后返回 IterationEnd <a href="https://docs.perl6.org/type/Iterator#IterationEnd">常量</a>来表示该 Interator 没有任何更多的值产生。</p>
+
+<p><a href="https://docs.perl6.org/type/Iterator">Iterator</a> 协议一旦生成了 <a href="https://docs.perl6.org/type/Iterator#IterationEnd">IterationEnd</a> 值，就禁止从 <a href="https://docs.perl6.org/type/Iterator">Iterator</a> 获取更多的值，所以你的迭代器的方法可能会假定它们永远不会再被调用。</p>
+
+<h2 id="认识其它帮派">认识其它帮派</h2>
+
+<p>Iterator 角色定义了更多的方法，所有这些方法都是可选实现的，其中大部分都有某种默认实现。 额外的方法是为了优化目的，让您根据序列如何迭代来获取快捷方式。</p>
+
+<p>我们来使用 <a href="https://modules.perl6.org/dist/Crypt::Bcrypt">Crypt::Bcrypt</a> 模块（运行 zef install Crypt::Bcrypt 来安装它）构建一个能哈希一堆数据的 Seq。 我们将从提供了 <code>.pull-one</code> 方法的最基本的 Iterator 开始，然后我们将优化它，以在不同的情况下表现更好。</p>
+
+<pre><code class="language-perl6">use Crypt::Bcrypt;
+
+sub hash-it (*@stuff) {
+    Seq.new: class :: does Iterator {
+        has @.stuff;
+        method pull-one {
+            @!stuff ?? bcrypt-hash @!stuff.shift, :15rounds
+                    !! IterationEnd
+        }
+    }.new: :@stuff
+}
+
+my $hashes := hash-it &lt;foo bar ber&gt;;
+for $hashes {
+    say &quot;Fetched value #{++$} {now - INIT now}&quot;;
+    say &quot;\t$_&quot;;
+}
+
+# OUTPUT:
+# Fetched value #1 2.26035863
+#     $2b$15$ZspycxXAHoiDpK99YuMWqeXUJX4XZ3cNNzTMwhfF8kEudqli.lSIa
+# Fetched value #2 4.49311657
+#     $2b$15$GiqWNgaaVbHABT6yBh7aAec0r5Vwl4AUPYmDqPlac.pK4RPOUNv1K
+# Fetched value #3 6.71103435
+#     $2b$15$zq0mf6Qv3Xv8oIDp686eYeTixCw1aF9/EqpV/bH2SohbbImXRSati
+</code></pre>
+
+<p>在上面的例子中, 我们把所有的 Seq 制作原料都包裹在一个叫做 hash-it 的 sub 中。我们吞噬了所有传递给该 sub 的位置参数并使用一个匿名类作为 Iterator 实例化出一个新的 Seq。 我们使用属性 <code>@!stuff</code> 存储我们需要哈希的东西。 在 <code>.pull-one</code> 方法中，我们检查我们是否仍然有 <code>@!stuff</code> 来进行哈希; 如果我们确实有，那么我们就从 <code>@!stuff</code> 中移除一个值，并对它使用哈希算法，使用15个回合来使散列算法花费一些时间。 最后，我们添加了一个 <code>say</code> 语句来测算程序在每次迭代中的运行时间，使用两个 now 调用，其中一个运行 <a href="https://docs.perl6.org/language/phasers#INIT">INIT phaser</a>。 从输出中，我们看到哈希单个字符串大约需要 2.2 秒。</p>
+
+<h2 id="不吃早餐">不吃早餐</h2>
+
+<p>使用 <code>for</code> 循环，不是使用散列例程返回的 <code>Seq</code> 的唯一方法。 如果一些用户不关心前几个哈希怎么办？ 例如，他们可以编写一段这样的代码：</p>
+
+<pre><code>my $hash = hash-it(&lt;foo bar ber&gt;).skip(2).head;
+say &quot;Made hash {now - INIT now}&quot;;
+say bcrypt-match 'ber', $hash;
+
+# OUTPUT:
+# Made hash 6.6813790
+# True
+</code></pre>
+
+<p>我们已经使用了 <a href="https://modules.perl6.org/dist/Crypt::Bcrypt">Crypt::Bcrypt</a> 模块的 <code>bcrypt-match</code> 来确保我们得到的哈希匹配我们的第三个输入字符串，并且它的确如此，但是看看它输出的时间。光输出单个哈希就花费了 <code>6.7s</code>。</p>
+
+<p>事实上, 用户要跳过的条目越多, 事情就会变得越来越糟糕。如果用户用 <code>一吨</code> 条目来调用我们的 <code>hash-it</code> 并且尝试<a href="https://docs.perl6.org/routine/skip">跳过</a>前 1,000,000 个元素以在第 1,000,001st 个哈希上获得元素,  它们将会等待大约 25 天以产生单个哈希！！</p>
+
+<p>原因是我们这个基本 <a href="https://docs.perl6.org/type/Iterator">Iterator</a> 只知道怎么拉取一个（<a href="https://docs.perl6.org/routine/pull-one">.pull-one</a>, 所以 skip 操作仍然生成哈希, 然后丢弃它们。因为我们的 <a href="https://docs.perl6.org/type/Iterator">Iterator</a> 生成的值不依赖于之前的值, 我们可以实现其中的优化过的方法之一以廉价地跳过迭代。</p>
+
+<pre><code>use Crypt::Bcrypt;
+
+sub hash-it(*@stuff) {
+    Seq.new: class :: does Iterator {
+        has @.stuff;
+        method pull-one {
+            @!stuff ?? bcrypt-hash @!stuff.shift, :15rounds
+                    !! IterationEnd
+        }
+        method skip-one {
+            return False unless @!stuff;
+            @!stuff.shift;
+            True
+        }
+    }.new: :@stuff
+}
+
+my $hash = hash-it(&lt;foo bar ber&gt;).skip(2).head;
+say &quot;Made hash {now - INIT now}&quot;;
+say bcrypt-match 'ber', $hash;
+
+# OUTPUT:
+# Made hash 2.2548012
+# True
+</code></pre>
+
+<p>我们给 Iterator 添加了一个 <a href="https://docs.perl6.org/routine/skip-one">.skip-one</a> 方法, 不是哈希化一个值, 仅仅丢弃这个值。它需要返回一个真值, 如果它能跳过一个值(例如:如果我们有值我们会在 .pull-one 中生成一个值, 但是我们跳过了它), 或者返回 false 如果没有要跳过的值。</p>
+
+<p>现在，在我们的 Seq 上调用的 .skip 方法使用我们的新的 .skip-one 方法来便宜地跳过 2 个项目，然后使用 .pull-one 生成第三个哈希值。 看现在的耗时：2.2s; 即生成单个散列所需的时间。</p>
+
+<p>但是，我们可以踢起来一下。 虽然我们不会注意到与我们的 3-item Seq 有差异，但试图跳过 1,000,000 项目的用户将无法获得 2.2 秒的时间来生成第 1,000,000 个散列。 他们还必须等待 1,000,000个 .skip-one 调用和 @！stuff.shift。 为了优化跳过一堆项目，我们可以实现 .skip-at-least 方法（简而言之，只显示我们的 Iterator 类）：</p>
+
+<pre><code class="language-perl6">class :: does Iterator {
+    has @.stuff;
+    method pull-one {
+        @!stuff
+          ?? bcrypt-hash(@!stuff.shift, :15pounds)
+          !! IterationEnd
+    }
+    method skip-one {
+        return False unless @!stuff;
+        @!stuff.shift;
+        True
+    }
+    method skip-at-least(Int \n) {
+        n == @!stuff.splice: 0, n
+    }
+}
+</code></pre>
+
+<p><a href="https://docs.perl6.org/routine/skip-at-least">.skip-at-least</a> 方法接收一个 Int 类型的参数, 表示要跳过的条目。它应该尽可能多地跳过指定数量的元素。如果它能够跳过那么多的条目, 则返回真, 如果跳过的条目数少于指定的数量则返回 false。现在, 用户要跳过 1,000,000 个条目时只会有一次 <code>.splice</code> 调用。</p>
+
+<p>为了完整性, Iterator 定义了另外一个跳过方法: <a href="https://docs.perl6.org/routine/skip-at-least-pull-one">.skip-at-least-pull-one</a>。它和 <a href="https://docs.perl6.org/routine/skip-at-least">.skip-at-least</a> 遵守相同的语义, 除了 <code>.pull-one</code> 语义是为了返回值。它的默认实现仅仅调用那俩个方法, 并且是短路的, 并且返回 <a href="https://docs.perl6.org/type/Iterator#IterationEnd">IterationEnd</a> 如果 <code>.skip-at-least</code> 返回一个假值, 并且默认实现很可能对所有 Iterators 就足够了。这个方法的存在便于 Iterator 用户调用 Iterator 上的方法（此时）它没有用在 Rakudo Perl 6 的核心代码中的任何调用 Seq 的方法中。</p>
+
+<h2 id="a-so-so-count">A so, so count&hellip;</h2>
+
+<p>还有俩个优化方法-<code>.bool-only</code> 和 <code>.count-only</code> - 这俩方法没有默认实现。第一个方法返回 <code>True</code> 或 <code>False</code>, 根据 Iterator 是否仍能生成条目（如果能就返回 True）。第二个方法返回 Iterator 还能生成的元素数。<strong>重要的</strong>是这些方法<strong>必须</strong>能够在不穷尽 Iterator 的情况下做到。换句话说, 在发现这些方法被实现之后, 我们 Iterator 的用户能够调用它们, 以后, 应该仍能拉取（<code>.pull-one</code>) 所有的条目, 就像所有的方法从未调用过一样。</p>
+
+<p>我们来制造一个接收 <code>Iterable</code> 和 <code>.rotate</code> 的 Iterator, 它每次迭代一次我们的 Iterator 直到它的尾变为它的头。基本上, 我们想这样:</p>
+
+<pre><code class="language-perl6">.say for rotator 1,2,3,4;
+
+# OUTPUT:
+# [2 3 4 1]
+# [3 4 1 2]
+# [4 1 2 3]
+</code></pre>
+
+<p>这个迭代器将用于研究两种迭代器方法。 对于较少的“made-up”示例，请尝试在 <a href="https://github.com/rakudo/rakudo">Perl 6 编译器的源代码</a>中查找迭代器的排列组合子例程的实现。</p>
+
+<p>下面有一个子例程，它与我们的闪亮的迭代器一起创建了 Seq，还有一些代码可以运行在程序的不同阶段：</p>
+
+<pre><code class="language-perl6">sub rotator (*@stuff) {
+    Seq.new: class :: does Iterator {
+        has int $!n;
+        has int $!steps = 1;
+        has     @.stuff is required;
+
+        submethod TWEAK { $!n = @!stuff − 1 }
+
+        method pull-one {
+            if $!n-- &gt; 0 {
+                LEAVE $!steps = 1;
+                [@!stuff .= rotate: $!steps]
+            }
+            else {
+                IterationEnd
+            }
+        }
+        method skip-one {
+            $!n &gt; 0 or return False;
+            $!n--; $!steps++;
+            True
+        }
+        method skip-at-least (Int \n) {
+            if $!n &gt; all 0, n {
+                $!steps += n;
+                $!n     −= n;
+                True
+            }
+            else {
+                $!n = 0;
+                False
+            }
+        }
+    }.new: stuff =&gt; [@stuff]
+}
+
+my $rotations := rotator ^5000;
+
+if $rotations {
+    say &quot;Time after getting Bool: {now - INIT now}&quot;;
+
+    say &quot;We got $rotations.elems() rotations!&quot;;
+    say &quot;Time after getting count: {now - INIT now}&quot;;
+
+    say &quot;Fetching last one...&quot;;
+    say &quot;Last one's first 5 elements are: $rotations.tail.head(5)&quot;;
+    say &quot;Time after getting last elem: {now - INIT now}&quot;;
+}
+
+# OUTPUT:
+# Time after getting Bool: 0.0230339
+# We got 4999 rotations!
+# Time after getting count: 26.04481484
+# Fetching last one...
+# Last one's first 5 elements are: 4999 0 1 2 3
+# Time after getting last elem: 26.0466234
+</code></pre>
+
+<p>首先，让我们来看看我们在迭代器中做了什么。我们接收一个 Iterable（在第37行的 sub 调用中，我们使用一个Range对象，在这种情况下我们可以加入5000个元素），将其克隆（使用[&hellip;]运算符），并将该克隆保存在@ ！我们的迭代器的东西属性。在对象实例化过程中，我们还在TWEAK子方法内保存了多少个@！东西在$！n属性中。</p>
+
+<p>对于每个pull - 迭代器之一，我们旋转我们的@！stuff属性，将旋转的结果存储在其中，以及对其进行浅克隆，这是我们返回的迭代。</p>
+
+<p>我们还已经实现了.skip-one和.skip-at-least优化方法，其中我们使用私有的$！steps属性来改变下一个.pull-one将旋转我们的@！东西的步骤。每当调用.pull-one时，我们只需使用LEAVE移相器将$！步骤重置为默认值1。</p>
+
+<p>我们来看看这个东西怎么样！我们将我们宝贵的Seq存储在$ rotations变量中，我们首先检查真实性，看看它是否具有任何元素;那么我们告诉世界我们可以从Seq中捞出多少轮？最后，我们获取Seq的最后一个元素（为了屏幕空间的原因）打印最后一个旋转的前5个元素。</p>
+
+<p>所有三个步骤 - 检查.Bool，检查.elems和获取最后一个项目与.tail是定时的，结果不是很漂亮。而.Bool相对较快地完成，.elems通话花了很长时间（26s）！这实际上并不是所有的伤害。从本系列的第一部分回顾.Bool和.elems缓存Seq，除非在Iterator中实现了特殊的方法。这意味着我们所做的每一次旋转仍然在记忆中，无空间地使用空间！我们要做什么？我们来尝试实现这些特殊的方法.Bool和.elems正在寻找！</p>
+
+<p>我们需要改变的只是为了给我们的迭代器添加两个额外的方法来确定我们可以生成多少个元素（.count），以及我们是否有任何元素来生成（.bool-only）：</p>
+
+<pre><code class="language-perl6">method count-only { $!n     }
+method bool-only  { $!n &gt; 0 }
+</code></pre>
+
+<p>为了完整起见，这里是我们前面的例子，将这两种方法添加到Iterator中:</p>
+
+<pre><code class="language-perl6">sub rotator (*@stuff) {
+    Seq.new: class :: does Iterator {
+        has int $!n;
+        has int $!steps = 1;
+        has     @.stuff is required;
+
+        submethod TWEAK { $!n = @!stuff − 1 }
+
+        method count-only { $!n     }
+        method bool-only  { $!n &gt; 0 }
+
+        method pull-one {
+            if $!n-- &gt; 0 {
+                LEAVE $!steps = 1;
+                [@!stuff .= rotate: $!steps]
+            }
+            else {
+                IterationEnd
+            }
+        }
+        method skip-one {
+            $!n &gt; 0 or return False;
+            $!n--; $!steps++;
+            True
+        }
+        method skip-at-least (\n) {
+            if $!n &gt; all 0, n {
+                $!steps += n;
+                $!n     −= n;
+                True
+            }
+            else {
+                $!n = 0;
+                False
+            }
+        }
+    }.new: stuff =&gt; [@stuff]
+}
+
+my $rotations := rotator ^5000;
+
+if $rotations {
+    say &quot;Time after getting Bool: {now - INIT now}&quot;;
+
+    say &quot;We got $rotations.elems() rotations!&quot;;
+    say &quot;Time after getting count: {now - INIT now}&quot;;
+
+    say &quot;Fetching last one...&quot;;
+    say &quot;Last one's first 5 elements are: $rotations.tail.head(5)&quot;;
+    say &quot;Time after getting last elem: {now - INIT now}&quot;;
+}
+
+# OUTPUT:
+# Time after getting Bool: 0.0087576
+# We got 4999 rotations!
+# Time after getting count: 0.00993624
+# Fetching last one...
+# Last one's first 5 elements are: 4999 0 1 2 3
+# Time after getting last elem: 0.0149863
+</code></pre>
+
+<p>代码几乎相同，但看看那些甜美的时光！ 我们的整个程序运行速度大约是1733倍，因为我们的Seq可以弄清楚它是否和多少元素，而不必迭代或旋转任何东西。 .tail调用看到我们的优化（旁注：实际上是最近的），它也不必迭代任何东西，只能使用我们的.skip-at-least优化来跳过到最后。 最后但并非最不重要的是，我们的Seq不再被缓存，所以记忆中唯一的东西就是我们关心的事情。 这是一个非常少的额外的代码的双赢。</p>
+
+<p>但等等&hellip;还有更多！</p>
+
+<p>原文：
+<a href="https://rakudo.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll--Part-2">https://rakudo.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll--Part-2</a></p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/seq/">Seq</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/" data-toggle="tooltip" data-placement="top" title="Perl 6 Sheet">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

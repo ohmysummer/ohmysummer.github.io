@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>引号结构</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="引号结构" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/%E5%BC%95%E5%8F%B7%E7%BB%93%E6%9E%84/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>引号结构</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/08/09</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h2 id="the-q-lang">The Q Lang</h2>
+
+<hr />
+
+<p>在 Perl 6 中, 字符串通常使用一些引号结构来表示. 这些引号结构中,最简单的就是 <code>Q</code>, 通过便捷方式 <code>｢…｣</code> 或 <code>Q</code> 后跟着由任意一对儿分隔符包围着的文本. 大多数时候, 你需要的只是 <code>'…'</code> 或 <code>&quot;…&quot;</code>.</p>
+
+<h3 id="literal-strings-q">Literal strings: Q</h3>
+
+<hr />
+
+<pre><code class="language-perl6">Q[A literal string]
+｢More plainly.｣
+Q ^Almost any non-word character can be a delimiter!^
+</code></pre>
+
+<p>分隔符能够嵌套, 但是在普通的 Q 形式中, 反斜线转义是不允许的. 换种说法就是, Q 字符串尽可能被作为字面量.</p>
+
+<pre><code class="language-perl6">Q&lt;Make sure you &lt;match&gt; opening and closing delimiters&gt;
+Q{This is still a closing brace → \}
+</code></pre>
+
+<p>这些例子产生:</p>
+
+<pre><code class="language-perl6">A literal string
+More plainly.
+Almost any non-word character can be a delimiter!
+Make sure you &lt;match&gt; opening and closing delimiters
+This is still a closing brace → \
+</code></pre>
+
+<h3 id="escaping-q">Escaping: q</h3>
+
+<hr />
+
+<pre><code class="language-perl6">'Very plain'
+q[This back\slash stays]
+q[This back\\slash stays] # Identical output
+q{This is not a closing brace → \}, but this is → }
+Q :q $There are no backslashes here, only lots of \$\$\$!$
+'(Just kidding. There\'s no money in that string)'
+'No $interpolation {here}!'
+Q:q#Just a literal &quot;\n&quot; here#
+</code></pre>
+
+<p><code>q</code> 形式的引号结构允许使用反斜线转义可能会结束字符串的字符. 反斜线自身也能被转义, 就像上面的第三个例子那样. 通常的形式是 <code>'...'</code> 或 <code>q</code> 后跟着分隔符, 但是它也能作为 Q 上的副词使用, 就像上面的第五个和最后一个例子那样.</p>
+
+<p>这些例子产生:</p>
+
+<pre><code class="language-perl6">Very plain
+This back\slash stays
+This back\slash stays
+This is not a closing brace → } but this is →
+There are no backslashes here, only lots of $$$!
+(Just kidding. There's no money in that string)
+No $interpolation {here}!
+Just a literal &quot;\n&quot; here
+</code></pre>
+
+<h3 id="interpolation-qq">Interpolation: qq</h3>
+
+<hr />
+
+<pre><code class="language-perl6">my $color = 'blue';
+say &quot;My favorite color is $color!&quot; # My favorite color is blue!
+</code></pre>
+
+<p><code>qq</code> 形式 &ndash; 通常使用双引号写成 &ndash; 允许变量的插值, 例如字符串中能写入变量, 以使变量的内容能插入到字符串中. 在 <code>qq</code> 引起字符串中, 也能转义变量.</p>
+
+<pre><code class="language-perl6">say &quot;The \$color variable contains the value '$color'&quot;;
+# The $color variable contatins the value 'blue'
+</code></pre>
+
+<p><code>qq</code> 的另外一种功能是使用花括号在字符串中插值 Perl 6 代码:</p>
+
+<pre><code class="language-perl6">my ($x, $y, $z) = 4, 3.5, 3;
+say &quot;This room is $x m by $y m by $z m.&quot;
+say &quot;Therefore its volume should be { $x * $y * $z } m³!&quot;
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code class="language-perl6">This room is 4 m by 3.5 m by 3 m.
+Therefore its volume should be 42 m³!
+</code></pre>
+
+<p>默认情况下, 只有带有 &lsquo;$&rsquo; 符号的变量才能正常插值. 这时, <code>&quot;documentation@perl6.org&quot;</code> 不会插值  <code>@perl6</code> 变量. 如果呢确实想那么做, 在变量名后面添加一个 <code>[]</code>:</p>
+
+<pre><code class="language-perl6">my @neighbors = &quot;Felix&quot;, &quot;Danielle&quot;, &quot;Lucinda&quot;;
+say &quot;@neighbors[] and I try our best to coexist peacefully.&quot;
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code class="language-perl6">Felix Danielle Lucinda and I try our best to coexist peacefully.
+</code></pre>
+
+<p>通常使用一个方法调用会更合适. 只有在 qq 引号中, 方法调用后面有圆括号, 就能进行插值:</p>
+
+<pre><code class="language-perl6">say &quot;@neighbors.join(', ') and I try our best to coexist peacefully.&quot;
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code class="language-perl6">Felix, Danielle, Lucinda and I try our best to coexist peacefully.
+</code></pre>
+
+<p>而 <code>&quot;@example.com&quot;</code> 产生 <code>@example.com</code>.</p>
+
+<h3 id="word-quoting-qw">Word quoting: qw</h3>
+
+<hr />
+
+<pre><code class="language-perl6">&lt;a b c&gt; eqv ('a', 'b', 'c')
+qw|! @ # $ % ^ &amp; * \| &lt; &gt; | eqv '! @ # $ % ^ &amp; | &lt; &gt;'.words
+Q:w { [ ] \{ \} } eqv ('[', ']', '{', '}')
+</code></pre>
+
+<p><code>:w</code> 通常写作 <code>&lt;...&gt;</code> 或 <code>qw</code>, 把字符串分割为&rdquo;words&rdquo; (单词). 在这种情景下, 单词被定义为由空格分割的一串非空白字符. <code>q:w</code> 和 <code>qw</code> 继承了 <code>q</code> 的插值和转义语法, 还有单引号字符串分割符, 而 <code>Qw</code> 和 <code>Q:w</code> 继承了 <code>Q</code> 的非转义语法.</p>
+
+<pre><code class="language-perl6">my @directions = 'left', 'right,', 'up', 'down';
+</code></pre>
+
+<p>这样读和写都更容易:</p>
+
+<pre><code class="language-perl6">my @directions = &lt;left right up down&gt;;
+</code></pre>
+
+<h3 id="word-quoting-with-interpolation-qqw">Word quoting with interpolation: qqw</h3>
+
+<hr />
+
+<p><code>qw</code> 形式的 word quoting 不会进行变量插值:</p>
+
+<pre><code class="language-perl6">my $a = 42; say qw{$a b c};  # $a b c
+</code></pre>
+
+<p>因此, 如果你想在引号字符串中进行变量插值, 你需要使用 <code>qqw</code> 变体:</p>
+
+<pre><code class="language-perl6">my $a = 42;
+my @list = qqw{$a b c};
+say @list;                # 42 b c
+</code></pre>
+
+<p>或者同样的:</p>
+
+<pre><code class="language-perl6">my $a = 42;
+my @list = «$a b c»;
+say @list;                # 42 b c
+</code></pre>
+
+<h3 id="shell-quoting-qx">Shell quoting: qx</h3>
+
+<hr />
+
+<p>把一个字符串作为一个外部程序运行,  在 Perl 6 中反引号不再用于 shell quoting, 并且 qx 不再插值 Perl 变量, 因此:</p>
+
+<pre><code class="language-perl6">my $world = &quot;there&quot;;
+say qx{echo &quot;hello $world&quot;}
+</code></pre>
+
+<p>仅仅打印 hello. 然而, 如果你在调用 perl6 之前声明了一个环境变量, 这在 qx 里是可用的, 例如:</p>
+
+<pre><code class="language-perl6">WORLD=&quot;there&quot; perl6
+&gt; say qx{echo &quot;hello $WORLD&quot;}
+</code></pre>
+
+<p>现在会打印 hello there.</p>
+
+<p>调用 <code>qx</code> 会返回结果, 所以这个结果能被赋值给一个变量以便后来使用:</p>
+
+<pre><code class="language-perl6">my $output = qx{echo &quot;hello!&quot;};
+say $output;    # hello!
+</code></pre>
+
+<h3 id="shell-quoting-with-interpolation-qqx">Shell quoting with interpolation: qqx</h3>
+
+<hr />
+
+<p>带插值的 Shell quoting:</p>
+
+<pre><code class="language-perl6">my $world = &quot;there&quot;;
+say qqx{echo &quot;hello $world&quot;};  # hello there
+</code></pre>
+
+<p>再一次, 外部命令的输出结果可以保存在一个变量中:</p>
+
+<pre><code class="language-perl6">my $word = &quot;cool&quot;;
+my $option = &quot;-i&quot;;
+my $file = &quot;/usr/share/dict/words&quot;;
+my $output = qqx{grep $option $word $file};
+# runs the command: grep -i cool /usr/share/dict/words
+say $output;      # Cooley␤Cooley's␤Coolidge␤Coolidge's␤cool␤ ...
+</code></pre>
+
+<h3 id="heredocs-to">Heredocs: :to</h3>
+
+<hr />
+
+<p><code>heredocs</code> 是多行字符串字面量的便捷方式, 你能选择自己的分隔符:</p>
+
+<pre><code class="language-perl6">say q:to/END/;
+Here is
+some multi-line
+string
+END
+</code></pre>
+
+<p>heredoc 的内容从下一行开始.</p>
+
+<pre><code class="language-perl6">my $escaped = my-escaping-function(q:to/TERMINATOR/, language =&gt; 'html');
+Here are the contents of the heredoc.
+Potentially multiple lines.
+TERMINATOR
+</code></pre>
+
+<p>如果终止分隔符缩进了, 同等数量的缩进会从字符串字面量上移除. 因此下面这个 heredoc</p>
+
+<pre><code class="language-perl6">say q:to/END/;
+    Here is
+    some multi line
+        string
+    END
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code class="language-perl6">Here is
+some multi line
+    string
+</code></pre>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/" data-toggle="tooltip" data-placement="top" title="智能匹配">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/abundant-and-deficient-numbers/" data-toggle="tooltip" data-placement="top" title="Abundant and Deficient Numbers">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

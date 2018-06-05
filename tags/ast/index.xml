@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ast on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/ast/</link>
+    <description>Recent content in Ast on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 12 May 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/ast/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Actions 和抽象语法树</title>
+      <link>https://ohmysummer.github.io/post/2016-05-12-actions%E5%92%8C%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/</link>
+      <pubDate>Thu, 12 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-05-12-actions%E5%92%8C%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/</guid>
+      <description>有一段结构化的文本, 写一个 Grammar 来解析它：
+name = Animal Facts author = jnthn [cat] desc = The smartest and cutest cuteness = 100000 [dugong] desc = The cow of the sea cuteness = -10 [magpie] desc = crow; raven; rook; jackdaw; chough; magpie; jay cuteness = 99  每一段都是一个章节, 有的章节没有[cat]这样的标题, 要求 grammar 生成一个散列, 散列的键是方括号中的单词, 如果没有就默认为 _ , 散列的值是一个散列的数组, 数组里面的每个散列的键为等号左边的单词, 键值为等号右边的字符。Grammar 如下:
+use v6; #use Grammar::Debugger; grammar INIFile::Grammar { token TOP { ^ &amp;lt;entries&amp;gt; # 条目 &amp;lt;section&amp;gt;+ # 章节 $ } token section { &#39;[&#39; ~ &#39;]&#39; &amp;lt;key&amp;gt; \n &amp;lt;entries&amp;gt; # 每个章节含有多个条目 entry } token entries { [ | &amp;lt;entry&amp;gt; \n | \n # entry 可以为空 ]+ } token entry { &amp;lt;key&amp;gt; \h* &#39;=&#39; \h* &amp;lt;value&amp;gt; } token key { \w+ } token value { \N+ } } class INIFileActions { method entries($/) { my %entries; for $&amp;lt;entry&amp;gt; -&amp;gt; $e { %entries{$e&amp;lt;key&amp;gt;} := ~$e&amp;lt;value&amp;gt;; } make %entries; } method TOP($/) { my %result; %result&amp;lt;_&amp;gt; := $&amp;lt;entries&amp;gt;.</description>
+    </item>
+    
+  </channel>
+</rss>

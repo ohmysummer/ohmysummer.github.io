@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>roles冲突</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="roles冲突" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/roles%E5%86%B2%E7%AA%81/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>roles冲突</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/11/16</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          <p>学会了怎么创建类, 我们继续用它来构建我们的中心内容:</p>
+
+<pre><code class="language-perl6">
+class Hammer {
+    method hammer($stuff) {
+        say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;
+    }
+}
+
+class Gavel {
+    method hammer($stuff) {
+        say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;
+    }
+}
+
+class Mallet {
+    method hammer($stuff) {
+        say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;
+    }
+}
+
+</code></pre>
+
+<p>但是注意到了吗？ 这三个方法包含了同样的方法, 在类中重复了。我们必须那样做如果我们想让每个 <strong>Hammar</strong>、<strong>Gavel</strong> 和 <strong>Mallet</strong> 有能力击打的话。（并且那是合理的）。 但是遗憾的是我们不得不把那个方法一式三份。</p>
+
+<p>为什么遗憾？ 因为一方面在真实世界中, 方法并不是很彼此相似, 有一天你决定在 <strong>hammer</strong>  方法中更改某些东西, 并没有意识到这个方法在三个不同的地方&hellip; 这导致了一堆痛苦和难受。</p>
+
+<p>所以我们的新玩具, 类, 展现出了一个问题。我们想在每个类中重用 hammer 方法。一个新的概念, <strong>role</strong> 来拯救我们来了:</p>
+
+<pre><code class="language-perl6">
+role Hammering {
+    method hammer($stuff) {
+        say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;
+    }
+}
+
+</code></pre>
+
+<p>虽然类经常以一个合适的名词命名, 但是 roles 经常以一个分词命名, 例如 <strong>Hammering</strong>。这不是一个必须遵守的规则, 但是它是一个好的经验法则。现在类的定义变的简单了:</p>
+
+<pre><code class="language-perl6">
+class Hammer does Hammering { }
+class Gavel  does Hammering { }
+class Mallet does Hammering { }
+
+</code></pre>
+
+<p>是的, 我们喜欢那样。</p>
+
+<p>这发生了什么？ 我们在类上使用 <strong>does</strong> 是干什么用的？ role 定义中的所有方法都被拷贝到类定义中。因为它是一个拷贝操作, 所以我们可以使用尽可能多的类。</p>
+
+<p>所以, 我们做的是: 当我们想重用方法的时候把方法放进 roles 里面。</p>
+
+<p>但是好处不止这一点儿。至少有两个好处:</p>
+
+<pre><code class="language-perl6">
+my $hammer = Hammer.new;    # create a new hammer object
+say $hammer ~~ Hammer;      # &quot;Bool::True&quot; -- yes, this we know
+say $hammer ~~ Hammering;   # &quot;Bool::True&quot; -- ooh!
+
+</code></pre>
+
+<p>所以 <code>$hammer</code> 知道它遵守了(does)<strong>Hammering</strong>, 我们现在不仅知道了对象属于哪个类, 还知道了对象并入了什么 role。这很有用如果我们不确定我们处理的是什么类型的对象:</p>
+
+<pre><code class="language-perl6">
+if $unkown_object ~~ Hammering {
+    $unknown_object.hammer(&quot;砸在钉子上&quot;);     # will always work
+}
+
+</code></pre>
+
+<p>一个类能一次接收几个 roles 吗？ 是的, 它可以:</p>
+
+<pre><code class="language-perl6">
+role Flying {
+    method fly {
+        say &quot;Whooosh!&quot;;
+    }
+}
+
+class FlyingHammer does Hammering does Flying { }
+
+</code></pre>
+
+<p>让一个类像那样遵守几个 roles 引入了一个有意思的可能: 冲突, 当来自两个不同 roles 的两个同名方法尝试占领同一个类时。这时会发生什么？ 好吧, 至少有 3 种可能:</p>
+
+<ul>
+<li>1. 第一个 role 赢了。 它的方法住进了类中</li>
+<li>1. 最后一个 role 赢了。 它覆盖了之前的方法</li>
+<li>1. 编译失败。冲突必须被解决。</li>
+</ul>
+
+<p>这种情况下选项 3  应该是正确答案。原因和之前相同: 因为类和工程越来越庞大, 程序员可能意识不到两个 role 之间在哪儿发生冲突。所以我们标记了它。</p>
+
+<pre><code class="language-perl6">
+role Sleeping {
+    method lie {
+        say &quot;水平躺下&quot;;
+    }
+}
+
+role Lying {
+    method lie {
+        say &quot;说谎...&quot;;
+    }
+}
+
+class SleepingLiar does Sleeping does Lying { }    # 冲突!
+
+</code></pre>
+
+<p>下一个问题, 那么: 当在类中有  role 冲突时, 我们怎么修复它？ 简单: 在类中自己定义一个同名的方法:</p>
+
+<pre><code class="language-perl6">
+class SleepingLiar does Sleeping does Lying {
+    method lie {
+        say &quot;Lying in my sleep....&quot;;
+    }
+}
+
+</code></pre>
+
+<p>如果你想从一个贴别的 role 中调用一个方法, 语法是这样的:</p>
+
+<pre><code class="language-perl6">
+class SleepingLiar does Sleeping does Lying {
+    method lie {
+        self.Sleeping::lie;
+    }
+}
+
+</code></pre>
+
+<p>﻿</p>
+
+<p>这就是 roles。它们把可重用的行为混合进类中。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/%E5%9C%86%E6%8B%AC%E5%8F%B7%E5%92%8C%E6%96%B9%E6%8B%AC%E5%8F%B7%E5%9C%A8%E5%88%9B%E5%BB%BA%E6%95%B0%E7%BB%84%E6%97%B6%E7%9A%84%E5%8C%BA%E5%88%AB/" data-toggle="tooltip" data-placement="top" title="圆括号和方括号在创建数组时的区别">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98grammar/" data-toggle="tooltip" data-placement="top" title="Perl6 中的可变 Grammar">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

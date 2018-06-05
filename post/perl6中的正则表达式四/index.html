@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的正则表达式(四)</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 中的正则表达式(四)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9B%9B/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 中的正则表达式(四)</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/09/11</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h1 id="最长-token-匹配">最长 token 匹配</h1>
+
+<p>注意，下面进入糟糕区域，如果看不懂请查看英文原文!</p>
+
+<p><a href="https://github.com/perl6/roast/blob/master/S05-metasyntax/longest-alternative.t#L53-L460"><code>S05-metasyntax/longest-alternative.t lines 53–460</code></a></p>
+
+<p>因为 &rdquo;longest-token matching&rdquo; 是一个很长的短语, 我们会经常将这个概念叫做 <code>LTM</code>.  这个基本的概念就是人们在头脑中倾向于怎么去解析文本, 所以计算机应该像人一样尝试做同样的事情. 而使用 <code>LTM</code> 解析文本就是关于计算机怎样决定匹配一组备选分支中的哪一个备选分支的.</p>
+
+<p>在 Perl 6 中, <code>|</code> 代表使用声明性的 longest-token 语义的逻辑备选分支.(你现在能使用 <code>||</code> 来标示旧的暂存的备选分支. 就是, <code>|</code> 和 <code>||</code> 现在在正则语法内的运作方式和在正则语法外的运作方式很像,  在正则语法外部, <code>|</code> 和 <code>||</code> 代表 junctional 和 短路的 <code>OR</code>. 这也包括事实上 <code>|</code> 的优先级比 <code>||</code> 的优先级高.)</p>
+
+<p>在过去, Perl 中正则表达式是通过一个能回溯的 NFA 算法来处理的. 这很强大, 但是很多解析器通过并行地处理 rules , 而不是一个接着一个地处理, 工作起来更高效, 至少达到某种程度. 如果你看一下像 yacc grammar 这样的东西, 你会发现很多 pattern/action 声明, 其中的 patterns 被认为是并行的,  并且最终由 grammar 决定触发哪个 action. 虽然默认的Perl 解析角度是从上至下的(或许使用一个中间层的从下至上角度来处理操作符优先级), 这对用户理解 token 处理进行确定性很有用。所以, 为了 regex 匹配的意图, 我们把 tokens 模式定义为那些不含潜在副作用或自引用的能被匹配的模式。(因为空格在行转换时经常有副作用, 所以通常被这样的模式排除, 给予或采取一点向前查看。) 基本上, Perl 自动地从 grammar 中派生出一个词法分析程序, 而不需要你自己写一个。</p>
+
+<p>为此, Perl 6 中的每个 regex 被要求能把它的纯模式和它的 actions 区分开, 并返回它的初始 token 模式的列表(包含由regex 的纯部分调用的 subrule 的 token 模式, 但是不包含多于一次的 subrule, 因为那可能会引起自引用, 这在传统正则表达式中是不被允许的。) 一个使用<code>|</code>的逻辑备选分支接收两个或多个这种列表并分发给匹配最长 token 前缀的备选分支。出现在第一位的可能是也可能不是那个备选分支。</p>
+
+<p>然而, 如果两个备选分支以同样的长度匹配, 绑定首先由特异性打破。 以最长的固定字符串开头的备选分支胜出; 即一个精确的匹配被看作是比使用字符类更接近. 如果它不起作用, 绑定会由两个方法中的一个破坏. 如果备选分支在不同的 grammars 中, 那么标准的 MRO(方法解析顺序)决定首先尝试哪一个. 如果备选分支在同一个 grammar 文件中, 本文出现的更早的备选分支取得优先权. (如果一个 grammar 的 rules 被定义在不止一个文件中, 那么顺序是未定义的, 则必须使用一个显式的断言用于强制失败, 如果首先尝试错误的那个的话)</p>
+
+<p>这个长的标记前缀大致相当于“令牌”在其他分析系统使用一个词法分析器的概念，但对于Perl这很大程度上是自动从语法定义一个偶然现象。然而，尽管是自动计算的，这一套标记可以由用户修改；各种内构造正则表达式的语法来告诉引擎，这是完成图案的部分开始的副作用，所以将这种构建用户控件被认为是象征性的，什么是不。被视为终止一个令牌声明并启动“行动”部分的结构的结构包括：
+这种最长 token 前缀大致相当于在其它解析系统中使用词法解析程序的 &ldquo;token&rdquo; 标记, 但对于 Perl 这很大程度上是从 grammar 定义中派生的附带现象。然而，尽管是自动计算的, 这套 tokens 可以由用户修改; regex 中的各种结构声明性的告诉 grammar 引擎, 模式部分结束, 并开始进入副作用, 所以通过插入这样的结构, 用户控制什么是 token, 什么不是。终止 token 声明并开始模式的 &ldquo;action&rdquo; 部分的结构包括:</p>
+
+<ul>
+<li>任何 :: 或 ::: 回溯控制 (而不是e : 肯定修饰符).</li>
+<li>任何带有节俭匹配(使用 <code>?</code>修饰符)量词化的原子。</li>
+
+<li><p>任何 <code>{...}</code> action, 但不是含有闭包的断言。(空的闭包 <code>{}</code> 通常用于显式地终止模式的 pure 部分。) 一般的 <code>**{...}</code> 量词形式的闭包也会终止最长 token, 但是无闭包形式的量词不会。</p></li>
+
+<li><p>任何诸如 <code>||</code> 或 <code>&amp;&amp;</code> 按次序的控制流操作符.</p></li>
+
+<li><p>作为前一点的结果，因为标准的 grammar 规则使用 <code>||</code> 定义空格, 最长的token 也由那 <em>可能</em> 使用那个规则匹配空格的 regex 或 rule 的任意部分终止, 包括通过 <code>:sigspace</code>隐式匹配的空格。（然而，token 声明明确允许通过在 token 中使用诸如 <code>\h+</code> 或其它字符类这种低级原语来识别空格）</p></li>
+
+<li><p>Subpatterns（捕获）不终止token模式，但可能需要重新解析 token以找到Subpatterns的位置。同样地，在确定最长token之后断言可能需要被检查。（或者, 如果以任何一种方式模仿了 DFA 语义, 例如, 使用汤普森的NFA，可能可以知道什么时候触发断言而不使用backchecks。）</p></li>
+</ul>
+
+<p>贪婪量词和字符类不会终止 token 模式。 诸如单词边界的零宽断言也不会。</p>
+
+<p>因为这种断言可以是 token 的一部分, 词法分析程序引擎必须能从这种断言的失败中恢复, 并回溯到下一个最佳 token 候选者, 它可能等长或更短, 但是绝对不会当前候选者更长。</p>
+
+<p>对于含有诸如 <code>&lt;?foo&gt;</code> 或 <code>&lt;?before \s&gt;</code> 这样的正向向前查看的模式, 这种断言会被认为比随后的模式更特殊, 所以向前查看的模式被当作最长 token 的最后一部分; 最长 token 匹配器会足够智能地把额外的 bit 当作是零宽的, 即, 重新匹配任何由向前查看遍历到的文本,当它(如果)继续匹配的时候。(实际上, 如果整个向前查看足够纯粹地参与 LTM, 再匹配可能仅仅优化掉 rematching, 因为向前查看已经在 LTM 引擎中匹配过了)</p>
+
+<p>然而, 对于包含诸如 <code>&lt;!foo&gt;</code> 或 <code>&lt;!before \s&gt;</code> 这种否定向前查看断言的模式, 反面的才是真: 随后的模式被认为比该断言更特殊。所以 LTM 完全忽略了否定向前查看, 并继续从跟在否定向前查看后面的任何东西中查找纯粹模式。你可能会说, 正向向前查看对 LTM 是不透明的, 否地向前查看对 LTM 是透明的。 结论是,如果你想写一个对 LTM 是透明的正向向前查看, 你可以使用两个感叹号的否定: <code>&lt;!!foo&gt;</code> 来标示它。(优化器能自由地移除双否定, 但是不是透明性)。</p>
+
+<p>奇怪的是，这 <code>令牌</code> 关键词具体不确定一个令牌的范围，除了一个令牌模式通常不匹配的空白，而空白是终止令牌的典型方式。
+很奇怪, <code>token</code> 关键字不确定 token 的作用域, 除了作为一个 token 模式通常不做很多的空格匹配情况之外, 空格是终止 tokens 的原型方式。</p>
+
+<p>初始token匹配器必须把区分大小写考虑在内（或任何其他规范化原语）并做正确的事, 即使传播到不具有相同的规范化的 rules 时。也就是说，它们必须继续代表较低规则能匹配的一组匹配。</p>
+
+<p><code>||</code> 形式有旧的短路语义，而不会试图匹配其右侧, 除非它的左侧耗尽了所有的可能性（包括所有 <code>|</code> 可能性）。regex 中的第一个 <code>||</code> 让它左侧的 token 模式能从外部的最长 token 匹配器中访问,  但从最长 token 匹配隐藏的任何后续的测试。每一个 <code>||</code>建立了一个新的最长 token匹配器。那就是, 如果你在 <code>||</code> 右侧使用 <code>|</code>，那么右侧为最长 token 处理这子表达式和任何被调用的 subrules建立了一个新的顶级作用域处理这个子表达式和任何所谓的规则。右边的最长 token 自动机是对于左侧的 <code>||</code> 或外部的含有 <code>||</code> 的 regex是不可见的。</p>
+
+<p>大西瓜啊，翻译的狗屎一样，惨不忍睹！</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%B8%80/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的操作符(一)">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl-6-weekly%E4%B8%80/" data-toggle="tooltip" data-placement="top" title="Perl 6 Weekly(一)">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

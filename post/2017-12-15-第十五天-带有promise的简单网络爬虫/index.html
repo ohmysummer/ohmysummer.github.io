@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第十五天-带有 Promise 的简单网络爬虫</title>
+  <meta property="og:title" content="第十五天-带有 Promise 的简单网络爬虫" />
+  <meta name="twitter:title" content="第十五天-带有 Promise 的简单网络爬虫" />
+  <meta name="description" content="Day 15 – A Simple Web Spider With Promises">
+  <meta property="og:description" content="Day 15 – A Simple Web Spider With Promises">
+  <meta name="twitter:description" content="Day 15 – A Simple Web Spider With Promises">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第十五天-带有 Promise 的简单网络爬虫</h1>
+                
+                  
+                    <h2 class="post-subheading">Day 15 – A Simple Web Spider With Promises</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2017/15/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="day-15-a-simple-web-spider-with-promises-https-perl6advent-wordpress-com-2017-12-15-a-simple-web-spider-with-promises"><a href="https://perl6advent.wordpress.com/2017/12/15/a-simple-web-spider-with-promises/">Day 15 – A Simple Web Spider With Promises</a></h1>
+
+<p>承诺，承诺
+去年夏天，我申请了一项编程工作，面试官要求我编写一个程序来抓取给定的域，只在该域中的链接之后，找到它引用的所有页面。我被允许以任何语言编写程序，但我选择使用Go语言执行任务，因为这是该公司使用的主要语言。这对于并发编程来说是一个理想的任务，并且Go具有非常好的现代化功能，即使有些低级别的并发支持。网络蜘蛛中的主要工作是执行与在域中发现的唯一锚链接相同的次数，即在每个页面上执行HTTP GET并解析页面文本以获取新链接。这个任务可以并行安全地完成，因为没有可能（除非你做得很糟糕），任何调用爬取代码都会干扰其他任何调用。</p>
+
+<p>Go和Perl 6的创造者受到安东尼霍尔爵士1978年的开创性工作“沟通顺序过程”的启发，但值得注意的是，Perl 6代码更加简洁，因此更容易隐藏到博客文章中。事实上，Go设计者总是将他们的结构称为“并发原语”。 Go为我的作业应用程序编写的并发spider代码大约有200行，而在Perl 6中大小不到这个大小的一半。</p>
+
+<p>下面我们来看看如何在Perl 6中实现一个简单的Web爬虫。内置的Promise类允许您启动，调度和检查异步计算的结果。所有你需要做的就是给Promise.start方法一个代码引用，然后调用await方法，这会阻塞，直到promise完成执行。然后您可以测试结果方法以确定承诺是否已被保留或中断。</p>
+
+<p>您可以通过将其保存到本地文件中来运行本文中的代码，例如网络spider.p6。如果您希望抓取https网站，请使用zef安装HTML :: Parser :: XML和HTTP :: UserAgent以及IO :: Socket :: SSL。我会提醒你，SSL支持目前看起来有点狼狈，所以最好坚持http站点。 Perl 6程序中的MAIN子程序存在时表示一个独立程序，这就是执行开始的地方。 MAIN的参数表示命令行参数。我编写了这个程序，以便默认情况下它会抓取Perlmonks站点，但是您可以覆盖它，如下所示：</p>
+
+<pre><code>$ perl6 web-spider.p6 [–domain=http://example.com]
+</code></pre>
+
+<p>简单的Perl 6域蜘蛛</p>
+
+<pre><code class="language-perl6">use HTML::Parser::XML;
+use XML::Document;
+use HTTP::UserAgent;
+
+sub MAIN(:$domain=&quot;http://www.perlmonks.org&quot;) {
+
+    my $ua =  HTTP::UserAgent.new;
+    my %url_seen;
+    my @urls=($domain);
+
+    loop {
+        my @promises;
+        while ( @urls ) {
+            my $url = @urls.shift;
+            my $p = Promise.start({crawl($ua, $domain, $url)});
+            @promises.push($p);
+        }
+        await Promise.allof(@promises);
+        for @promises.kv -&gt; $index, $p {
+            if $p.status ~~ Kept {
+                my @results =  $p.result;
+                for @results {
+                    unless %url_seen{$_} {
+                        @urls.push($_);
+                        %url_seen{$_}++;
+                    }
+                }
+            }
+        }
+        # Terminate if no more URLs to crawl
+        if @urls.elems == 0 {
+            last;
+        }
+    }
+    say %url_seen.keys;
+}
+
+# Get page and identify urls linked to in it. Return urls.
+sub crawl($ua, $domain, $url) {
+    my $page = $ua.get($url);
+    my $p = HTML::Parser::XML.new;
+    my XML::Document $doc = $p.parse($page.content);
+    # URLs to crawl
+    my %todo;
+    my @anchors = $doc.elements(:TAG&lt;a&gt;, :RECURSE);
+    for @anchors -&gt; $anchor {
+        next unless $anchor.defined;
+        my $href =  $anchor.attribs&lt;href&gt;;
+
+        # Convert relative to absolute urls
+        if $href.starts-with('/') or $href.starts-with('?') {
+            $href = $domain ~ $href;
+        }
+
+        # Get unique urls from page
+        if $href.starts-with($domain) {
+              %todo{$href}++;
+        }
+    }
+    my @urls = %todo.keys;
+
+    return @urls;
+}
+</code></pre>
+
+<h2 id="结论是">结论是</h2>
+
+<p>并发编程总是会有很多陷阱，从竞争状态到资源匮乏和死锁，但我认为很显然，Perl 6 已经使得这种编程形式更容易被大家接受。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/" data-toggle="tooltip" data-placement="top" title="第十四天-在 Perl 6 中构建和测试 Big Grammars">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" data-toggle="tooltip" data-placement="top" title="第十六天-Perl 6 性能改进">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

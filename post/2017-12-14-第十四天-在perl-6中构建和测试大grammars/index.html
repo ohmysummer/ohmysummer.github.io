@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第十四天-在 Perl 6 中构建和测试 Big Grammars</title>
+  <meta property="og:title" content="第十四天-在 Perl 6 中构建和测试 Big Grammars" />
+  <meta name="twitter:title" content="第十四天-在 Perl 6 中构建和测试 Big Grammars" />
+  <meta name="description" content="The Little Match Girl: Building and Testing Big Grammars in Perl 6">
+  <meta property="og:description" content="The Little Match Girl: Building and Testing Big Grammars in Perl 6">
+  <meta name="twitter:description" content="The Little Match Girl: Building and Testing Big Grammars in Perl 6">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第十四天-在 Perl 6 中构建和测试 Big Grammars</h1>
+                
+                  
+                    <h2 class="post-subheading">The Little Match Girl: Building and Testing Big Grammars in Perl 6</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2017/14/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="the-little-match-girl-building-and-testing-big-grammars-in-perl-6-https-perl6advent-wordpress-com-2017-12-14-day-14-the-little-match-girl-building-and-testing-big-grammars-in-perl-6"><a href="https://perl6advent.wordpress.com/2017/12/14/day-14-the-little-match-girl-building-and-testing-big-grammars-in-perl-6/">The Little Match Girl: Building and Testing Big Grammars in Perl 6</a></h1>
+
+<p>Perl 6 Grammars 很棒，但在项目中使用它们会是什么样呢？在圣诞节前和圣诞节后，我的经历是一个令人心酸的故事。你可以在<a href="https://github.com/albastev/Grammar-Modelica/tree/parse_modelica_library">这里</a>找到版本库。我不是来自计算机科学背景，所以也许它看起来很简陋，但是当我学习 Perl 6 Grammars 时，这是我的困难和胜利。</p>
+
+<h2 id="第一根火柴">第一根火柴</h2>
+
+<p>就像卖火柴的小女孩一样，我们的故事发生在圣诞节前。卖火柴的小女孩的任务是在圣诞节前夕销售一捆火柴棍（实际上是新年，我确实回去读了那个故事。圣诞节更适合 Perl 6），而我的任务是从 Modelica 模型中提取注释渲染为矢量图形。现在，Modelica 是一个非常棒的面向对象的建模语言，除了提及其附录中包含一个具体语法部分的非常好的<a href="https://www.modelica.org/documents/ModelicaSpec34.pdf">规范文档</a>（pdf）之外，我将完全理解它。仔细阅读本节，我意识到“语法元符号”和“词法单位”看起来像我最近读过的一篇博客文章中的 Perl 6 Grammars，并且急于尝试。</p>
+
+<p>来自 Modelica 的示例具体语法：</p>
+
+<pre><code>class-definition :
+[ encapsulated ] class-prefixes
+class-specifier
+</code></pre>
+
+<p>Perl 6 <strong>rule</strong> 的示例:</p>
+
+<pre><code class="language-perl6">rule class_definition {
+  [&lt;|w&gt;'encapsulated'&lt;|w&gt;]? 
+  &lt;class_prefixes&gt;
+  &lt;class_specifier&gt;
+}
+</code></pre>
+
+<p>这就像卖火柴的小女孩划第一颗火柴一样，第一次看到了一个超越她现实的奇妙世界。一个温暖的小炉子。然后它熄灭了。</p>
+
+<p>它非常接近，我把它放到了一个文本编辑器中，并且用一些 Perl 6 的东西替换了不是 Perl 6 的部分，以查看它是否会运行。它没有运行。我砍掉了它，我指出了不同的位来解决更小的块。无处不在的空白符号，正则表达式，标记，规则。我能够解析某些部分，其他部分神秘地没有起效。回顾过去，这一定很糟糕。与此同时，我们一起破解传统的正则表达式来提取注释，并将我的 Grammar 放在架子上。</p>
+
+<h2 id="第二根火柴">第二根火柴</h2>
+
+<p>不久之后，发布了 Grammar::Profiler 和 Grammar::Debugger，并且我受到启发，决定再试一试。我被授予了对我的规则出乎意料表现的很好的见解。我能够比以前更深入地理解 grammar。第二支火柴一直亮着，我有一场盛宴。然后它熄灭了。</p>
+
+<p>在调试器中，我陷入了回溯的深渊。分析器一直运行，因为它一次又一次地陷入泥潭。我能够走得更远，但最终遇到了一堵墙。成功似乎非常接近，但我自己的经历中有太多缺失的部分，并且有文档让我度过难关。</p>
+
+<h2 id="第三根火柴">第三根火柴</h2>
+
+<p>时间流逝，圣诞节来了。我有了新的职位，有时间做个人项目。我有不断改进的 <a href="https://docs.perl6.org/language/grammars">Grammar 文档</a>来指导我。我已经阅读了使用遗留代码高效工作的书。这足以让我再次迎难而上。</p>
+
+<h2 id="面向对象">面向对象</h2>
+
+<p>这对我来说是最大的突破。当我从文档中了解到 Tokens，rules 和  regex 都是有趣的外观方法时，我突然发现了所有的东西。当我回到家时，我立即检查我是否可以重写 TOP，并检查是否可以将 Grammar 方法变为 role。两人都很愉快地工作，而且我在做生意。我可以把它分成块，而不是一个单一的，全有或全无的 grammar。这极大地改进了代码的组织和可测试性。</p>
+
+<p>其中一个特别突出的问题是，我能够将 Grammar 整齐地分解成与 Modelica 规范中相应的角色。</p>
+
+<pre><code>lib
+----Grammar
+--------Modelica
+------------LexicalConventions.pm6
+------------ClassDefinition.pm6
+------------Extends.pm6
+------------ComponentClause.pm6
+------------Modification.pm6
+------------Equations.pm6
+------------Expressions.pm6
+--------Modelica.pm6
+</code></pre>
+
+<p><strong>Unit testing: one layer at a time</strong></p>
+
+<p>面向对象开辟了一个明智的单元测试方案，并通过将Modelica的部分内容传递到语法中，使我摆脱了临时测试的无稽之谈。您可以像继承其他任何类一样继承和重写语法。这允许您分别测试每个规则或标记，将您的语法分割为一口大小的层。您只需使用要测试的规则或标记覆盖TOP，并使用占位符方法覆盖任何依赖关系。</p>
+
+<p>Expressions.pm6中表达式的定义：</p>
+
+<pre><code class="language-perl6">rule expression {
+  [
+  &lt;|w&gt;'if'&lt;|w&gt; &lt;expression&gt; &lt;|w&gt;'then'&lt;|w&gt; &lt;expression&gt; [
+  &lt;|w&gt;'elseif'&lt;|w&gt; &lt;expression&gt; &lt;|w&gt;'then'&lt;|w&gt; &lt;expression&gt;
+  ]*
+  &lt;|w&gt;'else'&lt;|w&gt; &lt;expression&gt;
+  ]
+  ||
+  &lt;simple_expression&gt;
+}
+</code></pre>
+
+<p>这里我们看到表达式取决于它自己和simple_expression。为了测试，我们用一个占位符替换了通常的simple_expression规则。在这种情况下，它只是匹配字符串&rsquo;simple_expression&rsquo;。</p>
+
+<p>从Expressions.t覆盖测试语法：</p>
+
+<pre><code class="language-perl6">grammar TestExpression is Grammar::Modelica {
+    rule TOP {^ &lt;expression&gt; $}
+    rule simple_expression { 'simple_expression' }
+}
+ok TestExpression.parse('simple_expression');
+...
+</code></pre>
+
+<p>当你可以分离代码中有问题的部分时，回归测试也会更加愉快，并创建一个专门针对它的重写语法。</p>
+
+<h2 id="w-is-your-friend">&lt;|w&gt; is your friend</h2>
+
+<p>在我的第一次努力中，试图让Modelica保留字等正常工作的东西是我“存在的一些障碍”之一。在找到单词边界匹配标记&lt;| w&gt;后，这个改变了。当我在每边击打一个时，它可以工作，无论是在空白区还是标点符号旁边。</p>
+
+<p>从ComponentClause.pm6：</p>
+
+<pre><code class="language-perl6">rule type_prefix {
+  [&lt;|w&gt;[ 'flow' || 'stream' ]&lt;|w&gt;]?
+  [&lt;|w&gt;[ 'discrete' || 'parameter' || 'constant' ]&lt;|w&gt;]?
+  [&lt;|w&gt;[ 'input' || 'output' ]&lt;|w&gt;]?
+}
+</code></pre>
+
+<h3 id="token-rule-and-regex">Token, rule and regex</h3>
+
+<p>现在有很好的文档，但是我也会简要介绍一下我的经验。我发现规则和它的：sigspace魔术是大多数时候最好的选择。令牌在需要严格控制格式的情况下很有用。</p>
+
+<p>正则表达式用于回溯。对于Modelica，我发现它是无益的，可能是因为它被设计成单通口语。令牌和规则在我认为我需要的地方工作。所有的单元测试都在我将它们删除后通过，并且语法成功了四个Modelica标准库文件。只有在需要时才使用它。</p>
+
+<h3 id="以开始结束">以开始结束</h3>
+
+<p>另一个让我感到沮丧的是类定义语法。 Modelica使用形式some_identifier &hellip;结束some_identifier的类。如何确保在开始和结束时使用相同的标识符对我来说很麻烦。幸运的是，Perl 6允许您在语法方法中使用捕获。下面的（<IDENT>）捕获将填充$ 0，然后可以用它来确保我们的long_class_specifier以适当的标识符结束。</p>
+
+<pre><code class="language-perl6">rule long_class_specifier {
+  [(&lt;IDENT&gt;) &lt;string_comment&gt; &lt;composition&gt; &lt;|w&gt;'end'&lt;|w&gt; $0 ]
+  ||
+  [&lt;|w&gt;'extends'&lt;|w&gt; (&lt;IDENT&gt;) &lt;class_modification&gt;? &lt;string_comment&gt; &lt;composition&gt; &lt;|w&gt;'end'&lt;|w&gt; $0 ]
+}
+</code></pre>
+
+<p><strong>Integration Testing: lighting all the matches at once</strong></p>
+
+<p>在我的单元测试全部过去后，我感到有点不安。当然，它可以解析我设计的测试案例，但它对真正的Modelica会如何呢？颤抖的手，我从他的Modelica电子书中提供了一些Michael Tiller的示例代码。有效！没有摆弄我忽略的微妙东西，没有有趣的解析错误或永恒的回溯。只是成功。</p>
+
+<p>现在，星星偶尔会对齐。奇迹确实发生。充分巧妙的单元测试可以非常好地预防错误。我已经有足够的时间来验证了。回顾Damian Conway的演讲，我决定针对整个Modelica标准库运行它。并不是所有的CPAN，但305个文件都比我迄今尝试过的仅仅两个示例模型要好。</p>
+
+<p>我编写了脚本，将它指向了Modelica目录，并将它解雇了。它通过图书馆搅动，喘息一下。 150次失败。现在这是熟悉的领域。经过几次迭代后，当我在parse_modelica_library分支上运行它时，我的性能下降到了66次。我只是通过一个失败的文件，找出有问题的代码，并为其编写回归测试。</p>
+
+<p>所以，最后小火柴女郎点燃了她捆绑的其余部分。然后，她死了。不要死，但可以同时点亮所有305场比赛，例如/ parseThemAll.p6：</p>
+
+<pre><code class="language-perl6">#!perl6
+
+use v6;
+use Test;
+use lib '../lib';
+use Grammar::Modelica;
+
+
+plan 305;
+
+sub light($file) {
+  my $fh = open $file, :r;
+  my $contents = $fh.slurp-rest;
+  $fh.close;
+
+  my $match = Grammar::Modelica.parse($contents);
+  say $file;
+  ok $match;
+}
+
+sub MAIN($modelica-dir) {
+    say &quot;directory: $modelica-dir&quot;;
+    die &quot;Can't find directory&quot; if ! $modelica-dir.IO.d;
+
+    # modified from the lovely docs at
+    # https://docs.perl6.org/routine/dir
+    my @stack = $modelica-dir.IO;
+    my @files;
+    while @stack {
+      for @stack.pop.dir -&gt; $path {
+        light($path) if $path.f &amp;&amp; $path.extension.lc eq 'mo';
+        @stack.push: $path if $path.d;
+      }
+    }
+    # faster to do in parallel
+    @files.race.map({light($_)});
+}
+</code></pre>
+
+<p>我会看到在圣诞节前我能说服多少。那么也许我会弄清楚如何编写一些规则来构建QAST。</p>
+
+<p>圣诞节快乐！</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-12-13-%E7%AC%AC%E5%8D%81%E4%B8%89%E5%A4%A9-%E4%BD%BF%E7%94%A8-perl-6-%E6%8C%96%E6%8E%98%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91/" data-toggle="tooltip" data-placement="top" title="第十三天 - 使用 Perl 6 挖掘维基百科">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" data-toggle="tooltip" data-placement="top" title="第十五天-带有 Promise 的简单网络爬虫">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>正则表达式一例</title>
+  <meta property="og:title" content="正则表达式一例" />
+  <meta name="twitter:title" content="正则表达式一例" />
+  <meta name="description" content="以指定音量随机播放音频文件：
+#!/usr/bin/env perl6 use v6; my %v; # hash to hold data my token filename { .&#43;? \.\S\S\S }; # filenames end in .??? my token volume { \d&#43; }; # any digits for volume my regex extra { .&#43; \S }; # anything following that my $mixer = &#39;mixer&#39;; my $player = &#39;mplayer -vf dsize=600:-2 -geometry &#43;200-10 &#39;; my $lockfile = &#39;/tmp/myplayer&#39;; $lockfile.IO.spurt( $*PID ); # store the process ID so other process can kill this one END { $lockfile.">
+  <meta property="og:description" content="以指定音量随机播放音频文件：
+#!/usr/bin/env perl6 use v6; my %v; # hash to hold data my token filename { .&#43;? \.\S\S\S }; # filenames end in .??? my token volume { \d&#43; }; # any digits for volume my regex extra { .&#43; \S }; # anything following that my $mixer = &#39;mixer&#39;; my $player = &#39;mplayer -vf dsize=600:-2 -geometry &#43;200-10 &#39;; my $lockfile = &#39;/tmp/myplayer&#39;; $lockfile.IO.spurt( $*PID ); # store the process ID so other process can kill this one END { $lockfile.">
+  <meta name="twitter:description" content="以指定音量随机播放音频文件：
+#!/usr/bin/env perl6 use v6; my %v; # hash to hold data my token filename { .&#43;? \.\S\S\S }; # filenames end in .??? my token volume { \d&#43; }; # any digits for volume my regex extra { .&#43; …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-06-14-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80%E4%BE%8B/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-06-14-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80%E4%BE%8B/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>正则表达式一例</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/14/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>以指定音量随机播放音频文件：</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+use v6;
+
+my %v;                                 # hash to hold data
+my token filename    { .+? \.\S\S\S }; # filenames end in .???
+my token volume      { \d+ };          # any digits for volume
+my regex extra       { .+ \S };        # anything following that
+my $mixer          = 'mixer';
+my $player         = 'mplayer -vf dsize=600:-2 -geometry +200-10 ';
+my $lockfile       = '/tmp/myplayer';
+
+$lockfile.IO.spurt( $*PID );          # store the process ID so other process can kill this one
+END { $lockfile.IO.unlink; }          # remove the lockfile at end
+
+for $=finish.lines {                  # loop through the lines below '=begin finish'
+    last if /STOP/;                   # stop at a STOP line
+    if m/     (&lt;filename&gt;)
+          \s+ (&lt;volume&gt;)
+          \s* (&lt;extra&gt;?) / {          # use the regexes/tokens
+        my ( $m, $v, $e ) = $/[0..2]; # get captured values from $/
+        if $m and $v {                # if there's a filename and volume
+            %v{$m}&lt;v&gt; ~= $v;          #   store it in the hash
+            %v{$m}&lt;e&gt; ~= $e // '';    #   with any extra arguments
+        }}} # lisp-y to save lines
+for %v.keys.pick(*) -&gt; $m {           # loop randomly through keys
+    say &quot;Playing $m&quot;;
+    print qqx{ $mixer  %v{$m}&lt;v&gt;      };  # set the volume
+    print qqx{ $player %v{$m}&lt;e&gt; &quot;$m&quot; };  # play the file
+}
+
+# the rest is like a Perl5 __DATA__ section
+=begin finish
+300.avi 77
+Crystal Skull Rifftrax.avi 77 -aid 2
+Star Trek 5.avi 77
+Star Trek 7.avi
+aeon-flux.avi 93
+</code></pre>
+
+<p>改进版：</p>
+
+<pre><code class="language-perl6">#! /usr/bin/env perl6
+use v6;
+
+my @mixer          = 'mixer';
+my @player         = &lt; m6player -vf dsize=600:-2 -geometry +200-10 &gt;;
+my $lockfile       = '/tmp/myplayer';
+
+$lockfile.IO.spurt( $*PID );
+
+END { $lockfile.IO.unlink; }
+
+my token filename    { .+? \.\S\S\S };
+my token volume      { \d+ };
+my regex extra       { .* };
+
+my %song-data;
+
+for $=finish.lines {
+    last if /^ \s* STOP \s* $/;
+    next unless  m/ \s* &lt;filename&gt; \s+ &lt;volume&gt; &lt;extra&gt; /;
+    # $&lt;extra&gt; is short for $/{'extra'}
+    %song-data{~$&lt;filename&gt;}&lt;v e&gt; = +$&lt;volume&gt;, [$&lt;extra&gt;.words];
+}
+
+# uses sub-signature unpacking
+
+for %song-data.pick(*) -&gt; ( :key($m), :value($) (:$v,:@e)) {
+    say &quot;Playing $m&quot;;
+    print run( @mixer,  $v,     :out ).out.slurp-rest.indent(4);
+    print run( @player, @e, $m, :out ).out.slurp-rest.indent(4);
+
+}
+
+=begin finish
+300.avi 77
+Crystal Skull Rifftrax.avi 77 -aid 2
+Star Trek 5.avi 77
+Star Trek 7.avi
+aeon-flux.avi 93
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-06-10-class-list/" data-toggle="tooltip" data-placement="top" title="class-List">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-06-15-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84perl6/" data-toggle="tooltip" data-placement="top" title="面向对象的 Perl 6">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

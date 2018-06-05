@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Feed on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/feed/</link>
+    <description>Recent content in Feed on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 26 Oct 2016 16:41:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/feed/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>第 10000 个素数</title>
+      <link>https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/</link>
+      <pubDate>Wed, 26 Oct 2016 16:41:13 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/</guid>
+      <description>到目前为止(2016.10.26), Perl 6 的速度相比 Perl 5/Python 的差距还是很大的。以打印从 1 开始计数的第 10000 个素数为例, 使用如下版本的 Rakudo:
+ This is Rakudo version 2016.07.1 built on MoarVM version 2016.07 implementing Perl 6.c.
+ 从程序执行耗费的时间来看, Perl 6 实在慢的如蜗牛。
+并发打印第10000个素数 sub find-prime($count) { my $channel = Channel.new; my $promise = start { for ^$count { $channel.send($_) if .is-prime; } LEAVE $channel.close unless $channel.closed; } return $channel.list but role :: { method channel { $channel } };; } my @primes = find-prime(110000); #for @primes { # @primes.</description>
+    </item>
+    
+    <item>
+      <title>feed 操作符</title>
+      <link>https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/</link>
+      <pubDate>Sun, 18 Sep 2016 22:56:16 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/</guid>
+      <description>Sequencer Precedence
+infix ==&amp;gt; 这个流操作符(feed operator)从它的左侧接收结果并把结果作为最后一个参数传递给下一个(右侧的)例程(routine)。
+这个操作符的优先级很松散所以你需要使用圆括号把结果赋值给其它变量, 或者你甚至可以使用另外一个流操作符! 在接收单个参数或第一个参数为 block 的程序/方法的例子中, 你必须经常使用圆括号来调用(尽管这对于最后一个例程/方法不是必须的)。
+# Traditional structure, read bottom-to-top my @result = sort # (4) Sort, result is &amp;lt;Earth People&amp;gt; grep { /&amp;lt;[PE]&amp;gt;/ }, # (3) Look for P or E map { .tc }, # (2) Capitalize the words &amp;lt;people of earth&amp;gt;; # (1) Start with the input # Feed (left-to-right) with parentheses, read top-to-bottom @result = ( &amp;lt;people of earth&amp;gt; # (1) Start with the input ==&amp;gt; map({ .</description>
+    </item>
+    
+  </channel>
+</rss>

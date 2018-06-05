@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>项</title>
+  <meta property="og:title" content="项" />
+  <meta name="twitter:title" content="项" />
+  <meta name="description" content="Perl 6 中的大部分句法结构能归类为项和操作符. 这儿你能找到各种不同类型的项的概览.
+Literals Int 42 12_300_00 :16&lt;DEAD_BEEF&gt; #十六进制  Int 字面量由数字组成, 并且能在数字之间包含下划线. 使用 :radix&lt;number&gt; 冒号对儿形式能指定 10 进制外的其它进制.
+Rat 有理数 12.34 1_200.345_678  Rat(有理数)字面量由一个点号分割的两部分整数组成. 注意尾部的点号是不允许的, 所以你必须写成 1.0 而非 1. ( 这个规则很重要, 因为有一个以点号开头的中缀操作符, 例如 .. 范围操作符 ).
+Num 浮点数 12.3e-32 3e8  Num(浮点数)字面量由 Rat 或 Int 字面量后面再跟着一个字母 e 和 一个指数(可能为负)组成. 3e8 使用 值 3* 10**8 构建了一个 Num.
+Str &#39;a string&#39;&#39;I\&#39;m escaped!&#39; &quot;I don&#39;t need to be&quot; &quot;\&quot;But I still can be,\&quot; he said.">
+  <meta property="og:description" content="Perl 6 中的大部分句法结构能归类为项和操作符. 这儿你能找到各种不同类型的项的概览.
+Literals Int 42 12_300_00 :16&lt;DEAD_BEEF&gt; #十六进制  Int 字面量由数字组成, 并且能在数字之间包含下划线. 使用 :radix&lt;number&gt; 冒号对儿形式能指定 10 进制外的其它进制.
+Rat 有理数 12.34 1_200.345_678  Rat(有理数)字面量由一个点号分割的两部分整数组成. 注意尾部的点号是不允许的, 所以你必须写成 1.0 而非 1. ( 这个规则很重要, 因为有一个以点号开头的中缀操作符, 例如 .. 范围操作符 ).
+Num 浮点数 12.3e-32 3e8  Num(浮点数)字面量由 Rat 或 Int 字面量后面再跟着一个字母 e 和 一个指数(可能为负)组成. 3e8 使用 值 3* 10**8 构建了一个 Num.
+Str &#39;a string&#39;&#39;I\&#39;m escaped!&#39; &quot;I don&#39;t need to be&quot; &quot;\&quot;But I still can be,\&quot; he said.">
+  <meta name="twitter:description" content="Perl 6 中的大部分句法结构能归类为项和操作符. 这儿你能找到各种不同类型的项的概览.
+Literals Int 42 12_300_00 :16&lt;DEAD_BEEF&gt; #十六进制  Int 字面量由数字组成, 并且能在数字之间包含下划线. 使用 :radix&lt;number&gt; 冒号对儿形式能指定 10 进制外的其它进制.
+Rat 有理数 12.34 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-11-21-%E9%A1%B9/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-11-21-%E9%A1%B9/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>项</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/21/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>Perl 6 中的大部分句法结构能归类为项和操作符. 这儿你能找到各种不同类型的项的概览.</p>
+
+<h2 id="literals">Literals</h2>
+
+<h3 id="int">Int</h3>
+
+<pre><code class="language-perl6">42
+12_300_00
+:16&lt;DEAD_BEEF&gt;    #十六进制
+</code></pre>
+
+<p>Int 字面量由数字组成, 并且能在数字之间包含下划线. 使用 <code>:radix&lt;number&gt;</code> 冒号对儿形式能指定 10 进制外的其它进制.</p>
+
+<h3 id="rat-有理数">Rat   有理数</h3>
+
+<hr />
+
+<pre><code class="language-perl6">12.34
+1_200.345_678
+</code></pre>
+
+<p>Rat(有理数)字面量由一个点号分割的两部分整数组成. 注意尾部的点号是不允许的, 所以你必须写成 <code>1.0</code> 而非 <code>1.</code> ( 这个规则很重要, 因为有一个以点号开头的中缀操作符, 例如 <code>..</code> 范围操作符 ).</p>
+
+<h3 id="num-浮点数">Num  浮点数</h3>
+
+<hr />
+
+<pre><code class="language-perl6">12.3e-32
+3e8
+</code></pre>
+
+<p>Num(浮点数)字面量由 Rat 或 Int 字面量后面再跟着一个字母 e 和 一个指数(可能为负)组成. <code>3e8</code> 使用 值 <code>3* 10**8</code> 构建了一个 Num.</p>
+
+<h3 id="str">Str</h3>
+
+<hr />
+
+<pre><code class="language-perl6">'a string''I\'m escaped!'
+&quot;I don't need to be&quot;
+&quot;\&quot;But I still can be,\&quot; he said.&quot;
+q|Other delimiters can be used too!|
+</code></pre>
+
+<p>字符串字面量常常使用 <code>'</code> 或 <code>&quot;</code> 创建, 然儿, 字符串在 Perl 6 中其实是一种强大的子语言.</p>
+
+<h3 id="regex">Regex</h3>
+
+<hr />
+
+<pre><code class="language-perl6">/ match some text /
+rx/slurp \s rest (.*) $/
+</code></pre>
+
+<p>这两种会产生字面正则</p>
+
+<h3 id="pair">Pair</h3>
+
+<hr />
+
+<pre><code class="language-perl6">  a =&gt; 1
+'a' =&gt; 'b'
+:identifier
+:!identifier
+:identifier&lt;value&gt;
+:identifier&lt;value1 value2&gt;
+:identifier($value)
+:identifier['val1', 'val2']
+:identifier{key1 =&gt; 'val1', key2 =&gt; 'value2'}
+:$item
+:@array
+:%hash
+:&amp;callable
+</code></pre>
+
+<p>Pair 对象的创建要么使用 <code>infix:«=&gt;»</code> (它会自动括起左边, 如果左边是标识符的话), 要么使用各种冒号对儿形式.  那些总是以一个冒号开头的创建形式, 冒号后面要么跟着一个标识符, 要么跟着一个已经存在的变量(不带符号的变量名作为 pair 的键, 变量的值作为 pair 的键值).</p>
+
+<p>在标识符形式的冒号对儿中, 可选的值可以是任意环缀. 如果没有环缀, 那它的值就是 <code>Bool::True</code>. <code>!:identifier</code> 形式的值是 <code>Bool::False</code>.</p>
+
+<p>如果冒号对儿在参数列表中, 所有的冒号对儿都会作为命名参数,   但是 <code>'quoted string' =&gt; $value</code> 除外.</p>
+
+<h3 id="parcel">Parcel</h3>
+
+<hr />
+
+<p>什么是 Parcel? -&gt; Immutable sequence of values - 不可变值的序列.</p>
+
+<pre><code class="language-perl6">calss Parcel is Cool does Positional { }
+</code></pre>
+
+<p>Parcel 代表 <code>Parenthesis cell</code>, 例如, 被圆括号环绕的表达式. 除了空的 parcel 之外, 实际上是使用逗号来创建一个 Parcel.</p>
+
+<pre><code class="language-perl6">(1 + 2)  # not a Parcel
+()       # empty Parcel
+(1,)     # Parcel with one element
+(1,3)    # Parcel with two element
+1, 2, 3  # parenthesis are optional
+&lt;a b c&gt;  # word-quoting
+«a b c»  # also word-quoting
+qw/a b c/
+</code></pre>
+
+<p>Parcel 字面量有: 空的圆括号 (),  逗号分割的列表, 还有几种引号结构.</p>
+
+<pre><code class="language-perl6">&gt; say (1,2,3).WHAT
+(Parcel)
+&gt; say &lt;a b c&gt;.WHAT
+(Parcel)
+&gt; say «a b c».WHAT
+(Parcel)
+&gt; say (qw/a b c/).WHAT
+(Parcel)
+</code></pre>
+
+<p>Parcels 是不可变的, 但是能包含可变容器:</p>
+
+<pre><code class="language-perl6">my $x;
+my $p = (0, $x, 2); # can assign to $p[1], but not
+                    # to any other element of $p
+</code></pre>
+
+<p>像 <code>&lt;...&gt;</code> 这种 <code>Word-quoting</code> 结构也会创建 parcels:</p>
+
+<pre><code class="language-perl6">&lt;a b c&gt; # 3-element Parcel
+</code></pre>
+
+<p>在 flattening 列表上下文中, parcels 被展平并且会消失:</p>
+
+<pre><code class="language-perl6">my @flat = &lt;a b&gt;, &lt;c, d&gt;;
+say @flat.elems;
+</code></pre>
+
+<h3 id="term">term *</h3>
+
+<hr />
+
+<p><code>*</code> 会创建一个类型为 Whatever 的对象. 详情查看 <a href="http://doc.perl6.org/type/Whatever">Whatever</a>.</p>
+
+<h2 id="identifier-terms">Identifier terms</h2>
+
+<hr />
+
+<p>Perl 6中有内建的标识符项, 列出如下. 此外, 使用该语法能添加新的标识符项.</p>
+
+<pre><code class="language-perl6">sub term:&lt;fourty-two&gt; { 42 };
+say fourty-two
+</code></pre>
+
+<p>或者作为常量:</p>
+
+<pre><code class="language-perl6">constant forty-two = 42;
+say fourty-two
+</code></pre>
+
+<h3 id="self">self</h3>
+
+<hr />
+
+<p>在方法中, self 指向方法的调用者( 例如, 方法被调用的对象). 如果把它用在没有意义的上下文中, 会抛出一个 <code>X::Syntax::NoSelf</code> 类型的编译时错误.</p>
+
+<h3 id="now">now</h3>
+
+<hr />
+
+<p>返回一个代表当前时间的实例对象.</p>
+
+<h3 id="rand">rand</h3>
+
+<hr />
+
+<p>返回一个范围为 <code>0..^1</code>的伪随机浮点数.</p>
+
+<h3 id="pi">pi</h3>
+
+<hr />
+
+<p>返回数值 pi, 例如, 圆的周长和半径之间的比率.</p>
+
+<h3 id="e">e</h3>
+
+<hr />
+
+<p>返回欧拉数值.</p>
+
+<h3 id="i">i</h3>
+
+<hr />
+
+<p>返回复数的虚部.</p>
+
+<h2 id="variables">Variables</h2>
+
+<hr />
+
+<p>Variables are discussed in variable language docs.</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/terms/">terms</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-11-20-reddit-guess-who/" data-toggle="tooltip" data-placement="top" title="Guess Who">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-11-25-%E7%AE%80%E5%8D%95%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E6%9E%90/" data-toggle="tooltip" data-placement="top" title="简单字符串解析">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

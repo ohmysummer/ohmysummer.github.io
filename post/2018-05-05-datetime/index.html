@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>DateTime</title>
+  <meta property="og:title" content="DateTime" />
+  <meta name="twitter:title" content="DateTime" />
+  <meta name="description" content="Calendar date with time">
+  <meta property="og:description" content="Calendar date with time">
+  <meta name="twitter:description" content="Calendar date with time">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-05-05-datetime/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-05-05-datetime/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>DateTime</h1>
+                
+                  
+                    <h2 class="post-subheading">Calendar date with time</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2018/05/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="datetime-https-docs-perl6-org-type-datetime"><a href="https://docs.perl6.org/type/DateTime">DateTime</a></h1>
+
+<pre><code class="language-perl6">class DateTime does Dateish {}
+</code></pre>
+
+<p>对于在国内处理点数，<code>DateTime</code> 对象存储年，月，日，小时，分钟（全部为 <a href="https://docs.perl6.org/type/Int">Int</a>），秒（可能为小数）和时区。</p>
+
+<p>它提供了用日期和时间计算的方法。</p>
+
+<p><code>DateTime</code> 方法是不可变的;如果你试图修改它，请改为创建修改后的副本。</p>
+
+<p>时区的处理时间为以 UTC 为单位的<a href="https://docs.perl6.org/type/Int">整数</a>，而不是时区名称。</p>
+
+<pre><code class="language-perl6">use v6.c;
+my $dt = DateTime.new(
+    year    =&gt; 2015,
+    month   =&gt; 11,
+    day     =&gt; 21,
+    hour    =&gt; 16,
+    minute  =&gt; 1,
+);
+
+say $dt;                            # OUTPUT: «2015-11-21T16:01:00Z␤»
+say $dt.later(days =&gt; 20);          # OUTPUT: «2015-12-11T16:01:00Z␤»
+say $dt.truncated-to('hour');       # OUTPUT: «2015-11-21T16:00:00Z␤»
+say $dt.in-timezone(-8 * 3600);     # OUTPUT: «2015-11-21T08:01:00-0800␤»
+
+my $now = DateTime.now(formatter =&gt; { sprintf &quot;%02d:%02d&quot;, .hour, .minute });
+say $now;
+</code></pre>
+
+<h2 id="方法">方法</h2>
+
+<h3 id="new-方法">new 方法</h3>
+
+<p>定义为:</p>
+
+<pre><code class="language-perl6">multi method new(Int :$year!, Int :$month = 1, Int :$day = 1,
+                 Int :$hour = 0, Int :$minute = 0, :$second = 0,
+                 Int :$timezone = 0, :&amp;formatter)
+multi method new(Date :$date!,
+                 Int :$hour = 0, Int :$minute = 0, :$second = 0,
+                 Int :$timezone = 0, :&amp;formatter)
+multi method new(Int() $year, Int() $month, Int() $day,
+                 Int() $hour, Int $minute, $second,
+                 Int() :$timezone = 0, :&amp;formatter)
+multi method new(Instant:D $i,  :$timezone=0, :&amp;formatter)
+multi method new(Int:D $posix,  :$timezone=0, :&amp;formatter)
+multi method new(Str:D $format, :$timezone=0, :&amp;formatter)
+</code></pre>
+
+<p>创建一个新的 <code>DateTime</code> 对象。另外一个​​选项是分别从组件（年，月，日，小时&hellip;）创建新的 <code>DateTime</code> 对象。另一种方法是为 date 组件传递一个 <a href="https://docs.perl6.org/type/Date">Date</a> 对象，并以 component-wise 方式指定时间。另一种方法是从 <a href="https://docs.perl6.org/type/Instant">Instant</a> 获取时间，并仅提供时区和 formatter。或者，您可以提供 <a href="https://docs.perl6.org/type/Int">Int</a> 作为 UNIX 时间戳，而不是 Instant。</p>
+
+<p>您还可以提供格式为 ISO 8601 时间戳记符号或完整 <a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a> 日期和时间的 <a href="https://docs.perl6.org/type/Str">Str</a>。字符串格式应为 <code>yyyy-mm-ddThh:mm:ssZ</code> 或 <code>yyyy-mm-ddThh:mm:ss+0100</code>。由于我们允许使用 Unicode 数字和混合浓缩和扩展时间格式，因此我们的限制性比 ISO 8601 标准少一些。</p>
+
+<p>无效的输入字符串将引发 <a href="https://docs.perl6.org/type/X::Temporal::InvalidFormat">X::Temporal::InvalidFormat</a> 类型的异常。如果您提供的字符串包含时区并提供 <code>timezone</code> 具名参数，则会引发 <a href="https://docs.perl6.org/type/X::Temporal::InvalidFormat">X::DateTime::TimezoneClash</a> 类型的异常。</p>
+
+<pre><code class="language-perl6">my $datetime = DateTime.new(year =&gt; 2015,
+                            month =&gt; 1,
+                            day =&gt; 1,
+                            hour =&gt; 1,
+                            minute =&gt; 1,
+                            second =&gt; 1,
+                            timezone =&gt; 1);
+$datetime = DateTime.new(date =&gt; Date.new('2015-12-24'),
+                         hour =&gt; 1,
+                         minute =&gt; 1,
+                         second =&gt; 1,
+                         timezone =&gt; 1);
+$datetime = DateTime.new(2015, 1, 1, # First January of 2015
+                         1, 1, 1);   # Hour, minute, second with default timezone
+$datetime = DateTime.new(now);                       # Instant.
+# from a Unix timestamp
+say $datetime = DateTime.new(1470853583);            # OUTPUT: «2016-08-10T18:26:23Z␤»
+$datetime = DateTime.new(&quot;2015-01-01T03:17:30+0500&quot;) # Formatted string
+</code></pre>
+
+<h3 id="now-方法">now 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method now(:$timezone = $*TZ, :&amp;formatter --&gt; DateTime:D)
+</code></pre>
+
+<p>从当前系统时间创建一个新的 <code>DateTime</code> 对象。可以提供自定义 <a href="https://docs.perl6.org/routine/formatter">formatter</a> 和 <a href="https://docs.perl6.org/routine/timezone">timezone</a>。 <code>:$timezone</code> 是 GMT 的偏移量（<strong>以秒为单位</strong>），默认为 <a href="https://docs.perl6.org/language/variables#index-entry-%2524%2ATZ">$*TZ</a> 变量的值。</p>
+
+<pre><code class="language-perl6">say DateTime.now; # OUTPUT: «2018-01-08T13:05:32.703292-06:00␤»
+</code></pre>
+
+<p>请注意，可以使用链接到 <code>.now</code> 的以下方法轻松表示当前值，例如，</p>
+
+<pre><code class="language-perl6">say DateTime.now.year; # OUTPUT: «2018␤»
+</code></pre>
+
+<h3 id="clone-方法">clone 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method clone(:$year, :$month, :$day, :$hour, :$minute, :$second, :$timezone, :&amp;formatter)
+</code></pre>
+
+<p>根据 invocant 创建一个新的 <code>DateTime</code> 对象，但给定的参数会覆盖 invocant 中的值。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').clone(hour =&gt; 0);
+# OUTPUT: «2015-12-24T00:23:00Z␤»
+</code></pre>
+
+<p>请注意，在某些情况下，这可能会导致日期无效：</p>
+
+<pre><code class="language-perl6">say DateTime.new(&quot;2012-02-29T12:34:56Z&quot;).clone(year =&gt; 2015);
+CATCH { default { put .^name, ': ', .Str } };
+# OUTPUT: «X::OutOfRange: Day out of range. Is: 29, should be in 1..28␤»
+</code></pre>
+
+<h3 id="hh-mm-ss-方法">hh-mm-ss 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method hh-mm-ss(DateTime:D: --&gt; Str:D)
+</code></pre>
+
+<p>以 24 小时 HH:MM:SS 格式返回对象以字符串形式表示的时间：</p>
+
+<pre><code class="language-perl6">say DateTime.new(&quot;2052-02-29T22:34:56Z&quot;).hh-mm-ss;
+# OUTPUT: «22:34:56␤»
+</code></pre>
+
+<h3 id="hour-方法">hour 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method hour(DateTime:D: --&gt; Int:D)
+</code></pre>
+
+<p>返回小时组件。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56Z').hour;      # OUTPUT: «12␤»
+</code></pre>
+
+<h3 id="minute-方法">minute 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method minute(DateTime:D: --&gt; Int:D)
+</code></pre>
+
+<p>返回分钟组件。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56Z').minute;     # OUTPUT: «34␤»
+</code></pre>
+
+<h3 id="second-方法">second 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method second(DateTime:D:)
+</code></pre>
+
+<p>返回秒组件，可能包括小数秒。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56Z').second;     # OUTPUT: «56␤»
+say DateTime.new('2012-02-29T12:34:56.789Z').second; # OUTPUT: «56.789␤»
+say DateTime.new('2012-02-29T12:34:56,789Z').second; # comma also ok
+</code></pre>
+
+<h3 id="whole-second">whole-second</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method whole-second(DateTime:D:)
+</code></pre>
+
+<p>返回秒组件，向下舍入为 <a href="https://docs.perl6.org/type/Int">Int</a>。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56.789Z').whole-second;      # OUTPUT: «56␤»
+</code></pre>
+
+<h3 id="timezone-方法">timezone 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method timezone(DateTime:D: --&gt; Int:D)
+</code></pre>
+
+<p><strong>以秒为单位</strong> 返回时区，作为与 UTC 的偏移量。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').timezone;          # OUTPUT: «7200␤»
+</code></pre>
+
+<h3 id="offset-方法">offset 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method offset(DateTime:D: --&gt; Int:D)
+</code></pre>
+
+<p><strong>以秒为单位</strong> 返回时区，作为与UTC的偏移量。这是<a href="https://docs.perl6.org/type/DateTime#method_timezone">方法时区</a>的别名。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').offset;            # OUTPUT: «7200␤»
+</code></pre>
+
+<h3 id="offset-in-minutes-方法">offset-in-minutes 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method offset-in-minutes(DateTime:D: --&gt; Real:D)
+</code></pre>
+
+<p>以 UTC 为单位返回以小时为单位的时区。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').offset-in-hours;   # OUTPUT: «2␤»
+</code></pre>
+
+<h3 id="str-方法">Str 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method Str(DateTime:D: --&gt; Str:D)
+</code></pre>
+
+<p>返回调用者的字符串表示形式，由格式化程序完成。如果未指定格式化程序，则会返回ISO 8601时间戳。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').Str; # OUTPUT: «2015-12-24T12:23:00+02:00␤»
+</code></pre>
+
+<h3 id="instant-方法">Instant 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method Instant(DateTime:D: --&gt; Instant:D)
+</code></pre>
+
+<p>基于调用者返回一个Instant对象。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').Instant; # OUTPUT: «2015-12-24T12:23:00+02:00␤»
+</code></pre>
+
+<h3 id="posix-方法">posix 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method posix(DateTime:D: $ignore-timezone = False --&gt; Int:D)
+</code></pre>
+
+<p>将日期和时间作为POSIX / UNIX时间戳（自Epoch，1970年1月1日UTC以来的秒数）返回。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').posix;       # OUTPUT: «1450959780␤»
+</code></pre>
+
+<h3 id="later-方法">later 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method later(DateTime:D: *%unit)
+</code></pre>
+
+<p>返回基于当前日期对象的DateTime对象，但应用了时间增量。时间增量可以作为参数名称为单位的命名参数传递。</p>
+
+<p>除非给定的单位是秒或秒，否则给定的值将被转换为Int。</p>
+
+<p>允许的单位是秒，秒，分，分，小时，小时，日，星期，星期，月，月，年，年。请注意，复数形式只能用于较晚和较早的方法。</p>
+
+<p>第二种形式的结构可以用作指定三角洲的紧凑和自我记录方式：</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').later(:2years); # OUTPUT: «2017-12-24T12:23:00Z␤»
+</code></pre>
+
+<p>由于添加几个不同的时间单位不可交换，所以只能传递一个单位。</p>
+
+<pre><code class="language-perl6">my $d = DateTime.new(date =&gt; Date.new('2015-02-27'));
+say $d.later(month =&gt; 1).later(:2days);  # OUTPUT: «2015-03-29T00:00:00Z␤»
+say $d.later(days =&gt; 2).later(:1month);  # OUTPUT: «2015-04-01T00:00:00Z␤»
+say $d.later(days =&gt; 2).later(:month);   # same, as +True === 1
+</code></pre>
+
+<p>如果结果时间的值为60秒，但实际上当前没有闰秒，则秒数将设置为59：</p>
+
+<pre><code class="language-perl6">say DateTime.new('2008-12-31T23:59:60Z').later: :1day;
+# OUTPUT: «2009-01-01T23:59:59Z␤»
+</code></pre>
+
+<p>负偏移是允许的，虽然早些时候更习惯于此。</p>
+
+<h3 id="earlier-方法">earlier 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method earlier(DateTime:D: *%unit)
+</code></pre>
+
+<p>返回基于当前日期对象的日期时间对象，但是应用了过去的时间差值。除非给定的单位是秒或秒，否则给定的值将被转换为Int。请参阅后面的使用方法。</p>
+
+<pre><code class="language-perl6">my $d = DateTime.new(date =&gt; Date.new('2015-02-27'));
+say $d.earlier(month =&gt; 1).earlier(:2days);  # OUTPUT: «2015-01-25T00:00:00Z␤»
+</code></pre>
+
+<p>如果结果时间的值为60秒，但实际上当前没有闰秒，则秒数将设置为59：</p>
+
+<pre><code class="language-perl6">say DateTime.new('2008-12-31T23:59:60Z').earlier: :1day;
+# OUTPUT: «2008-12-30T23:59:59Z␤»
+</code></pre>
+
+<p>负偏移是允许的，尽管后来更加习惯于此。</p>
+
+<h3 id="truncated-to-方法">truncated-to 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method truncated-to(DateTime:D: Cool $unit)
+</code></pre>
+
+<p>返回调用者的副本，将小于指定单位的所有内容截断为尽可能最小的值。</p>
+
+<pre><code class="language-perl6">my $d = DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;);
+say $d.truncated-to('second');      # OUTPUT: «2012-02-29T12:34:56Z␤»
+say $d.truncated-to('minute');      # OUTPUT: «2012-02-29T12:34:00Z␤»
+say $d.truncated-to('hour');        # OUTPUT: «2012-02-29T12:00:00Z␤»
+say $d.truncated-to('day');         # OUTPUT: «2012-02-29T00:00:00Z␤»
+say $d.truncated-to('month');       # OUTPUT: «2012-02-01T00:00:00Z␤»
+say $d.truncated-to('year');        # OUTPUT: «2012-01-01T00:00:00Z␤»
+</code></pre>
+
+<p>使用.truncated-to（&rsquo;second&rsquo;）可以将小数秒的日期时间截断为整秒。</p>
+
+<h3 id="date-方法">Date 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">multi method Date(DateTime:U --&gt; Date:U)
+multi method Date(DateTime:D --&gt; Date:D)
+</code></pre>
+
+<p>将调用者转换为 <a href="https://docs.perl6.org/type/Date">Date</a></p>
+
+<pre><code class="language-perl6">say DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;).Date; # OUTPUT: «2012-02-29␤»
+say DateTime.Date;                                    # OUTPUT: «(Date)␤»
+</code></pre>
+
+<h3 id="datetime-方法">DateTime 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method DateTime(--&gt; DateTime)
+</code></pre>
+
+<p>返回调用者。</p>
+
+<pre><code class="language-perl6">say DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;).DateTime; # 2012-02-29T12:34:56.946314Z
+say DateTime.DateTime;                                    # OUTPUT: «(DateTime)␤»
+</code></pre>
+
+<h3 id="utc-方法">utc 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method utc(DateTime:D: --&gt; DateTime:D)
+</code></pre>
+
+<p>同时返回一个 DateTime 对象，但是在 UTC 时区。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').utc;  # OUTPUT: «2015-12-24T10:23:00Z␤»
+</code></pre>
+
+<h3 id="in-timezone-方法">in-timezone 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method in-timezone(DateTime:D: $timezone = 0 --&gt; DateTime:D)
+</code></pre>
+
+<p>同一时间返回一个DateTime对象，但在指定的$ timezone中，这是距离GMT的偏移量（以秒为单位）。</p>
+
+<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').in-timezone(3600 + 1800); # OUTPUT: «2015-12-24T13:53:00+0130␤»
+</code></pre>
+
+<h3 id="local-方法">local 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method local(DateTime:D: --&gt; DateTime:D)
+</code></pre>
+
+<p>同时返回DateTime对象，但在本地时区（$ * TZ）中。</p>
+
+<pre><code class="language-perl6">my $*TZ = -3600;
+say DateTime.new('2015-12-24T12:23:00+0200').local; # OUTPUT: «2015-12-24T09:23:00-0100␤»
+</code></pre>
+
+<h3 id="infix">infix:&lt;-&gt;</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">multi sub infix:&lt;-&gt; (DateTime:D, Duration:D --&gt; DateTime:D)
+multi sub infix:&lt;-&gt; (DateTime:D, DateTime:D --&gt; Duration:D)
+</code></pre>
+
+<p>将DateTime从持续时间或另一个DateTime对象中减去。分别返回一个新的DateTime对象或两个日期之间的持续时间。当减去持续时间时，原始DateTime的时区保留在返回的DateTime对象中。</p>
+
+<pre><code class="language-perl6">say perl DateTime.new(:2016year) - DateTime.new(:2015year):;           # OUTPUT: «Duration.new(31536001.0)␤»
+say DateTime.new(:2016year, :3600timezone) - Duration.new(31536001.0); # OUTPUT: «2015-01-01T00:00:00+01:00␤»
+</code></pre>
+
+<h3 id="infix-方法">infix:&lt;+&gt; 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">multi sub infix:&lt;+&gt; (DateTime:D, Duration:D --&gt; DateTime:D)
+multi sub infix:&lt;+&gt; (Duration:D, DateTime:D --&gt; DateTime:D)
+</code></pre>
+
+<p>采用日期时间并按给定持续时间增加它，以保留时区。</p>
+
+<pre><code class="language-perl6">say DateTime.new(:2015year) + Duration.new(31536001.0);        # OUTPUT: «2016-01-01T00:00:00Z␤»
+say Duration.new(42) + DateTime.new(:2015year, :3600timezone); # OUTPUT: «2015-01-01T00:00:42+01:00␤»
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/datetime/">DateTime</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-04-27-perl-6%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" data-toggle="tooltip" data-placement="top" title="Awesome Async Interfaces with Perl 6">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-05-06-%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/" data-toggle="tooltip" data-placement="top" title="类和对象">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>feed 操作符</title>
+  <meta property="og:title" content="feed 操作符" />
+  <meta name="twitter:title" content="feed 操作符" />
+  <meta name="description" content="Sequencer Precedence
+infix ==&gt; 这个流操作符(feed operator)从它的左侧接收结果并把结果作为最后一个参数传递给下一个(右侧的)例程(routine)。
+这个操作符的优先级很松散所以你需要使用圆括号把结果赋值给其它变量, 或者你甚至可以使用另外一个流操作符! 在接收单个参数或第一个参数为 block 的程序/方法的例子中, 你必须经常使用圆括号来调用(尽管这对于最后一个例程/方法不是必须的)。
+# Traditional structure, read bottom-to-top my @result = sort # (4) Sort, result is &lt;Earth People&gt; grep { /&lt;[PE]&gt;/ }, # (3) Look for P or E map { .tc }, # (2) Capitalize the words &lt;people of earth&gt;; # (1) Start with the input # Feed (left-to-right) with parentheses, read top-to-bottom @result = ( &lt;people of earth&gt; # (1) Start with the input ==&gt; map({ .">
+  <meta property="og:description" content="Sequencer Precedence
+infix ==&gt; 这个流操作符(feed operator)从它的左侧接收结果并把结果作为最后一个参数传递给下一个(右侧的)例程(routine)。
+这个操作符的优先级很松散所以你需要使用圆括号把结果赋值给其它变量, 或者你甚至可以使用另外一个流操作符! 在接收单个参数或第一个参数为 block 的程序/方法的例子中, 你必须经常使用圆括号来调用(尽管这对于最后一个例程/方法不是必须的)。
+# Traditional structure, read bottom-to-top my @result = sort # (4) Sort, result is &lt;Earth People&gt; grep { /&lt;[PE]&gt;/ }, # (3) Look for P or E map { .tc }, # (2) Capitalize the words &lt;people of earth&gt;; # (1) Start with the input # Feed (left-to-right) with parentheses, read top-to-bottom @result = ( &lt;people of earth&gt; # (1) Start with the input ==&gt; map({ .">
+  <meta name="twitter:description" content="Sequencer Precedence
+infix ==&gt; 这个流操作符(feed operator)从它的左侧接收结果并把结果作为最后一个参数传递给下一个(右侧的)例程(routine)。
+这个操作符的优先级很松散所以你需要使用圆括号把结果赋值给其它变量, 或者你甚至可以使用另外一个流操作符! 在接收单个参数或第一个参数为 block 的程序/方法的例子中, 你必须经常使用圆括号来调用( …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>feed 操作符</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2016/18/16
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p><a href="https://docs.perl6.org/language/operators#Sequencer_Precedence">Sequencer Precedence</a></p>
+
+<h3 id="infix">infix ==&gt;</h3>
+
+<p>这个流操作符(feed operator)从它的左侧接收结果并把结果作为最后一个参数传递给下一个(右侧的)例程(routine)。</p>
+
+<p>这个操作符的优先级很松散所以你需要使用圆括号把结果赋值给其它变量, 或者你甚至可以使用另外一个流操作符! 在接收单个参数或第一个参数为 block 的程序/方法的例子中, 你必须经常使用圆括号来调用(尽管这对于最后一个例程/方法不是必须的)。</p>
+
+<pre><code class="language-perl6"># Traditional structure, read bottom-to-top
+my @result =
+    sort               # (4) Sort, result is &lt;Earth People&gt;
+    grep { /&lt;[PE]&gt;/ }, # (3) Look for P or E
+    map { .tc },       # (2) Capitalize the words
+    &lt;people of earth&gt;; # (1) Start with the input
+
+# Feed (left-to-right) with parentheses, read top-to-bottom
+@result = (
+    &lt;people of earth&gt;  # (1) Start with the input
+    ==&gt; map({ .tc })   # (2) Capitalize the words
+    ==&gt; grep /&lt;[PE]&gt;/  # (3) Look for P or E
+    ==&gt; sort           # (4) Sort, result is &lt;Earth People&gt;
+);
+
+# For illustration, method chaining equivalent, read top-to-bottom
+@result =
+    &lt;people of earth&gt;  # (1) Start with the input
+    .map({ .tc })      # (2) Capitalize the words
+    .grep(/&lt;[PE]&gt;/)    # (3) Look for P or E
+    .sort;             # (4) Sort, result is &lt;Earth People&gt;
+
+# To assign without the need of parentheses use another feed operator
+&lt;people of earth&gt;
+    ==&gt; map({ .tc })
+    ==&gt; grep /&lt;[PE]&gt;/
+    ==&gt; sort()
+    ==&gt; @result;
+
+# It can be useful to capture a partial result, however, unlike
+# the leftward feed operator, it does require parentheses or a semicolon
+&lt;people of earth&gt;
+    ==&gt; map({ .tc })
+    ==&gt; my @caps; @caps # also could wrap in parentheses instead
+    ==&gt; grep /&lt;[PE]&gt;/
+    ==&gt; sort()
+    ==&gt; @result;
+</code></pre>
+
+<p>这个流操作符能让你在例程之外构建方法链那样的模式并且方法的结果能在不相关的数据上调用。在方法链中, 你被限制于使用数据身上可用的方法或使用之前的方法调用的结果。使用流操作符, 那个限制没有了。写出来的代码比一系列用多个换行符打断的方法调用更加可读。</p>
+
+<p>注: 在将来, 这个操作符会在它获得并行地运行列表操作的能力之后有所变化。它会强制左侧的操作数作为一个闭包(它能被克隆并运行在子线程中)变得可闭合。</p>
+
+<h2 id="infix-1">infix &lt;==</h2>
+
+<p>这个向左的流操作符从右侧接收结果并把结果作为最后的一个参数传递给它前面的(左侧的)例程。这为一系列列表操作函数阐明了从右到左的数据流。</p>
+
+<pre><code class="language-perl6"># Traditional structure, read bottom-to-top
+my @result =
+    sort                   # (4) Sort, result is &lt;Earth People&gt;
+    grep { /&lt;[PE]&gt;/ },     # (3) Look for P or E
+    map { .tc },           # (2) Capitalize the words
+    &lt;people of earth&gt;;     # (1) Start with the input
+
+# Feed (right-to-left) with parentheses, read bottom-to-top
+@result = (
+    sort()                 # (4) Sort, result is &lt;Earth People&gt;
+    &lt;== grep({ /&lt;[PE]&gt;/ }) # (3) Look for P or E
+    &lt;== map({ .tc })       # (2) Capitalize the words
+    &lt;== &lt;people of earth&gt;  # (1) Start with the input
+);
+
+# To assign without parentheses, use another feed operator
+@result
+    &lt;== sort()             # (4) Sort, result is &lt;Earth People&gt;
+    &lt;== grep({ /&lt;[PE]&gt;/ }) # (3) Look for P or E
+    &lt;== map({ .tc })       # (2) Capitalize the words
+    &lt;== &lt;people of earth&gt;; # (1) Start with the input
+
+# It can be useful to capture a partial result
+@result
+    &lt;== sort()
+    &lt;== grep({ /&lt;[PE]&gt;/ })
+    &lt;== my @caps # unlike ==&gt;, there is no need for additional statement
+    &lt;== map({ .tc })
+    &lt;== &lt;people of earth&gt;;
+</code></pre>
+
+<p>和向右的流操作符不一样, 这个结果不能严格地映射为方法链。然而, 和上面传统的结构中每个参数使用一行分割相比,  feed 操作符写出的代码比逗号更具描述性。向左的流操作符也允许你打断语句并捕获一个可能对调试来说极其方便的中间结果或者接收那个结果并在最终结果身上创建另外一个变种。</p>
+
+<p>注意: 在将来, 这个操作符会在它获得并行地运行列表操作的能力之后有所变化。它会强制右侧的操作数作为一个闭包变得可闭合(它能被克隆并运行在子线程中)</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/feed/">feed</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/feed-bottom-to-top/">feed-bottom-to-top</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-09-18-perl-6-calendar-2016-%E7%AC%AC%E4%B8%89%E5%A4%A9%E5%AF%B9%E8%B1%A1%E5%93%88%E5%B8%8C/" data-toggle="tooltip" data-placement="top" title="对象哈希">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-09-19-python-vs-perl6/" data-toggle="tooltip" data-placement="top" title="Python Vs Perl 6">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

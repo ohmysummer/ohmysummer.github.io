@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>IO 操作</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="IO 操作" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/io%E6%93%8D%E4%BD%9C/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>IO 操作</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/10/11</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<p>文件存在、文件的时间戳、文件的修改时间等等</p>
+
+<h3 id="批量插入文本">批量插入文本</h3>
+
+<pre><code class="language-perl6">use v6;
+
+my @filenames = dir '.',  test =&gt; any(/\.md$/, /\.markdown/);
+
+for @filenames -&gt; $filePath {
+    my $path = $filePath.path();
+    $path ~~ s/.md//;
+    $path ~~ s/.markdown//;
+
+    my $date = DateTime.new(now);
+    my $head =
+qq:heredoc 'EOT';
+title:  $path.IO.basename()
+date: $date
+tags: Perl6
+categories: Perl 6
+
+---
+
+&lt;blockquote class=&quot;blockquote-center&quot;&gt;这城市有太多风景都在提醒那过去！&lt;/blockquote&gt;
+
+[TOC]
+
+EOT
+
+   my @content   = slurp $filePath;
+   spurt($filePath.path, &quot;$head\n@content[]&quot;);
+}
+
+</code></pre>
+
+<p>在当前目录中查找所有以 <code>.md</code> (.markdown)结尾的文件（即markdown文件）, 并在文件最前面插入一段文本， 形如：</p>
+
+<pre><code class="language-perl6">title:  Perl6
+date: 2015-08-20T23:19:13Z
+tags: Perl6
+categories: Perl 6
+
+---
+
+&lt;blockquote class=&quot;blockquote-center&quot;&gt;我站在天桥上念你, 有点狼狈&lt;/blockquote&gt;
+
+</code></pre>
+
+<p>类 <code>IO::Path</code> 提供了 <code>basename</code>, <code>path</code>, <code>parts</code>, 等方法供使用, 具体用法请看文档:</p>
+
+<pre><code class="language-perl6">p6doc IO::Path
+</code></pre>
+
+<p>一些例子：</p>
+
+<pre><code class="language-perl6">say IO::Path.new(&quot;/etc/passwd&quot;).basename;   # passwd
+say IO::Path.new(&quot;docs/README.pod&quot;).extension;   # pod
+say IO::Path.new(&quot;/etc/passwd&quot;).dirname;    # /etc
+say IO::Path::Win32.new(&quot;C:\\Windows\\registry.ini&quot;).volume;    # C:
+say IO::Path.new(&quot;/etc/passwd&quot;).parts.perl # (&quot;dirname&quot; =&gt; &quot;/etc&quot;, &quot;volume&quot;  =&gt; &quot;&quot;, &quot;basename&quot; =&gt; &quot;passwd&quot;).hash
+</code></pre>
+
+<p>Examples:</p>
+
+<pre><code class="language-perl6">
+
+    # To iterate over the contents of the current directory: for dir() -&gt; $file
+    {
+        say $file;
+    }
+
+    # As before, but include even '.' and '..' which are filtered out by # the
+    default :test matcher: for dir(test =&gt; *) -&gt; $file {
+        say $file;
+    }
+
+    # To get the names of all .jpg and .jpeg files in ~/Downloads: my @jpegs =
+    &quot;%*ENV&lt;HOME&gt;/Downloads&quot;.IO.dir(test =&gt; /:i '.' jpe?g $/)».Str;
+
+
+# An example program that lists all files and directories recursively:
+
+    sub MAIN($dir = '.') {
+        my @todo = $dir.IO; while @todo {
+            for @todo.pop.dir -&gt; $path {
+                say $path.Str; @todo.push: $path if $path.d;
+            }
+        }
+    }
+</code></pre>
+
+<h3 id="文件测试操作符">文件测试操作符</h3>
+
+<hr />
+
+<pre><code class="language-perl6"># If you have a string - a path to something in the filesystem:
+
+    if &quot;path/to/file&quot;.IO ~~ :e {
+        say 'file exists';
+    }
+
+    my $file = &quot;path/to/file&quot;; if $file.IO ~~ :e {
+        say 'file exists';
+    }
+
+# Instead of the colonpair syntax, you can use method calls too:
+
+    if 'path/to/file'.IO.e {
+        say 'file exists';
+    }
+
+# If you already have an IO object in $file, either by creating one yourself, or
+# by getting it from another subroutine, such as dir, you can write this:
+
+    my $file = &quot;path/to/file&quot;.IO; if $file ~~ :e {
+        say 'file exists';
+    }
+</code></pre>
+
+<h3 id="文件时间戳">文件时间戳：</h3>
+
+<hr />
+
+<pre><code class="language-perl6">say &quot;path/to/file&quot;.IO.modified;                # e.g. Instant:1424089165
+say DateTime.new(&quot;path/to/file&quot;.IO.modified);  # e.g. 2015-02-16T12:18:50Z
+
+my $modification_instant = &quot;path/to/file&quot;.IO.modified;
+my $modification_time    = DateTime.new($modification_instant);
+say $modification_time;  # e.g. 2015-02-16T12:18:50Z
+
+
+say &quot;path/to/file&quot;.IO.accessed;                # e.g. Instant:1424353577
+say DateTime.new(&quot;path/to/file&quot;.IO.accessed);  # e.g. 2015-02-19T13:45:42Z
+
+my $access_instant = &quot;path/to/file&quot;.IO.accessed;
+my $access_time    =  DateTime.new($access_instant);
+say $access_time;  # e.g. 2015-02-19T13:45:42Z
+
+
+say &quot;path/to/file&quot;.IO.changed;                # e.g. Instant:1424089165
+say DateTime.new(&quot;path/to/file&quot;.IO.changed);  # e.g. 2015-02-16T12:18:50Z
+
+my $change_instant = &quot;path/to/file&quot;.IO.changed;
+my $change_time    =  DateTime.new($chnge_instant);
+say $change_time;  # e.g. 2015-02-16T12:18:50Z
+</code></pre>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/proto/" data-toggle="tooltip" data-placement="top" title="proto">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammar/" data-toggle="tooltip" data-placement="top" title="从正则表达式到 Grammar">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

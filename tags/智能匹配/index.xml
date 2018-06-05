@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>智能匹配 on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/</link>
+    <description>Recent content in 智能匹配 on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 03 Aug 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>智能匹配</title>
+      <link>https://ohmysummer.github.io/post/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/</link>
+      <pubDate>Wed, 03 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/</guid>
+      <description>智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上. 在下面的表格中, $_ 代表 ~~ 操作符的左侧, 或者作为 given 的参数, 或者作为其它主题化的参数. X 代表 ~~ 操作符右侧要匹配的模式, 或者在 when 后面的模式.(实际上, ~~ 操作符充当着一个小型的主题; 即, 为了右侧的计算, 它把 $_ 绑定到左侧的值上. 使用底层的 .ACCEPTS 形式来避免这种主题化.)
+第一节包含了含有享有特权的语法; 如果匹配能通过那些条目之一完成, 那它就会那样做. 这些特别的语法是通过它们的形式而非它们的类型进行分派的. 否则就使用表格中的剩余部分,并且匹配会根据普通的方法分派规则进行分派. 允许优化器(optimizer)假定编译时之后没有定义额外的匹配操作符, 所以, 如果在编译时模式类型就显而易见的, 那么跳转表(jump table)可以被优化. 然而, 这部分表格的语法仍然有点特权的, 跟 ~~ 操作符一样, 是 Perl 中少有的几个不使用多重分派的操作符之一. 相反, 基于类型的智能匹配会被单个地分派给属于 X 模式对象的底层方法.
+换句话说, 智能匹配首先根据模式(pattern)的形式或类型(下面的X)进行分派(dispatch), 然后那个模式自身决定是否和怎样注意主题($_)的类型. 所以, 下面表格中的第二列就是初始列. 第一列中的 Any 条目标示了模式要么不关心主题的类型, 要么把那个条目作为默认值, 因为上面列出的更具体的类型不匹配.
+$_ X Type of Match Implied Match if (given $_) ====== ===== ===================== =================== Any True ~~ True (parsewarn on literal token) Any False ~~ False match (parsewarn on literal token) Any Match ~~ Successful match (parsewarn on literal token) Any Nil ~~ Benign failure (parsewarn on literal token) Any Failure Failure type check (okay, matches against type) Any * block signature match block successfully binds to |$_ Any Callable:($) item sub truth X($_) S03-smartmatch/any-callable.</description>
+    </item>
+    
+    <item>
+      <title>Perl 6 中的智能匹配</title>
+      <link>https://ohmysummer.github.io/post/2016-02-19-perl6%E4%B8%AD%E7%9A%84%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/</link>
+      <pubDate>Fri, 19 Feb 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-02-19-perl6%E4%B8%AD%E7%9A%84%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/</guid>
+      <description>智能匹配 这儿有一个标准 Perl 6（即在你的编译单元开始的时候所生效的 Perl 方言） 的智能匹配表格。智能匹配通常作用在当前「主题」(topic)上, 即作用在 $_ 变量上. 在下面的表格中, $_ 代表 ~~ 操作符的左侧, 或者代表 given 的参数, 或者代表其它主题化的参数。 X 代表 ~~ 操作符右侧要与之($_)相匹配的模式, 或者在 when 后面的模式。(并且, 实际上, ~~ 操作符充当着一个小型的主题(topicalizer); 即, 为了右侧的计算, 它把 $_ 绑定到左侧的值上。 使用底层的 .ACCEPTS 形式来避免这种主题化.)
+第一节包含了特殊的(privileged)语法; 如果匹配能通过那些条目之一完成, 那它就会那样做。 这些特别的语法是通过它们的外形(form)而非它们的类型(type)进行分派的。 否则就使用表格中的剩余部分,并且匹配会根据正常的方法分派规则进行分派。 优化器(optimizer)被允许假定在编译时之后没有定义额外的匹配操作符, 所以, 如果在编译时模式类型就是显而易见的话, 那么跳转表(jump table)就可以被优化。 然而, 只要 ~~ 操作符是 Perl 中少有的几个不使用多重分派的操作符之一, 那么这部分表格的语法仍然有些特殊。 相反, 基于类型的智能匹配被直截了当地分派给了属于 X 模式对象的底层方法.
+换句话说, 智能匹配首先根据模式(pattern)的外形/形式(form)或类型(下面的X)进行分派(dispatch), 然后那个模式自身决定是否关注和怎样关注主题($_)的类型。 所以, 下表中的第二列实际上是初始(primary)列。 第一列中的 Any 条目标示了模式要么不关心主题的类型, 要么挑选那个条目作为默认项, 因为上面列出的类型越具体，它越不匹配。
+$_ X 所隐含的匹配类型 Match if (given $_) ====== ===== ===================== =================== Any True ~~ True (parsewarn on literal token) Any False ~~ False match (parsewarn on literal token) Any Match ~~ Successful match (parsewarn on literal token) Any Nil ~~ Benign failure (parsewarn on literal token) Any Failure Failure type check (okay, 与类型相匹配) Any * block 签名匹配 block 成功绑定到 |$_ Any Callable:($) item sub truth X($_)  S03-smartmatch/any-callable.</description>
+    </item>
+    
+  </channel>
+</rss>

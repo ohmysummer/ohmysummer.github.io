@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>在 Perl 6 中为自定义的类添加下标(subscripts)</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="在 Perl 6 中为自定义的类添加下标(subscripts)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/%E5%9C%A8perl6%E4%B8%AD%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%B1%BB%E6%B7%BB%E5%8A%A0%E4%B8%8B%E6%A0%87subscripts/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>在 Perl 6 中为自定义的类添加下标(subscripts)</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/08/18</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h3 id="为自定义的类添加下标-subscripts">为自定义的类添加下标(subscripts)</h3>
+
+<p>假如你定义了一个类，你想把类的实例用作散列那样，可以索引其中的元素， 那么你需要让你得自定义遵守 Associative 接口，并重写
+<code>AT-KEY</code> 、<code>EXISTS-KEY</code> 、<code>DELETE-KEY</code> 、<code>push</code> 等跟散列有关的方法:</p>
+
+<pre><code class="language-perl6">use v6;
+
+class HTTPHeader { ... }
+
+class HTTPHeader does Associative  {
+
+    has %!fields  handles &lt;self.AT-KEY self.EXISTS-KEY self.DELETE-KEY self.push  list kv keys values&gt;;
+    method Str { say self.hash.fmt; }
+
+
+    multi method EXISTS-KEY ($key)       { %!fields{normalize-key $key}:exists }
+    multi method DELETE-KEY ($key)       { %!fields{normalize-key $key}:delete }
+    multi method push (*@_)              { %!fields.push: @_                   }
+
+    sub normalize-key ($key) { $key.subst(/\w+/, *.tc, :g) } # titileCase 驼峰式的键
+
+    method AT-KEY (::?CLASS:D: $key) is rw {
+        my $element := %!fields{normalize-key $key};
+
+        Proxy.new(
+            FETCH =&gt; method () { $element },
+
+            STORE =&gt; method ($value) {
+                $element = do given $value».split(/',' \s+/).flat {
+                    when 1  { .[0] }    # a single value is stored as a string
+                    default { .Array }  # multiple values are stored as an array
+                }
+            }
+        );
+    }
+}
+
+
+my $header = HTTPHeader.new;
+say $header.WHAT;  #-&gt; (HTTPHeader)
+&quot;&quot;.say;
+
+$header&lt;Accept&gt; = &quot;text/plain&quot;;
+$header{'Accept-' X~ &lt;Charset Encoding Language&gt;} = &lt;utf-8 gzip en&gt;;
+$header.push('Accept-Language' =&gt; &quot;fr&quot;);  # like .push on a Hash
+
+say $header.hash.fmt;
+&quot;&quot;.say;
+# say $header.Str; # 同上
+
+say $header&lt;Accept-Language&gt;.values;
+say $header&lt;Accept-Charset&gt;;
+</code></pre>
+
+<p>输出：</p>
+
+<pre><code>(HTTPHeader)
+
+Accept  text/plain
+Accept-Charset  utf-8
+Accept-Encoding gzip
+Accept-Language en fr
+
+(en fr)
+utf-8
+</code></pre>
+
+<p>同样，你也可以使用数组下标，只要你重写相应地方法。</p>
+
+<p>关于为自定义的类添加下标这个问题， stackoverflow 上的回答是不需要在 handles 后面所跟的方法中添加 <code>self</code>。 他的解释如下:</p>
+
+<h2 id="为自定义的类添加下标-subscripts-http-stackoverflow-com-questions-36773986-how-to-add-subscripts-to-my-custom-class-in-perl-6"><a href="http://stackoverflow.com/questions/36773986/how-to-add-subscripts-to-my-custom-class-in-perl-6">为自定义的类添加下标(subscripts)</a></h2>
+
+<p>在自定义类上实现关联式下标(associative subscripting)。</p>
+
+<h3 id="通过代理实现">通过代理实现</h3>
+
+<p>Perl 6 通过在实现了集合类型的对象身上调用良定义的方法来实现关联式下标和位置下标（对于内置类型）。通过在 <code>%!fields</code> 属性后面添加 <code>handles</code> 特性(trait)， 你就把这些方法调用传递给了 <code>%!fields</code> &ndash; 它作为一个散列，会知道怎么来处理那些方法。</p>
+
+<h3 id="灵活的键">灵活的键</h3>
+
+<blockquote>
+<p>However, HTTP header field names are supposed to be case-insensitive (and preferred in camel-case). We can accommodate this by taking the *-KEY and push methods out of the handles list, and implementing them separately&hellip;</p>
+</blockquote>
+
+<p>把所有的键处理方法代理给内部的散列意味着你的键得到了散列那样的插值 &ndash; 意味着它们将是大小写无关的因为散列的键是大小写无关的。为了避免那，你把所有跟键有关的方法从 <em>handles</em> 子句中拿出并自己实现那些方法。在例子中，键在被索引到 <code>%!fields</code> 让键变成大小写无关之前先进行了键的「标准化」。</p>
+
+<h3 id="灵活的值">灵活的值</h3>
+
+<p>例子中的最后一部分展示了当值存入到散列那样的容器中时你如何控制值的插值。到目前为止，通过赋值给这个自定义容器的实例提供的值要么是一个字符串，要么是一个字符串的数组。额外的控制是通过移除定义在灵活的键中的  <strong>AT-KEY</strong> 方法来达成的并提供一个 <strong><a href="https://doc.perl6.org/type/Proxy">Proxy</a></strong> 对象来代替它。如果你给容器赋值，那么代理人对象的 <strong>STORE</strong> 方法会被调用并且那个方法会扫描所提供的字符串值中的 <code>&quot;, &quot;</code>（注意空格是必要的）。如果找到会接收那个字符串值作为几个字符串值的说明书。</p>
+
+<pre><code class="language-perl6">use v6;
+
+class HTTPHeader { ... }
+
+class HTTPHeader does Associative  {
+
+    has %!fields  handles &lt;list kv keys values&gt;;
+    method Str { say self.hash.fmt; }
+
+
+    multi method EXISTS-KEY ($key)       { %!fields{normalize-key $key}:exists }
+    multi method DELETE-KEY ($key)       { %!fields{normalize-key $key}:delete }
+    multi method push (*@_)              { %!fields.push: @_                   }
+
+    sub normalize-key ($key) { $key.subst(/\w+/, *.tc, :g) }
+
+    method AT-KEY (::?CLASS:D: $key) is rw {
+        my $element := %!fields{normalize-key $key};
+
+        Proxy.new(
+            FETCH =&gt; method () { $element },
+
+            STORE =&gt; method ($value) {
+                $element = do given $value».split(/',' \s+/).flat {
+                    when 1  { .[0] }    # a single value is stored as a string
+                    default { .Array }  # multiple values are stored as an array
+                }
+            }
+        );
+    }
+}
+
+
+my $header = HTTPHeader.new;
+say $header.WHAT;  #-&gt; (HTTPHeader)
+&quot;&quot;.say;
+
+$header&lt;Accept&gt; = &quot;text/plain&quot;;
+$header{'Accept-' X~ &lt;Charset Encoding Language&gt;} = &lt;utf-8 gzip en&gt;;
+$header.push('Accept-Language' =&gt; &quot;fr&quot;);  # like .push on a Hash
+
+say $header.hash.fmt;
+&quot;&quot;.say;
+# say $header.Str; # 同上
+
+say $header&lt;Accept-Language&gt;.values;
+say $header&lt;Accept-Charset&gt;;
+</code></pre>
+
+<p>输出：</p>
+
+<pre><code>(HTTPHeader)
+
+Accept  text/plain
+Accept-Charset  utf-8
+Accept-Encoding gzip
+Accept-Language en fr
+
+(en fr)
+utf-8
+</code></pre>
+
+<p>同样，你也可以使用数组下标，只要你重写相应地方法。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/s12-objects/" data-toggle="tooltip" data-placement="top" title="S12-Objects">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl6weekly%E7%AC%AC%E4%BA%8C%E6%9C%9F/" data-toggle="tooltip" data-placement="top" title="Perl6 Weekly(二)">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Superscripts on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/superscripts/</link>
+    <description>Recent content in Superscripts on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 12 Apr 2018 10:54:24 +0200</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/superscripts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>在 Perl 6 中设置超时</title>
+      <link>https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-perl-6/</link>
+      <pubDate>Thu, 12 Apr 2018 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-perl-6/</guid>
+      <description>在 Perl 6 中设置超时 在 Perl 5 中，我曾经使用信号设置超时（至少，这是一种简单且可预测的方式）。在 Perl 6 中，您可以使用 promise。让我们看看如何做到这一点。
+要模仿长时间运行的任务，请创建一个无限循环，然后打印其状态。开始吧:
+for 1 .. * { .say if $_ %% 100_000; }  只要循环得到控制，它将永远不会退出。我们的任务是在几秒钟内停止程序，因此计时器应在循环之前设置:
+Promise.in(2).then({ exit; }); for 1 .. * { .say if $_ %% 100_000; }  在这里，Promise.in 方法创建一个 promise，在给定秒数后自动 kept。在 promise 的基础上，使用 then，我们添加了另一个 promise，其代码将在超时后运行。这里唯一的语句就是退出，停止主程序。
+运行该程序以查看它的工作原理：
+$ time perl6 timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 0m2.196s user 0m2.120s sys 0m0.068s  该程序在我的计算机上计数达四百万，并在两秒内退出。这正是我们需要的行为。</description>
+    </item>
+    
+    <item>
+      <title>Perl 6 中的 Superscripts</title>
+      <link>https://ohmysummer.github.io/post/2018-04-09-perl-6-%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/</link>
+      <pubDate>Mon, 09 Apr 2018 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-04-09-perl-6-%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/</guid>
+      <description>Perl 6 中的 Superscripts 在 Perl 6 中，可以使用上标索引来计算数字的幂数，例如:
+&amp;gt; 2⁵ 32 &amp;gt; 7³ 343  也可以在上标中使用多个数字：
+&amp;gt; 10¹² 1000000000000  你可以猜到，上面的代码等同于这样：
+&amp;gt; 2**5 32 &amp;gt; 7**3 343 &amp;gt; 10**12 1000000000000  但问题是：上标到底是如何工作的？让我们找出答案。
+对于 Numeric 角色，定义了以下操作：
+proto sub postfix:&amp;lt;ⁿ&amp;gt;(Mu $, Mu $) is pure {*} multi sub postfix:&amp;lt;ⁿ&amp;gt;(\a, \b) { a ** b }  啊哈，这就是我们需要的，上标符号在这里转换为简单的 ** 运算符。
+您可以通过打印操作数来可视化传递给操作的确切内容：
+multi sub postfix:&amp;lt;ⁿ&amp;gt;(\a, \b) { nqp::say(&#39;# a = &#39; ~ a); nqp::say(&#39;# b = &#39; ~ b); a ** b }  这个时候，你会看到上面的测试示例输出如下：</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Grammars</title>
+  <meta property="og:title" content="Grammars" />
+  <meta name="twitter:title" content="Grammars" />
+  <meta name="description" content="Group of named regexes that form a formal grammar">
+  <meta property="og:description" content="Group of named regexes that form a formal grammar">
+  <meta name="twitter:description" content="Group of named regexes that form a formal grammar">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-02-05-perl-6-grammars/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-02-05-perl-6-grammars/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Grammars</h1>
+                
+                  
+                    <h2 class="post-subheading">Group of named regexes that form a formal grammar</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2016/05/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="grammars-http-doc-perl6-org-language-grammars"><a href="http://doc.perl6.org/language/grammars">Grammars</a></h1>
+
+<p>Grammars - 一组具名 regexes 组成正式的 grammar</p>
+
+<p>Grammars 是一个很强大的工具用于析构文本并通常返回数据结构。</p>
+
+<p>例如, Perl 6 是使用 Perl 6 风格 grammar 解析并执行的。</p>
+
+<p>对普通 Perl 6 使用者更实用的一个例子是 <a href="https://github.com/moritz/json">JSON::Tiny</a>模块, 它能反序列化任何合法的 JSON 文件, 而反序列代码只有不到 100 行, 还能扩展。</p>
+
+<p>Grammars 允许你把 regexes 组织到一块儿, 就像类(class) 中组织方法那样。</p>
+
+<h2 id="具名正则-named-regexes">具名正则 (Named Regexes)</h2>
+
+<p>　
+grammars 的主要组成部分是 <a href="http://doc.perl6.org/language/regexes">regexes</a>。 而 Perl 6 的 <a href="http://doc.perl6.org/language/regexes">regexes</a>语法不在该文档的讨论范围, 具名正则(named regexes) 有它自己的特殊语法, 这跟子例程(subroutine) 的定义很像:</p>
+
+<pre><code class="language-perl">my regex number { \d+ [ \. \d+ ]?   }   # 普通 regex 中空格被忽略, [] 是非捕获组
+</code></pre>
+
+<p>上面的代码使用 <code>my</code> 关键字指定了本地作用域的 regex, 因为具名正则(named regexes) 通常用在 grammars 里面。</p>
+
+<p>正则有名字了就方便我们在任何地方重用那个正则了:</p>
+
+<pre><code class="language-perl">say &quot;32.51&quot; ~~ &amp;number;
+say &quot;15 + 4.5&quot; ~~ /  \s* '+' \s*  /
+&amp;number           # my regex number { \d+ [ \. \d+ ]?   }  
+</code></pre>
+
+<p>为什么用 <code>&amp;number</code>, 对比具名子例程你就知道了:</p>
+
+<pre><code class="language-perl">&gt; sub number { say &quot;i am a subroutine&quot; }  # 具名子例程
+&gt; &amp;number                                 # sub number () { #`(Sub|140651249646256) ... }
+</code></pre>
+
+<p><code>&amp;number</code> 就是直接引用了具名的 regex 或 子例程。而在<code>/ /</code> 或 grammars 里面, 引用一个具名正则的语法也很特殊, 就是给名字包裹上 <code>&lt; &gt;</code>。<code>&lt;&gt;</code> 就像引号那样, 当用它引起某个具名正则后, 引用这个 `` 就会把该具名正则插入(带入)到整个正则之中, 就像字符串插值那样：</p>
+
+<pre><code class="language-perl">use v6;
+
+# 具名正则的声明
+my regex number { \d+ [ \. \d+]? }  
+my token ident  { \w+            }
+my rule  alpha  { &lt;[A..Za..z]&gt;   }
+
+# 1.0 通过 &amp; 来引用
+say so &quot;12.34&quot; ~~ &amp;number; # true
+
+# 2.0 在正则构造 // 里使用
+say so &quot;12.88 + 0.12&quot; ~~ /  \s* '+' \s*  /; # true
+# say so &quot;12.88 + 0.12&quot; ~~ /  \s* '+' \s*  /;
+# wrong, method 'number' not found for invocant of class 'Cursor'
+
+# 3.0 在 grammar 里面使用
+grammar EquationParse {
+    # 这里也不能给 number 起别名, 除非 number 是在 grammar 内部声明的
+     token TOP {  \s* '+' \s*  \s* '=' \s*  }
+}
+
+# 等式解析
+my $expr = EquationParse.parse(&quot;12.88 + 0.12 = 13.00&quot;);
+say $expr;
+
+</code></pre>
+
+<p>声明具名正则不是只有一个 <code>regex</code> 声明符, 实际上 , regex 声明符用的最少, 大多数时候, 都是使用 <code>token</code> 或 <code>rule</code> 声明符。token 和 rule 这两个都是 <code>ratcheing</code> (棘轮)的, 这意味着如果匹配失败, 那么匹配引擎就不会回并尝试匹配了。这通常会是你想要的, 但不适用于所有情况:</p>
+
+<blockquote>
+<p>棘轮用于单向驱动, 防止逆转。</p>
+</blockquote>
+
+<pre><code class="language-perl">my regex works-but-slow { .+ q } # 可能会回溯
+my token fails-but-fast { .+ q } # 不回溯
+my $s = 'Tokens and rules won\'t backtrack, which makes them fail quicker!';
+say so $s ~~ &amp;works-but-slow; # True
+say so $s ~~ &amp;fails-but-fast; # False, .+ 得到了整个字符串但不回溯
+</code></pre>
+
+<p><code>token</code> 和 <code>rule</code> 的唯一区别就是 <code>rule</code> 声明符会让正则中的 <code>:sigspace</code> 修饰符起效:</p>
+
+<pre><code class="language-perl">my token non-space-y { 'once' 'upon' 'a' 'time' }
+my rule space-y { 'once' 'upon' 'a' 'time' }
+say 'onceuponatime'    ~~ &amp;non-space-y;
+say 'once upon a time' ~~ &amp;space-y;
+</code></pre>
+
+<h2 id="创建-grammar">创建 Grammar</h2>
+
+<p>　
+当使用 grammar 关键字而非 class 关键字声明来声明一个类时, 会自动得到以 <a href="https://docs.perl6.org/type/Grammar">Grammar</a> 的父类。Grammars 应该只用于解析文本; 如果你想提取复杂的数据, 推荐 <a href="http://doc.perl6.org/language/grammars#Action_Objects">action object</a>和 grammar 一块使用。</p>
+
+<h3 id="proto-regexes">Proto regexes</h3>
+
+<p><a href="https://docs.perl6.org/type/Grammar">Grammars</a> 由 rules，token 和 regexes 组成; 他们实际上是方法，因为 grammars 是类。这些方法可以共享一个共同的名称和功能，因此可以使用 <a href="https://docs.perl6.org/syntax/proto">proto</a>。</p>
+
+<p>如果你有很多备选分支(alternations), 那么生成可读性好的代码或子类化(subclass)你的 grammar 可能会变得很困难。在下面的 <code>Actions</code> 类中, <code>TOP</code> 方法中的三元操作符并不理想, 并且当我们添加的操作越多, 它就变得越糟糕:</p>
+
+<pre><code class="language-perl6">grammar Calculator {
+    token TOP { [ &lt;add&gt; | &lt;sub&gt; ] }
+    rule  add { &lt;num&gt; '+' &lt;num&gt; }
+    rule  sub { &lt;num&gt; '-' &lt;num&gt; }
+    token num { \d+ }
+}
+
+class Calculations {
+    method TOP ($/) { make $&lt;add&gt; ?? $&lt;add&gt;.made !! $&lt;sub&gt;.made; }
+    method add ($/) { make [+] $&lt;num&gt;; }
+    method sub ($/) { make [-] $&lt;num&gt;; }
+}
+
+say Calculator.parse('2 + 3', actions =&gt; Calculations).made;
+
+# OUTPUT:
+# 5
+</code></pre>
+
+<p>为了让事情变得更好, 我们可以在 tokens 身上使用看起来像 <code>:sym&lt;...&gt;</code> 那样的副词来使用正则表达式原型(protoregexes):</p>
+
+<pre><code class="language-perl6">grammar Calculator {
+    token TOP { &lt;calc-op&gt; }
+
+    proto rule calc-op          {*}
+          rule calc-op:sym&lt;add&gt; { &lt;num&gt; '+' &lt;num&gt; }
+          rule calc-op:sym&lt;sub&gt; { &lt;num&gt; '-' &lt;num&gt; }
+
+    token num { \d+ }
+}
+
+class Calculations {
+    method TOP              ($/) { make $&lt;calc-op&gt;.made; }
+    method calc-op:sym&lt;add&gt; ($/) { make [+] $&lt;num&gt;; }
+    method calc-op:sym&lt;sub&gt; ($/) { make [-] $&lt;num&gt;; }
+}
+
+say Calculator.parse('2 + 3', actions =&gt; Calculations).made;
+
+# OUTPUT:
+# 5
+</code></pre>
+
+<p>在这个 grammar 中, 备选分支(alternation)已经被 <code>&lt;calc-op&gt;</code> 替换掉了, 它实质上是我们将要创建的一组值的名字。我们通过使用 <code>proto rule calc-op</code> 定义了一个 rule 原型类型(prototype) 来达成。我们之前的每一个备选分支已经被新的 rule <code>calc-op</code> 替换掉了并且备选分支的名字被附加上了 <code>:sym&lt;&gt;</code> 副词。</p>
+
+<p>在 actions 类中, 我们现在摆脱了三目操作符, 仅仅只在 <code>$&lt;calc-op&gt;</code> 匹配对象上接收 <code>.made</code> 值。并且单独备选分支的 actions 现在和 grammar 遵守相同的命名模式:  <code>method calc-op:sym&lt;add&gt;</code> 和 <code>method calc-op:sym&lt;sub&gt;</code>。</p>
+
+<p>当你子类化(subclass)那个 grammar 和 actions 类的时候才能看到这个方法的真正魅力。假设我们想为 calculator 增加一个乘法功能:</p>
+
+<pre><code class="language-perl6">grammar BetterCalculator is Calculator {
+    rule calc-op:sym&lt;mult&gt; { &lt;num&gt; '*' &lt;num&gt; }
+}
+
+class BetterCalculations is Calculations {
+    method calc-op:sym&lt;mult&gt; ($/) { make [*] $&lt;num&gt; }
+}
+
+say BetterCalculator.parse('2 * 3', actions =&gt; BetterCalculations).made;
+
+# OUTPUT:
+# 6
+</code></pre>
+
+<p>所有我们需要添加的就是为 <code>calc-op</code> 组添加额外的 rule 和 action, 感谢正则表达式原型(protoregexes), 所有的东西都能正常工作。</p>
+
+<h2 id="特殊的-tokens">特殊的 Tokens</h2>
+
+<h3 id="top">TOP</h3>
+
+<pre><code class="language-perl6">grammar Foo {
+    token TOP { \d+ }
+}
+</code></pre>
+
+<p>The TOP token is the default first token attempted to match when parsing with a grammar—the root of the tree. Note that if you&rsquo;re parsing with .parse method, token TOP is automatically anchored to the start and end of the string (see also: .subparse).</p>
+
+<p><code>TOP</code> token 是默认的第一个尝试去匹配的 token , 当解析一个 grammar 的时候 - 那颗树的根。注意如果你正使用 <code>.parse</code> 方法进行解析, 那么 token TOP 被自动地锚定到字符串的开头和结尾(再看看 <code>.subparse</code>)。</p>
+
+<p>使用 <code>rule TOP</code> 或 <code>regex TOP</code> 也是可以接受的。</p>
+
+<p>在 <code>.parse</code>、<code>.subparse</code> 或 <code>.parsefile</code> Grammar 方法中使用 <code>:rule</code> 命名参数可以选择一个不同的 token 来进行首次匹配。</p>
+
+<h3 id="ws">ws</h3>
+
+<p>当使用 <code>rule</code> 而非 <code>token</code> 时, 原子(atom)后面的任何空白(whitespace)被转换为一个对 <code>ws</code> 的非捕获调用。即:</p>
+
+<pre><code class="language-perl6">rule entry { &lt;key&gt; ’=’ &lt;value&gt; }
+</code></pre>
+
+<p>等价于:</p>
+
+<pre><code class="language-perl6">token entry { &lt;key&gt; &lt;.ws&gt; ’=’ &lt;.ws&gt; &lt;value&gt; &lt;.ws&gt; } # . = non-capturing
+</code></pre>
+
+<p>默认的 <code>ws</code> 匹配&rdquo;空白&rdquo;(whitespace), 例如空格序列(不管什么类型)、换行符、unspaces、或 heredocs。</p>
+
+<p>提供你自己的 <code>ws</code> token 是极好的:</p>
+
+<pre><code class="language-perl6">grammar Foo {
+    rule TOP { \d \d }
+}.parse: &quot;4   \n\n 5&quot;; # Succeeds
+
+grammar Bar {
+    rule TOP { \d \d }
+    token ws { \h*   }
+}.parse: &quot;4   \n\n 5&quot;; # Fails
+</code></pre>
+
+<p>上面的例子中, 在 Bar Gramamr 中重写了自己的 <code>ws</code>, 只匹配水平空白符, 所以 <code>\n\n</code> 匹配失败。</p>
+
+<h3 id="sym">sym</h3>
+
+<p><code>&lt;sym&gt;</code> token 可以在原型正则表达式(proto regex) 中使用，以匹配那个特定正则表达式的 <code>:sym</code> 副词的字符串值：</p>
+
+<pre><code class="language-perl6">grammar Foo {
+    token TOP { &lt;letter&gt;+ }
+    proto token letter {*}
+    token letter:sym&lt;P&gt; { &lt;sym&gt; }
+    token letter:sym&lt;e&gt; { &lt;sym&gt; }
+    token letter:sym&lt;r&gt; { &lt;sym&gt; }
+    token letter:sym&lt;l&gt; { &lt;sym&gt; }
+    token letter:sym&lt;*&gt; {   .   }
+}.parse(&quot;I ♥ Perl&quot;, actions =&gt; class {
+    method TOP($/) { make $&lt;letter&gt;.grep(*.&lt;sym&gt;).join }
+}).made.say; # OUTPUT: «Perl␤» 
+</code></pre>
+
+<p>当你已经将原型正则表达式与要匹配的字符串区分开来时，这很方便，因为使用 <code>&lt;sym&gt;</code> token 可防止重复这些字符串。</p>
+
+<h3 id="总是成功断言">总是成功断言</h3>
+
+<p><code>&lt;?&gt;</code> is the always succeed assertion(总是匹配成功). 当它用作 grammar 中的 token 时, 它可以被用于触发一个 Action 类方法。在下面的 grammar 中, 我们查找阿拉伯数字并且使用 <code>always succeed assertion</code> 定义一个 succ token。</p>
+
+<p>在 action 类中, 我们使用对 succ 方法的调用来设置(在这个例子中, 我们在 @!numbers 中准备了一个新元素)。在 <code>digit</code> 方法中, 我们把阿拉伯数字转换为梵文数字并且把它添加到 @!numbers 数组的最后一个元素中。多亏了 <code>succ</code>, 最后一个元素总是当前正被解析的 <code>digit</code> 数字的数。</p>
+
+<pre><code class="language-perl6">grammar Digifier {
+    rule TOP {
+        [ &lt;.succ&gt; &lt;digit&gt;+ ]+
+    }
+    token succ   { &lt;?&gt; }
+    token digit { &lt;[0..9]&gt; }
+}
+
+class Devanagari {
+    has @!numbers;
+    method digit ($/) { @!numbers[*-1] ~= $/.ord.&amp;[+](2358).chr }
+    method succ  ($)  { @!numbers.push: ''     }
+    method TOP   ($/) { make @!numbers[^(*-1)] }
+}
+
+say Digifier.parse('255 435 777', actions =&gt; Devanagari.new).made;
+# OUTPUT:
+# (२५५ ४३५ ७७७)
+</code></pre>
+
+<h2 id="grammar-中的方法">Grammar 中的方法</h2>
+
+<p>在 grammar 中使用 <code>method</code> 代替 <code>rule</code> 或 <code>token</code> 也是可以的, 只要它们返回一个 <a href="https://docs.perl6.org/type/Cursor">Cursor</a> 类型:</p>
+
+<pre><code class="language-perl6">grammar DigitMatcher {
+    method TOP (:$full-unicode) {
+        $full-unicode ?? self.num-full !! self.num-basic;
+    }
+    token num-full  { \d+ }
+    token num-basic { &lt;[0..9]&gt;+ }
+}
+</code></pre>
+
+<p>上面的 grammar 会根据 parse 方法提供的参数尝试不同的匹配:</p>
+
+<pre><code class="language-perl6">say +DigitMatcher.subparse: '12७१७९०९', args =&gt; \(:full-unicode);
+# OUTPUT:
+# 12717909
+
+say +DigitMatcher.subparse: '12७१७९०९', args =&gt; \(:!full-unicode);
+# OUTPUT:
+# 12
+</code></pre>
+
+<h2 id="action-object">Action Object</h2>
+
+<p>　
+一个成功的 grammar 匹配会给你一棵匹配对象(Match objects)的解析树, 匹配树(match tree)到达的越深, 则 grammar 中的分支越多, 那么在匹配树中航行以获取你真正感兴趣的东西就变的越来越困难。</p>
+
+<p>为了避免你在匹配树(match tree)中迷失, 你可以提供一个 action object。grammar 中每次解析成功一个具名规则(named rule)之后, 它就会尝试调用一个和该 grammar rule 同名的方法, 并传递给这个方法一个<code>Match</code> 对象作为位置参数。如果不存在这样的同名方法, 就跳过。</p>
+
+<p>这儿有一个例子来说明 grammar 和 action：</p>
+
+<pre><code class="language-perl">use v6;
+
+grammar TestGrammar {
+    token TOP { ^ \d+ $ }
+}
+
+class TestActions {
+    method TOP($/) {
+        $/.make(2 + $/);  # 等价于 $/.make: 2 + $/
+    }
+}
+my $actions = TestActions.new; # 创建 Action 实例
+my $match   = TestGrammar.parse('40', :$actions);
+say $match;       # ｢40｣
+say $match.made;  # 42
+</code></pre>
+
+<p><code>TestActions</code> 的一个实例变量作为具名参数 <code>actions</code> 被传递给 <code>parse</code> 调用, 然后当 token <code>TOP</code> 匹配成功之后, 就会自动调用方法 <code>TOP</code>, 并传递匹配对象(match object) 作为方法的参数。</p>
+
+<p>为了让参数是匹配对象更清楚, 上面的例子使用 <code>$/</code> 作为 action 方法的参数名, 尽管那仅仅是一个方便的约定, 跟内在无关。 <code>$match</code> 也可以。(尽管使用 <code>$/</code>可以提供把 <code>$</code>作为<code>$/</code>的缩写的优势。)</p>
+
+<p>下面是一个更有说服力的例子:</p>
+
+<pre><code class="language-perl">use v6;
+
+grammar KeyValuePairs {
+    token TOP {
+        [&lt;pair&gt; \n+]*
+    }
+ 
+    token ws {
+        \h*
+    }
+ 
+    rule pair {
+        &lt;key=.identifier&gt; '=' &lt;value=.identifier&gt;
+    }
+    token identifier {
+        \w+
+    }
+}
+
+class KeyValuePairsActions {
+    method pair      ($/) {
+        $/.make: $&lt;key&gt;.made =&gt; $&lt;value&gt;.made
+    }
+    method identifier($/) {
+        # 子例程 `make` 和在 $/ 上调用 .make 相同
+        make ~$/
+    }
+    method TOP ($match) {
+        # TOP 方法的参数可以使用任意变量名, 而不仅仅是 $/ 
+        $match.make: $match&lt;pair&gt;».made
+    }
+}
+
+my $res = KeyValuePairs.parse(q:to/EOI/, :actions(KeyValuePairsActions)).made;
+    second=b
+    hits=42
+    perl=6
+    EOI
+for @$res -&gt; $p {
+    say &quot;Key: $p.key()\tValue: $p.value()&quot;;
+}
+</code></pre>
+
+<p>这会输出:</p>
+
+<pre><code class="language-perl">Key: second     Value: b
+Key: hits       Value: 42
+Key: perl       Value: 6
+</code></pre>
+
+<p><code>pair</code> 这个 rule, 解析一对由等号分割的 pair, 并且给 <code>identifier</code> 这个 token 各自起了别名。对应的 action 方法构建了一个 <code>Pair</code> 对象, 并使用子匹配对象(sub match objects)的 <code>.made</code> 属性。这也暴露了一个事实: submatches 的 action 方法在那些调用正则/外部正则之前就被调用。所以 action 方法是按后续调用的。</p>
+
+<p>名为 <code>TOP</code> 的 action 方法仅仅把由 <code>pair</code> 这个 rule 的多重匹配组成的所有对象收集到一块, 然后以一个列表的方式返回。</p>
+
+<p>注意 <code>KeyValuePairsActions</code> 是作为一个类型对象(type object)传递给方法 <code>parse</code>的, 这是因为 action 方法中没有一个使用属性(属性只能通过实例来访问)。</p>
+
+<p>其它情况下, action 方法可能会在属性中保存状态。 那么这当然需要你传递一个实例给 <code>parse</code> 方法。</p>
+
+<p>注意, <code>token ws</code> 有点特殊: 当 <code>:sigspace</code> 开启的时候(就是我们使用 <code>rule</code>的时候), 我们覆写的 <code>ws</code> 会替换某些空白序列。这就是为什么 <code>rule pair</code> 中等号两边的空格解析没有问题并且闭合 <code>}</code> 之前的空白不会狼吞虎咽地吃下换行符, 因为换行符在 <code>TOP</code> token 已经占位置了, 并且 token 不会回溯。</p>
+
+<pre><code class="language-perl"># ws 的内置定义
+/ &lt;.ws&gt; /                # match &quot;whitespace&quot;:
+                         #   \s+ if it's between two \w characters,
+                         #   \s* otherwise
+
+&gt; my token ws { \h* } # 重写 ws 这个内置的 token
+&gt; say so &quot;\n&quot; ~~ &amp;ws # True
+</code></pre>
+
+<p>所以 <code>&lt;.ws&gt;</code> 内置的定义是：如果空白在两个 <code>\w</code> 单词字符之间, 则意思为 <code>\s+</code>, 否则为 <code>\s*</code>。 我们可以重写 <code>ws</code> 关于空白的定义, 重新定义我们需要的空白。比如把 <code>ws</code> 定义为 <code>{ \h* }</code> 就是所有水平空白符, 甚至可以将<code>ws</code> 定义为非空白字符。例如: <code>token ws { 'x' }</code></p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/grammars/">grammars</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/actions/">actions</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-02-03-comb-%E6%93%8D%E4%BD%9C%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%88%A9%E5%99%A8/" data-toggle="tooltip" data-placement="top" title="comb - 操作字符串的利器">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-02-06-given-when%E5%92%8C%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/" data-toggle="tooltip" data-placement="top" title="given when和模式匹配">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

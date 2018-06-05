@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.25.1" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/categories/perl-6/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io">
+              <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+
+    <header class="header-section ">
+      <div class="intro-header no-img">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+              <div class="page-heading">
+                <h2>#Perl 6</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container" role="main">
+            
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/sneaking-into-a-loop/">
+                <h2 class="post-title">Sneaking into a loop</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on March 23, 2015
+              </p>
+              <div class="post-entry">
+              
+                Sneaking into a loop [Sneaking into a loop]https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/
+Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的问题。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s3d\n&quot;).say;  slurp 会从 STDIN 中读取整个 &ldquo;file&rdquo; 并返回一个 Str。方法 Str::words 会按照某种 Unicode 意义的单词把该字符串分割成一个列表。把列表强转为 Bag 则创建一个计数 Hash, 它是如下表述的快捷方式。
+my %h; %h{$_}++ for &lt;peter paul marry&gt;; dd %h; # # OUTPUT«Hash %h = {:marry(1), :paul(1), :peter(1)}␤»  在关联数组上调用 .sort(-*.value) 会按照值的降序排序并返回一个排序后的 Pairs 列表。List::fmt 会调用 Pair::fmt, 它调用 fmt 方法, .key 作为其第二个参数, .value 也作为参数。say 会会使用一个空格连接各个元素并输出到标准输出。最后一步有一点错误因为除了第一行之外的每一行前面都会有一个额外的空格。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quot;).say;  手动连接字符串更好。这对于简短的单行程序来说有点多了。我们需要找到最长的单词并使用 .
+                <a href="https://ohmysummer.github.io/post/sneaking-into-a-loop/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/bag">Bag</a>&nbsp;
+		  
+	            #<a href="/tags/sort">sort</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB---junctions/">
+                <h2 class="post-title">Perl 6 的薛定谔的猫--Junctions</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on March 22, 2015
+              </p>
+              <div class="post-entry">
+              
+                薛定谔欧文应该是喜欢 Perl 6 的, 因为他的著名的薛定谔的猫可以用 Perl 6 的 Junction表达:
+my $cat = 'dead' | 'alive'; say &quot;cat is both dead and alive&quot; if $cat eq 'dead' and $cat eq 'alive'; # OUTPUT: # cat is both dead and alive  这里面发生了什么事情? 我会告诉你全部的!
+Anyone 游戏? 拿最简单的来说, Junctions 允许你把一堆值当作单个值。例如, 你可以使用 any Junction 来测试一个变量是否等于所给定值中的任意一个:
+say 'it matches!' if 'foo' eq 'foo' | 'bar' | 'ber'; say 'single-digit prime' if 5 == any ^9.
+                <a href="https://ohmysummer.github.io/post/perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB---junctions/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/junctions">Junctions</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/subset/">
+                <h2 class="post-title">Subset</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on March 19, 2015
+              </p>
+              <div class="post-entry">
+              
+                Subset 子集 Subset 可用于声明某一类型的子集。
+输入一个密码， 要求密码必须满足如下条件：
+1、 至少 8 位 2、 必须包含大写字母、小写字母 和 数字
+use v6; subset Length8 of Str where *.chars &lt; 8; subset UpCase of Str where none('A'..'Z') ∈ *.comb.Set; subset LowerCase of Str where none('a'..'z') ∈ *.comb.Set; subset IntNumber of Str where none('0'..'9') ∈ *.comb.Set; my $guess = prompt('Enter your password:'); given $guess { when Length8 { say '密码长度必须为 8 位 以上'; proceed } when UpCase { say '密码必须包括大写字母'; proceed } when LowerCase { say '密码必须包含小写字母'; proceed } when IntNumber { say '密码必须包含数字'; } }  该程序具有可扩展性， 要增加一种密码验证， 只有添加一个 subset 就好了，然后在 given/When 里面增加一个处理。
+                <a href="https://ohmysummer.github.io/post/subset/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/subset">Subset</a>&nbsp;
+		  
+	            #<a href="/tags/where">where</a>&nbsp;
+		  
+	            #<a href="/tags/given-when">given when</a>&nbsp;
+		  
+	            #<a href="/tags/proceed">proceed</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/%E6%93%8D%E4%BD%9C%E7%AC%A6/">
+                <h2 class="post-title">操作符</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on March 16, 2015
+              </p>
+              <div class="post-entry">
+              
+                操作符 操作符优先级 在像 1 + 2 * 3 这样的表达式中， 2 * 3 被首先计算， 因为中缀操作符 * 的优先级比 + 的优先级高。下面的表中总结了 Perl 6 中 的优先级级别， 从最牢固到最松散：
+A Level Examples N Terms 42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbose @$array L 方法后缀 .meth .+ .? .* .() .[] .{} .&lt;&gt; .«» .:: .= .^ .: N 自增 ++ -- R 求幂 ** L Symbolic unary ! + - ~ ? | || +^ ~^ ?
+                <a href="https://ohmysummer.github.io/post/%E6%93%8D%E4%BD%9C%E7%AC%A6/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/%E6%93%8D%E4%BD%9C%E7%AC%A6">操作符</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E7%89%B9%E6%80%A7%E4%BA%8C/">
+                <h2 class="post-title">Perl 6 中的特性(二)</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on March 16, 2015
+              </p>
+              <div class="post-entry">
+              
+                Set my $keywords = set &lt;if for unless while&gt;; # create a set sub has-keyword(*@words) { for @words -&gt; $word { return True if $word (elem) $keywords; # 依次检查数组中的元素是否属于集合 $keywords } False; } say has-keyword 'not', 'one', 'here'; # False say has-keyword 'but', 'here', 'for'; # True  Series Operator my @a=&lt;A G C T&gt;; my $x=@a; for 1 ... * -&gt; $a { (( [X~] $x xx $a )).
+                <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E7%89%B9%E6%80%A7%E4%BA%8C/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/%E7%89%B9%E6%80%A7">特性</a>&nbsp;
+		  
+	            #<a href="/tags/examples">Examples</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/when%E5%92%8Cwhere/">
+                <h2 class="post-title">When and Where</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on March 15, 2015
+              </p>
+              <div class="post-entry">
+              
+                When 可以用在主题化($_)的语句中 Perl 里面有个特殊的变量叫 $_, 即主题化变量, the variable in question.
+&gt; for ('Swift', 'PHP', 'Python', 'Perl') -&gt; $item { say $item when $item ~~ /^P/ } PHP Python Perl  &gt; for (12, 24, 56, 42) {.say when *&gt;40 } 56 42  而 where 用于对类型进行约束.
+&gt; for ('Swift', 'PHP', 'Python', 'Perl', 42) -&gt; $item where $item ~~ Str {say $item} Swift PHP Python Perl Constraint type check failed for parameter '$item'  未完待续.
+                <a href="https://ohmysummer.github.io/post/when%E5%92%8Cwhere/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/when">when</a>&nbsp;
+		  
+	            #<a href="/tags/where">where</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/using-perl-6%E4%B8%80/">
+                <h2 class="post-title">Using Perl 6(一)</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on March 14, 2015
+              </p>
+              <div class="post-entry">
+              
+                第一章 概要 Comming soon!
+第二章 基础 假设有一场乒乓球比赛，比赛结果以这种格式记录： Player1 Player2 | 3:2 这意味着选手1与选手2的比分为3:2, 你需要一个脚本算出每位选手赢了几场比赛并且胜了几局。 输入数据（存储在一个叫做scores的文件中）像下面这样：
+Beth Ana Charlie Dave Ana Dave | 3:0 Charlie Beth | 3:1 Ana Beth | 2:3 Dave Charlie | 3:0 Ana Charlie | 3:1 Beth Dave | 0:3  第一行是选手清单。随后每一行记录着比赛结果。
+这里使用Perl6给出一种解决方案：
+use v6; my $file = open 'scores'; my @names = $file.get.words ; #get方法读入一行，每调用一次get，读取一行 # &gt; @names.perl # Array.new(&quot;1&quot;, &quot;Beth&quot;, &quot;Ana&quot;, &quot;Charlie&quot;, &quot;Dave&quot;) my %matches; # 赢得比赛次数 my %sets; # 赢得比赛局数 for $file.
+                <a href="https://ohmysummer.github.io/post/using-perl-6%E4%B8%80/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/using-perl-6">Using Perl 6</a>&nbsp;
+		  
+	            #<a href="/tags/%E7%BA%A6%E6%9D%9F">约束</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/perl-6%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2014/">
+                <h2 class="post-title">Perl 6 圣诞月历-(2014)</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on December 19, 2014
+              </p>
+              <div class="post-entry">
+              
+                2014 Data munging in Perl 6 vs Perl 5 案例学习: 生成成绩报告单
+example.txt STDOUT Peter B Celine A- Zsófia B+ João F Maryam B+ 秀英 B- Finn D+ Aarav A Emma F Omar B  输出报告单：
+Zsófia's grade: B+ List of students with a failing grade: João, Emma Distribution of grades by letter: A: 2 students B: 5 students D: 1 student F: 2 students  example.txt 是一个文本文件， 每行一个学生姓名和分数，中间用空格分割。 我们希望我们的脚本能解析这样的文件并打印含有如下信息的报告：
+                <a href="https://ohmysummer.github.io/post/perl-6%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2014/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/%E5%9C%A3%E8%AF%9E">圣诞</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-04-29-perl-6-from-haskell---nutshell/">
+                <h2 class="post-title">Perl 6 from Haskell - Nutshell</h2>
+
+                
+                  <h3 class="post-subtitle">
+                  Learning Perl 6 from Haskell, in a nutshell: What do I already know?
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                Posted on July 11, 2014
+              </p>
+              <div class="post-entry">
+              
+                Haskell 和 Perl 6 是非常不同的语言。这很明显。 但是，这并不意味着没有相似之处或共同的想法！ 此页面尝试让一个 Haskell 用户启动并运行 Perl 6。Haskell 用户可能会发现，在用 Perl 6 编写脚本时，他们不需要放弃所有 Haskelly 的想法。
+请注意，这不应该被误认为是初学者教程或 Perl 6 概述; 它旨在作为具有强大 Haskell 背景的 Perl 6 学习者的技术参考。
+类型 类型 vs 值 在 Haskell 中, 您有类型级编程, 然后进行值级编程。
+plusTwo :: Integer -&gt; Integer -- Types plusTwo x = x + 2 -- Values  您不要像下面那样在 Haskell 中混合类型和值。
+plusTwo 2 -- This is valid plusTwo Integer -- This is not valid  在 Perl 6 中, 类型(亦称为类型对象)和值处于同样的级别
+                <a href="https://ohmysummer.github.io/post/2017-04-29-perl-6-from-haskell---nutshell/" class="post-read-more">[Read&nbsp;More]</a>
+              
+              </div>
+
+	      
+	        <span class="post-meta">
+	          
+	            #<a href="/tags/perl-6">Perl 6</a>&nbsp;
+		  
+	        </span>
+	      
+
+             </article>
+            
+          </div>
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.ioindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2017
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.25.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

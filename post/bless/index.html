@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>bless</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="bless" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/bless/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>bless</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/02/26</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h2 id="bless-方法">bless 方法</h2>
+
+<pre><code class="language-perl6">method bless(*%attrinit) returns Mu:D
+</code></pre>
+
+<p>相比 <code>new</code>方法来说更低层级别的对象构造方法。</p>
+
+<p>创建一个和调用者同类型的新对象, 使用具名参数来初始化属性, 并返回创建后的<strong>对象</strong>。</p>
+
+<p>在自定义构造函数时可以使用该方法:</p>
+
+<pre><code class="language-perl6">class Point {
+    has $.x;
+    has $.y;
+
+    # multi 是可选的
+    multi method new($x, $y) {
+        self.bless(:$x, :$y);
+    }
+}
+
+# 重写构造函数后, 不需要传具名参数了
+my $p = Point.new(-1, 1);
+say $p.x; # -1
+</code></pre>
+
+<blockquote>
+<p>虽然你可以自定义构造函数, 记得它会让子类继承变得更困难。</p>
+</blockquote>
+
+<pre><code class="language-perl6">use v6;
+
+# bless 的原理
+class Dog {
+    has $.name;
+    my $.counter; # 类方法
+    # 重写 new 方法, 使用位置参数创建实例
+    method new ($newName) {
+        $.counter++;
+        self.bless(name =&gt; $newName);
+    }
+}
+
+my $dog = Dog.new(&quot;yayaya&quot;);
+say $dog.name;   # yayaya
+say Dog.counter; # 1
+</code></pre>
+
+<h2 id="让我们创建一个对象">让我们创建一个对象</h2>
+
+<hr />
+
+<p>在 Perl 6 中创建一个对象相当容易。 作为类的作者你真的不必关心(至少在最简单的情况下), 你从 <code>Mu</code> 类继承了一个默认的构造函数。作为类的使用者, 你仅仅写出 <code>MyClass.new(attrib1 =&gt; $value1)</code> 就能创建一个 <code>MyClass</code>类的对象, 同时初始化了一个公开的属性 <strong>attrib1</strong>。</p>
+
+<h2 id="运行初始化代码">运行初始化代码</h2>
+
+<hr />
+
+<p>如果你想在对象创建中运行某些初始化代码, 那么你一点儿也没有必要动用 <code>new</code>方法。使用 <strong>BUILD</strong> 子方法:</p>
+
+<pre><code class="language-perl6">class C {
+    submethod BUILD {
+        say &quot;创建一个 C 的实例&quot;;
+    }
+}
+
+C.new();  # 创建一个 C 的实例
+</code></pre>
+
+<p><strong>BUILD</strong> submethod 由构造函数自动调用, 并且可以处理任何必要的初始化。<strong>BUILD</strong> submethod 也能接收用户传递给 <code>new()</code> 方法的具名参数。</p>
+
+<p>(以防你疑惑,  <strong>submethod</strong> 是<strong>不能</strong>被子类继承的方法。)</p>
+
+<p>因为 <strong>BUILD</strong> 运行在尚未完全构建好的对象上,  属性只有在被声明为具名参数的时候才可以被访问:</p>
+
+<pre><code class="language-perl6">submethod BUILD(:$!attr1, :$!attr2) {
+    # 这儿可以使用 $!attr1 和 $!attr2
+}
+</code></pre>
+
+<p>该语法也自动的使用和 <code>new</code>方法同名的具名参数的值初始化属性 。</p>
+
+<pre><code class="language-perl6">use v6;
+
+class Cat {
+    has $.fullname;
+    has $.nickname;
+
+    submethod BUILD(:$!fullname, :$!nickname) {
+        say &quot;造了一只猫, 它的全名是 $!fullname, 它的昵称是 $!nickname&quot;;
+    }
+}
+
+# 造了一只猫, 它的全名是 Camelia, 它的昵称是 Rakudo Star
+Cat.new(fullname =&gt; 'Camelia', nickname =&gt; 'Rakudo Star');
+</code></pre>
+
+<p>所以下面的两个类声明, 表现一样:</p>
+
+<pre><code class="language-perl6">class D {
+    has $.x;
+}
+# and
+class D {
+    has $!x;                   # 私有属性
+    submethod BUILD(:$!x) {}   # 允许 D.new( x =&gt; $x )
+    method x() {$!x}           # accessor
+}
+</code></pre>
+
+<p>这也解释了 <code>has $.x</code> 等价于 <code>has $!x</code> 加上 accessor 的原理。</p>
+
+<h2 id="自定义构造函数">自定义构造函数</h2>
+
+<hr />
+
+<p>假如你对具名参数不感冒, 而你想自定义一个接收<strong>一个</strong>强制位置参数的构造函数。那样你就需要自定义 <code>new</code>方法。要创建一个对象, 被重写的 new 方法中<strong>必须</strong>调用 <code>self.bless</code>：</p>
+
+<pre><code class="language-perl6">class C {
+    has $.size;
+    method new($x) {
+        self.bless(*, size =&gt; 2 * $x);
+    }
+}
+
+say C.new(3).size; # 接收一个位置参数, 打印出 6
+</code></pre>
+
+<p><code>bless</code>的第一个参数 *****号告诉它创建一个空对象自身。</p>
+
+<p>如果你想开启额外的具名参数, 那很容易:</p>
+
+<pre><code class="language-perl6">class C {
+    has $.size;
+    method new($x, *%remaining) {
+        self.bless(*, size =&gt; 2 * $x, |%remaining);
+    }
+}
+</code></pre>
+
+<p>注意, 这两个概念(自定义 new() 和 BUILD() (sub)methods) 是正交的; 你一次可以使用它俩, 它俩能和谐共处。</p>
+
+<h2 id="属性的默认值">属性的默认值</h2>
+
+<hr />
+
+<p>为属性提供默认值的最方便的方式是在声明属性的时候为属性提供默认值:</p>
+
+<pre><code class="language-perl6">class Window {
+    has $.height = 600;
+    has $.width  = $.height * 1.618;
+    ...
+}
+</code></pre>
+
+<p>默认值只会用在底层属性没有被 <code>new</code> 或 <code>BUILD</code>接触的时候使用。</p>
+
+<h2 id="理解对象初始化">理解对象初始化</h2>
+
+<hr />
+
+<p>假如你有一个类 C 继承自类 B, 那么创建一个类 C 的对象的处理看起来是这样:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-b43db2865db0c528.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img" /></p>
+
+<p>用户调用 <code>C.new</code>, 这反过来调用 <code>self.bless(*, |args)</code>。<strong>bless</strong> 方法创建了一个新的存储新创建对象的 <strong>P6Opaque</strong> 对象。这就是调用上图中的 <strong>CREATE</strong>。</p>
+
+<p>分配完存储空间和属性初始化之后,  <code>new</code>把控制权传给<strong>BUILDALL</strong>(顺带传递所有的具名参数), 这反过来会从层级树的顶端开始, 调用继承层级树上所有类的 <strong>BUILD</strong> 方法,  最后调用类 C 的 <strong>BUILD</strong> 方法。</p>
+
+<p>这样的设计允许你花费最少的力气来替换初始化的一部分, 尤其是自定义 <strong>new</strong> 和 <strong>BUILD</strong> 方法会很容易写。</p>
+
+<pre><code class="language-perl6">use v6;
+
+class B {
+    has $.name;
+
+    submethod BUILD(:$!name) {
+        say &quot;调用了 B 的 BUILD, 我叫 $!name&quot;
+    }
+}
+
+class C is B {
+    has $.nickname;
+
+    submethod BUILD(:$!nickname, :$name) {
+        say &quot;调用了 C 的 BUILD, 我叫 $!nickname, 我爸爸是 $name&quot;
+    }
+    method new(:$nickname) {
+        self.bless(nickname =&gt; 'Camelia', name =&gt; 'Lucy');
+    }
+}
+
+my $c = C.new(nickname =&gt; 'HANMEIMEI');
+</code></pre>
+
+<p>打印：</p>
+
+<pre><code class="language-perl6">调用了 B 的 BUILD, 我叫 Lucy
+调用了 C 的 BUILD, 我叫 Camelia, 我爸爸是 Lucy
+</code></pre>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/reddit-array-language/" data-toggle="tooltip" data-placement="top" title="Array language">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E5%8F%98%E9%87%8F/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的动态变量">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

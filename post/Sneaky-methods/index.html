@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Sneaky methods</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Sneaky methods" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/sneaky-methods/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Sneaky methods</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/05/01</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          <p><a href="https://gfldex.wordpress.com/2016/07/20/sneaky-methods/">Sneaky methods</a></p>
+
+<p>就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 <code>my</code> 关键字声明的免费浮点方法。现在为什么你想要:</p>
+
+<pre><code class="language-perl6">my method foo(SomeClass:D:) { self }
+</code></pre>
+
+<p>明显的答案是<a href="https://docs.perl6.org/language/mop">元对象协议</a>中的 <a href="https://docs.perl6.org/type/Metamodel$COLON$COLONMethodContainer#method_add_method">add_method</a> 方法, 在 Rakudo 里你能找到它：</p>
+
+<pre><code class="language-perl6">src/core/Bool.pm
+32:    Bool.^add_method('pred',  my method pred() { Bool::False });
+33:    Bool.^add_method('succ',  my method succ() { Bool::True });
+35:    Bool.^add_method('enums', my method enums() { self.^enum_values });
+</code></pre>
+
+<p>这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。</p>
+
+<!-- more -->
+
+<pre><code class="language-perl6">&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;
+
+# output
+# (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+# (a b c)
+</code></pre>
+
+<p>没有显式调用我们就不能没有名字, 因为 Perl 6 不允许我们这样做, 所以我们使用了空的作用域 <code>::</code> 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 <code>.&amp;</code> 来调用它。如果我们需要多次使用那个方法我们可以把它拉出来并给它一个名字。</p>
+
+<pre><code class="language-perl6">my multi method debug(List:D:) { dd self; self };
+&lt;a b c&gt;.&amp;debug.say;
+
+# output
+(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+(a b c)
+</code></pre>
+
+<p>或者, 如果我们想允许回调的话, 我们可以把它作为默认参数赋值。</p>
+
+<pre><code class="language-perl6">sub f(@l, :&amp;debug = my method (List:D:){self}) { @l.&amp;debug.say };
+f &lt;a b c&gt;, debug =&gt; my method ::(List:D){dd self; self};
+
+# output
+#(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+# (a b c)
+</code></pre>
+
+<p>在 Perl 6 中基本上所有的东西都是类, 包括<a href="https://docs.perl6.org/type/Method">方法</a>。 如果它是类它可以是一个对象并且我们能在我们喜欢的任何地方溜进去。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%94/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的正则表达式(五)">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl-6-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/" data-toggle="tooltip" data-placement="top" title="Perl 6 入门指南">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

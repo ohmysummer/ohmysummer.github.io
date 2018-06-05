@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Going over the Bridge, part 2. Let’s get rid of it</title>
+  <meta property="og:title" content="Going over the Bridge, part 2. Let’s get rid of it" />
+  <meta name="twitter:title" content="Going over the Bridge, part 2. Let’s get rid of it" />
+  <meta name="description" content="今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
+method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.">
+  <meta property="og:description" content="今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
+method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.">
+  <meta name="twitter:description" content="今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
+method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Going over the Bridge, part 2. Let’s get rid of it</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2018/12/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>今天，我们继续在 Rakudo Perl 6 中使用 <code>Bridge</code> 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。</p>
+
+<p><img src="https://inperl6.files.wordpress.com/2018/02/bridge1.jpg" alt="img" /></p>
+
+<h2 id="里面有什么">里面有什么?</h2>
+
+<p>该方法的主要用途在 <code>Real</code> 角色中，该角色包含以下一组方法：</p>
+
+<pre><code class="language-perl6">method sqrt() { self.Bridge.sqrt }
+method rand() { self.Bridge.rand }
+method sin() { self.Bridge.sin }
+method asin() { self.Bridge.asin }
+method cos() { self.Bridge.cos }
+method acos() { self.Bridge.acos }
+method tan() { self.Bridge.tan }
+method atan() { self.Bridge.atan }
+. . .
+method sec() { self.Bridge.sec }
+method asec() { self.Bridge.asec }
+method cosec() { self.Bridge.cosec }
+method acosec() { self.Bridge.acosec }
+method cotan() { self.Bridge.cotan }
+method acotan() { self.Bridge.acotan }
+method sinh() { self.Bridge.sinh }
+method asinh() { self.Bridge.asinh }
+method cosh() { self.Bridge.cosh }
+method acosh() { self.Bridge.acosh }
+method tanh() { self.Bridge.tanh }
+method atanh() { self.Bridge.atanh }
+method sech() { self.Bridge.sech }
+method asech() { self.Bridge.asech }
+method cosech() { self.Bridge.cosech }
+method acosech() { self.Bridge.acosech }
+method cotanh() { self.Bridge.cotanh }
+method acotanh() { self.Bridge.acotanh }
+method floor() { self.Bridge.floor }
+method ceiling() { self.Bridge.ceiling }
+. . .
+multi method log(Real:D: ) { self.Bridge.log }
+multi method exp(Real:D: ) { self.Bridge.exp }
+</code></pre>
+
+<p>有几个例程具有不同的模式，其中该方法被调用两次：一次用于获得所需的功能;其次是强制价值：</p>
+
+<pre><code class="language-perl6">multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
+multi method atan2(Cool $x = 1e0) { self.Bridge.atan2($x.Numeric.Bridge) }
+multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
+multi method atan2(Cool $x = 1e0) { self.Bridge.atan2($x.Numeric.Bridge) }
+multi method log(Real:D: Real $base) { self.Bridge.log($base.Bridge) }
+. . .
+multi sub atan2(Real \a, Real \b = 1e0) { a.Bridge.atan2(b.Bridge) }
+</code></pre>
+
+<p>正如你所看到的，<code>atan2</code> 函数被定义为方法和子例程。为了更多地混淆你，它有两个版本：</p>
+
+<pre><code class="language-perl6">proto sub atan2($, $?) {*}
+multi sub atan2(Real \a, Real \b = 1e0) { a.Bridge.atan2(b.Bridge) }
+# should really be (Cool, Cool), and then (Cool, Real) and (Real, Cool)
+# candidates, but since Int both conforms to Cool and Real, we'd get lots
+# of ambiguous dispatches. So just go with (Any, Any) for now.
+multi sub atan2( \a, \b = 1e0) { a.Numeric.atan2(b.Numeric) }
+</code></pre>
+
+<p>最后，一些类型转换的方法：</p>
+
+<pre><code class="language-perl6">method Bridge(Real:D:) { self.Num }
+method Int(Real:D:) { self.Bridge.Int }
+method Num(Real:D:) { self.Bridge.Num }
+multi method Str(Real:D:) { self.Bridge.Str }
+method Rat(Real:D: Real $epsilon = 1.0e-6) { self.Bridge.Rat($epsilon) }
+</code></pre>
+
+<p>注意 <code>Real</code> 角色的 <code>Bridge</code> 方法返回一个 <code>Num</code> 值。</p>
+
+<p>一些中缀方法也在使用该方法：</p>
+
+<pre><code class="language-perl6">multi sub infix:&lt;+&gt;(Real \a, Real \b) { a.Bridge + b.Bridge }
+multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge }
+multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge }
+multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge }
+multi sub infix:&lt;%&gt;(Real \a, Real \b) { a.Bridge % b.Bridge }
+multi sub infix:&lt;**&gt;(Real \a, Real \b) { a.Bridge ** b.Bridge }
+multi sub infix:«&lt;=&gt;»(Real \a, Real \b) { a.Bridge &lt;=&gt; b.Bridge }
+multi sub infix:&lt;==&gt;(Real \a, Real \b) { a.Bridge == b.Bridge }
+multi sub infix:«&lt;»(Real \a, Real \b) { a.Bridge &lt; b.Bridge }
+multi sub infix:«&lt;=»(Real \a, Real \b) { a.Bridge &lt;= b.Bridge }
+multi sub infix:«≤» (Real \a, Real \b) { a.Bridge ≤ b.Bridge }
+multi sub infix:«&gt;»(Real \a, Real \b) { a.Bridge &gt; b.Bridge }
+multi sub infix:«&gt;=»(Real \a, Real \b) { a.Bridge &gt;= b.Bridge }
+multi sub infix:«≥» (Real \a, Real \b) { a.Bridge ≥ b.Bridge }
+multi sub prefix:&lt;-&gt;(Real:D \a) { -a.Bridge }
+</code></pre>
+
+<h2 id="追踪调用">追踪调用</h2>
+
+<p>要查看 <code>Bridge</code> 方法何时被调用，让我们做一些简单的实验。我添加了几个 <code>nqp::say</code> 调用并运行 REPL 控制台来调用不同类型变量的 <code>sin</code> 方法。</p>
+
+<p>使用 <code>Num</code> 数据类型时，会调用一个直接方法：</p>
+
+<pre><code class="language-perl6">&gt; my Num $n = 1e1; 
+10
+&gt; $n.sin
+Num.sin
+</code></pre>
+
+<p>这个方法调用底层的 NQP 函数：</p>
+
+<pre><code class="language-perl6">proto method sin(|) {*}
+multi method sin(Num:D: ) {
+    nqp::p6box_n(nqp::sin_n(nqp::unbox_n(self)));
+}
+</code></pre>
+
+<p>使用其他数据类型，您可以通过真实角色出行：</p>
+
+<pre><code class="language-perl6">&gt; my Int $i = 1;
+1
+&gt; $i.sin
+Real.sin
+Num.sin
+
+&gt; my Rat $r = 1/2;
+0.5
+&gt; $r.sin
+Real.sin
+Num.sin
+</code></pre>
+
+<p>如果它们是从内置类型继承的，则可以使用与自己的类型相同的路径：</p>
+
+<pre><code class="language-perl6">&gt; class MyInt is Int {}
+&gt; my MyInt $mi = MyInt.new
+0
+&gt; $mi.sin
+Real.sin
+Num.sin
+</code></pre>
+
+<h2 id="摆脱它">摆脱它</h2>
+
+<p>我修改了所有使用 Rakudo 克隆方法的地方。大多数情况下，他们被直接调用 <code>Num</code> 方法替代。在一些地方，它会导致像 <code>$x.Num.Num</code> 这样的双重调用，当然这些调用也会减少。</p>
+
+<p>使用更新后的代码，所有来自 <code>Roast</code> 的测试都已通过。作为副作用，在某些情况下，速度增加了大约 3％：</p>
+
+<pre><code class="language-perl6">./perl6 -e'for 1..10_000_000 {Int.new(1).sin}'
+</code></pre>
+
+<p>这是一个相当广泛的变化，而且还有一件事：当您在新创建的 <code>Real</code> 对象上调用该方法时，会导致无限循环。看起来数字数据类型的错误层次结构是主要原因，但我认为我们至少可以安全地移除 <code>Bridge</code> 方法。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/" data-toggle="tooltip" data-placement="top" title="Going over the Bridge, part 1">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/" data-toggle="tooltip" data-placement="top" title="A bit more on Rat vs FatRat in Perl 6">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 Weekly(一)</title>
+  <meta property="og:title" content="Perl 6 Weekly(一)" />
+  <meta name="twitter:title" content="Perl 6 Weekly(一)" />
+  <meta name="description" content="1、在 Perl 6 中怎样检查文件的时间戳属性？
+在 Perl 6 中怎样检查文件的时间戳属性？ 在 Perl 5 中是使用文件测试操作符 file test operators , 在 Perl 6 中是使用来自于 IO::FileTestable role 的方法 (e.g. .modified, .accessed and .changed) 。
+例如:
+my $filename = &quot;sample.txt&quot;; my $seconds_since_epoch = $filename.IO.accessed; my $readable_timestamp = DateTime.new($filename.IO.accessed); say &quot;File &#39;$filename&#39; was last accessed at &#39;$readable_timestamp&#39;, which is {$seconds_since_epoch.Num} seconds since the epoch&quot;;  2、我正尝试生成包含 10 个随机随机序列的 FASTQ 文件， 序列由随机品质分数构成。我原来是使用下面的代码，它工作良好:
+my @seq = (rand_fa_seq() for ^10); my @qual = (rand_qual() for ^10); @seq.">
+  <meta property="og:description" content="1、在 Perl 6 中怎样检查文件的时间戳属性？
+在 Perl 6 中怎样检查文件的时间戳属性？ 在 Perl 5 中是使用文件测试操作符 file test operators , 在 Perl 6 中是使用来自于 IO::FileTestable role 的方法 (e.g. .modified, .accessed and .changed) 。
+例如:
+my $filename = &quot;sample.txt&quot;; my $seconds_since_epoch = $filename.IO.accessed; my $readable_timestamp = DateTime.new($filename.IO.accessed); say &quot;File &#39;$filename&#39; was last accessed at &#39;$readable_timestamp&#39;, which is {$seconds_since_epoch.Num} seconds since the epoch&quot;;  2、我正尝试生成包含 10 个随机随机序列的 FASTQ 文件， 序列由随机品质分数构成。我原来是使用下面的代码，它工作良好:
+my @seq = (rand_fa_seq() for ^10); my @qual = (rand_qual() for ^10); @seq.">
+  <meta name="twitter:description" content="1、在 Perl 6 中怎样检查文件的时间戳属性？
+在 Perl 6 中怎样检查文件的时间戳属性？ 在 Perl 5 中是使用文件测试操作符 file test operators , 在 Perl 6 中是使用来自于 IO::FileTestable role 的方法 (e.g. .modified, .accessed and .changed) 。
+例如:
+my $filename = …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-09-11-perl-6-weekly%E4%B8%80/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-09-11-perl-6-weekly%E4%B8%80/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 Weekly(一)</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/11/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>1、<a href="http://stackoverflow.com/questions/30264548/how-do-i-check-file-timestamp-attributes-in-perl-6">在 Perl 6 中怎样检查文件的时间戳属性？</a></p>
+
+<p>在 Perl 6 中怎样检查文件的时间戳属性？ 在 Perl 5 中是使用文件测试操作符  <a href="http://perldoc.perl.org/functions/-X.html">file test operators </a>, 在 Perl 6 中是使用来自于 <a href="http://doc.perl6.org/type/IO::FileTestable"><code>IO::FileTestable</code> role</a> 的方法 (e.g. <code>.modified</code>, <code>.accessed</code> and <code>.changed</code>) 。</p>
+
+<p>例如:</p>
+
+<pre><code class="language-perl6">my $filename = &quot;sample.txt&quot;;
+my $seconds_since_epoch = $filename.IO.accessed;
+my $readable_timestamp  = DateTime.new($filename.IO.accessed);
+
+say &quot;File '$filename' was last accessed at '$readable_timestamp', which is {$seconds_since_epoch.Num} seconds since the epoch&quot;;
+</code></pre>
+
+<p>2、我正尝试生成包含 10 个随机随机序列的 <a href="https://en.wikipedia.org/wiki/FASTQ_format">FASTQ 文件</a>， 序列由随机品质分数构成。我原来是使用下面的代码，它工作良好:</p>
+
+<pre><code class="language-perl6">my @seq  = (rand_fa_seq() for ^10);
+my @qual = (rand_qual()   for ^10);
+
+@seq.perl.say;
+@qual.perl.say;
+
+sub rand_fa_seq
+{
+    return join(&quot;&quot;, roll(20,&quot;ACGT&quot;.comb));
+
+}
+
+sub rand_qual
+{
+    return join(&quot;&quot;, roll(20,&quot;EFGHIJ&quot;.comb))
+}
+</code></pre>
+
+<p>等价于：</p>
+
+<pre><code class="language-perl6">sub rand-fa-seq($n = 20) { &lt;A C G T&gt;.roll($n).join }
+sub rand-qual($n = 20)   { &lt;E F G H I J&gt;.roll($n).join }
+
+my @seq  = rand-fa-seq() xx 10;
+my @qual = rand-qual() xx 10;
+</code></pre>
+
+<p>3、<a href="http://stackoverflow.com/questions/30414206/list-of-non-squares-using-list-comprehension-in-perl-6">在 Perl 6 中使用 &ldquo;列表解析” 生成非平方数列表</a></p>
+
+<p>在 Perl 6 中我怎样使用 &ldquo;列表解析&rdquo; 创建一组非平方数? 我在  <a href="http://rosettacode.org/wiki/Sequence_of_Non-squares#Perl_6">Rosetta Code</a>  那儿看到了如何打印一组非平方数的代码：</p>
+
+<pre><code class="language-perl6">sub nth_term (Int $n) { $n + round sqrt $n }
+
+say nth_term $_ for 1 .. 22;
+</code></pre>
+
+<p>目前为止我看到的最接近的东西是使用  <code>for</code> 关键字。 但是因为这实际上仅仅是一个内联（inline）循环，我认为这从技术上来讲并不是列表解析，尽管它看起来相似：</p>
+
+<pre><code class="language-perl6">my @y = ($_**2 + 1 for 1 .. 10);
+</code></pre>
+
+<p>但是，我真正想知道是否有一种 “列表解析 “ 的方法来创建可在数学上描述的诸如非平方数的列表。这儿有一个我用来创建一组非平方数的方法（直到 30）：</p>
+
+<pre><code class="language-perl6">my @non_squares = grep {sqrt($_) != floor(sqrt($_))}, 1 .. 30;
+</code></pre>
+
+<p>我怎样用列表解析来实现它呢？</p>
+
+<p>实际上， 你的例子  <code>my @y = ($_**2 + 1 for 1 .. 10);</code>  是 Perl 6 方式写成的列表解析。你还可以添加一个条件测试， 就像 <a href="http://design.perl6.org/S04.html#Loop_statements">Perl 6 design document S04</a> 中建议的那样：</p>
+
+<blockquote>
+<p>为了轻松地书写列表解析， 循环语句修饰符允许包含单个条件语句修饰符：</p>
+</blockquote>
+
+<pre><code class="language-perl6">sub odd(Int $n) {return $n % 2}
+@evens = ($_ * 2 if .&amp;odd for 0..100);
+</code></pre>
+
+<p>这个就是怎样写一个 Perl 6 列表解析的非平方数（直到 30）：</p>
+
+<pre><code class="language-perl6">my @non_squares = ($_ if .sqrt != .sqrt.Int for 1 .. 30);
+</code></pre>
+
+<hr />
+
+<p>一丢丢解释：在每次 for 循环迭代中， 从 1 到 30 这个范围中的当前数字会被赋值给默认变量 <code>$_</code>（等价于 it）。没有调用者的方法调用会默认在 “it&rdquo; 身上调用（例如 <code>.sqrt</code> 等价于 <code>$_.sqrt</code>）。 所以，对于 1到30中的每一个数字，它的平方根被检查以查看它是否有非整数平方根。 如果是真， 那它就被包含在列表中。</p>
+
+<p>4、<a href="http://stackoverflow.com/questions/30982697/print-and-colon-in-perl-6">Perl 6 中的 Print 函数和冒号</a></p>
+
+<p>我想知道在 Perl 6 中冒号与方法和函数调用有什么关系。</p>
+
+<p>我在 <a href="https://github.com/perl6/roast/blob/master/S32-io/copy.t">Perl6 spec test (S32-io)</a> 中看到了这个(我添加了注释):</p>
+
+<pre><code class="language-perl6">$fh.print: &quot;0123456789A&quot;;   # prints '0123456789A' to the file
+</code></pre>
+
+<p>据我所知，这等价于：</p>
+
+<pre><code class="language-perl6">$fh.print(&quot;0123456789A&quot;);   # prints '0123456789A' to the file
+</code></pre>
+
+<p>这两种方式看起来都接收多个参数而且展平列表也没问题：</p>
+
+<pre><code class="language-perl6">$fh.print: &quot;012&quot;, &quot;345&quot;, &quot;6789A&quot;;   # prints '0123456789A' to the file
+$fh.print(&quot;012&quot;, &quot;345&quot;, &quot;6789A&quot;);   # prints '0123456789A' to the file
+
+my @a = &lt;012 345 6789A&gt;;
+
+$fh.print(@a);   # prints '0123456789A' to the file
+$fh.print: @a;   # prints '0123456789A' to the file
+</code></pre>
+
+<p>存在这两种语法一定有某种原因。 使用这种或另一种语法有某种理由吗？</p>
+
+<p>我还注意到，当作为方法使用时， 我们不得不使用带有 <code>:</code> 或 <code>()</code>的 print：</p>
+
+<pre><code class="language-perl6">$fh.print(@a);   # Works
+$fh.print: @a;   # Works!
+$fh.print @a;    # ERROR!
+</code></pre>
+
+<p>当使用带冒号的 print 函数时，还有一些有意思的行为。 在这种情况下, ： 和 () 不等价：</p>
+
+<pre><code class="language-perl6">print @a;  # Prints '0123456789A' (no newline, just like Perl 5)
+print(@a); # Ditto
+print: @a; # Prints '012 345 6789A' followed by a newline (at least in REPL)
+
+print  @a, @a; # Error (Two terms in a row)
+print: @a, @a; # Prints '012 345 6789A 012 345 6789A' followed by a newline (in REPL)
+</code></pre>
+
+<p>然后我尝试在脚本文件中使用print。这对于打印到标准输出有效：</p>
+
+<pre><code class="language-perl6">print @a;
+
+</code></pre>
+
+<p>然而， 这不会打印到标准输出：</p>
+
+<pre><code class="language-perl6">print: @a, @a;
+
+</code></pre>
+
+<p>但是方法版本的工作良好：</p>
+
+<pre><code class="language-perl6">$fh.print: @a, @a; # Prints '0123456789A0123456789A' to the file
+</code></pre>
+
+<p>我感觉我已经理解了这个， 但是不能用语言表达出来。有人可以解释下使用 print 的这些变化吗。 还有， 这些行为会因为  Great List Refactor 而改变吗？</p>
+
+<hr />
+
+<p>Answer：</p>
+
+<p>使用冒号代替圆括号的一个主要原因是通过移除一组圆括号，它能使代码更清晰。在其它方面它们真的一样。</p>
+
+<p>当你使用 <code>print: @a</code> ， 那你真正在做的就是在行上放置一个标签， 并让 @a 落进去（fall-through）。这在 REPL 中会调用带有值的 say 方法。</p>
+
+<p>如果你没有在方法调用中使用括号或冒号，， 那么方法会以无参数方式调用。</p>
+
+<hr />
+
+<p>你可以交换方法的顺序，还有调用者，如果你使用冒号的话。</p>
+
+<pre><code class="language-perl6">say $*ERR: 'hello world'; # $*ERR.say('hello world')
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>我刚刚确认了， 就像你说的， <code>print: @a</code> 就是 <code>label: @a</code>,   <code>label</code> 可以是任何东西. – <a href="http://stackoverflow.com/users/215487/christopher-bottoms">Christopher Bottoms</a> <a href="http://stackoverflow.com/questions/30982697/print-and-colon-in-perl-6#comment50169331_30988281">Jun 26 at 14:12</a></th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td></td>
+<td>换句话说，冒号能代替方法调用的圆括号，但不能代替子例程调用。 – <a href="http://stackoverflow.com/users/215487/christopher-bottoms">Christopher Bottoms</a> <a href="http://stackoverflow.com/questions/30982697/print-and-colon-in-perl-6#comment50169347_30988281">Jun 26 at 14:12</a></td>
+</tr>
+</tbody>
+</table>
+
+<p>5、<a href="http://stackoverflow.com/questions/31745631/sorting-hash-kv-pairs">排序散列键值对儿</a></p>
+
+<pre><code class="language-perl6">my %hash =
+    two   =&gt; 2,
+    three =&gt; 3,
+    one   =&gt; 1,
+;
+
+for %hash.sort(*.key)».kv -&gt; ($key, $value) {
+    say &quot;'$key' =&gt; '$value'&quot;;
+}
+</code></pre>
+
+<p> <code>%hash.sort({.key})».kv</code> 和上面的  <code>sort</code> 等价吗?</p>
+
+<p>为什么这个 sort 没有 hyper <code>»</code>  提示就不会工作?</p>
+
+<hr />
+
+<p>这个 <a href="http://doc.perl6.org/routine/sort"><code>sort</code></a>方法返回一个 <a href="http://doc.perl6.org/type/Pair">Pairs</a> 的列表。</p>
+
+<p>因为在列表身上调用  <a href="http://doc.perl6.org/routine/kv"><code>.kv</code></a> 会返回一个索引, Pair 列表, 这不是你想要的; 你不能单单在列表身上调用   <a href="http://doc.perl6.org/routine/kv"><code>.kv</code></a> 。所以你必须通过在每个 Pair 身上调用 .kv 方法分别从列表中的   <a href="http://doc.perl6.org/type/Pair">Pair</a> 中取出键和值, 这正是 ».kv 所做的。</p>
+
+<p>你还可以使用 <a href="http://doc.perl6.org/routine/map"><code>.map(*.kv)</code></a> 代替。</p>
+
+<p><code>».kv</code> 语法允许把工作展开到多个线程中执行, 如果那样做有意义的话。</p>
+
+<p>(当前的 Rakudo仅以半随机的顺序工， 以防止人们错误地使用该特性 )</p>
+
+<hr />
+
+<p>通过在签名中使用副词以提取属性， 这是另一种 loop 写法：</p>
+
+<pre><code class="language-perl6">for %hash.sort -&gt; (:$key, :$value) {
+  say &quot;'$key' =&gt; '$value'&quot;;
+}
+
+for %hash.sort -&gt; $pair (:$key, :$value) {
+  say $pair;
+  say $key === $pair.key and $value === $pair.value; # True␤
+}
+
+# :$key is short for :key($key)
+for %hash.sort -&gt; (:key($k), :value($v)) {
+  say &quot;'$k' =&gt; '$v'&quot;;
+}
+</code></pre>
+
+<p>这对其它没有方法创建一组它们公用属性的对象有用：</p>
+
+<pre><code class="language-perl6">class C { has $.a; has $.b; has $.c; has $!private-value }
+my $c = 5;
+my $obj = C.new(:a&lt;A&gt;,:b(1),:$c);
+
+given $obj -&gt; ( :$a, :b($b), :$c) ) {
+  say &quot;$a $b $c&quot;;   # A 1 5
+}
+
+# ignore $.a by using an unnamed scalar
+given $obj -&gt; ( :a($), :$b, :$c ) { ... }
+
+# places any unspecified public attributes in %others
+given $obj -&gt; ( :$a, :$b, *%others ) {
+  .say for keys %others; # c␤
+}
+
+# 忽略任何未指定的属性
+# useful to allow subclasses to add more attributes
+# 或仅仅丢弃掉任何你不关心的值
+given $obj -&gt; ( :$a, :$b, *% ) { ... }
+
+# 失败，因为它没有处理公用的 c 属性
+# in the sub-signature
+given $obj -&gt; ( :$a, :$b ) { ... }
+</code></pre>
+
+<p>关于签名能做什么，那只是开始。</p>
+
+<p>所有下面的，在子例程和方法签名中都是被允许的，非强制性的， 对于这个例子杀伤力过大。这在 multi subs 和 multi methods 中对于限制可能的候选者真的很有用。</p>
+
+<pre><code class="language-perl6">for 'one' =&gt; 1, 1/3
+-&gt;
+  # Type is an alias to the object type
+  ::Type Any $_ # Any is the default type requirement
+
+  # the public attributes of the object
+  (
+    ::A-Type Any :key(   :numerator(   $a ) ),
+    ::B-Type Any :value( :denominator( $b ) ) where $b &gt;= 1,
+  )
+{
+  my Type $obj = $_; # new variable declared as having the same type
+  my A-Type $new-a = $a;
+  my B-Type $new-b = $b;
+
+  # could have used $_.^name or .^name instead of Type.^name
+  # so you don't actually have to add the alias to the signature
+  # to get the name of the arguments type
+  say Type.^name, ' ', $_;
+  say '  ', A-Type.^name, ' ', $a;
+  say '  ', B-Type.^name, ' ', $b;
+}
+
+Pair one =&gt; 1
+  Str one
+  Int 1
+Rat 0.333333
+  Int 1
+  Int 3
+</code></pre>
+
+<hr />
+
+<p>至于使用  <a href="http://doc.perl6.org/routine/sort"><code>.sort({.key})</code></a>, 恩, 那从根本上来说是同一个东西, 因为 <a href="http://doc.perl6.org/routine/sort"><code>sort</code></a>  在那儿接受任何 <a href="http://doc.perl6.org/type/Callable">Callable</a> </p>
+
+<p>我要指出, 你甚至不需要为 <a href="http://doc.perl6.org/routine/sort"><code>sort</code></a>  提供参数, 因为它默认比你给它的东西智能。</p>
+
+<p>Perl 6 有很多创建和访问 <a href="http://doc.perl6.org/type/Callable">Callable</a>  东西的方式。所以任何下面一种都可以工作：</p>
+
+<pre><code class="language-perl6">*.key
+{ .key } # { $_.key }
+-&gt; $_ { .key } # basically what the previous line turns into
+{ $^placeholder-var.key }
+sub ($_) { .key }
+&amp;a-subroutine-reference # you would have to create the subroutine though
+</code></pre>
+
+<p>还有， 因为所有普通的操作符实际上都是子例程，你可以在需要  <a href="http://doc.perl6.org/type/Callable">Callable</a> 的其它地方使用它们：</p>
+
+<pre><code class="language-perl6">&amp;infix:&lt;+&gt; # the subroutines responsible for the numeric addition operator
+&amp;[+] # ditto
+
+&amp;prefix:&lt;++&gt;
+&amp;postfix:&lt;++&gt;
+
+# etc
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/%E5%86%92%E5%8F%B7/">冒号</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-09-11-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%9B%9B/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的正则表达式(四)">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-09-15-%E6%97%A5%E6%9C%9F%E9%9A%BE%E9%A2%98/" data-toggle="tooltip" data-placement="top" title="日期难题">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

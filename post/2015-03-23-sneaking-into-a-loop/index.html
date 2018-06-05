@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Sneaking into a loop</title>
+  <meta property="og:title" content="Sneaking into a loop" />
+  <meta name="twitter:title" content="Sneaking into a loop" />
+  <meta name="description" content="Sneaking into a loop [Sneaking into a loop]https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/
+Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的问题。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s3d\n&quot;).say;  slurp 会从 STDIN 中读取整个 &ldquo;file&rdquo; 并返回一个 Str。方法 Str::words 会按照某种 Unicode 意义的单词把该字符串分割成一个列表。把列表强转为 Bag 则创建一个计数 Hash, 它是如下表述的快捷方式。
+my %h; %h{$_}&#43;&#43; for &lt;peter paul marry&gt;; dd %h; # # OUTPUT«Hash %h = {:marry(1), :paul(1), :peter(1)}␤»  在关联数组上调用 .sort(-*.value) 会按照值的降序排序并返回一个排序后的 Pairs 列表。List::fmt 会调用 Pair::fmt, 它调用 fmt 方法, .key 作为其第二个参数, .value 也作为参数。say 会会使用一个空格连接各个元素并输出到标准输出。最后一步有一点错误因为除了第一行之外的每一行前面都会有一个额外的空格。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quot;).say;  手动连接字符串更好。这对于简短的单行程序来说有点多了。我们需要找到最长的单词并使用 .">
+  <meta property="og:description" content="Sneaking into a loop [Sneaking into a loop]https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/
+Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的问题。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s3d\n&quot;).say;  slurp 会从 STDIN 中读取整个 &ldquo;file&rdquo; 并返回一个 Str。方法 Str::words 会按照某种 Unicode 意义的单词把该字符串分割成一个列表。把列表强转为 Bag 则创建一个计数 Hash, 它是如下表述的快捷方式。
+my %h; %h{$_}&#43;&#43; for &lt;peter paul marry&gt;; dd %h; # # OUTPUT«Hash %h = {:marry(1), :paul(1), :peter(1)}␤»  在关联数组上调用 .sort(-*.value) 会按照值的降序排序并返回一个排序后的 Pairs 列表。List::fmt 会调用 Pair::fmt, 它调用 fmt 方法, .key 作为其第二个参数, .value 也作为参数。say 会会使用一个空格连接各个元素并输出到标准输出。最后一步有一点错误因为除了第一行之外的每一行前面都会有一个额外的空格。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quot;).say;  手动连接字符串更好。这对于简短的单行程序来说有点多了。我们需要找到最长的单词并使用 .">
+  <meta name="twitter:description" content="Sneaking into a loop [Sneaking into a loop]https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/
+Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的问题。 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-03-23-sneaking-into-a-loop/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-03-23-sneaking-into-a-loop/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Sneaking into a loop</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/23/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="sneaking-into-a-loop">Sneaking into a loop</h2>
+
+<p>[Sneaking into a loop]<a href="https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/">https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/</a></p>
+
+<p>Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的<a href="http://irclog.perlgeek.de/perl6/2016-08-09#i_12993090">问题</a>。</p>
+
+<pre><code class="language-perl6">slurp.words.Bag.sort(-*.value).fmt(&quot;%10s3d\n&quot;).say;
+</code></pre>
+
+<p><code>slurp</code> 会从 STDIN 中读取整个 &ldquo;file&rdquo; 并返回一个 Str。方法 <code>Str::words</code> 会按照某种 Unicode 意义的单词把该字符串分割成一个列表。把列表强转为 Bag 则创建一个计数 Hash, 它是如下表述的快捷方式。</p>
+
+<pre><code class="language-perl6">my %h;
+%h{$_}++ for &lt;peter paul marry&gt;;
+dd %h;
+
+# # OUTPUT«Hash %h = {:marry(1), :paul(1), :peter(1)}␤»
+</code></pre>
+
+<p>在关联数组上调用 <code>.sort(-*.value)</code> 会按照值的降序排序并返回一个排序后的 Pairs 列表。List::fmt 会调用 Pair::fmt, 它调用 fmt 方法, .key 作为其第二个参数, .value 也作为参数。say 会会使用一个空格连接各个元素并输出到标准输出。最后一步有一点错误因为除了第一行之外的每一行前面都会有一个额外的空格。</p>
+
+<pre><code class="language-perl6">slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quot;).say;
+</code></pre>
+
+<p>手动连接字符串更好。这对于简短的单行程序来说有点多了。我们需要找到最长的单词并使用 <code>.chars</code> 来获取列宽。</p>
+
+<p>slurp 会在 <code>$*IN</code> 身上调用 <code>.slurp-rest</code> 方法。</p>
+
+<pre><code class="language-perl6">$*IN = &lt;peter paul marry peter paul paul&gt; but role { method slurp-rest { self.Str } };
+</code></pre>
+
+<p>这是一种 hack 因为它会在任何形式的类型检测上失败并且它除了 slurp 之外不会对任何东西起作用。还有, 实际上我们从 <code>$*IN</code> 那里解绑 STDIN。不要在工作中使用这个奇淫技巧。</p>
+
+<p>现在我们能开心地吞噬并开始计数了。</p>
+
+<pre><code class="language-perl6">my %counted-words = slurp.words.Bag;
+my $word-width = [max] %counted-words.keys».chars;
+</code></pre>
+
+<p>并且继续在链子断开的地方继续。</p>
+
+<pre><code class="language-perl6">%counted-words.sort(-*.value).fmt(&quot;%{$word-width}s3d&quot;).join(&quot;\n&quot;).say;
+</code></pre>
+
+<p>问题解决了但是很丑陋。我们把一个单行程序拆开了。我们来修复 fmt 以使它再次完整。</p>
+
+<p>我们想要的是一个 fmt 方法, 它接收一个位置的(Positional), 一个 printf 风格的格式字符串和一个格式字符串中的 block per <code>%*</code>。还有, 我们可能需要在 self.fmt 前面放上一个分隔符。</p>
+
+<pre><code class="language-perl6">my multi method fmt(Positional:D: $fmt-str, *@width where *.all ~~ Callable, :$separator = &quot; &quot;){
+    self.fmt(
+        $fmt-str.subst(:g, &quot;%*&quot;, {
+            my &amp;width = @width[$++] // Failure.new(&quot;missingh block&quot;);
+            '%' ~ (&amp;width.count == 2 ?? width(self, $_) !! width(self))
+        }), $separator);
+}
+</code></pre>
+
+<p>表达式 <code>*.all ~~ Callable</code> 检查 <a href="https://docs.perl6.org/type/Signature#Slurpy_(A.K.A._Variadic)_Parameters">slurp array</a>中的所有元素是否实现了 CALL-ME(那是实际被执行的方法在你执行 foo()的时候)。</p>
+
+<p>然后我们在格式字符串上使用了 <code>subst</code> 来替换 <code>%*</code>, 替换是一个(闭包)块儿, 它每次匹配被调用一次。而且这儿我们有不错的惯用法。</p>
+
+<pre><code class="language-perl6">say &quot;1-a 2-b 3-c&quot;.subst(:g, /\d/, {&lt;one two three&gt;[$++]});
+# one-a two-b three-c
+</code></pre>
+
+<p>匿名状态变量 <code>$</code> 从 0  开始计数, 每次代码块执行时增 1。实际上我们在这儿做的就是移除一个循环并给 subst 偷偷加入一个额外的计数器和数组下标。或者可以说我们注册了一个迭代器到 subst 里面的循环中。有人可能会质疑 subst 应该接收一个 Seq 作为它的第二个位置参数, 它会让调用变得冗长。无论如何, 我们把洞补上了。</p>
+
+<p>在第 11 行, 我们从吞噬数组中拿出一个元素或者在没有元素时创建一个 Failure。我们把 block 存储在一个变量中因为我们想在第 12 行中内省。如果那个 block 接收两个位置参数,we feed the topic subst is calling the block with as a 2nd parameter to our stored block. 那碰巧是一个 Match 并且对于影响所匹配的东西可能有用。在我们这个例子中我们对 <code>%*</code> 进行匹配并且当前位置由 <code>$++</code> 计数。做完那个之后我们得到了一个格式字符串, 它带有一个由用户提供的 fmt 版本的列宽参数。</p>
+
+<p>用户提供的块儿使用一组 Pairs 调用。我们不得不深入一层以得到更大的键。</p>
+
+<pre><code class="language-perl6">{[max] .values».keys».chars}
+</code></pre>
+
+<p>得到第一列的列宽。</p>
+
+<pre><code class="language-perl6">print %counted-words.sort(-*.value).&amp;fmt(&quot;%*s3d&quot;, {[max] .values».keys».chars}, separator =&gt; &quot;\n&quot;);
+</code></pre>
+
+<p>那个时髦的 <code>.&amp;fmt</code> 调用是必须的因为我们免费的浮点方法不是 List 的方法。</p>
+
+<p>&ndash; 翻译的好烂。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/bag/">Bag</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/sort/">sort</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-03-22-perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB---junctions/" data-toggle="tooltip" data-placement="top" title="Perl 6 的薛定谔的猫--Junctions">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-03-23-perl6%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的模块">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

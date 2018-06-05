@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的 Setty 和 Baggy 类型</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.18.1" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 中的 Setty 和 Baggy 类型" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/Perl%206%20%E7%9A%84%20Setty%20%E5%92%8C%20Baggy%20%E7%B1%BB%E5%9E%8B/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io">
+              <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 中的 Setty 和 Baggy 类型</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/12/11</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<p>有一个很常见的计数场景。比如说计算 DNA 中各个碱基的个数:</p>
+
+<pre><code class="language-perl6">my %counts;
+%counts{$_}++ for 'AGTCAGTCAGTCTTTCCCAAAAT'.comb;
+say %counts&lt;A T G C&gt;;  # (7 7 3 6)
+</code></pre>
+
+<p>创建一个<a href="https://docs.perl6.org/type/Hash">哈希</a>。对于每一个你想计数的东西,
+每遇到一次就在那个哈希中加 1。所以有什么问题？</p>
+
+<!-- more -->
+
+<p>Perl 6 通常有特定的更合适的类型来做这种操作; 例如,<a href="https://docs.perl6.org/type/Bag">Bag</a> 类型：</p>
+
+<pre><code class="language-perl6">'AGTCAGTCAGTCTTTCCCAAAAT'.comb.Bag&lt;A T G C&gt;.say; # (7 7 3 6)
+</code></pre>
+
+<p>我们来说说这些类型还有那些时髦的运算符！</p>
+
+<h1 id="注意-unicode">注意 Unicode</h1>
+
+<p>我将在这篇文章中使用花哨的 Unicode 版本的运算符和符号,因为它们看起来很纯。 然而, 他们都有我们称之为<a href="https://docs.perl6.org/language/unicode_texas.html#Other_acceptable_single_codepoints">Texas</a>的等同物, 你可以改用它们。</p>
+
+<h1 id="准备-set-走起">准备. Set. 走起</h1>
+
+<p>这些类型中最简单的就是 <a href="https://docs.perl6.org/type/Set">Set</a>。
+它将仅保存每个项目之一, 因此如果您有多个相同的对象, 那么重复项将被丢弃:</p>
+
+<pre><code class="language-perl6">say set 1, 2, 2, &quot;foo&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;b&quot;;
+# OUTPUT: set(a, foo, b, 1, 2)
+</code></pre>
+
+<p>集合运算符是强制的, 因此我们不需要显式地创建集合; 他们会为我们做：</p>
+
+<pre><code class="language-perl6">say 'Weeee \o/' if 'Zoffix' ∈ &lt;babydrop iBakeCake Zoffix viki&gt;;
+# OUTPUT: Weeee \o/
+</code></pre>
+
+<p>但在使用<a href="https://docs.perl6.org/language/glossary#index-entry-Allomorph">变形</a>
+时要注意:</p>
+
+<pre><code class="language-perl6">say 'Weeee \o/' if 42 ∈ &lt;1 42 72&gt;;
+# No output
+
+say 'Weeee \o/' if 42 ∈ +«&lt;1 42 72&gt;; # coerce allomorphs to Numeric
+# OUTPUT: Weeee \o/
+</code></pre>
+
+<p><a href="https://docs.perl6.org/language/quoting#Word_quoting:_%3C_%3E">尖括号为数字创建了变形</a>,因此在上面的第一种情况下, 我们的集合包含一堆<a href="https://docs.perl6.org/type/IntStr">IntStr</a> 对象,而运算符的左侧有一个常规 <a href="https://docs.perl6.org/type/IntStr">Int</a>,因此比较失败。 在第二种情况下, 我们使用超运算符强制变形到它们的数字组件,并且测试成功。</p>
+
+<p>虽然测试成员很令人兴奋, 但是我们可以使用集合做更多的事情！
+做集合的交集怎么样？</p>
+
+<pre><code class="language-perl6">my $admins = set &lt;Zoffix mst [Coke] lizmat&gt;;
+my $live-in-North-America = set &lt;Zoffix [Coke] TimToady huggable&gt;;
+
+my $North-American-admins = $admins ∩ $live-in-North-America;
+say $North-American-admins;
+# OUTPUT: set(Zoffix, [Coke])
+</code></pre>
+
+<p>我们用 ∩, U+2229 INTERSECTION, 交集运算符相交两个集合,
+并且接收到一个集合, 其仅包含在两个原始集合中都存在的元素。
+您还可以链接这些操作, 因此将在链中提供的所有集合中检查成员资格：</p>
+
+<pre><code class="language-perl6">say &lt;Zoffix lizmat&gt; ∩ &lt;huggable Zoffix&gt; ∩ &lt;TimToady huggable Zoffix&gt;;
+# OUTPUT: set(Zoffix)
+</code></pre>
+
+<p>另外一个集合运算符是集合差集运算符, 它的 Unicode 外观在我看来有点讨厌: ∖
+。不,它不是反斜线(\), 而是一个 U+2216 SET MINUS 符(幸运的是,你可以使用更明显的 <code>(-)</code>) Texas 版本)。</p>
+
+<p>差集运算符的才华弥补了它不算高的颜值:</p>
+
+<pre><code class="language-perl6">my @spammers = &lt;spammety@sam.com spam@in-a-can.com yum@spam.com&gt;;
+my @senders  = &lt;perl6@perl6.org spammety@sam.com good@guy.com&gt;;
+
+for keys @senders  ∖  @spammers -&gt; $non-spammer {
+    say &quot;Message from non-spammer&quot;;
+}
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>Message from perl6@perl6.org
+Message from good@guy.com
+</code></pre>
+
+<p>我们定义了两个数组: 一个包含了一组垃圾邮件发送者的邮件地址,
+另外一个包含了一组邮件发送者。怎么得到一组不含垃圾邮件发送者的邮件发送者呢?
+那么使用 ∖ (<code>(-)</code>也可以)运算符好了。</p>
+
+<p>然后我们使用 for 循环来迭代结果, 正如你看到的结果一样,
+所有的垃圾邮件发送者都被忽略了…​ 但是那里为什么使用 keys 呢?</p>
+
+<p>原因是在那些键拥有键和值的场景中, Setty 和 Mixy 类型很像哈希。
+集合类型总是把 True 作为值, 因为我们不需要在我们的循环中迭代
+<a href="https://docs.perl6.org/type/Pair">Pair</a> 对象, 所以我们仅仅使用 keys 来获取这个集合的键: 即电子邮件地址。</p>
+
+<p>但是, 类哈希语义在集合上不是无用的。 例如, 我们可以取一个切片, 并使用
+<code>:k</code> 副词只返回集合包含的元素:</p>
+
+<pre><code class="language-perl6">my $meows = set &lt;
+   Abyssinian  Aegean  Manx   Siamese  Siberian  Snowshoe
+   Sokoke      Sphynx  Suphalak  Thai
+&gt;;
+say $meows&lt;Sphynx  Raas  Ragamuffin  Thai&gt;:k;
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>(Sphynx Thai)
+</code></pre>
+
+<p>但是如果我们尝试从集合中删除一项会发生什么?</p>
+
+<pre><code class="language-perl6">say $meows&lt;Siamese&gt;:delete;
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>Cannot call 'DELETE-KEY' on an immutable 'Set'
+  in block &lt;unit&gt; at &lt;unknown file&gt; line 1
+</code></pre>
+
+<p>我们删除不了! 集合类型是不可变的。然而, 就像<a href="https://docs.perl6.org/type/Map">Map类型</a> 拥有一个可变版本的
+<a href="https://docs.perl6.org/type/Hash">Hash</a> 那样, <a href="https://docs.perl6.org/type/Set">Set类型</a> 也拥有一个可变的版本:<a href="https://docs.perl6.org/type/SetHash">SetHash</a>。我们没有一个好用的助手子程序来创建一个SetHash, 所以我们使用构造函数代替:</p>
+
+<pre><code class="language-perl6">my $s = SetHash.new: &lt;a a a b c d&gt;;
+say $s;
+$s&lt;a d&gt;:delete;
+say $s;
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>SetHash.new(a, c, b, d)
+SetHash.new(c, b)
+</code></pre>
+
+<p>对头! 我们成功地删除了一个切片。 那么, 圣诞老人的包里还有什么好东西?</p>
+
+<h1 id="gag-em-n-bag-em">Gag ’em ‘n’ Bag ’em</h1>
+
+<p>跟集合相关的另一种类型是 <a href="https://docs.perl6.org/type/Bag">Bag</a>, 是的,它也是不变的, 相应的可变类型是
+<a href="https://docs.perl6.org/type/BagHash">BagHash</a>。我们在本文开始时已经看到, 我们可以使用 Bag 来计算东西, 就像集合那样, Bag 也是哈希式的, 这就是为什么我们可以看到四个 DNA 氨基酸的一个切片:</p>
+
+<pre><code class="language-perl6">'AGTCAGTCAGTCTTTCCCAAAAT'.comb.Bag&lt;A T G C&gt;.say; # (7 7 3 6)
+</code></pre>
+
+<p>虽然集合的所有键值设置为 True, 但是 Bag 的键值是整数权重。
+如果你把两件相同的东西放到 Bag 里, 那么它们只有一个键, 但是键值为2:</p>
+
+<pre><code class="language-perl6">my $recipe = bag 'egg', 'egg', 'cup of milk', 'cup of flour';
+say $recipe;
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>bag(cup of flour, egg(2), cup of milk)
+</code></pre>
+
+<p>当然, 我们可以使用我们的灵巧的运算符来组合 bags! 这里,　我们会使用 ⊎,
+U+228E MULTISET UNION 运算符, 它的 Texas 版本 <code>(+)</code> 看起来更清楚：</p>
+
+<pre><code class="language-perl6">my $pancakes = bag 'egg', 'egg', 'cup of milk', 'cup of flour';
+my $omelette = bag 'egg', 'egg',  'egg', 'cup of milk';
+
+my $shopping-bag = $pancakes ⊎ $omelette ⊎ &lt;gum  chocolate&gt;;
+say $shopping-bag;
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>bag(gum, cup of flour, egg(5), cup of milk(2), chocolate)
+</code></pre>
+
+<p>我们使用了两个 Bags 加上一个含有俩个项的列表, 它会为我们正确地进行强转,
+所以我们不需要做任何事情。</p>
+
+<p>一个更令人印象深刻的运算符是 ≼, U+227C PRECEDES OR EQUAL TO, 它是 ≽,
+U+227D SUCCEEDS OR EQUAL TO 的镜像, 它告诉我们该运算符窄边上的 Baggy
+是否是另一边 Baggy 的子集; 意味着较小的 Baggy 中的所有对象都存在于较大的那个之中, 并且它们的权重最大。</p>
+
+<p>这里有一个挑战：我们有一些材料和一些我们想要构建的东西。 问题是,
+我们没有足够的材料来构建所有的东西, 所以我们想知道的是我们可以构建的东西的组合。让我们使用一些包！</p>
+
+<pre><code class="language-perl6">my $materials = bag 'wood' xx 300, 'glass' xx 100, 'brick' xx 3000;
+my @wanted =
+    bag('wood' xx 200, 'glass' xx 50, 'brick' xx 3000) but 'house',
+    bag('wood' xx 100, 'glass' xx 50)                  but 'shed',
+    bag('wood' xx 50)                                  but 'dog-house';
+
+say 'We can build...';
+.put for @wanted.combinations.grep: { $materials ≽ [⊎] |$^stuff-we-want };
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>We can build...
+
+house
+shed
+dog-house
+house shed
+house dog-house
+shed dog-house
+</code></pre>
+
+<p><code>$materials</code> 是一个含有我们的材料的 Bag。我们使用 <a href="https://docs.perl6.org/routine/xx">xx重复运算符</a> 来指定每种材料的数量。然后我们有一个含有三个 Bags 的 <code>@wanted</code> <a href="https://docs.perl6.org/type/Array">数组</a>: 它是我们想要构建的东西。我们还在它们身上使用了 <a href="https://docs.perl6.org/routine/but">but</a> 运算符为它们混合进名字以覆盖那些 bags 会最后输出。</p>
+
+<p>现在有趣的部分！我们在我们想要的东西的列表上调用 <code>.combinations</code>, 正如名字所示, 我们得到了所有可能的东西的组合。然后, 我们 <a href="https://docs.perl6.org/routine/grep">.grep</a> 结果, 寻找任何组合, 最多需要我们拥有的所有材料（这是≽运算符）。在它的末尾, 我们有我们的 <code>$material</code> Bag 在它较窄的一端, 我们有 ⊎ 运算符, 把我们想要的东西的每个组合的 bags 添加到一块, 除了我们将它作为元操作符[⊎], 这是就像把运算符放在 <code>$^stuff-we-want</code> 的每个项目之间。如果你是新手：那么 <code>$^stuff-we-want</code> 上的 <a href="https://docs.perl6.org/language/variables#index-entry-%24%5E">\$\^twigil</a> 在我们的 <code>.grep</code> 块上创建一个隐式签名, 我们可以给这个变量任意命名。</p>
+
+<p>我们做到了！程序的输出显示我们可以构建任何东西的组合,
+除了包含所有三个项目之外。我想我们不能拥有这一切…​</p>
+
+<p>…可是等等！还有更多！</p>
+
+<h1 id="混合起来">混合起来</h1>
+
+<p>让我们回顾一下我们的配方代码。 有一些东西不是很完美：</p>
+
+<pre><code class="language-perl6">my $recipe = bag  'egg', 'egg', 'cup of milk', 'cup of flour';
+say $recipe';
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>bag(cup of flour, egg(2), cup of milk)
+</code></pre>
+
+<p>如果食谱要求半杯牛奶而不是整杯牛奶怎么办? 如果 Bag 只能有整数权重,
+那么我们如何表示四分之一茶匙的盐?</p>
+
+<p>答案是 <a href="https://docs.perl6.org/type/Mix">Mix类型</a>（具有相应的可变版本, <a href="https://docs.perl6.org/type/MixHash">MixHash</a>）。 与 Bag 不同, Mix
+支持所有 <a href="https://docs.perl6.org/type/Real">Real</a> 权重, 包括负数权重。 因此, 我们的食谱最好用混合模型。</p>
+
+<pre><code class="language-perl6">my $recipe = Mix.new-from-pairs:  'egg'          =&gt; 2, 'cup of milk' =&gt; ½,
+                                  'cup of flour' =&gt; ¾, 'salt'        =&gt; ¼;
+say $recipe;
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>mix(salt(0.25), cup of flour(0.75), egg(2), cup of milk(0.5))
+</code></pre>
+
+<p>一定要用引号引起你的键, 不要使用 colonpair 形式（:42a, 或 :a(42)）,
+因为那些被视为命名参数。 还有一个<a href="https://docs.perl6.org/routine/mix">混合例程</a>, 但它不像 bag 例程那样具有权重和功能, 除了返回一个 Mix。 当然, 你可以在一个哈希或一组 pairs 上使用 <code>.Mix</code> 强转。</p>
+
+<p>除了令人惊奇的创作, 让我们做一些混合！ 假如说, 你是炼金术士。
+你想制作一堆令人惊叹的药水, 你要知道你需要的配料总量。</p>
+
+<p>然而, 你意识到一些反应所需的某些成分实际上是你正在做的其他反应的副产物。 那么, 什么是你需要的最有效的东西呢? 混合来拯救你来了！</p>
+
+<pre><code class="language-perl6">my %potions =
+    immortality  =&gt; (:oxium(6.98), :morphics(123.3),  :unobtainium(2)   ).Mix,
+    invisibility =&gt; (:forma(9.85), :rubidium(56.3),   :unobtainium(−0.3)).Mix,
+    strength     =&gt; (:forma(9.15), :rubidium(−30.3),  :kuva(0.3)        ).Mix,
+    speed        =&gt; (:forma(1.35), :nano-spores(1.3), :kuva(1.3)        ).Mix;
+
+say [⊎] %potions.values;
+</code></pre>
+
+<p><strong>输出.</strong></p>
+
+<pre><code>mix(unobtainium(1.7), nano-spores(1.3), morphics(123.3),forma(20.35), oxium(6.98), rubidium(26), kuva(1.6))
+</code></pre>
+
+<p>为了方便起见, 我们设置了一个 <a href="https://docs.perl6.org/type/Hash">哈希</a>, 键是药剂的名称, 值是成分的量的混合。 为了产生我们寻求的成分之一的反应, 我们使用负权重, 指定产生的量。</p>
+
+<p>然后, 我们使用了之前看到的相同的⊎集添加运算符, 以它的元格式：[⊎]。
+我们提供的哈希值是我们的混合, 它愉快地把我们的所有成分加起来, 我们在输出中会看到。</p>
+
+<p>看看unobtainium和rubidium：集合运算符正确地考虑了反应产生的数量,
+那些成分具有负权重！</p>
+
+<p>不朽的药水成功地混合, 我们现在需要做的是弄清楚在接下来的几千年做什么…​编写一些 Perl 6 怎么样</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/2016-11-01-Perl6-Grammar%E4%B9%8B%E5%88%86%E5%89%B2%E7%BB%93%E6%9E%84%E5%8C%96%E6%96%87%E6%9C%AC/" data-toggle="tooltip" data-placement="top" title="Perl 6 Grammar 之分割结构化文本">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/Perl%206%20Tips%20-%20%E6%8E%A2%E7%B4%A2%E7%BB%84%E5%90%88/" data-toggle="tooltip" data-placement="top" title="Perl 6 Tips - 排列组合">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.ioindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2017
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.18.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

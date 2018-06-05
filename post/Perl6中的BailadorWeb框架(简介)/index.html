@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的 Bailador Web 框架(简介)</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.18.1" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="Perl 6 中的 Bailador Web 框架(简介)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/Perl6%E4%B8%AD%E7%9A%84BailadorWeb%E6%A1%86%E6%9E%B6%28%E7%AE%80%E4%BB%8B%29/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io">
+              <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>Perl 6 中的 Bailador Web 框架(简介)</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2016/03/20</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<h1 id="开始-bailador">开始 Bailador</h1>
+
+<p><a href="https://github.com/tadzik/Bailador/">Bailador</a> 是对 <a href="http://perldancer.org/">Perl Dancer</a> Web 开发框架的模仿。
+安装方法：</p>
+
+<pre><code class="language-perl6">panda install Bailador
+# or
+zef install Bailador
+</code></pre>
+
+<!-- more -->
+
+<p>我们来创建一个脚本 <strong>first.pl</strong>，打印 &ldquo;hello world&rdquo;:</p>
+
+<pre><code class="language-perl6">use v6;
+use Bailador;
+
+get '/' =&gt; sub {
+    &quot;hello world&quot;
+}
+
+baile;
+</code></pre>
+
+<p>运行：perl6 first.pl 它会启动一个小型的 Web 服务器，你可以在3000端口上访问它：</p>
+
+<pre><code>$ perl6 first.pl
+Entering the development dance floor: http://0.0.0.0:3000
+[2016-05-05T12:57:31Z] Started HTTP server.
+</code></pre>
+
+<p>在 Bailador 中，我们需要把 <strong>HTTP</strong> 请求方法和服务器上的路径映射给一个匿名子例程, 这个子例程会返回它里面的内容。在这个例子中，我们把我们告诉它的网站根路径的 <strong>get</strong> HTTP 请求映射为返回字符串 <strong>hello world</strong>。如果你启动这个程序并用浏览器打开 <a href="http://0.0.0.0:3000/">http://0.0.0.0:3000/</a> 你就会看到这个文本。</p>
+
+<p>我们还可以映射其它路径(path-es):</p>
+
+<pre><code class="language-perl6">get '/about' =&gt; sub {
+    &quot;关于我&quot;
+}
+</code></pre>
+
+<p>这会把 <a href="http://0.0.0.0:3000/about"> http://0.0.0.0:3000/about</a> url 映射为返回 「关于我」。</p>
+
+<h2 id="路径中的占位符">路径中的占位符</h2>
+
+<p>路径中的一部分可以是以冒号开头的占位符:</p>
+
+<pre><code class="language-perl6">get '/hello/:name' =&gt; sub ($name) {
+    &quot;Hello $name!&quot;
+};
+</code></pre>
+
+<p><strong>:name</strong> 部分能匹配除了斜线 <strong>/</strong> 之外的任何字符串，并且它所匹配到的值会被赋值给匿名子例程中的 <strong>$name</strong> 变量。</p>
+
+<p>这样的占位符你可以拥有多个，并且占位符的实际名字是什么无关紧要。占位符所捕获到的值会按照它们出现在 url 中的顺序赋值给函数的参数。</p>
+
+<pre><code class="language-perl6">get '/hello/:first/:family' =&gt; sub ($fname, $lname) {
+    &quot;Hello $fname! And hi $lname&quot;
+};
+</code></pre>
+
+<p>在这个例子中，无论 <strong>:first</strong> 占位符捕获到的是什么，它都会被赋值给 <strong>$fname</strong> 参数，无论 <strong>:family</strong> 捕获到的是什么，它都会被赋值给 <strong>:$lname</strong>。例如 url <a href="http://0.0.0.0:3000/hello/Foo/Bar">http://0.0.0.0:3000/hello/Foo/Bar</a> 会生成如下响应:</p>
+
+<pre><code>Hello Foo! And hi Bar!
+</code></pre>
+
+<p>当然，让占位符的名字和参数的名字相同可能会让代码更易读。这是第二个脚本的完整版本:</p>
+
+<pre><code class="language-perl6">use v6;
+use Bailador;
+
+get '/' =&gt; sub {
+    &quot;hello world&quot;
+}
+
+get '/hello/:first/:family' =&gt; sub ($fname, $lname) {
+    &quot;Hello $fname! And hi $lname&quot;
+};
+
+
+baile;
+</code></pre>
+
+<h1 id="使用-bailador-回显文本">使用 Bailador 回显文本</h1>
+
+<p>我们来看看怎么从用户那儿接收输入并把输入回显给用户。</p>
+
+<h2 id="使用-post-回显">使用 POST 回显</h2>
+
+<p>对于这，我们必须创建两个路由(routes)因为现在 Bailador 还不能处理 GET 参数。</p>
+
+<pre><code class="language-perl6"># echo_post.p6
+
+use v6;
+use Bailador;
+
+get '/' =&gt; sub {
+    '&lt;form method=&quot;POST&quot; action=&quot;/echo&quot;&gt;&lt;input name=&quot;text&quot;&gt;&lt;input type=&quot;submit&quot;&gt;&lt;/form&gt;';
+}
+
+post '/echo' =&gt; sub {
+  my $text = request.params&lt;text&gt; // '';
+    my $html = 'You said (in a POST request) ';
+    $html ~= $text;
+    return $html;
+}
+
+baile;
+</code></pre>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-569a4158b27cc4d0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img" /></p>
+
+<p>我们能看到怎么创建一个路由来处理 POST 请求。</p>
+
+<p>第一个路由 <strong>get &lsquo;/&rsquo; =&gt; {</strong> 会发送一个 <strong>GET</strong> 请求并且它会返回一个包含在这个脚本中的 HTML 片段。(我知道，我们很快就会使用模板了) 那个 HTML 片段包含了一个带有单个文本框的表单和一个提交按钮。这个表单有一个通向 <strong>/echo</strong> URL 的 <strong>action</strong>，并且表单拥有 <strong>method=&ldquo;POST&rdquo;</strong>。这意味着，当用户点击提交按钮时，浏览器会发送回 POST 请求。</p>
+
+<p>第二个路由 <strong>post &lsquo;/echo&rsquo; =&gt; sub {</strong> 会处理 <strong>/echo</strong> 路径的 POST 请求。</p>
+
+<p>Bailador 提供的 <strong>request</strong> 函数以 <a href="https://github.com/tadzik/Bailador/blob/master/lib/Bailador/Request.pm">Bailador::Request</a>的形式返回代表当前请求的对象。</p>
+
+<p><strong>request</strong> 函数有几个方法，其中一个是 <strong>params</strong> 方法，它返回一个散列，其中散列的键是参数的名字（在我们这个例子中是 <strong>text</strong>），值是提交的值。</p>
+
+<p>我们把那个值保存在 <strong>$text</strong> 变量中，并且我们使用 &lsquo;//&rsquo; defined-or 操作符来设置变量的值为空，在用户没有提供任何值的情况下。然后我们连接用户提供的值组成 &ldquo;html&rdquo; 字符串。最后发送回那个字符串，我们这个小小的回显服务器就能工作啦。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-d07297442a570b93.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img" /></p>
+
+<h2 id="使用-get-回显">使用 GET 回显</h2>
+
+<pre><code class="language-perl6">use v6;
+use Bailador;
+
+get '/' =&gt; sub {
+    '&lt;form method=&quot;GET&quot;  action=&quot;/echo&quot;&gt;&lt;input name=&quot;text&quot;&gt;&lt;input type=&quot;submit&quot;&gt;&lt;/form&gt;';
+}
+
+get '/echo' =&gt; sub {
+    return 'You said (in a GET request) ' ~ (request.params&lt;text&gt; // '');
+}
+
+baile;
+</code></pre>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-399effeb8572bf83.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img" /></p>
+
+<p>在这个例子中，我省略了临时变量 <strong>$text</strong> 和 <strong>$html</strong>，在之前的例子中它们也不是必要的。当我们使用 <strong>GET</strong> 方法请求后，提交后回在浏览器的 URL 地址栏中拼接上我们的 text 字段和字段的值。</p>
+
+<h1 id="bailador-application-in-a-module">Bailador Application in a module</h1>
+
+<h2 id="模板">模板</h2>
+
+<p>在下面这个模板中，它把数据接收到变量 <code>$h</code> 中，之后使用这个变量来展示版本号和当前时间 - 从纪元开始的秒数。
+<em>bailador/code_in_module/views/index.tt</em></p>
+
+<pre><code class="language-perl6">% my ($h) = @_;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Bailador App&lt;/title&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, user-scalable=yes&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Bailador App&lt;/h1&gt;
+    &lt;div&gt;
+      Version &lt;%= $h&lt;version&gt; %&gt; Current time: &lt;%= $h&lt;date&gt; %&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="模块">模块</h2>
+
+<p>这个文件把所有代码包含在类中:</p>
+
+<pre><code class="language-perl6">unit class Demo;
+</code></pre>
+
+<p>为了拥有特定领域语言(DSL)，它加载了 Bailador 以让我们定义路由更容易。</p>
+
+<pre><code class="language-perl6">use Bailador;
+</code></pre>
+
+<p>最重要的是它包含了路由。</p>
+
+<pre><code class="language-perl6">unit class Demo;
+use Bailador;
+
+my $version = '0.01';
+
+get '/' =&gt; sub {
+    template 'index.tt', { version =&gt; $version, date =&gt; time }
+}
+</code></pre>
+
+<h2 id="启动应用程序的脚本">启动应用程序的脚本</h2>
+
+<pre><code class="language-perl6">use Bailador;
+Bailador::import();
+use lib callframe(0).file.IO.dirname ~ '/lib';
+use Demo;
+
+baile;
+</code></pre>
+
+<p>最有意思的应该是这段代码:</p>
+
+<pre><code class="language-perl6">use lib callframe(0).file.IO.dirname ~ '/lib';
+</code></pre>
+
+<p>它计算这个工程的根目录 - 假设 <code>app.pl</code> 文件在根目录中 - 然后把 <code>/lib</code> 子目录添加到 perl 将要查找额外模块的地方。这会在 <code>lib</code> 子目录下加载 <code>Demo.pm</code> 文件。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-317746ed1c73c978.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img" /></p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/%E7%94%A8%E7%B1%BB%E6%9D%A5%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/" data-toggle="tooltip" data-placement="top" title="用类来排序数组">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/Perl6%E4%B8%AD%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6%28%E4%B8%89%29/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的操作符(三)">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.ioindex.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2017
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.18.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>

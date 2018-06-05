@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>reddit编程题-詹妮的水果篮</title>
+  <meta property="og:title" content="reddit编程题-詹妮的水果篮" />
+  <meta name="twitter:title" content="reddit编程题-詹妮的水果篮" />
+  <meta name="description" content="问题描述 小詹妮拿着 5 美元去超市买东西, 为新搬来的邻居买水果篮礼物。因为她是个勤奋并缺乏想象力的孩纸, 她打算正好花 5 美元, 不多也不少。
+事实上超市里水果的价格并非整数, 正好花光 5 美元并不容易。 - 但是詹妮已经准备好了。她从背包里拿出上网本, 输入她看到过的水果的单价, 并且开启了一个程序为她收集 — 就是这样, 5 美元能买的水果的组合就出现在屏幕上。
+挑战 : 用你选择的语言展示詹妮的程序是什么样子。
+ 目标就是 500 美分 (等于 5 美元) 解决方法可以包含多种同类型的水果 - 假设它们数量没有限制 解决方法没有必要包含所有水果类型 对给定的输入检测所有可能的方法  输入描述 每行一种水果 — 规定了水果的名字(不含空格的单词)和水果的单价(单位为美分, 整数)
+输出描述 每个解决方法一行 — 用以逗号分割的数量&#43;名字对儿, 描述了那种类型要买的水果数。
+不要列出数量为 0 的水果。 如果为复数就给名字加 s。
+输入样本 banana 32 kiwi 41 mango 97 papaya 254 pineapple 399  输出样本 6 kiwis, 1 papaya 7 bananas, 2 kiwis, 2 mangos  有挑战的输入 apple 59 banana 32 coconut 155 grapefruit 128 jackfruit 1100 kiwi 41 lemon 70 mango 97 orange 73 papaya 254 pear 37 pineapple 399 watermelon 500  注意, 这种输入有 180 种解决方法。">
+  <meta property="og:description" content="问题描述 小詹妮拿着 5 美元去超市买东西, 为新搬来的邻居买水果篮礼物。因为她是个勤奋并缺乏想象力的孩纸, 她打算正好花 5 美元, 不多也不少。
+事实上超市里水果的价格并非整数, 正好花光 5 美元并不容易。 - 但是詹妮已经准备好了。她从背包里拿出上网本, 输入她看到过的水果的单价, 并且开启了一个程序为她收集 — 就是这样, 5 美元能买的水果的组合就出现在屏幕上。
+挑战 : 用你选择的语言展示詹妮的程序是什么样子。
+ 目标就是 500 美分 (等于 5 美元) 解决方法可以包含多种同类型的水果 - 假设它们数量没有限制 解决方法没有必要包含所有水果类型 对给定的输入检测所有可能的方法  输入描述 每行一种水果 — 规定了水果的名字(不含空格的单词)和水果的单价(单位为美分, 整数)
+输出描述 每个解决方法一行 — 用以逗号分割的数量&#43;名字对儿, 描述了那种类型要买的水果数。
+不要列出数量为 0 的水果。 如果为复数就给名字加 s。
+输入样本 banana 32 kiwi 41 mango 97 papaya 254 pineapple 399  输出样本 6 kiwis, 1 papaya 7 bananas, 2 kiwis, 2 mangos  有挑战的输入 apple 59 banana 32 coconut 155 grapefruit 128 jackfruit 1100 kiwi 41 lemon 70 mango 97 orange 73 papaya 254 pear 37 pineapple 399 watermelon 500  注意, 这种输入有 180 种解决方法。">
+  <meta name="twitter:description" content="问题描述 小詹妮拿着 5 美元去超市买东西, 为新搬来的邻居买水果篮礼物。因为她是个勤奋并缺乏想象力的孩纸, 她打算正好花 5 美元, 不多也不少。
+事实上超市里水果的价格并非整数, 正好花光 5 美元并不容易。 - 但是詹妮已经准备好了。她从背包里拿出上网本, 输入她看到过的水果的单价, 并且开启了一个程序为她收集 — 就是这样, 5 美元能买的水果的组合就出现在屏幕上。
+挑战 : 用你选择的语 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-04-12-reddit%E7%BC%96%E7%A8%8B%E9%A2%98-%E8%A9%B9%E5%A6%AE%E7%9A%84%E6%B0%B4%E6%9E%9C%E7%AF%AE/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-04-12-reddit%E7%BC%96%E7%A8%8B%E9%A2%98-%E8%A9%B9%E5%A6%AE%E7%9A%84%E6%B0%B4%E6%9E%9C%E7%AF%AE/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>reddit编程题-詹妮的水果篮</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2016/12/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h4 id="问题描述">问题描述</h4>
+
+<hr />
+
+<p>小詹妮拿着 5 美元去超市买东西,  为新搬来的邻居买水果篮礼物。因为她是个勤奋并缺乏想象力的孩纸, 她打算正好花 5 美元, 不多也不少。</p>
+
+<p>事实上超市里水果的价格并非整数, 正好花光 5 美元并不容易。 - 但是詹妮已经准备好了。她从背包里拿出上网本, 输入她看到过的水果的单价, 并且开启了一个程序为她收集 — 就是这样, 5 美元能买的水果的组合就出现在屏幕上。</p>
+
+<p><strong>挑战</strong> : 用你选择的语言展示詹妮的程序是什么样子。</p>
+
+<ul>
+<li>目标就是 500 美分 (等于 5 美元)</li>
+<li>解决方法可以包含多种同类型的水果 - 假设它们数量没有限制</li>
+<li>解决方法没有必要包含所有水果类型</li>
+<li>对给定的输入检测所有可能的方法</li>
+</ul>
+
+<h4 id="输入描述">输入描述</h4>
+
+<p>每行一种水果 — 规定了水果的<strong>名字</strong>(不含空格的单词)和水果的单价(单位为美分, 整数)</p>
+
+<h4 id="输出描述">输出描述</h4>
+
+<p>每个解决方法一行 — 用以逗号分割的数量+名字对儿, 描述了那种类型要买的水果数。</p>
+
+<p>不要列出数量为 0 的水果。 如果为复数就给名字加 <strong>s</strong>。</p>
+
+<h4 id="输入样本">输入样本</h4>
+
+<pre><code class="language-perl66">banana 32
+kiwi 41
+mango 97
+papaya 254
+pineapple 399
+</code></pre>
+
+<h4 id="输出样本">输出样本</h4>
+
+<pre><code class="language-perl66">6 kiwis, 1 papaya
+7 bananas, 2 kiwis, 2 mangos
+</code></pre>
+
+<h4 id="有挑战的输入">有挑战的输入</h4>
+
+<pre><code class="language-perl6">apple 59
+banana 32
+coconut 155
+grapefruit 128
+jackfruit 1100
+kiwi 41
+lemon 70
+mango 97
+orange 73
+papaya 254
+pear 37
+pineapple 399
+watermelon 500
+</code></pre>
+
+<p>注意, 这种输入有 180 种解决方法。</p>
+
+<pre><code class="language-perl6">my (@names, @prices) := ($_»[0], $_»[1]».Int given lines».words);
+
+for find-coefficients(500, @prices) -&gt; @quantities {
+    say (@names Z @quantities)
+        .map(-&gt; [$name, $qty] { &quot;$qty $name&quot;~(&quot;s&quot; if $qty &gt; 1) if $qty })
+        .join(&quot;, &quot;);
+}
+
+sub find-coefficients ($goal, @terms) {
+    gather {
+        my @coefficients;
+
+        loop (my $i = 0; $i &lt; @terms; @coefficients[$i]++) {
+            given [+](@coefficients Z* @terms) &lt;=&gt; $goal {
+                when Less { $i = 0                      }
+                when More { @coefficients[$i] = 0; $i++ }
+                when Same { take @coefficients.values   }
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>For each iteration of the loop, the array <code>@coefficients</code> is &ldquo;incremented by one&rdquo; as if its elements were the digits of a number - but not one with a fixed base: instead, it overflows the &ldquo;digits&rdquo; whenever the search condition has been exceeded (sum &gt; goal).</p>
+
+<p>The same could possibly be done more elegantly with recursion. And for those who don&rsquo;t like naive bruteforce solutions, this challenge could also be a nice opportunity to try some <a href="https://en.wikipedia.org/wiki/Dynamic_programming">dynamic programming</a> techniques.</p>
+
+<pre><code class="language-perl6">my @fruits = lines».split(&quot; &quot;).sort(-*[1]);
+my @names  = @fruits»[0];
+my @prices = @fruits»[1]».Int;
+
+for find-coefficients(500, @prices) -&gt; @quantities {
+    say (@names Z @quantities)
+        .map(-&gt; [$name, $qty] { &quot;$qty $name&quot;~(&quot;s&quot; if $qty &gt; 1) if $qty })
+        .join(&quot;, &quot;);
+}
+
+sub find-coefficients ($goal, @terms) {
+    gather {
+        my @initial = 0 xx @terms;
+
+        my %partials = (0 =&gt; [@initial,]);
+        my @todo = (@initial,);
+        my %seen-partials := SetHash.new;
+        my %seen-solutions := SetHash.new;
+
+        while @todo {
+            my @current := @todo.shift;
+            my $sum = [+] @current Z* @terms;
+
+            next if $sum &gt; $goal;
+
+            %partials{$sum}.push: @current;
+
+            # Find solutions by adding known partials to the current partial
+            for %partials{$goal - $sum}[*] -&gt; @known {
+                .take if !%seen-solutions{~$_}++ given list @current Z+ @known;
+            }
+
+            # Schedule additional iterations
+            if $sum &lt;= $goal div 2 {
+                for @terms.keys {
+                    my @next = @current;
+                    @next[$_]++;
+                    @todo.push: @next if !%seen-partials{~@next}++;
+                }
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>Note:</p>
+
+<ul>
+<li>For the challenge input *(solution space = 1,127,153,664)* it needs only 4296 iterations, at the cost of several hash lookups per iteration.</li>
+</ul>
+
+<p>Perl 5 的解决方案。</p>
+
+<pre><code class="language-perl">#可以求解三元以上的，只是个思路，可以推广。
+
+use strict;
+use warnings;
+#计算二元方程组
+#2x+3y=21
+
+my @number;
+
+while(&lt;DATA&gt;) {
+    chomp;
+    my ($name, $number) = split;
+    push @number,$number;
+}
+
+print &quot;@number\n&quot;;
+ $_=&quot;1&quot; x 500;
+my %seen;
+my $num = 31;
+my $count = 0;
+
+
+
+$_=~m{
+  (.*)\1{$num}
+  (.*)\2{40}
+  (.*)\3{96}
+  (.*)\4{253}
+  (.*)\5{398}
+
+  (?{
+  my $a=split //,$1;
+  my $b=split //,$2;
+  my $x=split //,$3;
+  my $y=split //,$4;
+  my $d=split //,$5;
+  $seen{&quot;x=$a,y=$b,a=$x,b=$y,d=$d&quot;}=1 if ($1 x $number[0]) . ($2 x $number[1]) . ($3 x $number[2]) . ($4 x $number[3]) . ($5 x $number[4]) eq $_ ;
+  })
+  (?!)}x;
+
+foreach my $result (sort keys %seen) {
+  print &quot;$result\n&quot;;
+}
+
+__DATA__
+banana 32
+kiwi 41
+mango 97
+papaya 254
+pineapple 399
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/map/">map</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/gather/">gather</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/when/">when</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-04-07-%E6%AD%A3%E5%88%99%E6%9B%BF%E6%8D%A2/" data-toggle="tooltip" data-placement="top" title="正则替换">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-04-12-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的签名">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

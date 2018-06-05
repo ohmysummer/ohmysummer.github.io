@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 CookBook</title>
+  <meta property="og:title" content="Perl 6 CookBook" />
+  <meta name="twitter:title" content="Perl 6 CookBook" />
+  <meta name="description" content="inspired by Python cookbook">
+  <meta property="og:description" content="inspired by Python cookbook">
+  <meta name="twitter:description" content="inspired by Python cookbook">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-05-08-perl6cookbook/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-05-08-perl6cookbook/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 CookBook</h1>
+                
+                  
+                    <h2 class="post-subheading">inspired by Python cookbook</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2018/08/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>Perl 6 CookBook(inspired by Python cookbook)</p>
+
+<h1 id="数据结构和算法">数据结构和算法</h1>
+
+<h2 id="解压序列赋值给多个变量">解压序列赋值给多个变量</h2>
+
+<h3 id="问题">问题</h3>
+
+<p>现在有一个包含 N 个元素的元组或者是序列，怎样将它里面的值解压后同时赋值 给 N 个变量？</p>
+
+<h3 id="解决方案">解决方案</h3>
+
+<p>任何的序列 (或者是可迭代对象) 可以通过一个简单的赋值语句解压并赋值给多个 变量。唯一的前提就是变量的数量必须跟序列元素的数量是一样的。</p>
+
+<p>代码示例：</p>
+
+<pre><code class="language-perl6">&gt; my @p = (4,5);
+[4 5]
+&gt; my ($x, $y) = @p;
+(4 5)
+&gt; $x
+4
+&gt; $y
+5
+&gt; my @data = ('ACME', 50, 91.1, (2012, 12, 21) );
+[ACME 50 91.1 (2012 12 21)]
+&gt; my ($name, $shares, $price, ($year, $mon, $day)) = ('ACME', 50, 91.1, |(2012, 12, 21) );
+(ACME 50 91.1 2012 12 21)
+&gt; $name
+ACME
+&gt; $mon
+12
+&gt; $day
+21
+
+# 或者使用签名字面值和绑定(REPL 模式下报错, 需要在脚本中运行！)
+&gt; my ($name, $shares, $price, $year, $mon, $day); # a signature literal
+&gt; :($name, $shares, $price, ($year, $mon, $day)) := ('ACME', 50, 91.1, (2012, 12, 21) ); # binding operation
+</code></pre>
+
+<p>如果变量个数和序列元素的个数不匹配，会有变量的值为 <code>Any</code>。</p>
+
+<p>代码示例：</p>
+
+<pre><code class="language-perl6">&gt; my ($x,$y,$z) = @p;
+(4 5 (Any))
+</code></pre>
+
+<p>字符串如果 unpack 则需要先 <code>comb</code>：</p>
+
+<pre><code>my $s = 'Hello';
+my ($a, $b, $c, $d, $e) =$s.comb;
+&gt; $a
+H
+&gt; $b
+e
+&gt; $e
+o
+</code></pre>
+
+<p>有时候，你可能只想解压一部分，丢弃其他的值。对于这种情况 Perl 6 并没有提 供特殊的语法。但是你可以使用任意变量名去占位，到时候丢掉这些变量就行了。</p>
+
+<p>代码示例：</p>
+
+<pre><code class="language-perl6">my @data = ('ACME', 50, 91.1, |(2012, 12, 21));
+my ($, $shares, $price, $) = @data;
+&gt; $shares
+50
+&gt; $price
+91.1
+</code></pre>
+
+<h2 id="解压可迭代对象赋值给多个变量">解压可迭代对象赋值给多个变量</h2>
+
+<p>如果一个可迭代对象的元素个数超过变量个数时，会抛出一个 Error。那么 怎样才能从这个可迭代对象中解压出 N 个元素出来？</p>
+
+<h3 id="解决方案-1">解决方案</h3>
+
+<p>Perl 6 使用星号来解决这个问题。比如，你在学习一门课程，在学期 末的时候，你想统计下家庭作业的平均成绩，但是排除掉第一个和最后一个分数。如 果只有四个分数，你可能就直接去简单的手动赋值，但如果有 24 个呢？这时候星号表 达式就派上用场了：</p>
+
+<pre><code class="language-perl6">sub drop_first_last(@grades) {
+    my ($first, *middle, $last) = @grades;
+    return avg(@middle);
+}
+</code></pre>
+
+<p>另外一种情况， 假设你现在有一些用户的记录列表， 每条记录包含一个名字、邮 件，接着就是不确定数量的电话号码。你可以像下面这样分解这些记录：</p>
+
+<pre><code class="language-perl6">&gt; my @record = ('Dave', 'dave@example.com', '773-555-1212', '847-555-1212')
+[Dave dave@example.com 773-555-1212 847-555-1212]
+&gt; my ($name, $email, @phone_numbers ) = @record
+(Dave dave@example.com [773-555-1212 847-555-1212])
+&gt; say @phone_numbers
+[773-555-1212 847-555-1212]
+</code></pre>
+
+<h2 id="保留最后-n-个元素">保留最后 N 个元素</h2>
+
+<h3 id="问题-1">问题</h3>
+
+<p>实现 python 中的 deque</p>
+
+<h2 id="查找最大或最小的-n-个元素">查找最大或最小的 N 个元素</h2>
+
+<h3 id="问题-2">问题</h3>
+
+<p>怎样从一个集合中获得最大或者最小的 N 个元素列表？</p>
+
+<h3 id="解决方案-2">解决方案</h3>
+
+<pre><code class="language-perl6">my @nums = [1, 8, 2, 23, 7, -4, 18, 23, 42, 37, 2];
+say @nums.sort.head(3); # 最小的前三个元素
+say @nums.sort.tail(3); # 最大的前三个元素
+</code></pre>
+
+<p>sort 还可以对更复杂的数据结构进行排序：</p>
+
+<pre><code class="language-perl6">my @portfolio = [ 
+    {'name'=&gt; 'IBM', 'shares'=&gt; 100, 'price'=&gt; 91.1}, 
+    {'name'=&gt; 'AAPL', 'shares'=&gt; 50, 'price'=&gt; 543.22}, 
+    {'name'=&gt; 'FB', 'shares'=&gt; 200, 'price'=&gt; 21.09}, 
+    {'name'=&gt; 'HPQ', 'shares'=&gt; 35, 'price'=&gt; 31.75}, 
+    {'name'=&gt; 'YHOO', 'shares'=&gt; 45, 'price'=&gt; 16.35}, 
+    {'name'=&gt; 'ACME', 'shares'=&gt; 75, 'price'=&gt; 115.65} 
+];
+
+say @portfolio.sort(*.{'price'}).head(3);
+say @portfolio.sort(-*.{'price'}).head(3);
+
+# ({name =&gt; YHOO, price =&gt; 16.35, shares =&gt; 45} {name =&gt; FB, price =&gt; 21.09, shares =&gt; 200} {name =&gt; HPQ, price =&gt; 31.75, shares =&gt; 35})
+# ({name =&gt; AAPL, price =&gt; 543.22, shares =&gt; 50} {name =&gt; ACME, price =&gt; 115.65, shares =&gt; 75} {name =&gt; IBM, price =&gt; 91.1, shares =&gt; 100})
+</code></pre>
+
+<h2 id="序列中出现次数最多的元素">序列中出现次数最多的元素</h2>
+
+<h3 id="问题-3">问题</h3>
+
+<p>怎样找出一个序列中出现次数最多的元素呢？</p>
+
+<h3 id="解决方案-3">解决方案</h3>
+
+<p>使用 Bag:</p>
+
+<pre><code class="language-perl6">my @words = [ 
+    'look', 'into', 'my', 'eyes', 'look', 'into', 'my', 'eyes', 
+    'the', 'eyes', 'the', 'eyes', 'the', 'eyes', 'not', 'around', 'the', 
+    'eyes', &quot;don't&quot;, 'look', 'around', 'the', 'eyes', 'look', 'into', 
+    'my', 'eyes', &quot;you're&quot;, 'under' 
+];
+
+say @words.Bag.sort(-*.value).head(3);
+</code></pre>
+
+<p>Bag 还可以进行集合操作：</p>
+
+<pre><code class="language-perl6">my @more_words = [ 
+    'look', 'into', 'my', 'eyes', 
+    'the', 'eyes', 'not', 'around', 'the', 
+    'eyes', &quot;don't&quot;, 'look', 'around', 'the', 'eyes', 'look', 'into', 
+    'my', 'eyes', &quot;you're&quot;, 'under' 
+];
+
+say @words.Bag ⊎  @more_words.Bag;
+# Bag(around(4), don't(2), eyes(13), into(5), look(7), my(5), not(2), the(8), under(2), you're(2))
+
+say @words.Bag (-)  @more_words.Bag;
+# Bag(eyes(3), into, look, my, the(2))
+</code></pre>
+
+<h2 id="通过某个关键字排序一个字典列表">通过某个关键字排序一个字典列表</h2>
+
+<h3 id="问题-4">问题</h3>
+
+<p>你有一个字典列表，你想根据某个或某几个字典字段来排序这个列表。</p>
+
+<h3 id="解决方案-4">解决方案</h3>
+
+<pre><code class="language-perl6">my @rows = [ 
+    {'fname' =&gt; 'Brian', 'lname' =&gt; 'Jones',   'uid' =&gt; 1003}, 
+    {'fname' =&gt; 'David', 'lname' =&gt; 'Beazley', 'uid' =&gt; 1002}, 
+    {'fname' =&gt; 'John',  'lname' =&gt; 'Cleese',  'uid' =&gt; 1001}, 
+    {'fname' =&gt; 'Big',   'lname' =&gt; 'Jones',   'uid' =&gt; 1004} 
+];
+
+# sort by fname
+
+.say for @rows.sort(*.{'fname'});
+
+# sort by uid
+.say for @rows.sort: *.{'uid'};
+</code></pre>
+
+<p>代码的输出如下:</p>
+
+<pre><code>{fname =&gt; Big, lname =&gt; Jones, uid =&gt; 1004}
+{fname =&gt; Brian, lname =&gt; Jones, uid =&gt; 1003}
+{fname =&gt; David, lname =&gt; Beazley, uid =&gt; 1002}
+{fname =&gt; John, lname =&gt; Cleese, uid =&gt; 1001}
+{fname =&gt; John, lname =&gt; Cleese, uid =&gt; 1001}
+{fname =&gt; David, lname =&gt; Beazley, uid =&gt; 1002}
+{fname =&gt; Brian, lname =&gt; Jones, uid =&gt; 1003}
+{fname =&gt; Big, lname =&gt; Jones, uid =&gt; 1004}
+</code></pre>
+
+<h2 id="通过某个字段将记录分组">通过某个字段将记录分组</h2>
+
+<h3 id="问题-5">问题</h3>
+
+<p>你有一个字典或者实例的序列，然后你想根据某个特定的字段比如 date 来分组迭代访问。</p>
+
+<h3 id="解决方案-5">解决方案</h3>
+
+<pre><code class="language-perl6">my @rows = [
+{'address' =&gt; '5412 N CLARK', 'date' =&gt; '07/01/2012'}, 
+{'address' =&gt; '5148 N CLARK', 'date' =&gt; '07/04/2012'}, 
+{'address' =&gt; '5800 E 58TH', 'date' =&gt; '07/02/2012'}, 
+{'address' =&gt; '2122 N CLARK', 'date' =&gt; '07/03/2012'}, 
+{'address' =&gt; '5645 N RAVENSWOOD', 'date' =&gt; '07/02/2012'}, 
+{'address' =&gt; '1060 W ADDISON', 'date' =&gt; '07/02/2012'}, 
+{'address' =&gt; '4801 N BROADWAY', 'date' =&gt; '07/01/2012'},
+{'address' =&gt; '1039 W GRANVILLE', 'date' =&gt; '07/04/2012'}
+];
+
+.say for @rows.classify: *.{'date'};
+</code></pre>
+
+<h2 id="过滤序列元素">过滤序列元素</h2>
+
+<h3 id="问题-6">问题</h3>
+
+<p>你有一个数据序列，想利用一些规则从中提取出需要的值或者是缩短序列</p>
+
+<h3 id="解决方案-6">解决方案</h3>
+
+<h2 id="字符串对齐">字符串对齐</h2>
+
+<h3 id="问题-7">问题</h3>
+
+<p>你想通过某种对齐方式来格式化字符串</p>
+
+<pre><code class="language-perl6">my $text = 'Hello World'
+Hello World
+&gt; $text.indent(4)
+    Hello World
+&gt; &quot;  indented by 2 spaces\n    indented even more&quot;.indent(*)
+indented by 2 spaces
+  indented even more
+</code></pre>
+
+<h2 id="合并拼接字符串">合并拼接字符串</h2>
+
+<h3 id="问题-8">问题</h3>
+
+<p>你想将几个小的字符串合并为一个大的字符串</p>
+
+<h3 id="解决方案-7">解决方案</h3>
+
+<pre><code class="language-perl6">my @parts = ['Is', 'Chicago', 'Not', 'Chicago?'];
+[Is Chicago Not Chicago?]
+&gt; @parts.join(' ');
+Is Chicago Not Chicago?
+</code></pre>
+
+<h2 id="基本的日期与时间转换">基本的日期与时间转换</h2>
+
+<pre><code class="language-perl6">&gt; my $today = Date.today
+2018-05-04
+
+# 10 天后
+&gt; $today.later(days =&gt; 10)
+2018-05-14
+
+# 两个月后
+&gt; $today.later(month =&gt; 2)
+2018-07-04
+
+# 一天后
+&gt; $today + 1
+2018-05-05
+
+# 两个日期之间相差的天数
+&gt; my $d = Date.new(2018,5,12)
+&gt; $d - $today
+8
+</code></pre>
+
+<h2 id="计算上一个周五的日期">计算上一个周五的日期</h2>
+
+<h3 id="问题-9">问题</h3>
+
+<p>你需要查找星期中上个星期五的日期。</p>
+
+<h3 id="解决方案-8">解决方案</h3>
+
+<pre><code class="language-perl6"># error
+(Date.today.later(days =&gt; -7) ... Date.today).grep: *.day-of-week==5
+
+# error, last friday
+(Date.today.later(days =&gt; -8) ... Date.today).grep(*.day-of-week==5)[0]
+
+# error
+Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date.today.week[1] )
+
+# another way
+@ = Date.today -1, *.pred ... *.day-of-week == 5 andthen .tail
+
+# 但是上面的例子是错误的, 需要使用 Junction 来确定 endpoint
+(Date.today, *.earlier(:1day) ... all( *.day-of-week==5,  *.week[1]+1==Date.today.week[1] )).tail
+
+# or
+(Date.today-1, *.pred ... all( *.day-of-week==5,  *.week[1]+1==Date.today.week[1] )).tail
+
+# or
+(Date.today-1, *.pred ... -&gt; $d { $d.day-of-week==5 &amp;&amp; $d.week[1]+1==Date.today.week[1] }).tail 
+</code></pre>
+
+<p>同理, 可以计算出下个周五:</p>
+
+<pre><code class="language-perl6">(Date.today, *.later(:1day) ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
+
+# or
+(Date.today+1, *.succ ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
+</code></pre>
+
+<h2 id="反转散列">反转散列</h2>
+
+<pre><code class="language-perl6">my @weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+@weekdays.kv.reverse.hash.{'Thursday'} # 3
+
+# antipairs 翻转键值对儿
+@weekdays.antipairs.hash.{'Sunday'}
+
+# 使用 :k 副词
+@weekdays.first('Thursday', :k) # 3
+</code></pre>
+
+<h2 id="格式化日期">格式化日期</h2>
+
+<pre><code class="language-perl6">Date.new('2018-05-04', formatter =&gt; sub ($self) {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day given $self})
+2018/05/04
+
+&gt; Date.new('2018-05-04', formatter =&gt; {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day })
+2018/05/04
+</code></pre>
+
+<h2 id="如何避免语法重复和样板">如何避免语法重复和样板</h2>
+
+<pre><code class="language-perl6">%tweets&lt;statuses&gt;[0]&lt;metadata&gt;&lt;iso_language_code&gt;.say;
+%tweets&lt;statuses&gt;[0]&lt;created_at&gt;.say;
+</code></pre>
+
+<p>可以被写为：</p>
+
+<pre><code class="language-perl6">given %tweets&lt;statuses&gt;[0] {
+    .&lt;metadata&gt;&lt;iso_language_code&gt;.say;
+    .&lt;created_at&gt;.say;
+}
+</code></pre>
+
+<p>这使用了主题变量 <code>$_</code>。简而言之，对于简短的循环也可以使用主题变量，如下所示：</p>
+
+<pre><code class="language-perl6">for @(%tweets&lt;statuses&gt;) {
+    .&lt;created_at&gt;.say;
+}
+</code></pre>
+
+<h2 id="解构">解构</h2>
+
+<pre><code class="language-perl6">subset Seconds of Numeric;
+my regex number { \d+ [ '.' \d+ ]? } # float 
+my regex suffix { &lt;:alpha&gt; } # 只匹配字母
+
+my %unit-multipliers = 'd' =&gt; 60*60*24, 'h' =&gt; 60*60, 'm' =&gt; 60, 's' =&gt; 1; # 每天, 每小时, 每分钟, 每秒所对应的秒数
+
+# @timicles =&gt; [0.5m 10s]
+sub MAIN(*@timicles where .all ~~ /&lt;number&gt; &lt;[dhms]&gt;/) {
+    my Seconds $to-wait = @timicles»\
+        .match(/&lt;number&gt; &lt;suffix&gt;+/)».hash\ # the +-quatifier is a workaround
+        .map(-&gt; % ( Rat(Any) :$number, Str(Any) :$suffix ) { %unit-multipliers{$suffix} * $number })\
+        .sum;
+    say $to-wait ~ &quot;s&quot;;
+}
+
+# Usage： perl6 program_file.pl6 1d 2h 3m 5s
+</code></pre>
+
+<p>map 里面使用了 Pointy-block <code>-&gt; {}</code>,</p>
+
+<pre><code>-&gt; % (:$number, :suffix) { }
+</code></pre>
+
+<p><code>%</code> 是一个匿名散列。</p>
+
+<h2 id="在正则表达式中使用数组">在正则表达式中使用数组</h2>
+
+<pre><code class="language-perl6">subset Seconds of Numeric;
+
+# Junction 作为散列的键, 可以让多个键对应同一个值, Also, any @keys =&gt; value is possible
+my %unit-multipliers = 'd'|'day' =&gt; 60*60*24, 'h'|'hour' =&gt; 60*60, 'm'|'min' =&gt; 60, 's'|'sec' =&gt; 1; 
+my @units = %unit-multipliers.keys;
+
+my regex number { \d+ [ '.' \d+ ]? }
+my regex suffix { @units }
+
+# @timicles =&gt; [0.5m 10s 0.5min, 10sec 1day 1d]
+sub MAIN(*@timicles where .all ~~ /&lt;number&gt; @units $/) {
+    my Seconds $to-wait = @timicles»\
+        .match(/&lt;number&gt; &lt;suffix&gt; $/)».hash\s
+        .map(-&gt; % ( :$number, :$suffix ) { %unit-multipliers{$suffix} * $number })\
+        .sum;
+    say $to-wait ~ &quot;s&quot;;
+}
+</code></pre>
+
+<h2 id="多个字符在字符串中的索引">多个字符在字符串中的索引</h2>
+
+<p>有一个字符串 banana, 要查看字符 a 和 字符 b 在 banana 中的索引：</p>
+
+<pre><code class="language-perl6">&gt; &quot;banana&quot;.comb.grep: 'a' | 'b',:k
+(0 1 3 5)
+
+# or
+
+gather for 'banana'.comb.antipairs  {.value.take if .key ∈ ['a','b'] } 
+
+# or
+gather 'banana'.comb.antipairs».&amp;{.value.take if .key ∈ ['a','b'] } 
+
+# or
+&gt; 'banana'.comb.antipairs&gt;&gt;.&amp;{.{.key (&amp;) ['a','b']}}
+(0 1 Nil 3 Nil 5)
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/cookbook/">cookbook</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-05-06-dateish/" data-toggle="tooltip" data-placement="top" title="Dateish">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-05-10-%E9%A5%AD%E5%90%A6%E5%AE%A2%E6%88%B7%E7%AB%AF/" data-toggle="tooltip" data-placement="top" title="饭否客户端">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

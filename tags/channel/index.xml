@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Channel on Young For Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/channel/</link>
+    <description>Recent content in Channel on Young For Perl 6</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 26 Oct 2016 16:41:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://ohmysummer.github.io/tags/channel/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>第 10000 个素数</title>
+      <link>https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/</link>
+      <pubDate>Wed, 26 Oct 2016 16:41:13 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/</guid>
+      <description>到目前为止(2016.10.26), Perl 6 的速度相比 Perl 5/Python 的差距还是很大的。以打印从 1 开始计数的第 10000 个素数为例, 使用如下版本的 Rakudo:
+ This is Rakudo version 2016.07.1 built on MoarVM version 2016.07 implementing Perl 6.c.
+ 从程序执行耗费的时间来看, Perl 6 实在慢的如蜗牛。
+并发打印第10000个素数 sub find-prime($count) { my $channel = Channel.new; my $promise = start { for ^$count { $channel.send($_) if .is-prime; } LEAVE $channel.close unless $channel.closed; } return $channel.list but role :: { method channel { $channel } };; } my @primes = find-prime(110000); #for @primes { # @primes.</description>
+    </item>
+    
+    <item>
+      <title>我在查找文件时所学到的</title>
+      <link>https://ohmysummer.github.io/post/2016-10-20-%E6%88%91%E5%9C%A8%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6%E6%97%B6%E6%89%80%E5%AD%A6%E5%88%B0%E7%9A%84/</link>
+      <pubDate>Thu, 20 Oct 2016 14:19:52 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-20-%E6%88%91%E5%9C%A8%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6%E6%97%B6%E6%89%80%E5%AD%A6%E5%88%B0%E7%9A%84/</guid>
+      <description>Things I found out while finding
+Concurrent::File::Find 现在已经在生态系统中了。我在这里分享几点我学到的东西。
+在子签名(sub-signature)上使用 where 从句将不会在子签名中提供变量。 如果 where 从句必须对所有参数进行操作，为了检查排他性或其他相互依赖性，那么它必须应用于最后一个参数上。 这个限制设计时就是这样的，所以我告诉了文档。 where 从句对捕获没有效果，但原意不是那样设计的并且第二天 jnthn 就修复了它。 我知道抱怨会得到你的关注，但我没想到它是这么快。
+我还发现一个叫 .close 的方法, 它几乎总是需要一个 LEAVE。 让我们看一些代码。
+sub find-simple ( IO(Str) $dir, :$keep-going = True, :$no-thread = False ) is export { my $channel = Channel.new; my &amp;amp;start = -&amp;gt; ( &amp;amp;c ) { c } if $no-thread; my $promise = start { for dir($dir) { CATCH { default { if $keep-going { note .</description>
+    </item>
+    
+    <item>
+      <title>Perl 6 中的并发</title>
+      <link>https://ohmysummer.github.io/post/2016-10-03-perl6%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/</link>
+      <pubDate>Mon, 03 Oct 2016 20:43:15 +0000</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2016-10-03-perl6%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/</guid>
+      <description>Concurrency
+与大多数现代编程语言一样，Perl 6 被设计为支持并发（允许多个事件同时发生）和异步编程（有时称为事件驱动或反应式编程 - 即程序某些部分的事件或变化可能会导致程序流异步地改变程序的其它部分）。
+Perl 的并发设计的目的是提供一个高层级的，可组合的，一致的接口，而不管如下所述的虚拟机通过工具层怎样为特定操作的系统来实现它。
+此外，某些 Perl 的特性可以隐式地以异步的方式操作，所以为了确保这些特性可预测的互通，用户代码应在可能情况下，避免较低层级的并发的 API（即线程和调度器），并使用高层级接口。
+High-level APIs Promises Promise（在其他编程环境中也被称为 *future*）封装了在获得 promise 时可能尚未完成或甚至未开始的计算结果。Promise 从 Planned 状态开始, 要么导致一个 Kept 状态, 这意味着该 promise 已成功完成, 要么导致一个 Broken 状态, 意味着该 promise 已失败。 通常这就是用户代码需要以并行或异步方式操作的使用最多的功能。Planned, 计划; Kept, 保持, Broken, 中断。
+my $p1 = Promise.new; say $p1.status; # Planned $p1.keep(&#39;result&#39;); say $p1.status; # Kept say $p1.result; # result # (since it has been kept, a result is available!) my $p2 = Promise.</description>
+    </item>
+    
+  </channel>
+</rss>

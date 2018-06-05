@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的变量</title>
+  <meta property="og:title" content="Perl 6 中的变量" />
+  <meta name="twitter:title" content="Perl 6 中的变量" />
+  <meta name="description" content="变量名以一个叫做魔符 sigil 的特殊字符开头, 后面跟着一个可选的第二个叫做 twigil 的特殊字符, 然后是一个标识符.
+Sigils    符号 类型约束 默认类型 Flattens Assignment     $ Mu (no type constraint) Any No item   &amp; Callable Callable No item   @ Positional Array Yes list   % Associative Hash Yes list    例子:
+my $square = 9 ** 2; my @array = 1, 2, 3; # Array variable with three elements my %hash = London =&gt; &#39;UK&#39;, Berlin =&gt; &#39;Germany&#39;;  默认类型可以使用 is 关键字设置。">
+  <meta property="og:description" content="变量名以一个叫做魔符 sigil 的特殊字符开头, 后面跟着一个可选的第二个叫做 twigil 的特殊字符, 然后是一个标识符.
+Sigils    符号 类型约束 默认类型 Flattens Assignment     $ Mu (no type constraint) Any No item   &amp; Callable Callable No item   @ Positional Array Yes list   % Associative Hash Yes list    例子:
+my $square = 9 ** 2; my @array = 1, 2, 3; # Array variable with three elements my %hash = London =&gt; &#39;UK&#39;, Berlin =&gt; &#39;Germany&#39;;  默认类型可以使用 is 关键字设置。">
+  <meta name="twitter:description" content="变量名以一个叫做魔符 sigil 的特殊字符开头, 后面跟着一个可选的第二个叫做 twigil 的特殊字符, 然后是一个标识符.
+Sigils    符号 类型约束 默认类型 Flattens Assignment     $ Mu (no type constraint) Any No item   &amp; Callable Callable No item   @ Positional …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-08-25-perl6%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-08-25-perl6%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 中的变量</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2015/25/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>变量名以一个叫做魔符 sigil 的特殊字符开头, 后面跟着一个可选的第二个叫做 <code>twigil</code> 的特殊字符, 然后是一个标识符.</p>
+
+<h2 id="sigils">Sigils</h2>
+
+<table>
+<thead>
+<tr>
+<th align="center">符号</th>
+<th align="left">类型约束</th>
+<th align="center">默认类型</th>
+<th align="center">Flattens</th>
+<th align="center">Assignment</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">$</td>
+<td align="left">Mu (no type constraint)</td>
+<td align="center">Any</td>
+<td align="center">No</td>
+<td align="center">item</td>
+</tr>
+
+<tr>
+<td align="center">&amp;</td>
+<td align="left">Callable</td>
+<td align="center">Callable</td>
+<td align="center">No</td>
+<td align="center">item</td>
+</tr>
+
+<tr>
+<td align="center">@</td>
+<td align="left">Positional</td>
+<td align="center">Array</td>
+<td align="center">Yes</td>
+<td align="center">list</td>
+</tr>
+
+<tr>
+<td align="center">%</td>
+<td align="left">Associative</td>
+<td align="center">Hash</td>
+<td align="center">Yes</td>
+<td align="center">list</td>
+</tr>
+</tbody>
+</table>
+
+<p>例子:</p>
+
+<pre><code class="language-perl6">my $square = 9 ** 2;
+my @array  = 1, 2, 3;   # Array variable with three elements
+my %hash   = London =&gt; 'UK', Berlin =&gt; 'Germany';
+</code></pre>
+
+<p>默认类型可以使用 <code>is</code> 关键字设置。</p>
+
+<pre><code class="language-perl6">class FailHash is Hash {
+    has Bool $!final = False;
+    multi method AT-KEY ( ::?CLASS:D: Str:D \key ){
+        fail X::OutOfRange.new(:what(&quot;Hash key&quot;), :got(key), :range(self.keys)) if $!final &amp;&amp; !self.EXISTS-KEY(key);
+        callsame
+    }
+
+    method finalize() {
+        $!final = True
+    }
+}
+
+my %h is FailHash = oranges =&gt; &quot;round&quot;, bananas =&gt; &quot;bendy&quot;;
+say %h&lt;oranges&gt;;
+# OUTPUT «round␤»
+%h.finalize;
+say %h&lt;cherry&gt;;
+CATCH { default { put .^name, ': ', .Str } }
+# OUTPUT «X::OutOfRange: Hash key out of range. Is: cherry, should be in (oranges bananas)»
+</code></pre>
+
+<p>不带符号的变量也是可行的, 查看 <a href="http://doc.perl6.org/language/variables#Sigilless_variables">无符号变量</a>.</p>
+
+<h2 id="项和列表赋值">项和列表赋值</h2>
+
+<p>有两种类型的赋值, item 赋值和 list 赋值. 两者都使用 = 号操作符. 根据 = 号左边的语法来区别 = 是 item 赋值还是 list 赋值.</p>
+
+<p>Item 赋值把等号右侧的值放到左侧的变量(容器)中.</p>
+
+<p>例如, <a href="https://docs.perl6.org/type/Array">数组</a>变量(@符号)在列表赋值时清空数组自身, 然后把等号右侧的值都放进数组自身中. 跟 Item 赋值相比, 这意味着等号左侧的变量类型始终是 Array, 不管右侧是什么类型.</p>
+
+<p>赋值类型(item 或 list)取决于当前表达式或声明符看到的第一个上下文:</p>
+
+<pre><code class="language-perl6">my $foo = 5;            # item assignment
+say $foo.perl;          # 5
+
+my @bar = 7, 9;         # list assignment
+say @bar.WHAT;          # Array
+say @bar.perl;          # [7, 9]
+
+(my $baz) = 11, 13;     # list assignment
+say $baz.WHAT;          # Parcel
+say $baz.perl;          # (11, 13)
+</code></pre>
+
+<p>因此, 包含在列表赋值中的赋值行为依赖于表达式或包含表达式的声明符。
+例如, 如果内部赋值是一个声明符(例如 my), 就使用 item 赋值, 它比逗号和列表赋值的优先级更高:</p>
+
+<pre><code class="language-perl6">my @array;
+@array = my $num = 42, &quot;str&quot;;   # item assignment: uses declarator
+say @array.perl;                # [42, &quot;str&quot;] (an Array)
+say $num.perl;                  # 42 (a Num)
+</code></pre>
+
+<p>类似地, 如果内部赋值是一个用于声明符初始化的表达式, 则内部表达式的上下文决定赋值的类型:</p>
+
+<pre><code class="language-perl6">my $num;
+my @array = $num = 42, &quot;str&quot;;    # item assignment: uses expression
+say @array.perl;                 # [42, &quot;str&quot;] (an Array)
+say $num.perl;                   # 42 (a Num)
+
+my ( @foo, $bar );
+@foo = ($bar) = 42, &quot;str&quot;;       # list assignment: uses parens
+say @foo.perl;                   # [42, &quot;str&quot;] (an Array)
+say $bar.perl;                   # $(42, &quot;str&quot;)  (a Parcel)
+</code></pre>
+
+<p>然而, 如果内部赋值既不是声明符又不是表达式, 而是更大的表达式的一部分, 更大的表达式的上下文决定赋值的类型:</p>
+
+<pre><code class="language-perl6">my ( @array, $num );
+@array = $num = 42, &quot;str&quot;;    # list assignment
+say @array.perl;              # [42, &quot;str&quot;] (an Array)
+say $num.perl;                # [42, &quot;str&quot;] (an Array)
+</code></pre>
+
+<p>这是因为整个表达式是 <code>@array = $num = 42, &quot;str&quot;</code>, 而 <code>$num = 42</code> 不是单独的表达式.</p>
+
+<p>查看<a href="https://docs.perl6.org/language/operators">操作符</a>获取关于优先级的更多详情。</p>
+
+<h2 id="无符号变量">无符号变量</h2>
+
+<p>在 Perl 6 中创建不带符号的变量也是可能的:</p>
+
+<pre><code class="language-perl6">my \degrees = pi / 180;
+my \θ       = 15 * degrees;
+</code></pre>
+
+<p>然而, 这些无符号变量并不创建<a href="https://docs.perl6.org/language/containers">容器</a>. 那意味着上面的 <code>degrees</code> 和 <code>θ</code> 实际上直接代表 <code>Nums</code>. 为了说明, 我们定义一个无符号变量后再赋值:</p>
+
+<pre><code class="language-perl6">θ = 3; # Dies with the error &quot;Cannot modify an immutable Num&quot;
+</code></pre>
+
+<p>无符号变量不强制上下文, 所以它们可被用于原样地传递某些东西:</p>
+
+<pre><code class="language-perl6">sub logged(&amp;f, |args) {
+    say('Calling ' ~ &amp;f.name ~ ' with arguments ' ~ args.perl);
+    my \result = f(|args);
+    #  ^^^^^^^ not enforcing any context here
+    say(&amp;f.name ~ ' returned ' ~ result.perl);
+    return |result;
+}
+</code></pre>
+
+<h2 id="twigils">Twigils</h2>
+
+<p><code>Twigils</code> 影响变量的<code>作用域</code>。请记住 twigils 对基本的魔符插值没有影响，那就是，如果  <code>$a</code> 内插， <code>$^a</code>, <code>$*a</code>, <code>$=a</code>, <code>$?a</code>, <code>$.a</code>, 等等也会内插. 它仅仅取决于 <code>$</code>.</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Twigil</th>
+<th align="left">Scope</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">*</td>
+<td align="left">动态的</td>
+</tr>
+
+<tr>
+<td align="center">!</td>
+<td align="left">属性(类成员)</td>
+</tr>
+
+<tr>
+<td align="center">?</td>
+<td align="left">编译时变量</td>
+</tr>
+
+<tr>
+<td align="center">.</td>
+<td align="left">方法(并非真正的变量)</td>
+</tr>
+
+<tr>
+<td align="center">&lt;</td>
+<td align="left">匹配对象索引(并非真正的变量)</td>
+</tr>
+
+<tr>
+<td align="center">^</td>
+<td align="left">自我声明的形式位置参数</td>
+</tr>
+
+<tr>
+<td align="center">:</td>
+<td align="left">自我声明的形式命名参数</td>
+</tr>
+
+<tr>
+<td align="center">=</td>
+<td align="left">Pod 变量</td>
+</tr>
+
+<tr>
+<td align="center">~</td>
+<td align="left">子语言</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="twigil">* Twigil</h2>
+
+<p>动态变量通过 caller 查找, 不是通过外部作用域。例如:</p>
+
+<pre><code class="language-perl6">    my $lexical   = 1;
+    my $*dynamic1 = 10;
+    my $*dynamic2 = 100;
+
+    sub say-all() {
+        say &quot;$lexical, $*dynamic1, $*dynamic2&quot;;
+    }
+
+    # prints 1, 10, 100
+    say-all();
+
+    {
+        my $lexical   = 2;
+        my $*dynamic1 = 11;
+        $*dynamic2    = 101; # 注意,这儿没有使用 my 来声明
+
+        # prints 1, 11, 101
+        say-all();
+    }
+
+    # prints 1, 10, 101
+    say-all();
+</code></pre>
+
+<p>第一次调用 <code>&amp;say-all</code> 时, 就像你期望的一样, 它打印 &ldquo;1, 10, 100&rdquo;。可是第二次它打印 &ldquo;1, 11, 101&rdquo;。 这是因为 <code>$lexical</code> 不是在调用者的作用域内被查找, 而是在 <code>&amp;say-all</code> 被定义的作用域里被查找的。这两个动态作用域变量在调用者的作用域内被查找, 所以值为 <code>11</code> 和 <code>101</code>。第三次调用 <code>&amp;say-all</code> 后,  <code>$*dynamic1</code> 不再是 11 了. 但是 <code>$*dynamic2</code> 仍然是 101。这源于我们在块中声明了一个新的动态变量 <code>$*dynamic1</code> 的事实并且没有像我们对待 <code>$*dynamic2</code> 那样把值赋值给旧的变量。</p>
+
+<p>动态变量与其他变量类型在引用一个未声明的动态变量上不同的是前者不是一个编译时错误，而是运行时 <a href="https://docs.perl6.org/type/Failure">failure</a>，这样一个动态变量可以在未定义时使用只要在把它用作任何其它东西的时候检查它是否定义过:</p>
+
+<pre><code class="language-perl6">sub foo() {
+    $*FOO // 'foo';
+}
+
+say foo; # -&gt; 'foo'
+
+my $*FOO = 'bar';
+
+say foo; # -&gt; 'bar'
+</code></pre>
+
+<h2 id="twigil-1">! Twigil</h2>
+
+<p>属性是变量, 存在于每个类的实例中. 通过 <code>!</code> 符号它们可以从类的里面直接被访问到:</p>
+
+<pre><code class="language-perl6">    class Point {
+        has $.x;
+        has $.y;
+
+        method Str() {
+            &quot;($!x, $!y)&quot;
+        }
+    }
+</code></pre>
+
+<p>注意属性是怎样被声明为 <code>$.x</code> 和 <code>$.y</code> 的, 但是仍然能够通过 <code>$!x</code> 和 <code>$!y</code> 访问到属性. 这是因为 在 Perl 6 中, 所有的属性都是<code>私有的</code>, 并且在类中能使用 <code>$!attribute-name</code> 直接访问这些属性. Perl 6 能自动为你生成访问方法. 关于对象、类和它们的属性和方法的详情, 请查看<a href="https://docs.perl6.org/language/objects">面向对象</a>.</p>
+
+<h2 id="twigil-2">? Twigil</h2>
+
+<p>编译时&rdquo;常量&rdquo;, 可通过 <code>?</code> twigil 访问. 编译器对它们很熟悉, 并且编译后不能被修改. 常用的一个例子如下:</p>
+
+<pre><code class="language-perl6">say &quot;$?FILE: $?LINE&quot;; # prints &quot;hello.pl: 23&quot; if this is the 23 line of a
+                      # file named &quot;hello.pl&quot;.
+</code></pre>
+
+<p>关于这些特殊变量的列表请查看<a href="https://docs.perl6.org/language/variables#Compile-time_variables">编译时变量</a>。</p>
+
+<p>尽管不能在运行时改变它们, 用户可以(重新)定义这种常量.</p>
+
+<pre><code class="language-perl6">constant $?TABSTOP = 4; # this causes leading tabs in a heredoc or in a POD
+                        # block's virtual margin to be counted as 4 spaces.
+</code></pre>
+
+<h2 id="twigil-3">. Twigil</h2>
+
+<p><code>.</code> twigil 真的不是用于变量的. 实际上, 看下面的代码:</p>
+
+<pre><code class="language-perl6">    class Point {
+        has $.x;
+        has $.y;
+
+        method Str() {
+            &quot;($.x, $.y)&quot; # 注意我们这次使用 . 而不是 !
+        }
+    }
+</code></pre>
+
+<p>对 <code>self</code>(自身)调用了方法 <code>x</code> 和方法 <code>y</code>, 这是自动为你生成的, 因为在你声明你的属性的时候, 你使用的是 <code>.</code> twigil 。 注意,  子类可能会覆盖那些方法. 如果你不想这个发生, 请使用 <code>$!x</code> 和 <code>$!y</code> 代替。</p>
+
+<p><code>.</code> twigil 只是调用了一个方法也表明下面是可能的</p>
+
+<pre><code class="language-perl6">    class SaySomething {
+        method a() { say &quot;a&quot;; }
+        method b() { $.a; }
+    }
+
+    SaySomething.b; # prints &quot;a&quot;
+</code></pre>
+
+<p>关于对象、类和它们的属性和方法的详情, 请查看<a href="https://docs.perl6.org/language/objects">面向对象</a>.</p>
+
+<h2 id="twigil-4">&lt; Twigil</h2>
+
+<p><code>&lt;</code> twigil 是 <code>$/&lt;...&gt;</code> 的别名, 其中,  <code>$/</code> 是匹配变量. 关于匹配变量的更多详情请查看 <a href="https://docs.perl6.org/language/variables#The_%24%2F_Variable">$/变量</a>和<a href="https://docs.perl6.org/type/Match">类型匹配</a></p>
+
+<h2 id="twigil-5">^ Twigil</h2>
+
+<p><code>^</code> twigil 为 block 块 或 子例程 声明了一个形式位置参数.  形如 <code>$^variable</code> 的变量是一种占位变量. 它们可用在裸代码块中来声明代码块的形式参数. 看下面代码中的块:</p>
+
+<pre><code class="language-perl6">for ^4 {
+    say &quot;$^seconds follows $^first&quot;;
+}
+</code></pre>
+
+<p>它打印出:</p>
+
+<pre><code class="language-perl6">1 follows 0
+3 follows 2
+</code></pre>
+
+<p>有两个形式参数，就是 <code>$first</code> 和 <code>$second</code>.  注意, 尽管 <code>$^second</code> 在代码中出现的比 <code>$^first</code> 早,  <code>$^first</code> 依然是代码块中的第一个形式参数. 这是因为占位符变量是以 Unicode 顺序排序的.</p>
+
+<p>子例程也能使用占位符变量, 但是只有在子例程没有显式的参数列表时才行. 这对普通的块也适用</p>
+
+<pre><code class="language-perl6">sub say-it    { say $^a; } # valid
+sub say-it()  { say $^a; } # invalid
+              { say $^a; } # valid
+-&gt; $x, $y, $x { say $^a; } # 非法, 已经有参数列表 $x,$y,$x 了
+</code></pre>
+
+<p>占位符变量语法上不能有类型限制. 也注意, 也不能使用单个大写字母的占位符变量, 如 <code>$^A</code></p>
+
+<h2 id="twigil-6">: Twigil</h2>
+
+<p><code>:</code> twigil 为块或子例程声明了一个形式<strong>命名参数</strong>。使用这种形式声明的变量也是占位符变量的一种类型。因此适用于使用 <code>^</code> twigil 声明的变量的东西在这儿也适用(除了它们不是位置的以外, 因此没有使用 Unicode 顺序排序)。所以这个:</p>
+
+<pre><code class="language-perl6">say { $:add ?? $^a + $^b !! $^a - $^b }( 4, 5 ) :!add
+# OUTPUT:
+# -1
+</code></pre>
+
+<p>查看 <sup class="footnote-ref" id="fnref:https-docs-perl6-org-routine-5E"><a href="#fn:https-docs-perl6-org-routine-5E">0</a></sup>获取关于占位符变量的更多细节。</p>
+
+<h2 id="twigil-7">= Twigil</h2>
+
+<p><code>=</code> twigil 用于访问 Pod 变量。当前文件中的每个 Pod 块都能通过一个 Pod 对象访问到, 例如 <code>$=data</code>, <code>$=SYNOPSIS</code> 或 <code>=UserBlock</code>, 即：一个和想要的块同名的变量加上一个 <code>=</code> twigil。</p>
+
+<pre><code class="language-perl6">=begin Foo
+...
+=end Foo
+
+#after that, $=Foo gives you all Foo-Pod-blocks
+</code></pre>
+
+<p>您可以通过 <code>$=pod</code>访问 Pod 树，它包含所有作为分级数据结构的Pod结构。</p>
+
+<p>请注意，所有这些 <code>$=someBlockName</code> 都支持位置和关联角色。</p>
+
+<h2 id="twigil-8">~ Twigil</h2>
+
+<p>注意: Slangs（俚语）在 Rakudo 中还没有被实现。 NYI = Not Yet Implemented.</p>
+
+<p><code>~</code> twigil 是指子语言（称为俚语）。下面是有用的：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">变量名</th>
+<th align="left">说 明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">$~MAIN</td>
+<td align="left">the current main language (e.g. Perl statements)</td>
+</tr>
+
+<tr>
+<td align="center">$~Quote</td>
+<td align="left">the current root of quoting language</td>
+</tr>
+
+<tr>
+<td align="center">$~Quasi</td>
+<td align="left">the current root of quasiquoting language</td>
+</tr>
+
+<tr>
+<td align="center">$~Regex</td>
+<td align="left">the current root of regex language</td>
+</tr>
+
+<tr>
+<td align="center">$~Trans</td>
+<td align="left">the current root of transliteration language</td>
+</tr>
+
+<tr>
+<td align="center">$~P5Regex</td>
+<td align="left">the current root of the Perl 5 regex language</td>
+</tr>
+</tbody>
+</table>
+
+<p>你在你当前的词法作用域中扩充这些语言。</p>
+
+<pre><code class="language-perl6">use MONKEY-TYPING;
+augment slang Regex {  # derive from $~Regex and then modify $~Regex
+    token backslash:std&lt;\Y&gt; { YY };
+}
+</code></pre>
+
+<h2 id="变量声明符和作用域">变量声明符和作用域</h2>
+
+<p>通常, 使用 <code>my</code> 关键字创建一个新的变量就足够了:</p>
+
+<pre><code class="language-perl6">my $amazing-variable = &quot;World&quot;;
+say &quot;Hello $amazing-variable!&quot;; # Hello World!
+</code></pre>
+
+<p>然而, 有很多声明符能在 <a href="https://docs.perl6.org/language/variables#Twigils">Twigils</a> 的能力之外改变作用域的细节。</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">声明符</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">my</td>
+<td align="left">作为词法作用域名字的开头</td>
+</tr>
+
+<tr>
+<td align="center">our</td>
+<td align="left">作为包作用域名字的开头</td>
+</tr>
+
+<tr>
+<td align="center">has</td>
+<td align="left">作为属性名的开头</td>
+</tr>
+
+<tr>
+<td align="center">anon</td>
+<td align="left">作为私有名字的开头</td>
+</tr>
+
+<tr>
+<td align="center">state</td>
+<td align="left">作为词法作用域但是持久名字的开头</td>
+</tr>
+
+<tr>
+<td align="center">augment</td>
+<td align="left">给已存在的名字添加定义</td>
+</tr>
+
+<tr>
+<td align="center">supersede</td>
+<td align="left">替换已存在名字的定义</td>
+</tr>
+</tbody>
+</table>
+
+<p>还有两个类似于声明符的前缀, 但是作用于预定义变量:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">前缀</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">temp</td>
+<td align="left">在作用域的最后恢复变量的值</td>
+</tr>
+
+<tr>
+<td align="center">let</td>
+<td align="left">如果 block 成功退出就恢复变量的值</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="my-声明符">my 声明符</h3>
+
+<p>使用 <code>my</code> 声明一个变量给变量一个词法作用域. 这意味着变量只在当前块中存在.例如:</p>
+
+<pre><code class="language-perl6">{
+    my $foo = &quot;bar&quot;;
+    say $foo; # -&gt; &quot;bar&quot;
+}
+say $foo; # !!! &quot;Variable '$foo' is not declared&quot;
+</code></pre>
+
+<p>它抛出异常,因为只要我们在同一个作用域内 <code>$foo</code> 才被定义. 此外, 词法作用域意味着变量能在新的作用域内被临时地重新定义:</p>
+
+<pre><code class="language-perl6">
+my $location = &quot;outside&quot;;
+
+sub outer-location {
+    # Not redefined:
+    say $location;
+}
+
+outer-location; # -&gt; &quot;outside&quot;
+
+sub in-building {
+    my $location = &quot;inside&quot;;
+    say $location;
+}
+
+in-building;    # -&gt; &quot;inside&quot;
+outer-location; # -&gt; &quot;outside&quot;
+</code></pre>
+
+<p>如果变量被重新定义了, 任何引用外部变量的代码会继续引用外部变量.
+所以, 在这儿, <code>&amp;outer-location</code> 仍然打印外部的 <code>$location</code>:</p>
+
+<pre><code class="language-perl6">sub new-location {
+    my $location = &quot;nowhere&quot;
+    outer-location;
+}
+
+new-location; # -&gt; &quot;outside&quot;
+</code></pre>
+
+<p>为了让 <code>new-location()</code> 能打印 <code>nowwhere</code>, 需要使用 <code>*</code> <a href="https://docs.perl6.org/language/variables#The_%2A_Twigil">twigil</a> 让 <code>$location</code> 变为动态变量.
+对于子例程来说, <code>my</code> 是默认作用域, 所以 <code>my sub x( ) { }</code> 和 <code>sub x( ) { }</code> 是一样的.</p>
+
+<h3 id="our-声明符">our 声明符</h3>
+
+<p>our 跟 <code>my</code> 的作用类似, 除了把别名引入到符号表之外:</p>
+
+<pre><code class="language-perl6">module M {
+    our $Var;
+    # $Var available here
+}
+
+# Available as $M::Var here.
+</code></pre>
+
+<h3 id="声明一组变量">声明一组变量</h3>
+
+<p>声明符 <code>my</code> 和 <code>our</code> 接收一组扩在圆括号中的变量作为参数来一次性声明多个变量。</p>
+
+<pre><code class="language-perl6">my (@a, $s, %h);
+</code></pre>
+
+<p>这可以和解构赋值结合使用。任何对这样一个列表的赋值会取得左侧列表中提供的元素数量并且从右侧列表中把对应的值赋值给它们。没有得到赋值的元素会根据变量的类型得到一个未定义值。</p>
+
+<pre><code class="language-perl6">my (Str $a, Str $b, Int $c) = &lt;a b&gt;;
+say [$a, $b, $c].perl;
+# OUTPUT«[&quot;a&quot;, &quot;b&quot;, Int]␤»
+</code></pre>
+
+<p>要把列表解构到一个单个的值中, 通过使用 <code>($var,)</code> 创建一个带有一个值的列表字面值。当使用了一个变量声明符时只在单个变量周围提供一个圆括号就足够了。</p>
+
+<pre><code class="language-perl6">sub f { 1,2,3 };
+my ($a) = f;
+say $a.perl;
+# OUTPUT«1␤»
+</code></pre>
+
+<p>要跳过列表中的元素, 使用匿名状态变量 <code>$</code>。</p>
+
+<pre><code class="language-perl6">my ($,$a,$,%h) = ('a', 'b', [1,2,3], {:1th});
+say [$a, %h].perl;
+# OUTPUT«[&quot;b&quot;, {:th(1)}]␤»
+</code></pre>
+
+<h3 id="has-声明符">has 声明符</h3>
+
+<p><code>has</code> 作用在类的实例或 role 的属性上, 还有类或 roles 的方法上. has 隐式作用于方法上, 所以 <code>has method x() {}</code> 和 <code>method x() {}</code> 做得是相同的事情。</p>
+
+<p>查看<a href="https://docs.perl6.org/language/objects">面向对象</a>获取更多文档和例子。</p>
+
+<pre><code class="language-perl6">has method x( ) { }
+</code></pre>
+
+<p>等价于:</p>
+
+<pre><code class="language-perl6">method x( ) { }
+</code></pre>
+
+<h3 id="anon-声明符">anon 声明符</h3>
+
+<p><code>anon</code> 声明符阻止符号本安装在词法作用域内, 还有方法表中, 和其它任何地方.
+例如, 你可以使用 <code>anon</code> 声明一个知道自己名字的子例程, 但是仍然不会被安装到作用域内:</p>
+
+<pre><code class="language-perl6">my %operations =
+    half   =&gt; anon sub half($x)   { $x / 2  },
+    square =&gt; anon sub square($x) { $x * $x },
+    ;
+say %operations&lt;square&gt;.name;       # square
+say %operations&lt;square&gt;(8);         # 64
+</code></pre>
+
+<h3 id="state-声明符">state 声明符</h3>
+
+<p><code>state</code> 声明词法作用域变量, 就像 my 那样。然而, <strong>初始化只发生一次</strong>, 就在正常执行流中第一次遇见初始化的时候。因此, state 变量会在闭合块或 程序的多次执行<strong>之间</strong>保留它们的值。</p>
+
+<p>因此, 下面这个子例程:</p>
+
+<pre><code class="language-perl6">sub a {
+    state @x;
+    state $l = 'A';
+    @x.push($l++);
+};
+
+say a for 1..6;
+</code></pre>
+
+<p>会持续增加 <code>$l</code> 并在每次被调用时把它追加到 @x 中, 所以它会打印出:</p>
+
+<pre><code>[A]
+[A B]
+[A B C]
+[A B C D]
+[A B C D E]
+[A B C D E F]
+</code></pre>
+
+<p>This works per &ldquo;clone&rdquo; of the containing code object, as in this example:</p>
+
+<pre><code class="language-perl6">({ state $i = 1; $i++.say; } xx 3).map: {$_(), $_()}; # says 1 then 2 thrice
+</code></pre>
+
+<p>注意，这不是一个线程安全的解构, 当同一个 block 的同一个克隆运行在多个线程中时。要知道方法只有每个类一个克隆，而不是每个对象。</p>
+
+<p>至于 <code>my</code>，声明多个状态变量必须放置在圆括号中, 而声明一个单一变量，圆括号可以省略。</p>
+
+<p>请注意，许多操作符都伴随着隐式绑定，什么会导致超距作用。使用 <code>.clone</code> 或强迫创建一个可以绑定的新容器。</p>
+
+<pre><code class="language-perl6">my @a;
+sub f() {
+    state $i;
+    $i++;
+    @a.push: &quot;k$i&quot; =&gt; $i # &lt;-- .clone goes here
+};
+f for 1..3;
+dd @a; # «Array $var = $[:k1(3), :k2(3), :k3(3)]»
+</code></pre>
+
+<p>所有的状态变量都是线程间共享的。这个结果可能是你不希望得到的或危险的。</p>
+
+<pre><code class="language-perl6">sub code(){ state $i = 0; say ++$i; $i };
+await
+    start { loop { last if code() &gt;= 5 } },
+    start { loop { last if code() &gt;= 5 } };
+
+# OUTPUT«1␤2␤3␤4␤4␤3␤5␤»
+# OUTPUT«2␤1␤3␤4␤5␤»
+# many other more or less odd variations can be produced
+</code></pre>
+
+<h3 id="变量">$ 变量</h3>
+
+<p>和显式地声明命名状态变量一样, <code>$</code> 能够用作不带显式状态声明的匿名状态变量。</p>
+
+<pre><code class="language-perl6">say &quot;1-a 2-b 3-c&quot;.subst(:g, /\d/, {&lt;one two three&gt;[$++]});
+# OUTPUT«one-a two-b three-c␤»
+</code></pre>
+
+<p>更进一步, 状态变量不需要存在于子例程中。你可以, 举个例子, 在单行程序中使用 <code>$</code> 在文件中编号行号。</p>
+
+<pre><code class="language-perl6">perl6 -ne 'say ++$ ~ &quot; $_&quot;' example.txt
+</code></pre>
+
+<p>实际上词法范围内每个对 <code>$</code> 的引用都是是一个<strong>单独的</strong>变量。</p>
+
+<pre><code class="language-perl6">perl6 -e '{ say ++$; say $++  } for ^5'
+# OUTPUT«1␤0␤2␤1␤3␤2␤4␤3␤5␤4␤»
+</code></pre>
+
+<p>如果在作用域内你需要多次引用 <code>$</code> 的值, 那么它应该被拷贝到一个新的变量中。</p>
+
+<pre><code class="language-perl6">sub foo() {
+    given ++$ {
+        when 1 {
+            say &quot;one&quot;;
+        }
+        when 2 {
+            say &quot;two&quot;;
+        }
+        when 3 {
+            say &quot;three&quot;;
+        }
+        default {
+            say &quot;many&quot;;
+        }
+    }
+}
+
+foo() for ^3;
+# OUTPUT«one␤two␤three␤»
+</code></pre>
+
+<h3 id="变量-1">@ 变量</h3>
+
+<p>和 <code>$</code> 变量类似, 也有一个位置匿名状态变量 <code>@</code>。</p>
+
+<pre><code class="language-perl6">sub foo($x) {
+    say (@).push($x);
+}
+
+foo($_) for ^3;
+
+# OUTPUT:
+# [0]
+# [0 1]
+# [0 1 2]
+</code></pre>
+
+<p>这里的 <code>@</code> 是用圆括号括起来了以和名为 <code>@.push</code> 的类成员变量消除歧义。索引访问并不需要这种歧义，但你需要拷贝这个值，以便用它做任何有用的事情。</p>
+
+<pre><code class="language-perl6">sub foo($x) {
+    my $v = @;
+    $v[$x] = $x;
+    say $v;
+}
+
+foo($_) for ^3;
+
+# OUTPUT:
+# [0]
+# [0 1]
+# [0 1 2]
+</code></pre>
+
+<p>就和 <code>$</code> 一样, 作用域中的每次提及 <code>@</code> 就引入了一个新的匿名数组。</p>
+
+<h3 id="变量-2">% 变量</h3>
+
+<p>最后, 还有一个关联匿名状态变量 <code>%</code>。</p>
+
+<pre><code class="language-perl6">sub foo($x) {
+    say (%).push($x =&gt; $x);
+}
+
+foo($_) for ^3;
+
+# OUTPUT:
+# 0 =&gt; 0
+# 0 =&gt; 0, 1 =&gt; 1
+# 0 =&gt; 0, 1 =&gt; 1, 2 =&gt; 2
+</code></pre>
+
+<p>关于歧义的同样警告适用。正如你可能期望，索引访问也有可能（使用复制以使之有用）。</p>
+
+<pre><code class="language-perl6">sub foo($x) {
+    my $v = %;
+    $v{$x} = $x;
+    say $v;
+}
+
+foo($_) for ^3;
+
+# OUTPUT:
+# 0 =&gt; 0
+# 0 =&gt; 0, 1 =&gt; 1
+# 0 =&gt; 0, 1 =&gt; 1, 2 =&gt; 2
+</code></pre>
+
+<p>就像其它的匿名状态变量一样, 在给定作用域中每次提及 <code>%</code> 最终都会引入一个单独的变量。</p>
+
+<h3 id="augment-声明符">augment 声明符</h3>
+
+<p>使用 <code>augment</code>, 你可以给已经存在的类或 grammars 增加属性和方法.</p>
+
+<p>因为类通常使用 our 作用域, 因此是全局的, 这意味着修改全局状态, 这是强烈不鼓励的, 对于大部分情况, 有更好的方法.</p>
+
+<pre><code class="language-perl6"># don't do this
+use MONKEY-TYPING;
+augment class Int {
+    method is-answer { self == 42 }
+}
+say 42.is-answer;       # True
+</code></pre>
+
+<h3 id="temp-前缀">temp 前缀</h3>
+
+<p>像 my 一样, temp 在作用域的末尾恢复旧的变量值. 然而, temp 不创建新的变量.</p>
+
+<pre><code class="language-perl6">my $in = 0; # temp will &quot;entangle&quot; the global variable with the call stack
+            # that keeps the calls at the bottom in order.
+sub f(*@c) {
+    (temp $in)++;
+     &quot;&lt;f&gt;\n&quot;
+     ~ @c&gt;&gt;.indent($in).join(&quot;\n&quot;)
+     ~ (+@c ?? &quot;\n&quot; !! &quot;&quot;)
+     ~ '&lt;/f&gt;'
+};
+sub g(*@c) {
+    (temp $in)++;
+    &quot;&lt;g&gt;\n&quot;
+    ~ @c&gt;&gt;.indent($in).join(&quot;\n&quot;)
+    ~ (+@c ?? &quot;\n&quot; !! &quot;&quot;)
+    ~ &quot;&lt;/g&gt;&quot;
+};
+print g(g(f(g()), g(), f()));
+
+# OUTPUT:
+# &lt;g&gt;
+#  &lt;g&gt;
+#   &lt;f&gt;
+#    &lt;g&gt;
+#    &lt;/g&gt;
+#   &lt;/f&gt;
+#   &lt;g&gt;
+#   &lt;/g&gt;
+#   &lt;f&gt;
+#   &lt;/f&gt;
+#  &lt;/g&gt;
+# &lt;/g&gt;
+</code></pre>
+
+<h3 id="let-前缀">let 前缀</h3>
+
+<p>跟 temp 类似, 如果 block 没有成功退出则恢复之前的值。成功的退出意味着该 block 返回了一个定义过的值或一个列表。</p>
+
+<pre><code class="language-perl6">my $answer = 42;
+
+{
+    let $answer = 84;
+    die if not Bool.pick;
+    CATCH {
+        default { say &quot;it's been reset :(&quot; }
+    }
+    say &quot;we made it 84 sticks!&quot;;
+}
+
+say $answer;
+</code></pre>
+
+<p>在上面的例子中, 如果 <code>Bool.pick</code> 返回 true, 那么答案会保持为 84, 因为那个 block 返回了一个定义了的值(say 返回 true)。
+否则那个 <code>die</code> 语句会让那个 block 不成功地退出, 把答案重新设置为 42。</p>
+
+<h2 id="类型约束和初始化">类型约束和初始化</h2>
+
+<p>变量可以有类型约束, 约束在声明符和变量名之间:</p>
+
+<pre><code class="language-perl6">my Int $x = 42;
+$x = 'a string'; # throws an X::TypeCheck::Assignment error
+CATCH { default { put .^name, ': ', .Str } }
+# OUTPUT: X::TypeCheck::Assignment: Type check failed in assignment to $x; expected Int but got Str (&quot;a string&quot;)
+</code></pre>
+
+<p>如果一个标量有类型约束但是没有初始值, 它会使用类型约束的类型对象来初始化.</p>
+
+<pre><code class="language-perl6">my Int $x;
+say $x.^name;    # Int
+say $x.defined;  # False
+</code></pre>
+
+<p>没有显式类型约束的标量的类型为 Mu, 但是默认会是 Any 类型的对象.</p>
+
+<p>带有 @ 符号的变量会被初始化为空的数组; 带有 % 符号的变量会被初始化为空的散列.</p>
+
+<p>变量的默认值可以使用 <code>is default</code> 特性设置, 通过把 Nil 赋值给变量来重新应用默认值:</p>
+
+<pre><code class="language-perl6">my Real $product is default(1);
+say $product;                       # 1
+$produce *= 5;
+say $product;                       # 5
+$product = Nil;
+say $product;                       # 1
+</code></pre>
+
+<h2 id="默认的有定义的变量指令">默认的有定义的变量指令</h2>
+
+<p>为了强制所有的变量拥有一个有定义的约束, 使用 <code>use variables :D</code> 指令。这个指令是词法作用域的并且可以使用 <code>use variables :_</code> 指令进行切换。</p>
+
+<pre><code class="language-perl6">use variables :D;
+my Int $i;
+# OUTPUT«===SORRY!=== Error while compiling &lt;tmp&gt;␤Variable definition of type Int:D (implicit :D by pragma) requires an initializer ...
+my Int $i = 1; # that works
+{ use variables :_; my Int $i; } # 在这个 block 中关掉它
+</code></pre>
+
+<p>请注意, 赋值 Nil 会把这个变量恢复为它的默认值。一个有定义的约束类型的默认值是类型名加上 <code>:D</code>(例如 <code>Int:D</code>)。That means a definedness contraint is no guarantee of definedness. 这只适用于变量初始化, 不适用于签名。</p>
+
+<h2 id="特殊变量">特殊变量</h2>
+
+<p><strong>Pre-defined lexical variables</strong></p>
+
+<p>每个代码块中都有3个特别的变量:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">变量</th>
+<th align="left">意义</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">$_</td>
+<td align="left">特殊变量</td>
+</tr>
+
+<tr>
+<td align="center">$/</td>
+<td align="left">正则匹配</td>
+</tr>
+
+<tr>
+<td align="center">$!</td>
+<td align="left">异常</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="toc_29">$_</h3>
+
+<p><code>$_</code> 是特殊变量，在没有显式标识的代码块中，它是默认参数。所以诸如 <code>for @array { ... }</code> 和 <code>given $var { ... }</code> 之类的结构会将变量绑定给 <code>$_</code>.</p>
+
+<pre><code class="language-perl6">for &lt;a b c&gt; { say $_ }  # sets $_ to 'a', 'b' and 'c' in turn
+say $_ for &lt;a b c&gt;;     # same, even though it's not a block
+given 'a'   { say $_ }  # sets $_ to 'a'
+say $_ given 'a';       # same, 尽管这不是一个块
+</code></pre>
+
+<p>CATCH 块将 <code>$_</code> 设置为捕获到的异常。 <code>~~</code> 智能匹配操作符。
+对 <code>$_</code> 调用一个方法可以省略特殊变量 <code>$_</code> 的名字，从而写的更短：</p>
+
+<pre><code class="language-perl6">.say;                   # 与 $_.say 相同
+</code></pre>
+
+<p><code>m/regex/</code> 和 <code>/regex/</code> 正则匹配 和 <code>s/regex/subst/</code> 替换是作用于 <code>$_</code> 上的.</p>
+
+<pre><code class="language-perl6">say &quot;Looking for strings with non-alphabetic characters...&quot;;
+for &lt;ab:c d$e fgh ij*&gt; {
+    .say if m/&lt;!alpha&gt;/;
+}
+</code></pre>
+
+<p>输出:</p>
+
+<pre><code class="language-perl6">Looking for strings with non-alphabetic characters...
+ab:c
+d$e
+ij*
+</code></pre>
+
+<h3 id="toc_30">$/</h3>
+
+<p><code>$/</code> 是匹配变量。它存储着最近一次<a href="https://docs.perl6.org/language/regexes">正则</a>匹配的结果，通常包含 <a href="https://docs.perl6.org/type/Match">Match</a> 类型的对象。</p>
+
+<pre><code class="language-perl6">'abc 12' ~~ /\w+/;  # 设置 $/ 为一个Match 对象
+say $/.Str;         # abc
+</code></pre>
+
+<p><code>Grammar.parse</code> 方法会把调用者的 <code>$/</code> 设置为 <code>Match object</code> 的结果。看下面的代码:</p>
+
+<pre><code class="language-perl6">use XML::Grammar; # panda install XML
+XML.Grammar.parse(&quot;&lt;p&gt;some text&lt;/p&gt;&quot;);
+say $/;
+
+# OUTPUT:
+# ｢&lt;p&gt;some text&lt;/p&gt;｣
+#  root =&gt; ｢&lt;p&gt;some text&lt;/p&gt;｣
+#   name =&gt; ｢p｣
+#   child =&gt; ｢some text｣
+#    text =&gt; ｢some text｣
+#    textnode =&gt; ｢some text｣
+#  element =&gt; ｢&lt;p&gt;some text&lt;/p&gt;｣
+#   name =&gt; ｢p｣
+#   child =&gt; ｢some text｣
+#    text =&gt; ｢some text｣
+#    textnode =&gt; ｢some text｣
+</code></pre>
+
+<p>其他匹配变量是 <code>$/</code> 元素的别名：</p>
+
+<pre><code class="language-perl6">$0          # same as $/[0]
+$1          # same as $/[1]
+$&lt;named&gt;    # same as $/&lt;named&gt;
+</code></pre>
+
+<h3 id="位置属性">位置属性</h3>
+
+<p>如果正则中有捕获分组, <code>$/</code> 中会有位置属性. 它们由圆括号组成.</p>
+
+<pre><code class="language-perl6">'abbbbbcdddddeffg' ~~ / a (b+) c (d+ef+) g /;
+say $/[0]; # ｢bbbbb｣
+say $/[1]; # ｢dddddeff｣
+</code></pre>
+
+<p>这些捕获分组也能使用 <code>$0</code>,<code>$1</code>,<code>$2</code> 等便捷形式取得:</p>
+
+<pre><code class="language-perl6">say $0; # ｢bbbbb｣
+say $1; # ｢dddddeff｣
+</code></pre>
+
+<p>要获取所有的位置属性, 使用 <code>$/.list</code>, <code>@$/</code>,<code>@( )</code> 中的任意一个都可以:</p>
+
+<pre><code class="language-perl6">say @().join; # bbbbbdddddeff
+</code></pre>
+
+<h3 id="命名属性">命名属性</h3>
+
+<p>如果正则中有命名捕获分组, <code>$/</code> 可以有命名属性, 或者正则调用了另一个正则:</p>
+
+<pre><code class="language-perl6">'I.... see?' ~~ / \w+ $&lt;punctuation&gt;=[ &lt;-[\w\s]&gt;+ ] \s* $&lt;final-word&gt; = [ \w+ . ] /;
+say $/&lt;punctuation&gt;; # ｢....｣
+say $/&lt;final-word&gt;;  # ｢see?｣
+</code></pre>
+
+<p>这些命名捕获分组也能使用便捷形式的 <code>$&lt;named&gt;</code> 获取:</p>
+
+<pre><code class="language-perl6">say $&lt;punctuation&gt;; # ｢....｣
+say $&lt;final-word&gt;;  # ｢see?｣
+</code></pre>
+
+<p>要获取所有的命名属性, 使用 <code>$/.hash</code>,  <code>%$/</code>, <code>%()</code>中的任何一个:</p>
+
+<pre><code class="language-perl6">say %().join;  # &quot;punctuation     ....final-word  see?&quot;
+</code></pre>
+
+<h3 id="变量-3">$! 变量</h3>
+
+<p><code>$!</code> 是错误变量. 如果 <code>try</code> block 或语句前缀捕获到异常, 那个异常就会被存储在 <code>$!</code> 中。如果没有捕获到异常, 那么 <code>$!</code> 会被设置为 Any 类型对象。
+注意, <code>CATCH</code> 块不设置 <code>$!</code>。CATCH 在 block 中把 <code>$_</code> 设置为捕获到的异常。</p>
+
+<h2 id="编译时变量">编译时变量</h2>
+
+<table>
+<thead>
+<tr>
+<th align="center">Compile-time Variables</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">$?FILE</td>
+<td align="left">所在文件</td>
+</tr>
+
+<tr>
+<td align="center">$?LINE</td>
+<td align="left">所在行</td>
+</tr>
+
+<tr>
+<td align="center">::?CLASS</td>
+<td align="left">所在类</td>
+</tr>
+
+<tr>
+<td align="center">&amp;?ROUTINE</td>
+<td align="left">所在子例程</td>
+</tr>
+
+<tr>
+<td align="center">&amp;?BLOCK</td>
+<td align="left">所在块</td>
+</tr>
+
+<tr>
+<td align="center">%?LANG</td>
+<td align="left">What is the current set of interwoven languages?</td>
+</tr>
+
+<tr>
+<td align="center">%?RESOURCES</td>
+<td align="left">The files associated with the &ldquo;Distribution&rdquo; of the current compilation unit.</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code class="language-perl6">for '.' {
+    .Str.say when !.IO.d;
+    .IO.dir()&gt;&gt;.&amp;?BLOCK when .IO.d # lets recurse a little!
+}
+</code></pre>
+
+<p>其它编译时变量：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Compile-time Variables</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">$?PACKAGE</td>
+<td align="left">所在包</td>
+</tr>
+
+<tr>
+<td align="center">$?MODULE</td>
+<td align="left">所在模块</td>
+</tr>
+
+<tr>
+<td align="center">$?CLASS</td>
+<td align="left">所在类(as variable)</td>
+</tr>
+
+<tr>
+<td align="center">$?ROLE</td>
+<td align="left">所在角色(as variable)</td>
+</tr>
+
+<tr>
+<td align="center">$?GRAMMAR</td>
+<td align="left">所在 grammar</td>
+</tr>
+
+<tr>
+<td align="center">$?TABSTOP</td>
+<td align="left">在 heredoc 或 虚拟边距中 tab 有多少空格</td>
+</tr>
+
+<tr>
+<td align="center">$?USAGE</td>
+<td align="left">从 MAIN 程序的签名中生成的使用信息</td>
+</tr>
+
+<tr>
+<td align="center">$?ENC</td>
+<td align="left">Str.encode/Buf.decode/various IO 方法的默认编码.</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="动态变量">动态变量</h2>
+
+<table>
+<thead>
+<tr>
+<th align="center">Dynamic Variable</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">$*ARGFILES</td>
+<td align="left">神奇的命令行输入句柄</td>
+</tr>
+
+<tr>
+<td align="center">@*ARGS</td>
+<td align="left">来自命令行的参数</td>
+</tr>
+
+<tr>
+<td align="center">$*IN</td>
+<td align="left">标准输入文件句柄, AKA stdin</td>
+</tr>
+
+<tr>
+<td align="center">$*OUT</td>
+<td align="left">标准输出文件句柄, AKA stdout</td>
+</tr>
+
+<tr>
+<td align="center">$*ERR</td>
+<td align="left">标准错误文件句柄, AKA stderr</td>
+</tr>
+
+<tr>
+<td align="center">%*ENV</td>
+<td align="left">环境变量</td>
+</tr>
+
+<tr>
+<td align="center">$*REPO</td>
+<td align="left">存储安装过的/加载了的模块信息的变量</td>
+</tr>
+
+<tr>
+<td align="center">$*TZ</td>
+<td align="left">系统的本地时区.</td>
+</tr>
+
+<tr>
+<td align="center">$*CWD</td>
+<td align="left">当前工作目录.</td>
+</tr>
+
+<tr>
+<td align="center">$*KERNEL</td>
+<td align="left">在哪个内核下运行</td>
+</tr>
+
+<tr>
+<td align="center">$*DISTRO</td>
+<td align="left">在哪个操作系统分发下运行</td>
+</tr>
+
+<tr>
+<td align="center">$*VM</td>
+<td align="left">在哪个虚拟机下运行</td>
+</tr>
+
+<tr>
+<td align="center">$*PERL</td>
+<td align="left">在哪个 Perl 下运行</td>
+</tr>
+
+<tr>
+<td align="center">$*PID</td>
+<td align="left">当前进程的进程 ID</td>
+</tr>
+
+<tr>
+<td align="center">$*PROGRAM-NAME</td>
+<td align="left">当前可执行程序的路径就像它通过命令行键入一样, 或 -e 如果 perl 引用了 -e 标记</td>
+</tr>
+
+<tr>
+<td align="center">$*PROGRAM</td>
+<td align="left">正被执行的 Perl 程序的位置( 以 IO::Path 对象的形式)</td>
+</tr>
+
+<tr>
+<td align="center">$*EXECUTABLE</td>
+<td align="left">当前运行的可执行 perl 的绝对路径</td>
+</tr>
+
+<tr>
+<td align="center">$*EXECUTABLE-NAME</td>
+<td align="left">当前运行的可执行 perl 程序的名字。(e.g. perl6-p, perl6-m, Niecza.exe)</td>
+</tr>
+
+<tr>
+<td align="center">$*USER</td>
+<td align="left">正在运行该程序的用户. 它是一个被求值为 &ldquo;username (uid)&rdquo; 的对象. 它只有在被当作字符串时才被求值为用户名, 如果被当作数字则被求值为数值化的用户 id。</td>
+</tr>
+
+<tr>
+<td align="center">$*GROUP</td>
+<td align="left">运行程序的用户的主要组. 它是被计算为  &ldquo;groupname (gid)&rdquo; 的对象.它只有在被当作字符串时才被求值为组名, 如果被当作数字则被求值为数值化的组 id。</td>
+</tr>
+
+<tr>
+<td align="center">$*HOME</td>
+<td align="left">代表当前运行程序的用户家目录的 IO::Path 对象。如果家目录不确定则为 Nil。</td>
+</tr>
+
+<tr>
+<td align="center">$*SPEC</td>
+<td align="left">程序运行的平台的合适的 IO::Spec 子类, 对于特定操作系统代码,使用智能匹配: say &ldquo;We are on Windows!&rdquo; if $*SPEC ~~ IO::Spec::Win32</td>
+</tr>
+
+<tr>
+<td align="center">$*TMPDIR</td>
+<td align="left">代表着 &ldquo;系统临时目录&rdquo; 的 IO::Path 对象</td>
+</tr>
+
+<tr>
+<td align="center">$*TOLERANCE</td>
+<td align="left">由 &lt;=~=&gt; 操作符使用并且任何依赖它的操作, 来决定两个值是否近似地相等, 默认为 1e-15。</td>
+</tr>
+
+<tr>
+<td align="center">$*THREAD</td>
+<td align="left">代表当前执行线程的 Thread 对象。</td>
+</tr>
+
+<tr>
+<td align="center">$*SCHEDULER</td>
+<td align="left">代表当前默认调度程序的 ThreadPoolScheduler 对象。</td>
+</tr>
+</tbody>
+</table>
+
+<p>注意 <code>$*SCHEDULER</code> 的用法:</p>
+
+<p>对于当前的 Rakudo, 这个默认在方法 <code>.hyper</code> 和 <code>.race</code> 上采用最大 16 个线程。要更改线程的最大数量, 要么在运行 perl 之前设置环境变量  RAKUDO_MAX_THREADS 的值, 要么在使用 .hyper 或 .race 之前创建一个默认改变了的作用域的拷贝:</p>
+
+<pre><code class="language-perl6">my $*SCHEDULER = ThreadPoolScheduler.new( max_threads =&gt; 64 );
+</code></pre>
+
+<p>这种行为在 spec 测试中没有被测试并且还会变化。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/variable/">Variable</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/twigil/">twigil</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/%E5%8C%BF%E5%90%8D%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8F/">匿名状态变量</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-08-25-perl-6-%E5%8D%95%E8%A1%8C%E7%A8%8B%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="Perl 6 单行程序">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-08-29-%E6%8E%A2%E7%B4%A2perl6%E7%9A%84signatures%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/" data-toggle="tooltip" data-placement="top" title="探索Perl6的Signatures,第二部分">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

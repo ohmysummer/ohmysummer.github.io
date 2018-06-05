@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 Shortcuts(第一部分)</title>
+  <meta property="og:title" content="Perl 6 Shortcuts(第一部分)" />
+  <meta name="twitter:title" content="Perl 6 Shortcuts(第一部分)" />
+  <meta name="description" content="查看原文
+快捷(Shortcuts)是一个具有争议性的话题。有些人认为它让代码更快更易读。有些人认为它让代码变得更难度如果人们不熟悉那些快捷的话。这篇文章仅仅告诉你 Shortcuts 的东西, 用不用取决于你。让我们开始把。
+类属性的公开 Getter/Setter &ldquo;getter&rdquo; 和 &ldquo;setter&rdquo; 的概念在很多语言中是共通的: 在你的类中有一个 &ldquo;东西&rdquo;, 并且你写了一个方法来设置或获取那个东西的值。以啰嗦的 Perl 6 方式来写, 这样的一个设置看起来像这样:
+class Foo { has $!attr = 42; method attr is rw { $!attr } } my $obj = Foo.new; say $obj.attr; $obj.attr = 72; say $obj.attr; # 输出&gt;&gt; # 42 # 72  这就像它本来的那样简洁, 但公共属性通常足以使编写这点儿代码变得恼人。这就是为什么 $. twigil 存在的原因。单独使用它会创建一个 &ldquo;getter&rdquo;; 如果你还想要一个 &ldquo;setter&rdquo;, 需要使用 is rw 特性:
+class Foo { has $.attr is rw = 42; } my $obj = Foo.">
+  <meta property="og:description" content="查看原文
+快捷(Shortcuts)是一个具有争议性的话题。有些人认为它让代码更快更易读。有些人认为它让代码变得更难度如果人们不熟悉那些快捷的话。这篇文章仅仅告诉你 Shortcuts 的东西, 用不用取决于你。让我们开始把。
+类属性的公开 Getter/Setter &ldquo;getter&rdquo; 和 &ldquo;setter&rdquo; 的概念在很多语言中是共通的: 在你的类中有一个 &ldquo;东西&rdquo;, 并且你写了一个方法来设置或获取那个东西的值。以啰嗦的 Perl 6 方式来写, 这样的一个设置看起来像这样:
+class Foo { has $!attr = 42; method attr is rw { $!attr } } my $obj = Foo.new; say $obj.attr; $obj.attr = 72; say $obj.attr; # 输出&gt;&gt; # 42 # 72  这就像它本来的那样简洁, 但公共属性通常足以使编写这点儿代码变得恼人。这就是为什么 $. twigil 存在的原因。单独使用它会创建一个 &ldquo;getter&rdquo;; 如果你还想要一个 &ldquo;setter&rdquo;, 需要使用 is rw 特性:
+class Foo { has $.attr is rw = 42; } my $obj = Foo.">
+  <meta name="twitter:description" content="查看原文
+快捷(Shortcuts)是一个具有争议性的话题。有些人认为它让代码更快更易读。有些人认为它让代码变得更难度如果人们不熟悉那些快捷的话。这篇文章仅仅告诉你 Shortcuts 的东西, 用不用取决于你。让我们开始把。
+类属性的公开 Getter/Setter &ldquo;getter&rdquo; 和 &ldquo;setter&rdquo; 的概念在很多语言中是共通的: 在你的类中有 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-08-31-perl-6-shortcuts%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-08-31-perl-6-shortcuts%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 Shortcuts(第一部分)</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2016/31/00
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p><a href="http://blogs.perl.org/users/zoffix_znet/2016/02/perl-6-shortcuts-part-1.html">查看原文</a></p>
+
+<p>快捷(Shortcuts)是一个具有争议性的话题。有些人认为它让代码更快更易读。有些人认为它让代码变得更难度如果人们不熟悉那些快捷的话。这篇文章仅仅告诉你 Shortcuts 的东西, 用不用取决于你。让我们开始把。</p>
+
+<h2 id="类属性的公开-getter-setter">类属性的公开 Getter/Setter</h2>
+
+<p>&ldquo;getter&rdquo; 和 &ldquo;setter&rdquo; 的概念在很多语言中是共通的: 在你的类中有一个 &ldquo;东西&rdquo;, 并且你写了一个方法来设置或获取那个东西的值。以啰嗦的 Perl 6 方式来写, 这样的一个设置看起来像这样:</p>
+
+<pre><code class="language-perl6">class Foo {
+    has $!attr = 42;
+    method attr is rw { $!attr }
+}
+
+my  $obj = Foo.new;
+say $obj.attr;
+    $obj.attr = 72;
+say $obj.attr;
+
+# 输出&gt;&gt;
+# 42
+# 72
+</code></pre>
+
+<p>这就像它本来的那样简洁, 但公共属性通常足以使编写这点儿代码变得恼人。这就是为什么 <code>$.</code> twigil 存在的原因。单独使用它会创建一个 &ldquo;getter&rdquo;; 如果你还想要一个 &ldquo;setter&rdquo;, 需要使用 <code>is rw</code> 特性:</p>
+
+<pre><code class="language-perl6">class Foo { has $.attr is rw = 42; }
+my  $obj = Foo.new;
+say $obj.attr;
+    $obj.attr = 72;
+say $obj.attr;
+
+# 输出&gt;&gt;:
+# 42
+# 72
+</code></pre>
+
+<p>我们把属性上的 <code>$!</code> twigil 更改为 <code>$.</code> twigil, 并且它为我们创建了一个公共的方法。继续!</p>
+
+<h2 id="在方法调用中省略圆括号">在方法调用中省略圆括号</h2>
+
+<hr />
+
+<p>下面这样的代码你不会经常看见, 代码末尾有一整吨的圆括号。确保它们都能匹配!</p>
+
+<pre><code class="language-perl6">$foo.log( $obj.nukanate( $foo.grep(*.bar).map(*.ber) ) );
+</code></pre>
+
+<p>对于那些想起  <a href="https://xkcd.com/297/">popular webcomic</a> 的人来说, Perl 6 还有一个备选项:</p>
+
+<pre><code class="language-perl6">$foo.log: $obj.nukanate: $foo.grep(*.bar).map: *.ber;
+</code></pre>
+
+<p>如果方法在方法调用链的最后, 你可以省略它的圆括号并使用一个冒号 : 代替。除了 <code>.grep</code>, 我们上面所有的调用在链中都是最后的(last in chain), 所以我们避免了很多圆括号。有时我也喜欢在冒号后面换行开始写东西。</p>
+
+<p>还要注意: 你总是可以省略方法调用中的圆括号, 如果你没有提供任何参数的话; 也不需要分号。</p>
+
+<h2 id="没有逗号的具名参数">没有逗号的具名参数</h2>
+
+<hr />
+
+<p>如果你正调用一个提供只有具名参数的方法或子例程的话, 你可以省略参数之间的逗号。有时候, 我也喜欢把每个参数作为新行叠放在一块儿:</p>
+
+<pre><code class="language-perl6">class Foo {
+    method baz (:$foo, :$bar, :$ber) { say &quot;[$foo, $bar, $ber]&quot; }
+}
+    sub    baz (:$foo, :$bar, :$ber) { say &quot;[$foo, $bar, $ber]&quot; }
+
+Foo.baz:
+    :foo(42)
+    :bar(72)
+    :ber(100);
+
+baz :foo(42) :bar(72) :ber(100);
+
+# OUTPUT&gt;&gt;:
+# [42, 72, 100]
+# [42, 72, 100]
+</code></pre>
+
+<p>再次, 这在当你提供只有具名参数的时候才有效。有很多很多其它使用同样形式提供参数或 Pairs 但是你又不能省略逗号的地方。</p>
+
+<h2 id="具名参数-pairs-中的整数">具名参数/Pairs 中的整数</h2>
+
+<hr />
+
+<p>‘如果参数或 Pair 接收一个正整数作为值, 就把数字写在冒号和键的名字之间:</p>
+
+<pre><code class="language-perl6">say DateTime.new: :2016year :2month :1day :16hour :32minute;
+
+# 输出&gt;&gt;:
+# 2016-02-01T16:32:00Z
+</code></pre>
+
+<p>这是其中之一当你第一次学习它的时候看起来不和谐的东西, 但是你会很快习惯它。它读起来很像英语:</p>
+
+<pre><code class="language-perl6">my %ingredients = :4eggs, :2sticks-of-butter, :4cups-of-suger;
+say %ingredients;
+
+# OUTPUT&gt;&gt;:
+# cups-of-sugar =&gt; 4, eggs =&gt; 4, sticks-of-butter =&gt; 2
+</code></pre>
+
+<h2 id="具名参数-pairs-中的布尔值">具名参数/Pairs 中的布尔值</h2>
+
+<hr />
+
+<p>使用键自身的名字来标示 <strong>True</strong>, 在键名和冒号之间插入一个感叹号来标示 <strong>False</strong>:</p>
+
+<pre><code class="language-perl6">sub foo (:$bar, :$ber) { say &quot;$bar, $ber&quot; }
+foo :!bar :ber;
+
+my %hash = :!bar, :ber;
+say %hash;
+
+# OUTPUT&gt;&gt;:
+# False, True
+# bar =&gt; False, ber =&gt; True
+</code></pre>
+
+<p>注意: 这也能应用在副词上!</p>
+
+<h2 id="具名参数-pairs-中的-lists">具名参数/Pairs 中的 Lists</h2>
+
+<hr />
+
+<p>如果你正提供一个 quote-word 结构给一个期望某种 listy 的具名参数/pair, 那么你可以省略圆括号; 在键和  quote-words 之间不留任何空格就是了:</p>
+
+<pre><code class="language-perl6">sub foo (:@args) { say @args }
+foo :args&lt;foo bar ber&gt;;
+
+my %hash = :ingredients&lt;milk eggs butter&gt;;
+say %hash;
+
+# OUTPUT&gt;&gt;:
+# (foo bar ber)
+# ingredients =&gt; (milk eggs butter)
+</code></pre>
+
+<h2 id="传递变量给具名参数-pairs">传递变量给具名参数/Pairs</h2>
+
+<hr />
+
+<p>你认为具名参数就这样了吗？还有一个更酷的 shortcut: 假设你有一个变量并且它和具名参数拥有相同的名字… 就通过使用变量自身把它传递进来好了, 代替键, 在冒号之后:</p>
+
+<pre><code class="language-perl">sub hashify (:$bar, :@ber) {
+    my %hash = :$bar, :@ber;
+    say %hash;
+}
+
+my ( $bar, @ber )  = 42, (1..3);
+hashify :$bar :@ber;
+
+# OUTPUT&gt;&gt;:
+# bar =&gt; 42, ber =&gt; [1..3]
+</code></pre>
+
+<p>注意我们既没有在 sub 调用中也没有在我们创建的 hash 中重复键的名字。它们是从变量的名字中派生出来的。</p>
+
+<h2 id="subs-作为方法调用">Subs 作为方法调用</h2>
+
+<hr />
+
+<p>如果你有一个 sub 想在某些东西上作为方法调用, 就在 sub 那儿前置一个 <code>&amp;</code>符号就好。 调用者会是第一个位置参数, 所有其它参数像往常那样传递。</p>
+
+<pre><code class="language-perl">sub be-wise ($self, $who = 'Anonymous') { &quot;Konw your $self, $who!&quot; }
+
+'ABC'.&amp;be-wise.say;
+'ABC'.&amp;be-wise('Zoffix').say;
+
+# OUTPUT&gt;&gt;:
+# Know your ABC, Anonymous!
+# Know your ABC, Zoffix!
+</code></pre>
+
+<p>这实质上是一种不那么难看的在某个实例上调用 <code>.map</code>的方式, 但是多数时候它的可读性更好。</p>
+
+<pre><code class="language-perl">sub be-wise ($self, $who = 'Anonymous') { &quot;Know your $self, $who!&quot; }
+
+'ABC'.map({be-wise $_, 'Zoffix'})».say;
+say be-wise 'ABC', 'Zoffix';
+
+# OUTPUT&gt;&gt;:
+# Know your ABC, Zoffix!
+# Know your ABC, Zoffix!
+</code></pre>
+
+<p>为了完整性, 但不是过度使用, 你可以内联调用甚至使用一个 pointy block 来设置签名!</p>
+
+<pre><code class="language-perl6">'ABC'.&amp;('Know your ' ~ *).say;
+'ABC'.&amp;( -&gt; $self, $who = 'Anonymous' {&quot;Know your $self, $who!&quot;} )('Zoffix')
+    .say;
+
+# OUTPUT&gt;&gt;:
+# Know your ABC
+# Know your ABC, Zoffix!
+</code></pre>
+
+<h2 id="hyper-方法调用">Hyper 方法调用</h2>
+
+<hr />
+
+<p>因为我们谈到了 .map 的快捷方式, 记住 » hyper 操作符。在方法调用的点号之前使用它以标示你想在调用者的每个元素身上调用点号后面跟着的方法, 而不是调用者本身。</p>
+
+<pre><code class="language-perl6">(1, 2, 3)».is-prime.say;
+(1, 2, 3)&gt;&gt;.is-prime.say;
+
+# OUTPUT&gt;&gt;:
+# (False True True)
+# (False True True)
+</code></pre>
+
+<h2 id="总结">总结</h2>
+
+<hr />
+
+<ul>
+<li>使用 <code>$.</code> twigil 来声明公共属性</li>
+<li>使用 <code>:</code>代替圆括号</li>
+<li>只含具名参数的 Methods/sub 调用不需要逗号</li>
+<li>通过把整数值写在键和冒号之间传递 Int 值</li>
+<li>使用键自身来指定一个 True 布尔值</li>
+<li>使用键自身, 并在键名和冒号之间插入一个 ! 号来指定一个 <strong>False</strong> 值</li>
+<li>当值是 quote-word 结构时, 把它写在键后面, 不含任何圆括号</li>
+<li>当变量和键的名字相同时, 把它直接用作键(包括符号), 不用指定任何值</li>
+<li>在 sub 那儿前置一个 <code>&amp;</code>, 当把它作为方法调用时</li>
+<li>使用 » 操作符来对列表中的每个元素调用一个方法</li>
+</ul>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/shortcut/">shortcut</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-08-14-%E5%93%87perl6/" data-toggle="tooltip" data-placement="top" title="哇, Perl 6!">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-09-10-data-dump/" data-toggle="tooltip" data-placement="top" title="Data Dump">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

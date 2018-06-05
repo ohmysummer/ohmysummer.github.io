@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Cro::HTTP::Client</title>
+  <meta property="og:title" content="Cro::HTTP::Client" />
+  <meta name="twitter:title" content="Cro::HTTP::Client" />
+  <meta name="description" content="HTTP 客户端">
+  <meta property="og:description" content="HTTP 客户端">
+  <meta name="twitter:description" content="HTTP 客户端">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-04-16-cro-http-client/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-16-cro-http-client/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/syntax.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Cro::HTTP::Client</h1>
+                
+                  
+                    <h2 class="post-subheading">HTTP 客户端</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;2018/16/24
+  
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="cro-http-client-http-cro-services-docs-reference-cro-http-client"><a href="http://cro.services/docs/reference/cro-http-client">Cro::HTTP::Client</a></h1>
+
+<p><code>Cro::HTTP::Client</code> 类提供了一个灵活的 HTTP 和 HTTPS 客户端实现，可以从简单到更复杂的情况进行扩展。它可以通过两种方式消费：</p>
+
+<p>通过对类型对象（ <code>Cro::HTTP::Client.get($url)</code> ）进行调用。这对于一次性请求很有用，但在向同一服务器发出多个请求时（例如使用 <code>keep-alive</code>）不提供连接重用。</p>
+
+<p>通过创建一个 <code>Cro::HTTP::Client</code> 实例。默认情况下，这可以重用连接池。它还可以配置默认的 base URL，传递的默认授权数据，甚至是插入到请求/响应处理管道中的中间件。 <code>Cro::HTTP::Client</code> 实例可以并发地使用。</p>
+
+<p>一般来说，如果您打算发起一次性请求，请使用类型对象。如果您要向同一台服务器或一组服务器发出很多请求，请创建一个实例。</p>
+
+<p>默认情况下，HTTPS 请求将使用 ALPN 来协商是否执行 HTTP/2 或 HTTP/1.1，并且 HTTP 请求将始终使用 HTTP/1.1。</p>
+
+<h2 id="发起基本请求">发起基本请求</h2>
+
+<p>可以在类型对象或 <code>Cro::HTTP::Client</code> 的实例上调用 <code>get</code>，<code>post</code>，<code>put</code>，<code>delete</code>，<code>patch</code> 和 <code>head</code> 方法。他们都会返回一个 <code>Promise</code>，如果请求成功则会被保留(kept), 如果失败则被毁掉(broken)。</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.get('https://www.perl6.org/');
+</code></pre>
+
+<p>响应(<code>$resp</code>) 是一个 <code>Cro::HTTP::Response</code> 对象。它将在请求头可用时立即生成;请求体可能尚未收到。默认情况下，错误（4xx和5xx状态码）将导致遵守 <code>X::Cro::HTTP::Error</code> 角色的异常，该角色具有包含 <code>Cro::HTTP::Response</code> 对象的 <code>response</code> 属性。</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.delete($product-url);
+CATCH {
+    when X::Cro::HTTP::Error {
+        if .response.status == 404 {
+            say &quot;Product not found!&quot;;
+        }
+        else {
+            say &quot;Unexpected error: $_&quot;;
+        }
+    }
+}
+</code></pre>
+
+<p>实际的异常类型要么是用于 4xx 错误的 <code>X::Cro::HTTP::Error::Client</code> , 要么是用于 5xx 错误的 <code>X::Cro::HTTP::Error::Server</code>（这在设置重试时很有用应该区分服务器错误和客户端错误）。</p>
+
+<p>要为每个客户端请求设置 base URL，可以将 base URL 作为 <code>base-uri</code> 参数传递给 <code>Cro::HTTP::Client</code> 实例。</p>
+
+<pre><code class="language-perl6">my $client = Cro::HTTP::Client.new(base-uri =&gt; &quot;http://persistent.url.com&quot;);
+await $client.get('/first');   # http://persistent.url.com/first
+await $client.get('/another'); # http://persistent.url.com/another
+</code></pre>
+
+<h2 id="添加额外的请求头">添加额外的请求头</h2>
+
+<p>通过给 <code>headers</code> 命名参数传递一个数组，可以为请求设置一个或多个请求头。它可能包含 <code>Pair</code> 对象，<code>Cro::HTTP::Header</code> 实例，或者两者的混合。</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.get: 'example.com',
+    headers =&gt; [
+        referer =&gt; 'http://anotherexample.com',
+        Cro::HTTP::Header.new(
+            name =&gt; 'User-agent',
+            value =&gt; 'Cro'
+        )
+    ];
+</code></pre>
+
+<p>如果请求头要添加到所有的请求中，则可以在构建时设置默认请求头：</p>
+
+<pre><code class="language-perl6">my $client = Cro::HTTP::Client.new:
+    headers =&gt; [
+        User-agent =&gt; 'Cro'
+    ];
+</code></pre>
+
+<h2 id="设置请求体">设置请求体</h2>
+
+<p>为了给请求一个请求体，传递一个 <code>body</code> 命名参数。<code>content-type</code> 命名参数通常也应该传递，以指示正文的类型。例如，具有 JSON 正文的请求可以发送为：</p>
+
+<pre><code class="language-perl6">my %panda = name =&gt; 'Bao Bao', eats =&gt; 'bamboo';
+my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
+    content-type =&gt; 'application/json',
+    body =&gt; %panda;
+</code></pre>
+
+<p>如果为 JSON API 编写客户端，那么在每个请求上设置内容类型(content type)可能会变得繁琐。在这种情况下，它可以在构建客户端实例时设置，并在默认情况下使用（请注意，只有在设置了主体的情况下才会使用它）：</p>
+
+<pre><code class="language-perl6"># Configure with JSON content type.
+my $client = Cro::HTTP::Client.new: content-type =&gt; 'application/json';
+
+# And later get it added by default.
+my %panda = name =&gt; 'Bao Bao', eats =&gt; 'bamboo';
+my $resp = await $client.post: 'we.love.pand.as/pandas', body =&gt; %panda;
+</code></pre>
+
+<p><code>Cro::HTTP::Client</code> 类使用一个 <code>Cro::BodySerializer</code> 来序列化所发送的请求体。除了 JSON 之外，还有 body parser 编码和发送一个 <code>Str</code>：</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/facts',
+    content-type =&gt; 'text/plain; charset=UTF-8',
+    body =&gt; &quot;99% of a Panda's diet consists of bamboo&quot;;
+</code></pre>
+
+<p><code>Blob</code>:</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.put: 'we.love.pand.as/images/baobao.jpg',
+    content-type =&gt; 'image/jpeg',
+    body =&gt; slurp('baobao.jpg', :bin);
+</code></pre>
+
+<p>根据 <code>application/x-www-form-urlencoded</code> 格式化的表单数据（这是 Web 浏览器中的默认设置）：</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
+    content-type =&gt; 'application/x-www-form-urlencoded',
+    # Can use a Hash; an Array of Pair allows multiple values per name
+    body =&gt; [
+        name =&gt; 'Bao Bao',
+        eats =&gt; 'bamboo'
+    ];
+</code></pre>
+
+<p>或者根据 <code>multipart/form-data</code> 格式化表单数据（这在Web浏览器中用于包含文件上传的表单）：</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
+    content-type =&gt; 'multipart/form-data',
+    body =&gt; [
+        # Simple pairs for simple form values
+        name =&gt; 'Bao Bao',
+        eats =&gt; 'bamboo',
+        # For file uploads, make a part object
+        Cro::HTTP::Body::MultiPartFormData::Part.new(
+            headers =&gt; [Cro::HTTP::Header.new(
+                name =&gt; 'Content-type',
+                value =&gt; 'image/jpeg'
+            )],
+            name =&gt; 'photo',
+            filename =&gt; 'baobao.jpg',
+            body-blob =&gt; slurp('baobao.jpg', :bin)
+        )
+    ];
+</code></pre>
+
+<p>要替换客户端将使用的一组正文序列化程序，请在构造 <code>Cro::HTTP::Client</code> 实例时给 <code>body-serializers</code> 命名参数传递一个数组：</p>
+
+<pre><code class="language-perl6">my $client = Cro::HTTP::Client.new:
+    body-serializers =&gt; [
+        Cro::HTTP::BodySerializer::JSON,
+        My::BodySerializer::XML
+    ];
+</code></pre>
+
+<p>要改为保留现有的一组正文序列化器并添加一些新的（它们将具有较高的优先级），请使用 <code>add-body-serializers</code>:</p>
+
+<pre><code class="language-perl6">my $client = Cro::HTTP::Client.new:
+    add-body-serializers =&gt; [ My::BodySerializer::XML ];
+</code></pre>
+
+<p>通过将一个 <code>Supply</code> 传递给 <code>body-byte-stream</code>，也可以让主体来自一个字节流。</p>
+
+<pre><code class="language-perl6">my $resp = await Cro::HTTP::Client.post: 'example.com/incoming',
+    content-type =&gt; 'application/octet-stream',
+    body-byte-stream =&gt; $supply;
+</code></pre>
+
+<p><code>body</code> 和 <code>body-byte-stream</code> 参数不能一起使用; 试图这样做会导致 <code>X::Cro::HTTP::Client::BodyAlreadySet</code> 异常.</p>
+
+<h2 id="获得响应体">获得响应体</h2>
+
+<p>响应体通常由 <code>Promise</code>（如果请求整个主体）或 <code>Supply</code>（当主体到达时将交付）异步提供的。</p>
+
+<p><code>body</code> 方法返回一个 <code>Promise</code>，当接收并分析正文时将保留 Promise。一些默认的主体解析器是：</p>
+
+<ul>
+<li><p>JSON，当 <code>Content-type</code> 头部是 <code>application/json</code> 或使用 <code>+json</code> 后缀时将使用这个 JSON。 <code>JSON::Fast</code> 将用于执行解析。</p></li>
+
+<li><p>字符串回退，在 <code>Content-type</code> 为 <code>text</code> 时使用。会返回一个 <code>Str</code>。</p></li>
+
+<li><p>Blob 回退，在所有其他情况下使用，并返回一个带主体的 <code>Blob</code>。</p></li>
+</ul>
+
+<p>一个 <code>Cro::HTTP::Client</code> 可以通过传递 <code>body-parsers</code> 命名参数来配置一个替代的 body 解析器组：</p>
+
+<pre><code class="language-perl6">my $client = Cro::HTTP::Client.new:
+    body-parsers =&gt; [
+        Cro::HTTP::BodyParser::JSON,
+        My::BodyParser::XML
+    ];
+</code></pre>
+
+<p>或者使用 <code>add-body-parsers</code> 在默认设置的顶部添加额外的 body 解析器:</p>
+
+<pre><code class="language-perl6">my $client = Cro::HTTP::Client.new:
+    add-body-parsers =&gt; [ My::BodyParser::XML ];
+</code></pre>
+
+<p>为了将响应主体作为一个 <code>Supply</code> 来供应，当它们通过网络到达时会发送这些字节，请使用 <code>body-byte-stream</code> 方法：</p>
+
+<pre><code class="language-perl6">react {
+    whenever $resp.body-byte-stream -&gt; $chunk {
+        say &quot;Got chunk: $chunk.gist()&quot;;
+    }
+}
+</code></pre>
+
+<p>要将整个响应主体作为 <code>Blob</code> 获取，请使用 <code>body-blob</code> 方法：</p>
+
+<pre><code class="language-perl6">my Blob $body = await $resp.body-blob();
+</code></pre>
+
+<p>要将整个响应主体作为 <code>Str</code>，请使用 <code>body-text</code> 方法：</p>
+
+<pre><code class="language-perl6">my Str $body = await $resp.body-text();
+</code></pre>
+
+<p>此方法将查看 <code>Content-type</code> 头以查看是否指定了 <code>charset</code>，并使用该字符串解码身体。否则，它会查看主体是否以 BOM 开始并依赖于此。如果没有通过，将使用启发式：如果 body 可以被解码为 utf-8，那么它将被认为是 utf-8，并且如果它不能被解码为 latin-1（它永远不会失败因为所有字节都是有效的）。</p>
+
+<h2 id="cookies">Cookies</h2>
+
+<p>默认情况下，响应中的 Cookie 会被忽略。但是，使用 <code>:cookie-jar</code> 选项（即传递 <code>True</code>）构造一个 <code>Cro::HTTP::Client</code> 将创建一个 <code>Cro::HTTP::Client::CookieJar</code> 实例。这将用于存储响应中设置的所有 Cookie。相关的 cookies 将自动包含在后续请求中。</p>
+
+<pre><code class="language-perl6">my $client = Cro::HTTP::Client.new(:cookie-jar);
+</code></pre>
+
+<p>Cookie 相关性通过考虑主机，路径和 <code>Secure</code> 扩展来确定。已经过了最大年龄的过期日期的 Cookies 将自动从 cookie jar 中移除。</p>
+
+<p>也可以传入一个 <code>Cro::HTTP::Client::CookieJar</code> 的实例，这样就可以在客户端的几个实例中共享一个 cookie jar（或者传入添加额外功能的子类）。</p>
+
+<pre><code class="language-perl6">my $jar = Cro::HTTP::Client::CookieJar.new;
+my $client = Cro::HTTP::Client.new(cookie-jar =&gt; $jar);
+my $json-client = Cro::HTTP::Client.new:
+    cookie-jar =&gt; $jar,
+    content-type =&gt; 'application/json';
+</code></pre>
+
+<p>要在请求中包含一组特定的 cookie，请在进行reuqest请求时使用 <code>cookies</code> 命名参数将它们传递给哈希：</p>
+
+<pre><code class="language-perl6">my $resp = await $client.get: 'http://somesite.com/',
+    cookies =&gt; {
+        session =&gt; $fake-session-id
+    };
+</code></pre>
+
+<p>以这种方式传递的 Cookie 将覆盖 cookie jar 中的任何 cookie。</p>
+
+<p>要获取响应设置的 cookie，请在 <code>Cro::HTTP::Response</code> 对象上使用 cookie 方法，该方法返回一个 <code>Cro::HTTP::Cookie</code> 对象列表。</p>
+
+<h2 id="重定向">重定向</h2>
+
+<p>默认情况下，<code>Cro::HTTP::Client</code> 将遵循 HTTP 重定向响应，强制执行 5 个重定向限制以避免循环重定向。如果有 5 个以上的重定向，<code>X::Cro::HTTP::Client::TooManyRedirects</code> 将被抛出。</p>
+
+<p>可以在构建新的 <code>Cro::HTTP::Client</code> 时或在每个请求的基础上配置此行为，并且每个请求设置都会覆盖在构建时配置的行为。无论哪种情况，都是使用后面的命名参数完成的。</p>
+
+<pre><code class="language-perl6">:follow         # follow redirects (up to 5 times per request)
+:!follow        # never follow redirects
+:follow(2)      # follow redirects (up to 2 times per request)
+:follow(10)     # follow redirects (up to 10 times per request)
+</code></pre>
+
+<p>目前 301,307 和 308 重定向的处理方式相同，永久重定向不会缓存。他们保留原始的请求方法。不管最初的请求方法如何，302 和 303 会导致发出 GET 请求。</p>
+
+<h2 id="认证">认证</h2>
+
+<p>基本认证和承载认证均由 <code>Cro::HTTP::Client</code> 直接支持。这些可以在实例化客户端或每个请求（将覆盖实例上配置的）时进行配置。</p>
+
+<p>对于基本身份验证，请将 <code>auth</code> 选项与包含用户名和密码的哈希值一起传递。</p>
+
+<pre><code class="language-perl6">auth =&gt; {
+    username =&gt; $user,
+    password =&gt; $password
+}
+</code></pre>
+
+<p>对于承载认证，传递一个包含承载的 <code>auth</code> 散列选项：</p>
+
+<pre><code class="language-perl6">auth =&gt; { bearer =&gt; $jwt }
+</code></pre>
+
+<p>未能正确传递用户名和密码或承载将导致 <code>X::Cro::Client::InvalidAuth</code> 异常。</p>
+
+<p>在这两种情况下，认证信息将随请求立即发送。为了仅在服务器以 401 响应响应初始请求时才发送它，请将 <code>if-ask</code> 选项设置为 <code>True</code>。</p>
+
+<pre><code class="language-perl6">auth =&gt; {
+    username =&gt; $user,
+    password =&gt; $password,
+    if-asked =&gt; True
+}
+</code></pre>
+
+<h2 id="持久化连接">持久化连接</h2>
+
+<p><code>Cro::HTTP::Client</code> 实例默认使用持久化连接。当对同一台服务器发起多个请求时，可以通过不需要每次建立新连接来实现更高的吞吐量。要不使用持久连接，请将 <code>:!persistent</code> 传递给构造函数。当使用类型对象（例如，<code>Cro::HTTP::Client.get($url)</code> 时，将不会使用持久连接缓存.</p>
+
+<h2 id="http-版本">HTTP 版本</h2>
+
+<p>可以在构造函数或发起每个请求时传递 <code>:http</code> 选项来控制应该使用哪个版本的 HTTP。它可以传递单个项目或列表。有效的选项是 <code>1.1</code>（它也会隐式地处理 HTTP/1.0）和 2。</p>
+
+<pre><code class="language-perl6">:http&lt;1.1&gt;      # HTTP/1.1 only
+:http&lt;2&gt;        # HTTP/2 only
+:http&lt;1.1 2&gt;    # HTTP/1.1 and HTTP/2 (HTTPS only; selected by ALPN)
+</code></pre>
+
+<p>对于 HTTP 请求，默认值为：http <1.1>，对于HTTPS请求，默认值为：http <1.1 2>。使用HTTP <1.1 2>与HTTP连接是不合法的，因为ALPN是决定使用哪种协议的唯一支持机制。</p>
+
+<h2 id="push-promises">Push promises</h2>
+
+<p><code>HTTP/2.0</code> 支持推送 promises，它允许服务器将额外资源作为响应的一部分推送给客户端。默认情况下，<code>Cro::HTTP::Client</code> 将指示远程服务器不发送 push promises。要加入此功能，可以选择：</p>
+
+<ul>
+<li><p>如果创建一个 <code>Cro::HTTP::Client</code> 实例，请将 <code>:push-promises</code> 传递给构造函数，以便为使用客户端实例发起的所有请求启用它们。</p></li>
+
+<li><p>否则，在发出请求时传递 <code>:push-promises</code>（例如，<code>get</code> 方法）。但是，在使用 HTTP/2.0 时，通常很明智的做法是创建一个实例并重用连接来处理多个请求。</p></li>
+</ul>
+
+<p>通过调用请求产生的 <code>Cro::HTTP::Response</code> 对象的 <code>push-promises</code> 方法来获得 Push promise。这将返回一个 <code>Supply</code>，它会为服务器发送的每个 push promise 发出一个 <code>Cro::HTTP::PushPromise</code> 实例。其中每个人都有一 <code>response</code> 属性，返回一个 <code>Promise</code>，当 push promise 被满足时，<code>Promise</code> 将被保存在一个 <code>Cro::HTTP::Response</code> 对象中。</p>
+
+<p>因此可以实现请求并获得所有 push promises，如下所示：</p>
+
+<pre><code class="language-perl6">react {
+    my $client = Cro::HTTP::Client.new(:push-promises);
+    my $response = await $client.get($url);
+    whenever $response.push-promises -&gt; $prom {
+        whenever $prom.response -&gt; $resp {
+            say &quot;Push promise for $prom.target() had status $resp.status()&quot;;
+        }
+    }
+}
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/cro/">Cro</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-04-15-flip-flop/" data-toggle="tooltip" data-placement="top" title="使用 flip-flop 和 gather-take 提取文本块儿">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-04-27-perl-6%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" data-toggle="tooltip" data-placement="top" title="Awesome Async Interfaces with Perl 6">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+

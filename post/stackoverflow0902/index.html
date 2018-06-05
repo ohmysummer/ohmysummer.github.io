@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>stackoverflow0902</title>
+  
+  <meta name="author" content=""/>
+  <meta name="generator" content="Hugo 0.29" />
+  <link href='https://ohmysummer.github.io//img/favicon.ico' rel='icon' type='image/x-icon'/>
+
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io//css/highlight.min.css">
+  
+  
+  <meta property="og:title" content="stackoverflow0902" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/post/stackoverflow0902/" />
+  <meta property="og:image" content="/img/avatar-icon.jpg" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+          <li>
+          <a title="博客" href="/">博客</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="归档" href="/categories">归档</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="关于" href="/page/about/">关于</a>
+  	      </li>
+  	    
+      
+        
+          <li>
+          <a title="标签" href="/tags">标签</a>
+  	      </li>
+  	    
+      
+      </ul>
+    </div>
+
+	<div class="avatar-container">
+	  <div class="avatar-img-border">
+      
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+              <img class="avatar-img" src="https://ohmysummer.github.io//img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+      
+	  </div>
+	</div>
+
+  </div>
+</nav>
+
+    
+
+
+
+  
+
+  <header class="header-section ">
+  
+  <div class="intro-header no-img">
+      <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-heading">
+          <h1>stackoverflow0902</h1>
+      
+      
+      
+      <span class="post-meta">焉知非鱼 · 2015/12/18</span>
+      
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </header>
+
+
+    <div class="container" role="main">	  
+      
+        <div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+          
+
+<p><a href="http://stackoverflow.com/questions/37979519/how-do-i-chain-to-an-inline-block-in-perl-6">How do I chain to an inline block in Perl 6?</a></p>
+
+<p>我想修改一个数组(我在这个例子中使用了 <code>splice</code>, 但是它也可能是修改数组的任何操作)并返回修改后的数组 - 和 <code>slice</code> 不一样, slice 返回的是从数组中抠出的项。我可以很容易地通过在数组中存储一个 block 来做到, 就像下面这样:</p>
+
+<pre><code class="language-perl6">my $1 = -&gt; $a { splice($a,1,3,[1,2,3]); $a };
+say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array;
+# [0 0 0 0 4 5]
+say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.$1;
+# [0 1 2 3 4 5]
+</code></pre>
+
+<p>我怎么把由 <code>$1</code> 代表的 block 内联到单个表达式中呢？ 下面的解决方法不正确:</p>
+
+<pre><code class="language-perl6">say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.(-&gt; $a { splice($a,1,3,[1,2,3]); $a })
+Invocant requires a type object of type Array, but an object instance was passed.  Did you forget a 'multi'?
+</code></pre>
+
+<p>解决方法是添加一个 <code>&amp;</code> 符号:</p>
+
+<pre><code class="language-perl6">say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.&amp;(-&gt; $a { splice($a,1,3,[1,2,3]); $a })
+# 输出 [0 1 2 3 4 5]
+</code></pre>
+
+<h2 id="getting-a-positional-slice-using-a-range-variable-as-a-subscript-http-stackoverflow-com-questions-38535690-getting-a-positional-slice-using-a-range-variable-as-a-subscript"><a href="http://stackoverflow.com/questions/38535690/getting-a-positional-slice-using-a-range-variable-as-a-subscript">Getting a positional slice using a Range variable as a subscript</a></h2>
+
+<pre><code class="language-perl6">my @numbers = &lt;4 8 16 16 23 42&gt;;
+.say for @numbers[0..2]; # this works
+# 4
+# 8
+# 15
+
+# but this doesn't
+my $range = 0..2;
+.say for @numbers[$range];
+# 16
+</code></pre>
+
+<p>最后的那个下标看起来好像把 <code>$range</code> 解释为range中元素的个数(3)。怎么回事?</p>
+
+<h2 id="解决方法">解决方法</h2>
+
+<p>使用 <code>@numbers[|$range]</code> 把 range 对象展平到列表中。或者在 <strong>Range</strong> 对象上使用绑定来传递它们。</p>
+
+<pre><code class="language-perl6"># On Fri Jul 2016, gfldex wrote:
+my @numbers =  &lt;4 8 15 16 23 42&gt;; my $range = 0..2; .say for @numbers[$range];
+
+# OUTPUT«16»
+# expected:
+# OUTPUT«4\n 8\n 15»
+
+
+# 这是对的, 并且还跟 &quot;Scalar container implies item&quot; 规则有关.
+# Changing it would break things like the second evaluation here:
+
+my @x = 1..10; my @y := 1..3; @x[@y]
+# (2 3 4)
+
+@x[item @y]
+# 4
+
+# 注意在签名中 range 可以被绑定给 @y, 而特殊的 Range 可以生成一个像 @x[$(@arr-param)] 的表达式
+# 这在它的语义中是不可预期的。
+
+# 同样, 绑定给 $range 也能提供预期的结果
+my @numbers =  &lt;4 8 15 16 23 42&gt;; my $range := 0..2; .say for @numbers[$range];
+# OUTPUT«4␤8␤15␤»
+
+# 这也是预期的结果, 因为使用绑定就没有标量容器来强制被当成一个 item 了。
+# So, all here is working as designed.
+</code></pre>
+
+<p>或者：</p>
+
+<pre><code class="language-perl6">.say for @numbers[@($range)]
+# 4
+# 8
+# 15
+</code></pre>
+
+<p>绑定到标量容器的符号输出一个东西
+可以达到你想要的选择包含：</p>
+
+<p>前置一个 @ 符号来得到单个东西的复数形式：numbers[@$range]; 或者以不同的形式来声明 ragne 变量, 以使它直接工作。
+对于后者, 考虑下面的形式:</p>
+
+<pre><code class="language-perl6"># Bind the symbol `numbers` to the value 1..10:
+my \numbers = [0,1,2,3,4,5,6,7,8,9,10];
+
+# Bind the symbol `rangeA` to the value 1..10:
+my \rangeA  := 1..10;
+# Bind the symbol `rangeB` to the value 1..10:
+my \rangeB   = 1..10;
+
+# Bind the symbol `$rangeC` to the value 1..10:
+my $rangeC  := 1..10;
+
+# Bind the symbol `$rangeD` to a Scalar container
+# and then store the value 1..10 in it:`
+my $rangeD   = 1..10;
+
+# Bind the symbol `@rangeE` to the value 1..10:
+my @rangeE  := 1..10;
+
+# Bind the symbol `@rangeF` to an Array container and then
+# store 1 thru 10 in the Scalar containers 1 thru 10 inside the Array
+my @rangeF   = 1..10;
+
+say numbers[rangeA];  # (1 2 3 4 5 6 7 8 9 10)
+say numbers[rangeB];  # (1 2 3 4 5 6 7 8 9 10)
+say numbers[$rangeC]; # (1 2 3 4 5 6 7 8 9 10)
+say numbers[$rangeD]; # 10
+say numbers[@rangeE]; # (1 2 3 4 5 6 7 8 9 10)
+say numbers[@rangeF]; # (1 2 3 4 5 6 7 8 9 10)
+</code></pre>
+
+<p>绑定到标量容器(<code>$rangeD</code>)上的符号总是产生单个值。在 <code>[...]</code>下标中单个值必须是数字。
+对于 range, 被当作单个数字时, 产生的是 range 的长度。</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        <li class="previous">
+          <a href="https://ohmysummer.github.io/post/%E7%BB%99%E6%95%B0%E5%AD%97%E6%B7%BB%E5%8A%A0%E5%8D%83%E5%88%86%E4%BD%8D%E5%88%86%E5%89%B2%E7%AC%A6/" data-toggle="tooltip" data-placement="top" title="给数字添加千分位分割符">&larr; Previous Post</a>
+        </li>
+        
+        
+        <li class="next">
+          <a href="https://ohmysummer.github.io/post/perl6intro-%E7%BF%BB%E8%AF%91/" data-toggle="tooltip" data-placement="top" title="perl6intro 翻译">Next Post &rarr;</a>
+        </li>
+        
+      </ul>
+
+      
+      <div class="disqus-comments">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+      
+
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          
+          
+		      
+          
+		      
+          
+	    	  
+           
+           
+          
+          
+          
+          
+          
+
+    		  <li>
+      			<a href="https://ohmysummer.github.io/index.xml" title="RSS">
+      			  <span class="fa-stack fa-lg">
+        				<i class="fa fa-circle fa-stack-2x"></i>
+        				<i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+      			  </span>
+      			</a>
+    		  </li>		
+
+        </ul>
+        <p class="credits copyright text-muted">
+    	  
+    	  &nbsp;&nbsp;
+    	  © 2015 - 2018
+    		  
+    	  
+    	  &nbsp;&bull;&nbsp;
+    	  <a href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    	  
+  	    </p>
+  	    
+    	<p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.29</a> powered &nbsp;&bull;&nbsp; Theme by <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+    	</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io//js/main.js"></script>
+<script src="https://ohmysummer.github.io//js/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+
+
+  </body>
+</html>
