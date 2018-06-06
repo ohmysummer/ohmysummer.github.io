@@ -277,5 +277,133 @@ say pi ** e; # 22.4591577183611  正则表达式中同样也使用了两个标�
  🎅 ─██─ || layer total ░░░░░░░░░░ ░░░░░░░░░░░░░░░ ░░░░░░░░░░ 2¼ ░░░░░░░░░░ ░░░░░░░░░░░░░░░ ░░░░░░░░░░ ░░░░░░░░░░ ░░░░░░░░░░░░░░░ ░░░░░░░░░░ ⅜ ‾‾??? ░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░ 2¼ ░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░ ░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░ ⅜ ‾‾5⅝ ░░░░░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ 2¼ ░░░░░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ⅜ ‾‾3 ░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░ 2¼ ░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░ ░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░ ⅜ _____________________________________‾‾⅜  这个计划是让精灵们下降到烟囱的底部，手中拿着卷尺，然后回来，确保每个砖块的顶部恰好位于卷尺上的正确位置。</description>
     </item>
     
+    <item>
+      <title>第九天 – HTTP and Web Sockets with Cro</title>
+      <link>https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/</link>
+      <pubDate>Sat, 09 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/</guid>
+      <description>Day 9 – HTTP and Web Sockets with Cro 礼物不仅仅是圣诞节的时候才有。今年夏天，在瑞士 Perl 工作室 - 精美地坐落在阿尔卑斯山 - 我有幸透露了 Cro。 Cro 是一组用于在 Perl 6 中构建服务的库，以及一些用于 stub，run 和跟踪服务的开发工具。 Cro 主要关注使用 HTTP（包括HTTP/2.0）和 Web 套接字构建服务，但可以提供对 ZeroMQ 的早期支持，并计划在未来推出一系列其他选项。
+响应式管道 Cro 遵循 Perl 的设计原则，使简单的事情变得简单，并且让困难的事情变得可能。就像 Git 一样，Cro 可以被认为是具有瓷器（使简单的事情变得简单）和管道（使困难的事情成为可能）。管道水平由组成管道的组件组成。这些组件具有不同的形状，例如源，传输和下沉。这是一个将 HTTP 请求转换为 HTTP 响应的转换：
+use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does Cro::Transform { method consumes() { Cro::HTTP::Request } method produces() { Cro::HTTP::Response } method transformer(Supply $pipeline --&amp;gt; Supply) { supply whenever $pipeline -&amp;gt; $request { given Cro::HTTP::Response.</description>
+    </item>
+    
+    <item>
+      <title>第八天 – Adventures in NQP Land: Hacking the Rakudo Compiler</title>
+      <link>https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/</link>
+      <pubDate>Fri, 08 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/</guid>
+      <description>Day 8 – Adventures in NQP Land: Hacking the Rakudo Compiler/ 对旧圣诞节经典“圣诞节十二天”的道歉，我给你一个 Perl 6 版本的第一行：
+在圣诞节的第一天，我真正的爱给了 pod 树上的 Perl 表格&amp;hellip;&amp;hellip;
+但是我得到的表格不是很漂亮！
+背景 我与 Perl 6 的第一次真正联系是在 2015 年春天，当时我决定检查它的状态，发现它已经准备好迎接黄金时段。在获得了该语言的一些经验之后，我开始在我可以提供帮助的地方贡献文档。我对文档的第一个贡献是清理其中没有很好呈现的表格。在我对本地主机上的 pod 表进行实验期间，我尝试了下表格：
+=begin table -r0c0 r0c1 =end table  这导致 Perl 6 抛出一个丑陋的, LTA（非常搓）的异常消息：
+&amp;quot;===SORRY!=== Cannot iterate object with P6opaque representation&amp;quot;  我解决了这个问题，但它让我感觉不爽，所以我开始调查 pod 和 tables 的内部。这导致我在 github.com/rakudo/src/Perl6/Pod.nqp 中发现了问题的根源。
+事实上，许多 pod 表格问题的真正问题最终都出现在该文件中。
+Not Quite Perl (NQP) nqp 是用于构建 Rakudo Perl 6 编译器的中间语言。它的 git 仓库在这里。本文的其余部分是关于修改 rakudo 编译器中的 nqp 代码，其仓库地址在这里。 Rakudo 在这里也有一个网站。</description>
+    </item>
+    
+    <item>
+      <title>第七天 – Test All The Things</title>
+      <link>https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/</link>
+      <pubDate>Thu, 07 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/</guid>
+      <description>https://perl6advent.wordpress.com/2017/12/07/day-7-test-all-the-things/
+Perl 6 与其大姐姐 Perl 5一样，具有很悠久的测试传统。当您安装任何 Perl 模块时，安装程​​序通常会运行该模块的测试套件。当然，作为新兴的 Perl 6 模块作者，您需要创建自己的测试套件。或者，也许你会在创建模块之前勇于创建测试套件。这实际上有几个好处，其中最主要的是你的第一个用户，甚至在它被写之前。
+但在实际代码之前，我想提一下我经常使用的两个 shell 别名 -
+alias 6=&#39;perl6 -Ilib&#39; alias 6p=&amp;quot;prove -e&#39;perl6 -Ilib&#39;&amp;quot;  这些别名使我可以快速运行测试文件，而不必去安装我的代码。如果我在项目目录中，我可以运行
+$ 6 t/01-core.t ok 1 - call with number ok 2 - call with text ok 3 - call with formatted string 1..3  它会告诉我我运行了哪些测试以及它们是否全部通过。就像它的大姐姐Perl 5一样，Perl 6使用&amp;rsquo;t /&amp;lsquo;目录作为测试文件，并按照惯例使用后缀&amp;rsquo;.t&amp;rsquo;来区分测试文件和软件包或脚本。它还有一个内置的单元测试模块，我们在上面使用。如果我们正在测试sprintf（）内部，它可能看起来像
+use Test; ok sprintf(1), &#39;call with number&#39;; ok sprintf(&amp;quot;text&amp;quot;), &#39;call with text&#39;; ok sprintf(&amp;quot;%d&amp;quot;,1), &#39;call with formatted string&#39;; done-testing;  ok和done-testing功能会自动导出给我们。我在这里使用规范的Perl 6风格，而不是太依赖括号。在这种情况下，我确实需要使用圆括号来确保sprintf（）不会“认为”“空调用”是它的参数。</description>
+    </item>
+    
+    <item>
+      <title>第六天-Perl 6 书评</title>
+      <link>https://ohmysummer.github.io/post/2017-12-06-%E7%AC%AC%E5%85%AD%E5%A4%A9-perl-6-%E4%B9%A6%E8%AF%84/</link>
+      <pubDate>Wed, 06 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-06-%E7%AC%AC%E5%85%AD%E5%A4%A9-perl-6-%E4%B9%A6%E8%AF%84/</guid>
+      <description>https://perl6advent.wordpress.com/2017/12/06/</description>
+    </item>
+    
+    <item>
+      <title>第五天 - 使用 Perl 6 签名解构参数</title>
+      <link>https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/</link>
+      <pubDate>Tue, 05 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/</guid>
+      <description>第五天 - 使用 Perl 6 签名解构参数 在许多其他关键的 Perl 6 特性中，我认为 Signatures 是众多&amp;rdquo;杀手级&amp;rdquo;特性之一。 它们的功能如此丰富而强大，我怀疑关于如何使用它们可以写一整本书。 我想探索一下我原来忽略但是非常珍惜的一些特定功能。
+您可能已经看到了基本的子程序签名：
+sub myfunc($x, $y, $z) {...}  它给函数声明了 3 个标量参数, 并在函数体里面给了它们 $x, $y, $z 的名字。
+太简单了。
+你可以更有爱心, 给它们加上指定的类型:
+sub myfunc(Str $x, Int $y, Rat $z) {...}  你可以使用笑脸符号 :D 让参数值是有定义的:
+sub myfunc(Str:D $x, Int:D $y, Rat:D $z) {...}  还有很多其它花哨的说明符你可以使用，在这里我不深入了。
+但是如果你的参数更复杂呢？ （不是 Complex - 虽然它也起作用..）
+For example, you might want to restrict a specific parameter to a Positional argument like an Array, or an Associative one like a Hash using the respective sigils, @ or %.</description>
+    </item>
+    
+    <item>
+      <title>第四天-使用 Grammars 进行解析</title>
+      <link>https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Mon, 04 Dec 2017 10:08:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/</guid>
+      <description>第四天-使用 Grammars 进行解析 下面是从 Parsing with Perl 6 Regexes and Grammars: A Recursive Descent into Parsing 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。
+这本书马上就要出版了。至少该书的电子版这个月应该可以购买, 纸质版的可以在 亚马逊 预定了。原本最迟会在 2018 年元月发出, 但是幸运的是, 圣诞节你就可以看到了。
+下面你会看到第九章, 使用 Grammars 进行解析。前面的章节详细探讨了创建正则表达式块儿、正则表达式怎么和 Perl 6 代码进行交互、匹配对象、正则力学、常用正则技术，还有重用和组合正则。你可以通过阅读正则表达式官方文档来获取更多关于正则的背景。
+后面的章节涵盖了 action 类和对象, 怎么报告高质量的解析错误, Unicode 支持, 最后还有三个案例研究。
+现在, 尽情享受吧！
+Grammar 是众人皆知的用于解析的瑞士军刀。
+在本章中，我们将更详细地探讨它们。 最重要的是，我们将讨论如何利用他们的威力。
+理解 Grammars Grammars 实现了自顶向下的解析方法。 入口点，通常是 TOP regex 正则表达式，它知道粗粒度的结构，并调用下降到繁复细节的更深一步的正则表达式。 也会涉及到递归。 例如，如果解析算术表达式，则操作符可以是一对括号内的任意表达式。
+这是一个自顶向下的结构，或者更确切地说是一个递归下降分析方法。 如果不涉及回溯，我们称之为*预测分析法*，因为在字符串中的每个位置，我们确切地知道我们在寻找什么 - 我们可以预测下一个 token 将会是什么（即使我们只能预测它可能是一组可选分支的其中之一）。
+结果匹配树在结构上完全对应于 grammar 中正则表达式的调用结构。 让我们考虑解析一个只包含运算符 *，+和用于分组的括号的算术表达式：</description>
+    </item>
+    
+    <item>
+      <title>第三天 – LetterOps with Perl6</title>
+      <link>https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/</link>
+      <pubDate>Sun, 03 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/</guid>
+      <description>Day 3 – LetterOps with Perl6 规模 “规模！规模就是一切！“。
+当圣诞老人的声音传到他们身上时，精灵散落在四面八方。
+“这个 operation 是为三十四个孩子准备的？现在我们有无数的！大人也送信！“
+小精灵 Buzzius 站了出来，喷出“但现在我们有电脑！”，又回到他精灵的追求。
+“他们有什么好处？请告诉我，如果我仍然需要阅读每一封信，我该怎么办？“。
+小精灵 Diodius 短暂地从藏身处抬起头，说：“告诉孩子们发一封文字信”。
+圣诞老人停止了叫喊，并抓住了他有胡子的下巴。 “我可以做到这一点”。早期的儿童采用者就像这样发了一封信。
+Dear Santa: I have been a good boy so I want you to bring me a collection of scythes and an ocean liner with a captain and a purser and a time travel machine and instructions to operate it and I know I haven&#39;t been so good at times but that is why I&#39;m asking the time machine so that I can make it good and well and also find out what happened on July 13th which I completely forgot.</description>
+    </item>
+    
+    <item>
+      <title>第二天-Perl 6: 符号, 变量和容器</title>
+      <link>https://ohmysummer.github.io/post/2017-12-02-%E7%AC%AC%E4%BA%8C%E5%A4%A9-perl6%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E5%8F%98%E9%87%8F%E5%92%8C%E5%AE%B9%E5%99%A8/</link>
+      <pubDate>Sat, 02 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-02-%E7%AC%AC%E4%BA%8C%E5%A4%A9-perl6%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E5%8F%98%E9%87%8F%E5%92%8C%E5%AE%B9%E5%99%A8/</guid>
+      <description>第二天-Perl 6: 符号, 变量和容器 对容器的基本理解对于在 Perl 6 中进行愉快的编程是至关重要的。它们无处不在，不仅影响你获得的变量类型，还决定了 List 和 Map 在迭代时的行为方式。
+今天，我们将学习什么是容器，以及如何使用它们，但是首先，我希望你暂时忘记你对 Perl 6 的符号和变量的所有知识或怀疑，特别是如果你来自 Perl 5 的背景。 忘记一切。
+把钱拿出来 在 Perl 6 中，变量以 $ 符号为前缀，用绑定运算符（:=）赋值。 像这样：
+my $foo := 42; say &amp;quot;The value is $foo&amp;quot;; # OUTPUT: «The value is 42␤»  如果你已经按照我的建议来忘记你所知道的一切，那么学习 List 和 Hash 类型也是一样：
+my $ordered-things := &amp;lt;foo bar ber&amp;gt;; my $named-things := %(:42foo, :bar&amp;lt;ber&amp;gt;); say &amp;quot;$named-things&amp;lt;foo&amp;gt; bottles of $ordered-things[2] on the wall&amp;quot;; # OUTPUT: «42 bottles of ber on the wall␤» .</description>
+    </item>
+    
+    <item>
+      <title>第一天 – Perl 6 鬼精灵: 圣诞节实用指南</title>
+      <link>https://ohmysummer.github.io/post/2017-12-01-%E7%AC%AC%E4%B8%80%E5%A4%A9-perl6%E9%AC%BC%E7%B2%BE%E7%81%B5-%E5%9C%A3%E8%AF%9E%E8%8A%82%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97/</link>
+      <pubDate>Fri, 01 Dec 2017 10:54:24 +0200</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2017-12-01-%E7%AC%AC%E4%B8%80%E5%A4%A9-perl6%E9%AC%BC%E7%B2%BE%E7%81%B5-%E5%9C%A3%E8%AF%9E%E8%8A%82%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97/</guid>
+      <description>第一天 – Perl 6 鬼精灵: 圣诞节实用指南 看看他们！同事、朋友和亲近的家人都在开心地笑着。他们都在享受着使用 Perl 6 的 6.c “圣诞”版编程的乐趣。给力的并发原语, 核心文法, 还有非常棒的对象模型。它让我印象深刻！
+但是等一下&amp;hellip; 就一秒。我有个想法。一个可怕的想法。我想到了一个鬼主意! 我们可以在他们的&amp;rdquo;圣诞&amp;rdquo;上捣乱。需要的只有一点花招。哈哈哈哈哈哈！！
+欢迎来到 2017 年的 Perl 6 圣诞日历！每天，从今天直到圣诞节，我们都会有一篇很赞的关于 Perl6 的博客推送到你面前。
+今天，我们会展示我们淘气的一面并且故意地做些淘气的事情。确实，这有点用，但是淘气点更快乐。我们开始吧！
+But True does False 你听过 but 操作符吗？一个好玩的东西：
+say True but False ?? &#39;Tis true&#39; !! &#39;Tis false&#39;; # OUTPUT: «Tis false␤» my $n = 42 but &#39;forty two&#39;; say $n; # OUTPUT: «forty two␤» say $n + 7; # OUTPUT: «49␤»  它是一个中缀操作符，它首先拷贝它左边的对象，然后把它右边提供的 role 混进这个拷贝中：</description>
+    </item>
+    
   </channel>
 </rss>

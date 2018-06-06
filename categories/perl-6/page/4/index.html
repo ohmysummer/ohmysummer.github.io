@@ -396,8 +396,8 @@ proto sub f($x) {*}  现在，尝试调用双参数函数将无法编译：
             </article>
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/">
-                <h2 class="post-title">第九天 – HTTP and Web Sockets with Cro</h2>
+              <a href="https://ohmysummer.github.io/post/2017-09-16-%E6%A0%B9%E6%8D%AEselect%E7%BB%93%E6%9E%9C%E7%94%9F%E6%88%90insert%E8%AF%AD%E5%8F%A5/">
+                <h2 class="post-title">根据select结果生成insert语句</h2>
 
                 
               </a>
@@ -406,11 +406,11 @@ proto sub f($x) {*}  现在，尝试调用双参数函数将无法编译：
                 <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 9, 2017
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 16, 2017
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (613 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (265 words)
   
   
 </span>
@@ -418,10 +418,9 @@ proto sub f($x) {*}  现在，尝试调用双参数函数将无法编译：
               </p>
               <div class="post-entry">
                 
-                  Day 9 – HTTP and Web Sockets with Cro 礼物不仅仅是圣诞节的时候才有。今年夏天，在瑞士 Perl 工作室 - 精美地坐落在阿尔卑斯山 - 我有幸透露了 Cro。 Cro 是一组用于在 Perl 6 中构建服务的库，以及一些用于 stub，run 和跟踪服务的开发工具。 Cro 主要关注使用 HTTP（包括HTTP/2.0）和 Web 套接字构建服务，但可以提供对 ZeroMQ 的早期支持，并计划在未来推出一系列其他选项。
-响应式管道 Cro 遵循 Perl 的设计原则，使简单的事情变得简单，并且让困难的事情变得可能。就像 Git 一样，Cro 可以被认为是具有瓷器（使简单的事情变得简单）和管道（使困难的事情成为可能）。管道水平由组成管道的组件组成。这些组件具有不同的形状，例如源，传输和下沉。这是一个将 HTTP 请求转换为 HTTP 响应的转换：
-use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does Cro::Transform { method consumes() { Cro::HTTP::Request } method produces() { Cro::HTTP::Response } method transformer(Supply $pipeline --&gt; Supply) { supply whenever $pipeline -&gt; $request { given Cro::HTTP::Response.
-                  <a href="https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/" class="post-read-more">[Read More]</a>
+                  想根据 MySQL select 语句的结果生成 insert 语句。
+use v6; for $=finish.lines -&gt; $line { next if $++ &lt; 3 || $line ~~ / '-' /; say 'insert into convert_path (id, path_name, events, app_key, create_at, update_at) values (' ~ ($line.split: /&lt;[\s+ |]&gt;/, :skip-empty)&gt;&gt;.&amp;quote.join(&quot;,&quot;) ~ &quot;);&quot;; } sub quote(Str $ele) { return '&quot;' ~ $ele ~ '&quot;'; } =finish +-----+--------------------------------+-------------------------------------------------------------------------------------------------------------+----------------------------------+------------+------------+ | id | path_name | events | app_key | create_at | update_at | +-----+--------------------------------+-------------------------------------------------------------------------------------------------------------+----------------------------------+------------+------------+ | 308 | 新增打听流程1 | 新增打听,提交打听 | 10c29cf8bd6e61f9ae4a0212eed803c8 | 1505098067 | 1505098067 | | 309 | 用户购买流程 | 浏览商品,加入购物车,结算购物车中的商品,点击付款,完成付款 | c10606f35c85bac58625c95006fba769 | 1505283224 | 1505283224 | | 311 | 用户购买流程2 | 浏览商品,点击付款,完成付款 | c10606f35c85bac58625c95006fba769 | 1505284039 | 1505284039 | | 312 | 朗读模板付费转化流程 | 访问朗读首页,访问朗读模板,输入或导入文本,开始朗读,进入下载支付页,微信支付 | 54117664fad164a634c57571ba7c5aa7 | 1505284047 | 1505284047 | | 313 | 用户购买流程3 | 浏览商品,填写配送地址,点击付款,完成付款 | c10606f35c85bac58625c95006fba769 | 1505284110 | 1505284110 | | 315 | 用户购买流程4 | 浏览商品,填写配送地址,完成配送地址,点击立即购买,付款,付款完成 | c10606f35c85bac58625c95006fba769 | 1505284303 | 1505284303 | | 316 | 新建朗读付费转化流程 | 访问朗读首页,访问新建朗读,输入或导入文本,开始朗读,进入下载支付页,微信支付 | 54117664fad164a634c57571ba7c5aa7 | 1505284351 | 1505284351 | | 321 | goodsDetail | onLoad,onShow | c10606f35c85bac58625c95006fba769 | 1505451421 | 1505451421 | +-----+--------------------------------+-------------------------------------------------------------------------------------------------------------+----------------------------------+------------+------------+  最后生成的结果如下：
+                  <a href="https://ohmysummer.github.io/post/2017-09-16-%E6%A0%B9%E6%8D%AEselect%E7%BB%93%E6%9E%9C%E7%94%9F%E6%88%90insert%E8%AF%AD%E5%8F%A5/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -436,12 +435,12 @@ use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does C
             </article>
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/">
-                <h2 class="post-title">第八天 – Adventures in NQP Land: Hacking the Rakudo Compiler</h2>
+              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/">
+                <h2 class="post-title">开启 Disqus 评论</h2>
 
                 
                   <h3 class="post-subtitle">
-                    第八天 -  NQP 领地的冒险：破解 Rakudo 编译器
+                    Disqus Is Cool
                   </h3>
                 
               </a>
@@ -450,11 +449,11 @@ use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does C
                 <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 8, 2017
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 15, 2017
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (468 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (193 words)
   
   
 </span>
@@ -462,15 +461,9 @@ use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does C
               </p>
               <div class="post-entry">
                 
-                  Day 8 – Adventures in NQP Land: Hacking the Rakudo Compiler/ 对旧圣诞节经典“圣诞节十二天”的道歉，我给你一个 Perl 6 版本的第一行：
-在圣诞节的第一天，我真正的爱给了 pod 树上的 Perl 表格&hellip;&hellip;
-但是我得到的表格不是很漂亮！
-背景 我与 Perl 6 的第一次真正联系是在 2015 年春天，当时我决定检查它的状态，发现它已经准备好迎接黄金时段。在获得了该语言的一些经验之后，我开始在我可以提供帮助的地方贡献文档。我对文档的第一个贡献是清理其中没有很好呈现的表格。在我对本地主机上的 pod 表进行实验期间，我尝试了下表格：
-=begin table -r0c0 r0c1 =end table  这导致 Perl 6 抛出一个丑陋的, LTA（非常搓）的异常消息：
-&quot;===SORRY!=== Cannot iterate object with P6opaque representation&quot;  我解决了这个问题，但它让我感觉不爽，所以我开始调查 pod 和 tables 的内部。这导致我在 github.com/rakudo/src/Perl6/Pod.nqp 中发现了问题的根源。
-事实上，许多 pod 表格问题的真正问题最终都出现在该文件中。
-Not Quite Perl (NQP) nqp 是用于构建 Rakudo Perl 6 编译器的中间语言。它的 git 仓库在这里。本文的其余部分是关于修改 rakudo 编译器中的 nqp 代码，其仓库地址在这里。 Rakudo 在这里也有一个网站。
-                  <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/" class="post-read-more">[Read More]</a>
+                  要开启 Disqus 评论, 需要先在 Disqus 官网注册账号, 获得 disqusShortname。
+#use Grammar::Tracer; #use Grammar::Debugger; my $scene = q:to/END/; ★ 二维码 1011 扫描二维码 1047 扫描小程序码 1012 长按图片识别二维码 1013 手机相册选取二维码 1031 长按图片识别一维码 1032 手机相册选取一维码 1048 长按图片识别小程序码 1049 手机相册选取小程序码 1025 扫描一维码 1072 二维码收款页面 ★ 搜索 1005 顶部搜索框的搜索结果页 1006 发现栏小程序主入口搜索框的搜索结果页 1042 添加好友搜索框的搜索结果页 1053 搜一搜的结果页 1027 顶部搜索框搜索结果页“使用过的小程序”列表 ★ 公众号 1043 公众号模板消息 1020 公众号 profile 页相关小程序列表 1035 公众号自定义菜单 1058 公众号文章 1074 公众号会话下发的小程序消息卡片 ★ 分享 1036 App 分享消息卡片 1007 单人聊天会话中的小程序消息卡片 1008 群聊会话中的小程序消息卡片 1044 带 shareTicket 的小程序消息卡片 ★ 模板消息 1014 小程序模版消息 1034 微信支付完成页 ★ 测试 1059 体验版小程序绑定邀请页 1017 前往体验版的入口页 ★ 卡券 1028 我的卡包 1029 卡券详情页 1052 卡券的适用门店列表 ★ 小程序之间跳转 1037 小程序打开小程序 1038 从另一个小程序返回 ★ 快捷入口 1001 发现栏小程序主入口 1022 聊天顶部置顶小程序入口 1023 安卓系统桌面图标 1024 小程序 profile 页 ★ 广告投放 1068 附近小程序列表广告 1067 公众号文章广告 ★ 其他 1039 摇电视 1056 音乐播放器菜单 1019 微信钱包 1026 附近小程序列表 1064 微信连Wifi状态栏 1073 客服消息列表下发的小程序消息卡片 END grammar Scene { token TOP { ^ &lt;entry&gt;+ $ } # 一个或多个块 token entry { &lt;head&gt; \s* # 每个块都有一个标题 &lt;line&gt;+ \s* # 每个标题下面有很多非标题行 } token head { '★' \s+ &lt;title&gt; } token line { [ &lt;!
+                  <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -485,55 +478,12 @@ Not Quite Perl (NQP) nqp 是用于构建 Rakudo Perl 6 编译器的中间语言�
             </article>
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/">
-                <h2 class="post-title">第七天 – Test All The Things</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 7, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (274 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  https://perl6advent.wordpress.com/2017/12/07/day-7-test-all-the-things/
-Perl 6 与其大姐姐 Perl 5一样，具有很悠久的测试传统。当您安装任何 Perl 模块时，安装程​​序通常会运行该模块的测试套件。当然，作为新兴的 Perl 6 模块作者，您需要创建自己的测试套件。或者，也许你会在创建模块之前勇于创建测试套件。这实际上有几个好处，其中最主要的是你的第一个用户，甚至在它被写之前。
-但在实际代码之前，我想提一下我经常使用的两个 shell 别名 -
-alias 6='perl6 -Ilib' alias 6p=&quot;prove -e'perl6 -Ilib'&quot;  这些别名使我可以快速运行测试文件，而不必去安装我的代码。如果我在项目目录中，我可以运行
-$ 6 t/01-core.t ok 1 - call with number ok 2 - call with text ok 3 - call with formatted string 1..3  它会告诉我我运行了哪些测试以及它们是否全部通过。就像它的大姐姐Perl 5一样，Perl 6使用&rsquo;t /&lsquo;目录作为测试文件，并按照惯例使用后缀&rsquo;.t&rsquo;来区分测试文件和软件包或脚本。它还有一个内置的单元测试模块，我们在上面使用。如果我们正在测试sprintf（）内部，它可能看起来像
-use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call with text'; ok sprintf(&quot;%d&quot;,1), 'call with formatted string'; done-testing;  ok和done-testing功能会自动导出给我们。我在这里使用规范的Perl 6风格，而不是太依赖括号。在这种情况下，我确实需要使用圆括号来确保sprintf（）不会“认为”“空调用”是它的参数。
-                  <a href="https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-06-%E7%AC%AC%E5%85%AD%E5%A4%A9-perl-6-%E4%B9%A6%E8%AF%84/">
-                <h2 class="post-title">第六天-Perl 6 书评</h2>
+              <a href="https://ohmysummer.github.io/post/2017-03-11-perl6%E4%B8%AD%E7%9A%84%E7%AC%91%E8%84%B8/">
+                <h2 class="post-title">Perl 6 中的笑脸</h2>
 
                 
                   <h3 class="post-subtitle">
-                    Five golden rings, Four calling birds, Three French hens, Two kinds of programmers?, And a book review in a Perl tree! (or Rakudo Tree? ;-)
+                    :D, :U, :_
                   </h3>
                 
               </a>
@@ -542,11 +492,11 @@ use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call
                 <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 6, 2017
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 11, 2017
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (1 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (83 words)
   
   
 </span>
@@ -554,15 +504,20 @@ use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call
               </p>
               <div class="post-entry">
                 
-                  <p><a href="https://perl6advent.wordpress.com/2017/12/06/">https://perl6advent.wordpress.com/2017/12/06/</a></p>
-
+                  在 Perl 6 中在调用者的类型身上使用 :D 或 :U 类型笑脸来制造 type/instance 方法:
+class Foo { multi method foo (Foo:D:) { say &quot;instance&quot; } multi method foo (Foo:U:) { say &quot;type object&quot; } } Foo .foo; # 输出 type object Foo.new.foo; # 输出 instance # Can use compile time vars to aovid re-typing the actual name everywhere: class Bar { multi method foo (::?CLASS:D:) { say &quot;instance&quot; } multi method foo (::?CLASS:U:) { say &quot;type object&quot; } } Bar .
+                  <a href="https://ohmysummer.github.io/post/2017-03-11-perl6%E4%B8%AD%E7%9A%84%E7%AC%91%E8%84%B8/" class="post-read-more">[Read More]</a>
                 
               </div>
 
               
                 <div class="blog-tags">
                   
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                    <a href="https://ohmysummer.github.io//tags/smileys/">smileys</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/defined/">defined</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/undefined/">undefined</a>&nbsp;
                   
                 </div>
               
@@ -570,12 +525,62 @@ use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call
             </article>
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/">
-                <h2 class="post-title">第五天 - 使用 Perl 6 签名解构参数</h2>
+              <a href="https://ohmysummer.github.io/post/2016-10-22-%E5%85%B3%E4%BA%8Eperl6%E4%BD%A0%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%8410%E4%BB%B6%E4%BA%8B/">
+                <h2 class="post-title">关于 Perl 6 你要知道的 10 件事</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 22, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (794 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Ten Things You Need To Know about Perl 6 Jeffrey Goff, Evozon Systems LLC OSCON London 2016 https://github.com/drforr http://theperlfisher.blogspot.ro  资源  perl6.org (obviously) docs.perl6.org - Online documentation modules.perl6.org - CPAN Lite
+ rakudo.org - Where to get the latest
+ https://github.com/tadzik/rakudobrew - Perlbrew for Perl 6
+ https://github.com/tadzik/panda/ - Module installer
+ irc://irc.freenode.org/perl6 - #perl6 on IRC.freenode.org
+ http://rosettacode.org/wiki/Category:Perl_6 - Sample source
+  要闻  干净, 一次性的可解析的文法 对用户友好的错误信息 友好的 Unicode 对初学者有帮助的符号 Math that works 函数签名 用正则表达式引导 OO with a type lattice built on a Metaprogramming model 自定义运算符 内置并发  一次性文法 my @doctor = { :first('Christopher'), :last('Eccleston'), years =&gt; 1 }, { :first('David'), :last('Tennant'), years =&gt; 4 }, { :first('Matt'), :last('Smith'), years =&gt; 4 }, { :first('Peter'), :last('Capaldi'), years =&gt; 3 }; say 'First New Who Doctor: ', @doctor[0]{'first'}, ' ', @doctor[0]&lt;last&gt;; say &quot;Average run: &quot; ~ @doctor.
+                  <a href="https://ohmysummer.github.io/post/2016-10-22-%E5%85%B3%E4%BA%8Eperl6%E4%BD%A0%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%8410%E4%BB%B6%E4%BA%8B/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E7%AD%BE%E5%90%8D/">签名</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%90%E7%AE%97%E7%AC%A6/">自定义运算符</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-06-01-perl6%E4%B8%AD%E7%9A%84subscripts/">
+                <h2 class="post-title">Perl 6 中的 Subscripts</h2>
 
                 
                   <h3 class="post-subtitle">
-                    Destructure your Arguments with Perl 6 Signatures
+                    Accessing data structure elements by index or key
                   </h3>
                 
               </a>
@@ -584,11 +589,11 @@ use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call
                 <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 5, 2017
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 1, 2016
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (398 words)
+  <i class="fa fa-clock-o"></i> 9 minutes (1911 words)
   
   
 </span>
@@ -596,23 +601,18 @@ use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call
               </p>
               <div class="post-entry">
                 
-                  第五天 - 使用 Perl 6 签名解构参数 在许多其他关键的 Perl 6 特性中，我认为 Signatures 是众多&rdquo;杀手级&rdquo;特性之一。 它们的功能如此丰富而强大，我怀疑关于如何使用它们可以写一整本书。 我想探索一下我原来忽略但是非常珍惜的一些特定功能。
-您可能已经看到了基本的子程序签名：
-sub myfunc($x, $y, $z) {...}  它给函数声明了 3 个标量参数, 并在函数体里面给了它们 $x, $y, $z 的名字。
-太简单了。
-你可以更有爱心, 给它们加上指定的类型:
-sub myfunc(Str $x, Int $y, Rat $z) {...}  你可以使用笑脸符号 :D 让参数值是有定义的:
-sub myfunc(Str:D $x, Int:D $y, Rat:D $z) {...}  还有很多其它花哨的说明符你可以使用，在这里我不深入了。
-但是如果你的参数更复杂呢？ （不是 Complex - 虽然它也起作用..）
-For example, you might want to restrict a specific parameter to a Positional argument like an Array, or an Associative one like a Hash using the respective sigils, @ or %.
-                  <a href="https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/" class="post-read-more">[Read More]</a>
+                  Subscripts 通过索引或键访问数据结构中的元素。
+通常，人们需要引用集合或数据结构中的一个特定的元素（或特定的元素切片）。从数学标记法中偷学到的，向量 v 的组成部分用 v₁, v₂, v₃ 来引用，在 Perl 6 中这个概念叫做 “下标” （或“索引”）。
+Basics Perl 6 提供了两个通用的下标接口：
+elements are identified by interface name supported by [ ] zero-based indices Positional Array, List, Buf, Match, ... { } string or object keys Associative Hash, Bag, Mix, Match, ...   Positional 下标 (通过 postcircumfix [ ] 通过元素在有序集合中的位置来寻址元素。)索引 0 引用第一个元素， 索引 1 引用第二个元素， 以此类推：  my @chores = &quot;buy groceries&quot;, &quot;feed dog&quot;, &quot;wash car&quot;; say @chores[0]; #-&gt; buy groceries say @chores[1]; #-&gt; feed dog say @chores[2]; #-&gt; wash car   Associative 下标 (通过 postcircumfix { }), 不要求集合以任何特定的顺序保存元素 - 相反，它使用一个唯一的键来寻址每个值。键的种类取决于使用的集合： 举个例子， 一个标准的散列 使用字符串作为键， 而一个 Mix 能使用任意的对象作为键， 等等:  my %grade = Zoe =&gt; &quot;C&quot;, Ben =&gt; &quot;B+&quot;; say %grade{&quot;Zoe&quot;}; #-&gt; C say %grade{&quot;Ben&quot;}; #-&gt; B+ my $stats = ( Date.
+                  <a href="https://ohmysummer.github.io/post/2016-06-01-perl6%E4%B8%AD%E7%9A%84subscripts/" class="post-read-more">[Read More]</a>
                 
               </div>
 
               
                 <div class="blog-tags">
                   
-                    <a href="https://ohmysummer.github.io//tags/signatures/">Signatures</a>&nbsp;
+                    <a href="https://ohmysummer.github.io//tags/subscripts/">Subscripts</a>&nbsp;
                   
                 </div>
               
@@ -620,12 +620,12 @@ For example, you might want to restrict a specific parameter to a Positional arg
             </article>
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/">
-                <h2 class="post-title">第四天-使用 Grammars 进行解析</h2>
+              <a href="https://ohmysummer.github.io/post/2016-04-12-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/">
+                <h2 class="post-title">Perl 6 中的签名</h2>
 
                 
                   <h3 class="post-subtitle">
-                    Parsing with Grammars (Book Extract)
+                    Parameter list pattern
                   </h3>
                 
               </a>
@@ -634,11 +634,11 @@ For example, you might want to restrict a specific parameter to a Positional arg
                 <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 4, 2017
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 12, 2016
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 9 minutes (1862 words)
+  <i class="fa fa-clock-o"></i> 9 minutes (1818 words)
   
   
 </span>
@@ -646,24 +646,21 @@ For example, you might want to restrict a specific parameter to a Positional arg
               </p>
               <div class="post-entry">
                 
-                  第四天-使用 Grammars 进行解析 下面是从 Parsing with Perl 6 Regexes and Grammars: A Recursive Descent into Parsing 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。
-这本书马上就要出版了。至少该书的电子版这个月应该可以购买, 纸质版的可以在 亚马逊 预定了。原本最迟会在 2018 年元月发出, 但是幸运的是, 圣诞节你就可以看到了。
-下面你会看到第九章, 使用 Grammars 进行解析。前面的章节详细探讨了创建正则表达式块儿、正则表达式怎么和 Perl 6 代码进行交互、匹配对象、正则力学、常用正则技术，还有重用和组合正则。你可以通过阅读正则表达式官方文档来获取更多关于正则的背景。
-后面的章节涵盖了 action 类和对象, 怎么报告高质量的解析错误, Unicode 支持, 最后还有三个案例研究。
-现在, 尽情享受吧！
-Grammar 是众人皆知的用于解析的瑞士军刀。
-在本章中，我们将更详细地探讨它们。 最重要的是，我们将讨论如何利用他们的威力。
-理解 Grammars Grammars 实现了自顶向下的解析方法。 入口点，通常是 TOP regex 正则表达式，它知道粗粒度的结构，并调用下降到繁复细节的更深一步的正则表达式。 也会涉及到递归。 例如，如果解析算术表达式，则操作符可以是一对括号内的任意表达式。
-这是一个自顶向下的结构，或者更确切地说是一个递归下降分析方法。 如果不涉及回溯，我们称之为*预测分析法*，因为在字符串中的每个位置，我们确切地知道我们在寻找什么 - 我们可以预测下一个 token 将会是什么（即使我们只能预测它可能是一组可选分支的其中之一）。
-结果匹配树在结构上完全对应于 grammar 中正则表达式的调用结构。 让我们考虑解析一个只包含运算符 *，+和用于分组的括号的算术表达式：
-                  <a href="https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/" class="post-read-more">[Read More]</a>
+                  签名也是对象 class Signature {}  签名是代码对象参数列表的静态描述。即, 签名描述了你需要什么参数和多少参数传递给代码或函数以调用它们。
+传递参数给签名把包含在 Capture 中的参数绑定到了签名上。
+&gt; sub a($a, $b) {}; &gt; &amp;a.signature.perl.say :($a, $b) &gt; my $b = -&gt; $a, $b {}; &gt; $b.signature.perl.say :($a, $b)  签名是一个对象, 就像 Perl 6 中的任何其它东西一样。 任何 Callable 类型中都有签名, 并且它能使用 .signature方法获取到。
+class Signature { ... }  签名字面量 签名出现在子例程和方法名后面的圆括号中, 对于 blocks 签名出现在 -&gt;或 &lt;-&gt; 箭头后面, 或者作为变量声明符(例如 [my](https://docs.perl6.org/syntax/my) )的输入, 或者以冒号开头作为单独的项。
+sub f($x) { } # ^^^^ sub f 的签名 method x() { } # ^^ 方法 x 的签名 my $s = sub (*@a) { } # ^^^^^ 匿名函数的签名 for &lt;a b c&gt; -&gt; $x { } # ^^ Block 的签名 my ($a, @b) = 5, (6,7,8); # ^^^^^^^^ 变量声明符的签名 my $sig = :($a, $b); # ^^^^^^^^ 独立的签名对象  签名字面量可以用于定义回调或闭包的签名。
+                  <a href="https://ohmysummer.github.io/post/2016-04-12-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0%E7%AD%BE%E5%90%8D/" class="post-read-more">[Read More]</a>
                 
               </div>
 
               
                 <div class="blog-tags">
                   
-                    <a href="https://ohmysummer.github.io//tags/grammars/">Grammars</a>&nbsp;
+                    <a href="https://ohmysummer.github.io//tags/signature/">signature</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E7%AD%BE%E5%90%8D/">签名</a>&nbsp;
                   
                 </div>
               
