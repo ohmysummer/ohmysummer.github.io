@@ -201,6 +201,46 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-06-28-%E6%95%A3%E5%88%97%E4%B9%9F%E6%98%AF%E5%AE%B9%E5%99%A8/">
+                <h2 class="post-title">散列也是容器</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 28, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (124 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  散列也是容器 假设我们想计算某个东西的出现次数, 我们通常的做法是弄一个 &ldquo;seen-hash&rdquo; 散列。有时候我们有一组待查询的键, 其中有些键可能不在我们所扫描的数据中。那是一种特殊情况, 但是 Perl 6 能够完美地解决, 因为散列也是容器, 因此我们能够拥有默认值。
+my $words = &lt;Hashes are containers too&gt;.lc; constant alphabet = 'a' .. 'z'; my %seen of Int is default(0); %seen{$_}++ for $words.comb; put &quot;$_: %seen{$_}&quot; for alphabet;  输出结果:
+a: 3 b: 0 c: 1 d: 0 e: 3 f: 0 g: 0 h: 2 i: 1 j: 0 k: 0 l: 0 m: 0 n: 2 o: 3 p: 0 q: 0 r: 2 s: 3 t: 2 u: 0 v: 0 w: 0 x: 0 y: 0 z: 0  $words 中没有出现的特殊字符由 is default(0) 处理了。 默认值可以被精心设计。我们来弄一个在数值上下文中为默认值为 0 但是在字符串上下文中为默认值为 NULL 并且总是被定义的一个散列。
+                  <a href="https://ohmysummer.github.io/post/2015-06-28-%E6%95%A3%E5%88%97%E4%B9%9F%E6%98%AF%E5%AE%B9%E5%99%A8/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/containers/">containers</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-06-18-%E6%89%BE%E5%88%B0%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6%E4%B8%AD%E5%85%B1%E6%9C%89%E7%9A%84%E8%A1%8C/">
                 <h2 class="post-title">找到两个文件中共有的行</h2>
 
@@ -609,48 +649,6 @@ class Proc::Async::Timeout is Proc::Async { has $.timeout is rw; method start($s
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/">入门指南</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-05-01-sneaky-methods/">
-                <h2 class="post-title">Sneaky methods</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 1, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (140 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Sneaky methods
-就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
-my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
-src/core/Bool.pm 32: Bool.^add_method('pred', my method pred() { Bool::False }); 33: Bool.^add_method('succ', my method succ() { Bool::True }); 35: Bool.^add_method('enums', my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
-&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Perl 6 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .
-                  <a href="https://ohmysummer.github.io/post/2015-05-01-sneaky-methods/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/add_method/">add_method</a>&nbsp;
                   
                 </div>
               

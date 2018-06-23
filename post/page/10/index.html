@@ -201,6 +201,50 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-10-17-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0/">
+                <h2 class="post-title">Perl 6 中的函数</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 17, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 11 minutes (2265 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 中的函数 例程（Routines）是 Perl 6 中代码重用的最小手段。它们有几种形式，最明显的是属于类和角色并与对象相关联的方法，还有函数, 也叫做子例程或短子程序，它们独立于对象而存在。
+子例程默认是词法（my）作用域的，对它们的调用通常在编译时解析。
+子例程可以具有签名，也称为*参数列表*，其指定签名期望的参数（如果有的话）。 它可以指定（或保持打开）参数的数量和类型，以及返回值。
+子例程的内省通过例程提供。
+定义/创建/使用 函数 子例程 创建子例程的基本方法是使用 sub 声明符，后跟可选标识符
+sub my-func { say &quot;Look ma, no args!&quot; } my-func;  sub 声明符返回可以存储在任何容器中的 Sub 类型的值:
+my &amp;c = sub { say &quot;Look ma, no name!&quot; } c; # OUTPUT: «Look ma, no name!␤» my Any:D $f = sub { say 'Still nameless...' } $f(); # OUTPUT: «Still nameless...␤» my Code \a = sub { say ‚raw containers don't implement postcircumfix:&lt;( )&gt;‘ }; a.
+                  <a href="https://ohmysummer.github.io/post/2016-10-17-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%87%BD%E6%95%B0/">函数</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-10-17-perl6fromruby/">
                 <h2 class="post-title">Perl 6 From Ruby - Nutshell</h2>
 
@@ -578,48 +622,6 @@ use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$
 class X::Paramenter::Exclusive is Exception { has $.type; method message { &quot;Parameters of {$.type.perl} are mutual exclusive&quot; } }  现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
 &amp;&amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&gt; Find::Type) ) class X::Parameter::UnrecognisedOption is Exception { has $.type; has $.unrecognised; method message { &quot;Option { $.unrecognised } not any of { $.type.map({ (.^name ~ '::') xx * Z~ .
                   <a href="https://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/key/">key</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-09-26-%E9%94%AE%E6%98%AF%E5%8F%AF%E9%80%89%E7%9A%84/">
-                <h2 class="post-title">键是可选的</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 26, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (123 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Keys are optional Keys are optional
-在我探索一个并发的 File::Find 模块时我发现我需要一组排序用的参数(例如 Bool)和互相排斥的参数。枚举相当易于组合, 把好用的名字引入到作用域中(直接地或通过 export)并且应该让相互排斥变得容易。容易的那部分有点幼稚因为类型化的吞噬参数尚未支持(还没有)。如果没有容易的方式, 肯定会有一个可行的困难的方式。
-首先, 我们定义两个枚举用作要查找的选项。
-package Find { enum Type (&lt;File Dir Symlink&gt;); enum Options (&lt;Recursive Keep-going&gt;); }  现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。
-+@options where { @options.all (elem) (Find::Type::.values (|) Find::Options::.values) &amp;&amp; (+(@options.grep: * ~~ Find::Type) &lt;= 1 or die &quot;can only check for one type at a time&quot;) }  在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。
-                  <a href="https://ohmysummer.github.io/post/2016-09-26-%E9%94%AE%E6%98%AF%E5%8F%AF%E9%80%89%E7%9A%84/" class="post-read-more">[Read More]</a>
                 
               </div>
 

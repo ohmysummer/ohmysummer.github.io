@@ -201,6 +201,54 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-07-perl-6%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8Bbag/">
+                <h2 class="post-title">Perl 6 中的数据类型 Bag</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (123 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  数据类型 Bag 是一种 Perl 5 中没有的新的数据类型。
+它可以被认为是一个容器，它一方面知道它里面有多少个单独的元素，另一方面可以说有多少种不同类型的商品。您可以用不同的方式描述此类型：Bag 是一个哈希，默认情况下，您添加的键的值为1。我们来看看例子。
+把一个 1 放进 bag 里，看看 perl 的输出：
+my $b1 = bag(1); say $b1.perl;  该程序打印以下输出：
+(1=&gt;1).Bag  也就是说，我们有一个 1。
+如果你把另一个数字也放进 bag 里面：
+my $b2 = bag(1, 2); say $b2.perl;  现在有一个 1 和一个 2：
+(1=&gt;1,2=&gt;1).Bag  好的，如果你添加另一个 1 呢?
+my $b3 = bag(1, 2, 1); say $b3.perl;  现在有两个 1：
+(1=&gt;2,2=&gt;1).Bag  让我们稍微离题一下：所有显示的例子都可以把括号去掉：
+my $b1 = bag 1; my $b2 = bag 1, 2; my $b3 = bag 1, 2, 1;  比较典型的是，bag 不止能存储数字，还可以存储字符串，例如：
+                  <a href="https://ohmysummer.github.io/post/2018-02-07-perl-6%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8Bbag/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-01-29-perl-6---rakudo-%E5%92%8C-nqp-%E5%86%85%E9%83%A8%E7%A0%94%E8%AE%A8/">
                 <h2 class="post-title">Perl 6 Rakudo 和 NQP 内部研讨(二)</h2>
 
@@ -629,54 +677,6 @@ Bool.^add_method('gist', my proto method gist(|) {*}); Bool.^add_multi_method('g
 在创建时调整对象 您创建的任何课程现在都可以使用TWEAK方法。在新的类的新实例的所有其他初始化完成之前，这个方法将被调用。一个简单的，有点人为的例子，其中一个类A有一个属性，默认值是42，但如果在创建对象时指定了默认值，它应该更改该值：
 class A { has $.value = 42; method TWEAK(:$value = 0) { # default prevents warning # change the attribute if the default value is specified $!value = 666 if $value == $!value; } } # no value specified, it gets the default attribute value dd A.new; # A.new(value =&gt; 42) # value specified, but it is not the default dd A.
                   <a href="https://ohmysummer.github.io/post/2017-12-22-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%8C%E5%A4%A9-perl-6.d%E7%9A%84%E7%89%B9%E6%80%A7/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-21-perl-6-%E4%B8%AD%E7%9A%84-proto-%E5%85%B3%E9%94%AE%E5%AD%97/">
-                <h2 class="post-title">Perl 6 中的 proto 关键字</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    The proto keyword in Perl 6
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 21, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (196 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  今天，我们正在关注 proto 关键字。它向编译器提供了关于你打算创建 multi-subs 的提示。
-例子 1 考虑一个翻转字符串或使整数变成负数的函数示例。
-multi sub f(Int $x) { return -$x; } multi sub f(Str $x) { return $x.flip; } say f(42); # -42 say f('Hello'); # olleH  如果我们创建另一个接收两个参数的函数的变体，会怎么样？
-multi sub f($a, $b) { return $a + $b; } say f(1, 2); # 3  这个代码完美的工作，但它看起来像它的和谐是破碎的。即使函数的名称没有提及它的作用，我们也打算设置一个函数，以某种方式返回它的参数的“反射”版本。将两个数字相加的函数不适合这个想法。
-所以，现在是在 proto 关键字的帮助下清楚地宣布意图的时候了。
-proto sub f($x) {*}  现在，尝试调用双参数函数将无法编译：
-===SORRY!=== Error while compiling proto.pl Calling f(Int, Int) will never work with proto signature ($x) at proto.
-                  <a href="https://ohmysummer.github.io/post/2017-12-21-perl-6-%E4%B8%AD%E7%9A%84-proto-%E5%85%B3%E9%94%AE%E5%AD%97/" class="post-read-more">[Read More]</a>
                 
               </div>
 
