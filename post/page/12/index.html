@@ -201,6 +201,48 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-08-31-perl-6-shortcuts%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+                <h2 class="post-title">Perl 6 Shortcuts(第一部分)</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 31, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (515 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  查看原文
+快捷(Shortcuts)是一个具有争议性的话题。有些人认为它让代码更快更易读。有些人认为它让代码变得更难度如果人们不熟悉那些快捷的话。这篇文章仅仅告诉你 Shortcuts 的东西, 用不用取决于你。让我们开始把。
+类属性的公开 Getter/Setter &ldquo;getter&rdquo; 和 &ldquo;setter&rdquo; 的概念在很多语言中是共通的: 在你的类中有一个 &ldquo;东西&rdquo;, 并且你写了一个方法来设置或获取那个东西的值。以啰嗦的 Perl 6 方式来写, 这样的一个设置看起来像这样:
+class Foo { has $!attr = 42; method attr is rw { $!attr } } my $obj = Foo.new; say $obj.attr; $obj.attr = 72; say $obj.attr; # 输出&gt;&gt; # 42 # 72  这就像它本来的那样简洁, 但公共属性通常足以使编写这点儿代码变得恼人。这就是为什么 $. twigil 存在的原因。单独使用它会创建一个 &ldquo;getter&rdquo;; 如果你还想要一个 &ldquo;setter&rdquo;, 需要使用 is rw 特性:
+class Foo { has $.attr is rw = 42; } my $obj = Foo.
+                  <a href="https://ohmysummer.github.io/post/2016-08-31-perl-6-shortcuts%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/shortcut/">shortcut</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-08-14-%E5%93%87perl6/">
                 <h2 class="post-title">哇, Perl 6!</h2>
 
@@ -622,48 +664,6 @@ Too few positionals passed; expected 2 arguments but got 1 in any methods at gen
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/how/">HOW</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-07-20-the-awesome-errors-of-perl-6/">
-                <h2 class="post-title">The Awesome Errors of Perl 6</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 20, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1237 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  The Awesome Errors of Perl 6 如果你一直在读技术相关的东西，你现在可能知道 Rust 里面的令人惊喜的错误报告能力。 既然 Perl 6 也因它的绝妙的错误处理而闻名, mst 查询了一些例子来炫耀 rust 的错误处理能力, 但是不幸的是我没有发现。
-我尽力避免错误并且我很少完整地读完它。所以我会搜寻一些很酷的关于令人惊叹的错误方面的例子并写出来。虽然我能够用头撞击键盘并把输出粘贴出来, 但是那将会惨不忍读, 所以我会谈论一些对初学者来说没那么明显的棘手的错误, 还有怎样修复那些错误。
-让我们开始用头部猛击吧!
-基础 下面是一段有错误的代码;
-say &quot;Hello world!; say &quot;Local time is {DateTime.now}&quot;; # ===SORRY!=== Error while compiling /home/zoffix/test.p6 # Two terms in a row (runaway multi-line &quot;&quot; quote starting at line 1 maybe?) # at /home/zoffix/test.p6:2 # ------&gt; say &quot;Local time is {DateTime.now}&quot;; # expecting any of: # infix # infix stopper # postfix # statement end # statement modifier # statement modifier loop  第一行丢失了字符串上的闭合引号, 所以直到第二行的开括号之间的所有东西都会被认为是字符串的一部分。一旦推测的闭合引号被找到, Perl 6 就看到单词 &ldquo;Local&rdquo;, 这个单词被定义为一个项(item)。因为在 Perl 6 中一行中同时存在两个项(item)是不允许的, 所以编译器抛出了错误, 并对它所期望的提供了一些建议, 并且它探测到了我们正处在一个字符串中, 并且建议我们检测, 我们忘记在行 1 中闭合引号了。
-                  <a href="https://ohmysummer.github.io/post/2016-07-20-the-awesome-errors-of-perl-6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/errors/">Errors</a>&nbsp;
                   
                 </div>
               

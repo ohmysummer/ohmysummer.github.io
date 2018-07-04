@@ -201,6 +201,51 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-05-%E6%95%A3%E5%88%97%E7%9A%84%E6%95%A3%E5%88%97/">
+                <h2 class="post-title">散列的散列</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    a hash of hashes of numbers in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 5, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (192 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  如何在 Perl 6 中声明散列的数字散列？ 默认情况下，散列将所有键转换为字符串。当你的键是可能接近的数字时，会导致问题：
+&gt; my %h; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash %h = {&quot;0.333333&quot; =&gt; 2}  当然，这可以修复如下：
+&gt; my %h{Real}; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash[Any,Real] %h = (my Any %{Real} = 0.333333 =&gt; 2, &lt;1/3&gt; =&gt; 1)  但现在我需要散列的数字散列时，例如 { 1/3 =&gt; { 2/3 =&gt; 1, 0.666667 =&gt; 2 } }。
+&gt; my %h{Real}; %h{1/3}{2/3} = 1; %h{1/3}{0.666667} = 2; dd %h; Hash[Any,Real] %h = (my Any %{Real} = &lt;1/3&gt; =&gt; ${&quot;0.
+                  <a href="https://ohmysummer.github.io/post/2018-07-05-%E6%95%A3%E5%88%97%E7%9A%84%E6%95%A3%E5%88%97/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/hash/">Hash</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-06-19-perl-6-colon-pair/">
                 <h2 class="post-title">Perl 6 Colon Pair</h2>
 
@@ -244,6 +289,57 @@ say :foo.^name; # OUTPUT: «Pair␤»  但是，在参数列表中使用时，�
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/colonpairs/">colonpairs</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-10-03-perl6%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/">
+                <h2 class="post-title">Perl 6 中的并发</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Concurrency and Asynchronous Programming
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 3, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 9 minutes (1743 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Concurrency
+与大多数现代编程语言一样，Perl 6 被设计为支持并发（允许多个事件同时发生）和异步编程（有时称为事件驱动或反应式编程 - 即程序某些部分的事件或变化可能会导致程序流异步地改变程序的其它部分）。
+Perl 的并发设计的目的是提供一个高层级的，可组合的，一致的接口，而不管如下所述的虚拟机通过工具层怎样为特定操作的系统来实现它。
+此外，某些 Perl 的特性可以隐式地以异步的方式操作，所以为了确保这些特性可预测的互通，用户代码应在可能情况下，避免较低层级的并发的 API（即线程和调度器），并使用高层级接口。
+High-level APIs Promises Promise（在其他编程环境中也被称为 *future*）封装了在获得 promise 时可能尚未完成或甚至未开始的计算结果。Promise 从 Planned 状态开始, 结果要么是 Kept 状态, 这意味着该 promise 已成功完成, 要么是 Broken 状态, 意味着该 promise 已失败。 通常这就是用户代码需要以并行或异步方式操作的使用最多的功能。
+my $p1 = Promise.new; say $p1.status; # OUTPUT: «Planned␤» $p1.keep('Result'); say $p1.status; # OUTPUT: «Kept␤» say $p1.result; # OUTPUT: «Result␤» # (since it has been kept, a result is available!) my $p2 = Promise.new; $p2.
+                  <a href="https://ohmysummer.github.io/post/2016-10-03-perl6%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%B9%B6%E5%8F%91/">并发</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/channel/">Channel</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/concurrency/">Concurrency</a>&nbsp;
                   
                 </div>
               

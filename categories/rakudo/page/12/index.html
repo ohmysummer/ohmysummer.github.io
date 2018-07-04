@@ -201,48 +201,6 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-11-16-perl6%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98grammar/">
-                <h2 class="post-title">Perl6 中的可变 Grammar</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 16, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (283 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  ## A Mutable Grammar For Perl 6 Rules Rules 就像 perl5的 regexes，并且更好。它们像子例程和方法那样申明，并且还能调用其它 rules
-下面是一个解析 Perl 6 基本变量名的例子：
-grammar Perl6 { # among other stuff: # token alpha 是一个预定义好的 rule token identifier { &lt;alpha&gt; \w+ } # 匹配一个全限定名标识符 # [ ... ] 是非捕获组 token name { &lt;identifier&gt; [ '::' &lt;identifier&gt; ] * } # .. | .. 是分支. 最长匹配胜出. token sigil { '$' | '@' | '&amp;' | '%' | '::' } # &lt;rule&gt; 调用命名 rule, 隐式地锚定在当前位置 token variable { &lt;sigil&gt; &lt;name&gt; } }  Grammars Grammar 跟类很像，含有 rules 而不是 methods。 grammars 是 rules 的集合并支持继承。
-                  <a href="https://ohmysummer.github.io/post/2015-11-16-perl6%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98grammar/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/proto/">proto</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-11-16-roles%E5%86%B2%E7%AA%81/">
                 <h2 class="post-title">roles冲突</h2>
 
@@ -618,6 +576,75 @@ $ cat add2.pl sub MAIN($x, $y) { say $x + $y } sub USAGE () { say &quot;Usage: a
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/%E5%9C%A3%E8%AF%9E/">圣诞</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-09-18-%E7%A9%BA%E7%99%BD%E6%A0%BC/">
+                <h2 class="post-title">空白格</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 18, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (58 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  
+
+<h2 id="空格最少化">空格最少化</h2>
+
+<hr />
+
+<p>在数组或散列的开括号(即下标左边的那个括号)之前不允许有空格, 参数列表的圆开括号前面也是不能有空格的. 即:</p>
+
+<pre><code class="language-perl6">@deadbeef[$x]         # okay
+%monsters{'cookie'}   # okay
+saymewant('cookie')   # okay
+
+@a       [$b]         # WRONG
+%people  {'john'}     # WRONG
+mewant   ('cookie')   # WRONG
+</code></pre>
+
+<p>这种限制的的几个副作用之一就是条件控制结构的周围不再需要圆括号了:</p>
+
+<pre><code class="language-perl6">if $value eq $target {
+        print &quot;Bullseye!&quot;;
+    }
+while $i &lt; 10 { $i++ }
+</code></pre>
+
+<p>然而, 显式的使用 <code>unspace</code> 语法仍然能够让你对齐下标和后缀操作符:</p>
+
+<pre><code class="language-perl6">%squirrels{'fluffy'} = Squirrel.new;
+%monsters.{'cookie'} = Monster.new;
+%beatles\.{'ringo'}  = Beatle.new;
+%people\ .{'john'}   = Person.new;
+</code></pre>
+
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/unspace/">unspace</a>&nbsp;
                   
                 </div>
               

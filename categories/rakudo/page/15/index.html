@@ -201,48 +201,6 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/">
-                <h2 class="post-title">Grammar 笔记</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 11, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (279 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  一个 Grammar 解析复杂文本的例子。
-一个 Grammar 调了很久, 先分解下：
- 解析[ ] 里面的数据：  use v6; use Grammar::Debugger; grammar Lines { token TOP { ^ &lt;line&gt;+ $ } token line { \[ &lt;student&gt;+ % &lt;semicolon&gt; \] \n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！ } token student { &lt;myname&gt;+ % &lt;comma&gt; # 分隔符也可以是一个 subrule } token myname { &lt;[A..Za..z-]&gt;+ # 字符类的写法 &lt;[...]&gt; } token comma { ',' \s+ # 逗号, 分号 不能裸露出现在 token 中 } token semicolon { ';' \s+ } } my $parse = Lines.
-                  <a href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/action/">Action</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-07-05-main-%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/">
                 <h2 class="post-title">MAIN 中的冒号</h2>
 
@@ -651,6 +609,47 @@ class Wizard { has Int $!mana; method mana() is rw { return Proxy.new: FETCH =&g
                     <a href="https://ohmysummer.github.io//tags/subscript-adverbs/">subscript adverbs</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/%E4%B8%8B%E6%A0%87%E5%89%AF%E8%AF%8D/">下标副词</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/">
+                <h2 class="post-title">在 Perl 6 中异步地执行外部程序</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 14, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (132 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Execute an external program with timeout in Perl6
+Proc::Async 允许我们异步地执行外部程序。
+my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;); my $res = await $proc.start;  我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
+class Proc::Async::Timeout is Proc::Async { has $.timeout is rw; method start($self: |) { return callsame unless $.timeout; my $killer = Promise.in($.timeout).then: { $self.kill }; my $promise = callsame; Promise.anyof($promise, $killer).then: { $promise.result }; } } my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;sleep 5; warn 'end'&quot;); $proc.
+                  <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%BC%82%E6%AD%A5/">异步</a>&nbsp;
                   
                 </div>
               
