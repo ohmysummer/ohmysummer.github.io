@@ -201,6 +201,133 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-07-15-perl6%E4%B8%AD%E7%9A%84role/">
+                <h2 class="post-title">Perl 6 中的 Role</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 15, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (266 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Composition and mix-ins Sigils Typed data structures Traits  所以到底什么是 role 呢？ role 是零个或多个方法和属性的集合。
+role 不像 class，它不能被实例化（如果你尝试了，会生成一个 class）。Perl 6 中 Classes 是可变的，而 roles 是不可变的。
+申明 Roles 就像申明 Class 一样： 使用关键字 role来引入 role, 在 role 中声明属性和方法就像在 Perl 6 的类中声明属性和方法那样。
+role DebugLog { has @.log_lines; has $.log_size is rw = 100; method log_message($message) { @!log_lines.shift if @!log_lines.elems &gt;= $!log_size; @!log_lines.push($message); } }  Role Composition  使用 does trait 将 role 组合到 Class 中：  class WebCrawler does DebugLog { .
+                  <a href="https://ohmysummer.github.io/post/2015-07-15-perl6%E4%B8%AD%E7%9A%84role/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/role/">Role</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-07-14-perl-6-rotor--%E5%88%97%E8%A1%A8%E6%93%8D%E4%BD%9C%E4%B9%8B%E7%8E%8B/">
+                <h2 class="post-title">Perl 6 rotor--列表操作之王</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 14, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (554 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 .rotor - The King of List Manipulation
+对于 Perl 6 程序员, .rotor是一个强大的列表操作工具。
+分段 最简单的, .rotor接收一个整数$number并把列表分成多个子列表, 每个子列表含有 $number 个元素:
+say &lt;a b c d e f g h&gt;.rotor: 3 # ((a b c) (d e f))  我们有一个含有 8 个元素的列表, 我们在该列表上调用接收参数 3 的 .rotor方法, 它返回 2 个列表, 每个列表中含有 3 个元素。不包括原列表中的最后 2 个元素, 因为它们没有组成一个完整的3个元素的列表。然而它们可以被包含进来, 使用 :partial具名参数设置为 True:
+say &lt;a b c d e f g h&gt;.rotor: 3, :partial # ((a b c) (d e f) (g h)) say &lt;a b c d e f g h&gt;.
+                  <a href="https://ohmysummer.github.io/post/2015-07-14-perl-6-rotor--%E5%88%97%E8%A1%A8%E6%93%8D%E4%BD%9C%E4%B9%8B%E7%8E%8B/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/rotor/">rotor</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%88%97%E8%A1%A8%E6%93%8D%E4%BD%9C/">列表操作</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/">
+                <h2 class="post-title">Grammar 笔记</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 11, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (279 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  一个 Grammar 解析复杂文本的例子。
+一个 Grammar 调了很久, 先分解下：
+ 解析[ ] 里面的数据：  use v6; use Grammar::Debugger; grammar Lines { token TOP { ^ &lt;line&gt;+ $ } token line { \[ &lt;student&gt;+ % &lt;semicolon&gt; \] \n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！ } token student { &lt;myname&gt;+ % &lt;comma&gt; # 分隔符也可以是一个 subrule } token myname { &lt;[A..Za..z-]&gt;+ # 字符类的写法 &lt;[...]&gt; } token comma { ',' \s+ # 逗号, 分号 不能裸露出现在 token 中 } token semicolon { ';' \s+ } } my $parse = Lines.
+                  <a href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/action/">Action</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-07-05-main-%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/">
                 <h2 class="post-title">MAIN 中的冒号</h2>
 
@@ -525,131 +652,6 @@ my @a = 1, 2, 3; for @a { } # 三次迭代  my $s = @a; for $s { } # 一次迭�
                     <a href="https://ohmysummer.github.io//tags/slip/">Slip</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/pick/">pick</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-05-19-%E6%80%8E%E4%B9%88%E5%9C%A8perl6%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%98%E5%8F%96%E5%99%A8/">
-                <h2 class="post-title">怎么在 Perl 6 中自定义存取器</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 19, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (185 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  How does one write custom accessor methods in Perl6? 我有一个类:
-class Wizard { has Int $.mana is rw; }  我可以这样做:
-my Wizard $gandalf .= new; $gandalf.mana = 150;  我想在不放弃使用$gandalf.mana = 150; 的情况下, 在 setter里面做一些检查。换句话说, 我不想这样写: $gandalf.setMana(150)。 如果程序尝试设置一个负值的话, 就退出。
-class Wizard { has Int $!mana; method mana() is rw { return Proxy.new: FETCH =&gt; sub ($) { return $!mana }, STORE =&gt; sub ($, $mana) { die &quot;It's over 9000!
-                  <a href="https://ohmysummer.github.io/post/2015-05-19-%E6%80%8E%E4%B9%88%E5%9C%A8perl6%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%98%E5%8F%96%E5%99%A8/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%AD%98%E5%8F%96%E5%99%A8/">存取器</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E8%87%AA%E5%AE%9A%E4%B9%89/">自定义</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-05-18-%E4%B8%8B%E6%A0%87%E5%89%AF%E8%AF%8D/">
-                <h2 class="post-title">下标副词</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 18, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (500 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  下标副词 为了使切片下标返回除了值以外的其它东西，那么给下标(subscript)添加合适的副词。
-@array = &lt;A B&gt;; @array[0,1,2]; # returns 'A', 'B', (Any) @array[0,1,2] :p; # returns 0 =&gt; 'A', 1 =&gt; 'B' @array[0,1,2] :kv; # returns 0, 'A', 1, 'B' @array[0,1,2] :k; # returns 0, 1 @array[0,1,2] :v; # returns 'A', 'B' %hash = (:a&lt;A&gt;, :b&lt;B&gt;); %hash&lt;a b c&gt;; # returns 'A', 'B', (Any) %hash&lt;a b c&gt; :p; # returns a =&gt; 'A', b =&gt; 'B' %hash&lt;a b c&gt; :kv; # returns 'a', 'A', 'b', 'B' %hash&lt;a b c&gt; :k; # returns 'a', 'b' %hash&lt;a b c&gt; :v; # returns 'A', 'B'  如果副词为真，那么这些副词形式都会清除不存在的条目；如果为假的话，就会留下不存在的项，就像普通的切片那样。所以：
-                  <a href="https://ohmysummer.github.io/post/2015-05-18-%E4%B8%8B%E6%A0%87%E5%89%AF%E8%AF%8D/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/subscript-adverbs/">subscript adverbs</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E4%B8%8B%E6%A0%87%E5%89%AF%E8%AF%8D/">下标副词</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/">
-                <h2 class="post-title">在 Perl 6 中异步地执行外部程序</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 14, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (132 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Execute an external program with timeout in Perl6
-Proc::Async 允许我们异步地执行外部程序。
-my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;); my $res = await $proc.start;  我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
-class Proc::Async::Timeout is Proc::Async { has $.timeout is rw; method start($self: |) { return callsame unless $.timeout; my $killer = Promise.in($.timeout).then: { $self.kill }; my $promise = callsame; Promise.anyof($promise, $killer).then: { $promise.result }; } } my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;sleep 5; warn 'end'&quot;); $proc.
-                  <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%BC%82%E6%AD%A5/">异步</a>&nbsp;
                   
                 </div>
               

@@ -201,6 +201,134 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-10-20-%E6%88%91%E5%9C%A8%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6%E6%97%B6%E6%89%80%E5%AD%A6%E5%88%B0%E7%9A%84/">
+                <h2 class="post-title">我在查找文件时所学到的</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 20, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (243 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Things I found out while finding
+Concurrent::File::Find 现在已经在生态系统中了。我在这里分享几点我学到的东西。
+在子签名(sub-signature)上使用 where 从句将不会在子签名中提供变量。 如果 where 从句必须对所有参数进行操作，为了检查排他性或其他相互依赖性，那么它必须应用于最后一个参数上。 这个限制设计时就是这样的，所以我告诉了文档。 where 从句对捕获没有效果，但原意不是那样设计的并且第二天 jnthn 就修复了它。 我知道抱怨会得到你的关注，但我没想到它是这么快。
+我还发现一个叫 .close 的方法, 它几乎总是需要一个 LEAVE。 让我们看一些代码。
+sub find-simple ( IO(Str) $dir, :$keep-going = True, :$no-thread = False ) is export { my $channel = Channel.new; my &amp;start = -&gt; ( &amp;c ) { c } if $no-thread; my $promise = start { for dir($dir) { CATCH { default { if $keep-going { note .
+                  <a href="https://ohmysummer.github.io/post/2016-10-20-%E6%88%91%E5%9C%A8%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6%E6%97%B6%E6%89%80%E5%AD%A6%E5%88%B0%E7%9A%84/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/channel/">Channel</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84with/">
+                <h2 class="post-title">Perl 6 中的 with</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 19, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (137 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  with orwith without with 语句就像 if 但是是为了测试是否定义而非真假。此外, 它主题化了条件, 这很像 given:
+with &quot;abc&quot;.index(&quot;a&quot;) { .say } # print 0  代替 elsif, orwith 用于把是否定义的测试链接起来:
+# The below code says &quot;Found a at 0&quot; my $s = &quot;abc&quot;; with $s.index(&quot;a&quot;) { say &quot;Found a at $_&quot; } orwith $s.index(&quot;b&quot;) { say &quot;Found b at $_&quot; } orwith $s.index(&quot;c&quot;) { say &quot;Found c at $_&quot; } else { say &quot;Didn't find a, b or c&quot; }  你可以混合基于 if 的从句和基于 with 的从句：
+                  <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84with/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/with/">with</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/">
+                <h2 class="post-title">Perl6 模块分析 - 并行查找文件</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 19, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 7 minutes (1394 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  并行查找文件 如果你没有使用 panda 或 zef 安装该模块, 你可以下载到本地：
+use v6; use lib &quot;C:\\Users\\Administrator\\perl6-concurrent-file-find\\lib&quot;; use Concurrent::File::Find;  下面来看具体代码：
+class X::IO::NotADirectory does X::IO is export { has $.path; method message { &quot;«$.path» is not a directory&quot; } } class X::IO::CanNotAccess does X::IO is export { has $.path; method message { &quot;Cannot access «$.path»: permission denied&quot; } } class X::IO::StaleSymlink does X::IO is export { has $.path; method message { &quot;Stale symlink «$.path»&quot; } }  上面的代码自定义了 3 个与 IO 错误相关的类并导出, 每个类中有一个 $.
+                  <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/junction/">Junction</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/smartmatch/">Smartmatch</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/block/">Block</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E9%80%92%E5%BD%92/">递归</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84block/">
                 <h2 class="post-title">Perl 6 中的 Block</h2>
 
@@ -505,137 +633,6 @@ my $p1 = Promise.new; say $p1.status; # OUTPUT: «Planned␤» $p1.keep('Result'
                     <a href="https://ohmysummer.github.io//tags/channel/">Channel</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/concurrency/">Concurrency</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-09-28-gather-take/">
-                <h2 class="post-title">gather-take</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 28, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (172 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  控制流 gather/take gather 是一个语句或者能返回一序列值的 block 前缀。该值来自于 gather 块中的动态作用域的 take 调用。
-my $a = gather { take 1; take 5; take 42; } say join ', ', @$a; # 1, 5, 42  gather/take 能根据上下文按需(惰性地)生成值。如果你想强制惰性求值则使用 lazy 子例程或方法。绑定到一个标量或无符号的容器上也会强制惰性求值。 举个例子:
-my @vals = lazy gather { take 1; say &quot;Produced a value&quot;; take 2; } say @vals[0]; say 'between consumption of two values'; say @vals[1]; # OUTPUT: # 1 # between consumption of two values # Produced a value # 2  gather/take 是动态作用域的, 所以你可以从 gather 内部所调用的 subs 或方法中调用 take:
-                  <a href="https://ohmysummer.github.io/post/2016-09-28-gather-take/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/gather/">gather</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/take/">take</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-09-27-%E8%A7%A3%E6%9E%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BE%93%E5%87%BA/">
-                <h2 class="post-title">解析命令行输出</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 27, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (315 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  哦, 列, 你在哪里? 当 ramiroencinas 给 Perl 6 的生态系统增加 FileSystem::Capacity::VolumesInfo模块的时候, 我说他没有添加 macOS 支持。而当我尝试为这个模块贡献源代码时我才发现知道一丢丢 Perl 6 的特性就能节省很多时间。 FileSystem::Capacity::VolumesInfo 这个模块所做的就是解析 df 命令的输出, 它看起来长这样:
-$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.
-                  <a href="https://ohmysummer.github.io/post/2016-09-27-%E8%A7%A3%E6%9E%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BE%93%E5%87%BA/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BD%8D%E7%BD%AE%E9%94%9A%E7%82%B9/">正则表达式位置锚点</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/regexp-position-anchor/">regexp position anchor</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/">
-                <h2 class="post-title">I left my keys in a side-channel</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 26, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (115 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  当我尝试把选项聚合到一个模块中时我无意中发现了一个常见问题的简洁解决办法。我想拥有一个子例程作为吞噬具名参数、做一些检查、并且要么返回 True 以满足那个 where 从句, 要么死掉并抛出一个合适的错误信息的 where 从句。 那很简单但是不彻底。那个 where 从句没有提供它所检查的参数的名字, 这需要拥有一个合适的错误信息。我们来简化下代码。
-sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {}  子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Perl 6 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
-如你所见 checker 接收一组冒号对(colon-pairs)。剩下的问题我们能提供给我们可能要输出的异常，特别的附加信息。如果我们希望该参数是可选的，避免奇怪的语法。我们可以有一个可选的位置，但我们就不能在checker中混合位置和具名参数。存储该值将是微不足道，因为返回的匿名子例程可以具有闭包变量。我们只需要填充它。幸运的是，子返回作为引用返回，然后由那个 where 从句调用。我们可以偷偷加进另一个呼叫，只要我们大家别忘了把代码引用返回给匿名子例程(sub)。
-返回引用给同一个对象是通过链式方法调用完成的。通常情况下，当事情在 Perl 6 的领地上变得复杂时，我们就混入一个 role 好了。然后，我们有了一个可以返回自身的方法。
-use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$closure-variable, $value-from-where-clause]; $value-from-where-clause == $i or die &quot;bad value $value-from-where-clause for $closure-variable&quot; } but role :: { method side-channel($second-value){ $closure-variable = $second-value; self } } } sub f($a where g(42).
-                  <a href="https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/key/">key</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/but/">but</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/where/">where</a>&nbsp;
                   
                 </div>
               

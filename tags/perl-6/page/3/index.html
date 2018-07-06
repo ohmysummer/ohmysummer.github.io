@@ -201,6 +201,112 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/">
+                <h2 class="post-title">第二十四天-解魔方</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 24 – Solving a Rubik’s Cube
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 24, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (770 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 24 – Solving a Rubik’s Cube 介绍 我在圣诞节的愿望清单上有一个速度魔方，我真的很兴奋。 :)我想分享一些Perl 6代码的热情。
+我在89年从高中毕业，所以我恰好是在青少年时期拥有魔方的合适年龄。我记得试图在巴士上炫耀，让我的时间缩短到不到一分钟。我在80年代从当地的一家玩具店拿到了一本小册子，其中展示了一个关于如何解决我记忆的立方体的算法。我再也没有这本小册子了。多年来我一直坚持，但从来没有达到竞争水平。
+在过去的几个月里，YouTube根据我对立体声频道的兴趣，向我推荐了一些立方体视频;看到世界纪录在5秒以内，使我一分钟的旧时间看起来很慢。
+我所讲过的每个人都可以解决魔方问题，他们使用的算法与我所学的算法不同，而在立体魔法中讨论的方法却与众不同。不过，这种先进的版本似乎被定期制定世界记录的人们普遍使用。
+拾取这个算法并不难，我找到了几个视频，尤其是描述如何解决最后一层的视频。这样做了几天之后，我将步骤转录为几个笔记，其中列出了步骤列表，以及每个步骤的关键部分：所需的方向，然后是该步骤的各个转弯。然后，我可以参考我的笔记本的一个页面，而不是一个30分钟的视频，并且在几天后，记住了以下步骤：能够从记谱法移动到仅仅做这些移动是一个很大的加速。
+一周后，我能够在两分钟内使用新方法可靠地解决问题;退后一步，但在休息时间里一周的努力并不坏。从那以后（几个星期后），我一直下到1:20以下。再次，这是初学者的方法，没有任何先进的技术，而且我可以在不查看立方体的情况下完成各个算法步骤。 （尽管如此，我仍然有很长的路要走。）
+符号 关于移动符号的快速注释 - 考虑到您将立方体的一边保持在顶部，一边朝向您，相对边是：
+L (Left) R (Right) U (Up) D (Down) F (Front) B (Back)  如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个&rdquo;，那就意味着逆时针方向，所以R&rsquo;会让最上面的部分下来，而R会让底部的部分出现。
+此外，您可能必须翻转两次，写成U2; （顺时针或逆时针无关紧要，因为它从起点开始为180º。）
+算法 我正在使用的初学者算法有以下基本步骤：
+1.白色十字架2.白色拐角3.第二层4.黄色十字架5.黄色边缘6.黄色拐角7.定位黄色拐角
+如果您对每个步骤的具体内容感到好奇，您可以浏览Rubik的wiki或上面链接的YouTube视频。该算法的更高级版本（由Jessica Fridrich提供的CFOP）允许您合并步骤，具有处理特定立方体状态的特定“快捷方式”，或者解决任何颜色作为第一面，而不仅仅是白色。
+设计一个模块 当我开始研究这个模块时，我知道我希望能够以某种熟悉算法的人熟悉的方式展示每一步所需的位置，并且让各个步骤也是自然的，就像是：
+F.R.U.Rʼ.Uʼ.Fʼ  我也希望能够转储立方体的现有状态;现在作为文本，但最终也能够将其与视觉表示相结合，
+我们需要能够判断立方体是否已解决;我们需要能够检查相对于当前方向的棋子，并且能够改变我们的方向。
+由于我要开始渲染立方体状态的能力，然后快速添加转向两侧的能力，我选择了一个内部结构，使其变得相当容易。
+代码 github上提供了该模块的最新版本。这里介绍的代码来自最初的版本。
+Perl 6允许您创建Enumerations，因此您可以在代码中使用实际的单词而不是查找值，所以让我们从一些我们需要的内容开始：
+enum Side «:Up('U') :Down('D') :Front('F') :Back('B') :Left('L') :Right('R')»; enum Colors «:Red('R') :Green('G') :Blue('B') :Yellow('Y') :White('W') :Orange('O')»;  有了这个语法，我们可以直接在我们的代码中使用Up，并且它的关联值是U.
+                  <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/">
+                <h2 class="post-title">Playing with the code of Rakudo Perl 6</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 23, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (180 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  昨天，我们查看了返回字符串的 Bool 类的两个方法。函数产生的字符串表示在源代码中被硬编码。
+让我们使用这个观察并尝试改变文本。
+所以，这里是我们要修改的片段：
+Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? 'True' !! 'False' });  该 gist 方法用于对已定义的变量进行字符串化。
+要做到这一点，你需要在计算机上安装 Rakudo 的源代码，以便编译它们。首先从 GitHub 克隆项目：
+$ git clone https://github.com/rakudo/rakudo.git  编译 MoarVM：
+$ cd rakudo $ perl Configure.pl --gen-moar --gen-nqp --backends=moar $ make  完成之后，你会在 rakudo 目录下获得 perl6 可执行文件。
+现在，打开 src/core/Bool.pm 文件，并将 gist 方法的字符串更改为使用 Unicode 大拇指代替纯文本：
+Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? '👍' !! '👎' });  保存文件后，您需要重新编译 Rakudo。 Bool.
+                  <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-12-23-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E5%A4%A9-perl-6%E9%AB%98%E5%B0%94%E5%A4%AB/">
                 <h2 class="post-title">第二十三天-Perl 6 高尔夫</h2>
 
@@ -604,101 +710,6 @@ my $n = Net::AMQP.new( host =&gt; 'localhost', port =&gt; 5672, login =&gt; 'gue
 旁注：我相信我根本不会做大多数其他开发人员的正义，特别是在这篇文章中忽略了JVM的努力。我建议每个人都去，并检查提交日志，看看有多少人现在参与使Rakudo更快，更好，更强大。我确定他们想在本文的底部看到您的感谢！  因此，节省你一份查看提交日志的工作我已经做了一些挖掘，看看自上个圣诞节以来与提高性能有关的提交。 N％或Nx更快的东西。如下所示：
 3c6277c77 Have .codes use nqp::codes op. 350% faster for short strings ee4593601 Make Baggy (^) Baggy about 150x faster  这两项承诺将以一年的核心发展时间表推动编程项目的发展。但是，今年，它们仅仅是数百次提交中的两次。
                   <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/">
-                <h2 class="post-title">第十五天-带有 Promise 的简单网络爬虫</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 15 – A Simple Web Spider With Promises
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 15, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (218 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 15 – A Simple Web Spider With Promises 承诺，承诺 去年夏天，我申请了一项编程工作，面试官要求我编写一个程序来抓取给定的域，只在该域中的链接之后，找到它引用的所有页面。我被允许以任何语言编写程序，但我选择使用Go语言执行任务，因为这是该公司使用的主要语言。这对于并发编程来说是一个理想的任务，并且Go具有非常好的现代化功能，即使有些低级别的并发支持。网络蜘蛛中的主要工作是执行与在域中发现的唯一锚链接相同的次数，即在每个页面上执行HTTP GET并解析页面文本以获取新链接。这个任务可以并行安全地完成，因为没有可能（除非你做得很糟糕），任何调用爬取代码都会干扰其他任何调用。
-Go和Perl 6的创造者受到安东尼霍尔爵士1978年的开创性工作“沟通顺序过程”的启发，但值得注意的是，Perl 6代码更加简洁，因此更容易隐藏到博客文章中。事实上，Go设计者总是将他们的结构称为“并发原语”。 Go为我的作业应用程序编写的并发spider代码大约有200行，而在Perl 6中大小不到这个大小的一半。
-下面我们来看看如何在Perl 6中实现一个简单的Web爬虫。内置的Promise类允许您启动，调度和检查异步计算的结果。所有你需要做的就是给Promise.start方法一个代码引用，然后调用await方法，这会阻塞，直到promise完成执行。然后您可以测试结果方法以确定承诺是否已被保留或中断。
-您可以通过将其保存到本地文件中来运行本文中的代码，例如网络spider.p6。如果您希望抓取https网站，请使用zef安装HTML :: Parser :: XML和HTTP :: UserAgent以及IO :: Socket :: SSL。我会提醒你，SSL支持目前看起来有点狼狈，所以最好坚持http站点。 Perl 6程序中的MAIN子程序存在时表示一个独立程序，这就是执行开始的地方。 MAIN的参数表示命令行参数。我编写了这个程序，以便默认情况下它会抓取Perlmonks站点，但是您可以覆盖它，如下所示：
-$ perl6 web-spider.p6 [–domain=http://example.com]  简单的Perl 6域蜘蛛
-use HTML::Parser::XML; use XML::Document; use HTTP::UserAgent; sub MAIN(:$domain=&quot;http://www.perlmonks.org&quot;) { my $ua = HTTP::UserAgent.new; my %url_seen; my @urls=($domain); loop { my @promises; while ( @urls ) { my $url = @urls.
-                  <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/">
-                <h2 class="post-title">第十四天-在 Perl 6 中构建和测试 Big Grammars</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    The Little Match Girl: Building and Testing Big Grammars in Perl 6
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 14, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (319 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  The Little Match Girl: Building and Testing Big Grammars in Perl 6 Perl 6 Grammars 很棒，但在项目中使用它们会是什么样呢？在圣诞节前和圣诞节后，我的经历是一个令人心酸的故事。你可以在这里找到版本库。我不是来自计算机科学背景，所以也许它看起来很简陋，但是当我学习 Perl 6 Grammars 时，这是我的困难和胜利。
-第一根火柴 就像卖火柴的小女孩一样，我们的故事发生在圣诞节前。卖火柴的小女孩的任务是在圣诞节前夕销售一捆火柴棍（实际上是新年，我确实回去读了那个故事。圣诞节更适合 Perl 6），而我的任务是从 Modelica 模型中提取注释渲染为矢量图形。现在，Modelica 是一个非常棒的面向对象的建模语言，除了提及其附录中包含一个具体语法部分的非常好的规范文档（pdf）之外，我将完全理解它。仔细阅读本节，我意识到“语法元符号”和“词法单位”看起来像我最近读过的一篇博客文章中的 Perl 6 Grammars，并且急于尝试。
-来自 Modelica 的示例具体语法：
-class-definition : [ encapsulated ] class-prefixes class-specifier  Perl 6 rule 的示例:
-rule class_definition { [&lt;|w&gt;'encapsulated'&lt;|w&gt;]? &lt;class_prefixes&gt; &lt;class_specifier&gt; }  这就像卖火柴的小女孩划第一颗火柴一样，第一次看到了一个超越她现实的奇妙世界。一个温暖的小炉子。然后它熄灭了。
-它非常接近，我把它放到了一个文本编辑器中，并且用一些 Perl 6 的东西替换了不是 Perl 6 的部分，以查看它是否会运行。它没有运行。我砍掉了它，我指出了不同的位来解决更小的块。无处不在的空白符号，正则表达式，标记，规则。我能够解析某些部分，其他部分神秘地没有起效。回顾过去，这一定很糟糕。与此同时，我们一起破解传统的正则表达式来提取注释，并将我的 Grammar 放在架子上。
-第二根火柴 不久之后，发布了 Grammar::Profiler 和 Grammar::Debugger，并且我受到启发，决定再试一试。我被授予了对我的规则出乎意料表现的很好的见解。我能够比以前更深入地理解 grammar。第二支火柴一直亮着，我有一场盛宴。然后它熄灭了。
-                  <a href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/" class="post-read-more">[Read More]</a>
                 
               </div>
 

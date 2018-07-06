@@ -201,6 +201,159 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/">
+                <h2 class="post-title">Perl 6 Dispatch 解密</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    But Here&#39;s My Dispatch, So callwith Maybe
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 2, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 8 minutes (1564 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 的一个很好的特性是 multi-dispatch, 即多重分派。它允许你在函数, 方法或 Grammar token 中使用相同的名字并让它们所处理的数据的类型来决定执行哪一个。下面是一个 factorial postfix 操作符, 用两个 multies 来实现:
+multi postfix:&lt;!&gt; (0) { 1 } multi postfix:&lt;!&gt; (UInt \n) { n × samewith n − 1 } say 5! # OUTPUT: 120  虽然 multi-dispatch 的主题很明显并且它还有一些说明文档, 我今天想讲的是 7 个特殊的子例程, 让你能够行走在 dispatch 迷宫中。它们是 nextwith, nextsame, samewith, callwith, callsame, nextcallee 和 lastcall.
+设立实验室 Multies 从最窄到最广的候选者进行排序，并且当一个 multi 被调用时，绑定器尝试找到一个匹配并调用第一个匹配的候选者。 有时，您可能希望调用或简单地移动到链中的下一个匹配候选者，可选地使用不同的参数。 为了观察这些操作的效果，我们将使用以下设置：
+class Wide { } class Middle is Wide { } class Narrow is Middle { } multi foo (Narrow $v) { say 'Narrow ', $v; 'from Narrow' } multi foo (Middle $v) { say 'Middle ', $v; 'from Middle' } multi foo (Wide $v) { say 'Wide ', $v; 'from Wide' } foo Narrow; # OUTPUT: Narrow (Narrow) foo Middle; # OUTPUT: Middle (Middle) foo Wide; # OUTPUT: Wide (Wide)  我们有三个类，每个类都继承自前一个类，所以我们的 Narrow 类 可以适应 Middle 和 Wide multi 候选者; Middle 也可以适应 Wide，但不能适应 Narrow; 而 Narrow 既不适用于 Middle，也不适用于 Narrow。请记住，Perl 6 中的所有类也都是 Any 类型，因此也适用于任何接受 Any 的候选者。
+                  <a href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/nextwith/">nextwith</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/nextsame/">nextsame</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/samewith/">samewith</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/callwith/">callwith</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/callsame/">callsame</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/nextcallee/">nextcallee</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/lastcall/">lastcall</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-03-18-regexes/">
+                <h2 class="post-title">Regexes</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Pattern matching against strings
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 18, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 18 minutes (3736 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  正则表达式, 简称 regexes, 是描述文本模式的字符序列。模式匹配就是将这些模式和实际的文本进行匹配的过程。
+词法约定 Perl 6 正则表达式有特殊的写法:
+m/abc/; # a regex that is immediately matched against $_ rx/abc/; # a Regex object /abc/; # a Regex object  对于前两个例子, 分隔符还能用除了斜线之外的其它字符:
+m{abc}; rx{abc};  注意, 冒号和圆括号都不能用作分隔符; 禁止使用冒号作为正则表达式分割符是因为它和副词冲突, 例如 rx:i/abc/(忽略大小写的正则表达式), 而圆括号表明函数调用。
+空白符在正则表达式中通常被忽略(带有 :s 或 :sigspace 副词的正则表达式除外)。
+通常, 对于 Perl 6 来说, 正则表达式中的注释以 # 号开头, 直至行尾。
+字面值 正则表达式最简单的情况是匹配字符串字面值。
+if 'properly' ~~ m/ perl / { say &quot;'properly' contains 'perl'&quot;; }  字母数字和下划线 _ 按字面值匹配。所有其它字符要么使用反斜线转义(例如, \: 匹配一个冒号), 要么用引号引起来:
+                  <a href="https://ohmysummer.github.io/post/2017-03-18-regexes/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/regex/">Regex</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-03-11-perl6%E4%B8%AD%E7%9A%84%E7%AC%91%E8%84%B8/">
+                <h2 class="post-title">Perl 6 中的笑脸</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    :D, :U, :_
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 11, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (83 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在 Perl 6 中在调用者的类型身上使用 :D 或 :U 类型笑脸来制造 type/instance 方法:
+class Foo { multi method foo (Foo:D:) { say &quot;instance&quot; } multi method foo (Foo:U:) { say &quot;type object&quot; } } Foo .foo; # 输出 type object Foo.new.foo; # 输出 instance # Can use compile time vars to aovid re-typing the actual name everywhere: class Bar { multi method foo (::?CLASS:D:) { say &quot;instance&quot; } multi method foo (::?CLASS:U:) { say &quot;type object&quot; } } Bar .
+                  <a href="https://ohmysummer.github.io/post/2017-03-11-perl6%E4%B8%AD%E7%9A%84%E7%AC%91%E8%84%B8/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/smileys/">smileys</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/defined/">defined</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/undefined/">undefined</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-03-05-perl-6-grammar-%E6%8C%87%E5%8D%97/">
                 <h2 class="post-title">Perl 6 Gramamr 指南</h2>
 
@@ -520,133 +673,6 @@ my package EXPORT::DEFAULT { ... subset Pos of Numeric where * &gt; 0; subset Ne
                     <a href="https://ohmysummer.github.io//tags/subsets/">Subsets</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/where/">where</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%89%88/">
-                <h2 class="post-title">Perl 6 时间戳转换器命令行版</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 31, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (1022 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 By Example: Datetime Conversion for the Command Line 我偶尔会在数据库中存储 UNIX 时间戳, 即从 1970-01-01 开始的秒数。我在按照日期查询数据库中的数据时, 需要将 UNIX 时间戳转换为人类可读的时间, 所以我写了个很小的工具来帮助我在 UNIX 时间戳和日期/时间之间来回转换:
-$ autotime 2015-12-24 1450915200 $ autotime 2015-12-24 11:23:00 1450956180 $ autotime 1450915200 2015-12-24 $ autotime 1450956180 2015-12-24 11:23:00  使用库 Perl 6 的 DateTime 和 Date 模块会做实际的转换。 DateTime.new 构造函数有一个接收单个整数作为 UNIX 时间戳的变体:
-$ perl6 -e &quot;say DateTime.new(1480915200)&quot; 2016-12-05T05:20:00Z  看起来我们已经完成了一个方向的转换,对吗?
-#!/usr/bin/env perl6 sub MAIN (Int $timestamp) { say DateTime.
-                  <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%89%88/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/datetime/">Datetime</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-12-31-2016-%E5%B9%B4%E6%9C%AB%E6%80%BB%E7%BB%93/">
-                <h2 class="post-title">2016 年末总结</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 31, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (5 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  <ul>
-<li>不想总结。</li>
-<li>总结个大西瓜。</li>
-<li>有什么好总结的。</li>
-<li>说多了都是泪。</li>
-<li>还是不要总结了。</li>
-</ul>
-
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%A4%A7%E8%A5%BF%E7%93%9C/">大西瓜</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-12-30-perl-6-tips---%E6%8E%A2%E7%B4%A2%E7%BB%84%E5%90%88/">
-                <h2 class="post-title">Perl 6 Tips - 排列组合</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 30, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (694 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Quick Tip #16: 探索组合
-xx 是列表重复操作符, 用于将一个列表重复指定的次数。xx 不会展平列表中的元素。
-$ perl6 &gt; my @n = &lt;1 2 3&gt;; [1 2 3] &gt; my $n = 4; 4 &gt; my @c = @n xx $n  输出：
-[[1 2 3] [1 2 3] [1 2 3] [1 2 3]]  现在我想要长度为 $n 的一堆列表的所有排列（combinations）:
-&gt; ( [X] ( @n xx $n ) ) ((1 1 1 1) (1 1 1 2) (1 1 1 3) (1 1 2 1) (1 1 2 2) (1 1 2 3) (1 1 3 1) (1 1 3 2) (1 1 3 3) (1 2 1 1) (1 2 1 2) (1 2 1 3) (1 2 2 1) (1 2 2 2) (1 2 2 3) (1 2 3 1) (1 2 3 2) (1 2 3 3) (1 3 1 1) (1 3 1 2) (1 3 1 3) (1 3 2 1) (1 3 2 2) (1 3 2 3) (1 3 3 1) (1 3 3 2) (1 3 3 3) (2 1 1 1) (2 1 1 2) (2 1 1 3) (2 1 2 1) (2 1 2 2) (2 1 2 3) (2 1 3 1) (2 1 3 2) (2 1 3 3) (2 2 1 1) (2 2 1 2) (2 2 1 3) (2 2 2 1) (2 2 2 2) (2 2 2 3) (2 2 3 1) (2 2 3 2) (2 2 3 3) (2 3 1 1) (2 3 1 2) (2 3 1 3) (2 3 2 1) (2 3 2 2) (2 3 2 3) (2 3 3 1) (2 3 3 2) (2 3 3 3) (3 1 1 1) (3 1 1 2) (3 1 1 3) (3 1 2 1) (3 1 2 2) (3 1 2 3) (3 1 3 1) (3 1 3 2) (3 1 3 3) (3 2 1 1) (3 2 1 2) (3 2 1 3) (3 2 2 1) (3 2 2 2) (3 2 2 3) (3 2 3 1) (3 2 3 2) (3 2 3 3) (3 3 1 1) (3 3 1 2) (3 3 1 3) (3 3 2 1) (3 3 2 2) (3 3 2 3) (3 3 3 1) (3 3 3 2) (3 3 3 3))  注意，排列是不一样的，它更简单，因为有一个方法来生成排列：
-                  <a href="https://ohmysummer.github.io/post/2016-12-30-perl-6-tips---%E6%8E%A2%E7%B4%A2%E7%BB%84%E5%90%88/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/permutations/">permutations</a>&nbsp;
                   
                 </div>
               

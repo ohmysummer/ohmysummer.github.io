@@ -201,6 +201,156 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-10-06-proto/">
+                <h2 class="post-title">proto</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 6, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (189 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  proto proto 意思为原型。proto 从形式上声明了 multi 候选者之间的共性。 proto 充当作能检查但不会修改参数的包裹。看看这个基本的例子:
+proto congratulate(Str $reason, Str $name, |) {*} multi congratulate($reason, $name) { say &quot;Hooray for your $reason, $name&quot;; } multi congratulate($reason, $name, Int $rank) { say &quot;Hooray for your $reason, $name -- you got rank $rank!&quot;; } congratulate('being a cool number', 'Fred'); # OK congratulate('being a cool number', 'Fred', 42); # OK congratulate('being a cool number', 42); # Proto match error  所有的 multi congratulate 会遵守基本的签名, 这个签名中有两个字符串参数, 后面跟着可选的更多的参数。 | 是一个未命名的 Capture 形参, 这允许 multi 接收额外的参数。第三个 congratulate 调用在编译时失败, 因为第一行的 proto 的签名变成了所有三个 multi congratulate 的共同签名, 而 42 不匹配 Str。
+                  <a href="https://ohmysummer.github.io/post/2015-10-06-proto/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/proto/">proto</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-10-05-perl-6-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2010/">
+                <h2 class="post-title">Perl 6 圣诞月历-(2010)</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 5, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 14 minutes (2923 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  2010 第二天:用main函数控制命令行交互 2010 年 Perl6 圣诞月历(二)用 main 函数控制命令行交互
+在 UNIX 环境下，很多脚本都是要从命令行里获取运行参数的。Perl6 上，实现这个相当简单~比如下面这样：
+$ cat add.pl sub MAIN ($x, $y) { say $x + $y } $ perl6 add.pl 3 4 7 $ perl6 add.pl too many arguments Usage: add.pl x y  只要定义一个带命名变量的 MAIN 函数，你就可以获得一个命令行分析器。然后命令行参数就被自动绑定到 $x 和 $y 上了。如果不匹配，还有温馨的 Usage 提示~~
+当然，你可能更喜欢自己定制 Usage 信息。那么自己动手，编写 USAGE 函数好了：
+$ cat add2.pl sub MAIN($x, $y) { say $x + $y } sub USAGE () { say &quot;Usage: add.
+                  <a href="https://ohmysummer.github.io/post/2015-10-05-perl-6-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2010/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%9C%A3%E8%AF%9E/">圣诞</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-09-18-%E7%A9%BA%E7%99%BD%E6%A0%BC/">
+                <h2 class="post-title">空白格</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 18, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (58 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  
+
+<h2 id="空格最少化">空格最少化</h2>
+
+<hr />
+
+<p>在数组或散列的开括号(即下标左边的那个括号)之前不允许有空格, 参数列表的圆开括号前面也是不能有空格的. 即:</p>
+
+<pre><code class="language-perl6">@deadbeef[$x]         # okay
+%monsters{'cookie'}   # okay
+saymewant('cookie')   # okay
+
+@a       [$b]         # WRONG
+%people  {'john'}     # WRONG
+mewant   ('cookie')   # WRONG
+</code></pre>
+
+<p>这种限制的的几个副作用之一就是条件控制结构的周围不再需要圆括号了:</p>
+
+<pre><code class="language-perl6">if $value eq $target {
+        print &quot;Bullseye!&quot;;
+    }
+while $i &lt; 10 { $i++ }
+</code></pre>
+
+<p>然而, 显式的使用 <code>unspace</code> 语法仍然能够让你对齐下标和后缀操作符:</p>
+
+<pre><code class="language-perl6">%squirrels{'fluffy'} = Squirrel.new;
+%monsters.{'cookie'} = Monster.new;
+%beatles\.{'ringo'}  = Beatle.new;
+%people\ .{'john'}   = Person.new;
+</code></pre>
+
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/unspace/">unspace</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-09-17-perl6%E4%B8%AD%E7%9A%84polymod%E6%96%B9%E6%B3%95/">
                 <h2 class="post-title">Perl 6 中的 polymod 方法</h2>
 
@@ -497,133 +647,6 @@ my $square = 9 ** 2; my @array = 1, 2, 3; # Array variable with three elements m
                     <a href="https://ohmysummer.github.io//tags/twigil/">twigil</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/%E5%8C%BF%E5%90%8D%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8F/">匿名状态变量</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-08-25-perl-6-%E5%8D%95%E8%A1%8C%E7%A8%8B%E5%BA%8F/">
-                <h2 class="post-title">Perl 6 单行程序</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 25, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 8 minutes (1623 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 单行程序 这本书在进行之中。我希望你能觉得它有趣，甚至可能有用！如果你想贡献反馈的话，那么很欢迎提问题还有新的或有提升的正则表达式。
-作者 戴维法瑞尔 PerlTricks.com
-版本 版本 0.01
-许可 FreeBSD
-贡献者  Alexander Moquin Bruce Gray Carl Mäsak David H. Adler FROGGS Helmut Wollmersdorfer japhb Larry Wall Matt Oates Moritz Lenz Mouq Salve J Nilsen Sam S Skids timotimo  致谢 启发于 Peteris Krumins 的 Perl 5 example 文件。他逐字逐句地写了一本关于 Perl 5 单行 的书。
-irc上有很好地 folks。
-内容  介绍 教程 文件间距 行号 计算 创建字符串和创建数组 文本转换和替换 文本分析 选择性的行打印 使用管道转换数据(进行中) WWW(进行中) 转换到 Windows  介绍 把 Perl 和其它语言区别开的一件事情是在单行代码中写小程序的能力，即人们所熟知的&rdquo;单行&rdquo;。在终端里直接键入一个程序比写一个废弃的脚本往往更快。并且单行程序也很强大；它们是羽翼丰满的程序，能够加载外部库，但是也能集成到终端中。你可以在单行程序中输入或输出数据。
-                  <a href="https://ohmysummer.github.io/post/2015-08-25-perl-6-%E5%8D%95%E8%A1%8C%E7%A8%8B%E5%BA%8F/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/oneliners/">OneLiners</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%8D%95%E8%A1%8C%E7%A8%8B%E5%BA%8F/">单行程序</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-08-25-cookbook/">
-                <h2 class="post-title">cookbook</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 25, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (668 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  字符串处理  将每行从第二列到最后一列数值为0的且数目多于6个的行删除
- 数据：
-OG004240: 1 3 1 1 9 0 4 5 1 1 6 1 2 OG004241: 1 2 1 4 7 2 1 3 1 2 9 1 1 OG004242: 1 2 1 2 4 1 3 9 2 2 4 2 2 OG004243: 0 4 1 2 9 2 4 5 1 2 3 1 1 OG004244: 0 2 1 3 8 3 3 2 2 3 4 2 2 OG004245: 0 3 1 2 7 3 3 0 3 2 7 2 2 OG004246: 0 0 2 0 1 15 0 15 0 0 1 0 1  use v6; my @lines = &quot;a.
-                  <a href="https://ohmysummer.github.io/post/2015-08-25-cookbook/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/cookbook/">cookbook</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-08-24-perl6%E4%B8%AD%E7%9A%84%E5%BC%95%E5%8F%B7/">
-                <h2 class="post-title">Perl 6 中的引号</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 24, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (276 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  除了 q 和 qq 之外，现在还有一种基本形式的 Q，它不会进行插值，除非显式地修改它那样做。所以，q 实际上是 Q:q 的简称，qq 实际上是 Q:qq 的简称。实际上所有的 quote-like 形式都派生自带有副词的 Q 形式：
-S02-literals/quoting.t lines 95–116 S02-literals/quoting.t lines 132–139
-q// Q :q // qq// Q :qq // rx// Q :regex // s/// Q :subst /// tr/// Q :trans ///  诸如 :regex 的副词通过转换到不同的解析器改变了语言的解析。这能完全改变任何之后的副词还有所引起的东西自身的解释。
-q:s// Q :q :scalar // rx:s// Q :regex :scalar //  就像 q[...] 拥有简写形式的 &lsquo;&hellip;&rsquo;, 并且 qq[...] 拥有简写形式的 &ldquo;&hellip;&rdquo; 一样，完整的 Q[...] 引用也有一种使用半角括号 ｢&hellip;｣ 的短形式。
-                  <a href="https://ohmysummer.github.io/post/2015-08-24-perl6%E4%B8%AD%E7%9A%84%E5%BC%95%E5%8F%B7/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%BC%95%E5%8F%B7/">引号</a>&nbsp;
                   
                 </div>
               

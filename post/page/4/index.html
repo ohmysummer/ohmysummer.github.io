@@ -201,6 +201,174 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/">
+                <h2 class="post-title">Going over the Bridge, part 2. Let’s get rid of it</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 12, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (598 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
+method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.
+                  <a href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/">
+                <h2 class="post-title">Going over the Bridge, part 1</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 11, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (169 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在处理 Perl 6 中的数字的类中，我们看到了 Bridge 方法，该方法以多态方式使用。让我们花一些时间，并试图了解 1）它是如何工作的，2）是否有必要。
+类和角色 我们的第一步是查看方法定义在哪里。以下是我们需要的类和角色列表：
+ Duration Instant Int Num Rational Real  为了预测下一步，让我们添加一些关于他们关系的更多细节：
+ class Duration is Cool does Real class Instant is Cool does Real class Int is Cool does Real class Num is Cool does Real role Rational does Real role Real does Numeric  在斜体字体中，我添加了伪声明，这些伪声明没有在 src/core 的相应文件中明确拼写，而是通过 src/Perl6/Metamodel/BOOTSTRAP.nqp 设置:
+Int.HOW.add_parent(Int, Cool); . . . Num.HOW.add_parent(Num, Cool);  对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
+                  <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-10-perl-6%E4%B8%AD%E7%9A%84%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0/">
+                <h2 class="post-title">Perl 6 中的命名参数</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 10, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (66 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  
+
+<p>Perl 6 中的函数（和类方法）能够接受命名参数。最简单的方法是用箭头分隔名称和值：</p>
+
+<pre><code class="language-perl6">sub f(:$a, :$b) {
+    $a ** $b
+}
+
+say f(a =&gt; 2, b =&gt; 3); # 8
+</code></pre>
+
+<p>但另一种语法是可能的，在冒号的帮助下。有几个主要品种。</p>
+
+<h2 id="key-value">:key(value)</h2>
+
+<p>所有内容都以冒号开头，数值在括号内：</p>
+
+<pre><code class="language-perl6">say f(:a(2), :b(3));
+</code></pre>
+
+<p>例如，不用圆括号，尖角括号也是允许的：</p>
+
+<pre><code class="language-perl6">say f(:a&lt;2&gt;, :b&lt;3&gt;);
+</code></pre>
+
+<h2 id="nkey">：Nkey</h2>
+
+<p>对于整数值，仍然有这样一个奇怪的语法：</p>
+
+<pre><code class="language-perl6">say f(:2a, :3b);
+</code></pre>
+
+<h2 id="key-和-key">:key 和 :!key</h2>
+
+<p>如果命名参数用作标记，则不需要指定值。在这种情况下，您可以传递 True 和 False，如下所示：</p>
+
+<pre><code class="language-perl6">sub g(:$key) {
+    $key
+}
+
+say g(:key);  # True
+say g(:!key); # False
+</code></pre>
+
+<p>实际上，所有冒号对儿都会创建键值对，因此您可以在创建散列时执行相同的操作</p>
+
+<pre><code class="language-perl6">my %data = :alpha(10), :beta(20), :gamma(30);
+say %data&lt;beta&gt;; # 20
+</code></pre>
+
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-08-perl-6-grammar%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7%E5%AF%B9%E5%84%BF/">
                 <h2 class="post-title">Perl 6 Grammar 中的冒号对儿</h2>
 
@@ -532,151 +700,6 @@ F.R.U.Rʼ.Uʼ.Fʼ  我也希望能够转储立方体的现有状态;现在作为
 Perl 6允许您创建Enumerations，因此您可以在代码中使用实际的单词而不是查找值，所以让我们从一些我们需要的内容开始：
 enum Side «:Up('U') :Down('D') :Front('F') :Back('B') :Left('L') :Right('R')»; enum Colors «:Red('R') :Green('G') :Blue('B') :Yellow('Y') :White('W') :Orange('O')»;  有了这个语法，我们可以直接在我们的代码中使用Up，并且它的关联值是U.
                   <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/">
-                <h2 class="post-title">Playing with the code of Rakudo Perl 6</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 23, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (180 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  昨天，我们查看了返回字符串的 Bool 类的两个方法。函数产生的字符串表示在源代码中被硬编码。
-让我们使用这个观察并尝试改变文本。
-所以，这里是我们要修改的片段：
-Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? 'True' !! 'False' });  该 gist 方法用于对已定义的变量进行字符串化。
-要做到这一点，你需要在计算机上安装 Rakudo 的源代码，以便编译它们。首先从 GitHub 克隆项目：
-$ git clone https://github.com/rakudo/rakudo.git  编译 MoarVM：
-$ cd rakudo $ perl Configure.pl --gen-moar --gen-nqp --backends=moar $ make  完成之后，你会在 rakudo 目录下获得 perl6 可执行文件。
-现在，打开 src/core/Bool.pm 文件，并将 gist 方法的字符串更改为使用 Unicode 大拇指代替纯文本：
-Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? '👍' !! '👎' });  保存文件后，您需要重新编译 Rakudo。 Bool.
-                  <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-23-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E5%A4%A9-perl-6%E9%AB%98%E5%B0%94%E5%A4%AB/">
-                <h2 class="post-title">第二十三天-Perl 6 高尔夫</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 23 – The Wonders of Perl 6 Golf
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 23, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (621 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 23 – The Wonders of Perl 6 Golf 啊，圣诞节！还有什么比和你的朋友与家人一起坐在桌子旁边玩高尔夫球代码还好呢！ &hellip;等等，什么？
-哦，对，这还不是圣诞节。但是你可能想要为它做好准备！
-如果你还没有注意到，有一个不错的网站可以玩高尔夫球代码：https://code-golf.io/。这个网站很酷的地方是，它不仅仅只支持 perl 6！在撰写本文时，它还支持其他 6 种语言。嗯&hellip;
-无论如何，因为我在那个网站的成绩还不错，我会分享一些我觉得最好的解决方案。所有的 trickety-hackety，unicode-cheatery 和 mind-blowety。在我们看来，也许我们甚至会看到即使在代码高尔夫中，perl 6 也非常简洁易读。也就是说，如果你很难将你的圣诞愿望放在一张卡片上，那么可能会放得下一行 perl 6 代码。
-我不会提供完整的解决方案，不会破坏你的圣诞乐趣，但我会给你足够的提示，以提出有竞争力的解决方案。
-这个圣诞节我就是想让你得到一些乐趣。所以你先下载一份 rakudo，以确保你可以跟随。稍后我们会有一些南瓜派，我们会做一些颂歌。如果您在运行 perl 6 时遇到任何问题，可以在 freenode 上加入 ＃perl6 频道以获得一些帮助。这就是说，https://code-golf.io/ 本身为你提供了一个很好的编辑器来编写和评估你的代码，所以应该没有问题。
-一些基本的例子 让我们以帕斯卡三角形任务为例。我听到了，我听到了！圣诞节前的数学，这太残酷了。残忍，但很有必要。
-只有一个你必须知道的基本技巧。如果从 Pascal 三角形中取出任何一行，将它移动一个元素，然后用原始行对结果进行 zip-sum，就会得到下一行！
-所以如果你有一行数字：
-1 3 3 1  你所做的只是把它移到右边：
-0 1 3 3 1  并将其与原始行相加：
-1 3 3 1 + + + + 0 1 3 3 1 = 1 4 6 4 1  就是如此容易！所以我们还是写代码吧：
-                  <a href="https://ohmysummer.github.io/post/2017-12-23-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E5%A4%A9-perl-6%E9%AB%98%E5%B0%94%E5%A4%AB/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-22-exploring-the-bool-type-in-perl-6-part-1/">
-                <h2 class="post-title">Exploring the Bool type in Perl 6, part 1</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    探索 Perl 6 中的布尔值, 第一部分
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 22, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (195 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  今天，我们将使用 GitHub 上提供的 Rakudo 源代码挖掘 Bool 类型的内部。
-Perl 6 是用 Perl 6 和 NQP（Not Quite Perl 6）语言编写的，这使得阅读源代码变得相对容易。当然，有很多东西不容易理解，或者没有反映在 Perl 6 语言的公开文档中。到目前为止，您都无法在 Perl 6 书籍中找到深入的细节。无论如何，对 Perl 6 有一些中级的理解，这仍然是可能的。
-好的，回到 src/core/Bool.pm 文件。它以一些 BEGIN phasers 开始，它为 Bool 类添加了一些方法和 multi 方法。下一次我们将讨论元模型和类构造的细节。今天，对我们来说更有趣的是 Bool 类的方法在做什么。
-gist 和 perl gist 和 perl 方法返回对象的字符串表示形式：当变量被字符串化时隐式调用 gist，perl 应该直接调用。它适用于 Perl 6 中的任何对象，但这种行为当然应该定义在某处。他们在这里：
-Bool.^add_method('gist', my proto method gist(|) {*}); Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? 'True' !! 'False' }); Bool.^add_multi_method('gist', my multi method gist(Bool:U:) { '(Bool)' }); Bool.
-                  <a href="https://ohmysummer.github.io/post/2017-12-22-exploring-the-bool-type-in-perl-6-part-1/" class="post-read-more">[Read More]</a>
                 
               </div>
 

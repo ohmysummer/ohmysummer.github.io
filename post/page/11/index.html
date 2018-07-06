@@ -201,6 +201,137 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-09-28-gather-take/">
+                <h2 class="post-title">gather-take</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 28, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (172 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  控制流 gather/take gather 是一个语句或者能返回一序列值的 block 前缀。该值来自于 gather 块中的动态作用域的 take 调用。
+my $a = gather { take 1; take 5; take 42; } say join ', ', @$a; # 1, 5, 42  gather/take 能根据上下文按需(惰性地)生成值。如果你想强制惰性求值则使用 lazy 子例程或方法。绑定到一个标量或无符号的容器上也会强制惰性求值。 举个例子:
+my @vals = lazy gather { take 1; say &quot;Produced a value&quot;; take 2; } say @vals[0]; say 'between consumption of two values'; say @vals[1]; # OUTPUT: # 1 # between consumption of two values # Produced a value # 2  gather/take 是动态作用域的, 所以你可以从 gather 内部所调用的 subs 或方法中调用 take:
+                  <a href="https://ohmysummer.github.io/post/2016-09-28-gather-take/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/gather/">gather</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/take/">take</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-09-27-%E8%A7%A3%E6%9E%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BE%93%E5%87%BA/">
+                <h2 class="post-title">解析命令行输出</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 27, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (315 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  哦, 列, 你在哪里? 当 ramiroencinas 给 Perl 6 的生态系统增加 FileSystem::Capacity::VolumesInfo模块的时候, 我说他没有添加 macOS 支持。而当我尝试为这个模块贡献源代码时我才发现知道一丢丢 Perl 6 的特性就能节省很多时间。 FileSystem::Capacity::VolumesInfo 这个模块所做的就是解析 df 命令的输出, 它看起来长这样:
+$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.
+                  <a href="https://ohmysummer.github.io/post/2016-09-27-%E8%A7%A3%E6%9E%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BE%93%E5%87%BA/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BD%8D%E7%BD%AE%E9%94%9A%E7%82%B9/">正则表达式位置锚点</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/regexp-position-anchor/">regexp position anchor</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/">
+                <h2 class="post-title">I left my keys in a side-channel</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 26, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (115 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  当我尝试把选项聚合到一个模块中时我无意中发现了一个常见问题的简洁解决办法。我想拥有一个子例程作为吞噬具名参数、做一些检查、并且要么返回 True 以满足那个 where 从句, 要么死掉并抛出一个合适的错误信息的 where 从句。 那很简单但是不彻底。那个 where 从句没有提供它所检查的参数的名字, 这需要拥有一个合适的错误信息。我们来简化下代码。
+sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {}  子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Perl 6 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
+如你所见 checker 接收一组冒号对(colon-pairs)。剩下的问题我们能提供给我们可能要输出的异常，特别的附加信息。如果我们希望该参数是可选的，避免奇怪的语法。我们可以有一个可选的位置，但我们就不能在checker中混合位置和具名参数。存储该值将是微不足道，因为返回的匿名子例程可以具有闭包变量。我们只需要填充它。幸运的是，子返回作为引用返回，然后由那个 where 从句调用。我们可以偷偷加进另一个呼叫，只要我们大家别忘了把代码引用返回给匿名子例程(sub)。
+返回引用给同一个对象是通过链式方法调用完成的。通常情况下，当事情在 Perl 6 的领地上变得复杂时，我们就混入一个 role 好了。然后，我们有了一个可以返回自身的方法。
+use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$closure-variable, $value-from-where-clause]; $value-from-where-clause == $i or die &quot;bad value $value-from-where-clause for $closure-variable&quot; } but role :: { method side-channel($second-value){ $closure-variable = $second-value; self } } } sub f($a where g(42).
+                  <a href="https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/key/">key</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/but/">but</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/where/">where</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/">
                 <h2 class="post-title">These keys are LTA</h2>
 
@@ -483,134 +614,6 @@ my @questions = ('name', ' quest', 'favorite color'); my @answers = (&quot;lance
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/python/">Python</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/">
-                <h2 class="post-title">feed 操作符</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 18, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (421 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Sequencer Precedence
-infix ==&gt; 这个流操作符(feed operator)从它的左侧接收结果并把结果作为最后一个参数传递给下一个(右侧的)例程(routine)。
-这个操作符的优先级很松散所以你需要使用圆括号把结果赋值给其它变量, 或者你甚至可以使用另外一个流操作符! 在接收单个参数或第一个参数为 block 的程序/方法的例子中, 你必须经常使用圆括号来调用(尽管这对于最后一个例程/方法不是必须的)。
-# Traditional structure, read bottom-to-top my @result = sort # (4) Sort, result is &lt;Earth People&gt; grep { /&lt;[PE]&gt;/ }, # (3) Look for P or E map { .tc }, # (2) Capitalize the words &lt;people of earth&gt;; # (1) Start with the input # Feed (left-to-right) with parentheses, read top-to-bottom @result = ( &lt;people of earth&gt; # (1) Start with the input ==&gt; map({ .
-                  <a href="https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/feed/">feed</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/feed-bottom-to-top/">feed-bottom-to-top</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-09-18-perl-6-calendar-2016-%E7%AC%AC%E4%B8%89%E5%A4%A9%E5%AF%B9%E8%B1%A1%E5%93%88%E5%B8%8C/">
-                <h2 class="post-title">对象哈希</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 18, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (431 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  第三天　－　对象哈希
-Perl 6 添加对象散列, 其键并不仅仅是字符串。这些键是值和类型的结合。这意味着对象可以被字符串化为同样的东西但是它们可以是不同的键。
-普通的哈希构造：
-use v6; my Int $int = 4; my Str $str = &quot;4&quot;; my IntStr $int_str = &lt;4&gt;; # Allomorph my %hash; %hash{$int} = 'Plain old number'; %hash{$str} = 'String of digits'; %hash{$int_str} = 'Dualvar'; say &quot;There are &quot;, %hash.elems, &quot; elements in the hash&quot;; # this calls the .gist method, sorta like a dumper routine %hash.say;  结果显示该哈希中只有一个元素并且这个元素是我最后添加的那个：
-There are 1 elements in the hash {4 =&gt; Dualvar}  但是我也可以通过告诉哈希我想要它接受的对象来声明一个对象哈希（Object hash）。我可以使用　Any 对象来允许哈希接受任何东西：
-                  <a href="https://ohmysummer.github.io/post/2016-09-18-perl-6-calendar-2016-%E7%AC%AC%E4%B8%89%E5%A4%A9%E5%AF%B9%E8%B1%A1%E5%93%88%E5%B8%8C/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%AF%B9%E8%B1%A1%E5%93%88%E5%B8%8C/">对象哈希</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-09-10-data-dump/">
-                <h2 class="post-title">Data Dump</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 10, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (152 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  for Perl 6 你们选对了, 这就是满足你们快速打印数据需要的. 如果你已经安装了 Term::ANSIColor的话,输出就会亮瞎你的狗眼!
-选项 indent 默认缩进为 2
-&lt;...&gt; say Dump({ some =&gt; object }, :indent(4)); &lt;...&gt;  max-recursion 默认为 50
-&lt;...&gt; say Dump({ some =&gt; object }, :max-recursion(3)); &lt;...&gt;  :color( ) 默认为 :color(true), 安装了 Term::ANSIColor的情况下输出会带颜色. 当为 :color(False) 时关闭彩色.
-用法 use Data::Dump; say Dump(%( key1 =&gt; 'value1', key256 =&gt; 1, ));  输出:
-{ key1 =&gt; &quot;value1&quot;.Str, key256 =&gt; 1.Int, }  注意: 如果你已经安装了 Term::ANSIColor, 那么接下来就会让你吃惊了.
-                  <a href="https://ohmysummer.github.io/post/2016-09-10-data-dump/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/datadump/">DataDump</a>&nbsp;
                   
                 </div>
               

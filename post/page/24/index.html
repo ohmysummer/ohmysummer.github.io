@@ -201,6 +201,132 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-03-23-perl6%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97/">
+                <h2 class="post-title">Perl 6 中的模块</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 23, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (697 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Modules Exporting and Selective Importing is export packages(包), subroutines(子例程), variables(变量), constants(常量) 和 enums(枚举) , 通过在它们的名字后面添加 is export 特性来导出。
+unit module MyModule; our $var is export = 3; sub foo is export { ... }; constant $FOO is export = &quot;foobar&quot;; enum FooBar is export &lt;one two three&gt;; # Packages like classes can be exported too class MyClass is export {}; # If a subpackage is in the namespace of the current package # it doesn't need to be explicitly exported class MyModule::MyClass {};  就像所有的 traits 一样, 如果应用到子例程(routine)上, &ldquo;is export&rdquo; 应该出现在参数列表的后面:
+                  <a href="https://ohmysummer.github.io/post/2015-03-23-perl6%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E6%A8%A1%E5%9D%97/">模块</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/modules/">Modules</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-03-23-sneaking-into-a-loop/">
+                <h2 class="post-title">Sneaking into a loop</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 23, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (268 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Sneaking into a loop [Sneaking into a loop]https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/
+Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的问题。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s3d\n&quot;).say;  slurp 会从 STDIN 中读取整个 &ldquo;file&rdquo; 并返回一个 Str。方法 Str::words 会按照某种 Unicode 意义的单词把该字符串分割成一个列表。把列表强转为 Bag 则创建一个计数 Hash, 它是如下表述的快捷方式。
+my %h; %h{$_}++ for &lt;peter paul marry&gt;; dd %h; # # OUTPUT«Hash %h = {:marry(1), :paul(1), :peter(1)}␤»  在关联数组上调用 .sort(-*.value) 会按照值的降序排序并返回一个排序后的 Pairs 列表。List::fmt 会调用 Pair::fmt, 它调用 fmt 方法, .key 作为其第二个参数, .value 也作为参数。say 会会使用一个空格连接各个元素并输出到标准输出。最后一步有一点错误因为除了第一行之外的每一行前面都会有一个额外的空格。
+slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quot;).say;  手动连接字符串更好。这对于简短的单行程序来说有点多了。我们需要找到最长的单词并使用 .
+                  <a href="https://ohmysummer.github.io/post/2015-03-23-sneaking-into-a-loop/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/bag/">Bag</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/sort/">sort</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-03-22-perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB---junctions/">
+                <h2 class="post-title">Perl 6 的薛定谔的猫--Junctions</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 22, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (558 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  薛定谔欧文应该是喜欢 Perl 6 的, 因为他的著名的薛定谔的猫可以用 Perl 6 的 Junction表达:
+my $cat = 'dead' | 'alive'; say &quot;cat is both dead and alive&quot; if $cat eq 'dead' and $cat eq 'alive'; # OUTPUT: # cat is both dead and alive  这里面发生了什么事情? 我会告诉你全部的!
+Anyone 游戏? 拿最简单的来说, Junctions 允许你把一堆值当作单个值。例如, 你可以使用 any Junction 来测试一个变量是否等于所给定值中的任意一个:
+say 'it matches!' if 'foo' eq 'foo' | 'bar' | 'ber'; say 'single-digit prime' if 5 == any ^9.
+                  <a href="https://ohmysummer.github.io/post/2015-03-22-perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB---junctions/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/junctions/">Junctions</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-03-19-subset/">
                 <h2 class="post-title">Subset</h2>
 
@@ -495,52 +621,6 @@ grammar N { token TOP { &lt;digit&gt;+ } } for &lt;1 42 123 1000&gt; -&gt; $n { 
 
             </article>
           
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-04-29-perl-6-from-haskell---nutshell/">
-                <h2 class="post-title">Perl 6 from Haskell - Nutshell</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Learning Perl 6 from Haskell, in a nutshell: What do I already know?
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 11, 2014
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (158 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Haskell 和 Perl 6 是非常不同的语言。这很明显。 但是，这并不意味着没有相似之处或共同的想法！ 此页面尝试让一个 Haskell 用户启动并运行 Perl 6。Haskell 用户可能会发现，在用 Perl 6 编写脚本时，他们不需要放弃所有 Haskelly 的想法。
-请注意，这不应该被误认为是初学者教程或 Perl 6 概述; 它旨在作为具有强大 Haskell 背景的 Perl 6 学习者的技术参考。
-类型 类型 vs 值 在 Haskell 中, 您有类型级编程, 然后进行值级编程。
-plusTwo :: Integer -&gt; Integer -- Types plusTwo x = x + 2 -- Values  您不要像下面那样在 Haskell 中混合类型和值。
-plusTwo 2 -- This is valid plusTwo Integer -- This is not valid  在 Perl 6 中, 类型(亦称为类型对象)和值处于同样的级别
-                  <a href="https://ohmysummer.github.io/post/2017-04-29-perl-6-from-haskell---nutshell/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
         </div>
         
           <ul class="pager main-pager">
@@ -549,6 +629,10 @@ plusTwo 2 -- This is valid plusTwo Integer -- This is not valid  在 Perl 6 中,
                 <a href="/post/page/23/">&larr; Newer Posts</a>
               </li>
             
+            
+              <li class="next">
+                <a href="/post/page/25/">Older Posts &rarr;</a>
+              </li>
             
           </ul>
         
