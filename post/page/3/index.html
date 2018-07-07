@@ -201,6 +201,144 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-04-13-perl-6-%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E8%A7%A3%E6%9E%90/">
+                <h2 class="post-title">Perl 6 中的列表解析</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    list comprehension in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 13, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (361 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 中的列表解析 看一看 Python 中关于列表推导的页面。
+S = {x² : x in {0 ... 9}} V = (1, 2, 4, 8, ..., 2¹²) M = {x | x in S and x even}  Python 列表解析:
+S = [x**2 for x in range(10)] V = [2**i for i in range(13)] M = [x for x in S if x % 2 == 0]  在原始定义中我没有看到 10 或 13 , Perl 6 与原始语言最接近的语法是:
+                  <a href="https://ohmysummer.github.io/post/2018-04-13-perl-6-%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E8%A7%A3%E6%9E%90/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/list-comprehension/">list comprehension</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-perl-6/">
+                <h2 class="post-title">在 Perl 6 中设置超时</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Setting timeouts in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 12, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (100 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在 Perl 6 中设置超时 在 Perl 5 中，我曾经使用信号设置超时（至少，这是一种简单且可预测的方式）。在 Perl 6 中，您可以使用 promise。让我们看看如何做到这一点。
+要模仿长时间运行的任务，请创建一个无限循环，然后打印其状态。开始吧:
+for 1 .. * { .say if $_ %% 100_000; }  只要循环得到控制，它将永远不会退出。我们的任务是在几秒钟内停止程序，因此计时器应在循环之前设置:
+Promise.in(2).then({ exit; }); for 1 .. * { .say if $_ %% 100_000; }  在这里，Promise.in 方法创建一个 promise，在给定秒数后自动 kept。在 promise 的基础上，使用 then，我们添加了另一个 promise，其代码将在超时后运行。这里唯一的语句就是退出，停止主程序。
+运行该程序以查看它的工作原理：
+$ time perl6 timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 0m2.196s user 0m2.120s sys 0m0.068s  该程序在我的计算机上计数达四百万，并在两秒内退出。这正是我们需要的行为。
+                  <a href="https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/superscripts/">Superscripts</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-04-11-typed-hashes-in-perl-6/">
+                <h2 class="post-title">Typed hashes in Perl 6</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    希望你有好运气
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 11, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (213 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Typed hashes in Perl 6 在 Perl 6 中, 你可以通过指定变量的类型来限制变量容器的内容, 例如：
+my Int $i;  标量变量中只有一个值。你可以将该概念扩展到数组, 并让其元素仅保存整数, 如下例所示：
+&gt; my Int @i; [] &gt; @i.push(42); [42] &gt; @i.push('Hello'); Type check failed in assignment to @i; expected Int but got Str (&quot;Hello&quot;) in block &lt;unit&gt; at &lt;unknown file&gt; line 1  哈希中保存的是 pairs, 所以你可以同时指定键和值的类型。语法和上面的例子并无不同。
+首先, 让我们声明值的类型：
+my Str %s;  现在, 可以将字符串作为哈希的值：
+&gt; %s&lt;Hello&gt; = 'World' World &gt; %s&lt;42&gt; = 'Fourty-two' Fourty-two  但这个哈希不能保存整数:
+                  <a href="https://ohmysummer.github.io/post/2018-04-11-typed-hashes-in-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/typed-hashes/">Typed hashes</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-04-10-what-does-gist-do-in-perl-6/">
                 <h2 class="post-title">Perl 6 中的 gist 方法</h2>
 
@@ -504,134 +642,6 @@ say %distance.sort({$^a.value &lt;=&gt; $^b.value});  一般来说，它已经�
 其次，这些占位符变量内部是 Pair 类型的对象，它包含键和值：
 say %distance.
                   <a href="https://ohmysummer.github.io/post/2018-02-16-%E5%A6%82%E4%BD%95%E5%9C%A8perl-6%E4%B8%AD%E5%AF%B9%E6%95%A3%E5%88%97%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-02-15-examining-the-real-role-of-perl-6-part-1/">
-                <h2 class="post-title">Examining the Real role of Perl 6, part 1</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 15, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (211 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  在过去的几天里，我们谈了很多关于 Real 这个角色。让我们更仔细地看看它。该代码位于 src/core/Real.pm 文件中。
-它包含角色本身和一些实现不同中缀的子例程。Real 角色又实现了 Numeric 角色：
-my role Real does Numeric { . . . }  有趣的是，类定义还需要关于 Complex 类的一些知识，这就是为什么在文件的第一行有一个前向类声明：
-my class Complex { ... }  Real 角色将许多三角函数定义为方法，正如我们已经看到的，他们正在使用 Bridge 方法：
-method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.
-                  <a href="https://ohmysummer.github.io/post/2018-02-15-examining-the-real-role-of-perl-6-part-1/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-perl-6/">
-                <h2 class="post-title">FatRat vs Rat in Perl 6</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    FatRat vs Rat in Perl 6
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 15, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (688 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  昨天，Solomon Foster 在 Facebook 的 Perl 6 小组上发布了一个例子:
-my @x = FatRat.new(1, 1), -&gt; $x { $x - ($x ** 2 - $N) / (2 * $x) } ... *  这段代码实现了牛顿找到 $N 平方根近似值的方法。重要的是它使用 FatRat 值来获得更高的准确性。
-让我们运行 9 的平方根：
-my $N = 9; my @x = Rat.new(1, 1), -&gt; $x { $x - ($x ** 2 - $N) / (2 * $x) } ... *; .say for @x[0..7];  很快，它收敛到正确的值：
-                  <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-perl-6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/">
-                <h2 class="post-title">A bit more on Rat vs FatRat in Perl 6</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 14, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (134 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  昨天，我们正在深入研究 Rakudo Perl 6，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
-我们找到了它发生的地方。今天，让我们进行一个练习，看看Perl 6的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
-改变很简单。所有你需要的是更新DIVIDE_N例程中的ifs：
---- a/src/core/Rat.pm +++ b/src/core/Rat.pm @@ -48,16 +48,14 @@ sub DIVIDE_NUMBERS(Int:D \nu, Int:D \de, \t1, \t2) { ($numerator := -$numerator), ($denominator := -$denominator))), nqp::if( - nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat), + nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat) || $denominator &gt;= UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(FatRat),FatRat,'$!numerator',$numerator), FatRat,'$!denominator',$denominator), - nqp::if( - $denominator &lt; UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(Rat),Rat,'$!numerator',$numerator), - Rat,'$!denominator',$denominator), - nqp::p6box_n(nqp::div_In($numerator, $denominator))))) + Rat,'$!denominator',$denominator) + )) }  现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。
-                  <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/" class="post-read-more">[Read More]</a>
                 
               </div>
 

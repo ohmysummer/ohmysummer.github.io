@@ -201,6 +201,170 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-06-14-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80%E4%BE%8B/">
+                <h2 class="post-title">正则表达式一例</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 14, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (364 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  以指定音量随机播放音频文件：
+#!/usr/bin/env perl6 use v6; my %v; # hash to hold data my token filename { .+? \.\S\S\S }; # filenames end in .??? my token volume { \d+ }; # any digits for volume my regex extra { .+ \S }; # anything following that my $mixer = 'mixer'; my $player = 'mplayer -vf dsize=600:-2 -geometry +200-10 '; my $lockfile = '/tmp/myplayer'; $lockfile.IO.spurt( $*PID ); # store the process ID so other process can kill this one END { $lockfile.
+                  <a href="https://ohmysummer.github.io/post/2015-06-14-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80%E4%BE%8B/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-06-10-class-list/">
+                <h2 class="post-title">class-List</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 10, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1193 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  my class List is Iterable does Positional { .. }  List 以序列化的方式存储 items并且潜在是惰性的。
+默认列表和数组的索引从 0 开始。
+你可以给列表中的元素赋值如果它们是容器的话。使用数组以使列表中的每个元素存储在容器中。
+Items, Flattening and Sigils 在 Perl 6 中, 把 List 赋值给一个标量变量不会丢死信息。不同之处在于迭代通常会把标量中的列表(或其它任何像列表的东西, 例如 Parcel 和 数组)当作单个元素。
+my @a = 1, 2, 3; for @a { } # 三次迭代  my $s = @a; for $s { } # 一次迭代 for @a.item { } # 一次迭代 for $s.list { } # 三次迭代  Lists 通常会插值(展开)除非它们通过一个 item(scalar)容器访问:(GLR 的影响？)
+                  <a href="https://ohmysummer.github.io/post/2015-06-10-class-list/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/list/">List</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-05-19-slip%E4%B8%80%E4%BE%8B/">
+                <h2 class="post-title">Slip一例</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 19, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (55 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  
+
+<h4 id="描述">描述</h4>
+
+<p>有 7 块板子放在一个&rdquo;袋子&rdquo;中, 随机从袋子中移除一个板子展示到玩家面前直到袋子变空。当袋子变空时, 它会被重新装填, 如果需要额外的板子, 则重复前面那个过程。</p>
+
+<h4 id="输出">输出</h4>
+
+<p>使用随机 bag 系统随机输出 50 块板子。</p>
+
+<p>板子如下:</p>
+
+<ul>
+<li>O</li>
+<li>I</li>
+<li>S</li>
+<li>Z</li>
+<li>L</li>
+<li>J</li>
+<li>T</li>
+</ul>
+
+<h4 id="输出样本">输出样本</h4>
+
+<hr />
+
+<ul>
+<li><code>LJOZISTTLOSZIJOSTJZILLTZISJOOJSIZLTZISOJTLIOJLTSZO</code></li>
+<li><code>OTJZSILILTZJOSOSIZTJLITZOJLSLZISTOJZTSIOJLZOSILJTS</code></li>
+<li><code>ITJLZOSILJZSOTTJLOSIZIOLTZSJOLSJZITOZTLJISTLSZOIJO</code></li>
+</ul>
+
+<p>在 Perl 6 中我会这样写 (smls):</p>
+
+<pre><code class="language-perl6">say (|&lt;O I S Z L J T&gt;.pick(*) xx *).[^50].join;
+</code></pre>
+
+<p>注意:</p>
+
+<ul>
+<li>| 操作符把每次迭代的项展开进外部的列表中, 以使你不必在结果上显式地调用 .flat 方法</li>
+<li>使用 <code>&lt; &gt;</code> 字符串列表字面量看起来比在字符串字面量上使用 .comb 方法更合适</li>
+<li>xx 操作符每次都会重新计算它左侧的表达式</li>
+</ul>
+
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/slip/">Slip</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/pick/">pick</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-05-19-%E6%80%8E%E4%B9%88%E5%9C%A8perl6%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%98%E5%8F%96%E5%99%A8/">
                 <h2 class="post-title">怎么在 Perl 6 中自定义存取器</h2>
 
@@ -492,126 +656,6 @@ say $logfile ~~ /2015 | 2016 '-' 02 '-' 06T14 ':' 36 '+' 02 ':' 00/;  但是这�
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-04-15-grammars-generating-grammars/">
-                <h2 class="post-title">Grammars generating grammars</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 15, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (499 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  现在你可能已经习惯了 Perl 6 中到处出现的前缀&rdquo;meta&rdquo;。Metaclasses, Metaobjects, Metaoperators, 还有迷一般的 Meta-Object 协议。听起来一点也不可怕, 你都见过了不是吗？今天, 在 Perl 6 Advent Calendar 上, 我们将进行完全的 meta 化(full meta)。我们将拥有能解析 grammars 的 grammars, 然后生成将用于解析 grammars 的 grammars。
-Grammars 无疑是 Perl 6 的杀手级功能。我们拥有了正则表达式曾经没有的东西: 可读性、可组合性当然还有解析 Perl 6 自身的能力。— 如果这不能展示它的强大, 那我不知道什么能够!
-为预定义好的 grammars(例如以 Bachus-Naur 形式)写解析器总是有点无趣, 几乎和复制粘贴一样。如果你曾经坐下来重头开始写一个解析器(或者期间温习一遍那本优秀的&rdquo;让我们构建一个编译器&rdquo;图书), 你可能会意识到模式是如此相似:从你的 grammar 中拿出单个 rule, 为它写一个子例程, 让它调用(可能是递归的)其它类似的为其它 grmmars rules 定义的子例程, 清洗, 重复。现在我们有了Perl 6 Grammars! 在这个新世界中, 我们不必为每个 token 写上子例程来完成工作了。 现在我们写 grammar 类, 里面放上 *tokens*、*rules*、regexes 标志。在标志里写正则表达式(或代码)并引用(可能是递归的) Perl 6 gramamr 中的其它标志。如果你曾经使用过这些东西, 你肯定会意识到 Perl 6 中的 gramamrs 是多么的方便。
-                  <a href="https://ohmysummer.github.io/post/2015-04-15-grammars-generating-grammars/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-04-15-perl-6%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2012/">
-                <h2 class="post-title">Perl 6圣诞月历-(2012)</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 15, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 12 minutes (2495 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  2012 一个日历 #!/usr/bin/env perl6 constant @months = &lt;January February March April May June July August September October November December&gt;; constant @days = &lt;Su Mo Tu We Th Fr Sa&gt;; sub center(Str $text, Int $width) { my $prefix = ' ' x ($width - $text.chars) div 2; my $suffix = ' ' x $width - $text.chars - $prefix.chars; return $prefix ~ $text ~ $suffix; } sub MAIN(:$year = Date.today.year, :$month = Date.
-                  <a href="https://ohmysummer.github.io/post/2015-04-15-perl-6%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2012/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%9C%A3%E8%AF%9E/">圣诞</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-04-01-capture/">
-                <h2 class="post-title">Capture</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 1, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (402 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Capture 的定义:
-class Capture does Positional does Associative { }  Capture 是一个用于给 code 对象传递参数的容器。Captures 是签名的另一面 — Captures 在调用方定义实参, 而签名(Signatures) 在被调用方定义形式参数。
-当你调用 print $a, $b 时, $a, $b 这部分就是一个 Capture。$a, $b 在这儿是实参。
-Captures 包含一个 list-like 部分的位置参数和一个 hash-like 部分的具名参数。对于具名参数, Captures 使用一种略微不同的语法而不是普通的 List。有两种简单的方法生成一个具名参数：
- 使用一个未引起的键命名一个形参, 后面跟着 =&gt;, 然后跟着参数 使用以形参命名的冒号对儿字面量  say unique 1, -2, 2, 3, as =&gt; { abs $_ }; # 1, -2, 3 # ... is the same thing as: say unique 1, -2, 2, 3, :as({ abs $_ }); # 1, -2, 3 # Be careful not to quote the name of a named parameter: say unique 1, -2, 2, 3, 'as' =&gt; { abs $_ }; # 1, -2, 2, 3, &quot;as&quot; =&gt; { .
-                  <a href="https://ohmysummer.github.io/post/2015-04-01-capture/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/capture/">Capture</a>&nbsp;
                   
                 </div>
               

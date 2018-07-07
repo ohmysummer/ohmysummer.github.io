@@ -201,6 +201,142 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-doing-math-with-perl6/">
+                <h2 class="post-title">Doing Math With Perl6</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Different mathematical paradigms and how they are implemented in this language.
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (584 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Sets Perl 6 包括 Set 数据类型，以及对大多数 set 操作的支持。并集和交集不仅是原生操作，它们使用自然符号 ∩ 和 ∪。例如，此代码将检查有限数量集的集算术的基本定律：
+my @arbitrary-numbers = ^100; my \U = @arbitrary-numbers.Set; my @sets; @sets.push: Set.new( @arbitrary-numbers.pick( @arbitrary-numbers.elems.rand)) for @arbitrary-numbers; my (@union, @intersection); for @sets -&gt; $set { @union.push: $set ∩ $set === $set; @intersection.push: $set ∪ $set === $set; } say &quot;Idempotent union is &quot;, so @union.all; # OUTPUT: «Idempotent union is True» say &quot;Idempotent intersection is &quot;, so @intersection.all; # OUTPUT: «Idempotent intersection is True» my (@universe, @empty-set, @id-universe, @id-empty); for @sets -&gt; \A { @universe.
+                  <a href="https://ohmysummer.github.io/post/2018-07-07-doing-math-with-perl6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/math/">Math</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-date-and-time-functions/">
+                <h2 class="post-title">Date and Time Functions</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Processing date and time in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (225 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 包括几个处理时态信息的类：Date，DateTime，Instant 和 Duration。前三个是 dateish，所以它们混合了 Dateish 角色，它定义了处理日期的类应该采用的所有方法和属性。它还包括以 X::Temporal 为根的异常的类层次结构。
+我们将尝试在下一个（稍微扩展）的示例中说明这些类，这个示例可用于处理目录中的所有文件（默认情况下）。在目录中使用特定扩展名（默认为 .p6），根据他们的年龄对其进行排序，并计算每月创建的文件数量，以及在几个月的范围内表示的特定时期内修改的文件数量：
+use v6; sub MAIN( $path = &quot;.&quot;, $extension = &quot;p6&quot; ) { my DateTime $right = DateTime.now; my %metadata; my %files-month; my %files-period; for dir($path).grep( / \.$extension $/ ) -&gt; $file { CATCH { when X::Temporal { say &quot;Date-related problem&quot;, .payload } when X::IO { say &quot;File-related problem&quot;, .payload } default { .payload.say } } my Instant $modified = $file.
+                  <a href="https://ohmysummer.github.io/post/2018-07-07-date-and-time-functions/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/date/">Date</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/time/">Time</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/">
+                <h2 class="post-title">Hashes and Maps</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Working with associative arrays/dictionaries/hashes
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1195 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  关联角色和关联类 关联角色是 Hash 和 Map 以及 MixHash 等其他类的基础。它定义了将在关联类中使用的两种类型; 默认情况下，您可以使用任何内容（字面意思，因为任何 Any 子类的类都可以使用）作为键和 keyof 方法。
+默认情况下，使用 % sigil 声明的任何对象都将获得 Associative 角色，默认情况下将表现为散列，但此角色仅提供上述两种方法，以及默认的 Hash 行为。
+say (%).^name ; # 输出 Hash  相反，如果未混入 Associative 角色，则不能使用 % sigil，但由于此角色没有任何关联属性，因此你必须重新定义散列下标操作符的行为。为此，你必须重写几个函数：
+class Logger does Associative[Cool,DateTime] { has %.store; method log( Cool $event ) { %.store{ DateTime.new( now ) } = $event; } multi method AT-KEY ( ::?CLASS:D: $key) { my @keys = %.store.keys.grep( /$key/ ); %.store{ @keys }; } multi method EXISTS-KEY (::?
+                  <a href="https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/hash/">Hash</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/map/">Map</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-07-06-proc-async/">
                 <h2 class="post-title">Proc Async</h2>
 
@@ -519,143 +655,6 @@ use Digest::HMAC; use Digest; use Digest::SHA; use MIME::Base64; use URI::Encode
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-05-08-perl6cookbook/">
-                <h2 class="post-title">Perl 6 CookBook</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    inspired by Python cookbook
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 8, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1214 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 CookBook(inspired by Python cookbook)
-数据结构和算法 解压序列赋值给多个变量 问题 现在有一个包含 N 个元素的元组或者是序列，怎样将它里面的值解压后同时赋值 给 N 个变量？
-解决方案 任何的序列 (或者是可迭代对象) 可以通过一个简单的赋值语句解压并赋值给多个 变量。唯一的前提就是变量的数量必须跟序列元素的数量是一样的。
-代码示例：
-&gt; my @p = (4,5); [4 5] &gt; my ($x, $y) = @p; (4 5) &gt; $x 4 &gt; $y 5 &gt; my @data = ('ACME', 50, 91.1, (2012, 12, 21) ); [ACME 50 91.1 (2012 12 21)] &gt; my ($name, $shares, $price, ($year, $mon, $day)) = ('ACME', 50, 91.
-                  <a href="https://ohmysummer.github.io/post/2018-05-08-perl6cookbook/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/cookbook/">cookbook</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-05-06-dateish/">
-                <h2 class="post-title">Dateish</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Object that can be treated as a date
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 6, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (411 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  role Dateish { ... }  Date 和 DateTime 都支持访问 year, month 和 day-of-month 以及相关的函数，例如计算星期几。
-方法 year 方法 定义为：
-method year(Date:D: --&gt; Int:D)  返回日期的月份(1..12)。
-say Date.new('2015-12-31').month; # OUTPUT: «12» say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).month; # OUTPUT: «12»  day 方法 定义为：
-method day(Date:D: --&gt; Int:D)  返回日期中月份的天(1..31)。
-say Date.new('2015-12-31').day; # OUTPUT: «31» say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).day; # OUTPUT: «24»  formatter 方法 定义为：
-                  <a href="https://ohmysummer.github.io/post/2018-05-06-dateish/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/date/">Date</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-05-06-make/">
-                <h2 class="post-title">Make</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 6, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (541 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  方法 make 的文档由以下类型组装而成：
-Match 类 来自于 Match
-make 方法 method make(Match:D: Mu $payload) sub make(Mu $payload)  将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
-这通常用于 grammar 的 action 类方法中，其中一个方法存储一段数据，然后由另一个方法取回。这取决于你存储什么数据。它可以是树节点，计算结果或值的列表。
-sub 形式的 make 操作当前的 $/，这可能是一个简写：
-method my-action ($/) { make &quot;foo: $/&quot;; }  make 会把数据结构附加到各自的 Match 对象上, 随后通过 .made 方法取回。使用 Match.perl 方法可以看到, Match 里面有一个 made 属性：
-&gt; if 'abc' ~~ /\w+/ { $/.make: {'a' =&gt; 'bc', 'd' =&gt; 'wsl'}; say $/.
-                  <a href="https://ohmysummer.github.io/post/2018-05-06-make/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/make/">make</a>&nbsp;
                   
                 </div>
               

@@ -201,6 +201,134 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-15-examining-the-real-role-of-perl-6-part-1/">
+                <h2 class="post-title">Examining the Real role of Perl 6, part 1</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 15, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (211 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在过去的几天里，我们谈了很多关于 Real 这个角色。让我们更仔细地看看它。该代码位于 src/core/Real.pm 文件中。
+它包含角色本身和一些实现不同中缀的子例程。Real 角色又实现了 Numeric 角色：
+my role Real does Numeric { . . . }  有趣的是，类定义还需要关于 Complex 类的一些知识，这就是为什么在文件的第一行有一个前向类声明：
+my class Complex { ... }  Real 角色将许多三角函数定义为方法，正如我们已经看到的，他们正在使用 Bridge 方法：
+method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.
+                  <a href="https://ohmysummer.github.io/post/2018-02-15-examining-the-real-role-of-perl-6-part-1/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-perl-6/">
+                <h2 class="post-title">FatRat vs Rat in Perl 6</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    FatRat vs Rat in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 15, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (688 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  昨天，Solomon Foster 在 Facebook 的 Perl 6 小组上发布了一个例子:
+my @x = FatRat.new(1, 1), -&gt; $x { $x - ($x ** 2 - $N) / (2 * $x) } ... *  这段代码实现了牛顿找到 $N 平方根近似值的方法。重要的是它使用 FatRat 值来获得更高的准确性。
+让我们运行 9 的平方根：
+my $N = 9; my @x = Rat.new(1, 1), -&gt; $x { $x - ($x ** 2 - $N) / (2 * $x) } ... *; .say for @x[0..7];  很快，它收敛到正确的值：
+                  <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/">
+                <h2 class="post-title">A bit more on Rat vs FatRat in Perl 6</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 14, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (134 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  昨天，我们正在深入研究 Rakudo Perl 6，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
+我们找到了它发生的地方。今天，让我们进行一个练习，看看Perl 6的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
+改变很简单。所有你需要的是更新DIVIDE_N例程中的ifs：
+--- a/src/core/Rat.pm +++ b/src/core/Rat.pm @@ -48,16 +48,14 @@ sub DIVIDE_NUMBERS(Int:D \nu, Int:D \de, \t1, \t2) { ($numerator := -$numerator), ($denominator := -$denominator))), nqp::if( - nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat), + nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat) || $denominator &gt;= UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(FatRat),FatRat,'$!numerator',$numerator), FatRat,'$!denominator',$denominator), - nqp::if( - $denominator &lt; UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(Rat),Rat,'$!numerator',$numerator), - Rat,'$!denominator',$denominator), - nqp::p6box_n(nqp::div_In($numerator, $denominator))))) + Rat,'$!denominator',$denominator) + )) }  现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。
+                  <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/">
                 <h2 class="post-title">Going over the Bridge, part 2. Let’s get rid of it</h2>
 
@@ -535,171 +663,6 @@ Rakudo 的类, roles, 枚举和 subset 类型都由这些原语组装在一起. 
 Dumping QAST 每个 Rakudo Perl 6 程序都编译到 QAST 节点树上，如果在编译程序或模块时给 perl6 指定 --target=ast 或 --target=optimize 命令行选项，则可以转储该树:
 $ perl6 --target=ast -e 'say &quot;Hello, World!&quot;' [...] - QAST::Op(call &amp;say) &lt;sunk&gt; :statement_id&lt;?&gt; say \&quot;Hello, World!\&quot; - QAST::Want &lt;wanted&gt; Hello, World!
                   <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-core-hacking-qastalicious/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-logo/">
-                <h2 class="post-title">Perl 6 logo</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    封面
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 28, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 0 minutes (0 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  <p><img src="https://wx4.sinaimg.cn/mw690/6c9ce165ly1fnwq6lso2ij20p20p2gnf.jpg" alt="img" />
-<img src="https://wx3.sinaimg.cn/mw690/6c9ce165ly1fnwq6ldgwtj206t05qt8t.jpg" alt="img" />
-<img src="https://wx1.sinaimg.cn/mw690/6c9ce165ly1fnwq6mh1tmj20fk0mgabl.jpg" alt="img" />
-<img src="https://wx1.sinaimg.cn/mw690/6c9ce165ly1fnwq6s779xj217c1kwwup.jpg" alt="img" />
-<img src="https://wx1.sinaimg.cn/mw690/6c9ce165ly1fnwq6ofudoj20h00m0gmu.jpg" alt="img" />
-<img src="https://wx4.sinaimg.cn/mw690/6c9ce165ly1fnwq6ntpyaj20dq0i0dgo.jpg" alt="img" />
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Camelia.svg" alt="img" />
-<img src="https://wx4.sinaimg.cn/mw690/6c9ce165ly1fnwq4b2wunj20be0f9go5.jpg" alt="img" />
-<img src="https://wx2.sinaimg.cn/mw690/6c9ce165ly1fnwq48csvrj20as0713yn.jpg" alt="img" />
-<img src="https://wx2.sinaimg.cn/mw690/6c9ce165ly1fnwq4aqrsej20dw0dw74y.jpg" alt="img" />
-<img src="https://wx2.sinaimg.cn/mw690/6c9ce165ly1fnwq4bsx5oj20x2103q4n.jpg" alt="img" />
-<img src="https://wx4.sinaimg.cn/mw690/6c9ce165ly1fnwq4a6tfxj2074074jrd.jpg" alt="img" />
-<img src="https://wx2.sinaimg.cn/mw690/6c9ce165ly1fnwq4ekirwj21hc0xcqcx.jpg" alt="img" />
-<img src="https://upload-images.jianshu.io/upload_images/326727-e05292e819fa20a0.png" alt="img" /></p>
-
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-25-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B9%B6%E5%8F%91http%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">第二十五天-圣诞奖金 - 并发HTTP服务器实施和scripter的方法</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Bonus Xmas – Concurrent HTTP Server implementation and the scripter’s approach
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 25, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (412 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Bonus Xmas – Concurrent HTTP Server implementation and the scripter’s approach 首先，我想强调 Jonathan Worthington 在 Rakudo Perl6 和 IO::Socket::Async 中的工作。谢谢 Jon！
-我喜欢制作脚本;编写组织良好的动作序列，获得结果并对它们进行处理。
-当我从 Perl6 开始时，我发现了一个壮观的生态系统，我可以按照自己喜欢的方式实践我的想法：脚本方式。其中一个想法是实现一个小型的 HTTP 服务器来玩玩。查看与 Perl6，HTTP 和套接字相关的其他项目和模块，我发现背后的作者是具有面向对象编程经验的程序员。
-Perl6 范式 Perl6 支持三种最流行的编程范式:
- 面向对象 函数式 过程式  我认为，当你设计一个将会增长的应用程序或服务时，面向对象的范式是很好的，它会做许多不同的事情并且会有很多变化。但我不喜欢那些变化太大，会有很多变化的东西;这就是为什么我喜欢使用原生过程式方法的脚本，因为它能够快速提升简单性和有效性。我喜欢小（一步一步）但能快速完成伟大东西的事物。
-函数式范式在我看来非常棒;你可以使用一个函数，并像 var 一样使用它，以及其他令人惊讶的事情。
-Perl6 Supplies 就像一个 V12 引擎 在我开始将 perl6intro.com 翻译成西班牙语后不久，我开始使用 Perl6。看看 Perl6 的文档，我发现了 Perl6 巨大的并发潜力。 Perl6在并发方面比我想象的更加强大。
-我使用 Perl6 的 HTTP 服务器的思想始于 Perl6 Supplies（具有多个订阅者的异步数据流），具体来说就是 IO::Socket::Async类。所有的套接字管理，数据传输和并发性实际上都是自动且易于理解的。制作并玩一玩小并发但强大的服务是极好的。
-基于 IO::Socket::Async 文档的示例，我开始在 mini-http-cgi-server 项目中实现一个支持 pseudoCGI 的小型 HTTP 服务器，并且按照我的预期工作。当我得到我想要的东西时，我很满意，我离开了这个项目一段时间。我不喜欢事情发展太多。
-                  <a href="https://ohmysummer.github.io/post/2017-12-25-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B9%B6%E5%8F%91http%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/">
-                <h2 class="post-title">第二十四天-解魔方</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 24 – Solving a Rubik’s Cube
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 24, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (770 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 24 – Solving a Rubik’s Cube 介绍 我在圣诞节的愿望清单上有一个速度魔方，我真的很兴奋。 :)我想分享一些Perl 6代码的热情。
-我在89年从高中毕业，所以我恰好是在青少年时期拥有魔方的合适年龄。我记得试图在巴士上炫耀，让我的时间缩短到不到一分钟。我在80年代从当地的一家玩具店拿到了一本小册子，其中展示了一个关于如何解决我记忆的立方体的算法。我再也没有这本小册子了。多年来我一直坚持，但从来没有达到竞争水平。
-在过去的几个月里，YouTube根据我对立体声频道的兴趣，向我推荐了一些立方体视频;看到世界纪录在5秒以内，使我一分钟的旧时间看起来很慢。
-我所讲过的每个人都可以解决魔方问题，他们使用的算法与我所学的算法不同，而在立体魔法中讨论的方法却与众不同。不过，这种先进的版本似乎被定期制定世界记录的人们普遍使用。
-拾取这个算法并不难，我找到了几个视频，尤其是描述如何解决最后一层的视频。这样做了几天之后，我将步骤转录为几个笔记，其中列出了步骤列表，以及每个步骤的关键部分：所需的方向，然后是该步骤的各个转弯。然后，我可以参考我的笔记本的一个页面，而不是一个30分钟的视频，并且在几天后，记住了以下步骤：能够从记谱法移动到仅仅做这些移动是一个很大的加速。
-一周后，我能够在两分钟内使用新方法可靠地解决问题;退后一步，但在休息时间里一周的努力并不坏。从那以后（几个星期后），我一直下到1:20以下。再次，这是初学者的方法，没有任何先进的技术，而且我可以在不查看立方体的情况下完成各个算法步骤。 （尽管如此，我仍然有很长的路要走。）
-符号 关于移动符号的快速注释 - 考虑到您将立方体的一边保持在顶部，一边朝向您，相对边是：
-L (Left) R (Right) U (Up) D (Down) F (Front) B (Back)  如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个&rdquo;，那就意味着逆时针方向，所以R&rsquo;会让最上面的部分下来，而R会让底部的部分出现。
-此外，您可能必须翻转两次，写成U2; （顺时针或逆时针无关紧要，因为它从起点开始为180º。）
-算法 我正在使用的初学者算法有以下基本步骤：
-1.白色十字架2.白色拐角3.第二层4.黄色十字架5.黄色边缘6.黄色拐角7.定位黄色拐角
-如果您对每个步骤的具体内容感到好奇，您可以浏览Rubik的wiki或上面链接的YouTube视频。该算法的更高级版本（由Jessica Fridrich提供的CFOP）允许您合并步骤，具有处理特定立方体状态的特定“快捷方式”，或者解决任何颜色作为第一面，而不仅仅是白色。
-设计一个模块 当我开始研究这个模块时，我知道我希望能够以某种熟悉算法的人熟悉的方式展示每一步所需的位置，并且让各个步骤也是自然的，就像是：
-F.R.U.Rʼ.Uʼ.Fʼ  我也希望能够转储立方体的现有状态;现在作为文本，但最终也能够将其与视觉表示相结合，
-我们需要能够判断立方体是否已解决;我们需要能够检查相对于当前方向的棋子，并且能够改变我们的方向。
-由于我要开始渲染立方体状态的能力，然后快速添加转向两侧的能力，我选择了一个内部结构，使其变得相当容易。
-代码 github上提供了该模块的最新版本。这里介绍的代码来自最初的版本。
-Perl 6允许您创建Enumerations，因此您可以在代码中使用实际的单词而不是查找值，所以让我们从一些我们需要的内容开始：
-enum Side «:Up('U') :Down('D') :Front('F') :Back('B') :Left('L') :Right('R')»; enum Colors «:Red('R') :Green('G') :Blue('B') :Yellow('Y') :White('W') :Orange('O')»;  有了这个语法，我们可以直接在我们的代码中使用Up，并且它的关联值是U.
-                  <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/" class="post-read-more">[Read More]</a>
                 
               </div>
 

@@ -6,10 +6,43 @@
     <description>Recent content on Young For Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Jul 2018 21:14:56 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 07 Jul 2018 15:08:06 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Doing Math With Perl6</title>
+      <link>https://ohmysummer.github.io/post/2018-07-07-doing-math-with-perl6/</link>
+      <pubDate>Sat, 07 Jul 2018 15:08:06 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-07-07-doing-math-with-perl6/</guid>
+      <description>Sets Perl 6 包括 Set 数据类型，以及对大多数 set 操作的支持。并集和交集不仅是原生操作，它们使用自然符号 ∩ 和 ∪。例如，此代码将检查有限数量集的集算术的基本定律：
+my @arbitrary-numbers = ^100; my \U = @arbitrary-numbers.Set; my @sets; @sets.push: Set.new( @arbitrary-numbers.pick( @arbitrary-numbers.elems.rand)) for @arbitrary-numbers; my (@union, @intersection); for @sets -&amp;gt; $set { @union.push: $set ∩ $set === $set; @intersection.push: $set ∪ $set === $set; } say &amp;quot;Idempotent union is &amp;quot;, so @union.all; # OUTPUT: «Idempotent union is True» say &amp;quot;Idempotent intersection is &amp;quot;, so @intersection.all; # OUTPUT: «Idempotent intersection is True» my (@universe, @empty-set, @id-universe, @id-empty); for @sets -&amp;gt; \A { @universe.</description>
+    </item>
+    
+    <item>
+      <title>Date and Time Functions</title>
+      <link>https://ohmysummer.github.io/post/2018-07-07-date-and-time-functions/</link>
+      <pubDate>Sat, 07 Jul 2018 13:33:35 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-07-07-date-and-time-functions/</guid>
+      <description>Perl 6 包括几个处理时态信息的类：Date，DateTime，Instant 和 Duration。前三个是 dateish，所以它们混合了 Dateish 角色，它定义了处理日期的类应该采用的所有方法和属性。它还包括以 X::Temporal 为根的异常的类层次结构。
+我们将尝试在下一个（稍微扩展）的示例中说明这些类，这个示例可用于处理目录中的所有文件（默认情况下）。在目录中使用特定扩展名（默认为 .p6），根据他们的年龄对其进行排序，并计算每月创建的文件数量，以及在几个月的范围内表示的特定时期内修改的文件数量：
+use v6; sub MAIN( $path = &amp;quot;.&amp;quot;, $extension = &amp;quot;p6&amp;quot; ) { my DateTime $right = DateTime.now; my %metadata; my %files-month; my %files-period; for dir($path).grep( / \.$extension $/ ) -&amp;gt; $file { CATCH { when X::Temporal { say &amp;quot;Date-related problem&amp;quot;, .payload } when X::IO { say &amp;quot;File-related problem&amp;quot;, .payload } default { .payload.say } } my Instant $modified = $file.</description>
+    </item>
+    
+    <item>
+      <title>Hashes and Maps</title>
+      <link>https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/</link>
+      <pubDate>Sat, 07 Jul 2018 10:56:38 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/</guid>
+      <description>关联角色和关联类 关联角色是 Hash 和 Map 以及 MixHash 等其他类的基础。它定义了将在关联类中使用的两种类型; 默认情况下，您可以使用任何内容（字面意思，因为任何 Any 子类的类都可以使用）作为键和 keyof 方法。
+默认情况下，使用 % sigil 声明的任何对象都将获得 Associative 角色，默认情况下将表现为散列，但此角色仅提供上述两种方法，以及默认的 Hash 行为。
+say (%).^name ; # 输出 Hash  相反，如果未混入 Associative 角色，则不能使用 % sigil，但由于此角色没有任何关联属性，因此你必须重新定义散列下标操作符的行为。为此，你必须重写几个函数：
+class Logger does Associative[Cool,DateTime] { has %.store; method log( Cool $event ) { %.store{ DateTime.new( now ) } = $event; } multi method AT-KEY ( ::?CLASS:D: $key) { my @keys = %.store.keys.grep( /$key/ ); %.store{ @keys }; } multi method EXISTS-KEY (::?</description>
+    </item>
     
     <item>
       <title>Proc Async</title>

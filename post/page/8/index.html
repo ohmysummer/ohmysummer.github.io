@@ -201,6 +201,140 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/">
+                <h2 class="post-title">开启 Disqus 评论</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Disqus Is Cool
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 15, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (193 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  要开启 Disqus 评论, 需要先在 Disqus 官网注册账号, 获得 disqusShortname。
+#use Grammar::Tracer; #use Grammar::Debugger; my $scene = q:to/END/; ★ 二维码 1011 扫描二维码 1047 扫描小程序码 1012 长按图片识别二维码 1013 手机相册选取二维码 1031 长按图片识别一维码 1032 手机相册选取一维码 1048 长按图片识别小程序码 1049 手机相册选取小程序码 1025 扫描一维码 1072 二维码收款页面 ★ 搜索 1005 顶部搜索框的搜索结果页 1006 发现栏小程序主入口搜索框的搜索结果页 1042 添加好友搜索框的搜索结果页 1053 搜一搜的结果页 1027 顶部搜索框搜索结果页“使用过的小程序”列表 ★ 公众号 1043 公众号模板消息 1020 公众号 profile 页相关小程序列表 1035 公众号自定义菜单 1058 公众号文章 1074 公众号会话下发的小程序消息卡片 ★ 分享 1036 App 分享消息卡片 1007 单人聊天会话中的小程序消息卡片 1008 群聊会话中的小程序消息卡片 1044 带 shareTicket 的小程序消息卡片 ★ 模板消息 1014 小程序模版消息 1034 微信支付完成页 ★ 测试 1059 体验版小程序绑定邀请页 1017 前往体验版的入口页 ★ 卡券 1028 我的卡包 1029 卡券详情页 1052 卡券的适用门店列表 ★ 小程序之间跳转 1037 小程序打开小程序 1038 从另一个小程序返回 ★ 快捷入口 1001 发现栏小程序主入口 1022 聊天顶部置顶小程序入口 1023 安卓系统桌面图标 1024 小程序 profile 页 ★ 广告投放 1068 附近小程序列表广告 1067 公众号文章广告 ★ 其他 1039 摇电视 1056 音乐播放器菜单 1019 微信钱包 1026 附近小程序列表 1064 微信连Wifi状态栏 1073 客服消息列表下发的小程序消息卡片 END grammar Scene { token TOP { ^ &lt;entry&gt;+ $ } # 一个或多个块 token entry { &lt;head&gt; \s* # 每个块都有一个标题 &lt;line&gt;+ \s* # 每个标题下面有很多非标题行 } token head { '★' \s+ &lt;title&gt; } token line { [ &lt;!
+                  <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-07-31-seq%E5%92%8C%E6%91%87%E6%BB%9A/">
+                <h2 class="post-title">Seq 和摇滚</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    How to make your very own Iterator object
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 31, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (978 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  这是这个系列的第二部分！请确保你已经阅读过第一部分, 在那里我们讨论了什么是 Seq, 并且怎么来缓存它们。
+今天, 我们把 Seq 单独拎出来, 看看里面到底有什么; 是什么驱动的它; 并且怎样让它实现我们的想法。
+第二部分: 快速迭代 使 Seq 做事情的主要部分是遵循 Iterator 角色的对象。 这个对象知道如何生成下一个值，什么时候从 Seq 中提取一个值，或者将其所有值推送到某个地方，或者简单地丢弃所有剩余的值。
+请记住，当使用 Seq 作为值的来源时，您不需要直接使用 Iterator 的方法。 它们被间接称为各种 Perl 6 结构。 自己调用这些方法的场景通常是我们制作一个由另一个 Iterator 提供的迭代器的时候，就像我们会看到的那样。
+Pull my finger 在最基本的形式中, 一个 Iterator 对象需要提供的只有一个方法: .pull-one
+my $seq := Seq.new: class :: does Iterator { method pull-one { return $++ if $++ &lt; 4; IterationEnd } }.new; .say for $seq;  输出:
+# OUTPUT: # 0 # 1 # 2 # 3  上面的例子中, 我们使用 Seq 的 .
+                  <a href="https://ohmysummer.github.io/post/2017-07-31-seq%E5%92%8C%E6%91%87%E6%BB%9A/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/seq/">Seq</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/">
+                <h2 class="post-title">Perl 6 Sheet</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Perl 6 札记
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 19, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (349 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  正则表达式 Perl 6 的正则表达式允许你为你自定义的字符类混进 Unicode 属性！
+constant string = 'The Quick 🐼 Jumped Over 57 Dogs'; say string ~~ m:g/ &lt;:upper-[TQ]&gt; /; # (「J」 「O」 「P」) say string ~~ m:g/ &lt;-[\x0..\x255]+[\x35..\x37]&gt; /; # (「🐼」 「5」 「7」) say string ~~ m:g/ &lt;-:digit -:Ll -:Zs&gt; /; # (「T」 「Q」 「🐼」 「J」 「O」 「D」) say string ~~ m:g/ &lt;[\w]-[TQJ\d]-:lower+[5]&gt; /; # (「O」 「5」 「D」)  Wow! #Perl6 #Regex is so awesome, you can just shove an array into it and it&rsquo;ll know to treat it as alternatives to match!
+                  <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/">
                 <h2 class="post-title">Perl 6 Dispatch 解密</h2>
 
@@ -542,137 +676,6 @@ $_ = 42; say 'oi?' when 42; .
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/whatever/">Whatever</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-01-02-stackoverflow/">
-                <h2 class="post-title">2017 StackOverFlow-sort,deepmap,flat</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 2, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (794 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  perl6 What is the best way to match any of a group of words?  我想匹配任意一组单词，但是失败了，请问怎样才能正确地匹配到？
-my @a=&lt;a b c d e f&gt;; my $x=&quot;a1234567&quot;; say $x ~~ m/ @a.any /;  Answer
-my @a = &lt;a b c d e f&gt;; my $x = &quot;a1234567&quot;; say $x ~~ /@a/  /@a/ 和 /| @a/ 相同，它是最长的备选分支。对于备选分支，你可以使用 /|| @a/。
- How to build lazy lists with defined generators and is there a “takeWhile” alternative?
-                  <a href="https://ohmysummer.github.io/post/2017-01-02-stackoverflow/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/sort/">sort</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/flat/">flat</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/deepmap/">deepmap</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/flat/">flat</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-01-01-perl-6-rakudo-%E5%92%8C-nqp-%E5%86%85%E9%83%A8%E7%A0%94%E8%AE%A8/">
-                <h2 class="post-title">Perl 6 Rakudo 和 NQP 内部研讨(一)</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 1, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 28 minutes (5914 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  标题: Rakudo and NQP Internals 子标题: The guts tormented implementers made 作者: Jonathan Worthington
-关于这个课程 Perl 6 是一种大型语言, 包含许多要求正确实现的功能。
-这样的软件项目很容易被难控制的复杂性淹没。 Rakudo 和 NQP 项目的早期阶段已经遭受了这样的困难, 因为我们学到了 - 艰难的方式 - 关于复杂性, 出现并可能在实现过程中不受限制地扩散。
-本课程将教您如何使用 Rakudo 和 NQP 内部。 在他们的设计中编码是一个大量学习的过程, 关于如何(以及如何不)写一个 Perl 6 实现, 这个过程持续了多年。 因此, 本课程还将教你事情的来龙去脉。
-关于讲师  计算机科学背景 选择旅行世界,并帮助实现 Perl 6, 而不是做博士 有不止一种方法来获得&rdquo;永久头部损伤&rdquo; :-) 不知何故在 Edument AB 被聘用, 作为讲师/顾问 从 2008 年开始成为 Rakudo Perl 6 核心开发者 6model, MoarVM, NQP 和 Rakudo 各个方面的缔造者  课程大纲 - 第一天  鹰的视角: 编译器和 NQP/Rakudo 架构 NQP 语言 编译管道 QAST 探索 nqp::ops  课程大纲 - 第二天  6model 有界序列化和模块加载 正则表达式和 grammar 引擎 JVM 后端 MoarVM 后端  鹰的视角 编译器和 NQP/Rakudo 架构
-                  <a href="https://ohmysummer.github.io/post/2017-01-01-perl-6-rakudo-%E5%92%8C-nqp-%E5%86%85%E9%83%A8%E7%A0%94%E8%AE%A8/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/nqp/">NQP</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-tips---%E5%88%9B%E5%BB%BA%E5%8F%AF%E9%87%8D%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
-                <h2 class="post-title">Perl 6 Tips - 创建可重用的数据类型</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 31, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (200 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Quick Tip #19: 创建可重用的数据类型 Perl 6 允许你使用类型来约束变量值，但是你不必拘泥于内置类型。一旦你定义了自己的类型，它们就表现得像内置类型一样。
-下面是我从布拉德的 Subsets::Common模块偷得的一些子集(subsets):
-my package EXPORT::DEFAULT { ... subset Pos of Numeric where * &gt; 0; subset Neg of Numeric where * &lt; 0; subset Zero of Numeric where * == 0; subset UNumeric of Numeric where * &gt;= 0; subset Even of Int where * % 2 == 0; subset Odd of Int where * % 2; subset Time::Hour12 of PosInt where * ~~ 1 .
-                  <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-tips---%E5%88%9B%E5%BB%BA%E5%8F%AF%E9%87%8D%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/subsets/">Subsets</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/where/">where</a>&nbsp;
                   
                 </div>
               
