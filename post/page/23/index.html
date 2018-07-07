@@ -201,6 +201,51 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-06-15-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84perl6/">
+                <h2 class="post-title">面向对象的 Perl 6</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 15, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1111 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 有很多预先定义好的类型，这些类型可以归为 2 类：普通类型和原生类型。原生类型用于底层类型（例如 uint 64）。原生类型没有和对象同样的功能，尽管你可以在它们身上调用方法， 它们还是被包装成普通的对象。所有你能存储到变量中的东西要么是一个原生的 value， 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。
+使用对象 方法可以有参数， 但是方法名和参数列表之间不可以有空格：
+say &quot;abc&quot;.uc; # ^^^ 不带参数的方法调用 my @words = $string.comb(/\w+/); # ^^^^^^^^^^^^ 带一个参数的方法调用  另外一种方法调用的语法将方法名和参数列表用一个冒号分开(冒号紧跟方法名, 中间不能有空格):
+say @*INC.join: ':';  方法能返回一个可变容器, 这种情况下 你可以赋值给方法调用的返回值.
+$*IN.input-line-separator = &quot;\r\n&quot;;  类型对象 Types本身就是对象 ，你可以使用类型的名字获取 type object :
+my $int-type-obj = Int;  你可以通过调用 WHAT 方法查看任何对象的 type object(它实际上是一个方法形式的macro):
+my $int-type-obj = 1.WHAT;  使用 === 操作符可以比较 类型对象的相等性：
+sub f(Int $x) { if $x.
+                  <a href="https://ohmysummer.github.io/post/2015-06-15-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84perl6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-06-14-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80%E4%BE%8B/">
                 <h2 class="post-title">正则表达式一例</h2>
 
@@ -601,54 +646,6 @@ src/core/Bool.pm 32: Bool.^add_method('pred', my method pred() { Bool::False });
  在布尔上下文中 Match 对象被求值为真或假
   if /pattern/ {...} # 或: /pattern/; if $/ {...}  如果模式使用 :global 或 :overlap 或 :exhaustive 修饰符, 会在第一个匹配处返回布尔真值.
                   <a href="https://ohmysummer.github.io/post/2015-04-28-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%94/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-04-27-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammars-part-1/">
-                <h2 class="post-title">从正则表达式到Grammars - Part 1</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 27, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (363 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  原文
-略去啰嗦的前半部分。
-Into the Breach 假设我们 的日志文件中有一个时间戳 2016-02-06T14:36+02:00, 我们使用智能匹配:
-say $logfile ~~ /2016-02-06T14:36+02:00/;  这会报错:
- Unrecognized regex metacharacter - (must be quoted to match literally)
- 在 Perl 6 的正则表达式中任何非字母数字字符(&lsquo;a&rsquo;..&lsquo;z&rsquo;, &lsquo;A&rsquo;..&lsquo;Z&rsquo;, 0..9)都必须用引号引起来:
-say $logfile ~~ /2016 '-' 02 '-' 06T14 ':' 36 '+' 02 ':' 00/;  现在我们得到等价的奇怪的表达式:
-｢2016-01-29T13:25+01:00｣  这仅仅告诉我们, ~~智能匹配操作符匹配了一些文本, 这就是它匹配到的文本。｢｣ 是日语引文标记, 故意和剩余的文本区分开来。
-在 Perl 6 中, 默认打印出带有明确标记的匹配对象, 它准确地告诉你匹配从哪里开始, 到哪里结束。
-归纳 我们想让该正则表达式更具普遍性, 例如匹配 2016 年的日志:
-say $logfile ~~ /2015 | 2016 '-' 02 '-' 06T14 ':' 36 '+' 02 ':' 00/;  但是这还会匹配到我们不想要的东西, 例如 &rsquo;/post/2015/02&rsquo; 或者甚至 &lsquo;/number/120153&rsquo;。因为 |的优先级没有字符间的连接优先级高。所以:
-                  <a href="https://ohmysummer.github.io/post/2015-04-27-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammars-part-1/" class="post-read-more">[Read More]</a>
                 
               </div>
 

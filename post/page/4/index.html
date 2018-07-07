@@ -201,6 +201,51 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-16-%E5%A6%82%E4%BD%95%E5%9C%A8perl-6%E4%B8%AD%E5%AF%B9%E6%95%A3%E5%88%97%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F/">
+                <h2 class="post-title">如何在 Perl 6 中对散列进行排序</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 16, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (169 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  要在 Perl 6 中对散列进行排序，首先你要知道什么是占位符变量。一旦这个概念变得清晰，对散列排序就变得非常简单。
+例如，创建一个不同城市距离莫斯科远近的散列：
+my %distance = Владимир =&gt; 185, Волгоград =&gt; 1000, Калининград =&gt; 1227, Мурманск =&gt; 1895, Новосибирск =&gt; 3550;  现在的任务是通过比较距离来对散列进行排序。
+say %distance.sort({$^a.value &lt;=&gt; $^b.value});  一般来说，它已经准备好了。该程序打印你需要的东西：
+(Владимир =&gt; 185 Волгоград =&gt; 1000 Калининград =&gt; 1227 Архангельск =&gt; 1261 Астрахань =&gt; 1411 Мурманск =&gt; 1895 Новосибирск =&gt; 3550)  让我们看看传递给排序方法的块内发生了什么。
+首先，变量 $^a 和 $^b 是占位符，它是匿名块的参数并按字母顺序排序。也就是说，以相同的方式，他们可以被称为 $^x 和 $^y 或 $^var1 和 $^var2。
+其次，这些占位符变量内部是 Pair 类型的对象，它包含键和值：
+say %distance.
+                  <a href="https://ohmysummer.github.io/post/2018-02-16-%E5%A6%82%E4%BD%95%E5%9C%A8perl-6%E4%B8%AD%E5%AF%B9%E6%95%A3%E5%88%97%E8%BF%9B%E8%A1%8C%E6%8E%92%E5%BA%8F/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-15-examining-the-real-role-of-perl-6-part-1/">
                 <h2 class="post-title">Examining the Real role of Perl 6, part 1</h2>
 
@@ -625,51 +670,6 @@ Rakudo 的类, roles, 枚举和 subset 类型都由这些原语组装在一起. 
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/nqp/">NQP</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-core-hacking-qastalicious/">
-                <h2 class="post-title">Perl 6 Core Hacking: QASTalicious</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Overview of Q Abstract Syntax Trees &#43; bug fix tutorial
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 28, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 25 minutes (5145 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  在过去的一个月中，我在 Rakudo 的 QAST 地区花了一些时间写了一些优化，修复了包含警告的错误，并且用一个单一的提交压缩了一个10个thunk范围的bug的怪物蜂巢。 在今天的文章中，我们将详细介绍最后一个专长，以及了解QAST是什么以及如何使用它。
-第一部分: QAST &ldquo;QAST&rdquo; 代表 &ldquo;Q&rdquo; Abstract Syntax Tree.(&ldquo;Q&rdquo; 抽象语法树.) 为什么会有个字母 &ldquo;Q&rdquo; 在那里呢, 因为 Q 是 P 的下一个字母, 而 &ldquo;P&rdquo; 过去是在 &ldquo;PAST&rdquo; 里面的, 代表 &ldquo;Parrot&rdquo;(鹦鹉), 是很早之前的一个实验性的 Perl 6 实现(或者说, 它的虚拟机). 我们来看看什么是 QAST!
-Dumping QAST 每个 Rakudo Perl 6 程序都编译到 QAST 节点树上，如果在编译程序或模块时给 perl6 指定 --target=ast 或 --target=optimize 命令行选项，则可以转储该树:
-$ perl6 --target=ast -e 'say &quot;Hello, World!&quot;' [...] - QAST::Op(call &amp;say) &lt;sunk&gt; :statement_id&lt;?&gt; say \&quot;Hello, World!\&quot; - QAST::Want &lt;wanted&gt; Hello, World!
-                  <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-core-hacking-qastalicious/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
                   
                 </div>
               

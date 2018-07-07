@@ -201,6 +201,51 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-core-hacking-qastalicious/">
+                <h2 class="post-title">Perl 6 Core Hacking: QASTalicious</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Overview of Q Abstract Syntax Trees &#43; bug fix tutorial
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 28, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 25 minutes (5145 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在过去的一个月中，我在 Rakudo 的 QAST 地区花了一些时间写了一些优化，修复了包含警告的错误，并且用一个单一的提交压缩了一个10个thunk范围的bug的怪物蜂巢。 在今天的文章中，我们将详细介绍最后一个专长，以及了解QAST是什么以及如何使用它。
+第一部分: QAST &ldquo;QAST&rdquo; 代表 &ldquo;Q&rdquo; Abstract Syntax Tree.(&ldquo;Q&rdquo; 抽象语法树.) 为什么会有个字母 &ldquo;Q&rdquo; 在那里呢, 因为 Q 是 P 的下一个字母, 而 &ldquo;P&rdquo; 过去是在 &ldquo;PAST&rdquo; 里面的, 代表 &ldquo;Parrot&rdquo;(鹦鹉), 是很早之前的一个实验性的 Perl 6 实现(或者说, 它的虚拟机). 我们来看看什么是 QAST!
+Dumping QAST 每个 Rakudo Perl 6 程序都编译到 QAST 节点树上，如果在编译程序或模块时给 perl6 指定 --target=ast 或 --target=optimize 命令行选项，则可以转储该树:
+$ perl6 --target=ast -e 'say &quot;Hello, World!&quot;' [...] - QAST::Op(call &amp;say) &lt;sunk&gt; :statement_id&lt;?&gt; say \&quot;Hello, World!\&quot; - QAST::Want &lt;wanted&gt; Hello, World!
+                  <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-core-hacking-qastalicious/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-logo/">
                 <h2 class="post-title">Perl 6 logo</h2>
 
@@ -645,55 +690,6 @@ if ( 5 &lt; 1|10 &lt; 2 ) { say &quot;Spooky&quot; } else { say &quot;Boo&quot; 
                     <a href="https://ohmysummer.github.io//tags/junction/">Junction</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/set/">Set</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-20-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%A4%A9-%E5%AE%8F%E7%9A%84%E8%BF%9B%E9%98%B6/">
-                <h2 class="post-title">第二十天-宏的进阶</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 20: Advancements in Macrotechnologies
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 20, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (300 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 20: Advancements in Macrotechnologies 你好！
-请允许我，在出现日历的这一天，一个小切线。我不会直接谈论一个很酷的熟练的Perl 6特性。相反，我会打开一个小窗口，讨论可能会发生什么 - 希望在某些时候！
-如果你像我一样，在Rakudo上继续了几年的进步，你在版本中经常看到这一点：&gt;一些不太有效的功能包括：&gt; - 高级宏
-那么，这究竟意味着什么？ Perl 6确实有宏，但它们目前的限制超出了人们通常想要做的。这并不是说它们目前是无用的，它们仍然是有用的，从前几年出现的其他帖子到OO :: Monitor使用宏来提前报告拼写错误。
-输入007. 007是“具有宏观许可的小型实验语言”。这是什么意思？！这是一种用于对宏进行调试和实验的语言，因此当他们被集成到Perl 6中时，他们的设计就已经准备好并经过战斗测试。
-那么，它有什么？ 007试图模仿Perl 6的“强大”部分，因此我们不会为完全不同的语言设计宏。这意味着阶段，中缀操作员，（MOP和正则表达式的要点）。
-它是什么样子的？ 007的核心就是喜欢Perl 6.然而，它的确存在一些问题。让我们来看看你想写的最重要的片段：FizzBu​​zz。注意：此博客帖子中的所有代码片段都是可执行的007代码，而不是Perl 6代码。
-my n = 1; while n &lt;= 100 { if n %% 15 { say(&quot;FizzBuzz&quot;); } else if n %% 3 { say(&quot;Fizz&quot;); } else if n %% 5 { say(&quot;Buzz&quot;); } else { say(n); } n = n + 1; }  什么？你不在乎吗？很明显，我确实答应过你的宏。我们将看看一个简单的宏“name”，它返回最后一个索引对象的名称。
-                  <a href="https://ohmysummer.github.io/post/2017-12-20-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%A4%A9-%E5%AE%8F%E7%9A%84%E8%BF%9B%E9%98%B6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
                   
                 </div>
               
