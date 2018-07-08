@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>class Supply</title>
+  <meta property="og:title" content="class Supply" />
+  <meta name="twitter:title" content="class Supply" />
+  <meta name="description" content="Asynchronous data stream with multiple subscribers">
+  <meta property="og:description" content="Asynchronous data stream with multiple subscribers">
+  <meta name="twitter:description" content="Asynchronous data stream with multiple subscribers">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-07-07-class-supply/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-07-class-supply/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>class Supply</h1>
+                
+                  
+                    <h2 class="post-subheading">Asynchronous data stream with multiple subscribers</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 8, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 7 minutes (1283 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<pre><code>class Supply {}
+</code></pre>
+
+<p>supply 是一种线程安全的异步数据流，如 <a href="https://docs.perl6.org/type/Channel">Channel</a>，但它可以有多个订阅者（taps: 水龙头），所有订阅者都可以获得流经 supply 的相同值。</p>
+
+<p>它是 <a href="https://en.wikipedia.org/wiki/Observer_pattern">观察者模式</a> 的线程安全实现，是支持 Perl 6 中的反应式编程的核心。</p>
+
+<p>有两种类型的 Supplies：<code>实时</code>(live)和<code>按需</code>(on demand)。当水龙头接入到实时(<code>live</code>)供应时，水龙头将仅在创建水龙头<strong>之后</strong>看到流经 supply 的值。这种供应(supplies)通常是无限的，例如鼠标移动。关闭这样的水龙头(tap)不会阻止鼠标事件的发生，它只是意味着值将看不见了。所有的开孔器(tappers
+)都看到了相同的值流(flow of values)。</p>
+
+<p>在<code>按需</code>供应上轻敲(tap)将发起值的产生，再次轻敲(tap)供应可能会产生一组新的值。例如，每次轻敲时，<code>Supply.interval</code> 都会生成一个具有适当间隔的新计时器。如果水龙头(tap)关闭，计时器只会停止向该水龙头发射值。</p>
+
+<p>从 <a href="https://docs.perl6.org/type/Supplier">Supplier</a> 的工厂方法 <code>Supply</code> 获得 <code>live Supply</code>（实时供应）。通过在 <code>Supplier</code> 对象上调用 <code>emit</code> 来发出新值。</p>
+
+<pre><code class="language-perl6">my $supplier = Supplier.new;
+my $supply   = $supplier.Supply;
+$supplier.tap( -&gt; $v { say &quot;$v&quot; });
+$supplier.emit(42);  # Will cause the tap to output &quot;42&quot; 
+</code></pre>
+
+<p><a href="https://docs.perl6.org/type/Supply#method_live">实时方法</a>在实时供应上返回 <code>True</code>。工厂方法如 <a href="https://docs.perl6.org/type/Supply#method_interval">interval</a>，<a href="https://docs.perl6.org/type/Supply#method_from-list">from-list</a> 会返回按需供应(on demand supplies)。</p>
+
+<p>可以使用 <a href="https://docs.perl6.org/type/Supplier::Preserving">Supplier::Preserving</a>创建一个直到第一次轻敲的保存值的实时供应（<code>Supply</code>）。</p>
+
+<p>可以在<a href="https://docs.perl6.org/language/concurrency#Supplies">并发页面</a>中找到更多示例。</p>
+
+<h2 id="返回-taps-的方法">返回 Taps 的方法</h2>
+
+<h3 id="tap-方法">tap 方法</h3>
+
+<pre><code class="language-perl6">method tap(Supply:D: &amp;emit = -&gt; $ { },
+        :&amp;done,
+        :&amp;quit,
+    --&gt; Tap:D)
+</code></pre>
+
+<p>除了所有现有的 taps 之外，还会创建一个新 tap（如果您愿意，可以使用一种订阅）。第一个位置参数是一段代码，当通过 <code>emit</code> 调用获得新值时将调用该代码。</p>
+
+<p>当调用供应(supply)上的 <code>done</code> 方法时，将调用 <code>:&amp;done</code> 回调，指示通道(channel)的寿命终止。对于实时(<code>live</code>)供应，将在父供应商(<code>Supplier</code>)处调用 <code>done</code> 例程。</p>
+
+<p>当调用 supply 上的 <code>quit</code> 方法时，将调用 <code>&amp;quit</code> 回调，表示错误地终止了 supply。对于实时供应(<code>live</code> supply)，将在父供应商(<code>Supplier</code>)处调用 <code>quit</code> 例程。</p>
+
+<p><code>tap</code> 方法返回 <a href="https://docs.perl6.org/type/Tap">Tap</a> 类型的对象，你可以在其上调用 <code>close</code> 方法来取消订阅。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(0 .. 5);
+my $t = $s.tap( -&gt; $v { say &quot;$v&quot;}, done =&gt; { say &quot;no more ticks&quot; } );
+</code></pre>
+
+<p>产生:</p>
+
+<pre><code>0
+1
+2
+3
+4
+5
+no more ticks
+</code></pre>
+
+<h3 id="act-方法">act 方法</h3>
+
+<pre><code class="language-perl6">method act(Supply:D: &amp;act --&gt; Tap:D)
+</code></pre>
+
+<p>使用给定代码在给定供应上创建 tap。与 <code>tap</code> 方法不同，它保证该给定代码一次只能由一个线程执行。</p>
+
+<h2 id="实用方法">实用方法</h2>
+
+<h3 id="capture-方法">Capture 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method Capture(Supply:D --&gt; Capture:D)
+</code></pre>
+
+<p>等价于在调用者身上调用 <a href="https://docs.perl6.org/type/List#method_Capture">.List.Capture</a>。</p>
+
+<h3 id="channel-方法">Channel 方法</h3>
+
+<pre><code class="language-perl6">method Channel(Supply:D: --&gt; Channel:D)
+</code></pre>
+
+<p>返回一个 <a href="https://docs.perl6.org/type/Channel">Channel</a> 对象，该对象将从供应中接收所有未来值，并在 Supply 完成时关闭(<code>close</code>)，并在供应退出时退出（关闭并显示错误）。</p>
+
+<h3 id="promise-方法">Promise 方法</h3>
+
+<pre><code class="language-perl6">method Promise(Supply:D: --&gt; Promise:D)
+</code></pre>
+
+<p>返回在供应(<code>Supply</code>)完成时将保留的 <a href="https://docs.perl6.org/type/Promise">Promise</a>。如果 <code>Supply</code> 也发出任何值，则 <code>Promise</code> 将保留最终值。否则，它将与 <code>Nil</code> 保持一致。如果供应以退出(<code>quit</code>)而不是完成(<code>done</code>)结束，那么 <code>Promise</code> 将被该异常打破(broken)。</p>
+
+<pre><code class="language-perl6">my $supplier = Supplier.new;
+my $s = $supplier.Supply;
+my $p = $s.Promise;
+$p.then(-&gt; $v { say &quot;got $v.result()&quot; });
+$supplier.emit('cha');         # not output yet 
+$supplier.done();              # got cha 
+</code></pre>
+
+<p><code>Promise</code> 方法在处理仅产生一个值的供应时，当只感兴趣最终值，或仅完成（成功与否）相关时最有用。</p>
+
+<h3 id="live-方法">live 方法</h3>
+
+<pre><code class="language-perl6">method live(Supply:D: --&gt; Bool:D)
+</code></pre>
+
+<p>如果供应是“实时”，则返回True，也就是说，值一到达就会被发送到水龙头。始终在默认的Supply中返回True（但是例如在Supply.from-list返回的供应中它为False）。</p>
+
+<h3 id="schedule-on-方法">schedule-on 方法</h3>
+
+<pre><code class="language-perl6">method schedule-on(Supply:D: Scheduler $scheduler)
+</code></pre>
+
+<p>在指定的调度程序上运行emit，done和quit回调。</p>
+
+<p>这对于需要从GUI线程运行某些操作的GUI工具包很有用。</p>
+
+<h2 id="等到供应完成的方法">等到供应完成的方法</h2>
+
+<h3 id="wait-方法">wait 方法</h3>
+
+<pre><code class="language-perl6">method wait(Supply:D:)
+</code></pre>
+
+<p>点击它被调用的供应，并阻止执行，直到供应完成（在这种情况下，它评估在Supply上发出的最终值，或者如果没有发出值则为Nil）或退出（在这种情况下它）将抛出传递给退出的异常）。</p>
+
+<pre><code class="language-perl6">my $s = Supplier.new;
+start {
+  sleep 1;
+  say &quot;One second: running.&quot;;
+  sleep 1;
+  $s.emit(42);
+  $s.done;
+}
+$s.Supply.wait;
+say &quot;Two seconds: done&quot;;
+</code></pre>
+
+<h3 id="list-方法">list 方法</h3>
+
+<pre><code class="language-perl6">method list(Supply:D: --&gt; List:D)
+</code></pre>
+
+<p>点击它所调用的Supply，并返回一个惰性列表，该列表将在Supply发出值时生效。一旦供应完成，该清单将被终止。如果Supply退出，则一旦达到惰性列表中的该点，就会抛出异常。</p>
+
+<h3 id="grab-方法">grab 方法</h3>
+
+<pre><code class="language-perl6">method grab(Supply:D: &amp;when-done --&gt; Supply:D)
+</code></pre>
+
+<p>点击调用它的供应。完成后，调用＆when-done然后发出它在结果Supply上返回的值列表。如果原始供应退出，则异常立即在退货供应上传达。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(4, 10, 3, 2);
+my $t = $s.grab(&amp;sum);
+$t.tap(&amp;say);           # OUTPUT: «19␤» 
+</code></pre>
+
+<h3 id="reverse-方法">reverse 方法</h3>
+
+<pre><code class="language-perl6">method reverse(Supply:D: --&gt; Supply:D)
+</code></pre>
+
+<p>点击调用它的供应。一旦该供应完成，其发出的所有值将以相反的顺序在返回的供应上发出。如果原始供应退出，则异常立即在退货供应上传达。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(1, 2, 3);
+my $t = $s.reverse;
+$t.tap(&amp;say);           # OUTPUT: «3␤2␤1␤» 
+</code></pre>
+
+<h3 id="sort-方法">sort 方法</h3>
+
+<pre><code class="language-perl6">method sort(Supply:D: &amp;custom-routine-to-use? --&gt; Supply:D)
+</code></pre>
+
+<p>点击调用它的供应。一旦该耗材发出完成，它所发出的所有值都将被排序，并且结果以排序的顺序在返回的Supply上发出结果。可选择接受比较器块。如果原始供应退出，则异常立即在退货供应上传达。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(4, 10, 3, 2);
+my $t = $s.sort();
+$t.tap(&amp;say);           # OUTPUT: «2␤3␤4␤10␤» 
+</code></pre>
+
+<h2 id="返回另一个-supply-的方法">返回另一个 Supply 的方法</h2>
+
+<h3 id="from-list-方法">from-list 方法</h3>
+
+<pre><code class="language-perl6">method from-list(Supply:U: +@values --&gt; Supply:D)
+</code></pre>
+
+<p>根据传递给此方法的值创建按需供应。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(1, 2, 3);
+$s.tap(&amp;say);           # OUTPUT: «1␤2␤3␤» 
+</code></pre>
+
+<h3 id="share-方法">share 方法</h3>
+
+<pre><code class="language-perl6">method share(Supply:D: --&gt; Supply:D)
+</code></pre>
+
+<p>通过按需供应创建实时供应，从而可以在多个分接头上共享按需供应的值，而不是每个分接头从按需供应中查看其自己的所有值的副本。</p>
+
+<pre><code class="language-perl6"># this says in turn: &quot;first 1&quot; &quot;first 2&quot; &quot;second 2&quot; &quot;first 3&quot; &quot;second 3&quot; 
+my $s = Supply.interval(1).share;
+$s.tap: { &quot;first $_&quot;.say };
+sleep 1.1;
+$s.tap: { &quot;second $_&quot;.say };
+sleep 2
+</code></pre>
+
+<h3 id="flat-方法">flat 方法</h3>
+
+<pre><code class="language-perl6">method flat(Supply:D: --&gt; Supply:D)
+</code></pre>
+
+<p>创建供应，在再次发射之前，在给定供应中看到的所有值都被展平。</p>
+
+<h3 id="do-方法">do 方法</h3>
+
+<pre><code class="language-perl6">method do(Supply:D: &amp;do --&gt; Supply:D)
+</code></pre>
+
+<p>创建供应，在给定供应中看到的所有值再次发出。仅为其副作用执行的给定代码保证一次只能由一个线程执行。</p>
+
+<h3 id="on-close-方法">on-close 方法</h3>
+
+<pre><code class="language-perl6">method on-close(Supply:D: &amp;on-close --&gt; Supply:D)
+</code></pre>
+
+<p>返回一个新的Supply，只要关闭该供应的Tap，它就会运行和关闭。这包括是否将进一步的操作链接到供应。 （例如，$ supply.on-close（＆on-close）.map（*。uc））。使用反应或供应块时，使用CLOSE相位器通常是更好的选择。</p>
+
+<pre><code class="language-perl6">my $s = Supplier.new;
+my $tap = $s.Supply.on-close({ say &quot;Tap closed&quot; }).tap(
+    -&gt; $v { say &quot;the value is $v&quot; },
+    done    =&gt; { say &quot;Supply is done&quot; },
+    quit    =&gt; -&gt; $ex { say &quot;Supply finished with error $ex&quot; },
+);
+ 
+$s.emit('Perl 6');
+$tap.close;        # OUTPUT: «Tap closed␤»
+</code></pre>
+
+<h3 id="interval-方法">interval 方法</h3>
+
+<pre><code class="language-perl6">method interval(Supply:U: $interval, $delay = 0, :$scheduler = $*SCHEDULER --&gt; Supply:D)
+</code></pre>
+
+<p>创建一个每隔$ interval秒发出一次值的供应，从调用开始$ delay秒。发射的值是从0开始的整数，并且对于每个发射的值递增1。</p>
+
+<p>实施可能会将太小的值视为它们支持的最低分辨率，在这种情况下可能会发出警告;例如将0.0001作为0.001。</p>
+
+<h3 id="grep-方法">grep 方法</h3>
+
+<pre><code class="language-perl6">method grep(Supply:D: Mu $test --&gt; Supply:D)
+</code></pre>
+
+<p>创建一个新的供应，仅从原始供应中发出smartmatch对$ test的值。</p>
+
+<pre><code class="language-perl6">my $supplier = Supplier.new;
+my $all      = $supplier.Supply;
+my $ints     = $all.grep(Int);
+$ints.tap(&amp;say);
+$supplier.emit($_) for 1, 'a string', 3.14159;   # prints only 1 
+</code></pre>
+
+<h3 id="map-方法">map 方法</h3>
+
+<pre><code class="language-perl6">method map(Supply:D: &amp;mapper --&gt; Supply:D)
+</code></pre>
+
+<p>返回一个新的供应，通过＆mapper映射给定供应的每个值，并将其发送到新供应。</p>
+
+<pre><code class="language-perl6">my $supplier = Supplier.new;
+my $all      = $supplier.Supply;
+my $double   = $all.map(-&gt; $value { $value * 2 });
+$double.tap(&amp;say);
+$supplier.emit(4);           # RESULT: «8» 
+</code></pre>
+
+<h3 id="batch-方法">batch 方法</h3>
+
+<pre><code class="language-perl6">method batch(Supply:D: :$elems, :$seconds --&gt; Supply:D)
+</code></pre>
+
+<p>创建一个新的供应，通过批次中的元素数量（使用：elems）或最大秒数（使用：秒）或两者来批量处理给定供应的值。供应完成后，最后一批中会发出任何剩余值。</p>
+
+<h3 id="elems-方法">elems 方法</h3>
+
+<pre><code class="language-perl6">method elems(Supply:D: $seconds? --&gt; Supply:D)
+</code></pre>
+
+<p>创建一个新的供应，其中发出的值的数量发生了变化。如果您只想每隔这么多秒更新一次，它也可以选择一个间隔（以秒为单位）。</p>
+
+<h3 id="head-方法">head 方法</h3>
+
+<pre><code class="language-perl6">method head(Supply:D: Int(Cool) $number = 1 --&gt; Supply:D)
+</code></pre>
+
+<p>使用与List.head相同的语义创建“head”提供。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(4, 10, 3, 2);
+my $hs = $s.head(2);
+$hs.tap(&amp;say);           # OUTPUT: «4␤10␤» 
+</code></pre>
+
+<h3 id="tail-方法">tail 方法</h3>
+
+<pre><code class="language-perl6">method tail(Supply:D: Int(Cool) $number = 1 --&gt; Supply:D)
+</code></pre>
+
+<p>使用与List.tail相同的语义创建“尾部”提供。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(4, 10, 3, 2);
+my $ts = $s.tail(2);
+$ts.tap(&amp;say);           # OUTPUT: «3␤2␤» 
+</code></pre>
+
+<h3 id="rotor-方法">rotor 方法</h3>
+
+<pre><code class="language-perl6">method rotor(Supply:D: @cycle --&gt; Supply:D)
+</code></pre>
+
+<p>使用与List.rotor相同的语义创建“旋转”供应。</p>
+
+<h3 id="delayed-方法">delayed 方法</h3>
+
+<pre><code class="language-perl6">method delayed(Supply:D: $seconds, :$scheduler = $*SCHEDULER --&gt; Supply:D)
+</code></pre>
+
+<p>创建一个新的供应，其中发出流经给定供应的所有值，但具有给定的延迟（以秒为单位）。</p>
+
+<h3 id="throttle-方法">throttle 方法</h3>
+
+<pre><code class="language-perl6">method throttle(Supply:D:
+  $limit,                 # values / time or simultaneous processing 
+  $seconds or $callable,  # time-unit / code to process simultaneously 
+  $delay = 0,             # initial delay before starting, in seconds 
+  :$control,              # supply to emit control messages on (optional) 
+  :$status,               # supply to tap status messages from (optional) 
+  :$bleed,                # supply to bleed messages to (optional) 
+  :$vent-at,              # bleed when so many buffered (optional) 
+  :$scheduler,            # scheduler to use, default $*SCHEDULER 
+  --&gt; Supply:D)
+</code></pre>
+
+<p>从给定的Supply生成Supply，但确保传递的消息数量有限。</p>
+
+<p>它有两种操作模式：每个时间单位或最大执行代码块：这由第二个位置参数决定。</p>
+
+<p>第一个位置参数指定应该应用的限制。</p>
+
+<p>如果第二个位置参数是Callable，则limit表示执行Callable的最大并行进程数，该进程被赋予接收的值。在这种情况下，发出的值将是从启动Callable获得的Promises。</p>
+
+<p>如果第二个位置参数是数值，则将其解释为时间单位（以秒为单位）。如果指定.1作为值，则确保每十分之一秒不超过限制。</p>
+
+<p>如果超出限制，则缓冲传入的消息，直到有空间再次传递/执行Callable。</p>
+
+<p>第三个位置参数是可选的：它表示在传递任何值之前油门将等待的秒数。</p>
+
+<p>：control命名参数可选地指定一个可用于控制油门运行时的供应。可以发送的消息是“key：value”形式的字符串。请参阅下文，了解可以发送以控制油门的消息类型。</p>
+
+<p>：status named参数可选地指定将接收任何状态消息的Supply。如果指定，它将至少在原始Supply耗尽后发送一条状态消息。请参阅下面的状态消息</p>
+
+<p>：bleed命名参数可选地指定一个Supply，它将接收任何明确放血的值（带有出血控制消息），或者自动放血（如果有一个出口处于活动状态）。</p>
+
+<p>：vent-at命名参数指示在将任何其他值路由到：bleed Supply之前可以缓冲的值的数量。如果未指定，则默认为0（不会导致自动出血）。只有在指定了：出血供应时才有意义。</p>
+
+<p>：scheduler命名参数表示要使用的调度程序。默认为$ * SCHEDULER。</p>
+
+<p><strong>控制信息</strong></p>
+
+<p>这些消息可以发送到：control Supply。控制消息由“key：value”形式的字符串组成，例如“限制：4”。</p>
+
+<p>限制</p>
+
+<p>将消息数（最初在第一个位置给出）更改为给定值。</p>
+
+<p>流血</p>
+
+<p>将给定数量的缓冲消息路由到：bleed Supply。</p>
+
+<p>发泄，在</p>
+
+<p>在自动出血发生之前更改缓冲值的最大数量。如果该值低于之前，将导致立即重新路由缓冲值以匹配新的最大值。</p>
+
+<p>状态</p>
+
+<p>将状态消息发送到：status具有给定ID的供应。</p>
+
+<p><strong>状态信息</strong></p>
+
+<p>状态返回消息是具有以下键的哈希：</p>
+
+<p>允许</p>
+
+<p>当前仍允许传递/执行的消息/可调用的数量。</p>
+
+<p>流血</p>
+
+<p>路由到：bleed Supply的消息数。</p>
+
+<p>缓冲的</p>
+
+<p>由于溢出而当前缓冲的消息数。</p>
+
+<p>发射</p>
+
+<p>发出（传递）的消息数。</p>
+
+<p>ID</p>
+
+<p>此状态消息的ID（单调递增的数字）。如果您想记录状态消息，则很方便。</p>
+
+<p>限制</p>
+
+<p>正在应用的当前限制。</p>
+
+<p>发泄，在</p>
+
+<p>在自动重新路由到：bleed Supply之前可以缓冲的最大消息数。</p>
+
+<p><strong>例子</strong></p>
+
+<p>有一段简单的代码在异步开始运行时宣布，等待一段时间，然后在完成时宣布。这样做6次，但不要让超过3次同时运行。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(^6);  # set up supply 
+my $t = $s.throttle: 3,        # only allow 3 at a time 
+{                              # code block to run 
+    say &quot;running $_&quot;;          # announce we've started 
+    sleep rand;                # wait some random time 
+    say &quot;done $_&quot;              # announce we're done 
+}                              # don't need ; because } at end of line 
+$t.wait;                       # wait for the supply to be done 
+</code></pre>
+
+<p>一次运行的结果将是：</p>
+
+<pre><code>running 0
+running 1
+running 2
+done 2
+running 3
+done 1
+running 4
+done 4
+running 5
+done 0
+done 3
+done 5
+</code></pre>
+
+<h3 id="stable-方法">stable 方法</h3>
+
+<pre><code class="language-perl6">method stable(Supply:D: $time, :$scheduler = $*SCHEDULER --&gt; Supply:D)
+</code></pre>
+
+<p>如果在给定的$ time（以秒为单位）内没有被另一个值取代，则创建一个仅传递给定供应的值的新供应。 （可选）使用：scheduler参数，使用除默认调度程序之外的其他调度程序。</p>
+
+<p>为了澄清上述情况，如果在超时$ time期间，将向供应商发送所有其他值，但最后一个值将被丢弃。每次向供应商发出额外值时，在超时期间，将重置$ time。</p>
+
+<p>在处理UI输入时，此方法非常有用，在用户停止输入一段时间而不是每次击键之前，不希望执行操作。</p>
+
+<pre><code class="language-perl6">my $supplier = Supplier.new;
+my $supply1 = $supplier.Supply;
+$supply1.tap(-&gt; $v { say &quot;Supply1 got: $v&quot; });
+$supplier.emit(42);
+ 
+my Supply $supply2 = $supply1.stable(5);
+$supply2.tap(-&gt; $v { say &quot;Supply2 got: $v&quot; });
+sleep(3);
+$supplier.emit(43);  # will not be seen by $supply2 but will reset $time 
+$supplier.emit(44);
+sleep(10);
+# OUTPUT: «Supply1 got: 42␤Supply1 got: 43␤Supply1 got: 44␤Supply2 got: 44␤» 
+</code></pre>
+
+<p>如上所示，$ supply1收到了向供应商发出的所有价值，而$ supply2只收到了一个价值。 43被抛弃了，因为它后面跟着另一个&rsquo;最后&rsquo;值44，它被保留并在大约8秒后发送到$ supply2，这是因为超时$ time在3秒后被重置。</p>
+
+<h3 id="reduce-方法">reduce 方法</h3>
+
+<pre><code class="language-perl6">method reduce(Supply:D: &amp;with --&gt; Supply:D)
+</code></pre>
+
+<p>使用与List.reduce相同的语义创建“减少”供应。</p>
+
+<pre><code class="language-perl6">my $supply = Supply.from-list(1..5).reduce({$^a + $^b});
+$supply.tap(-&gt; $v { say &quot;$v&quot; }); # OUTPUT: «15␤» 
+</code></pre>
+
+<h3 id="produce-方法">produce 方法</h3>
+
+<pre><code class="language-perl6">method produce(Supply:D: &amp;with --&gt; Supply:D)
+</code></pre>
+
+<p>使用与List.produce相同的语义创建“生成”供应。</p>
+
+<pre><code class="language-perl6">my $supply = Supply.from-list(1..5).produce({$^a + $^b});
+$supply.tap(-&gt; $v { say &quot;$v&quot; }); # OUTPUT: «1␤3␤6␤10␤15␤» 
+</code></pre>
+
+<h3 id="lines">lines</h3>
+
+<pre><code class="language-perl6">method lines(Supply:D: :$chomp = True --&gt; Supply:D)
+</code></pre>
+
+<p>创建一个供应，它将从通常由某些异步I / O操作创建的供应中逐行发出字符。可选：chomp参数指示是否删除行分隔符：默认值为True。</p>
+
+<h3 id="words">words</h3>
+
+<pre><code class="language-perl6">method words(Supply:D: --&gt; Supply:D)
+</code></pre>
+
+<p>创建一个供应，它将从通常由某些异步I / O操作创建的供应中逐字发出字符。</p>
+
+<pre><code class="language-perl6">my $s = Supply.from-list(&quot;Hello Word!&quot;.comb);
+my $ws = $s.words;
+$ws.tap(&amp;say);           # OUTPUT: «Hello␤Word!␤» 
+</code></pre>
+
+<h3 id="unique-方法">unique 方法</h3>
+
+<pre><code class="language-perl6">method unique(Supply:D: :$as, :$with, :$expires --&gt; Supply:D)
+</code></pre>
+
+<p>创建仅提供唯一值的供应，由可选：as和：with参数定义（与List.unique相同）。可选：expires参数在“重置”之前等待多长时间（以秒为单位）并且不考虑已经看到的值，即使它与旧值相同。</p>
+
+<h3 id="squish-方法">squish 方法</h3>
+
+<pre><code class="language-perl6">method squish(Supply:D: :$as, :$with --&gt; Supply:D)
+</code></pre>
+
+<p>创建仅提供唯一值的供应，由可选：as和：with参数定义（与List.squish相同）。</p>
+
+<h3 id="max-方法">max 方法</h3>
+
+<pre><code class="language-perl6">method max(Supply:D: &amp;custom-routine-to-use = &amp;infix:&lt;cmp&gt; --&gt; Supply:D)
+</code></pre>
+
+<p>如果它们大于之前看到的任何值，则创建仅从给定供应中发出值的供应。换句话说，从持续上升的供应中，它将发出所有的价值。从不断下降的供应中，它只会发出第一个值。可选参数指定比较器，就像Any.max一样。</p>
+
+<h3 id="min-方法">min 方法</h3>
+
+<pre><code class="language-perl6">method min(Supply:D: &amp;custom-routine-to-use = &amp;infix:&lt;cmp&gt; --&gt; Supply:D)
+</code></pre>
+
+<p>如果它们小于之前看到的任何值，则创建仅从给定供应中发出值的供应。换句话说，从不断下降的供应中，它将发出所有的价值。从持续上升的供应中，它将仅发出第一个值。可选参数指定比较器，就像Any.min一样。</p>
+
+<h3 id="minmax-方法">minmax 方法</h3>
+
+<pre><code class="language-perl6">method minmax(Supply:D: &amp;custom-routine-to-use = &amp;infix:&lt;cmp&gt; --&gt; Supply:D)
+</code></pre>
+
+<p>每次从给定供应中看到新的最小值或最大值时，创建一个发出范围的供应。可选参数指定比较器，与Any.minmax一样。</p>
+
+<h3 id="skip-方法">skip 方法</h3>
+
+<pre><code class="language-perl6">method skip(Supply:D: Int(Cool) $number = 1 --&gt; Supply:D)
+</code></pre>
+
+<p>返回一个新的Supply，它将从给定的Supply发出所有值，但前几个$ number值将被丢弃。</p>
+
+<pre><code class="language-perl6">my $supplier = Supplier.new;
+my $supply = $supplier.Supply;
+$supply = $supply.skip(3);
+$supply.tap({ say $_ });
+$supplier.emit($_) for 1..10; # OUTPUT: «4␤5␤6␤7␤8␤9␤10␤» 
+</code></pre>
+
+<h3 id="start-方法">start 方法</h3>
+
+<pre><code class="language-perl6">method start(Supply:D: &amp;startee --&gt; Supply:D)
+</code></pre>
+
+<p>创造供应供应。对于原始供应中的每个值，代码对象在另一个线程上进行调度，并返回单个值（如果代码成功）或者没有值退出（如果代码失败）的供应。</p>
+
+<p>这对于异步启动您未阻止的工作非常有用。</p>
+
+<p>使用migrate可将值再次连接到单个电源中。</p>
+
+<h3 id="migrate-方法">migrate 方法</h3>
+
+<pre><code class="language-perl6">method migrate(Supply:D: --&gt; Supply:D)
+</code></pre>
+
+<p>采用供应本身具有类型为Supply的值作为输入。每次外部电源发出新的电源时，都会触发该电源并发出其值。之前任何已开发的供应将被关闭。这对于在不同数据源之间进行迁移非常有用，并且只关注最新的数据源。</p>
+
+<p>例如，想象一下用户可以在不同股票之间切换的应用程序。当他们切换到新的连接时，建立与Web套接字的连接以获取最新值，并且应关闭任何先前的连接。来自Web套接字的每个值流将表示为Supply，它们本身被发送到供应的最新数据源供观察。迁移方法可用于将此供应供应平坦为单个供应用户关心的当前值。</p>
+
+<p>这是一个简单的模拟这样的程序：</p>
+
+<pre><code class="language-perl6">my Supplier $stock-sources .= new;
+ 
+sub watch-stock($symbol) {
+    $stock-sources.emit: supply {
+        say &quot;Starting to watch $symbol&quot;;
+        whenever Supply.interval(1) {
+            emit &quot;$symbol: 111.&quot; ~ 99.rand.Int;
+        }
+        CLOSE say &quot;Lost interest in $symbol&quot;;
+    }
+}
+ 
+$stock-sources.Supply.migrate.tap: *.say;
+ 
+watch-stock('GOOG');
+sleep 3;
+watch-stock('AAPL');
+sleep 3;
+</code></pre>
+
+<p>产生的输出如下：</p>
+
+<pre><code>Starting to watch GOOG
+GOOG: 111.67
+GOOG: 111.20
+GOOG: 111.37
+Lost interest in GOOG
+Starting to watch AAPL
+AAPL: 111.55
+AAPL: 111.6
+AAPL: 111.6
+</code></pre>
+
+<h2 id="组合-supplies-的方法">组合 supplies 的方法</h2>
+
+<h3 id="merge-方法">merge 方法</h3>
+
+<pre><code class="language-perl6">method merge(Supply @*supplies --&gt; Supply:D)
+</code></pre>
+
+<p>创建从给定供应中看到的任何值的供应。只有在完成所有给定的供应后，才能完成供应。也可以称为类方法。</p>
+
+<h3 id="zip-方法">zip 方法</h3>
+
+<pre><code class="language-perl6">method zip(Supply @*supplies, :&amp;with = &amp;[,] --&gt; Supply:D)
+</code></pre>
+
+<p>只要在所有耗材上看到新值，就会创建一个发出组合值的供应。默认情况下，会创建列表，但可以通过使用：with参数指定自己的组合器来更改列表。一旦完成任何给定的供应，就会完成供应。也可以称为类方法。</p>
+
+<h3 id="zip-latest-方法">zip-latest 方法</h3>
+
+<pre><code class="language-perl6">method zip-latest(Supply @*supplies, :&amp;with = &amp;[,], :$initial --&gt; Supply:D)
+</code></pre>
+
+<p>只要在任何耗材上看到新值，就会创建一个发出组合值的供应。默认情况下，会创建列表，但可以通过使用：with参数指定自己的组合器来更改列表。可选的：initial参数可用于指示组合值的初始状态。默认情况下，在生成的电源上发出第一个组合值之前，所有耗材必须至少有一个值。一旦完成任何给定的供应，就会完成供应。也可以称为类方法。</p>
+
+<h2 id="i-o-功能作为-supplies">I/O 功能作为 supplies</h2>
+
+<h3 id="sub-signal">sub signal</h3>
+
+<pre><code class="language-perl6">sub signal(*@signals, :$scheduler = $*SCHEDULER)
+</code></pre>
+
+<p>为指定的Signal枚举（例如SIGINT）和可选的：scheduler参数创建一个供应。收到的任何信号都将在电源上发出。例如：</p>
+
+<pre><code class="language-perl6">signal(SIGINT).tap( { say &quot;Thank you for your attention&quot;; exit 0 } );
+</code></pre>
+
+<p>会抓住Control-C，谢谢你，然后退出。</p>
+
+<p>要从信号编号转到信号，您可以执行以下操作：</p>
+
+<pre><code class="language-perl6">signal(Signal(2)).tap( -&gt; $sig { say &quot;Received signal: $sig&quot; } );
+</code></pre>
+
+<p>通过检查Signal ::。键可以找到支持的信号列表（就像任何枚举一样）。有关枚举如何工作的更多详细信息，请参阅枚举。</p>
+
+<p>注意：高达2018.05的Rakudo版本有一个错误，因为某些系统上的信号数值不正确。例如，即使信号（10）实际上是特定系统上的SIGUSR1，它也会返回SIGBUS。话虽如此，使用信号（SIGUSR1）在2018.04,2018.04.1和2018.05之外的所有Rakudo版本上都按预期工作，其中通过使用信号（SIGBUS）可以实现预期的行为。这些问题在2018.05之后的Rakudo版本中得到了解决。</p>
+
+<h3 id="io-notification-watch-path-方法">IO::Notification.watch-path 方法</h3>
+
+<pre><code class="language-perl6">method watch-path($path --&gt; Supply:D)
+</code></pre>
+
+<p>创建OS将向其发出值的供应，以指示给定路径的文件系统上的更改。在IO对象上还有一个带有watch方法的快捷方式，如下所示：</p>
+
+<pre><code class="language-perl6">IO::Notification.watch-path(&quot;.&quot;).act( { say &quot;$^file changed&quot; } );
+&quot;.&quot;.IO.watch.act(                     { say &quot;$^file changed&quot; } );   # same 
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/supply/">Supply</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-perl6-pod/" data-toggle="tooltip" data-placement="top" title="Perl 6 Pod">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-07-08-class-channel/" data-toggle="tooltip" data-placement="top" title="Class Channel">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

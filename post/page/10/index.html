@@ -201,6 +201,94 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-11-01-perl6-grammar%E4%B9%8B%E5%88%86%E5%89%B2%E7%BB%93%E6%9E%84%E5%8C%96%E6%96%87%E6%9C%AC/">
+                <h2 class="post-title">Perl 6 Grammar 之分割结构化文本</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 1, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (468 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  如何使用 Grammar 分割一个有规律的文本文件? 首先这个文本有规律, 但是却是多行的。 我想将这样的文档分为独立的. 比如下面这个例子, 我想将他们分成3个独立的文本, 每个文本包含: [时间] Title 以及下面的 content lines. 实际的文件会有上千个, 最终输出的文本的名字是按照括号里面的时间来。
+sample.txt
+[28/04/2015 12:32] Title1 content line 1 content line 2 content line 3 content line 4 content line 5 balabala balabala [28/04/2015 12:16] Title2 content line 6 balabala content line 7 [27/04/2015 17:30] ​Title3 content line 8 content line 9 content line 10  下面是解析：
+use Grammar::Tracer; # 开启 Grammar 调试有助于排错 grammar StructedText { token TOP { ^ &lt;entry&gt;+ $ } token entry { &lt;head&gt; \s* # 每一项有一个标题 &lt;line&gt;+ \s* # 每个标题下面有很多行 } token head { '[' &lt;datetime&gt; ']' \s+ &lt;title&gt; } token datetime { &lt;filedate&gt; \s+ &lt;filetime&gt; } token filedate { [\d+]+ % '/' } token filetime { [\d+]+ % ':' } token title { \N+ } token line { [ &lt;!
+                  <a href="https://ohmysummer.github.io/post/2016-11-01-perl6-grammar%E4%B9%8B%E5%88%86%E5%89%B2%E7%BB%93%E6%9E%84%E5%8C%96%E6%96%87%E6%9C%AC/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-10-28-perl6%E4%B8%AD%E7%9A%84%E5%8C%85/">
+                <h2 class="post-title">Perl 6 中的包</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 28, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (351 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Packages - Organizing and referencing namespaced program elements
+ 包是指定程序元素的嵌套命名空间。 模块，类，Grammar是包类型。 像目录中的文件一样，通常可以使用其短名称（如果它们是本地的）或使用较长的名称来消除歧义的引用具名元素。
+Names 名称是作为变量名称的合法部分的任何东西（不包括sigil符号）。 这包括：
+$foo # 简单标识符 $Foo::Bar::baz # 通过 :: 分割的组合标识符 $Foo::($bar)::baz # 执行插值的组合标识符 $42 # numeric names $! # 某些标点符号变量  :: 用于分割嵌套的包名。
+包限定名 普通的包限定名像这样:
+$Foo::Bar::baz # 包 Foo::Bar 中的 $baz 变量  有时保持sigil与变量名很清晰，所以来写这个的一个替代方式是：
+Foo::Bar::&lt;$baz&gt;  这在编译时解决，因为变量名是一个常量。
+如果 :: 之前的名称部分为 null，则意味着包未指定并且必须搜索。 一般来说，这意味着跟在主sigil后面的初始 :: 是对编译时已知的名字的无操作(no-op)，但 ::() 也可以用来引入插值。 另外，在没有另一个sigil的情况下，:: 可以作为它自己的sigil，表明有意使用一个尚未声明的包名。
+伪包 在名称前面保留以下伪包名称：
+MY # 当前词法作用域中的符号 (aka $?SCOPE) OUR # 当前包中的符号 (aka $?
+                  <a href="https://ohmysummer.github.io/post/2016-10-28-perl6%E4%B8%AD%E7%9A%84%E5%8C%85/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%8C%85/">包</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-10-27-perl6%E4%B8%AD%E5%88%97%E8%A1%A8%E5%BA%8F%E5%88%97%E5%92%8C%E6%95%B0%E7%BB%84/">
                 <h2 class="post-title">Perl 6 中列表、序列和数组</h2>
 
@@ -550,94 +638,6 @@ my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) }; my ($a, $b) = (2, 4); $swap
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/block/">Block</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-10-17-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0/">
-                <h2 class="post-title">Perl 6 中的函数</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 17, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 11 minutes (2265 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 中的函数 例程（Routines）是 Perl 6 中代码重用的最小手段。它们有几种形式，最明显的是属于类和角色并与对象相关联的方法，还有函数, 也叫做子例程或短子程序，它们独立于对象而存在。
-子例程默认是词法（my）作用域的，对它们的调用通常在编译时解析。
-子例程可以具有签名，也称为*参数列表*，其指定签名期望的参数（如果有的话）。 它可以指定（或保持打开）参数的数量和类型，以及返回值。
-子例程的内省通过例程提供。
-定义/创建/使用 函数 子例程 创建子例程的基本方法是使用 sub 声明符，后跟可选标识符
-sub my-func { say &quot;Look ma, no args!&quot; } my-func;  sub 声明符返回可以存储在任何容器中的 Sub 类型的值:
-my &amp;c = sub { say &quot;Look ma, no name!&quot; } c; # OUTPUT: «Look ma, no name!␤» my Any:D $f = sub { say 'Still nameless...' } $f(); # OUTPUT: «Still nameless...␤» my Code \a = sub { say ‚raw containers don't implement postcircumfix:&lt;( )&gt;‘ }; a.
-                  <a href="https://ohmysummer.github.io/post/2016-10-17-perl6%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%87%BD%E6%95%B0/">函数</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-10-17-perl6fromruby/">
-                <h2 class="post-title">Perl 6 From Ruby - Nutshell</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 17, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 13 minutes (2759 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 from Ruby - Nutshell
-基本语法 语句结束分号 Ruby 使用换行(有几个例外)来探测大部分语句的结束, 只要表达式已经完成。通过把运算符挂在行的末尾以保证解析会继续而打断一个长的表达式的做法很常见:
-foo + # 在 Ruby 中结尾的运算符意味着解析会继续 bar + baz  在 Perl 6 中你必须显式地使用 ; 来结束语句, 这允许更好的反馈和更灵活的断行。有两个例外不需要显式的 ;, 块儿中的最后一条语句, 在块自身的闭合花括号之后(如果那一行上没有任何其它东西):
-if 5 &lt; $x &lt; 10 { say &quot;Yep!&quot;; $x = 17 # 在闭合花括号 } 之前不需要分号 ; } # 因为换行, 在闭合花括号 } 之后不需要分号 ; say &quot;Done!&quot;; # 如果后面什么也没有, 那么这儿的分号也不需要  空白 Ruby 中允许使用大量令人吃惊的灵活的空白, 即使在开启了严格模式和警告的情况下:
-# 不符合习惯但是在 Ruby 中是合法的 puts&quot;Hello &quot;+ (people [ i] .
-                  <a href="https://ohmysummer.github.io/post/2016-10-17-perl6fromruby/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/ruby/">Ruby</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
                   
                 </div>
               

@@ -201,6 +201,89 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-05-01-sneaky-methods/">
+                <h2 class="post-title">Sneaky methods</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 1, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (140 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Sneaky methods
+就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
+my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
+src/core/Bool.pm 32: Bool.^add_method('pred', my method pred() { Bool::False }); 33: Bool.^add_method('succ', my method succ() { Bool::True }); 35: Bool.^add_method('enums', my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
+&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Perl 6 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .
+                  <a href="https://ohmysummer.github.io/post/2015-05-01-sneaky-methods/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/add_method/">add_method</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-04-28-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%94/">
+                <h2 class="post-title">Perl 6 中的正则表达式(五)</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 28, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 21 minutes (4327 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  从匹配中返回值 Match 对象  成功的匹配总是返回一个 Match 对象, 这个对象通常也被放进 $/ 中, (具名 regex, token, 或 rule 是一个子例程, 因此会声明它们自己的本地 $/ 变量, 它通常指 rule 中最近一次的 submatch, 如果有的话)。当前的匹配状态被保存到 regex 的 $¢ 变量中, 当匹配结束时它最终会被绑定到用户的 $/变量中  不成功的匹配会返回 Nil (并把 $/ 设置为 Nil, 如果匹配已经设置了 $/的话)
+ 名义上, Match 对象包含一个布尔的成功值, 一个有序的子匹配对象(submatch objects)数组, 一个具名的子匹配对象(submatch objects)散列.(它也可选地包含一个用于创建抽象语法树(AST)的抽象对象) 为了提供访问这些各种各样值的便捷方法, Match 对象在不同上下文中求值也不同:
+ 在布尔上下文中 Match 对象被求值为真或假
+  if /pattern/ {...} # 或: /pattern/; if $/ {...}  如果模式使用 :global 或 :overlap 或 :exhaustive 修饰符, 会在第一个匹配处返回布尔真值.
+                  <a href="https://ohmysummer.github.io/post/2015-04-28-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%94/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-04-27-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammars-part-1/">
                 <h2 class="post-title">从正则表达式到Grammars - Part 1</h2>
 
@@ -535,85 +618,6 @@ use v6; subset Length8 of Str where *.chars &lt; 8; subset UpCase of Str where n
                     <a href="https://ohmysummer.github.io//tags/given-when/">given when</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/proceed/">proceed</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-03-16-%E6%93%8D%E4%BD%9C%E7%AC%A6/">
-                <h2 class="post-title">操作符</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 16, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 18 minutes (3829 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  操作符 操作符优先级 在像 1 + 2 * 3 这样的表达式中， 2 * 3 被首先计算， 因为中缀操作符 * 的优先级比 + 的优先级高。下面的表中总结了 Perl 6 中 的优先级级别， 从最牢固到最松散：
-A Level Examples N Terms 42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbose @$array L 方法后缀 .meth .+ .? .* .() .[] .{} .&lt;&gt; .«» .:: .= .^ .: N 自增 ++ -- R 求幂 ** L Symbolic unary ! + - ~ ? | || +^ ~^ ?
-                  <a href="https://ohmysummer.github.io/post/2015-03-16-%E6%93%8D%E4%BD%9C%E7%AC%A6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E6%93%8D%E4%BD%9C%E7%AC%A6/">操作符</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-03-16-perl6%E4%B8%AD%E7%9A%84%E7%89%B9%E6%80%A7%E4%BA%8C/">
-                <h2 class="post-title">Perl 6 中的特性(二)</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 16, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 45 minutes (9552 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Set my $keywords = set &lt;if for unless while&gt;; # create a set sub has-keyword(*@words) { for @words -&gt; $word { return True if $word (elem) $keywords; # 依次检查数组中的元素是否属于集合 $keywords } False; } say has-keyword 'not', 'one', 'here'; # False say has-keyword 'but', 'here', 'for'; # True  Series Operator my @a=&lt;A G C T&gt;; my $x=@a; for 1 ... * -&gt; $a { (( [X~] $x xx $a )).
-                  <a href="https://ohmysummer.github.io/post/2015-03-16-perl6%E4%B8%AD%E7%9A%84%E7%89%B9%E6%80%A7%E4%BA%8C/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E7%89%B9%E6%80%A7/">特性</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/examples/">Examples</a>&nbsp;
                   
                 </div>
               

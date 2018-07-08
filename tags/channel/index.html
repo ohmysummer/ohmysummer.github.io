@@ -201,6 +201,53 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-08-class-channel/">
+                <h2 class="post-title">Class Channel</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Thread-safe queue for sending values from producers to consumers
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 8, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (303 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  class Channel {}  Channel 是一个线程安全的队列，可帮助你将一个或多个生产者的一系列对象发送给一个或多个消费者。每个对象将仅到达由调度程序选择的一个这样的消费者。如果只有一个消费者和一个生产者，则保证保留对象的顺序。在 Channel 上发送是非阻塞的。
+my $c = Channel.new; await (^10).map: { start { my $r = rand; sleep $r; $c.send($r); } } $c.close; say $c.list;  可以在并发页面中找到更多示例。
+方法 send 方法 定义为：
+method send(Channel:D: \item)  将项目排入频道。如果通道已经关闭，则抛出类型X :: Channel :: SendOnClosed的异常。此调用不会阻止等待使用者获取该对象。对可排队的项目数量没有设定限制，因此应注意防止失控排队。
+my $c = Channel.new; $c.send(1); $c.send([2, 3, 4, 5]); $c.close; say $c.list; # OUTPUT: «(1 [2 3 4 5])␤»  receive 方法 定义为：
+method receive(Channel:D:)  从频道接收和删除项目。如果没有项目存在，它会阻塞，等待来自另一个线程的发送。
+                  <a href="https://ohmysummer.github.io/post/2018-07-08-class-channel/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/channel/">Channel</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/">
                 <h2 class="post-title">第 10000 个素数</h2>
 

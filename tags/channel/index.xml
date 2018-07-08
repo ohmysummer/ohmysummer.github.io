@@ -6,10 +6,24 @@
     <description>Recent content in Channel on Young For Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 26 Oct 2016 16:41:13 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 08 Jul 2018 16:11:52 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/tags/channel/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Class Channel</title>
+      <link>https://ohmysummer.github.io/post/2018-07-08-class-channel/</link>
+      <pubDate>Sun, 08 Jul 2018 16:11:52 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-07-08-class-channel/</guid>
+      <description>class Channel {}  Channel 是一个线程安全的队列，可帮助你将一个或多个生产者的一系列对象发送给一个或多个消费者。每个对象将仅到达由调度程序选择的一个这样的消费者。如果只有一个消费者和一个生产者，则保证保留对象的顺序。在 Channel 上发送是非阻塞的。
+my $c = Channel.new; await (^10).map: { start { my $r = rand; sleep $r; $c.send($r); } } $c.close; say $c.list;  可以在并发页面中找到更多示例。
+方法 send 方法 定义为：
+method send(Channel:D: \item)  将项目排入频道。如果通道已经关闭，则抛出类型X :: Channel :: SendOnClosed的异常。此调用不会阻止等待使用者获取该对象。对可排队的项目数量没有设定限制，因此应注意防止失控排队。
+my $c = Channel.new; $c.send(1); $c.send([2, 3, 4, 5]); $c.close; say $c.list; # OUTPUT: «(1 [2 3 4 5])␤»  receive 方法 定义为：
+method receive(Channel:D:)  从频道接收和删除项目。如果没有项目存在，它会阻塞，等待来自另一个线程的发送。</description>
+    </item>
     
     <item>
       <title>第 10000 个素数</title>

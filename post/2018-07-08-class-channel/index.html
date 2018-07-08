@@ -5,20 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Young For Perl 6</title>
-  <meta property="og:title" content="Young For Perl 6" />
-  <meta name="twitter:title" content="Young For Perl 6" />
+  <title>Class Channel</title>
+  <meta property="og:title" content="Class Channel" />
+  <meta name="twitter:title" content="Class Channel" />
+  <meta name="description" content="Thread-safe queue for sending values from producers to consumers">
+  <meta property="og:description" content="Thread-safe queue for sending values from producers to consumers">
+  <meta name="twitter:description" content="Thread-safe queue for sending values from producers to consumers">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-07-08-class-channel/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Young For Perl 6" />
 
   <meta name="generator" content="Hugo 0.41" />
-  <link rel="canonical" href="https://ohmysummer.github.io/" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-08-class-channel/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -194,14 +197,26 @@ if (!doNotTrack) {
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Young For Perl 6</h1>
+            <div class="post-heading">
+              <h1>Class Channel</h1>
                 
                   
-                    <hr class="small">
-                    <span class="page-subheading">Writing Perl 6 Just For Fun</span>
+                    <h2 class="post-subheading">Thread-safe queue for sending values from producers to consumers</h2>
                   
                 
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 8, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (303 words)
+  
+  
+</span>
+
                 
             </div>
           </div>
@@ -212,329 +227,252 @@ if (!doNotTrack) {
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
         
 
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-11-14-%E5%9C%86%E6%8B%AC%E5%8F%B7%E5%92%8C%E6%96%B9%E6%8B%AC%E5%8F%B7%E5%9C%A8%E5%88%9B%E5%BB%BA%E6%95%B0%E7%BB%84%E6%97%B6%E7%9A%84%E5%8C%BA%E5%88%AB/">
-                <h2 class="post-title">圆括号和方括号在创建数组时的区别</h2>
-                
-                
-              </a>
+<pre><code class="language-perl6">class Channel {}
+</code></pre>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 14, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (132 words)
-  
-  
-</span>
+<p><code>Channel</code> 是一个线程安全的队列，可帮助你将一个或多个生产者的一系列对象发送给一个或多个消费者。每个对象将仅到达由调度程序选择的一个这样的消费者。如果只有一个消费者和一个生产者，则保证保留对象的顺序。在 <code>Channel</code> 上发送是非阻塞的。</p>
 
+<pre><code class="language-perl6">my $c = Channel.new;
+await (^10).map: {
+    start {
+        my $r = rand;
+        sleep $r;
+        $c.send($r);
+    }
+}
+$c.close;
+say $c.list;
+</code></pre>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%9C%86%E6%8B%AC%E5%8F%B7/">圆括号</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E6%96%B9%E6%8B%AC%E5%8F%B7/">方括号</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-11-11-%E5%9C%A8perl6%E4%B8%AD%E6%80%8E%E4%B9%88%E4%B8%BA%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E7%B1%BB%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95/">
-                <h2 class="post-title">在 Perl 6 中怎么为已存在的类添加方法</h2>
-                
-                
-              </a>
+<p>可以在<a href="https://docs.perl6.org/language/concurrency#Channels">并发页面</a>中找到更多示例。</p>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 11, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (185 words)
-  
-  
-</span>
+<h2 id="方法">方法</h2>
 
+<h3 id="send-方法">send 方法</h3>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/add_method/">add_method</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/callable/">Callable</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-11-05-d%E5%9C%A8perl6%E4%B8%AD%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D/">
-                <h2 class="post-title">D 在 Perl 6 中是什么意思</h2>
-                
-                
-              </a>
+<p>定义为：</p>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 5, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (105 words)
-  
-  
-</span>
+<pre><code class="language-perl6">method send(Channel:D: \item)
+</code></pre>
 
+<p>将项目排入频道。如果通道已经关闭，则抛出类型X :: Channel :: SendOnClosed的异常。此调用不会阻止等待使用者获取该对象。对可排队的项目数量没有设定限制，因此应注意防止失控排队。</p>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/d/">:D</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-11-05-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%89/">
-                <h2 class="post-title">Perl 6 中的正则表达式(三)</h2>
-                
-                
-              </a>
+<pre><code class="language-perl6">my $c = Channel.new;
+$c.send(1);
+$c.send([2, 3, 4, 5]);
+$c.close;
+say $c.list; # OUTPUT: «(1 [2 3 4 5])␤» 
+</code></pre>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 5, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1209 words)
-  
-  
-</span>
+<h3 id="receive-方法">receive 方法</h3>
 
+<p>定义为：</p>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-10-29-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammar/">
-                <h2 class="post-title">从正则表达式到 Grammar</h2>
-                
-                
-              </a>
+<pre><code class="language-perl6">method receive(Channel:D:)
+</code></pre>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 29, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 8 minutes (1698 words)
-  
-  
-</span>
+<p>从频道接收和删除项目。如果没有项目存在，它会阻塞，等待来自另一个线程的发送。</p>
 
+<p>如果通道已关闭，并且已经删除了最后一项，或者在接收等待项目到达时调用了close，则抛出类型X :: Channel :: ReceiveOnClosed的异常。</p>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/actions/">Actions</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-10-11-io%E6%93%8D%E4%BD%9C/">
-                <h2 class="post-title">IO 操作</h2>
-                
-                
-              </a>
+<p>如果通道已被标记为不稳定且方法失败，并且最后一项已被删除，则抛出作为异常而失败的参数。</p>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 11, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (392 words)
-  
-  
-</span>
+<p>请参阅方法轮询以获取不会引发异常的非阻塞版本。</p>
 
+<pre><code class="language-perl6">my $c = Channel.new;
+$c.send(1);
+say $c.receive; # OUTPUT: «1␤» 
+</code></pre>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/io/">IO</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-10-06-proto/">
-                <h2 class="post-title">proto</h2>
-                
-                
-              </a>
+<h3 id="poll-方法">poll 方法</h3>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 6, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (189 words)
-  
-  
-</span>
+<p>定义为：</p>
 
+<pre><code class="language-perl6">method poll(Channel:D:)
+</code></pre>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/proto/">proto</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-10-05-perl-6-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2010/">
-                <h2 class="post-title">Perl 6 圣诞月历-(2010)</h2>
-                
-                
-              </a>
+<p>从频道接收和删除项目。如果没有项目，则返回Nil而不是等待。</p>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 5, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 14 minutes (2923 words)
-  
-  
-</span>
+<pre><code class="language-perl6">my $c = Channel.new;
+Promise.in(2).then: { $c.close; }
+^10 .map({ $c.send($_); });
+loop {
+    if $c.poll -&gt; $item { $item.say };
+    if $c.closed  { last };
+    sleep 0.1;
+}
+</code></pre>
 
+<p>请参阅方法接收，以获取正确响应通道关闭和故障的阻止版本。</p>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%9C%A3%E8%AF%9E/">圣诞</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-09-18-%E7%A9%BA%E7%99%BD%E6%A0%BC/">
-                <h2 class="post-title">空白格</h2>
-                
-                
-              </a>
+<h3 id="close-方法">close 方法</h3>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 18, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (58 words)
-  
-  
-</span>
+<p>定义为：</p>
 
+<pre><code class="language-perl6">method close(Channel:D:)
+</code></pre>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/unspace/">unspace</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-09-17-perl6%E4%B8%AD%E7%9A%84polymod%E6%96%B9%E6%B3%95/">
-                <h2 class="post-title">Perl 6 中的 polymod 方法</h2>
-                
-                
-              </a>
+<p>通常关闭频道。这使后续的发送调用死于X :: Channel :: SendOnClosed。后续调用.receive可能仍然会耗尽先前发送的任何剩余项目，但如果队列为空，则会抛出X :: Channel :: ReceiveOnClosed异常。由@（）或.list方法生成的Seq在完成此操作之前不会终止。 when-block也将在封闭的通道上正确终止。</p>
 
-              <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 17, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (366 words)
-  
-  
-</span>
+<pre><code class="language-perl6">my $c = Channel.new;
+$c.close;
+$c.send(1);
+CATCH { default { put .^name, ': ', .Str } };
+# OUTPUT: «X::Channel::SendOnClosed: Cannot send a message on a closed channel␤» 
+</code></pre>
 
+<p>请注意，抛出的任何异常都可能会阻止调用.close，这可能会挂起接收线程。在这种情况下，使用LEAVE移相器强制执行.close调用。</p>
 
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/polymod/">polymod</a>&nbsp;
-                  
-                </div>
-              
-            </article>
-          
-        </div>
+<h3 id="list-方法">list 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method list(Channel:D: --&gt; List:D)
+</code></pre>
+
+<p>返回基于Seq的列表，它将迭代队列中的项目并在迭代时从中删除每个项目。这只能在调用close方法后终止。</p>
+
+<pre><code class="language-perl6">my $c = Channel.new; $c.send(1); $c.send(2);
+$c.close;
+say $c.list; # OUTPUT: «(1 2)␤» 
+</code></pre>
+
+<h3 id="closed-方法">closed 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method closed(Channel:D: --&gt; Promise:D)
+</code></pre>
+
+<p>返回通过调用方法close关闭通道后将保留的promise。</p>
+
+<pre><code class="language-perl6">my $c = Channel.new;
+$c.closed.then({ say &quot;It's closed!&quot; });
+$c.close;
+sleep 1;
+</code></pre>
+
+<h3 id="fail-方法">fail 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method fail(Channel:D: $error)
+</code></pre>
+
+<p>关闭通道（即，使后续发送调用死亡），并将要作为通道中的最终元素抛出的错误排入队列。方法receive会将该错误作为异常抛出。如果频道已经关闭或者已经调用了.fail，则不执行任何操作。</p>
+
+<pre><code class="language-perl6">my $c = Channel.new;
+$c.fail(&quot;Bad error happens!&quot;);
+$c.receive;
+CATCH { default { put .^name, ': ', .Str } };
+# OUTPUT: «X::AdHoc: Bad error happens!␤» 
+</code></pre>
+
+<h3 id="capture-方法">Capture 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method Capture(Channel:D --&gt; Capture:D)
+</code></pre>
+
+<p>相当于在调用者上调用.List.Capture。</p>
+
+<h3 id="supply-方法">Supply 方法</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">method Supply(Channel:D:)
+</code></pre>
+
+<p>这将返回按需供应，该供应为通道上收到的每个值发出一个值。当通道关闭时，将在Supply上调用done。</p>
+
+<pre><code class="language-perl6">my $c = Channel.new;
+my Supply $s1 = $c.Supply;
+my Supply $s2 = $c.Supply;
+$s1.tap(-&gt; $v { say &quot;First $v&quot; });
+$s2.tap(-&gt; $v { say &quot;Second $v&quot; });
+^10 .map({ $c.send($_) });
+sleep 1;
+</code></pre>
+
+<p>对此方法的多次调用会生成多个Supply实例，这些实例会与Channel的值竞争。</p>
+
+<h3 id="sub-await">sub await</h3>
+
+<p>定义为：</p>
+
+<pre><code class="language-perl6">multi sub await(Channel:D)
+multi sub await(*@)
+</code></pre>
+
+<p>等待所有一个或多个通道都有可用值，并返回这些值（它在通道上调用.receive）。也适用于承诺。</p>
+
+<pre><code class="language-perl6">my $c = Channel.new;
+Promise.in(1).then({$c.send(1)});
+say await $c;
+</code></pre>
+
 
         
-          <ul class="pager main-pager">
+          <div class="blog-tags">
             
-              <li class="previous">
-                <a href="https://ohmysummer.github.io/page/19/">&larr; Newer Posts</a>
-              </li>
+              <a href="https://ohmysummer.github.io//tags/channel/">Channel</a>&nbsp;
             
-            
-              <li class="next">
-                <a href="https://ohmysummer.github.io/page/21/">Older Posts &rarr;</a>
-              </li>
-            
-          </ul>
+          </div>
         
-      </div>
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-class-supply/" data-toggle="tooltip" data-placement="top" title="class Supply">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

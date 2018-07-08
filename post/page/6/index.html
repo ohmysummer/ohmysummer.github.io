@@ -201,6 +201,103 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-21-perl-6-%E4%B8%AD%E7%9A%84-proto-%E5%85%B3%E9%94%AE%E5%AD%97/">
+                <h2 class="post-title">Perl 6 中的 proto 关键字</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    The proto keyword in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 21, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (196 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  今天，我们正在关注 proto 关键字。它向编译器提供了关于你打算创建 multi-subs 的提示。
+例子 1 考虑一个翻转字符串或使整数变成负数的函数示例。
+multi sub f(Int $x) { return -$x; } multi sub f(Str $x) { return $x.flip; } say f(42); # -42 say f('Hello'); # olleH  如果我们创建另一个接收两个参数的函数的变体，会怎么样？
+multi sub f($a, $b) { return $a + $b; } say f(1, 2); # 3  这个代码完美的工作，但它看起来像它的和谐是破碎的。即使函数的名称没有提及它的作用，我们也打算设置一个函数，以某种方式返回它的参数的“反射”版本。将两个数字相加的函数不适合这个想法。
+所以，现在是在 proto 关键字的帮助下清楚地宣布意图的时候了。
+proto sub f($x) {*}  现在，尝试调用双参数函数将无法编译：
+===SORRY!=== Error while compiling proto.pl Calling f(Int, Int) will never work with proto signature ($x) at proto.
+                  <a href="https://ohmysummer.github.io/post/2017-12-21-perl-6-%E4%B8%AD%E7%9A%84-proto-%E5%85%B3%E9%94%AE%E5%AD%97/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-21-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E5%A4%A9-%E6%95%B0%E7%8B%AC%E4%B8%8Ejunctions%E5%92%8C%E9%9B%86%E5%90%88/">
+                <h2 class="post-title">第二十一天-数独与Junctions和集合</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 21 – Sudoku with Junctions and Sets
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 21, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (616 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 21 – Sudoku with Junctions and Sets Perl6 中有许多核心元素为您提供强大的工具，以简洁而强大的方式完成任务。其中两个是具有许多特征的联结和集合，但也是截然不同的。为了演示这些功能，我将介绍如何将它们用于一个简单的问题，Sudoku拼图。
+数独：进修 所以对于那些不知道数独谜题的人来说，它是一个9乘9的网格，它提供了一些填充了数字1-9的单元格。目标是填充数字在1和9之间的所有单元格，所以没有任何行，列或子广场具有多于一个的数字。
+有几种方法来表示一个数独谜题，我个人最喜欢的是 9×9 嵌套数组，例如：
+my @game = [ [4,0,0,0,0,0,0,0,0], [0,9,0,3,4,6,0,5,0], [5,8,0,0,9,0,0,0,6], [0,4,0,8,1,3,0,0,9], [0,0,0,5,0,4,0,0,0], [8,0,0,6,2,9,0,4,0], [3,0,0,0,5,0,0,6,2], [0,5,0,9,3,2,0,8,0], [0,0,0,0,0,0,0,0,1] ];  在这种情况下，没有赋值的单元格被赋值为0，这样所有的单元格都有一个赋值给它们的整数值。使用这种格式要记住的主要事情是你需要使用@game [$ y] [$ x]而不是@game [$ x] [$ y]来引用单元格，
+Junctions：量子逻辑测试 在 Perl6 中使用 Junction 的最简单方法之一是逻辑测试。 Junction可以表示您想要测试的值的选择。例如 ：
+if ( 5 &lt; 1|10 &lt; 2 ) { say &quot;Spooky&quot; } else { say &quot;Boo&quot; } Spooky  因此，这不仅证明了操作符链（经验丰富的程序员可能已经看起来很困惑），而且对于5 &lt;10和1 &lt;2，任何连接点（1 | 10）的计算结果都为True。这样，连接点可以非常已经很强大了，当你为它们分配一个变量容器时，它变得非常有趣。
+                  <a href="https://ohmysummer.github.io/post/2017-12-21-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E5%A4%A9-%E6%95%B0%E7%8B%AC%E4%B8%8Ejunctions%E5%92%8C%E9%9B%86%E5%90%88/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/junction/">Junction</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/set/">Set</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-12-20-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%A4%A9-%E5%AE%8F%E7%9A%84%E8%BF%9B%E9%98%B6/">
                 <h2 class="post-title">第二十天-宏的进阶</h2>
 
@@ -615,92 +712,6 @@ Grammar 和 Actions 难学吗? 不，他们不是！
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-12-%E7%AC%AC%E5%8D%81%E4%BA%8C%E5%A4%A9the-year-of-perl-6-books/">
-                <h2 class="post-title">第十二天 – The Year of Perl 6 Books</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 12, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (1 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  <p><a href="https://perl6advent.wordpress.com/2017/12/12/day-12-the-year-of-perl-6-books/">https://perl6advent.wordpress.com/2017/12/12/day-12-the-year-of-perl-6-books/</a></p>
-
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9perl6%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E7%9A%84%E6%98%9F%E5%8F%B7/">
-                <h2 class="post-title">第十一天-Perl 6 中所有的星号</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    All the Stars of Perl 6, or * ** *
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 11, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1213 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  在今年的 Perl 6 Advent Calendar 中, 雪花被今天的博客文章承包了。 我们将检阅使用了 * 字符的结构。 在 Perl 6 中，根据上下文的不同，您可以叫它星星（或者，如果你愿意的话，可以叫它星号）或者 *whatever*。
-Perl 6 不是一个隐秘的编程语言， 在许多方面它的语法比 Perl 5 更加一致。另一方面，有些地方需要花时间来开启对语法的信心。
-让我们看看 * 的不同用法，从最简单的开始，旨在了解最烧脑的例如 * ** *。
-前两种用法很简单，不需要太多的讨论：
-1. 乘法 单个星号用于乘法。严格来讲, 这是一个中缀操作符 infix:&lt;*&gt;, 它的返回值为 Numeric。
-say 20 * 18; # 360  2. 幂 两个星号 ** 是幂操作符。再次, 这是一个中缀操作符 infix:&lt;**&gt;, 它返回 Numeric 结果, 计算两个给定值点幂。
-say pi ** e; # 22.4591577183611  正则表达式中同样也使用了两个标记（* 或 **），它们表示不同的东西。 Perl 6 的一个特点是它可以很容易地在不同的语言之间切换。 正则表达式和 grammar 都是这样的内部语言的例子，其中同样的符号在 Perl 6 中可能意味着不同的含义。
-                  <a href="https://ohmysummer.github.io/post/2017-12-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9perl6%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E7%9A%84%E6%98%9F%E5%8F%B7/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/whatever/">Whatever</a>&nbsp;
                   
                 </div>
               
