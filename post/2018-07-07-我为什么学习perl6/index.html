@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (1 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (130 words)
   
   
 </span>
@@ -231,7 +231,81 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p><a href="http://www.evanmiller.org/why-im-learning-perl-6.html">http://www.evanmiller.org/why-im-learning-perl-6.html</a></p>
+        
+
+<p><a href="http://www.evanmiller.org/why-im-learning-perl-6.html">http://www.evanmiller.org/why-im-learning-perl-6.html</a></p>
+
+<p>想听一个编程笑话吗？</p>
+
+<p>Perl 6。</p>
+
+<p>想知道我最喜欢的编程语言吗？</p>
+
+<p>Perl 6。</p>
+
+<p>嘘，克隆 master 分支并运行这个：</p>
+
+<pre><code class="language-perl6">use v6.d.PREVIEW;
+
+my $channel = Channel.new;
+
+my @ten_tasks = (^10).map: {
+    start {
+        my $thread = $*THREAD.id;
+        await $channel;
+        say &quot;HOLY MOLEY SOMEONE STOLE MY THREAD&quot; if $thread != $*THREAD.id;
+    }
+}
+
+$channel.send(&quot;Ring ring&quot;) for ^10;
+$channel.close;
+
+await @ten_tasks;
+</code></pre>
+
+<p>猜猜它输出了什么？</p>
+
+<p>没有！开个玩笑，你会看到很多来自任务的烦恼消息，等待电话响起，然后穿着别人的操作系统线程醒来。</p>
+
+<p>为什么这很重要？并发很难，如果你想要M：N线程多路复用（即WEB SCALE CODE，其中应用程序线程没有固定到pthread）你今天的选择正是Erlang，Go，.NET和Perl 6。</p>
+
+<p>如果你对Erlang感到困惑，被Go推迟，对.NET无动于衷，请看看Perl 6.认真的。当然，它的发展时间比男孩时期要长 - 从2000年开始，比电影早两年，并在2015年发布，两年之后 - 但也许如果有人在某事上工作了15年，他们实际上可能会做出一些好事。我不是说这种情况是真的（可能不是少年时代），但至少它是可能的，对吗？</p>
+
+<p>有趣的是，十五年前，每个人都在说Perl是如何通过大规模的语言重新设计而自拔的，因为世界显然将转向Python和Ruby。好吧每个人都切换到Python和Ruby，但现在每个人都有了再次切换的痒，因为事实证明Python和Ruby并不是为并发代码执行而设计的。如果你需要的是仿生robo-feet，也许拍摄自己的脚并不是一个糟糕的策略。</p>
+
+<p>我不会在这里回顾 Perl 6 作为一种语言，因为它是一个包含大量黑暗角落和奇怪边缘情况的大规模规范，但我确实希望分享一些关于语言运行时发现的事情。 Perl 6虚拟机MoarVM是一项出色的技术。</p>
+
+<p>事件循环感知调度程序？检查。延续？你得到了他们。将两者混合后会发生什么？好吧，你可以启动数百个工作程序并让它们等待消息（比如网络），而不会占用任何操作系统线程。当例程获得消息时，它会继续执行任何可用的OS线程。因此在开场示例中所有的“圣洁的MOLEY”。这就像Go或Erlang有更多的美元符号，或者没有回调cacciatore的Nginx或Node.js。</p>
+
+<p>MoarVM是用漂亮干净的C编写的，如果你喜欢挖掘，它会充满惊喜。没有GIL，因此与其他语言不同，Perl 6字节码可以同时执行。 Unicode很棒，让“Straße”.uc正确并使用一个聪明的恒定时间算法来解决代码点组合的字形。对象模型和垃圾收集器与FFI很好地配合，因此与C的接口很简单。代码库编写得很好，组织良好，文档齐全，经过充分测试;小东西，比如具有正确尺寸的函数和具有良好名称的变量，使得阅读愉快。</p>
+
+<p>判断语言实现的快速方法是检查其字符串连接函数。如果将concat实现为realloc和memcpy，那么楼上的灯可能没有设置为全亮度。看哪，在MoarVM中，字符串被分成多个字符串，并且可以重复链而不占用更多内存。所以这个表达式：</p>
+
+<pre><code class="language-perl6">&quot;All work and no play makes Jack a dull boy&quot; x 1000
+</code></pre>
+
+<p>不会生成一千个字符串的副本，甚至可以指向同一个字符串的一千个指针。它存储为短字符串和重复计数，并且VM字符串函数知道如何在具有重复子字符串的字符串上有效地操作。很聪明，对吧？制作一亿份; RAM的使用率几乎没有变化</p>
+
+<p>我不会试图在这里用Perl 6卖给你 - 说实话，我仍然不完全理解这种语言 - 但是花了几天时间戳它的运行时间，我会告诉你虚拟机是一个有希望的系统工作。顺便说一句，MoarVM是Perl 6堆栈的一个相对较新的部分，已经取代了ParrotVM，这应该是运行所有脚本语言的东西; MoarVM更加专注于运行Perl 6，看起来是未来更强大的基础。</p>
+
+<p>如果您致力于实现编程语言，请在周日下午查看MoarVM代码;我怀疑即使是硬化的VM黑客也可以从其调度程序和字符串处理中学到至少一些东西。如果你正在编制一个编程语言列表来试试，那么你的未来会帮自己一个忙，并把Perl 6放在菜单上。我不能告诉你这种语言是否符合你的口味，但我可以告诉你，这位厨师曾经很有名，而且厨房里有所需的所有成分，可以制作出非常特别的东西。</p>
+
+<h2 id="笔记">笔记</h2>
+
+<p>实际上，如果您在Rakudo Star 2017.07之前使用Perl 6版本，该程序将不会输出任何内容;之前的缓存错误导致$ * THREAD.id报告过时的值。</p>
+
+<p>对于好奇：Go切换I / O，消息传递和函数调用的上下文。 Erlang VM在I / O，消息传递和每4,000个VM指令上切换上下文。 MoarVM在对等待的调用上切换上下文，其中包括消息传递和异步I / O承诺。 Nginx和Node.js永远不会切换上下文，这就是为什么所有回调都是必要的。</p>
+
+<p>字符串长度限制为232，所以不要对此功能太疯狂。此外，Perl 6的正则表达式/语法引擎似乎在匹配之前将所有内容展平，因此您还没有获得压缩表示的全部好处。如果您正在寻找项目创意&hellip;&hellip;</p>
+
+<p>你正在阅读 evanmiller.org，这是一本随机收集的数学，技术和思考。如果您喜欢这个，您可能也会喜欢：</p>
+
+<ul>
+<li><a href="http://www.evanmiller.org/a-review-of-perl-6.html">Perl 6 评论</a></li>
+<li><a href="http://www.evanmiller.org/elixir-ram-and-the-template-of-doom.html">Elixir RAM和 Doom 模板</a></li>
+<li><a href="http://www.evanmiller.org/you-cant-dig-upwards.html">你无法向上挖掘</a></li>
+<li><a href="http://www.evanmiller.org/why-im-betting-on-julia.html">我为什么押注 Julia</a></li>
+</ul>
 
 
         
@@ -249,7 +323,7 @@ if (!doNotTrack) {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-07-06-perl6%E6%A6%82%E8%A7%88/" data-toggle="tooltip" data-placement="top" title="Perl6概览">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-07-06-perl6%E6%A6%82%E8%A7%88/" data-toggle="tooltip" data-placement="top" title="Perl 6 概览">&larr; Previous Post</a>
             </li>
           
           
