@@ -201,6 +201,47 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-14-cro-http-test/">
+                <h2 class="post-title">Cro Http Test</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 14, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (351 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Cro::HTTP::Test 原则上可以通过使用 Cro::HTTP::Server托管应用程序, 使用 Cro::HTTP::Client向其发出请求, 并使用标准 Test 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：
+ 为发出测试请求和检查结果提供更方便的 API 跳过网络并将 Cro::TCP 对象从客户端管道传递到服务器管道, 反之亦然  基本示例 给定模块 MyService::Routes, 如下所示：
+sub routes() is export { route { get -&gt; { content 'text/plain', 'Nothing to see here'; } post -&gt; 'add' { request-body 'application-json' =&gt; -&gt; (:$x!, :$y!) { content 'application/json', { :result($x + $y) }; } } } }  我们可以像这样编写测试：
+use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get('/'), status =&gt; 200, content-type =&gt; 'text/plain', body =&gt; /nothing/; test-given '/add', { test post(json =&gt; { :x(37), :y(5) }), status =&gt; 200, json =&gt; { :result(42) }; test post(json =&gt; { :x(37) }), status =&gt; 400; test get(json =&gt; { :x(37) }), status =&gt; 405; } } done-testing;  设置要测试的服务 test-service 函数有两个候选者。
+                  <a href="https://ohmysummer.github.io/post/2018-07-14-cro-http-test/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/cro/">Cro</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-04-16-cro-http-client/">
                 <h2 class="post-title">Cro::HTTP::Client</h2>
 

@@ -201,6 +201,50 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-12-11-perl-6-%E7%9A%84-setty-%E5%92%8C-baggy-%E7%B1%BB%E5%9E%8B/">
+                <h2 class="post-title">Perl 6 中的 Setty 和 Baggy 类型</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 11, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (765 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  有一个很常见的计数场景。比如说计算 DNA 中各个碱基的个数:
+my %counts; %counts{$_}++ for 'AGTCAGTCAGTCTTTCCCAAAAT'.comb; say %counts&lt;A T G C&gt;; # (7 7 3 6)  创建一个哈希。对于每一个你想计数的东西, 每遇到一次就在那个哈希中加 1。所以有什么问题？
+Perl 6 通常有特定的更合适的类型来做这种操作; 例如,Bag 类型：
+'AGTCAGTCAGTCTTTCCCAAAAT'.comb.Bag&lt;A T G C&gt;.say; # (7 7 3 6)  我们来说说这些类型还有那些时髦的运算符！
+注意 Unicode 我将在这篇文章中使用花哨的 Unicode 版本的运算符和符号,因为它们看起来很纯。 然而, 他们都有我们称之为Texas的等同物, 你可以改用它们。
+准备. Set. 走起 这些类型中最简单的就是 Set。 它将仅保存每个项目之一, 因此如果您有多个相同的对象, 那么重复项将被丢弃:
+say set 1, 2, 2, &quot;foo&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;b&quot;; # OUTPUT: set(a, foo, b, 1, 2)  集合运算符是强制的, 因此我们不需要显式地创建集合; 他们会为我们做：
+                  <a href="https://ohmysummer.github.io/post/2016-12-11-perl-6-%E7%9A%84-setty-%E5%92%8C-baggy-%E7%B1%BB%E5%9E%8B/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/setty/">Setty</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-11-01-perl6-grammar%E4%B9%8B%E5%88%86%E5%89%B2%E7%BB%93%E6%9E%84%E5%8C%96%E6%96%87%E6%9C%AC/">
                 <h2 class="post-title">Perl 6 Grammar 之分割结构化文本</h2>
 
@@ -596,48 +640,6 @@ class X::IO::NotADirectory does X::IO is export { has $.path; method message { &
                     <a href="https://ohmysummer.github.io//tags/block/">Block</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/%E9%80%92%E5%BD%92/">递归</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84block/">
-                <h2 class="post-title">Perl 6 中的 Block</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 19, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (174 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 中的 Block class Block is Code { }  Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
-如果没有显式的签名或占位符参数，那么 Block 会把 $_ 作为位置参数：
-my $block = { uc $_; }; say $block.WHAT; # (Block) say $block('hello'); # HELLO  Block 和 -&gt; 或 &lt;-&gt; 之间还可以拥有签名:
-my $add = -&gt; $a, $b { $a + $b }; say $add(38, 4); # 42  如果用 &lt;-&gt; 引入签名, 那么参数默认标记为 rw:
-my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) }; my ($a, $b) = (2, 4); $swap($a, $b); say $a; # 4  类型不是 Routine（它是 Block 的子类）的 Blocks 对于 return是透明的。
-                  <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84block/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/block/">Block</a>&nbsp;
                   
                 </div>
               

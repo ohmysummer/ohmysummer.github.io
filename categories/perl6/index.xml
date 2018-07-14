@@ -6,10 +6,22 @@
     <description>Recent content in Perl6 on Young For Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 08 Jul 2018 16:11:52 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 14 Jul 2018 17:14:59 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/categories/perl6/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Cro Http Test</title>
+      <link>https://ohmysummer.github.io/post/2018-07-14-cro-http-test/</link>
+      <pubDate>Sat, 14 Jul 2018 17:14:59 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-07-14-cro-http-test/</guid>
+      <description>Cro::HTTP::Test 原则上可以通过使用 Cro::HTTP::Server托管应用程序, 使用 Cro::HTTP::Client向其发出请求, 并使用标准 Test 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：
+ 为发出测试请求和检查结果提供更方便的 API 跳过网络并将 Cro::TCP 对象从客户端管道传递到服务器管道, 反之亦然  基本示例 给定模块 MyService::Routes, 如下所示：
+sub routes() is export { route { get -&amp;gt; { content &#39;text/plain&#39;, &#39;Nothing to see here&#39;; } post -&amp;gt; &#39;add&#39; { request-body &#39;application-json&#39; =&amp;gt; -&amp;gt; (:$x!, :$y!) { content &#39;application/json&#39;, { :result($x + $y) }; } } } }  我们可以像这样编写测试：
+use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#39;/&#39;), status =&amp;gt; 200, content-type =&amp;gt; &#39;text/plain&#39;, body =&amp;gt; /nothing/; test-given &#39;/add&#39;, { test post(json =&amp;gt; { :x(37), :y(5) }), status =&amp;gt; 200, json =&amp;gt; { :result(42) }; test post(json =&amp;gt; { :x(37) }), status =&amp;gt; 400; test get(json =&amp;gt; { :x(37) }), status =&amp;gt; 405; } } done-testing;  设置要测试的服务 test-service 函数有两个候选者。</description>
+    </item>
     
     <item>
       <title>Class Channel</title>

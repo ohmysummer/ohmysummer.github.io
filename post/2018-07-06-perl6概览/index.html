@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 15 minutes (3118 words)
+  <i class="fa fa-clock-o"></i> 16 minutes (3239 words)
   
   
 </span>
@@ -413,22 +413,22 @@ True
 
 <p>我非常兴奋地阅读 Perl 6 的特性 - 事实上, 除了病态的好奇之外, 我被 Perl 6 吸引的最初原因是语言中包含了 Grammar。简化 grammar 的好方法是重构正则表达式, 例如：</p>
 
-<pre><code class="language-perl6">my regex sex { &quot;Male&quot; || &quot;Female&quot; };
-my regex species { :i &quot;cat&quot; || &quot;dog&quot; };
+<pre><code class="language-perl6">my regex sex     { &quot;Male&quot;   || &quot;Female&quot; };
+my regex species { :i &quot;cat&quot; || &quot;dog&quot;    };
 
 if &quot;Male CAT&quot; ~~ /&lt;sex&gt; \s &lt;species&gt;/ {
-    say &quot;Sex: &quot; ~ $/&lt;sex&gt;;
+    say &quot;Sex: &quot;     ~ $/&lt;sex&gt;;
     say &quot;Species: &quot; ~ $/&lt;species&gt;.lc;
 }
 </code></pre>
 
-<p>（Tilde是Perl 6的字符串连接运算符; double-tilde是“智能匹配”, 在此上下文中应用正则表达式。）</p>
+<p>(波浪号是 Perl 6 的字符串连接操作符; 双波浪号是&rdquo;智能匹配&rdquo;, 在此上下文中应用正则表达式。)</p>
 
-<p>接下来, 你可以将正则表达式组合成一个语法块, 提供一个名为TOP的特殊正则表达式, 指示解析应该从哪里开始：</p>
+<p>接下来, 你可以将正则表达式组合成一个 grammar 块, 提供一个名为 <code>TOP</code> 的特殊正则表达式, 它指示解析应该从哪里开始：</p>
 
 <pre><code class="language-perl6">grammar Animal {
-    regex sex { &quot;Male&quot; || &quot;Female&quot; }
-    regex species { :i &quot;cat&quot; || &quot;dog&quot; }
+    regex sex     { &quot;Male&quot;   || &quot;Female&quot; }
+    regex species { :i &quot;cat&quot; || &quot;dog&quot;    }
 
     regex TOP {
         &lt;sex&gt; \s &lt;species&gt;
@@ -436,41 +436,41 @@ if &quot;Male CAT&quot; ~~ /&lt;sex&gt; \s &lt;species&gt;/ {
 }
 
 if my $result = Animal.parse(&quot;Male CAT&quot;) {
-    say &quot;Sex: &quot; ~ $result&lt;sex&gt;;
+    say &quot;Sex: &quot;     ~ $result&lt;sex&gt;;
     say &quot;Species: &quot; ~ $result&lt;species&gt;;
 }
 </code></pre>
 
-<p>因为命名的正则表达式（或规则）可以相互引用, 所以Perl 6语法引擎可以用于构建递归下降解析器。我使用Ragel进行了许多解析任务, 所以我喜欢有一种Ragel-ish内置语言的想法 - 但我担心我不会很快放弃Ragel, 也不会迁移到Perl 6, 至少不是因为它的语法引擎。</p>
+<p>因为命名正则表达式（或 rules）可以相互引用, 所以 Perl 6 grammar 引擎可以用于构建递归下降解析器。我使用 Ragel 进行了许多解析任务, 所以我喜欢有一种Ragel-ish内置语言的想法 - 但我担心我不会很快放弃 Ragel, 也不会迁移到 Perl 6, 至少不是因为它的 grammar 引擎。</p>
 
-<p>Perl 6的语法引擎的问题 - 也许这个缺点可以在该语言的未来版本中解决 - 是如果解析因任何原因失败, 则解析方法只返回Nil。没有迹象表明发生故障的地方;因此, 对于任何类型的非平凡输入, 语法都是调试的真正痛苦。一个错位的角色会杀死整个解析, 而验尸官的报告是空白的。</p>
+<p>Perl 6 的 grammar 引擎的问题 - 也许这个缺点可以在该语言的未来版本中解决 - 是如果解析因任何原因失败, 则解析方法只返回 <code>Nil</code>。没有迹象表明发生故障的地方;因此, 对于任何类型的非平凡输入,  调试 grammar 都会很痛苦。一个放错位置的字符会杀死整个解析, 而验尸官的报告是确是空白的。</p>
 
-<p>Perl 6编译器是使用Perl 6语法引擎编写的, 所以我想知道Perl 6解析器如何产生其行号和错误消息。我开始探索语言的语法文件, 就像一个孩子在他父母的床头柜上掠过, 我很遗憾我曾经有过这个想法。</p>
+<p>Perl 6 编译器是使用 Perl 6 grammar 引擎编写的, 所以我想知道 Perl 6 解析器如何产生其行号和错误消息。我开始探索语言的 grammar 文件, 就像一个孩子从他父母的床头柜上掠过, 我很遗憾我曾经有过这个想法。</p>
 
-<p>Perl 6语法文件是混合语法, 代码和错误消息的泡沫派对, 这已经足够糟糕了, 但这里是最重要的：Perl 6语法文件中的大多数规则都有一个额外的条件, 而不是匹配的东西, 抛出异常, 异常处理程序选择解析器的内部状态, 以确定在抛出异常之前处理了多少输入。它的工作原理, 但如果你想要的只是一些行号, 那么这是一种复制的技术。传统的解析器生成器在处理非匹配输入方面做得更好。</p>
+<p>Perl 6 grammar 文件是混合了 grammar, 代码和错误消息的泡沫派对, 这已经足够糟糕了, 但这里是最重要的：Perl 6 grammar 文件中的大多数规则都有一个额外的条件, 而不是匹配的东西, 抛出异常, 异常处理程序选择解析器的内部状态, 以确定在抛出异常之前处理了多少输入。它的工作原理, 但如果你想要的只是一些行号, 那么这是一种复制的技术。传统的解析器生成器在处理非匹配输入方面做得更好。</p>
 
-<p>这个缺点部分解释了为什么如果你的源代码中存在语法错误, Perl 6的错误消息有时会无用。 Perl 6的许多错误消息都很有用, 但是例如, 如果你忘记关闭引号, Perl 6会告诉你文件的最后一行有错误 - 当然错误更可能在附近打开报价, 可以是文件中的任何位置。祝你好运, 因为Perl 6的异常抛出解析器提供了一些线索。</p>
+<p>这个缺点部分解释了为什么如果你的源代码中存在语法错误, Perl 6 的错误消息有时会无用。 Perl 6 的许多错误消息都很有用, 但是例如, 如果你忘记关闭引号, Perl 6 会告诉你文件的最后一行有错误 - 当然错误更可能在附近打开报价, 可以是文件中的任何位置。祝你好运, 因为 Perl 6 的异常抛出解析器提供了一些线索。</p>
 
-<p>作为一个长期的Ragel瘾君子, 我真的很想要Perl 6的语法引擎, 但缺乏合适的故障处理意味着我不能认可它, 除非作为一个可重构的正则表达式机器。例如, Perl 6可能是一个有趣的新编程语言原型平台, 但是只要看一下Perl 6语法文件, 你就会想要关闭抽屉并回到更无辜的时间。</p>
+<p>作为一个长期的 Ragel 瘾君子, 我真的很想要 Perl 6 的 grammar 引擎, 但缺乏合适的故障处理意味着我不能认可它, 除非作为一个可重构的正则表达式机器。例如, Perl 6 可能是一个有趣的新编程语言原型平台, 但是只要看一下 Perl 6 的 grammar 文件, 你就会想要关闭抽屉并回到更无辜的时间。</p>
 
 <h2 id="关于标识符的注释">关于标识符的注释</h2>
 
-<p>让我们解决一些问题：Perl 6标识符可以包含破折号。</p>
+<p>让我们解决一些问题：Perl 6 标识符可以包含破折号。</p>
 
 <pre><code class="language-perl6">$why-hello-there = &quot;Why, hello there!&quot;;
 </code></pre>
 
-<p>Perl 6ers称之为“烤肉串”;我被告知有良好的权威, Lispers使用相同的案例约定, 但他们从未真正拥有与肉类相关的名称。</p>
+<p>Perl 6ers 称之为“烤肉串”; 我被告知有良好的权威, Lispers 使用相同的案例约定, 但他们从未真正拥有与肉类相关的名称。</p>
 
-<p>Kebab案例是Perl 6标准库中的首选案例约定, 包括函数和变量名称（例如is-prime（$ a-big-number））。因为Perl 6中的变量几乎总是以sigil（美元符号, 符号或百分号）开头, 所以约定通常不会对减法操作产生任何歧义。因此, 对于Perl 6而言, 这并不是一个糟糕的选择, 并且至少与Larry Wall对Unicode的赌注一致, 他的大胆愿景是, 有一天我们能够将连字符和减号作为单独的字符键入我们的计算机。</p>
+<p>Kebab 案例是 Perl 6 标准库中的首选案例约定, 包括函数和变量名称(例如 <code>is-prime($a-big-number)</code>)。因为 Perl 6 中的变量几乎总是以符号(美元符号, @符号或百分号)开头, 所以该约定通常不会对减法操作产生任何歧义。因此, 对于 Perl 6 而言, 这并不是一个糟糕的选择, 并且至少与 Larry Wall 对 Unicode 的赌注一致, 他的大胆愿景是, 有一天我们能够将连字符和减号作为单独的字符键入我们的计算机。</p>
 
-<p>我展示Perl 6的大多数程序员都会立刻在烤肉盒的情况下退缩, 好像有人肉挂在上面。我个人长得喜欢它。它为Perl 6代码提供了一个独特的视觉识别屏幕, 即使你不喜欢审美, 你也不得不承认它在Shift手指上比CamelCase或下划线更容易。</p>
+<p>我展示 Perl 6 的大多数程序员都会立刻在烤肉盒的情况下退缩, 好像有人肉挂在上面。我个人长得喜欢它。它为 Perl 6 代码提供了一个独特的视觉识别屏幕, 即使你不喜欢审美, 你也不得不承认它在 Shift 手指上比CamelCase 或下划线更容易。</p>
 
-<p>当然, 对你的左小指的健康有任何有益的影响可能会被Perl 6的$ @％＆冲走！变量sigils。</p>
+<p>当然, 对你的左小指的健康有任何有益的影响可能会被 Perl 6 的 $@%&amp;! 变量符号。</p>
 
 <h2 id="数组和散列">数组和散列</h2>
 
-<p>Perl 5 有数组, 用 <code>@</code> 表示, 用整数索引, 哈希, 前面是 <code>%</code>, 用字符串作为键;在这些块中, Perl 教堂建成了。</p>
+<p>Perl 5 有数组, 用 <code>@</code> 表示, 用整数索引, 散列, 前面是 <code>%</code>, 用字符串作为键;在这些块中, Perl 教堂建成了。</p>
 
 <p>Perl 6 具有相同的两个数据结构, 但有许多修改。一个明显的语法变化是 <code>$array[0]</code> 现在写成 <code>@array[0]</code>, 也就是说, 值访问使用数据结构的符号（@符号或百分号）, 而不是标量符号（美元符号）。</p>
 
@@ -480,14 +480,14 @@ if my $result = Animal.parse(&quot;Male CAT&quot;) {
 my Str %hash;
 </code></pre>
 
-<p>声明一个只存储整数的数组, 以及一个只存储字符串的哈希。默认情况下, 散列键是字符串, 因此你无需对它们进行参数化。</p>
+<p>声明一个只存储整数的数组, 以及一个只存储字符串的散列。默认情况下, 散列键是字符串, 因此你无需对它们进行参数化。</p>
 
 <p>字面值数组用方括号写成：</p>
 
 <pre><code class="language-perl6">@array = [99, 100, 101];
 </code></pre>
 
-<p>字面值哈希可以用几种不同的方式编写。以下是等效的：</p>
+<p>字面值散列可以用几种不同的方式编写。以下是等效的：</p>
 
 <pre><code class="language-perl6">%( minutes =&gt; 3, seconds =&gt; 45 )
 %( &quot;minutes&quot; =&gt; 3, &quot;seconds&quot; =&gt; 45 )
@@ -496,42 +496,42 @@ my Str %hash;
 %( :3minutes, :45seconds )
 </code></pre>
 
-<p>最后一种形式感觉就像一个黑客, 但我想这比 Rails 方法的菠萝倒置本体更好, 如 <code>3.minutes</code> 或 <code>45.seconds</code>。</p>
+<p>最后一种形式感觉就像一个 hack, 但我想这比  <code>3.minutes</code> 或 <code>45.seconds</code> 这样的 Rails 方法的菠萝倒置本体更好。</p>
 
-<p>在构造散列时, 可以使用花括号代替 <code>%(...)</code>, 也就是说, 除非大括号包含默认变量$ _, 在这种情况下, Perl 6会混淆并认为正在声明一个块。由于这个原因, 文档不鼓励使用哈希 - 但是当Perl 6打印哈希时, 大括号是默认表示, 所以我得到关于使用什么的混合消息。在Perl的传统中, 确实有不止一种方法可以做到, 但在这种情况下, 我仍然在寻找一个令人满意的解释为什么。在我看来, Perl 6应该只支持一个周围的哈希语法, 禁止另一个, 并保存自己无数的StackOverflow问题标记为#newbie。</p>
+<p>在构造散列时, 可以使用花括号代替 <code>%(...)</code>, 也就是说, 除非花括号包含默认变量 <code>$_</code>, 在这种情况下, Perl 6 会变得困惑并认为正在声明一个块。由于这个原因, 文档不鼓励使用花括号创建散列 - 但是当 Perl 6 打印散列时, 花括号是默认表示, 所以我得到关于使用什么的混合消息。在 Perl 的传统中, 确实有不止一种方法可以做到, 但在这种情况下, 我仍然在寻找一个令人满意的解释为什么。在我看来, Perl 6 应该只支持一个周围的散列语法, 禁止另一个, 并省下自己无数的 StackOverflow 问题标记为 #newbie。</p>
 
-<p>哈希成员可以作为％hash <key>或％hash {“key”}访问。一个可爱的功能是哈希可以查找键的数组, 因此％hash <key1 key2>返回“key1”和“key2”的值。</p>
+<p>散列成员可以作为 <code>%hash&lt;key&gt;</code> 或 <code>%hash{&quot;key&quot;}</code> 访问。一个可爱的功能是散列可以查找键的数组, 因此 <code>%hash&lt;key1 key2&gt;</code> 返回 &ldquo;key1&rdquo; 和 &ldquo;key2&rdquo; 的值。</p>
 
-<p>如果你对字符串键不满意, 则可以在大括号内声明不同类型的键：</p>
+<p>如果你对字符串键不满意, 则可以在花括号内声明不同类型的键：</p>
 
 <pre><code class="language-perl6">my %hash{Int};
 </code></pre>
 
-<p>或者创建一个由带有冒号前缀的任意对象键入的哈希：</p>
+<p>或者创建一个由带有冒号前缀的任意对象键入的散列：</p>
 
 <pre><code class="language-perl6">my %hash := :{ 100 =&gt; &quot;One hundred&quot;,
                200 =&gt; &quot;Two hundred&quot;,
                $(pi) =&gt; &quot;Three point one four one five nine&quot; }
 </code></pre>
 
-<p>对于记录, 这是创建对象哈希的唯一文字语法;奇怪的$ _禁令也适用于此。并注意上面的$（）语法, 必须防止Perl 6将pi解释为字符串。对于Perl 6比Perl 5更加一致的所有言论, 肯定有很多小规则。</p>
+<p>对于记录, 这是创建对象散列的唯一字面语法;奇怪的 <code>$_</code> 禁令也适用于此。并注意上面的 <code>$()</code> 语法, 必须防止 Perl 6 将 <code>pi</code> 解释为字符串。关于 Perl 6 比 Perl 5 更加一致的所有言论, 肯定有很多小规则。</p>
 
 <h2 id="列表">列表</h2>
 
-<p>从技术上讲, Perl 5有第三个数据结构, 即列表。列表可以分配给数组或散列 - 列表值用逗号分隔并用括号括起来 - 但它们本身是不可变的, 并且不能显式绑定到变量。</p>
+<p>从技术上讲, Perl 5 有第三个数据结构, 即列表。列表可以赋值给数组或散列 - 列表的值用逗号分隔并用圆括号括起来 - 但它们本身是不可变的, 并且不能显式绑定到变量。</p>
 
-<p>在Perl 6中列表仍然存在（并且是不可变的）, 但与先前的语言不同, Perl 6允许你使用bind-to（：=）运算符将列表绑定到变量以供以后重用：</p>
+<p>列表仍然存在于 Perl 6 中（并且是不可变的）, 但与先前的语言不同, Perl 6 允许你使用 bind-to(<code>:=</code>)运算符将列表绑定到变量以供以后重用：</p>
 
 <pre><code class="language-perl6">my @list := (1, &quot;One&quot;, pi);
 </code></pre>
 
-<p>分配给列表中的项可能会导致错误：</p>
+<p>给列表中的项(item)赋值可能会导致错误：</p>
 
 <pre><code class="language-perl6">@list[0] = 2
 # Cannot modify an immutable Int (1)
 </code></pre>
 
-<p>请注意, 此错误消息表示你无法修改Int, 而不能修改List。如果列表包含变量, 则可以修改变量的内容, 而无需更改实际列表（仍包含变量）：</p>
+<p>请注意, 此错误消息表示你无法修改 Int, 而不是不能修改 List。如果列表包含变量, 则可以修改变量的内容, 而无需更改实际的列表（仍包含变量）：</p>
 
 <pre><code class="language-perl6">my $value = 10;
 my @list2 := (1, 2, $value);
@@ -544,7 +544,7 @@ say @list2; # (1 2 3.14159265358979)
 say $value; # 3.14159265358979
 </code></pre>
 
-<p>很奇怪, 是吗？从某种意义上说, 因为列表本身是不可变的, 所以值赋值只是重新路由到特定的列表成员。通过这种方式, 列表分配有点自然地遵循：</p>
+<p>很奇怪, 是吗？从某种意义上说, 因为列表本身是不可变的, 所以值赋值只是重新路由到特定的列表成员。通过这种方式, 列表赋值有点自然地遵循：</p>
 
 <pre><code class="language-perl6">my $value1 = 1;
 my $value2 = 2;
@@ -552,7 +552,7 @@ my $value2 = 2;
 ($value1, $value2) = ($value2, $value1);
 </code></pre>
 
-<p>不要太兴奋, 因为这个任务不会像你期望的那样表现：</p>
+<p>但是不要太兴奋, 因为这个赋值不会像你期望的那样表现：</p>
 
 <pre><code class="language-perl6">my $value1 = 1;
 my $value2 = 2;
@@ -561,19 +561,19 @@ my $value3 = 3;
 (($value1, $value2), $value3) = ((100, 200), 300);
 </code></pre>
 
-<p>由于我不清楚的原因, 在分配之前左侧是扁平的, 并且相当于：</p>
+<p>由于我不清楚的原因, 在赋值之前左侧是扁平的, 并且相当于：</p>
 
 <pre><code class="language-perl6">($value1, $value2, $value3) = ((100, 200), 300);
 </code></pre>
 
-<p>因此, 在两种情况下, $ value1被分配（100,200）, $ value2获得300, $ value3什么都没有。有一个单独的冒号前缀用于进行解构赋值（请注意, 在此用法中需要bind-to：=）：</p>
+<p>因此, 在两种情况下, <code>$value1</code> 被赋值为 (100,200), <code>$value2</code> 被赋值为 300, <code>$value3</code> 什么都没有得到。有一个单独的冒号前缀用于进行解构赋值（请注意, 在此用法中需要 bind-to <code>:=</code>）：</p>
 
 <pre><code class="language-perl6">:(($value1, $value2), $value3) := ((100, 200), 300);
 </code></pre>
 
-<p>在上面的行中, $ value1得到100, $ value2是200, $ value3成为300.我不理解在列表赋值和完全解构赋值之间进行语法区分的逻辑 - 并且静默地展平左侧列表结构第一种情况 - 但你有它。</p>
+<p>在上面的行中, <code>$value1</code> 得到 100, <code>$value2</code> 是 200, <code>$value3</code> 成为 300. 我不理解在列表赋值和完全解构赋值之间进行语法区分的逻辑 - 并且第一种情况静默地展平左侧列表结构 - 但你有它。</p>
 
-<p>列表可以包含其他列表, 还包含数组和哈希。数组和散列可以包含数组和散列（这仍然是Perl）, 也可以包含列表。</p>
+<p>列表可以包含其他列表, 还包含数组和散列。数组和散列可以包含数组和散列（这仍然是 Perl）, 也可以包含列表。</p>
 
 <p>关于列表, 我要注意的最后一件事是它们可以使用特殊的管道运算符展开：</p>
 
@@ -583,7 +583,7 @@ say (1,  @list, 5); # &quot;(1 (2 3 4) 5)&quot;
 say (1, |@list, 5); # &quot;(1 2 3 4 5)&quot;
 </code></pre>
 
-<p>这在调用函数时会派上用场。但是在我们谈论困扰我的事情后, 我们会谈到这一点。</p>
+<p>这在调用函数时会派上用场。但是在我们还是在谈论困扰我的事情后, 再谈到这一点。</p>
 
 <h2 id="itemization">Itemization</h2>
 
@@ -604,9 +604,9 @@ say @array[0].VAR.WHAT; # &quot;(Scalar)&quot;
 say @list[0].VAR.WHAT;  # &quot;(Int)&quot;
 </code></pre>
 
-<p>数组有一个额外的, 隐藏的间接层, 文档称之为逐项化(itemization)。与列表不同, 该数组实际上充满了透明容器, 这些容器指向实际值, 并且可以通过 <code>.VAR</code> 方法访问。赋值给数组成员确实修改了容器, 而修改列表成员则会操作项目(item)本身。</p>
+<p>数组有一个额外的, 隐藏的间接层, 文档称之为逐项化(itemization)。与列表不同, 该数组实际上充满了透明容器, 这些容器指向实际值, 并且可以通过 <code>.VAR</code> 方法访问。赋值给数组成员确实修改了容器, 而修改列表成员则会操作项(item)本身。</p>
 
-<p>但是, 列表也可以使用特殊的美元函数 <code>$(...)</code> 在每个成员的基础上拥有这一间接层。你仍然无法修改列表, 但已逐项清除列表展平操作。</p>
+<p>但是, 列表也可以使用特殊的美元函数 <code>$(...)</code> 在每个成员的基础上拥有这一间接层。你仍然无法修改列表, 但项化(itemized)的成员免于了列表展平操作。</p>
 
 <p>分项是已经很复杂的语言的一个令人困惑的部分 - 大多数情况下, 方法直接通过容器, 但是因为列表的逐项列表成员没有被 <code>List.flat</code> 展平, 当你从函数返回一个嵌套列表时, 你是根据你希望调用者在返回值上调用 <code>List.flat</code> 时期望调用者所期望的内容, 期望知道哪些成员是逐项列出的, 哪些不是。</p>
 

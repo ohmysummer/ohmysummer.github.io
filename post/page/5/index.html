@@ -201,6 +201,50 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-08-perl-6-grammar%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7%E5%AF%B9%E5%84%BF/">
+                <h2 class="post-title">Perl 6 Grammar 中的冒号对儿</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Colonpair in Perl 6’s Grammar, part 1
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 8, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (268 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  欢迎来到这个系列的第 50 篇文章!
+今天, 我们将讨论一个小的语法结构, 然而就 Grammar 来说这是非常复杂的。首先让我们看看整个 colonpair token:
+token colonpair { :my $*key; :my $*value; ':' :dba('colon pair') [ | '!' [ &lt;identifier&gt; || &lt;.panic: &quot;Malformed False pair; expected identifier&quot;&gt; ] [ &lt;[ \[ \( \&lt; \{ ]&gt; { $/.typed_panic('X::Syntax::NegatedPair', key =&gt; ~$&lt;identifier&gt;) } ]? { $*key := $&lt;identifier&gt;.Str; $*value := 0 } | $&lt;num&gt; = [\d+] &lt;identifier&gt; [ &lt;?before &lt;.[ \[ \( \&lt; \{ ]&gt;&gt; {} &lt;.
+                  <a href="https://ohmysummer.github.io/post/2018-02-08-perl-6-grammar%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7%E5%AF%B9%E5%84%BF/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-07-perl-6%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8Bbag/">
                 <h2 class="post-title">Perl 6 中的数据类型 Bag</h2>
 
@@ -633,50 +677,6 @@ Perl 6 是用 Perl 6 和 NQP（Not Quite Perl 6）语言编写的，这使得阅
 gist 和 perl gist 和 perl 方法返回对象的字符串表示形式：当变量被字符串化时隐式调用 gist，perl 应该直接调用。它适用于 Perl 6 中的任何对象，但这种行为当然应该定义在某处。他们在这里：
 Bool.^add_method('gist', my proto method gist(|) {*}); Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? 'True' !! 'False' }); Bool.^add_multi_method('gist', my multi method gist(Bool:U:) { '(Bool)' }); Bool.
                   <a href="https://ohmysummer.github.io/post/2017-12-22-exploring-the-bool-type-in-perl-6-part-1/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-22-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%8C%E5%A4%A9-perl-6.d%E7%9A%84%E7%89%B9%E6%80%A7/">
-                <h2 class="post-title">第二十二天-Perl 6.d 的特性</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 22 – Features of Perl 6.d
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 22, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (538 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 22 – Features of Perl 6.d 所以我们就是这样。 Rakudo Perl 6第一次正式发布两年后，或者更准确的说是6.c。自从马特奥茨从那时起就开始关注性能的提升之后，圣诞老人认为要对此进行对比，描述自那时起实施的6.d的新功能。因为有很多，圣诞老人不得不做出选择。
-在创建时调整对象 您创建的任何课程现在都可以使用TWEAK方法。在新的类的新实例的所有其他初始化完成之前，这个方法将被调用。一个简单的，有点人为的例子，其中一个类A有一个属性，默认值是42，但如果在创建对象时指定了默认值，它应该更改该值：
-class A { has $.value = 42; method TWEAK(:$value = 0) { # default prevents warning # change the attribute if the default value is specified $!value = 666 if $value == $!value; } } # no value specified, it gets the default attribute value dd A.new; # A.new(value =&gt; 42) # value specified, but it is not the default dd A.
-                  <a href="https://ohmysummer.github.io/post/2017-12-22-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%8C%E5%A4%A9-perl-6.d%E7%9A%84%E7%89%B9%E6%80%A7/" class="post-read-more">[Read More]</a>
                 
               </div>
 

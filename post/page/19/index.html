@@ -201,6 +201,48 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-01-01-perl-6-%E6%A0%B8%E5%BF%83%E9%AA%87%E5%AE%A2--%E8%AF%8D%E6%B3%95%E7%9A%84%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/">
+                <h2 class="post-title">Perl 6 核心骇客--词法的胡言乱语</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 1, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 8 minutes (1695 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 核心骇客: 词法的胡言乱语
+喜欢修复 Perl 6 编译器中的 bug? 这儿有一个great grammar bugglet: 当 „” 引号用在引起的用空白分割的单词列表构造器中时看起来好像不能工作:
+say „hello world”; .say for qww&lt;„hello world”&gt;; .say for qww&lt;&quot;hello world&quot;&gt;; # OUTPUT: # hello world # „hello # world” # hello world  ” 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 hello world。看起来像是一个待修复的有趣的 bug! 我们进去看看。
+你怎样拼写它? 事实上这段代码没能正确解析表明这是一个 grammar bug。大部分的 grammar 住在 src/Perl6/Grammar.nqp中, 但是在我们的手变脏之前, 让我们来解决我们应该查看什么。
+二进制 perl6 有一个 --target 命令行参数来接收其中之一的编译步骤并且会导致那个步骤的输出被产生出来。那儿有哪些步骤? 根据你正使用的后端它们也会有所不同, 但是你可以仅仅运行 perl6 --stagestats -e '' 把它们都打印出来:
+                  <a href="https://ohmysummer.github.io/post/2016-01-01-perl-6-%E6%A0%B8%E5%BF%83%E9%AA%87%E5%AE%A2--%E8%AF%8D%E6%B3%95%E7%9A%84%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-12-21-perl6intro-%E7%BF%BB%E8%AF%91/">
                 <h2 class="post-title">perl6intro 翻译</h2>
 
@@ -620,47 +662,6 @@ grammar Perl6 { # among other stuff: # token alpha 是一个预定义好的 rule
                     <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/proto/">proto</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-11-16-roles%E5%86%B2%E7%AA%81/">
-                <h2 class="post-title">roles冲突</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 16, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (303 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  学会了怎么创建类, 我们继续用它来构建我们的中心内容:
-class Hammer { method hammer($stuff) { say &quot;You hammer on $stuff. BAM BAM BAM!&quot;; } } class Gavel { method hammer($stuff) { say &quot;You hammer on $stuff. BAM BAM BAM!&quot;; } } class Mallet { method hammer($stuff) { say &quot;You hammer on $stuff. BAM BAM BAM!&quot;; } }  但是注意到了吗？ 这三个方法包含了同样的方法, 在类中重复了。我们必须那样做如果我们想让每个 Hammar、Gavel 和 Mallet 有能力击打的话。（并且那是合理的）。 但是遗憾的是我们不得不把那个方法一式三份。
-为什么遗憾？ 因为一方面在真实世界中, 方法并不是很彼此相似, 有一天你决定在 hammer 方法中更改某些东西, 并没有意识到这个方法在三个不同的地方&hellip; 这导致了一堆痛苦和难受。
-所以我们的新玩具, 类, 展现出了一个问题。我们想在每个类中重用 hammer 方法。一个新的概念, role 来拯救我们来了:
-                  <a href="https://ohmysummer.github.io/post/2015-11-16-roles%E5%86%B2%E7%AA%81/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/roles/">roles</a>&nbsp;
                   
                 </div>
               

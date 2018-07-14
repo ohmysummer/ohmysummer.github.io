@@ -201,6 +201,51 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-05-%E6%95%A3%E5%88%97%E7%9A%84%E6%95%A3%E5%88%97/">
+                <h2 class="post-title">散列的散列</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    a hash of hashes of numbers in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 5, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (192 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  如何在 Perl 6 中声明散列的数字散列？ 默认情况下，散列将所有键转换为字符串。当你的键是可能接近的数字时，会导致问题：
+&gt; my %h; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash %h = {&quot;0.333333&quot; =&gt; 2}  当然，这可以修复如下：
+&gt; my %h{Real}; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash[Any,Real] %h = (my Any %{Real} = 0.333333 =&gt; 2, &lt;1/3&gt; =&gt; 1)  但现在我需要散列的数字散列时，例如 { 1/3 =&gt; { 2/3 =&gt; 1, 0.666667 =&gt; 2 } }。
+&gt; my %h{Real}; %h{1/3}{2/3} = 1; %h{1/3}{0.666667} = 2; dd %h; Hash[Any,Real] %h = (my Any %{Real} = &lt;1/3&gt; =&gt; ${&quot;0.
+                  <a href="https://ohmysummer.github.io/post/2018-07-05-%E6%95%A3%E5%88%97%E7%9A%84%E6%95%A3%E5%88%97/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/hash/">Hash</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-06-19-perl-6-colon-pair/">
                 <h2 class="post-title">Perl 6 Colon Pair</h2>
 
@@ -607,54 +652,6 @@ use v6.c; my $dt = DateTime.new( year =&gt; 2015, month =&gt; 11, day =&gt; 21, 
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/datetime/">DateTime</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-04-27-perl-6%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/">
-                <h2 class="post-title">Awesome Async Interfaces with Perl 6</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    A tutorial for writing IRC bots with Perl 6
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 26, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1262 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  IRC::Client: Perl 6 Multi-Server IRC (or Awesome Async Interfaces with Perl 6) 我在 2015 年圣诞节编写了我的第一个 Perl 6 程序 - 一个新年 IRC 派对机器人工具。这项工作包括发布 IRC::Client 模块. 我从这个语言中找到了童年的乐趣并且在假期喝了不少酒, 结果就是这个模块差强人意。
-最近，我需要一个用于某些 Perl 6 bug 队列工作的工具，因此我决定花费一个周末，从头开始重新设计并重写这个模块。在过去的几个月中，有好几个人请求我这么做，所以我想我还会写一篇关于如何使用该模块的教程 - 作为一名主拖延者的道歉。如果你对 IRC 不感兴趣，我希望本教程将作为 Perl 6 中异步，非阻塞接口的一个通用示例。
-基础 要创建一个 IRC 机器人，实例化一个 IRC::Client 对象，给它一些基本信息，并调用 .run 方法。实现所需的所有功能，并将它们作为方法名称匹配要收听的事件的类，并通过 .plugins 属性传递。当发生 IRC 事件时，它会按照您指定的顺序传递给所有插件，如果某个插件要求它处理事件，则停止。
-这里有一个简单的 IRC 机器人，它可以响应在频道中发送的消息，通知和发送给它的私人消息。响应是 bot 收到的大写原始消息：
-use IRC::Client; .run with IRC::Client.new: :nick&lt;MahBot&gt; :host&lt;irc.freenode.net&gt; :channels&lt;#perl6&gt; :debug :plugins(class { method irc-to-me ($_) { .
-                  <a href="https://ohmysummer.github.io/post/2018-04-27-perl-6%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/irc/">IRC</a>&nbsp;
                   
                 </div>
               
