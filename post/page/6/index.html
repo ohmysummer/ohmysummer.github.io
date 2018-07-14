@@ -201,6 +201,52 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-22-exploring-the-bool-type-in-perl-6-part-1/">
+                <h2 class="post-title">Exploring the Bool type in Perl 6, part 1</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    探索 Perl 6 中的布尔值, 第一部分
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 22, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (195 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  今天，我们将使用 GitHub 上提供的 Rakudo 源代码挖掘 Bool 类型的内部。
+Perl 6 是用 Perl 6 和 NQP（Not Quite Perl 6）语言编写的，这使得阅读源代码变得相对容易。当然，有很多东西不容易理解，或者没有反映在 Perl 6 语言的公开文档中。到目前为止，您都无法在 Perl 6 书籍中找到深入的细节。无论如何，对 Perl 6 有一些中级的理解，这仍然是可能的。
+好的，回到 src/core/Bool.pm 文件。它以一些 BEGIN phasers 开始，它为 Bool 类添加了一些方法和 multi 方法。下一次我们将讨论元模型和类构造的细节。今天，对我们来说更有趣的是 Bool 类的方法在做什么。
+gist 和 perl gist 和 perl 方法返回对象的字符串表示形式：当变量被字符串化时隐式调用 gist，perl 应该直接调用。它适用于 Perl 6 中的任何对象，但这种行为当然应该定义在某处。他们在这里：
+Bool.^add_method('gist', my proto method gist(|) {*}); Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? 'True' !! 'False' }); Bool.^add_multi_method('gist', my multi method gist(Bool:U:) { '(Bool)' }); Bool.
+                  <a href="https://ohmysummer.github.io/post/2017-12-22-exploring-the-bool-type-in-perl-6-part-1/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-12-22-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%8C%E5%A4%A9-perl-6.d%E7%9A%84%E7%89%B9%E6%80%A7/">
                 <h2 class="post-title">第二十二天-Perl 6.d 的特性</h2>
 
@@ -646,54 +692,6 @@ Go和Perl 6的创造者受到安东尼霍尔爵士1978年的开创性工作“�
 $ perl6 web-spider.p6 [–domain=http://example.com]  简单的Perl 6域蜘蛛
 use HTML::Parser::XML; use XML::Document; use HTTP::UserAgent; sub MAIN(:$domain=&quot;http://www.perlmonks.org&quot;) { my $ua = HTTP::UserAgent.new; my %url_seen; my @urls=($domain); loop { my @promises; while ( @urls ) { my $url = @urls.
                   <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/">
-                <h2 class="post-title">第十四天-在 Perl 6 中构建和测试 Big Grammars</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    The Little Match Girl: Building and Testing Big Grammars in Perl 6
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 14, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (319 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  The Little Match Girl: Building and Testing Big Grammars in Perl 6 Perl 6 Grammars 很棒，但在项目中使用它们会是什么样呢？在圣诞节前和圣诞节后，我的经历是一个令人心酸的故事。你可以在这里找到版本库。我不是来自计算机科学背景，所以也许它看起来很简陋，但是当我学习 Perl 6 Grammars 时，这是我的困难和胜利。
-第一根火柴 就像卖火柴的小女孩一样，我们的故事发生在圣诞节前。卖火柴的小女孩的任务是在圣诞节前夕销售一捆火柴棍（实际上是新年，我确实回去读了那个故事。圣诞节更适合 Perl 6），而我的任务是从 Modelica 模型中提取注释渲染为矢量图形。现在，Modelica 是一个非常棒的面向对象的建模语言，除了提及其附录中包含一个具体语法部分的非常好的规范文档（pdf）之外，我将完全理解它。仔细阅读本节，我意识到“语法元符号”和“词法单位”看起来像我最近读过的一篇博客文章中的 Perl 6 Grammars，并且急于尝试。
-来自 Modelica 的示例具体语法：
-class-definition : [ encapsulated ] class-prefixes class-specifier  Perl 6 rule 的示例:
-rule class_definition { [&lt;|w&gt;'encapsulated'&lt;|w&gt;]? &lt;class_prefixes&gt; &lt;class_specifier&gt; }  这就像卖火柴的小女孩划第一颗火柴一样，第一次看到了一个超越她现实的奇妙世界。一个温暖的小炉子。然后它熄灭了。
-它非常接近，我把它放到了一个文本编辑器中，并且用一些 Perl 6 的东西替换了不是 Perl 6 的部分，以查看它是否会运行。它没有运行。我砍掉了它，我指出了不同的位来解决更小的块。无处不在的空白符号，正则表达式，标记，规则。我能够解析某些部分，其他部分神秘地没有起效。回顾过去，这一定很糟糕。与此同时，我们一起破解传统的正则表达式来提取注释，并将我的 Grammar 放在架子上。
-第二根火柴 不久之后，发布了 Grammar::Profiler 和 Grammar::Debugger，并且我受到启发，决定再试一试。我被授予了对我的规则出乎意料表现的很好的见解。我能够比以前更深入地理解 grammar。第二支火柴一直亮着，我有一场盛宴。然后它熄灭了。
-                  <a href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/" class="post-read-more">[Read More]</a>
                 
               </div>
 

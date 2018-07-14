@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Io Guide</title>
+  <meta property="og:title" content="Io Guide" />
+  <meta name="twitter:title" content="Io Guide" />
+  <meta name="description" content="基础知识 绝大多数常见的 IO 工作都是由 IO::Path 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
+在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 Proc 或 Proc::Async 类型，你还可以处理一个子类的 IO::Handle 在 IO::Pipe。
+最后，你有 IO::CatHandle ，以及 IO::Spec 及其子类，你很少直接使用它们。这些类为你提供了高级功能，例如将多个文件作为一个句柄进行操作，或者进行低级路径操作。
+除了所有这些类之外，Perl 6还提供了几个子程序，可以让你间接使用这些类。如果你喜欢函数式编程风格或Perl 6 单行程序，这些就派上用场了。
+虽然 IO::Socket 及其子类也与输入和输出有关，但本指南并未涵盖它们。
+路径导航 什么是 IO::Path？ 要将路径表示为文件或目录，请使用 IO::Path 类型。获取该类型对象的最简单方法是通过在 Str 上调用 .IO 方法将字符串强制为 IO 类型：
+say &#39;my-file.txt&#39;.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤»  看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
+say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤»  这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。">
+  <meta property="og:description" content="基础知识 绝大多数常见的 IO 工作都是由 IO::Path 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
+在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 Proc 或 Proc::Async 类型，你还可以处理一个子类的 IO::Handle 在 IO::Pipe。
+最后，你有 IO::CatHandle ，以及 IO::Spec 及其子类，你很少直接使用它们。这些类为你提供了高级功能，例如将多个文件作为一个句柄进行操作，或者进行低级路径操作。
+除了所有这些类之外，Perl 6还提供了几个子程序，可以让你间接使用这些类。如果你喜欢函数式编程风格或Perl 6 单行程序，这些就派上用场了。
+虽然 IO::Socket 及其子类也与输入和输出有关，但本指南并未涵盖它们。
+路径导航 什么是 IO::Path？ 要将路径表示为文件或目录，请使用 IO::Path 类型。获取该类型对象的最简单方法是通过在 Str 上调用 .IO 方法将字符串强制为 IO 类型：
+say &#39;my-file.txt&#39;.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤»  看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
+say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤»  这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。">
+  <meta name="twitter:description" content="基础知识 绝大多数常见的 IO 工作都是由 IO::Path 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
+在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 Proc …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-07-14-io-guide/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-14-io-guide/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Io Guide</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 14, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (441 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="基础知识">基础知识</h2>
+
+<p>绝大多数常见的 IO 工作都是由 <a href="https://docs.perl6.org/type/ IO::Path">IO::Path</a> 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。</p>
+
+<p>在幕后， <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a> 与 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handle</a> 一起使用 ; 如果你需要比 <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a> 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 <a href="https://docs.perl6.org/type/Proc">Proc</a> 或 <a href="https://docs.perl6.org/type/Proc::Async">Proc::Async</a> 类型，你还可以处理一个子类的 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handle</a> 在 <a href="https://docs.perl6.org/type/IO::Pipes">IO::Pipe</a>。</p>
+
+<p>最后，你有 <a href="https://docs.perl6.org/type/IO::CatHandle">IO::CatHandle</a> ，以及 <a href="https://docs.perl6.org/type/IO::Spec">IO::Spec</a> 及其子类，你很少直接使用它们。这些类为你提供了高级功能，例如将多个文件作为一个句柄进行操作，或者进行低级路径操作。</p>
+
+<p>除了所有这些类之外，Perl 6还提供了几个子程序，可以让你间接使用这些类。如果你喜欢函数式编程风格或Perl 6 单行程序，这些就派上用场了。</p>
+
+<p>虽然 <a href="https://docs.perl6.org/type/IO::Socket">IO::Socket</a> 及其子类也与输入和输出有关，但本指南并未涵盖它们。</p>
+
+<h2 id="路径导航">路径导航</h2>
+
+<h3 id="什么是-io-path">什么是 IO::Path？</h3>
+
+<p>要将路径表示为文件或目录，请使用 <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a> 类型。获取该类型对象的最简单方法是通过在 <a href="https://docs.perl6.org/type/Str">Str</a> 上调用 <a href="https://docs.perl6.org/routine/IO">.IO</a> 方法将字符串强制为 IO 类型：</p>
+
+<pre><code class="language-perl6">say 'my-file.txt'.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤» 
+</code></pre>
+
+<p>看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 <a href="https://docs.perl6.org/routine/perl">.perl</a> 方法看到它：</p>
+
+<pre><code class="language-perl6">say 'my-file.txt'.IO.perl;
+# OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤» 
+</code></pre>
+
+<p>这两个额外的属性 - <code>SPEC</code> 和 - <code>CWD</code> 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。</p>
+
+<p>这意味着无论你如何创建一个， <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a> 对象在技术上始终引用绝对路径。这就是它的 <a href="https://docs.perl6.org/routine/absolute">.absolute</a> 和 <a href="https://docs.perl6.org/routine/relative">.relative</a> 方法返回 <a href="https://docs.perl6.org/type/Str">Str</a> 对象的原因，它们是字符串化路径的正确方法。</p>
+
+<p>但是，不要急于字符串化任何东西。将路径作为 <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a> 对象传递。在路径上运行的所有例程都可以处理它们，因此不需要转换它们。</p>
+
+<h3 id="使用文件">使用文件</h3>
+
+<h4 id="写入文件">写入文件</h4>
+
+<h4 id="写入新内容">写入新内容</h4>
+
+<p>让我们制作一些文件并从中写入和读取数据！在 <a href="https://docs.perl6.org/routine/spurt">spurt</a> 和 <a href="https://docs.perl6.org/routine/slurp">slurp</a> 子里程以块儿的形式读写数据。除非你正在处理难以完全存储在内存中的非常大的文件，否则这两个例程都适合你。</p>
+
+<pre><code class="language-perl6">&quot;my-file.txt&quot;.IO.spurt: &quot;I ♥ Perl!&quot;;
+</code></pre>
+
+<p>上面的代码在当前目录中创建了一个名为 <code>my-file.txt</code> 的文件，然后将文本 <strong>I ♥ Perl!</strong> 写入其中。如果 Perl 6 是你的第一语言，请庆祝你的成就！尝试使用其他程序打开你创建的文件，以验证你写入的内容。如果你已经了解其他语言，你可能想知道本指南是否遗漏了处理编码或错误条件等问题。</p>
+
+<p>但是，这就是你需要的所有代码。默认情况下，字符串将以 <em>utf-8</em> 编码方式进行编码，并通过 <a href="https://docs.perl6.org/type/Failure">Failure</a> 机制处理错误：这些是你可以使用常规条件处理的异常。在这种情况下，我们会让所有潜在的 <a href="https://docs.perl6.org/type/Failure">Failures</a> 事件在调用之后陷入沉没，因此它们包含的任何<a href="https://docs.perl6.org/type/Exception">异常</a>都将被抛出。</p>
+
+<h4 id="附加内容">附加内容</h4>
+
+<p>如果你想为我们在上一节中创建的文件添加更多内容，你可以注意 <a href="https://docs.perl6.org/routine/spurt">spurt 文档</a>中提到的 <code>:append</code> 参数。但是，为了更好地控制，让我们自己使用 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handle</a> 来处理：</p>
+
+<pre><code class="language-perl6">my $fh = 'my-file.txt'.IO.open: :a;
+$fh.print: &quot;I count: &quot;;
+$fh.print: &quot;$_ &quot; for ^10;
+$fh.close;
+</code></pre>
+
+<p>该 <a href="https://docs.perl6.org/routine/open">.open</a> 方法调用打开我们的 <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a>，并返回一个 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handle</a>。我们将 <code>:a</code> 作为参数传递，表示我们想要以追加模式打开文件。</p>
+
+<p>在接下来的两行代码中，我们使用 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handl</a> 上常用的 <a href="https://docs.perl6.org/routine/print">.print</a> 方法打印一行包含 11 个文本（<em>I count</em> 字符串和 10 个数字）。请注意，<a href="https://docs.perl6.org/type/Failure">Failure</a> 机制再一次负责我们的所有错误检查。如果 <a href="https://docs.perl6.org/routine/open">.open</a> 失败，它将返回一个 <a href="https://docs.perl6.org/type/Failure">Failure</a>，当我们尝试在其上调用 <a href="https://docs.perl6.org/routine/print">.print</a> 方法时，它将抛出。</p>
+
+<p>最后，我们通过调用它上面的 <a href="https://docs.perl6.org/routine/close">.close</a> 方法来关闭 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handl</a>。这样做很重要，特别是在大型程序或处理大量文件的程序中，因为许多系统对程序可以同时打开的文件数量有限制。如果你没有关闭句柄，最终你将达到该限制并且 <a href="https://docs.perl6.org/routine/open">.open</a> 调用将失败。请注意，与其他语言不同，Perl 6 不使用引用计数，因此当离开定义它们的作用域时，文件句柄<strong>不会被关闭</strong>。只有当它们被垃圾回收并且未能关闭句柄时，它们才会被关闭，这可能会导致程序有机会在打开的句柄被垃圾回收之前达到文件限制。</p>
+
+<h4 id="从文件中读取">从文件中读取</h4>
+
+<h4 id="使用-io-path">使用 IO::Path</h4>
+
+<p>我们在前面的章节中已经看到，在文件中写东西是 Perl 6 中的单行代码。从它们中读取，同样容易：</p>
+
+<pre><code class="language-perl6">say 'my-file.txt'.IO.slurp;        # OUTPUT: «I ♥ Perl!␤» 
+say 'my-file.txt'.IO.slurp: :bin;  # OUTPUT: «Buf[uint8]:0x&lt;49 20 e2 99 a5 20 50 65 72 6c 21&gt;␤» 
+</code></pre>
+
+<p>该 <a href="https://docs.perl6.org/routine/slurp">.slurp</a> 方法读取文件的全部内容并将其作为单个 <a href="https://docs.perl6.org/type/Str">Str</a> 对象返回，如果请求二进制模式，则通过指定 <code>:bin</code> 命名参数将其作为 <a href="https://docs.perl6.org/type/Buf">Buf</a> 对象返回。</p>
+
+<p>由于 <a href="https://docs.perl6.org/routine/slurp">slurping</a> 将整个文件加载到内存中，因此不适合处理大文件。</p>
+
+<p>该 <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a> 类型提供了另外两种便捷方法：<a href="https://docs.perl6.org/type/IO::Path#method_words">.words</a> 与 <a href="https://docs.perl6.org/type/IO::Path#method_lines">.lines</a> 惰性地读取小块文件并返回<a href="https://docs.perl6.org/type/Seq">序列</a>对象是（默认）不保存已经消耗的值。</p>
+
+<p>这是一个示例，它在文本文件中查找提及 Perl 并将其打印出来的行。尽管文件本身太大而无法容纳到可用的 <a href="https://en.wikipedia.org/wiki/Random-access_memory">RAM</a> 中，但程序运行时不会出现任何问题，因为内容是以小块的形式处理的：</p>
+
+<pre><code class="language-perl6">.say for '500-PetaByte-File.txt'.IO.lines.grep: *.contains: 'Perl';
+</code></pre>
+
+<p>这是另一个打印文件中前 100 个单词的示例，而不是完全加载它：</p>
+
+<pre><code class="language-perl6">.say for '500-PetaByte-File.txt'.IO.words: 100
+</code></pre>
+
+<p>请注意，我们通过传递 limit 参数 <a href="https://docs.perl6.org/type/IO::Path#method_words">.words</a> 而不是使用<a href="https://docs.perl6.org/language/operators#index-entry-array_indexing_operator-array_subscript_operator-array_indexing_operator">列表索引操作</a>来完成此操作。原因是在引擎盖下仍然使用文件句柄，并且在完全使用返回的 Seq 之前，句柄将保持打开状态。如果没有引用 Seq，最终句柄将在垃圾收集运行期间关闭，但在大型程序中使用大量文件时，最好确保所有句柄立即关闭。所以，你应该始终确保SEQ从 IO::Path 的.words 和 .lines 方法是完全具体化; 而极限论证可以帮助你。</p>
+
+<h4 id="使用-io-handle">使用 IO::Handle</h4>
+
+<p>当然，你可以使用 IO::Handle 类型从文件中读取，这样可以更好地控制你正在执行的操作：</p>
+
+<pre><code class="language-perl6">given 'some-file.txt'.IO.open {
+    say .readchars: 8;  # OUTPUT: «I ♥ Perl␤» 
+    .seek: 1, SeekFromCurrent;
+    say .readchars: 15;  # OUTPUT: «I ♥ Programming␤» 
+    .close
+}
+</code></pre>
+
+<p>该 IO::Handle 给你.read，.readchars，不用彷徨，.getc，.words，.lines，.slurp，.comb，.split和.Supply方法从中读取数据。有很多选择; 当你完成它时，需要关闭手柄。</p>
+
+<p>与某些语言不同，当保留定义的范围时，句柄不会自动关闭。相反，它将保持开放，直到收集垃圾为止。为了使关闭业务更容易，一些方法允许你指定:close参数，你还可以使用will leave特征或模块does auto-close提供的特征 Trait::IO 。</p>
+
+<h2 id="做错事的方法">做错事的方法</h2>
+
+<p>本节介绍如何不执行 Perl 6 IO。</p>
+
+<h3 id="不管-spec">不管 $*SPEC</h3>
+
+<p>你可能听说过$*SPEC并看过一些代码或书籍显示其用于拆分和连接路径片段的用法。它提供的一些例程名称甚至可能看起来与你在其他语言中使用的名称相似。</p>
+
+<p>但是，除非你编写自己的IO框架，否则几乎不需要$*SPEC直接使用。$*SPEC提供低级别的东西，它的使用不仅会使你的代码难以阅读，你可能会引入安全问题（例如空字符）！</p>
+
+<p>这种 IO::Path 类型是Perl 6世界的主力。它满足所有路径操作需求，并提供快捷例程，让你避免处理文件句柄。用它而不是$*SPEC东西。</p>
+
+<p>提示：你可以加入路径部分/并将其提供给 IO::Path 例程; 无论操作系统如何，他们仍将与他们一起做The Right Thing™。</p>
+
+<pre><code class="language-perl6"># WRONG!! TOO MUCH WORK! 
+my $fh = open $*SPEC.catpath: '', 'foo/bar', $file;
+my $data = $fh.slurp;
+$fh.close;
+</code></pre>
+
+<pre><code class="language-perl6"># RIGHT! Use IO::Path to do all the dirty work 
+my $data = 'foo/bar'.IO.add($file).slurp;
+</code></pre>
+
+<p>但是，将它用于 IO::Path 无法提供的东西是很好的。例如，.devnull方法：</p>
+
+<pre><code class="language-perl6">{
+    temp $*OUT = open :w, $*SPEC.devnull;
+    say &quot;In space no one can hear you scream!&quot;;
+}
+say &quot;Hello&quot;
+</code></pre>
+
+<h3 id="字符串化-io-path">字符串化 IO::Path</h3>
+
+<p>不要使用该.Str方法对 IO::Path 对象进行字符串化，除非你只是想将它们显示在某处以供参考或使用某些内容。该.Str方法返回 IO::Path 实例化的任何基本路径字符串。它不考虑$.CWD属性的值。例如，此代码已损坏：</p>
+
+<pre><code class="language-perl6"># WRONG!! .Str DOES NOT USE $.CWD! 
+my $path = 'foo'.IO;
+chdir 'bar';
+run &lt;tar -cvvf archive.tar&gt;, ~$path;
+</code></pre>
+
+<p>该chdir调用更改了当前目录的值，但$path我们创建的是相对于该更改之前的目录。</p>
+
+<p>但是，该 IO::Path 对象确实知道它相对于哪个目录。我们只需要使用.absolute或.relative对字符串进行字符串化。两个例程都返回一个Str对象; 它们只是结果是绝对路径还是相对路径。所以，我们可以像这样修复我们的代码：</p>
+
+<pre><code class="language-perl6"># RIGHT!! .absolute does consider the value of $.CWD! 
+my $path = 'foo'.IO;
+chdir 'bar';
+run &lt;tar -cvvf archive.tar&gt;, $path.absolute;
+# Also good: 
+run &lt;tar -cvvf archive.tar&gt;, $path.relative;
+</code></pre>
+
+<h3 id="要留意的-cwd">要留意的 $*CWD</h3>
+
+<p>虽然通常不在视图范围内，但 IO::Path 默认情况下，每个对象都使用当前值$*CWD来设置其$.CWD属性。这意味着有两件事需要注意。</p>
+
+<h4 id="temp-cwd">temp $*CWD</h4>
+
+<p>这段代码是错误的：</p>
+
+<pre><code class="language-perl6"># WRONG!! 
+my $*CWD = &quot;foo&quot;.IO;
+</code></pre>
+
+<p>该my $*CWD制造$*CWD不确定的。然后.IOcoercer继续并将其创建的路径的$.CWD属性设置为undefined的字符串化版本$*CWD; 一个空字符串。</p>
+
+<p>执行此操作的正确方法是使用temp而不是my。它会将更改的效果本地化$*CWD，就像my它一样，但它不会使其未定义，因此.IOcoercer仍将获得正确的旧值：</p>
+
+<pre><code class="language-perl6">temp $*CWD = &quot;foo&quot;.IO;
+</code></pre>
+
+<p>更好的是，如果要在本地化中执行某些代码$*CWD，请使用indir例程来实现此目的。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/io/">IO</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-07-14-cro-http-test/" data-toggle="tooltip" data-placement="top" title="Cro Http Test">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

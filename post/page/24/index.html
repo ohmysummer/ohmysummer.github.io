@@ -201,6 +201,47 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/">
+                <h2 class="post-title">在 Perl 6 中异步地执行外部程序</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 14, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (132 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Execute an external program with timeout in Perl6
+Proc::Async 允许我们异步地执行外部程序。
+my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;); my $res = await $proc.start;  我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
+class Proc::Async::Timeout is Proc::Async { has $.timeout is rw; method start($self: |) { return callsame unless $.timeout; my $killer = Promise.in($.timeout).then: { $self.kill }; my $promise = callsame; Promise.anyof($promise, $killer).then: { $promise.result }; } } my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;sleep 5; warn 'end'&quot;); $proc.
+                  <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%BC%82%E6%AD%A5/">异步</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-05-08-perl-6-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/">
                 <h2 class="post-title">Perl 6 入门指南</h2>
 
@@ -572,47 +613,6 @@ slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quo
                     <a href="https://ohmysummer.github.io//tags/bag/">Bag</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/sort/">sort</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-03-22-perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB---junctions/">
-                <h2 class="post-title">Perl 6 的薛定谔的猫--Junctions</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on March 22, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (558 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  薛定谔欧文应该是喜欢 Perl 6 的, 因为他的著名的薛定谔的猫可以用 Perl 6 的 Junction表达:
-my $cat = 'dead' | 'alive'; say &quot;cat is both dead and alive&quot; if $cat eq 'dead' and $cat eq 'alive'; # OUTPUT: # cat is both dead and alive  这里面发生了什么事情? 我会告诉你全部的!
-Anyone 游戏? 拿最简单的来说, Junctions 允许你把一堆值当作单个值。例如, 你可以使用 any Junction 来测试一个变量是否等于所给定值中的任意一个:
-say 'it matches!' if 'foo' eq 'foo' | 'bar' | 'ber'; say 'single-digit prime' if 5 == any ^9.
-                  <a href="https://ohmysummer.github.io/post/2015-03-22-perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB---junctions/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/junctions/">Junctions</a>&nbsp;
                   
                 </div>
               

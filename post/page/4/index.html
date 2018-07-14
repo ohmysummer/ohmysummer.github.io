@@ -201,6 +201,48 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-21-more-on-the-proto-keyword-in-perl-6/">
+                <h2 class="post-title"> More on the proto keyword in Perl 6</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 21, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (106 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在深入研究 EVAL 子例程的细节之前，我们必须揭示一些关于 protos 原型和多重分派的更多信息。检查以下程序：
+proto sub f($x) { say &quot;proto f($x)&quot;; } multi sub f($x) { say &quot;f($x)&quot; } multi sub f(Int $x) { say &quot;f(Int $x)&quot; } multi sub f(Str $x) { say &quot;f(Str $x)&quot; } f(2); f('2'); f(3); f('3');  这里有三个 multi 函数和一个用 proto 关键字声明的函数。早些时候，我们只看到了函数体为空的原型函数，如:
+proto sub f($x) {*}  但这不是必需的。正如我们在示例中所看到的，该函数可以承载正常的函数体：
+proto sub f($x) { say &quot;proto f($x)&quot;; }  运行这个程序：
+proto f(2) proto f(2) proto f(3) proto f(3)  所有的调用都被 proto-候选者抓住了。现在，更新它并返回一些专用值的 {*} 块;
+                  <a href="https://ohmysummer.github.io/post/2018-02-21-more-on-the-proto-keyword-in-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-18-examining-the-real-role-of-perl-6-part-2/">
                 <h2 class="post-title">Examining the Real role of Perl 6, part 2</h2>
 
@@ -576,92 +618,6 @@ method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin
  class Duration is Cool does Real class Instant is Cool does Real class Int is Cool does Real class Num is Cool does Real role Rational does Real role Real does Numeric  在斜体字体中，我添加了伪声明，这些伪声明没有在 src/core 的相应文件中明确拼写，而是通过 src/Perl6/Metamodel/BOOTSTRAP.nqp 设置:
 Int.HOW.add_parent(Int, Cool); . . . Num.HOW.add_parent(Num, Cool);  对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
                   <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-02-10-perl-6%E4%B8%AD%E7%9A%84%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0/">
-                <h2 class="post-title">Perl 6 中的命名参数</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 10, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (66 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  
-
-<p>Perl 6 中的函数（和类方法）能够接受命名参数。最简单的方法是用箭头分隔名称和值：</p>
-
-<pre><code class="language-perl6">sub f(:$a, :$b) {
-    $a ** $b
-}
-
-say f(a =&gt; 2, b =&gt; 3); # 8
-</code></pre>
-
-<p>但另一种语法是可能的，在冒号的帮助下。有几个主要品种。</p>
-
-<h2 id="key-value">:key(value)</h2>
-
-<p>所有内容都以冒号开头，数值在括号内：</p>
-
-<pre><code class="language-perl6">say f(:a(2), :b(3));
-</code></pre>
-
-<p>例如，不用圆括号，尖角括号也是允许的：</p>
-
-<pre><code class="language-perl6">say f(:a&lt;2&gt;, :b&lt;3&gt;);
-</code></pre>
-
-<h2 id="nkey">：Nkey</h2>
-
-<p>对于整数值，仍然有这样一个奇怪的语法：</p>
-
-<pre><code class="language-perl6">say f(:2a, :3b);
-</code></pre>
-
-<h2 id="key-和-key">:key 和 :!key</h2>
-
-<p>如果命名参数用作标记，则不需要指定值。在这种情况下，您可以传递 True 和 False，如下所示：</p>
-
-<pre><code class="language-perl6">sub g(:$key) {
-    $key
-}
-
-say g(:key);  # True
-say g(:!key); # False
-</code></pre>
-
-<p>实际上，所有冒号对儿都会创建键值对，因此您可以在创建散列时执行相同的操作</p>
-
-<pre><code class="language-perl6">my %data = :alpha(10), :beta(20), :gamma(30);
-say %data&lt;beta&gt;; # 20
-</code></pre>
-
                 
               </div>
 
