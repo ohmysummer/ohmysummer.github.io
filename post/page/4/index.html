@@ -201,6 +201,55 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-04-09-perl-6-%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/">
+                <h2 class="post-title">Perl 6 中的 Superscripts</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Superscripts in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 9, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (204 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 中的 Superscripts 在 Perl 6 中，可以使用上标索引来计算数字的幂数，例如:
+&gt; 2⁵ 32 &gt; 7³ 343  也可以在上标中使用多个数字：
+&gt; 10¹² 1000000000000  你可以猜到，上面的代码等同于这样：
+&gt; 2**5 32 &gt; 7**3 343 &gt; 10**12 1000000000000  但问题是：上标到底是如何工作的？让我们找出答案。
+对于 Numeric 角色，定义了以下操作：
+proto sub postfix:&lt;ⁿ&gt;(Mu $, Mu $) is pure {*} multi sub postfix:&lt;ⁿ&gt;(\a, \b) { a ** b }  啊哈，这就是我们需要的，上标符号在这里转换为简单的 ** 运算符。
+您可以通过打印操作数来可视化传递给操作的确切内容：
+multi sub postfix:&lt;ⁿ&gt;(\a, \b) { nqp::say('# a = ' ~ a); nqp::say('# b = ' ~ b); a ** b }  这个时候，你会看到上面的测试示例输出如下：
+                  <a href="https://ohmysummer.github.io/post/2018-04-09-perl-6-%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/superscripts/">Superscripts</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-21-more-on-the-proto-keyword-in-perl-6/">
                 <h2 class="post-title"> More on the proto keyword in Perl 6</h2>
 
@@ -576,48 +625,6 @@ my $N = 9; my @x = Rat.new(1, 1), -&gt; $x { $x - ($x ** 2 - $N) / (2 * $x) } ..
 里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
 method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.
                   <a href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/">
-                <h2 class="post-title">Going over the Bridge, part 1</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 11, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (169 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  在处理 Perl 6 中的数字的类中，我们看到了 Bridge 方法，该方法以多态方式使用。让我们花一些时间，并试图了解 1）它是如何工作的，2）是否有必要。
-类和角色 我们的第一步是查看方法定义在哪里。以下是我们需要的类和角色列表：
- Duration Instant Int Num Rational Real  为了预测下一步，让我们添加一些关于他们关系的更多细节：
- class Duration is Cool does Real class Instant is Cool does Real class Int is Cool does Real class Num is Cool does Real role Rational does Real role Real does Numeric  在斜体字体中，我添加了伪声明，这些伪声明没有在 src/core 的相应文件中明确拼写，而是通过 src/Perl6/Metamodel/BOOTSTRAP.nqp 设置:
-Int.HOW.add_parent(Int, Cool); . . . Num.HOW.add_parent(Num, Cool);  对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
-                  <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/" class="post-read-more">[Read More]</a>
                 
               </div>
 

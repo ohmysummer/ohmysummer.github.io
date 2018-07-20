@@ -201,6 +201,52 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-20-%E4%BD%BF%E7%94%A8perl6%E8%BF%9E%E6%8E%A5kafka/">
+                <h2 class="post-title">使用 Perl 6 连接 Kafka</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Using Perl 6 to consumer Kafka
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 20, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (399 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  有这样一个场景, 数据发送方将压缩文件读成字节数组后发往 Kafka, 然后第三方的 Kafka Client 从中读取字节数组解压缩, 每条 message 对应一个压缩文件, 每个压缩文件中包含 _log.txt 和 _result.txt。
+Perl 6 可以从 Kafka 中读取消息并完成解析。
+首先安装相关模块: Pkafka 用于和 Kafka 交互； Archive::Libarchive 用于解压缩字节数组。 Cro 用于 HTTP 请求，DBiish 用于数据库读写。
+zef install Pkafka zef install Archive::Libarchive zef install Cro zef install DBIish  代码片段如下:
+use PKafka::Consumer; use PKafka::Message; use PKafka::Producer; use Archive::Libarchive; use Archive::Libarchive::Constants; use Cro::HTTP::Client; use JSON::Fast; use JSON::Path; use DBIish; sub MAIN () { my $brokers = &quot;127.
+                  <a href="https://ohmysummer.github.io/post/2018-07-20-%E4%BD%BF%E7%94%A8perl6%E8%BF%9E%E6%8E%A5kafka/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/kafka/">Kafka</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-07-14-io-guide/">
                 <h2 class="post-title">Io Guide</h2>
 
@@ -602,59 +648,6 @@ my $file = 'foo'.IO; spurt $file, &quot;and\nCamelia\n♡\nme\n&quot;; my $proc 
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/async/">Async</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-07-07-%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%A6%E4%B9%A0perl6/">
-                <h2 class="post-title">我为什么学习Perl6</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Why I’m Learning Perl 6
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 6, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (130 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  http://www.evanmiller.org/why-im-learning-perl-6.html
-想听一个编程笑话吗？
-Perl 6。
-想知道我最喜欢的编程语言吗？
-Perl 6。
-嘘，克隆 master 分支并运行这个：
-use v6.d.PREVIEW; my $channel = Channel.new; my @ten_tasks = (^10).map: { start { my $thread = $*THREAD.id; await $channel; say &quot;HOLY MOLEY SOMEONE STOLE MY THREAD&quot; if $thread != $*THREAD.id; } } $channel.send(&quot;Ring ring&quot;) for ^10; $channel.close; await @ten_tasks;  猜猜它输出了什么？
-没有！开个玩笑，你会看到很多来自任务的烦恼消息，等待电话响起，然后穿着别人的操作系统线程醒来。
-为什么这很重要？并发很难，如果你想要M：N线程多路复用（即WEB SCALE CODE，其中应用程序线程没有固定到pthread）你今天的选择正是Erlang，Go，.NET和Perl 6。
-如果你对Erlang感到困惑，被Go推迟，对.NET无动于衷，请看看Perl 6.认真的。当然，它的发展时间比男孩时期要长 - 从2000年开始，比电影早两年，并在2015年发布，两年之后 - 但也许如果有人在某事上工作了15年，他们实际上可能会做出一些好事。我不是说这种情况是真的（可能不是少年时代），但至少它是可能的，对吗？
-有趣的是，十五年前，每个人都在说Perl是如何通过大规模的语言重新设计而自拔的，因为世界显然将转向Python和Ruby。好吧每个人都切换到Python和Ruby，但现在每个人都有了再次切换的痒，因为事实证明Python和Ruby并不是为并发代码执行而设计的。如果你需要的是仿生robo-feet，也许拍摄自己的脚并不是一个糟糕的策略。
-我不会在这里回顾 Perl 6 作为一种语言，因为它是一个包含大量黑暗角落和奇怪边缘情况的大规模规范，但我确实希望分享一些关于语言运行时发现的事情。 Perl 6虚拟机MoarVM是一项出色的技术。
-                  <a href="https://ohmysummer.github.io/post/2018-07-07-%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%A6%E4%B9%A0perl6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
                   
                 </div>
               

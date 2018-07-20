@@ -201,6 +201,48 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/">
+                <h2 class="post-title">Going over the Bridge, part 1</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 11, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (169 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在处理 Perl 6 中的数字的类中，我们看到了 Bridge 方法，该方法以多态方式使用。让我们花一些时间，并试图了解 1）它是如何工作的，2）是否有必要。
+类和角色 我们的第一步是查看方法定义在哪里。以下是我们需要的类和角色列表：
+ Duration Instant Int Num Rational Real  为了预测下一步，让我们添加一些关于他们关系的更多细节：
+ class Duration is Cool does Real class Instant is Cool does Real class Int is Cool does Real class Num is Cool does Real role Rational does Real role Real does Numeric  在斜体字体中，我添加了伪声明，这些伪声明没有在 src/core 的相应文件中明确拼写，而是通过 src/Perl6/Metamodel/BOOTSTRAP.nqp 设置:
+Int.HOW.add_parent(Int, Cool); . . . Num.HOW.add_parent(Num, Cool);  对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
+                  <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-10-perl-6%E4%B8%AD%E7%9A%84%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0/">
                 <h2 class="post-title">Perl 6 中的命名参数</h2>
 
@@ -664,59 +706,6 @@ $ cd rakudo $ perl Configure.pl --gen-moar --gen-nqp --backends=moar $ make  完
 现在，打开 src/core/Bool.pm 文件，并将 gist 方法的字符串更改为使用 Unicode 大拇指代替纯文本：
 Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? '👍' !! '👎' });  保存文件后，您需要重新编译 Rakudo。 Bool.
                   <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-23-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E5%A4%A9-perl-6%E9%AB%98%E5%B0%94%E5%A4%AB/">
-                <h2 class="post-title">第二十三天-Perl 6 高尔夫</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 23 – The Wonders of Perl 6 Golf
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 23, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (621 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 23 – The Wonders of Perl 6 Golf 啊，圣诞节！还有什么比和你的朋友与家人一起坐在桌子旁边玩高尔夫球代码还好呢！ &hellip;等等，什么？
-哦，对，这还不是圣诞节。但是你可能想要为它做好准备！
-如果你还没有注意到，有一个不错的网站可以玩高尔夫球代码：https://code-golf.io/。这个网站很酷的地方是，它不仅仅只支持 perl 6！在撰写本文时，它还支持其他 6 种语言。嗯&hellip;
-无论如何，因为我在那个网站的成绩还不错，我会分享一些我觉得最好的解决方案。所有的 trickety-hackety，unicode-cheatery 和 mind-blowety。在我们看来，也许我们甚至会看到即使在代码高尔夫中，perl 6 也非常简洁易读。也就是说，如果你很难将你的圣诞愿望放在一张卡片上，那么可能会放得下一行 perl 6 代码。
-我不会提供完整的解决方案，不会破坏你的圣诞乐趣，但我会给你足够的提示，以提出有竞争力的解决方案。
-这个圣诞节我就是想让你得到一些乐趣。所以你先下载一份 rakudo，以确保你可以跟随。稍后我们会有一些南瓜派，我们会做一些颂歌。如果您在运行 perl 6 时遇到任何问题，可以在 freenode 上加入 ＃perl6 频道以获得一些帮助。这就是说，https://code-golf.io/ 本身为你提供了一个很好的编辑器来编写和评估你的代码，所以应该没有问题。
-一些基本的例子 让我们以帕斯卡三角形任务为例。我听到了，我听到了！圣诞节前的数学，这太残酷了。残忍，但很有必要。
-只有一个你必须知道的基本技巧。如果从 Pascal 三角形中取出任何一行，将它移动一个元素，然后用原始行对结果进行 zip-sum，就会得到下一行！
-所以如果你有一行数字：
-1 3 3 1  你所做的只是把它移到右边：
-0 1 3 3 1  并将其与原始行相加：
-1 3 3 1 + + + + 0 1 3 3 1 = 1 4 6 4 1  就是如此容易！所以我们还是写代码吧：
-                  <a href="https://ohmysummer.github.io/post/2017-12-23-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E5%A4%A9-perl-6%E9%AB%98%E5%B0%94%E5%A4%AB/" class="post-read-more">[Read More]</a>
                 
               </div>
 
