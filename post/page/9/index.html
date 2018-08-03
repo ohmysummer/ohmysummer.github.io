@@ -201,6 +201,106 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/">
+                <h2 class="post-title">Perl 6 Sheet</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Perl 6 札记
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 19, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (349 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  正则表达式 Perl 6 的正则表达式允许你为你自定义的字符类混进 Unicode 属性！
+constant string = 'The Quick 🐼 Jumped Over 57 Dogs'; say string ~~ m:g/ &lt;:upper-[TQ]&gt; /; # (「J」 「O」 「P」) say string ~~ m:g/ &lt;-[\x0..\x255]+[\x35..\x37]&gt; /; # (「🐼」 「5」 「7」) say string ~~ m:g/ &lt;-:digit -:Ll -:Zs&gt; /; # (「T」 「Q」 「🐼」 「J」 「O」 「D」) say string ~~ m:g/ &lt;[\w]-[TQJ\d]-:lower+[5]&gt; /; # (「O」 「5」 「D」)  Wow! #Perl6 #Regex is so awesome, you can just shove an array into it and it&rsquo;ll know to treat it as alternatives to match!
+                  <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/">
+                <h2 class="post-title">Perl 6 Dispatch 解密</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    But Here&#39;s My Dispatch, So callwith Maybe
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 2, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 8 minutes (1564 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 的一个很好的特性是 multi-dispatch, 即多重分派。它允许你在函数, 方法或 Grammar token 中使用相同的名字并让它们所处理的数据的类型来决定执行哪一个。下面是一个 factorial postfix 操作符, 用两个 multies 来实现:
+multi postfix:&lt;!&gt; (0) { 1 } multi postfix:&lt;!&gt; (UInt \n) { n × samewith n − 1 } say 5! # OUTPUT: 120  虽然 multi-dispatch 的主题很明显并且它还有一些说明文档, 我今天想讲的是 7 个特殊的子例程, 让你能够行走在 dispatch 迷宫中。它们是 nextwith, nextsame, samewith, callwith, callsame, nextcallee 和 lastcall.
+设立实验室 Multies 从最窄到最广的候选者进行排序，并且当一个 multi 被调用时，绑定器尝试找到一个匹配并调用第一个匹配的候选者。 有时，您可能希望调用或简单地移动到链中的下一个匹配候选者，可选地使用不同的参数。 为了观察这些操作的效果，我们将使用以下设置：
+class Wide { } class Middle is Wide { } class Narrow is Middle { } multi foo (Narrow $v) { say 'Narrow ', $v; 'from Narrow' } multi foo (Middle $v) { say 'Middle ', $v; 'from Middle' } multi foo (Wide $v) { say 'Wide ', $v; 'from Wide' } foo Narrow; # OUTPUT: Narrow (Narrow) foo Middle; # OUTPUT: Middle (Middle) foo Wide; # OUTPUT: Wide (Wide)  我们有三个类，每个类都继承自前一个类，所以我们的 Narrow 类 可以适应 Middle 和 Wide multi 候选者; Middle 也可以适应 Wide，但不能适应 Narrow; 而 Narrow 既不适用于 Middle，也不适用于 Narrow。请记住，Perl 6 中的所有类也都是 Any 类型，因此也适用于任何接受 Any 的候选者。
+                  <a href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/nextwith/">nextwith</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/nextsame/">nextsame</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/samewith/">samewith</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/callwith/">callwith</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/callsame/">callsame</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/nextcallee/">nextcallee</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/lastcall/">lastcall</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-03-18-regexes/">
                 <h2 class="post-title">Regexes</h2>
 
@@ -574,89 +674,6 @@ my @a = &lt;a b c d e f&gt;; my $x = &quot;a1234567&quot;; say $x ~~ /@a/  /@a/ 
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/nqp/">NQP</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-tips---%E5%88%9B%E5%BB%BA%E5%8F%AF%E9%87%8D%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
-                <h2 class="post-title">Perl 6 Tips - 创建可重用的数据类型</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 31, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (200 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Quick Tip #19: 创建可重用的数据类型 Perl 6 允许你使用类型来约束变量值，但是你不必拘泥于内置类型。一旦你定义了自己的类型，它们就表现得像内置类型一样。
-下面是我从布拉德的 Subsets::Common模块偷得的一些子集(subsets):
-my package EXPORT::DEFAULT { ... subset Pos of Numeric where * &gt; 0; subset Neg of Numeric where * &lt; 0; subset Zero of Numeric where * == 0; subset UNumeric of Numeric where * &gt;= 0; subset Even of Int where * % 2 == 0; subset Odd of Int where * % 2; subset Time::Hour12 of PosInt where * ~~ 1 .
-                  <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-tips---%E5%88%9B%E5%BB%BA%E5%8F%AF%E9%87%8D%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/subsets/">Subsets</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/where/">where</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%89%88/">
-                <h2 class="post-title">Perl 6 时间戳转换器命令行版</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 31, 2016
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (1022 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 By Example: Datetime Conversion for the Command Line 我偶尔会在数据库中存储 UNIX 时间戳, 即从 1970-01-01 开始的秒数。我在按照日期查询数据库中的数据时, 需要将 UNIX 时间戳转换为人类可读的时间, 所以我写了个很小的工具来帮助我在 UNIX 时间戳和日期/时间之间来回转换:
-$ autotime 2015-12-24 1450915200 $ autotime 2015-12-24 11:23:00 1450956180 $ autotime 1450915200 2015-12-24 $ autotime 1450956180 2015-12-24 11:23:00  使用库 Perl 6 的 DateTime 和 Date 模块会做实际的转换。 DateTime.new 构造函数有一个接收单个整数作为 UNIX 时间戳的变体:
-$ perl6 -e &quot;say DateTime.new(1480915200)&quot; 2016-12-05T05:20:00Z  看起来我们已经完成了一个方向的转换,对吗?
-#!/usr/bin/env perl6 sub MAIN (Int $timestamp) { say DateTime.
-                  <a href="https://ohmysummer.github.io/post/2016-12-31-perl-6-%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%89%88/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/datetime/">Datetime</a>&nbsp;
                   
                 </div>
               

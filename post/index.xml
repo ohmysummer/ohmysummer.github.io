@@ -6,10 +6,40 @@
     <description>Recent content in Posts on Young For Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 20 Jul 2018 20:14:28 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 03 Aug 2018 21:08:25 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Ping Pang in Perl6</title>
+      <link>https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-perl6/</link>
+      <pubDate>Fri, 03 Aug 2018 21:08:25 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-perl6/</guid>
+      <description>Ping Pang in Perl 6 使用 channels 在线程之间传递消息是一种管理并发的简单方法。
+一位朋友最近向我展示了一个很酷的程序，用 elixir 来演示消息传递 - 两个线程通过来回传递递增的数字来计数。快速搜索出现了一些例子。
+我决定在 Perl 6 中实现这个。这就是我想出来的→
+my ($ping, $pong) = Channel.new xx 2; sub ping { while $ping.receive -&amp;gt; $n { say &amp;quot;ping $n (thread #{$*THREAD.id})&amp;quot;; $pong.send: $n + 1; } } sub pong { while $pong.receive -&amp;gt; $n { last if $n &amp;gt;= 5; say &amp;quot;pong $n (thread #{$*THREAD.id})&amp;quot;; $ping.send: $n + 1; } } $ping.send: 1; await Promise.</description>
+    </item>
+    
+    <item>
+      <title>使用 Cro 创建单页应用程序</title>
+      <link>https://ohmysummer.github.io/post/2018-08-02-%E4%BD%BF%E7%94%A8cro%E5%88%9B%E5%BB%BA%E5%8D%95%E9%A1%B5%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Thu, 02 Aug 2018 22:54:18 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-08-02-%E4%BD%BF%E7%94%A8cro%E5%88%9B%E5%BB%BA%E5%8D%95%E9%A1%B5%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/</guid>
+      <description>使用 Cro 创建单页应用 本教程将介绍如何使用 Cro 作为后端构建简单的单页应用程序。对于前端，我们将使用 webpack，ES6，React 和 Redux。你不需要事先了解这些信息，但如果您想在自己的应用程序中很好地使用它们，则需要进一步阅读。
+代码可以在这里获取。在教程的各个阶段，提交了当前的状态。仓库历史记录与教程完全匹配，因此你可以使用它来获取各步骤变更的概述，或者如果你试图通过从头开始构建这些东西，可以知道你错过了什么。
+你需要什么  要安装 Cro (请参阅本指南获取相关帮助)
+ 要安装 npm (即 Node.js 的包管理器, 我们要用它来获取需要的包来构建前端); 在基于 Debian 的 Linux 发行版上，只需 sudo apt install npm。
+  我们要构建什么 所以我们正在举办美食节或者啤酒节。或者任何带有一堆我们可以尝试的东西的活动。但是&amp;hellip;尝试什么？如果有这样一些应用程序就好了，人们可以留下他们关于什么火和什么不火的提示，我们可以实时看到他们。如果在去过的上一届啤酒节上有过这样的东西，我可能会幸免于那杯绿茶啤酒&amp;hellip;&amp;hellip;
+所以, 我们会制作一个单页应用程序以支持:
+ 提交新的提示 (POST 到后端)
+ 现场发布最新提示 (通过网络套接字提供)
+ 能够同意或不同意某提示 (也是 POST) 能够看到按照最愉快到最不愉快 (通过 GE T获取) 排序的提示列表  Stubbing 后端 给应用程序想一个有创意的名称。我叫它 &amp;ldquo;tipsy&amp;rdquo;。然后使用 cro stub 来存根 HTTP 应用程序。为了简单起见，我们将跳过 HTTPS（也就是HTTP/2.0），但会包含 Web 套接字支持。
+$ cro stub http tipsy tipsy Stubbing a HTTP Service &#39;tipsy&#39; in &#39;tipsy&#39;.</description>
+    </item>
     
     <item>
       <title>使用 Perl 6 连接 Kafka</title>

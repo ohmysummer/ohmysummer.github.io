@@ -6,10 +6,22 @@
     <description>Recent content in Channel on Young For Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 08 Jul 2018 16:11:52 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 03 Aug 2018 21:08:25 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/tags/channel/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Ping Pang in Perl6</title>
+      <link>https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-perl6/</link>
+      <pubDate>Fri, 03 Aug 2018 21:08:25 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-perl6/</guid>
+      <description>Ping Pang in Perl 6 使用 channels 在线程之间传递消息是一种管理并发的简单方法。
+一位朋友最近向我展示了一个很酷的程序，用 elixir 来演示消息传递 - 两个线程通过来回传递递增的数字来计数。快速搜索出现了一些例子。
+我决定在 Perl 6 中实现这个。这就是我想出来的→
+my ($ping, $pong) = Channel.new xx 2; sub ping { while $ping.receive -&amp;gt; $n { say &amp;quot;ping $n (thread #{$*THREAD.id})&amp;quot;; $pong.send: $n + 1; } } sub pong { while $pong.receive -&amp;gt; $n { last if $n &amp;gt;= 5; say &amp;quot;pong $n (thread #{$*THREAD.id})&amp;quot;; $ping.send: $n + 1; } } $ping.send: 1; await Promise.</description>
+    </item>
     
     <item>
       <title>Class Channel</title>

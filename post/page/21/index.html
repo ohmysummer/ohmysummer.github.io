@@ -201,6 +201,85 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-10-11-io%E6%93%8D%E4%BD%9C/">
+                <h2 class="post-title">IO 操作</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 11, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (392 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  文件存在、文件的时间戳、文件的修改时间等等
+批量插入文本 use v6; my @filenames = dir '.', test =&gt; any(/\.md$/, /\.markdown/); for @filenames -&gt; $filePath { my $path = $filePath.path(); $path ~~ s/.md//; $path ~~ s/.markdown//; my $date = DateTime.new(now); my $head = qq:heredoc 'EOT'; title: $path.IO.basename() date: $date tags: Perl6 categories: Perl 6 --- &lt;blockquote class=&quot;blockquote-center&quot;&gt;这城市有太多风景都在提醒那过去！&lt;/blockquote&gt; [TOC] EOT my @content = slurp $filePath; spurt($filePath.path, &quot;$head\n@content[]&quot;); }  在当前目录中查找所有以 .md (.markdown)结尾的文件（即markdown文件）, 并在文件最前面插入一段文本， 形如：
+title: Perl6 date: 2015-08-20T23:19:13Z tags: Perl6 categories: Perl 6 --- &lt;blockquote class=&quot;blockquote-center&quot;&gt;我站在天桥上念你, 有点狼狈&lt;/blockquote&gt;  类 IO::Path 提供了 basename, path, parts, 等方法供使用, 具体用法请看文档:
+                  <a href="https://ohmysummer.github.io/post/2015-10-11-io%E6%93%8D%E4%BD%9C/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/io/">IO</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-10-06-proto/">
+                <h2 class="post-title">proto</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 6, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (189 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  proto proto 意思为原型。proto 从形式上声明了 multi 候选者之间的共性。 proto 充当作能检查但不会修改参数的包裹。看看这个基本的例子:
+proto congratulate(Str $reason, Str $name, |) {*} multi congratulate($reason, $name) { say &quot;Hooray for your $reason, $name&quot;; } multi congratulate($reason, $name, Int $rank) { say &quot;Hooray for your $reason, $name -- you got rank $rank!&quot;; } congratulate('being a cool number', 'Fred'); # OK congratulate('being a cool number', 'Fred', 42); # OK congratulate('being a cool number', 42); # Proto match error  所有的 multi congratulate 会遵守基本的签名, 这个签名中有两个字符串参数, 后面跟着可选的更多的参数。 | 是一个未命名的 Capture 形参, 这允许 multi 接收额外的参数。第三个 congratulate 调用在编译时失败, 因为第一行的 proto 的签名变成了所有三个 multi congratulate 的共同签名, 而 42 不匹配 Str。
+                  <a href="https://ohmysummer.github.io/post/2015-10-06-proto/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/proto/">proto</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-10-05-perl-6-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2010/">
                 <h2 class="post-title">Perl 6 圣诞月历-(2010)</h2>
 
@@ -564,96 +643,6 @@ class Foo { has $.prop is rw; } sub inspect-a-foo( Foo $my-foo ) { say &quot;thi
                     <a href="https://ohmysummer.github.io//tags/signature/">Signature</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/%E7%AD%BE%E5%90%8D/">签名</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-08-25-perl6%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F/">
-                <h2 class="post-title">Perl 6 中的变量</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 25, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 13 minutes (2723 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  变量名以一个叫做魔符 sigil 的特殊字符开头, 后面跟着一个可选的第二个叫做 twigil 的特殊字符, 然后是一个标识符.
-Sigils    符号 类型约束 默认类型 Flattens Assignment     $ Mu (no type constraint) Any No item   &amp; Callable Callable No item   @ Positional Array Yes list   % Associative Hash Yes list    例子:
-my $square = 9 ** 2; my @array = 1, 2, 3; # Array variable with three elements my %hash = London =&gt; 'UK', Berlin =&gt; 'Germany';  默认类型可以使用 is 关键字设置。
-                  <a href="https://ohmysummer.github.io/post/2015-08-25-perl6%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/variable/">Variable</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/twigil/">twigil</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%8C%BF%E5%90%8D%E7%8A%B6%E6%80%81%E5%8F%98%E9%87%8F/">匿名状态变量</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-08-25-perl-6-%E5%8D%95%E8%A1%8C%E7%A8%8B%E5%BA%8F/">
-                <h2 class="post-title">Perl 6 单行程序</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 25, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 8 minutes (1623 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 单行程序 这本书在进行之中。我希望你能觉得它有趣，甚至可能有用！如果你想贡献反馈的话，那么很欢迎提问题还有新的或有提升的正则表达式。
-作者 戴维法瑞尔 PerlTricks.com
-版本 版本 0.01
-许可 FreeBSD
-贡献者  Alexander Moquin Bruce Gray Carl Mäsak David H. Adler FROGGS Helmut Wollmersdorfer japhb Larry Wall Matt Oates Moritz Lenz Mouq Salve J Nilsen Sam S Skids timotimo  致谢 启发于 Peteris Krumins 的 Perl 5 example 文件。他逐字逐句地写了一本关于 Perl 5 单行 的书。
-irc上有很好地 folks。
-内容  介绍 教程 文件间距 行号 计算 创建字符串和创建数组 文本转换和替换 文本分析 选择性的行打印 使用管道转换数据(进行中) WWW(进行中) 转换到 Windows  介绍 把 Perl 和其它语言区别开的一件事情是在单行代码中写小程序的能力，即人们所熟知的&rdquo;单行&rdquo;。在终端里直接键入一个程序比写一个废弃的脚本往往更快。并且单行程序也很强大；它们是羽翼丰满的程序，能够加载外部库，但是也能集成到终端中。你可以在单行程序中输入或输出数据。
-                  <a href="https://ohmysummer.github.io/post/2015-08-25-perl-6-%E5%8D%95%E8%A1%8C%E7%A8%8B%E5%BA%8F/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/oneliners/">OneLiners</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E5%8D%95%E8%A1%8C%E7%A8%8B%E5%BA%8F/">单行程序</a>&nbsp;
                   
                 </div>
               

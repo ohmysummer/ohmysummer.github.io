@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>使用 Cro 创建单页应用程序</title>
+  <meta property="og:title" content="使用 Cro 创建单页应用程序" />
+  <meta name="twitter:title" content="使用 Cro 创建单页应用程序" />
+  <meta name="description" content="Building a Single Page Application with Cro">
+  <meta property="og:description" content="Building a Single Page Application with Cro">
+  <meta name="twitter:description" content="Building a Single Page Application with Cro">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-08-02-%E4%BD%BF%E7%94%A8cro%E5%88%9B%E5%BB%BA%E5%8D%95%E9%A1%B5%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-02-%E4%BD%BF%E7%94%A8cro%E5%88%9B%E5%BB%BA%E5%8D%95%E9%A1%B5%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>使用 Cro 创建单页应用程序</h1>
+                
+                  
+                    <h2 class="post-subheading">Building a Single Page Application with Cro</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 2, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 23 minutes (4749 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="使用-cro-创建单页应用-http-mi-cro-services-docs-intro-spa-with-cro"><a href="http://mi.cro.services/docs/intro/spa-with-cro">使用 Cro 创建单页应用</a></h1>
+
+<p>本教程将介绍如何使用 Cro 作为后端构建简单的单页应用程序。对于前端，我们将使用 webpack，ES6，React 和 Redux。你不需要事先了解这些信息，但如果您想在自己的应用程序中很好地使用它们，则需要进一步阅读。</p>
+
+<p><a href="https://github.com/croservices/sample-app-spa-react">代码</a>可以在这里获取。在教程的各个阶段，提交了当前的状态。仓库历史记录与教程完全匹配，因此你可以使用它来获取各步骤变更的概述，或者如果你试图通过从头开始构建这些东西，可以知道你错过了什么。</p>
+
+<h2 id="你需要什么">你需要什么</h2>
+
+<ul>
+<li>要安装 Cro (请参阅<a href="http://mi.cro.services/docs/intro/getstarted">本指南</a>获取相关帮助)<br /></li>
+<li>要安装 <code>npm</code> (即 Node.js 的包管理器, 我们要用它来获取需要的包来构建前端); 在基于 Debian 的 Linux 发行版上，只需 <code>sudo apt install npm</code>。<br /></li>
+</ul>
+
+<h2 id="我们要构建什么">我们要构建什么</h2>
+
+<p>所以我们正在举办美食节或者啤酒节。或者任何带有一堆我们可以尝试的东西的活动。但是&hellip;尝试什么？如果有这样一些应用程序就好了，人们可以留下他们关于什么火和什么不火的提示，我们可以实时看到他们。如果在去过的上一届啤酒节上有过这样的东西，我可能会幸免于那杯绿茶啤酒&hellip;&hellip;</p>
+
+<p>所以, 我们会制作一个单页应用程序以支持:</p>
+
+<ul>
+<li>提交新的提示 (POST 到后端)<br /></li>
+<li>现场发布最新提示 (通过网络套接字提供)<br /></li>
+<li>能够同意或不同意某提示 (也是 POST)</li>
+<li>能够看到按照最愉快到最不愉快 (通过 GE T获取) 排序的提示列表</li>
+</ul>
+
+<h2 id="stubbing-后端">Stubbing 后端</h2>
+
+<p>给应用程序想一个有创意的名称。我叫它 &ldquo;tipsy&rdquo;。然后使用 <code>cro stub</code> 来存根 HTTP 应用程序。为了简单起见，我们将跳过 HTTPS（也就是HTTP/2.0），但会包含 Web 套接字支持。</p>
+
+<pre><code>$ cro stub http tipsy tipsy
+Stubbing a HTTP Service 'tipsy' in 'tipsy'...
+
+First, please provide a little more information.
+
+Secure (HTTPS) (yes/no) [no]: n
+Support HTTP/1.1 (yes/no) [yes]: y
+Support HTTP/2.0 (yes/no) [no]: n
+Support Web Sockets (yes/no) [no]: y
+</code></pre>
+
+<p>这创建了一个叫 <code>tipsy</code> 的目录。现在让我们进到这个目录中并检查存根后端运行, 使用 <code>cro run</code>:</p>
+
+<pre><code>$ cro run
+▶ Starting tipsy (tipsy)
+🔌 Endpoint HTTP will be at http://localhost:20000/
+📓 tipsy Listening at http://localhost:20000
+</code></pre>
+
+<p>我们可以使用 <code>curl</code> 或通过在浏览器中访问它来检查它：</p>
+
+<pre><code>$ curl http://localhost:20000
+&lt;h1&gt; tipsy &lt;/h1&gt;
+</code></pre>
+
+<p>我喜欢在工作时定期提交。因此，我将创建一个 git 仓库，添加一个 <code>.gitignore</code> 文件 (忽略 Perl 6 预编译输出) 并提交 stub。</p>
+
+<pre><code>$ git init .
+Initialized empty Git repository in /home/jnthn/dev/cro/tipsy/.git/
+jnthn@lviv:~/dev/cro/tipsy$ echo '.precomp/' &gt; .gitignore
+jnthn@lviv:~/dev/cro/tipsy$ git add .
+jnthn@lviv:~/dev/cro/tipsy$ git commit -m &quot;Stub tipsy backend&quot;
+[master (root-commit) ff1043a] Stub tipsy backend
+ 5 files changed, 99 insertions(+)
+ create mode 100644 .cro.yml
+ create mode 100644 .gitignore
+ create mode 100644 META6.json
+ create mode 100644 lib/Routes.pm6
+ create mode 100644 service.p6
+</code></pre>
+
+<h2 id="服务静态页面">服务静态页面</h2>
+
+<p>我们现在将调整我们的 Cro stub 应用程序以服务 HTML 页面。我们将创建一个 <code>static</code> 目录，其中是要服务的静态内容。</p>
+
+<pre><code>mkdir static
+</code></pre>
+
+<p>在那里，我们将把 <code>index.html</code> 放在下面的上下文中：</p>
+
+<pre><code class="language-html">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Tipsy&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Tipsy&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>然后，我们编辑 <code>lib/Routes.pm6</code> 以使 <code>/</code> 路由服务此文件：</p>
+
+<pre><code class="language-perl6">get -&gt; {
+    static 'static/index.html'
+}
+</code></pre>
+
+<p>我们之前运行的 <code>cro run</code> 应该会自动重新启动服务。在浏览器中打开该文件，检查它是否被正被服务。</p>
+
+<h2 id="设置前端构建工具链">设置前端构建工具链</h2>
+
+<p>接下来，我们将设置前端。首先，我们将存储一个 <code>package.json</code> 文件，该文件将包含我们的开发和前端 JavaScript 依赖关系。我们使用 <code>npm init</code> 并提供一些答案：</p>
+
+<pre><code>$ npm init .
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help json` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install &lt;pkg&gt; --save` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+name: (tipsy) 
+version: (1.0.0) 
+description: Tipsy gives you tips at festivals
+entry point: (index.js) 
+test command: 
+git repository: 
+keywords: 
+author: 
+license: (ISC) 
+About to write to /home/jnthn/dev/cro/tipsy/package.json:
+
+{
+  &quot;name&quot;: &quot;tipsy&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;Tipsy gives you tips at festivals&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+  &quot;author&quot;: &quot;&quot;,
+  &quot;license&quot;: &quot;ISC&quot;
+}
+
+
+Is this ok? (yes)
+</code></pre>
+
+<p>接下来，让我们安装 webpack 工具作为开发依赖：</p>
+
+<pre><code>npm install --save-dev webpack webpack-cli
+</code></pre>
+
+<p>在运行的时候：我们来说说 webpack 是干什么的？它以各种方式提供帮助：</p>
+
+<ul>
+<li>它为我们从现代 JavaScript（具有诸如模块导入，lambda 表达式和 <code>let</code> 变量声明之类的便利功能）编译成适用于 Web 浏览器的 JavaScript 版本<br /></li>
+<li>它允许我们使用 JavaScript 模块，使用 <code>npm</code> 包管理器进行管理，并将它们连接成一个 JavaScript 文件<br /></li>
+<li>它也可以帮助 CSS 和图像资产<br /></li>
+</ul>
+
+<p>接下来，我们将在仓库的根目录中创建一个 <code>webpack.config.js</code>，其中包含以下内容：</p>
+
+<pre><code class="language-js">const path = require('path');
+
+module.exports = {
+    entry: './frontend/index.js',
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'static/js')
+    }
+};
+</code></pre>
+
+<p>这意味着它将采用 <code>frontend/index.js</code> 作为我们应用程序的 JavaScript 前端部分的根，并遵循它的所有依赖关系，并将它们构建到一个将写入 <code>static/js/bundle.js</code> 的包中。接下来，我们来创建这些位置。首先，让我们对输出位置进行存根(stub); <code>.gitignore</code> 既会忽略生成的输出又会确保目录存在（因为 git 不会跟踪空目录）。</p>
+
+<pre><code>$ mkdir static/js
+$ echo '*' &gt; static/js/.gitignore
+</code></pre>
+
+<p>下面, 给 <code>frontend/index.js</code> 占个坑:</p>
+
+<pre><code>$ mkdir frontend
+$ echo 'document.write(&quot;Hello from JS&quot;)' &gt; frontend/index.js
+</code></pre>
+
+<p>现在，我们希望能够方便地从我们的本地安装中运行 webpack。一种方法是编辑 <code>package.json</code> 并向 <code>scripts</code> 部分添加一项：</p>
+
+<pre><code>&quot;scripts&quot;: {
+    &quot;build&quot;: &quot;webpack&quot;,
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+</code></pre>
+
+<p>现在可以使用 <code>npm run build</code> 运行：</p>
+
+<pre><code>$ npm run build
+
+&gt; tipsy@1.0.0 build /home/jnthn/dev/cro/tipsy
+&gt; webpack
+
+Hash: 142d15221600d8f7960f
+Version: webpack 3.6.0
+Time: 125ms
+    Asset    Size  Chunks             Chunk Names
+bundle.js  2.5 kB       0  [emitted]  main
+   [0] ./frontend/index.js 32 bytes {0} [built]
+</code></pre>
+
+<h2 id="服务和使用-bundle">服务和使用 bundle</h2>
+
+<p>接下来，编辑 <code>static/index.html</code>，并在 <code>&lt;/body&gt;</code> 闭合标记之前添加：</p>
+
+<pre><code class="language-html">&lt;script src=&quot;js/bundle.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+
+<p>最后，我们需要为 JavaScript 提供服务。编辑 <code>lib/Routes.pm6</code> 并添加一个像这样的新路由（这将服务 <code>static/js</code> 下的任何东西，如果我们需要，可以为将来的多个包做好准备）：</p>
+
+<pre><code class="language-perl6">get -&gt; 'js', *@path {
+    static 'static/js', @path
+}
+</code></pre>
+
+<p>在浏览器中刷新，那么 <code>Hello from JS</code> 应该出现在页面上。</p>
+
+<p>最后但并非最不重要的是，我们需要忽略 <code>node_modules</code>，然后可以提交前端存根：</p>
+
+<pre><code>$ echo 'node_modules/' &gt;&gt; .gitignore
+$ git add .
+$ git commit -m &quot;Stub JavaScript application&quot;
+[master 199866c] Stub JavaScript application
+ 6 files changed, 40 insertions(+), 1 deletion(-)
+ create mode 100644 frontend/index.js
+ create mode 100644 package.json
+ create mode 100644 static/index.html
+ create mode 100644 webpack.config.js
+</code></pre>
+
+<h2 id="开始构建后端">开始构建后端</h2>
+
+<p>为了简单起见，我们将构建一个内存模型。有各种各样的方法可以将它考虑在内，但要记住的关键是 Web 应用程序是一个并发系统，而 Cro 请求在线程池中处理。这意味着可以同时处理两个请求！</p>
+
+<p>为了处理这个问题，我们将使用 <code>OO::Monitors</code> 模块。监视器就像一个类，但它强制它的方法互相排斥 - 也就是说，一次只有一个线程可能在特定实例的方法内。因此，如果我们不泄露我们的内部状态（如果我们必须返回其中的一部分，则制作防御副本），监视对象内部的状态将受到保护。</p>
+
+<p>首先，让我们将 <code>OO::Monitors</code> 添加到我们的 <code>META6.json</code> depends 部分，以至于文件的一部分如下所示：</p>
+
+<pre><code>&quot;depends&quot;: [
+    &quot;Cro::HTTP&quot;,
+    &quot;Cro::WebSocket&quot;,
+    &quot;OO::Monitors&quot;
+  ],
+</code></pre>
+
+<p>为了确保你真的有这个模块可用，如果缺失, 请使用 <code>zef</code> 安装它:</p>
+
+<pre><code>$ zef install --deps-only .
+</code></pre>
+
+<p>我们将把业务逻辑放在一个单独的模块 <code>lib/Tipsy.pm6</code> 中，并在 <code>t/tipsy.t</code> 中为它写一些测试。首先，让我们为我们的业务/域逻辑存储 API：</p>
+
+<pre><code class="language-perl6">use OO::Monitors;
+
+class Tip {
+    has Int $.id;
+    has Str $.tip;
+    has Int $.agreed;
+    has Int $.disagreed;
+}
+
+monitor Tipsy {
+    method add-tip(Str $tip --&gt; Nil) { ... }
+    method agree(Int $tip-id --&gt; Nil) { ... }
+    method disagree(Int $tip-id --&gt; Nil) { ... }
+    method latest-tips(--&gt; Supply) { ... }
+    method top-tips(--&gt; Supply) { ... }
+}
+</code></pre>
+
+<p>在这里，<code>Tip</code> 是一个不变的对象，代表一个提示以及同意和不同意的数量。 <code>Tipsy</code> 类有很多方法来实现各种操作。前三个是可变操作。接下来的 <code>atest-tips</code> 将是 Tip 对象的 <code>Supply</code>，每次添加新提示时都会发出提示对象。第一次点击时，我们将始终发出最新的 50 个提示。 <code>top-tips</code> 方法返回一个 Supply，每当排名发生变化时，它将发出前 50 个提示的排序列表。不要试图记住所有这些，我们会一次一个地回到他们身上。</p>
+
+<p>接下来是让我们的路由可用。我们可以在 <code>Routes.pm6</code> 中创建实例，但这会让我们很难在独立于业务逻辑的情况下测试我们的路由。相反，我们将使 <code>Routes.pm6</code> 中的 stub 作为参数来使用业务逻辑对象的实例：</p>
+
+<pre><code class="language-perl6">use Cro::HTTP::Router;
+use Cro::HTTP::Router::WebSocket;
+use Tipsy;
+
+sub routes(Tipsy $tipsy) is export {
+    route {
+        get -&gt; {
+            static 'static/index.html'
+        }
+    ...
+}
+</code></pre>
+
+<p>然后通过以下方式将其设置在 <code>service.p6</code> 入口点：</p>
+
+<p>1.使用模块 2.制作一个实例</p>
+
+<p><code>service.p6</code> 文件最终会看起来像这样：</p>
+
+<pre><code class="language-perl6">use Cro::HTTP::Log::File;
+use Cro::HTTP::Server;
+use Routes;
+use Tipsy;
+
+my $tipsy = Tipsy.new;
+my $application = routes($tipsy);
+
+my Cro::Service $http = Cro::HTTP::Server.new(
+    http =&gt; &lt;1.1&gt;,
+    host =&gt; %*ENV&lt;TIPSY_HOST&gt; ||
+        die(&quot;Missing TIPSY_HOST in environment&quot;),
+    port =&gt; %*ENV&lt;TIPSY_PORT&gt; ||
+        die(&quot;Missing TIPSY_PORT in environment&quot;),
+    :$application,
+    after =&gt; [
+        Cro::HTTP::Log::File.new(logs =&gt; $*OUT, errors =&gt; $*ERR)
+    ]
+);
+$http.start;
+say &quot;Listening at http://%*ENV&lt;TIPSY_HOST&gt;:%*ENV&lt;TIPSY_PORT&gt;&quot;;
+react {
+    whenever signal(SIGINT) {
+        say &quot;Shutting down...&quot;;
+        $http.stop;
+        done;
+    }
+}
+</code></pre>
+
+<h2 id="添加提示和最近的提示">添加提示和最近的提示</h2>
+
+<p>接下来，让我们编写测试以添加提示，并在最新提示中看到它。这里有 <code>t/tipsy.t</code>：</p>
+
+<pre><code class="language-perl6">use Tipsy;
+use Test;
+
+my $tipsy = Tipsy.new;
+lives-ok { $tipsy.add-tip('The lamb kebabs are good!') },
+    'Can add a tip';
+lives-ok { $tipsy.add-tip('Not so keen on the fish burrito!') },
+    'Can add another tip';
+given $tipsy.latest-tips.head(2).list -&gt; @tips {
+    is @tips[0].tip, 'Not so keen on the fish burrito!',
+        'Correct first tip retrieved on initial tap of latest-tips';
+    is @tips[1].tip, 'The lamb kebabs are good!',
+        'Correct second tip retrieved on initial tap of latest-tips';
+}
+
+react {
+    whenever $tipsy.latest-tips.skip(2).head(1) {
+        is .tip, 'Try the vanilla stout for sure',
+            'Get new tips emitted live';
+    }
+    $tipsy.add-tip('Try the vanilla stout for sure');
+}
+
+done-testing;
+</code></pre>
+
+<p>第一部分测试我们可以添加两个提示，如果我们点击提供最新的提示，那么我们会立即给出这两个提示。第二部分涉及更多：它检查如果我们点击最新的提示Supply，然后添加一个新的提示，那么我们也会被告知这个新提示。</p>
+
+<p>现在让他们通过！这是 <code>monitor</code> 中的实现：</p>
+
+<pre><code class="language-perl6">monitor Tipsy {
+    has Int $!next-id = 1;
+    has Tip %!tips-by-id{Int};
+    has Supplier $!latest-tips = Supplier.new;
+
+    method add-tip(Str $tip --&gt; Nil) {
+        my $id = $!next-id++;
+        my $new-tip = Tip.new(:$id, :$tip);
+        %!tips-by-id{$id} = $new-tip;
+        start $!latest-tips.emit($new-tip);
+    }
+
+    method latest-tips(--&gt; Supply) {
+        my @latest-existing = %!tips-by-id.values.sort(-*.id).head(50);
+        supply {
+            whenever $!latest-tips {
+                .emit;
+            }
+            .emit for @latest-existing;
+        }
+    }
+    
+    # The other unimplemented methods go here
+}
+</code></pre>
+
+<p>我们保留一个ID的计数器，为每个提示分配自己的唯一ID。我们有一个哈希映射到Tip对象的ID。然后我们有一个供应商，当有新的提示时，我们将用它来通知任何感兴趣的团体。</p>
+
+<p>添加提示方法的前3行很简单，最后一行有点好奇：为什么要开始？答案是，使用耗材时，发件人支付分发消息的费用，但我们不希望将显示器 - 这会互相排斥 - 与所有这些工作挂钩。所以，我们开始异步分派通知。</p>
+
+<p>最新技巧的方法也需要小心。请记住，我们从监视器返回的内容不受互斥排除的保护。因此，我们应该在供应模块之外复制最新的现有技巧，而显示器正在保护％！tips-by-id。然后，当返回的供应块被挖掘时，我们订阅最新的技巧，然后发出每个最新的现有技巧。</p>
+
+<p>随着这些，我们的测试通过。进展！</p>
+
+<pre><code>$ git add .
+$ git commit -m &quot;Implement first part of business logic&quot;
+[master 6e352c6] Implement first part of business logic
+ 6 files changed, 70 insertions(+), 4 deletions(-)
+ create mode 100644 lib/Tipsy.pm6
+ create mode 100644 t/tipsy.t
+</code></pre>
+
+<h2 id="设置-reacts">设置 Reacts</h2>
+
+<p>现在是时候回到前端了。我们将使用 React。 React 为我们提供了一个虚拟的DOM，我们可以在每次改变时重建它。然后将其与当前真实的 DOM 进行比较，并应用更改。这让我们以更实用的风格工作。 React 组件是使用 JSX 编写的，一种嵌入到 JavaScript 中的类 XML 语法。首先，我们需要设置编译。以下是新的开发依赖关系：</p>
+
+<pre><code>$ npm install --save-dev babel-loader babel-core babel-preset-es2015 babel-preset-react
+</code></pre>
+
+<p>接下来, 我们需要创建一个 <code>.babelrc</code> 文件, 假设要使用这个 react 预先装置 (Babel 是用于将现代 JavaScript 转换成浏览器兼容的 Javascript 的东西)。它应该只包含:</p>
+
+<pre><code>{
+  &quot;presets&quot; : [&quot;es2015&quot;,&quot;react&quot;]
+}
+</code></pre>
+
+<p>最后, <code>webpack.config.js</code> 需要更新才能使用它。更改后, 它看起来应该像下面这样:</p>
+
+<pre><code>const path = require('path');
+
+module.exports = {
+    entry: './frontend/index.js',
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'static/js')
+    },
+    module : {
+        rules : [
+            {
+                test: /\.js/,
+                include: path.resolve(__dirname, 'frontend'),
+                loader: 'babel-loader'
+            }
+        ]
+    }
+};
+</code></pre>
+
+<p>尝试 <code>npm run build</code>。它应该存活下来，尽管我们还没有使用任何新的 React 支持。</p>
+
+<p>接下来构建工具链，是时候安装我们将用于前端的 React 模块。开始：</p>
+
+<pre><code>$ npm install --save react react-dom
+</code></pre>
+
+<p>通过这些，我们可以编辑我们的 <code>index.js</code> 文件，如下所示：</p>
+
+<pre><code>import React from 'react';
+import {render} from 'react-dom';
+
+var App = () =&gt; &lt;p&gt;Hello React!&lt;/p&gt;;
+render(&lt;App /&gt;, document.getElementById('app'));
+And add a div tag with the ID app to our index.html:
+
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Tipsy&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Tipsy&lt;/h1&gt;
+    &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+    &lt;script src=&quot;js/bundle.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>再次运行 <code>npm run build</code>, 刷新, 它应该会打印出 Hello React!.</p>
+
+<pre><code>$ git add .
+$ git commit -m &quot;Setup react&quot;
+[master 0ffa260] Setup react
+ 5 files changed, 27 insertions(+), 1 deletion(-)
+ create mode 100644 .babelrc
+</code></pre>
+
+<h2 id="添加一些组件">添加一些组件</h2>
+
+<p>Next, let&rsquo;s sketch out the UI a little more. Replace the existing App component with this:</p>
+
+<pre><code>var SubmitTip = () =&gt; (
+    &lt;div&gt;
+        &lt;h2&gt;Got a tip?&lt;/h2&gt;
+        &lt;div&gt;
+            &lt;textarea rows=&quot;2&quot; cols=&quot;100&quot; maxlength=&quot;200&quot; /&gt;
+        &lt;/div&gt;
+        &lt;input type=&quot;button&quot; value=&quot;Add Tip&quot; /&gt;
+    &lt;/div&gt;
+);
+
+var LatestTips = () =&gt; (
+    &lt;div&gt;
+        &lt;h2&gt;Latest Tips&lt;/h2&gt;
+        TODO
+    &lt;/div&gt;
+);
+
+var App = () =&gt; (
+    &lt;div&gt;
+        &lt;SubmitTip /&gt;
+        &lt;LatestTips /&gt;
+    &lt;/div&gt;
+);
+</code></pre>
+
+<p>Another npm run build, refresh, and it should show something that looks a lot like one would expect from the UI. But how do we get data to populate the UI? And how do we do stuff when the button is clicked? For that, we&rsquo;ll bring in the final piece of the client side puzzle: Redux.</p>
+
+<p>Redux§</p>
+
+<p>There&rsquo;s a good tutorial on Redux on its site, and I won&rsquo;t try and repeat it all here, but I&rsquo;ll try to summarize what Redux does. React gives us a way to render a virtual DOM each time something changes. To make that useful, we need some kind of object containing the current state that should be rendered onto the UI. Redux is a container for that state, and gets us to organize changes to it using reducers. That is to say, we never really update state, we just produce a new one derived from the current one, plus an action.</p>
+
+<p>First, let&rsquo;s add the redux and related dependencies.</p>
+
+<pre><code>$ npm install --save redux redux-thunk react-redux
+</code></pre>
+
+<p>Next up, we need to define some actions. Actions correspond to state changes on the page. We&rsquo;ll create just two for now:</p>
+
+<p>CHANGE_TIP_TEXT - when the text of the tip the user is typing changes
+ADD_TIP - when the Add Tip button is pressed
+In a frontend/actions.js file, we do this:</p>
+
+<pre><code>export const CHANGE_TIP_TEXT = 'CHANGE_TIP_TEXT';
+export const ADD_TIP = 'ADD_TIP';
+
+export function changeTipText(text) {
+    return { type: CHANGE_TIP_TEXT, text };
+}
+export function addTip() {
+    return { type: ADD_TIP };
+}
+</code></pre>
+
+<p>The constants are names of actions, and the functions are known as &ldquo;action creators&rdquo;: they create an object with a type property and, optionally, some data.</p>
+
+<p>Next, we need a reducer. Reducers take current state, and calculate and return a new state. They never mutate the state and never do any side-effects (such as network I/O). They are pure calculation. Our state will, for now, be very simple: just the content of the text box.</p>
+
+<p>Writing reducers is much more convenient when we have the upcoming spread operator in JavaScript; it&rsquo;s a prefix &hellip;, and works much like Perl 6&rsquo;s prefix | operator for flattening. Since we already have a build toolchain, we can add it by installing another syntax transform:</p>
+
+<pre><code>npm install --save-dev babel-plugin-transform-object-rest-spread
+</code></pre>
+
+<p>And adding it to our .babelrc:</p>
+
+<pre><code>{
+    &quot;presets&quot; : [&quot;es2015&quot;,&quot;react&quot;],
+    &quot;plugins&quot; : [&quot;transform-object-rest-spread&quot;]
+}
+</code></pre>
+
+<p>With that done, here&rsquo;s our reducer, placed in frontend/reducer.js:</p>
+
+<pre><code>import * as ActionTypes from './actions';
+
+const initialState = {
+    tipText: ''
+};
+export function tipsyReducer(state = initialState, action) {
+    switch (action.type) {
+        case ActionTypes.CHANGE_TIP_TEXT:
+            return { ...state, tipText: action.text };
+        case ActionTypes.ADD_TIP:
+            return { ...state, tipText: '' };
+        default:
+            return state;
+    }
+}
+</code></pre>
+
+<p>Now it&rsquo;s time to wire it up to React. The overall flow will be:</p>
+
+<ol>
+<li>Something happens on the UI (text changed, add tip button pressed) 2. An action object is created 3. It&rsquo;s passed into the reducer, which produces a new state 4. The new state is turned into properties, which are then used to build up a React virtual DOM 5. React takes care of applying any updates to the real DOM, thus reflecting our changes</li>
+</ol>
+
+<p>Back in frontend/index.js, we&rsquo;ll import our actions and reducer, together with some bits from the redux and react-redux libraries:</p>
+
+<pre><code>import { createStore } from 'redux';
+import { Provider, connect } from 'react-redux';
+import * as Actions from './actions';
+import { tipsyReducer } from './reducer';
+</code></pre>
+
+<p>Next up, we&rsquo;ll create a Redux store, which is the thing that holds the latest version of the state produced by the reducer. We create it simply by passing our reducer to createStore:</p>
+
+<pre><code>let store = createStore(tipsyReducer);
+</code></pre>
+
+<p>Next up, we need to map the state from the store into properties that will be available in our React components, and also produce some functions that will also be made available in those properties, and will dispatch actions.</p>
+
+<pre><code>function mapProps(state) {
+    return state;
+}
+function mapDispatch(dispatch) {
+    return {
+        onChangeTipText: text =&gt; dispatch(Actions.changeTipText(text)),
+        onAddTip: text =&gt; dispatch(Actions.addTip())
+    };
+}
+</code></pre>
+
+<p>With those ready, we can complete the integration of Redux with React, which looks like this:</p>
+
+<pre><code>let ConnectedApp = connect(mapProps, mapDispatch)(App);
+render(
+    &lt;Provider store={store}&gt;
+        &lt;ConnectedApp /&gt;
+    &lt;/Provider&gt;,
+    document.getElementById('app'));
+</code></pre>
+
+<p>The connect function makes the properties from the state in the store available to the App React component, and wrapping it in Provider makes the state from the store available in order for that to happen.</p>
+
+<p>Last but not least, we can update our components:</p>
+
+<pre><code>var SubmitTip = props =&gt; (
+    &lt;div&gt;
+        &lt;h2&gt;Got a tip?&lt;/h2&gt;
+        &lt;div&gt;
+            &lt;textarea rows=&quot;2&quot; cols=&quot;100&quot; maxLength=&quot;200&quot;
+                value={props.tipText}
+                onChange={e =&gt; props.onChangeTipText(e.target.value)} /&gt;
+        &lt;/div&gt;
+        &lt;input type=&quot;button&quot; value=&quot;Add Tip&quot; onClick={props.onAddTip} /&gt;
+    &lt;/div&gt;
+);
+
+var App = props =&gt; (
+    &lt;div&gt;
+        &lt;SubmitTip tipText={props.tipText}
+            onChangeTipText={props.onChangeTipText}
+            onAddTip={props.onAddTip} /&gt;
+        &lt;LatestTips /&gt;
+    &lt;/div&gt;
+);
+</code></pre>
+
+<p>After npm run build, and a refresh in the browser, we should notice that hitting the Add Tip button after typing will clear the text box. Our actions and reducer are running. Phew!</p>
+
+<p>For completeness, here is the entire frontend/index.js at this stage:</p>
+
+<pre><code>import React from 'react';
+import { render } from 'react-dom';
+import { createStore } from 'redux';
+import { Provider, connect } from 'react-redux';
+import * as Actions from './actions';
+import { tipsyReducer } from './reducer';
+
+var SubmitTip = props =&gt; (
+    &lt;div&gt;
+        &lt;h2&gt;Got a tip?&lt;/h2&gt;
+        &lt;div&gt;
+            &lt;textarea rows=&quot;2&quot; cols=&quot;100&quot; maxLength=&quot;200&quot;
+                value={props.tipText}
+                onChange={e =&gt; props.onChangeTipText(e.target.value)} /&gt;
+        &lt;/div&gt;
+        &lt;input type=&quot;button&quot; value=&quot;Add Tip&quot; onClick={props.onAddTip} /&gt;
+    &lt;/div&gt;
+);
+
+var LatestTips = () =&gt; (
+    &lt;div&gt;
+        &lt;h2&gt;Latest Tips&lt;/h2&gt;
+        TODO
+    &lt;/div&gt;
+);
+
+var App = props =&gt; (
+    &lt;div&gt;
+        &lt;SubmitTip tipText={props.tipText}
+            onChangeTipText={props.onChangeTipText}
+            onAddTip={props.onAddTip} /&gt;
+        &lt;LatestTips /&gt;
+    &lt;/div&gt;
+);
+
+function mapProps(state) {
+    return state;
+}
+function mapDispatch(dispatch) {
+    return {
+        onChangeTipText: text =&gt; dispatch(Actions.changeTipText(text)),
+        onAddTip: text =&gt; dispatch(Actions.addTip())
+    };
+}
+
+let store = createStore(tipsyReducer);
+let ConnectedApp = connect(mapProps, mapDispatch)(App);
+render(
+    &lt;Provider store={store}&gt;
+        &lt;ConnectedApp /&gt;
+    &lt;/Provider&gt;,
+    document.getElementById('app'));
+</code></pre>
+
+<p>It&rsquo;s commit time again.</p>
+
+<pre><code>$ git add .
+$ git commit -m &quot;Wire up Redux&quot;
+[master 3478433] Wire up Redux
+ 5 files changed, 83 insertions(+), 7 deletions(-)
+ create mode 100644 frontend/actions.js
+ rewrite frontend/index.js (81%)
+ create mode 100644 frontend/reducer.js
+</code></pre>
+
+<p>POSTing to the backend§
+Finally, it&rsquo;s time to get adding a tip in the frontend calling the backend! We&rsquo;ll need to do two things:</p>
+
+<ol>
+<li>Write a POST handler in the Cro backend 2. Find a way to have our Redux action result in a POST</li>
+</ol>
+
+<p>First for the Cro part. In lib/Routes.pm6 we add the following route implementation:</p>
+
+<pre><code>post -&gt; 'tips' {
+    request-body -&gt; (:$text) {
+        $tipsy.add-tip($text);
+        response.status = 204;
+    }
+}
+</code></pre>
+
+<p>Next up, the JavaScript part. The question is where to put the network bit? Our reducer should be pure. The answer is the redux-thunk module that we installed earlier, but didn&rsquo;t yet use. This allows us to write action creators that return a function. This function will be passed the dispatcher, and it can call it to dispatch actions. Typically, we will dispatch one action when an asynchronous operation starts, which we can use to indicate that on the UI, and a further one once it has completed, so we can again indicate that the operation completed in the UI.</p>
+
+<p>First, let&rsquo;s setup redux-thunk, which is a piece of middleware. Back in frontend/index.js, add:</p>
+
+<pre><code>import thunkMiddleware from 'redux-thunk';
+</code></pre>
+
+<p>And then change:</p>
+
+<pre><code>import { createStore } from 'redux';
+</code></pre>
+
+<p>To also import applyMiddleware:</p>
+
+<pre><code>import { createStore, applyMiddleware } from 'redux';
+</code></pre>
+
+<p>Finally, change:</p>
+
+<pre><code>let store = createStore(tipsyReducer);
+</code></pre>
+
+<p>To apply the middleware also:</p>
+
+<pre><code>let store = createStore(tipsyReducer, applyMiddleware(thunkMiddleware));
+</code></pre>
+
+<p>Next, in frontend/actions.js, we&rsquo;ll refactor the add tip action creator function to be a thunk action:</p>
+
+<pre><code>export function addTip() {
+    return dispatch =&gt; {
+        dispatch({ type: ADD_TIP });
+    };
+}
+</code></pre>
+
+<p>Note that this doesn&rsquo;t yet change anything; build it and the behavior should be just the same. Now that we&rsquo;ve done this, however, we can see that it will be possible to do this dispatch in a callback after the network operation.</p>
+
+<p>There&rsquo;s of course dozens of good ways to deal with asynchronous operations in JavaScript, and if you are seriously building single page applications I strongly recommend looking into using a promise library. There&rsquo;s also Redux middleware that will integrate with that. For now, we&rsquo;ll do the simplest possible thing: use jQuery and a callback. First, let&rsquo;s add jQuery as a dependency:</p>
+
+<pre><code>$ npm install --save jquery
+</code></pre>
+
+<p>Then we&rsquo;ll import it in frontend/actions.js:</p>
+
+<pre><code>import $ from 'jquery';
+</code></pre>
+
+<p>And do the POST to the backend:</p>
+
+<pre><code>export function addTip() {
+    return (dispatch, getState) =&gt; {
+        $.ajax({
+            url: '/tips',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ text: getState().tipText }),
+            success: () =&gt; dispatch({ type: ADD_TIP })
+        });
+    };
+}
+</code></pre>
+
+<p>Reload it, maybe open your browser&rsquo;s development tools (F12 usually), flip to the Network tab, and click Add Tip. All being well, you&rsquo;ll observe the request was made and it produced a 204 response. Alternatively, you may like to stop the cro run and instead do cro trace; type a message, click Add Tip again, and you should see the request body dumped in the trace output.</p>
+
+<pre><code>...
+65 63 74 69 6f 6e 3a 20 6b 65 65 70 2d 61 6c 69  ection: keep-ali
+76 65 0d 0a 0d 0a 7b 22 74 65 78 74 22 3a 22 74  ve....{&quot;text&quot;:&quot;t
+72 79 20 74 68 65 20 62 65 65 66 22 7d           ry the beef&quot;}
+</code></pre>
+
+<p>The latest tips websocket§
+There&rsquo;s a variety of ways that we could write up the websocket, but we&rsquo;ll use redux-websocket-action. This allows us to send Redux actions over the websocket to the client, which is neat (although, unfortunately, does mean we are coupling our backend to the use of this library in the frontend, which is worth some questioning).</p>
+
+<p>First, let&rsquo;s install the library in the frontend:</p>
+
+<pre><code>$ npm install --save redux-websocket-action
+</code></pre>
+
+<p>Over in index.js, we import it:</p>
+
+<pre><code>import WSAction from 'redux-websocket-action';
+</code></pre>
+
+<p>And set it up, like this:</p>
+
+<pre><code>let host = window.location.host;
+let wsAction = new WSAction(store, 'ws://' + host + '/latest-tips', {
+    retryCount:3,
+    reconnectInterval: 3
+});
+wsAction.start();
+</code></pre>
+
+<p>Over in frontend/actions.js, we&rsquo;ll add one more action type (but no action creation function, as it will originate on the server):</p>
+
+<pre><code>export const LATEST_TIP = 'LATEST_TIP';
+</code></pre>
+
+<p>Then we&rsquo;ll update our reducer, to prepend each incoming tip to a list of latest tips, so frontend/reducer.js ends up as:</p>
+
+<pre><code>import * as ActionTypes from './actions';
+
+const initialState = {
+    tipText: '',
+    latestTips: []
+};
+export function tipsyReducer(state = initialState, action) {
+    switch (action.type) {
+        case ActionTypes.CHANGE_TIP_TEXT:
+            return { ...state, tipText: action.text };
+        case ActionTypes.ADD_TIP:
+            return { ...state, tipText: '' };
+        case ActionTypes.LATEST_TIP: {
+            let tip = { id: action.id, text: action.text };
+            return {
+                ...state,
+                latestTips: [tip, ...state.latestTips]
+            };
+        }
+        default:
+            return state;
+    }
+}
+</code></pre>
+
+<p>And then update the React components in frontend/index.js to render the latest tips:</p>
+
+<pre><code>var LatestTips = props =&gt; (
+    &lt;div&gt;
+        &lt;h2&gt;Latest Tips&lt;/h2&gt;
+        &lt;ul&gt;
+        {props.tips.map(t =&gt; &lt;li key={t.id}&gt;{t.text}&lt;/li&gt;)}
+        &lt;/ul&gt;
+    &lt;/div&gt;
+);
+
+var App = props =&gt; (
+    &lt;div&gt;
+        &lt;SubmitTip tipText={props.tipText}
+            onChangeTipText={props.onChangeTipText}
+            onAddTip={props.onAddTip} /&gt;
+        &lt;LatestTips tips={props.latestTips} /&gt;
+    &lt;/div&gt;
+);
+</code></pre>
+
+<p>App is updated simply to pass the tips to the LatestTips component. And with that, the client-side additions are done.</p>
+
+<p>Now for the backend, which is just a single addition in Routes.pm6. We clear out the websocket stub that was generated for us, and replace it with code to take the latest-tips Supply from the Tipsy business logic object, turn the events into appropriate JSON, and emit them:</p>
+
+<pre><code>get -&gt; 'latest-tips' {
+    web-socket -&gt; $incoming {
+        supply whenever $tipsy.latest-tips -&gt; $tip {
+            emit to-json {
+                WS_ACTION =&gt; True,
+                action =&gt; {
+                    type =&gt; 'LATEST_TIP',
+                    id =&gt; $tip.id,
+                    text =&gt; $tip.tip
+                }
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>The outer hash is the &ldquo;envelope&rdquo; for redux-websocket-action, which tells it to pay attention to the message and dispatch its action property as a Redux action.</p>
+
+<p>Reload it in the browser. Add a tip. See it show up. Open a second tab with the application. You&rsquo;ll see it shows the first tip. Add a second tip. Flip back to the first tab, and you&rsquo;ll see that tip magically showed up there too. We&rsquo;re now successfully sharing out the tips over the web socket. Hurrah! That calls for a commit.</p>
+
+<p>Agree and disagree§
+We&rsquo;ve spent a lot of time setting up the client-side infrastructure. Now it&rsquo;s in place, however, adding further features is a far quicker process. Let&rsquo;s round off the tutorial by implementing the Agree/Disagree feature (links to let the user indicate agreement/disagreement with the tips), and showing the list of top tips.</p>
+
+<p>Let&rsquo;s start out in the very backend, by writing tests for these new features in the business logic object. We&rsquo;ll add these tests to t/tipsy.t:</p>
+
+<pre><code>given $tipsy.latest-tips.head(3).list -&gt; @tips {
+    $tipsy.agree(@tips[0].id) for ^3;
+    $tipsy.agree(@tips[1].id) for ^4;
+    $tipsy.disagree(@tips[1].id) for ^10;
+    $tipsy.agree(@tips[2].id) for ^2;
+}
+given $tipsy.top-tips.head(1).list[0] {
+    is .[0].tip, 'Try the vanilla stout for sure',
+        'Most agreeable tip first';
+    is .[1].tip, 'The lamb kebabs are good!',
+        'Next most agreeable tip second';
+    is .[2].tip, 'Not so keen on the fish burrito!',
+        'Least agreeable tip third';
+}
+throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
+    'Correct exception on no such tip';
+</code></pre>
+
+<p>The first part just adds some agreement and disagreement on the tips (they are sorted latest first). Next, we use the top-tips Supply and grab the first thing it emits (or should emit, at least), which is the current ordering at the point we tap the Supply. It checks that ordering is correct. A final test checks that for unrecognized IDs, we throw an exception.</p>
+
+<p>Here&rsquo;s the new exception type:</p>
+
+<pre><code>class X::Tipsy::NoSuchId is Exception {
+    has $.id;
+    method message() { &quot;No tip with ID '$!id'&quot; }
+}
+</code></pre>
+
+<p>Next up, we&rsquo;ll give the Tip class some methods that produce a new version of the Tip object with agreed or disagreed bumped one higher (we keep these instances immutable, since we share them outside of our monitor):</p>
+
+<pre><code>class Tip {
+    has Int $.id is required;
+    has Str $.tip is required;
+    has Int $.agreed = 0;
+    has Int $.disagreed = 0;
+
+    method agree() {
+        self.clone(agreed =&gt; $!agreed + 1)
+    }
+
+    method disagree() {
+        self.clone(disagreed =&gt; $!disagreed + 1)
+    }
+}
+</code></pre>
+
+<p>The agree and disagree methods are easy enough:</p>
+
+<pre><code>method agree(Int $tip-id --&gt; Nil) {
+    with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
+        $tip-ref .= agree;
+    }
+    else {
+        X::Tipsy::NoSuchId.new(id =&gt; $tip-id).throw;
+    }
+}
+
+method disagree(Int $tip-id --&gt; Nil) {
+    with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
+        $tip-ref .= disagree;
+    }
+    else {
+        X::Tipsy::NoSuchId.new(id =&gt; $tip-id).throw;
+    }
+}
+</code></pre>
+
+<p>Hm, actually that&rsquo;s quite a bit of similarity. Let&rsquo;s use a private method to factor it out:</p>
+
+<pre><code>method agree(Int $tip-id --&gt; Nil) {
+    self!with-tip: $tip-id, -&gt; $tip-ref is rw {
+        $tip-ref .= agree;
+    }
+}
+
+method disagree(Int $tip-id --&gt; Nil) {
+    self!with-tip: $tip-id, -&gt; $tip-ref is rw {
+        $tip-ref .= disagree;
+    }
+}   
+        
+method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
+    with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
+        operation($tip-ref)
+    }
+    else {
+        X::Tipsy::NoSuchId.new(id =&gt; $tip-id).throw;
+    }
+}
+</code></pre>
+
+<p>Finally, here&rsquo;s our first attempt at the top-tips method:</p>
+
+<pre><code>method top-tips(--&gt; Supply) { 
+    my @top-tips = %!tips-by-id.values
+        .sort({ .disagreed - .agreed })
+        .head(50);
+    supply {
+        emit @top-tips;
+    }
+}
+</code></pre>
+
+<p>It passes the tests, and yet&hellip;something is missing. It&rsquo;s meant to emit an updated sorted list of tips every time there&rsquo;s either a new tip or a tip is agreed or disagreed with. Let&rsquo;s add some tests for that also:</p>
+
+<pre><code>my $new-tip-id;
+react {
+    whenever $tipsy.top-tips.skip(1).head(1) {
+        is .[0].tip, 'Try the vanilla stout for sure',
+            'After adding a tip, correct order (1)';
+        is .[1].tip, 'The lamb kebabs are good!',
+            'After adding a tip, correct order (2)';
+        is .[2].tip, 'The pau bahji is super spicy',
+            'After adding a tip, correct order (3)';
+        is .[3].tip, 'Not so keen on the fish burrito!',
+            'After adding a tip, correct order (4)';
+        $new-tip-id = .[2].id;
+    }
+    $tipsy.add-tip('The pau bahji is super spicy');
+}
+ok $new-tip-id, 'New tip ID seen in top sorted tips';
+
+react {
+    whenever $tipsy.top-tips.skip(5).head(1) {
+        is .[0].tip, 'The pau bahji is super spicy',
+            'After agrees, order updated';
+    }
+    $tipsy.agree($new-tip-id) for ^5;
+}
+</code></pre>
+
+<p>To have this update, we need a Supplier that we can emit on to indicate a change to the agree/disagree counts.</p>
+
+<p>has Supplier $!tip-change = Supplier.new;
+And to emit on it (easy after the factoring out earlier):</p>
+
+<pre><code>method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
+    with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
+        operation($tip-ref);
+        start $!tip-change.emit($tip-ref&lt;&gt;);
+    }
+    else {
+        X::Tipsy::NoSuchId.new(id =&gt; $tip-id).throw;
+    }
+}
+</code></pre>
+
+<p>Finally, to update the top-tips method. There&rsquo;s a few ways we could do this, but the easiest way to be sure we&rsquo;re safe is to make sure the Supply keeps its own local state, which it can protect (again, remember that since the supply block is returned from, and lives beyond, the method, it is not going to be protected by the monitor).</p>
+
+<pre><code>method top-tips(--&gt; Supply) {
+    my %initial-tips = %!tips-by-id;
+    supply {
+        my %current-tips = %initial-tips;
+        sub emit-latest-sorted() {
+            emit [%current-tips.values.sort({ .disagreed - .agreed }).head(50)]
+        }
+        whenever Supply.merge($!latest-tips.Supply, $!tip-change.Supply) {
+            %current-tips{.id} = $_;
+            emit-latest-sorted;
+        }
+        emit-latest-sorted;
+    }
+}
+</code></pre>
+
+<p>With that done, it&rsquo;s time to expose this functionality to the outside world by updating lib/Routes.pm6. Its job is to map the business logic onto HTTP. The only thing we need to watch out for is to turn the &ldquo;no such ID&rdquo; exceptions into the appropriate HTTP response, which is a 404 Not Found. Otherwise, we&rsquo;d send back 500 Internal Server Error, which is wrong because it&rsquo;s not the server&rsquo;s fault that the client sent some bogus ID. Here goes:</p>
+
+<pre><code>post -&gt; 'tips', Int $id, 'agree' {
+    $tipsy.agree($id);
+    response.status = 204;
+    CATCH {
+        when X::Tipsy::NoSuchId {
+            not-found;
+        }
+    }
+}
+
+post -&gt; 'tips', Int $id, 'disagree' {
+    $tipsy.disagree($id);
+    response.status = 204;
+    CATCH {
+        when X::Tipsy::NoSuchId {
+            not-found;
+        }
+    }
+}
+</code></pre>
+
+<p>The final step in the backend is to map the top tips out to another web socket:</p>
+
+<pre><code>get -&gt; 'top-tips' {
+    web-socket -&gt; $incoming {
+        supply whenever $tipsy.top-tips -&gt; @tips {
+            emit to-json {
+                WS_ACTION =&gt; True,
+                action =&gt; {
+                    type =&gt; 'UPDATE_TOP_TIPS',
+                    tips =&gt; [@tips.map: -&gt; $tip {
+                        {
+                            id =&gt; $tip.id,
+                            text =&gt; $tip.tip,
+                            agreed =&gt; $tip.agreed,
+                            disagreed =&gt; $tip.disagreed
+                        }
+                    }]
+                }
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>Now for the frontend. In frontend/actions.js, we&rsquo;ll add three new action type constants:</p>
+
+<pre><code>export const UPDATE_TOP_TIPS = 'UPDATE_TOP_TIPS';
+export const AGREE = 'AGREE';
+export const DISAGREE = 'DISAGREE';
+And then two new action creators (UPDATE_TOP_TIPS doesn't need one, as it comes from the server):
+
+export function agree(id) {
+    return dispatch =&gt; {
+        $.ajax({
+            url: '/tips/' + id + '/agree',
+            type: 'POST',
+            success: () =&gt; dispatch({ type: AGREE, id })
+        });
+    };
+}
+export function disagree(id) {
+    return dispatch =&gt; {
+        $.ajax({
+            url: '/tips/' + id + '/disagree',
+            type: 'POST',
+            success: () =&gt; dispatch({ type: DISAGREE, id })
+        });
+    };
+}
+</code></pre>
+
+<p>In the reducer, we&rsquo;ll tweak the initial state to have an empty set of top tips:</p>
+
+<pre><code>const initialState = {
+    tipText: '',
+    latestTips: [],
+    topTips: []
+};
+</code></pre>
+
+<p>And then add an extra case statement to handle the new update action (we don&rsquo;t need to do anything much on agree/disagree, though in a real application we&rsquo;d want to give some user feedback that their vote was counted):</p>
+
+<pre><code>case ActionTypes.UPDATE_TOP_TIPS:
+    return {
+        ...state,
+        topTips: action.tips
+    };
+</code></pre>
+
+<p>Next we need to get the second web socket connected up. That&rsquo;s just a little refactor away in frontend/index.js:</p>
+
+<pre><code>['latest-tips', 'top-tips'].forEach(endpoint =&gt; {
+    let host = window.location.host;
+    let wsAction = new WSAction(store, 'ws://' + host + '/' + endpoint, {
+        retryCount:3,
+        reconnectInterval: 3
+    });
+    wsAction.start();
+});
+</code></pre>
+
+<p>Next, we&rsquo;ll update the dispatch to props map, to include our new agree and disagree actions:</p>
+
+<pre><code>function mapDispatch(dispatch) {
+    return {
+        onChangeTipText: text =&gt; dispatch(Actions.changeTipText(text)),
+        onAddTip: text =&gt; dispatch(Actions.addTip()),
+        onAgree: id =&gt; dispatch(Actions.agree(id)),
+        onDisagree: id =&gt; dispatch(Actions.disagree(id)),
+    };
+}
+</code></pre>
+
+<p>Next up, we&rsquo;ll factor out showing a tip to a component that we can reuse in both the latest tips and top tips, which includes links to agree or disagree:</p>
+
+<pre><code>var Tip = props =&gt; (
+    &lt;li&gt;
+        {props.text} [&lt;a href=&quot;#&quot; onClick={() =&gt; props.onAgree(props.id)}&gt;Agree&lt;/a&gt;]
+        [&lt;a href=&quot;#&quot; onClick={() =&gt; props.onDisagree(props.id)}&gt;Disagree&lt;/a&gt;]
+    &lt;/li&gt;
+);
+</code></pre>
+
+<p>And then showing a list of tips, with a heading:</p>
+
+<pre><code>var TipList = props =&gt; (
+    &lt;div&gt;
+        &lt;h2&gt;{props.heading}&lt;/h2&gt;
+        &lt;ul&gt;
+        {props.tips.map(t =&gt; &lt;Tip key={t.id} {...props} {...t} /&gt;)}
+        &lt;/ul&gt;
+    &lt;/div&gt;
+);
+</code></pre>
+
+<p>Finally, the App component becomes:</p>
+
+<pre><code>var App = props =&gt; (
+    &lt;div&gt;
+        &lt;SubmitTip tipText={props.tipText}
+            onChangeTipText={props.onChangeTipText}
+            onAddTip={props.onAddTip} /&gt;
+        &lt;TipList heading=&quot;Latest Tips&quot; tips={props.latestTips}
+            onAgree={props.onAgree} onDisagree={props.onDisagree} /&gt;
+        &lt;TipList heading=&quot;Top Tips&quot; tips={props.topTips}
+            onAgree={props.onAgree} onDisagree={props.onDisagree} /&gt;
+    &lt;/div&gt;
+);
+</code></pre>
+
+<p>And there we have it. npm run build, refresh, and give it a spin. Clicking agree or disagree in either list ends up with the sort order in the Top Tips list changing to reflect the votes.</p>
+
+<p>At last, we&rsquo;re done.</p>
+
+<pre><code>$ git commit -m &quot;Add agree/disagree feature&quot; .
+[master 5d792bc] Add agree/disagree feature
+ 6 files changed, 188 insertions(+), 18 deletions(-)
+</code></pre>
+
+<p>Summing up§
+In this tutorial we&rsquo;ve gone from zero to reactive single page application. The frontend is written in modern ES6 using React and Redux. The backend is in Perl 6, using Cro. They communicate using both HTTP and web sockets. And both declare their dependencies, so getting started for a new developer is just a case of:</p>
+
+<pre><code>zef install --deps-only .
+npm install .
+npm run build
+cro run
+</code></pre>
+
+<p>One again, the code is available with the commit history described during this tutorial.</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/cro/">cro</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-07-20-%E4%BD%BF%E7%94%A8perl6%E8%BF%9E%E6%8E%A5kafka/" data-toggle="tooltip" data-placement="top" title="使用 Perl 6 连接 Kafka">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-perl6/" data-toggle="tooltip" data-placement="top" title="Ping Pang in Perl6">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

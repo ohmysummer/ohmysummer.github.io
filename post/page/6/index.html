@@ -201,6 +201,112 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/">
+                <h2 class="post-title">第二十四天-解魔方</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 24 – Solving a Rubik’s Cube
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 24, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (770 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 24 – Solving a Rubik’s Cube 介绍 我在圣诞节的愿望清单上有一个速度魔方，我真的很兴奋。 :)我想分享一些Perl 6代码的热情。
+我在89年从高中毕业，所以我恰好是在青少年时期拥有魔方的合适年龄。我记得试图在巴士上炫耀，让我的时间缩短到不到一分钟。我在80年代从当地的一家玩具店拿到了一本小册子，其中展示了一个关于如何解决我记忆的立方体的算法。我再也没有这本小册子了。多年来我一直坚持，但从来没有达到竞争水平。
+在过去的几个月里，YouTube根据我对立体声频道的兴趣，向我推荐了一些立方体视频;看到世界纪录在5秒以内，使我一分钟的旧时间看起来很慢。
+我所讲过的每个人都可以解决魔方问题，他们使用的算法与我所学的算法不同，而在立体魔法中讨论的方法却与众不同。不过，这种先进的版本似乎被定期制定世界记录的人们普遍使用。
+拾取这个算法并不难，我找到了几个视频，尤其是描述如何解决最后一层的视频。这样做了几天之后，我将步骤转录为几个笔记，其中列出了步骤列表，以及每个步骤的关键部分：所需的方向，然后是该步骤的各个转弯。然后，我可以参考我的笔记本的一个页面，而不是一个30分钟的视频，并且在几天后，记住了以下步骤：能够从记谱法移动到仅仅做这些移动是一个很大的加速。
+一周后，我能够在两分钟内使用新方法可靠地解决问题;退后一步，但在休息时间里一周的努力并不坏。从那以后（几个星期后），我一直下到1:20以下。再次，这是初学者的方法，没有任何先进的技术，而且我可以在不查看立方体的情况下完成各个算法步骤。 （尽管如此，我仍然有很长的路要走。）
+符号 关于移动符号的快速注释 - 考虑到您将立方体的一边保持在顶部，一边朝向您，相对边是：
+L (Left) R (Right) U (Up) D (Down) F (Front) B (Back)  如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个&rdquo;，那就意味着逆时针方向，所以R&rsquo;会让最上面的部分下来，而R会让底部的部分出现。
+此外，您可能必须翻转两次，写成U2; （顺时针或逆时针无关紧要，因为它从起点开始为180º。）
+算法 我正在使用的初学者算法有以下基本步骤：
+1.白色十字架2.白色拐角3.第二层4.黄色十字架5.黄色边缘6.黄色拐角7.定位黄色拐角
+如果您对每个步骤的具体内容感到好奇，您可以浏览Rubik的wiki或上面链接的YouTube视频。该算法的更高级版本（由Jessica Fridrich提供的CFOP）允许您合并步骤，具有处理特定立方体状态的特定“快捷方式”，或者解决任何颜色作为第一面，而不仅仅是白色。
+设计一个模块 当我开始研究这个模块时，我知道我希望能够以某种熟悉算法的人熟悉的方式展示每一步所需的位置，并且让各个步骤也是自然的，就像是：
+F.R.U.Rʼ.Uʼ.Fʼ  我也希望能够转储立方体的现有状态;现在作为文本，但最终也能够将其与视觉表示相结合，
+我们需要能够判断立方体是否已解决;我们需要能够检查相对于当前方向的棋子，并且能够改变我们的方向。
+由于我要开始渲染立方体状态的能力，然后快速添加转向两侧的能力，我选择了一个内部结构，使其变得相当容易。
+代码 github上提供了该模块的最新版本。这里介绍的代码来自最初的版本。
+Perl 6允许您创建Enumerations，因此您可以在代码中使用实际的单词而不是查找值，所以让我们从一些我们需要的内容开始：
+enum Side «:Up('U') :Down('D') :Front('F') :Back('B') :Left('L') :Right('R')»; enum Colors «:Red('R') :Green('G') :Blue('B') :Yellow('Y') :White('W') :Orange('O')»;  有了这个语法，我们可以直接在我们的代码中使用Up，并且它的关联值是U.
+                  <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/">
+                <h2 class="post-title">Playing with the code of Rakudo Perl 6</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 23, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (180 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  昨天，我们查看了返回字符串的 Bool 类的两个方法。函数产生的字符串表示在源代码中被硬编码。
+让我们使用这个观察并尝试改变文本。
+所以，这里是我们要修改的片段：
+Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? 'True' !! 'False' });  该 gist 方法用于对已定义的变量进行字符串化。
+要做到这一点，你需要在计算机上安装 Rakudo 的源代码，以便编译它们。首先从 GitHub 克隆项目：
+$ git clone https://github.com/rakudo/rakudo.git  编译 MoarVM：
+$ cd rakudo $ perl Configure.pl --gen-moar --gen-nqp --backends=moar $ make  完成之后，你会在 rakudo 目录下获得 perl6 可执行文件。
+现在，打开 src/core/Bool.pm 文件，并将 gist 方法的字符串更改为使用 Unicode 大拇指代替纯文本：
+Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? '👍' !! '👎' });  保存文件后，您需要重新编译 Rakudo。 Bool.
+                  <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-12-23-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E5%A4%A9-perl-6%E9%AB%98%E5%B0%94%E5%A4%AB/">
                 <h2 class="post-title">第二十三天-Perl 6 高尔夫</h2>
 
@@ -590,114 +696,6 @@ shell&gt; 123 +7 Merry Christmas
 shell&gt; 123 +13 Happy New Year
 </code></pre>
 
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-17-%E7%AC%AC%E5%8D%81%E4%B8%83%E5%A4%A9-%E5%85%B3%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92/">
-                <h2 class="post-title">第十七天-关于消息传递</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 17: Something about messaging (but I couldn’t think of a snappier title.)
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 17, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (607 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 17: Something about messaging (but I couldn’t think of a snappier title.) 为什么要传递消息 当我第一次开始考虑写今年的 Advent 文章时，我反思我在过去的十二个月里并没有真正写过大量的 Perl 6，与往年相比，我似乎写了大量的模块。我一直在做的事情（至少在我的日常工作中）正在考虑和实施大量使用某些消息传递系统的应用程序。所以我认为将这些想法引入 Perl 6 会很有趣。
-作为一种“胶水语言”，Perl一直享有盛誉，Perl 6 具有与之竞争的功能，最显着的是响应式和并发功能，因此非常适合创建基于消息的集成服务。
-传递什么信息 现在我的脚下就是优秀的企业集成模式，尽管它现在已经有近15年的历史了，但我仍然建议任何有兴趣（或工作于）该领域的人。然而，它是一个重量级的书（字面上，它在硬书中的重量接近一点五公斤），所以我用它来提醒自己不要试图在这个主题上详尽无遗，以免这会变成一本书本身。
-有相当多的自由和商业管理消息系统，使用一系列开放和专有的协议，但我将限制自己到我熟悉的 RabbitMQ，并且在 Perl 6 中由 Net::AMQP 支持。
-如果你想亲自尝试一下这些例子，你将需要访问一个 RabbitMQ 代理（它可以作为大多数操作系统发行版的包），但是你可以使用 Docker Image，它看起来工作得很好。
-您还需要安装 Net::AMQP，这可以通过以下方式完成：
-zef install Net::AMQP  在示例中，我将使用 RabbitMQ 服务器的默认连接详细信息（即代理正在本地主机上运行，​​并且默认 guest 处于活动状态），如果您需要提供不同的详细信息，则可以更改 Net::AMQP 的构造函数以反映适当的值：
-my $n = Net::AMQP.new( host =&gt; 'localhost', port =&gt; 5672, login =&gt; 'guest', password =&gt; 'guest', vhost =&gt; '/' );  一些示例可能需要其他模块，但我会在介绍时介绍它们。
-                  <a href="https://ohmysummer.github.io/post/2017-12-17-%E7%AC%AC%E5%8D%81%E4%B8%83%E5%A4%A9-%E5%85%B3%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/">
-                <h2 class="post-title">第十六天-Perl 6 性能改进</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 16, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (84 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶 在英国，我们缺乏感恩节给圣诞节带来了新的一年，感谢和反思。为此，我想围绕Perl 6性能的状态放置一些我已经坐了一段时间的零碎片断，这些片断强调了这个过程需要付出多少努力。我不确定更广泛的编程社区对正在发生的努力的速度和数量表示赞赏。
-我不是核心开发人员，但自2010年推出Rakudo *之后，我一直是Perl 6的低级用户。通常情况下，已经进入Rakudo的努力被未知的努力所掩盖。人们重新审视Rakudo Perl 6时尤其如此，他可能会想象下一个圣诞节将会如何。但是Perl 6在历史上证明，在下一个圣诞节之前，事情总会有所改善，无论您选择哪个圣诞节，
-回到2014年的圣诞节，我写了一篇关于为什么我认为Perl 6能够完成生物信息学工作的出色文章。那篇文章中没有提到的是，为什么在Rakudo上实现Perl 6根本没有准备好去做任何严肃的生物信息学。表演真的没有！我在Perl 6中的第一次尝试（当Parrot虚拟机完全使用时）让我执行了几十分钟的简单操作，我期望它是毫秒级的性能。这很遗憾，因为我没有跟踪时间。但这当然不是一个好起点。
-然而，快速转发到2014年和MoarVM，我觉得自己写这篇来临邮件感觉很舒服，因为我知道在作为用户的4年中有多少改进。而且，所有的发展都是在完成语言定义和正确的实施。然而，我是一直在等待perf到达那里的用户。我认为大部分时间到了。为此，我要感谢所有核心开发者所付出的巨大的日常努力。观看它展现出令人难以置信的动力。对我来说，这个圣诞节是圣诞节的目标，它已经到来。 👏🏻🎊
-我一直在为我的BioInfo模块运行和计时测试，这些模块对生物序列数据进行了多年的基本操作。它以非常糟糕的方式做到了这一点。在紧密循环中分配和丢弃哈希时出现了很多错误等等。但是我已经将这些代码留给了现在 - 在五年多的时间里。悄悄地进行私人基准测试，偶尔鼓励在IRC频道看到大幅飞跃的努力。 Sub 10s是一个很大的！它从30/40秒突然发生。在我暗示IRC一个地方，我的代码在分析时特别慢，这是一次跳跃！
-这是一个长期观点，如果我放大去年的这一年，可以看到，如果时间不是很长，整个系数的性能仍然在提高。
-请记住，所有这些配置文件都不是来自Rakudo编译器的发布版本，而是来自当天的HEAD。所以偶尔会有一些奇怪的表现回归，正如你上面看到的，通常不会留下来发布。
-发生什么了？情况如何变好？有几个原因。 Perl 6中的许多算法选择和核心功能都已经在源代码级别（更晚些时候）逐步和积极地进行了优化。但支持Rakudo的MoarVM虚拟机的优化能力也得到了提高，并且可以降低到原生代码和内联专用版本的代码。这部分得益于2014年以来Rakudo Perl 6提供的-profile选项，它提供了所有这些信息。
-在上面关于MoarVM如何处理我编译过的Perl 6测试的代码框的情节中，应该很清楚的是，自从今年夏天以来，有相当多的框架被JIT编译，解释较少，并且几乎所有专用框架（橙色）结束原生JIT（绿色）。如果您想了解更多有关“spesh”MoarVM代码专门工具的最新工作，您可以在他的博客上阅读Jonathan Worthington的4篇文章。 Baart Weigmans还有一篇博客概述了他在JIT编译器方面的工作，最近还谈到了许多尚未登陆的新功能，希望能让许多新开发人员加入并帮助改进JIT。所以如果这对你来说是一件有趣的事情，我建议你查看一下上面的链接。
-所以这是我的基准和我的目标，其中大部分是围绕数据结构创建和解析。但是，数字作品等其他内容呢？那也保持了吗？没有任何人推动，就像我推动我对事情可以改进的地方的看法。答案是肯定的！
-曾几何时，早在2013年，一位名叫Tim King的绅士就开始对Perl 6中的素数感兴趣.Tim对他发现的性能颇为不满。正确如此。他从以下漂亮的代码开始：
-通过定义一个素数的交叉点找到任何素数，真是一个不错的优雅解决方案！但是蒂姆惊讶地发现联赛很慢，上面的代码让他看到了前1000个素数。今天，超级高级代码需要0.96s。
-对于基于联结的代码的缓慢程度，蒂姆继续做更标准的迭代方法感到不满。 Tim在这些帖子后不久就从网上消失。但他留下了我继续留下的遗产。他的主要基准测试代码和我对时间结果的适应性可以在这个要点中找到。以下是另一张图表，其中显示了每个超过100次试验找到前1000个素数所需的平均时间。 2015年的垂直线是较高的标准偏差。
-再次以最近的放大视图（最新的数据点让我担心一点，我以某种方式搞砸了&hellip;&hellip;）
-上面的收敛到一个点，是启动和停止Rakudo运行时和MoarVM的开销。发现素数并不是它曾经的努力，它比Rakudo的开始稍微慢一些。无论您选择的代码解决方案的级别和优雅程度如何，至少要快一个数量级。
-好吧，我们已经看到MoarVM获得了一些闪亮的新运动部件。但是像Liz，jnthn，Zoffix以及最近在字符串Samcv世界中开发人员已经付出了巨大的努力，以改进MoarVM和Rakudo在算法上实际上正在做的事情。
-旁注：我相信我根本不会做大多数其他开发人员的正义，特别是在这篇文章中忽略了JVM的努力。我建议每个人都去，并检查提交日志，看看有多少人现在参与使Rakudo更快，更好，更强大。我确定他们想在本文的底部看到您的感谢！  因此，节省你一份查看提交日志的工作我已经做了一些挖掘，看看自上个圣诞节以来与提高性能有关的提交。 N％或Nx更快的东西。如下所示：
-3c6277c77 Have .codes use nqp::codes op. 350% faster for short strings ee4593601 Make Baggy (^) Baggy about 150x faster  这两项承诺将以一年的核心发展时间表推动编程项目的发展。但是，今年，它们仅仅是数百次提交中的两次。
-                  <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" class="post-read-more">[Read More]</a>
                 
               </div>
 

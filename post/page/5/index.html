@@ -201,6 +201,87 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/">
+                <h2 class="post-title">A bit more on Rat vs FatRat in Perl 6</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 14, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (134 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  昨天，我们正在深入研究 Rakudo Perl 6，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
+我们找到了它发生的地方。今天，让我们进行一个练习，看看Perl 6的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
+改变很简单。所有你需要的是更新DIVIDE_N例程中的ifs：
+--- a/src/core/Rat.pm +++ b/src/core/Rat.pm @@ -48,16 +48,14 @@ sub DIVIDE_NUMBERS(Int:D \nu, Int:D \de, \t1, \t2) { ($numerator := -$numerator), ($denominator := -$denominator))), nqp::if( - nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat), + nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat) || $denominator &gt;= UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(FatRat),FatRat,'$!numerator',$numerator), FatRat,'$!denominator',$denominator), - nqp::if( - $denominator &lt; UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(Rat),Rat,'$!numerator',$numerator), - Rat,'$!denominator',$denominator), - nqp::p6box_n(nqp::div_In($numerator, $denominator))))) + Rat,'$!denominator',$denominator) + )) }  现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。
+                  <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/">
+                <h2 class="post-title">Going over the Bridge, part 2. Let’s get rid of it</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 12, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (598 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
+method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.
+                  <a href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/">
                 <h2 class="post-title">Going over the Bridge, part 1</h2>
 
@@ -600,112 +681,6 @@ Perl6 Supplies 就像一个 V12 引擎 在我开始将 perl6intro.com 翻译成�
 我使用 Perl6 的 HTTP 服务器的思想始于 Perl6 Supplies（具有多个订阅者的异步数据流），具体来说就是 IO::Socket::Async类。所有的套接字管理，数据传输和并发性实际上都是自动且易于理解的。制作并玩一玩小并发但强大的服务是极好的。
 基于 IO::Socket::Async 文档的示例，我开始在 mini-http-cgi-server 项目中实现一个支持 pseudoCGI 的小型 HTTP 服务器，并且按照我的预期工作。当我得到我想要的东西时，我很满意，我离开了这个项目一段时间。我不喜欢事情发展太多。
                   <a href="https://ohmysummer.github.io/post/2017-12-25-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B9%B6%E5%8F%91http%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/">
-                <h2 class="post-title">第二十四天-解魔方</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Day 24 – Solving a Rubik’s Cube
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 24, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (770 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 24 – Solving a Rubik’s Cube 介绍 我在圣诞节的愿望清单上有一个速度魔方，我真的很兴奋。 :)我想分享一些Perl 6代码的热情。
-我在89年从高中毕业，所以我恰好是在青少年时期拥有魔方的合适年龄。我记得试图在巴士上炫耀，让我的时间缩短到不到一分钟。我在80年代从当地的一家玩具店拿到了一本小册子，其中展示了一个关于如何解决我记忆的立方体的算法。我再也没有这本小册子了。多年来我一直坚持，但从来没有达到竞争水平。
-在过去的几个月里，YouTube根据我对立体声频道的兴趣，向我推荐了一些立方体视频;看到世界纪录在5秒以内，使我一分钟的旧时间看起来很慢。
-我所讲过的每个人都可以解决魔方问题，他们使用的算法与我所学的算法不同，而在立体魔法中讨论的方法却与众不同。不过，这种先进的版本似乎被定期制定世界记录的人们普遍使用。
-拾取这个算法并不难，我找到了几个视频，尤其是描述如何解决最后一层的视频。这样做了几天之后，我将步骤转录为几个笔记，其中列出了步骤列表，以及每个步骤的关键部分：所需的方向，然后是该步骤的各个转弯。然后，我可以参考我的笔记本的一个页面，而不是一个30分钟的视频，并且在几天后，记住了以下步骤：能够从记谱法移动到仅仅做这些移动是一个很大的加速。
-一周后，我能够在两分钟内使用新方法可靠地解决问题;退后一步，但在休息时间里一周的努力并不坏。从那以后（几个星期后），我一直下到1:20以下。再次，这是初学者的方法，没有任何先进的技术，而且我可以在不查看立方体的情况下完成各个算法步骤。 （尽管如此，我仍然有很长的路要走。）
-符号 关于移动符号的快速注释 - 考虑到您将立方体的一边保持在顶部，一边朝向您，相对边是：
-L (Left) R (Right) U (Up) D (Down) F (Front) B (Back)  如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个&rdquo;，那就意味着逆时针方向，所以R&rsquo;会让最上面的部分下来，而R会让底部的部分出现。
-此外，您可能必须翻转两次，写成U2; （顺时针或逆时针无关紧要，因为它从起点开始为180º。）
-算法 我正在使用的初学者算法有以下基本步骤：
-1.白色十字架2.白色拐角3.第二层4.黄色十字架5.黄色边缘6.黄色拐角7.定位黄色拐角
-如果您对每个步骤的具体内容感到好奇，您可以浏览Rubik的wiki或上面链接的YouTube视频。该算法的更高级版本（由Jessica Fridrich提供的CFOP）允许您合并步骤，具有处理特定立方体状态的特定“快捷方式”，或者解决任何颜色作为第一面，而不仅仅是白色。
-设计一个模块 当我开始研究这个模块时，我知道我希望能够以某种熟悉算法的人熟悉的方式展示每一步所需的位置，并且让各个步骤也是自然的，就像是：
-F.R.U.Rʼ.Uʼ.Fʼ  我也希望能够转储立方体的现有状态;现在作为文本，但最终也能够将其与视觉表示相结合，
-我们需要能够判断立方体是否已解决;我们需要能够检查相对于当前方向的棋子，并且能够改变我们的方向。
-由于我要开始渲染立方体状态的能力，然后快速添加转向两侧的能力，我选择了一个内部结构，使其变得相当容易。
-代码 github上提供了该模块的最新版本。这里介绍的代码来自最初的版本。
-Perl 6允许您创建Enumerations，因此您可以在代码中使用实际的单词而不是查找值，所以让我们从一些我们需要的内容开始：
-enum Side «:Up('U') :Down('D') :Front('F') :Back('B') :Left('L') :Right('R')»; enum Colors «:Red('R') :Green('G') :Blue('B') :Yellow('Y') :White('W') :Orange('O')»;  有了这个语法，我们可以直接在我们的代码中使用Up，并且它的关联值是U.
-                  <a href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/">
-                <h2 class="post-title">Playing with the code of Rakudo Perl 6</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 23, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (180 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  昨天，我们查看了返回字符串的 Bool 类的两个方法。函数产生的字符串表示在源代码中被硬编码。
-让我们使用这个观察并尝试改变文本。
-所以，这里是我们要修改的片段：
-Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? 'True' !! 'False' });  该 gist 方法用于对已定义的变量进行字符串化。
-要做到这一点，你需要在计算机上安装 Rakudo 的源代码，以便编译它们。首先从 GitHub 克隆项目：
-$ git clone https://github.com/rakudo/rakudo.git  编译 MoarVM：
-$ cd rakudo $ perl Configure.pl --gen-moar --gen-nqp --backends=moar $ make  完成之后，你会在 rakudo 目录下获得 perl6 可执行文件。
-现在，打开 src/core/Bool.pm 文件，并将 gist 方法的字符串更改为使用 Unicode 大拇指代替纯文本：
-Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { self ?? '👍' !! '👎' });  保存文件后，您需要重新编译 Rakudo。 Bool.
-                  <a href="https://ohmysummer.github.io/post/2017-12-23-playing-with-the-code-of-rakudo-perl-6/" class="post-read-more">[Read More]</a>
                 
               </div>
 

@@ -201,6 +201,114 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-17-%E7%AC%AC%E5%8D%81%E4%B8%83%E5%A4%A9-%E5%85%B3%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92/">
+                <h2 class="post-title">第十七天-关于消息传递</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 17: Something about messaging (but I couldn’t think of a snappier title.)
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 17, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (607 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 17: Something about messaging (but I couldn’t think of a snappier title.) 为什么要传递消息 当我第一次开始考虑写今年的 Advent 文章时，我反思我在过去的十二个月里并没有真正写过大量的 Perl 6，与往年相比，我似乎写了大量的模块。我一直在做的事情（至少在我的日常工作中）正在考虑和实施大量使用某些消息传递系统的应用程序。所以我认为将这些想法引入 Perl 6 会很有趣。
+作为一种“胶水语言”，Perl一直享有盛誉，Perl 6 具有与之竞争的功能，最显着的是响应式和并发功能，因此非常适合创建基于消息的集成服务。
+传递什么信息 现在我的脚下就是优秀的企业集成模式，尽管它现在已经有近15年的历史了，但我仍然建议任何有兴趣（或工作于）该领域的人。然而，它是一个重量级的书（字面上，它在硬书中的重量接近一点五公斤），所以我用它来提醒自己不要试图在这个主题上详尽无遗，以免这会变成一本书本身。
+有相当多的自由和商业管理消息系统，使用一系列开放和专有的协议，但我将限制自己到我熟悉的 RabbitMQ，并且在 Perl 6 中由 Net::AMQP 支持。
+如果你想亲自尝试一下这些例子，你将需要访问一个 RabbitMQ 代理（它可以作为大多数操作系统发行版的包），但是你可以使用 Docker Image，它看起来工作得很好。
+您还需要安装 Net::AMQP，这可以通过以下方式完成：
+zef install Net::AMQP  在示例中，我将使用 RabbitMQ 服务器的默认连接详细信息（即代理正在本地主机上运行，​​并且默认 guest 处于活动状态），如果您需要提供不同的详细信息，则可以更改 Net::AMQP 的构造函数以反映适当的值：
+my $n = Net::AMQP.new( host =&gt; 'localhost', port =&gt; 5672, login =&gt; 'guest', password =&gt; 'guest', vhost =&gt; '/' );  一些示例可能需要其他模块，但我会在介绍时介绍它们。
+                  <a href="https://ohmysummer.github.io/post/2017-12-17-%E7%AC%AC%E5%8D%81%E4%B8%83%E5%A4%A9-%E5%85%B3%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/">
+                <h2 class="post-title">第十六天-Perl 6 性能改进</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 16, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (84 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶 在英国，我们缺乏感恩节给圣诞节带来了新的一年，感谢和反思。为此，我想围绕Perl 6性能的状态放置一些我已经坐了一段时间的零碎片断，这些片断强调了这个过程需要付出多少努力。我不确定更广泛的编程社区对正在发生的努力的速度和数量表示赞赏。
+我不是核心开发人员，但自2010年推出Rakudo *之后，我一直是Perl 6的低级用户。通常情况下，已经进入Rakudo的努力被未知的努力所掩盖。人们重新审视Rakudo Perl 6时尤其如此，他可能会想象下一个圣诞节将会如何。但是Perl 6在历史上证明，在下一个圣诞节之前，事情总会有所改善，无论您选择哪个圣诞节，
+回到2014年的圣诞节，我写了一篇关于为什么我认为Perl 6能够完成生物信息学工作的出色文章。那篇文章中没有提到的是，为什么在Rakudo上实现Perl 6根本没有准备好去做任何严肃的生物信息学。表演真的没有！我在Perl 6中的第一次尝试（当Parrot虚拟机完全使用时）让我执行了几十分钟的简单操作，我期望它是毫秒级的性能。这很遗憾，因为我没有跟踪时间。但这当然不是一个好起点。
+然而，快速转发到2014年和MoarVM，我觉得自己写这篇来临邮件感觉很舒服，因为我知道在作为用户的4年中有多少改进。而且，所有的发展都是在完成语言定义和正确的实施。然而，我是一直在等待perf到达那里的用户。我认为大部分时间到了。为此，我要感谢所有核心开发者所付出的巨大的日常努力。观看它展现出令人难以置信的动力。对我来说，这个圣诞节是圣诞节的目标，它已经到来。 👏🏻🎊
+我一直在为我的BioInfo模块运行和计时测试，这些模块对生物序列数据进行了多年的基本操作。它以非常糟糕的方式做到了这一点。在紧密循环中分配和丢弃哈希时出现了很多错误等等。但是我已经将这些代码留给了现在 - 在五年多的时间里。悄悄地进行私人基准测试，偶尔鼓励在IRC频道看到大幅飞跃的努力。 Sub 10s是一个很大的！它从30/40秒突然发生。在我暗示IRC一个地方，我的代码在分析时特别慢，这是一次跳跃！
+这是一个长期观点，如果我放大去年的这一年，可以看到，如果时间不是很长，整个系数的性能仍然在提高。
+请记住，所有这些配置文件都不是来自Rakudo编译器的发布版本，而是来自当天的HEAD。所以偶尔会有一些奇怪的表现回归，正如你上面看到的，通常不会留下来发布。
+发生什么了？情况如何变好？有几个原因。 Perl 6中的许多算法选择和核心功能都已经在源代码级别（更晚些时候）逐步和积极地进行了优化。但支持Rakudo的MoarVM虚拟机的优化能力也得到了提高，并且可以降低到原生代码和内联专用版本的代码。这部分得益于2014年以来Rakudo Perl 6提供的-profile选项，它提供了所有这些信息。
+在上面关于MoarVM如何处理我编译过的Perl 6测试的代码框的情节中，应该很清楚的是，自从今年夏天以来，有相当多的框架被JIT编译，解释较少，并且几乎所有专用框架（橙色）结束原生JIT（绿色）。如果您想了解更多有关“spesh”MoarVM代码专门工具的最新工作，您可以在他的博客上阅读Jonathan Worthington的4篇文章。 Baart Weigmans还有一篇博客概述了他在JIT编译器方面的工作，最近还谈到了许多尚未登陆的新功能，希望能让许多新开发人员加入并帮助改进JIT。所以如果这对你来说是一件有趣的事情，我建议你查看一下上面的链接。
+所以这是我的基准和我的目标，其中大部分是围绕数据结构创建和解析。但是，数字作品等其他内容呢？那也保持了吗？没有任何人推动，就像我推动我对事情可以改进的地方的看法。答案是肯定的！
+曾几何时，早在2013年，一位名叫Tim King的绅士就开始对Perl 6中的素数感兴趣.Tim对他发现的性能颇为不满。正确如此。他从以下漂亮的代码开始：
+通过定义一个素数的交叉点找到任何素数，真是一个不错的优雅解决方案！但是蒂姆惊讶地发现联赛很慢，上面的代码让他看到了前1000个素数。今天，超级高级代码需要0.96s。
+对于基于联结的代码的缓慢程度，蒂姆继续做更标准的迭代方法感到不满。 Tim在这些帖子后不久就从网上消失。但他留下了我继续留下的遗产。他的主要基准测试代码和我对时间结果的适应性可以在这个要点中找到。以下是另一张图表，其中显示了每个超过100次试验找到前1000个素数所需的平均时间。 2015年的垂直线是较高的标准偏差。
+再次以最近的放大视图（最新的数据点让我担心一点，我以某种方式搞砸了&hellip;&hellip;）
+上面的收敛到一个点，是启动和停止Rakudo运行时和MoarVM的开销。发现素数并不是它曾经的努力，它比Rakudo的开始稍微慢一些。无论您选择的代码解决方案的级别和优雅程度如何，至少要快一个数量级。
+好吧，我们已经看到MoarVM获得了一些闪亮的新运动部件。但是像Liz，jnthn，Zoffix以及最近在字符串Samcv世界中开发人员已经付出了巨大的努力，以改进MoarVM和Rakudo在算法上实际上正在做的事情。
+旁注：我相信我根本不会做大多数其他开发人员的正义，特别是在这篇文章中忽略了JVM的努力。我建议每个人都去，并检查提交日志，看看有多少人现在参与使Rakudo更快，更好，更强大。我确定他们想在本文的底部看到您的感谢！  因此，节省你一份查看提交日志的工作我已经做了一些挖掘，看看自上个圣诞节以来与提高性能有关的提交。 N％或Nx更快的东西。如下所示：
+3c6277c77 Have .codes use nqp::codes op. 350% faster for short strings ee4593601 Make Baggy (^) Baggy about 150x faster  这两项承诺将以一年的核心发展时间表推动编程项目的发展。但是，今年，它们仅仅是数百次提交中的两次。
+                  <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/">
                 <h2 class="post-title">第十五天-带有 Promise 的简单网络爬虫</h2>
 
@@ -555,91 +663,6 @@ use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does C
 事实上，许多 pod 表格问题的真正问题最终都出现在该文件中。
 Not Quite Perl (NQP) nqp 是用于构建 Rakudo Perl 6 编译器的中间语言。它的 git 仓库在这里。本文的其余部分是关于修改 rakudo 编译器中的 nqp 代码，其仓库地址在这里。 Rakudo 在这里也有一个网站。
                   <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/">
-                <h2 class="post-title">第七天 – Test All The Things</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 7, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (274 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  https://perl6advent.wordpress.com/2017/12/07/day-7-test-all-the-things/
-Perl 6 与其大姐姐 Perl 5一样，具有很悠久的测试传统。当您安装任何 Perl 模块时，安装程​​序通常会运行该模块的测试套件。当然，作为新兴的 Perl 6 模块作者，您需要创建自己的测试套件。或者，也许你会在创建模块之前勇于创建测试套件。这实际上有几个好处，其中最主要的是你的第一个用户，甚至在它被写之前。
-但在实际代码之前，我想提一下我经常使用的两个 shell 别名 -
-alias 6='perl6 -Ilib' alias 6p=&quot;prove -e'perl6 -Ilib'&quot;  这些别名使我可以快速运行测试文件，而不必去安装我的代码。如果我在项目目录中，我可以运行
-$ 6 t/01-core.t ok 1 - call with number ok 2 - call with text ok 3 - call with formatted string 1..3  它会告诉我我运行了哪些测试以及它们是否全部通过。就像它的大姐姐Perl 5一样，Perl 6使用&rsquo;t /&lsquo;目录作为测试文件，并按照惯例使用后缀&rsquo;.t&rsquo;来区分测试文件和软件包或脚本。它还有一个内置的单元测试模块，我们在上面使用。如果我们正在测试sprintf（）内部，它可能看起来像
-use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call with text'; ok sprintf(&quot;%d&quot;,1), 'call with formatted string'; done-testing;  ok和done-testing功能会自动导出给我们。我在这里使用规范的Perl 6风格，而不是太依赖括号。在这种情况下，我确实需要使用圆括号来确保sprintf（）不会“认为”“空调用”是它的参数。
-                  <a href="https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-06-%E7%AC%AC%E5%85%AD%E5%A4%A9-perl-6-%E4%B9%A6%E8%AF%84/">
-                <h2 class="post-title">第六天-Perl 6 书评</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Five golden rings, Four calling birds, Three French hens, Two kinds of programmers?, And a book review in a Perl tree! (or Rakudo Tree? ;-)
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 6, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (1 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  <p><a href="https://perl6advent.wordpress.com/2017/12/06/">https://perl6advent.wordpress.com/2017/12/06/</a></p>
-
                 
               </div>
 

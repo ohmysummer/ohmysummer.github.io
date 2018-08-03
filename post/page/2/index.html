@@ -201,6 +201,97 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/">
+                <h2 class="post-title">Hashes and Maps</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Working with associative arrays/dictionaries/hashes
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1195 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  关联角色和关联类 关联角色是 Hash 和 Map 以及 MixHash 等其他类的基础。它定义了将在关联类中使用的两种类型; 默认情况下，您可以使用任何内容（字面意思，因为任何 Any 子类的类都可以使用）作为键和 keyof 方法。
+默认情况下，使用 % sigil 声明的任何对象都将获得 Associative 角色，默认情况下将表现为散列，但此角色仅提供上述两种方法，以及默认的 Hash 行为。
+say (%).^name ; # 输出 Hash  相反，如果未混入 Associative 角色，则不能使用 % sigil，但由于此角色没有任何关联属性，因此你必须重新定义散列下标操作符的行为。为此，你必须重写几个函数：
+class Logger does Associative[Cool,DateTime] { has %.store; method log( Cool $event ) { %.store{ DateTime.new( now ) } = $event; } multi method AT-KEY ( ::?CLASS:D: $key) { my @keys = %.store.keys.grep( /$key/ ); %.store{ @keys }; } multi method EXISTS-KEY (::?
+                  <a href="https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/hash/">Hash</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/map/">Map</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-06-proc-async/">
+                <h2 class="post-title">Proc Async</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Running process (asynchronous interface)
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 6, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (834 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  class Proc::Async {}  注意: 目前只有 Rakudo 的 MoarVM 后端实现了 [Proc::Async](https://docs.perl6.org/type/Proc::Async)。
+Proc::Async 允许你异步地运行外部命令, 捕获标准输出和错误句柄，并可选择地写入到它的标准输入中。
+my $file = 'foo'.IO; spurt $file, &quot;and\nCamelia\n♡\nme\n&quot;; my $proc = Proc::Async.new: :w, 'tac', '--', $file, '-'; # my $proc = Proc::Async.new: :w, 'sleep', 15; # uncomment to try timeouts react { whenever $proc.stdout.lines { # split input on \r\n, \n, and \r say 'lines: ', $_ } whenever $proc.stderr { say 'stderr: ', $_ } whenever $proc.
+                  <a href="https://ohmysummer.github.io/post/2018-07-06-proc-async/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/async/">Async</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-07-07-%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%A6%E4%B9%A0perl6/">
                 <h2 class="post-title">我为什么学习Perl6</h2>
 
@@ -571,94 +662,6 @@ say Date.new('2015-12-31').day; # OUTPUT: «31» say DateTime.new(date =&gt; Dat
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/date/">Date</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-05-06-make/">
-                <h2 class="post-title">Make</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 6, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (541 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  方法 make 的文档由以下类型组装而成：
-Match 类 来自于 Match
-make 方法 method make(Match:D: Mu $payload) sub make(Mu $payload)  将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
-这通常用于 grammar 的 action 类方法中，其中一个方法存储一段数据，然后由另一个方法取回。这取决于你存储什么数据。它可以是树节点，计算结果或值的列表。
-sub 形式的 make 操作当前的 $/，这可能是一个简写：
-method my-action ($/) { make &quot;foo: $/&quot;; }  make 会把数据结构附加到各自的 Match 对象上, 随后通过 .made 方法取回。使用 Match.perl 方法可以看到, Match 里面有一个 made 属性：
-&gt; if 'abc' ~~ /\w+/ { $/.make: {'a' =&gt; 'bc', 'd' =&gt; 'wsl'}; say $/.
-                  <a href="https://ohmysummer.github.io/post/2018-05-06-make/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/make/">make</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-05-06-slip/">
-                <h2 class="post-title">Slip</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    A kind of List that automatically flattens into an outer container
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 6, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (397 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  有时您想要将列表的元素插入到另一个列表中。这可以通过称为 Slip 的特殊类型的列表完成。
-say (1, (2, 3), 4) eqv (1, 2, 3, 4); # OUTPUT: «False␤» say (1, Slip.new(2, 3), 4) eqv (1, 2, 3, 4); # OUTPUT: «True␤» say (1, slip(2, 3), 4) eqv (1, 2, 3, 4); # OUTPUT: «True␤»  另一种方法是使用 | 前缀运算符。请注意，这比逗号的优先级更高，因此它只影响单个值，但与上述选项不同，它会打破标量。
-say (1, |(2, 3), 4) eqv (1, 2, 3, 4); # OUTPUT: «True␤» say (1, |$(2, 3), 4) eqv (1, 2, 3, 4); # OUTPUT: «True␤» say (1, slip($(2, 3)), 4) eqv (1, 2, 3, 4); # OUTPUT: «False␤»  Slip class Slip is List {}  Slip 是一个 List，自动展平到一个外部列表（或其他类似列表的容器或 iterable）中。
-                  <a href="https://ohmysummer.github.io/post/2018-05-06-slip/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/slip/">Slip</a>&nbsp;
                   
                 </div>
               

@@ -201,6 +201,87 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-11-25-%E7%AE%80%E5%8D%95%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E6%9E%90/">
+                <h2 class="post-title">简单字符串解析</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 25, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (289 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  简单字符串解析 我已经以好几种方式使用 Perl 6 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:
+grammar String::Simple::Grammar { our $quote; rule TOP {^ &lt;string&gt; $} # Note for now, {} gets around a rakudo binding issue token string { &lt;quote&gt; {} :temp $quote = $&lt;quote&gt;; &lt;quotebody&gt; $&lt;quote&gt; } token quote { '&quot;' | &quot;'&quot; } token quotebody { ( &lt;escaped&gt; | &lt;!before $quote&gt; . )* } token escaped { '\\' ( $quote | '\\' ) } } class String::Simple::Actions { method TOP($/) { make $&lt;string&gt;.
+                  <a href="https://ohmysummer.github.io/post/2015-11-25-%E7%AE%80%E5%8D%95%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E6%9E%90/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E6%9E%90/">字符串解析</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-11-21-%E9%A1%B9/">
+                <h2 class="post-title">项</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 21, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (366 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 中的大部分句法结构能归类为项和操作符. 这儿你能找到各种不同类型的项的概览.
+Literals Int 42 12_300_00 :16&lt;DEAD_BEEF&gt; #十六进制  Int 字面量由数字组成, 并且能在数字之间包含下划线. 使用 :radix&lt;number&gt; 冒号对儿形式能指定 10 进制外的其它进制.
+Rat 有理数 12.34 1_200.345_678  Rat(有理数)字面量由一个点号分割的两部分整数组成. 注意尾部的点号是不允许的, 所以你必须写成 1.0 而非 1. ( 这个规则很重要, 因为有一个以点号开头的中缀操作符, 例如 .. 范围操作符 ).
+Num 浮点数 12.3e-32 3e8  Num(浮点数)字面量由 Rat 或 Int 字面量后面再跟着一个字母 e 和 一个指数(可能为负)组成. 3e8 使用 值 3* 10**8 构建了一个 Num.
+Str 'a string''I\'m escaped!' &quot;I don't need to be&quot; &quot;\&quot;But I still can be,\&quot; he said.
+                  <a href="https://ohmysummer.github.io/post/2015-11-21-%E9%A1%B9/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/terms/">terms</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-11-20-reddit-guess-who/">
                 <h2 class="post-title">Guess Who</h2>
 
@@ -546,85 +627,6 @@ my rule Number { \d+ }; my rule Variable { \w+ }; my rule String { '&quot;' &lt;
                     <a href="https://ohmysummer.github.io//tags/grammar/">Grammar</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/actions/">Actions</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-10-11-io%E6%93%8D%E4%BD%9C/">
-                <h2 class="post-title">IO 操作</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 11, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (392 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  文件存在、文件的时间戳、文件的修改时间等等
-批量插入文本 use v6; my @filenames = dir '.', test =&gt; any(/\.md$/, /\.markdown/); for @filenames -&gt; $filePath { my $path = $filePath.path(); $path ~~ s/.md//; $path ~~ s/.markdown//; my $date = DateTime.new(now); my $head = qq:heredoc 'EOT'; title: $path.IO.basename() date: $date tags: Perl6 categories: Perl 6 --- &lt;blockquote class=&quot;blockquote-center&quot;&gt;这城市有太多风景都在提醒那过去！&lt;/blockquote&gt; [TOC] EOT my @content = slurp $filePath; spurt($filePath.path, &quot;$head\n@content[]&quot;); }  在当前目录中查找所有以 .md (.markdown)结尾的文件（即markdown文件）, 并在文件最前面插入一段文本， 形如：
-title: Perl6 date: 2015-08-20T23:19:13Z tags: Perl6 categories: Perl 6 --- &lt;blockquote class=&quot;blockquote-center&quot;&gt;我站在天桥上念你, 有点狼狈&lt;/blockquote&gt;  类 IO::Path 提供了 basename, path, parts, 等方法供使用, 具体用法请看文档:
-                  <a href="https://ohmysummer.github.io/post/2015-10-11-io%E6%93%8D%E4%BD%9C/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/io/">IO</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-10-06-proto/">
-                <h2 class="post-title">proto</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 6, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (189 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  proto proto 意思为原型。proto 从形式上声明了 multi 候选者之间的共性。 proto 充当作能检查但不会修改参数的包裹。看看这个基本的例子:
-proto congratulate(Str $reason, Str $name, |) {*} multi congratulate($reason, $name) { say &quot;Hooray for your $reason, $name&quot;; } multi congratulate($reason, $name, Int $rank) { say &quot;Hooray for your $reason, $name -- you got rank $rank!&quot;; } congratulate('being a cool number', 'Fred'); # OK congratulate('being a cool number', 'Fred', 42); # OK congratulate('being a cool number', 42); # Proto match error  所有的 multi congratulate 会遵守基本的签名, 这个签名中有两个字符串参数, 后面跟着可选的更多的参数。 | 是一个未命名的 Capture 形参, 这允许 multi 接收额外的参数。第三个 congratulate 调用在编译时失败, 因为第一行的 proto 的签名变成了所有三个 multi congratulate 的共同签名, 而 42 不匹配 Str。
-                  <a href="https://ohmysummer.github.io/post/2015-10-06-proto/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/proto/">proto</a>&nbsp;
                   
                 </div>
               
