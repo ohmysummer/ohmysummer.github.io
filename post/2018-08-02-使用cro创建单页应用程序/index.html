@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 23 minutes (4749 words)
+  <i class="fa fa-clock-o"></i> 18 minutes (3814 words)
   
   
 </span>
@@ -708,7 +708,7 @@ $ git commit -m &quot;Setup react&quot;
 
 <h2 id="添加一些组件">添加一些组件</h2>
 
-<p>Next, let&rsquo;s sketch out the UI a little more. Replace the existing App component with this:</p>
+<p>接下来，让我们再简单介绍一下 UI。用以下内容替换现有的 App 组件：</p>
 
 <pre><code>var SubmitTip = () =&gt; (
     &lt;div&gt;
@@ -735,22 +735,25 @@ var App = () =&gt; (
 );
 </code></pre>
 
-<p>Another npm run build, refresh, and it should show something that looks a lot like one would expect from the UI. But how do we get data to populate the UI? And how do we do stuff when the button is clicked? For that, we&rsquo;ll bring in the final piece of the client side puzzle: Redux.</p>
+<p>再运行一次 npm run build, refresh，它应该显示一些看起来很像人们期望的 UI。但是我们如何获取数据来填充 UI？当点击按钮时我们要做些什么？为此，我们将引入客户端难题的最后一部分：Redux。</p>
 
-<p>Redux§</p>
+<h2 id="redux">Redux</h2>
 
-<p>There&rsquo;s a good tutorial on Redux on its site, and I won&rsquo;t try and repeat it all here, but I&rsquo;ll try to summarize what Redux does. React gives us a way to render a virtual DOM each time something changes. To make that useful, we need some kind of object containing the current state that should be rendered onto the UI. Redux is a container for that state, and gets us to organize changes to it using reducers. That is to say, we never really update state, we just produce a new one derived from the current one, plus an action.</p>
+<p>Redux 在其网站上有一个很好的教程，我不会在这里尝试重复，但我会尝试总结一下 Redux 的作用。 React 为我们提供了一种在每次更改时渲染虚拟 DOM 的方法。为了使它有用，我们需要某种对象，其中包含应该呈现在 UI 上的当前状态。 Redux 是该状态的容器，它让我们使用 reducer 组织对它的更改。也就是说，我们永远不会真正更新状态，我们只是生成一个从当前状态派生的新状态，再加上一个动作。</p>
 
-<p>First, let&rsquo;s add the redux and related dependencies.</p>
+<p>首先，让我们添加 redux 和相关的依赖项。</p>
 
 <pre><code>$ npm install --save redux redux-thunk react-redux
 </code></pre>
 
-<p>Next up, we need to define some actions. Actions correspond to state changes on the page. We&rsquo;ll create just two for now:</p>
+<p>接下来，我们需要定义一些 action。action 对应于页面上的状态更改。我们现在只创建两个：</p>
 
-<p>CHANGE_TIP_TEXT - when the text of the tip the user is typing changes
-ADD_TIP - when the Add Tip button is pressed
-In a frontend/actions.js file, we do this:</p>
+<ul>
+<li>CHANGE_TIP_TEXT - 当用户输入的提示文本发生变化时</li>
+<li>ADD_TIP - 当添加 Tip 的按钮被按下时</li>
+</ul>
+
+<p>在 frontend/actions.js 文件中, 我们这样做:</p>
 
 <pre><code>export const CHANGE_TIP_TEXT = 'CHANGE_TIP_TEXT';
 export const ADD_TIP = 'ADD_TIP';
@@ -763,16 +766,16 @@ export function addTip() {
 }
 </code></pre>
 
-<p>The constants are names of actions, and the functions are known as &ldquo;action creators&rdquo;: they create an object with a type property and, optionally, some data.</p>
+<p>常量是 actions 的名称，这些函数称为“action 创建者”：它们创建一个具有类型属性的对象，并且可选地创建一些数据。</p>
 
-<p>Next, we need a reducer. Reducers take current state, and calculate and return a new state. They never mutate the state and never do any side-effects (such as network I/O). They are pure calculation. Our state will, for now, be very simple: just the content of the text box.</p>
+<p>接下来，我们需要一个 reducer。 Reducers 采用当前状态，计算并返回一个新状态。他们永远不会改变状态，也不会做任何副作用（例如网络 I/O）。他们是纯粹的计算。到目前为止，我们的状态将非常简单：只是文本框的内容。</p>
 
-<p>Writing reducers is much more convenient when we have the upcoming spread operator in JavaScript; it&rsquo;s a prefix &hellip;, and works much like Perl 6&rsquo;s prefix | operator for flattening. Since we already have a build toolchain, we can add it by installing another syntax transform:</p>
+<p>当我们在 JavaScript 中使用即将推出的扩展运算符时，写 reducers 会更方便; 它是一个前缀 <code>...</code>，和 Perl 6 的前缀 <code>|</code> 操作符一样压平操作数。由于我们已经有了构建工具链，我们可以通过安装另一个语法转换来添加它：</p>
 
 <pre><code>npm install --save-dev babel-plugin-transform-object-rest-spread
 </code></pre>
 
-<p>And adding it to our .babelrc:</p>
+<p>并把它添加到我们的 .babelrc 文件中:</p>
 
 <pre><code>{
     &quot;presets&quot; : [&quot;es2015&quot;,&quot;react&quot;],
@@ -780,7 +783,7 @@ export function addTip() {
 }
 </code></pre>
 
-<p>With that done, here&rsquo;s our reducer, placed in frontend/reducer.js:</p>
+<p>完成后，这是我们的 reducer，放在 frontend/reducer.js 文件中：</p>
 
 <pre><code>import * as ActionTypes from './actions';
 
@@ -799,13 +802,13 @@ export function tipsyReducer(state = initialState, action) {
 }
 </code></pre>
 
-<p>Now it&rsquo;s time to wire it up to React. The overall flow will be:</p>
+<p>现在是时候把它连接到 React 了。整体流程将是：</p>
 
 <ol>
-<li>Something happens on the UI (text changed, add tip button pressed) 2. An action object is created 3. It&rsquo;s passed into the reducer, which produces a new state 4. The new state is turned into properties, which are then used to build up a React virtual DOM 5. React takes care of applying any updates to the real DOM, thus reflecting our changes</li>
+<li>UI 上发生了一些事情（文本已更改，按下了添加提示按钮）2。创建了一个 action 对象 3.它被传递到 reducer，它生成一个新状态 4.新状态转换为属性，然后用于构建 React 虚拟 DOM 5. React 负责将任何更新应用于真实DOM，从而反映我们的更改</li>
 </ol>
 
-<p>Back in frontend/index.js, we&rsquo;ll import our actions and reducer, together with some bits from the redux and react-redux libraries:</p>
+<p>回到 frontend/index.js，我们将导入我们的 actions 和 reducer，以及 redux 和 react-redux 库中的一些东西：</p>
 
 <pre><code>import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
@@ -813,12 +816,12 @@ import * as Actions from './actions';
 import { tipsyReducer } from './reducer';
 </code></pre>
 
-<p>Next up, we&rsquo;ll create a Redux store, which is the thing that holds the latest version of the state produced by the reducer. We create it simply by passing our reducer to createStore:</p>
+<p>接下来，我们将创建一个 Redux 存储，它包含 reducer 生成的最新版本的状态。我们通过将 reducer 传递给 createStore 来创建它：</p>
 
 <pre><code>let store = createStore(tipsyReducer);
 </code></pre>
 
-<p>Next up, we need to map the state from the store into properties that will be available in our React components, and also produce some functions that will also be made available in those properties, and will dispatch actions.</p>
+<p>接下来，我们需要将存储中的状态映射到 React 组件中可用属性，并生成一些也可以在这些属性中使用的函数，并调度 actions。</p>
 
 <pre><code>function mapProps(state) {
     return state;
@@ -831,7 +834,7 @@ function mapDispatch(dispatch) {
 }
 </code></pre>
 
-<p>With those ready, we can complete the integration of Redux with React, which looks like this:</p>
+<p>有了这些，我们可以完成 Redux 与 React 的集成，如下所示：</p>
 
 <pre><code>let ConnectedApp = connect(mapProps, mapDispatch)(App);
 render(
@@ -841,9 +844,9 @@ render(
     document.getElementById('app'));
 </code></pre>
 
-<p>The connect function makes the properties from the state in the store available to the App React component, and wrapping it in Provider makes the state from the store available in order for that to happen.</p>
+<p>connect 函数使来自存储中状态的属性可用于 App React 组件，并将其包装在 Provider 中使得存储中的状态可用以便实现。</p>
 
-<p>Last but not least, we can update our components:</p>
+<p>最后但同样重要的是，我们可以更新我们的组件：</p>
 
 <pre><code>var SubmitTip = props =&gt; (
     &lt;div&gt;
@@ -867,9 +870,9 @@ var App = props =&gt; (
 );
 </code></pre>
 
-<p>After npm run build, and a refresh in the browser, we should notice that hitting the Add Tip button after typing will clear the text box. Our actions and reducer are running. Phew!</p>
+<p>在 npm run build 之后, 刷新浏览器，我们应该注意到在键入后点击 Add Tip 按钮将清除文本框。我们的 action 和 reducer 正在运行。唷！</p>
 
-<p>For completeness, here is the entire frontend/index.js at this stage:</p>
+<p>为了完整性，这里是这个阶段整个 frontend/index.js：</p>
 
 <pre><code>import React from 'react';
 import { render } from 'react-dom';
@@ -925,7 +928,7 @@ render(
     document.getElementById('app'));
 </code></pre>
 
-<p>It&rsquo;s commit time again.</p>
+<p>又到了提交的时间了。</p>
 
 <pre><code>$ git add .
 $ git commit -m &quot;Wire up Redux&quot;
@@ -936,14 +939,13 @@ $ git commit -m &quot;Wire up Redux&quot;
  create mode 100644 frontend/reducer.js
 </code></pre>
 
-<p>POSTing to the backend§
-Finally, it&rsquo;s time to get adding a tip in the frontend calling the backend! We&rsquo;ll need to do two things:</p>
+<h2 id="posting-到后端">POSTing 到后端</h2>
 
-<ol>
-<li>Write a POST handler in the Cro backend 2. Find a way to have our Redux action result in a POST</li>
-</ol>
+<p>最后，是时候在前端添加一个提示调用后端了！我们需要做两件事：</p>
 
-<p>First for the Cro part. In lib/Routes.pm6 we add the following route implementation:</p>
+<p>1.在 Cro 后端编写一个 POST 处理程序 2.找到一种方法让我们的 Redux action 结果在 POST 中</p>
+
+<p>首先是 Cro 部分。在 lib/Routes.pm6 中，我们添加以下路由实现：</p>
 
 <pre><code>post -&gt; 'tips' {
     request-body -&gt; (:$text) {
@@ -953,34 +955,34 @@ Finally, it&rsquo;s time to get adding a tip in the frontend calling the backend
 }
 </code></pre>
 
-<p>Next up, the JavaScript part. The question is where to put the network bit? Our reducer should be pure. The answer is the redux-thunk module that we installed earlier, but didn&rsquo;t yet use. This allows us to write action creators that return a function. This function will be passed the dispatcher, and it can call it to dispatch actions. Typically, we will dispatch one action when an asynchronous operation starts, which we can use to indicate that on the UI, and a further one once it has completed, so we can again indicate that the operation completed in the UI.</p>
+<p>接下来，JavaScript 部分。问题是网络部分在哪里？我们的 reducer 应该是纯净的。答案是我们之前安装的 redux-thunk 模块，但尚未使用。这允许我们编写返回函数的 action 创建者。该函数将通过调度程序，并可以调用它来调度 action。通常，我们将在异步操作开始时调度一个 action，我们可以使用它在 UI 上指示，并在完成后再指示一个操作，因此我们可以再次指示操作在 UI 中完成。</p>
 
-<p>First, let&rsquo;s setup redux-thunk, which is a piece of middleware. Back in frontend/index.js, add:</p>
+<p>首先，让我们设置 redux-thunk，这是一个中间件。回到 frontend/index.js，添加：</p>
 
 <pre><code>import thunkMiddleware from 'redux-thunk';
 </code></pre>
 
-<p>And then change:</p>
+<p>然后改变：</p>
 
 <pre><code>import { createStore } from 'redux';
 </code></pre>
 
-<p>To also import applyMiddleware:</p>
+<p>还要再导入 applyMiddleware:</p>
 
 <pre><code>import { createStore, applyMiddleware } from 'redux';
 </code></pre>
 
-<p>Finally, change:</p>
+<p>最后，更改：</p>
 
 <pre><code>let store = createStore(tipsyReducer);
 </code></pre>
 
-<p>To apply the middleware also:</p>
+<p>还要应用 the middleware:</p>
 
 <pre><code>let store = createStore(tipsyReducer, applyMiddleware(thunkMiddleware));
 </code></pre>
 
-<p>Next, in frontend/actions.js, we&rsquo;ll refactor the add tip action creator function to be a thunk action:</p>
+<p>下一步，在 frontend/actions.js 中, 我们将重构 add tip action 创建器函数作为 thunk action：</p>
 
 <pre><code>export function addTip() {
     return dispatch =&gt; {
@@ -989,19 +991,19 @@ Finally, it&rsquo;s time to get adding a tip in the frontend calling the backend
 }
 </code></pre>
 
-<p>Note that this doesn&rsquo;t yet change anything; build it and the behavior should be just the same. Now that we&rsquo;ve done this, however, we can see that it will be possible to do this dispatch in a callback after the network operation.</p>
+<p>请注意，这还没有改变任何东西; build 它，行为应该是一样的。但是，现在我们已经完成了这项工作，我们可以看到在网络操作之后可以在回调中执行此调度。</p>
 
-<p>There&rsquo;s of course dozens of good ways to deal with asynchronous operations in JavaScript, and if you are seriously building single page applications I strongly recommend looking into using a promise library. There&rsquo;s also Redux middleware that will integrate with that. For now, we&rsquo;ll do the simplest possible thing: use jQuery and a callback. First, let&rsquo;s add jQuery as a dependency:</p>
+<p>当然有很多好方法可以处理 JavaScript 中的异步操作，如果你正在认真构建单页面应用程序，我强烈建议你考虑使用 promise 库。还有 Redux 中间件将与之集成。现在，我们将做最简单的事情：使用 jQuery 和回调。首先，让我们添加 jQuery 作为依赖：</p>
 
 <pre><code>$ npm install --save jquery
 </code></pre>
 
-<p>Then we&rsquo;ll import it in frontend/actions.js:</p>
+<p>然后我们会在 frontend/actions.js 中导入它:</p>
 
 <pre><code>import $ from 'jquery';
 </code></pre>
 
-<p>And do the POST to the backend:</p>
+<p>并将 POST 发送到后端：</p>
 
 <pre><code>export function addTip() {
     return (dispatch, getState) =&gt; {
@@ -1016,7 +1018,7 @@ Finally, it&rsquo;s time to get adding a tip in the frontend calling the backend
 }
 </code></pre>
 
-<p>Reload it, maybe open your browser&rsquo;s development tools (F12 usually), flip to the Network tab, and click Add Tip. All being well, you&rsquo;ll observe the request was made and it produced a 204 response. Alternatively, you may like to stop the cro run and instead do cro trace; type a message, click Add Tip again, and you should see the request body dumped in the trace output.</p>
+<p>重新加载它，可能打开浏览器的开发工具（通常是F12），翻到“网络”选项卡，然后单击“添加提示”。一切顺利，您将观察到请求已经完成并且它产生了 204 响应。或者，你可能想停止运行，而是做一些 cro trace; 键入消息，再次单击“添加提示”，您应该看到请求主体在跟踪输出中转储。</p>
 
 <pre><code>...
 65 63 74 69 6f 6e 3a 20 6b 65 65 70 2d 61 6c 69  ection: keep-ali
@@ -1024,20 +1026,21 @@ Finally, it&rsquo;s time to get adding a tip in the frontend calling the backend
 72 79 20 74 68 65 20 62 65 65 66 22 7d           ry the beef&quot;}
 </code></pre>
 
-<p>The latest tips websocket§
-There&rsquo;s a variety of ways that we could write up the websocket, but we&rsquo;ll use redux-websocket-action. This allows us to send Redux actions over the websocket to the client, which is neat (although, unfortunately, does mean we are coupling our backend to the use of this library in the frontend, which is worth some questioning).</p>
+<h2 id="the-latest-tips-websocket">The latest tips websocket</h2>
 
-<p>First, let&rsquo;s install the library in the frontend:</p>
+<p>我们可以通过各种方式编写 websocket，但我们将使用 redux-websocket-action。这允许我们通过 websocket 将 Redux 动作发送到客户端，这很简洁（尽管不幸的是，这意味着我们将后端与前端中此库的使用相结合，这值得一些质疑）。</p>
+
+<p>首先，让我们在前端安装库：</p>
 
 <pre><code>$ npm install --save redux-websocket-action
 </code></pre>
 
-<p>Over in index.js, we import it:</p>
+<p>在 index.js 中，我们导入它：</p>
 
 <pre><code>import WSAction from 'redux-websocket-action';
 </code></pre>
 
-<p>And set it up, like this:</p>
+<p>并设置它，像这样：</p>
 
 <pre><code>let host = window.location.host;
 let wsAction = new WSAction(store, 'ws://' + host + '/latest-tips', {
@@ -1047,12 +1050,12 @@ let wsAction = new WSAction(store, 'ws://' + host + '/latest-tips', {
 wsAction.start();
 </code></pre>
 
-<p>Over in frontend/actions.js, we&rsquo;ll add one more action type (but no action creation function, as it will originate on the server):</p>
+<p>在 frontend/actions.js 中，我们将添加一个动作类型（但没有动作创建功能，因为它将来自服务器）：</p>
 
 <pre><code>export const LATEST_TIP = 'LATEST_TIP';
 </code></pre>
 
-<p>Then we&rsquo;ll update our reducer, to prepend each incoming tip to a list of latest tips, so frontend/reducer.js ends up as:</p>
+<p>然后我们将更新我们的 reducer，将每个传入的提示添加到最新提示列表中，因此 frontend/reducer.js 最终为：</p>
 
 <pre><code>import * as ActionTypes from './actions';
 
@@ -1079,7 +1082,7 @@ export function tipsyReducer(state = initialState, action) {
 }
 </code></pre>
 
-<p>And then update the React components in frontend/index.js to render the latest tips:</p>
+<p>然后更新 frontend/index.js 中的 React 组件以渲染最新提示：</p>
 
 <pre><code>var LatestTips = props =&gt; (
     &lt;div&gt;
@@ -1100,9 +1103,9 @@ var App = props =&gt; (
 );
 </code></pre>
 
-<p>App is updated simply to pass the tips to the LatestTips component. And with that, the client-side additions are done.</p>
+<p>应用程序更新只是为了将提示传递给 LatestTips 组件。然后，客户端添加完成。</p>
 
-<p>Now for the backend, which is just a single addition in Routes.pm6. We clear out the websocket stub that was generated for us, and replace it with code to take the latest-tips Supply from the Tipsy business logic object, turn the events into appropriate JSON, and emit them:</p>
+<p>现在是后端，这只是 Routes.pm6 中的一个补充。我们清除了为我们生成的 websocket 存根，并将其替换为代码以从 Tipsy 业务逻辑对象获取最新提示，将事件转换为适当的 JSON，然后发出它们：</p>
 
 <pre><code>get -&gt; 'latest-tips' {
     web-socket -&gt; $incoming {
@@ -1124,10 +1127,19 @@ var App = props =&gt; (
 
 <p>Reload it in the browser. Add a tip. See it show up. Open a second tab with the application. You&rsquo;ll see it shows the first tip. Add a second tip. Flip back to the first tab, and you&rsquo;ll see that tip magically showed up there too. We&rsquo;re now successfully sharing out the tips over the web socket. Hurrah! That calls for a commit.</p>
 
-<p>Agree and disagree§
-We&rsquo;ve spent a lot of time setting up the client-side infrastructure. Now it&rsquo;s in place, however, adding further features is a far quicker process. Let&rsquo;s round off the tutorial by implementing the Agree/Disagree feature (links to let the user indicate agreement/disagreement with the tips), and showing the list of top tips.</p>
+<p>外部哈希是redux-websocket-action的“包络”，它告诉它注意消息并将其action属性作为Redux动作发送。</p>
+
+<p>在浏览器中重新加载它。添加提示。看到它出现。使用该应用程序打开第二个选项卡。你会看到它显示第一个提示。添加第二个提示。翻回第一个标签，你会看到那个小费神奇地出现在那里。我们现在已成功通过Web套接字分享提示。欢呼！这需要提交。</p>
+
+<h2 id="agree-and-disagree">Agree and disagree</h2>
+
+<p>We&rsquo;ve spent a lot of time setting up the client-side infrastructure. Now it&rsquo;s in place, however, adding further features is a far quicker process. Let&rsquo;s round off the tutorial by implementing the Agree/Disagree feature (links to let the user indicate agreement/disagreement with the tips), and showing the list of top tips.</p>
 
 <p>Let&rsquo;s start out in the very backend, by writing tests for these new features in the business logic object. We&rsquo;ll add these tests to t/tipsy.t:</p>
+
+<p>我们花了很多时间来设置客户端基础架构。现在它已经到位，但是，添加更多功能是一个更快的过程。让我们通过实现同意/不同意功能（链接让用户表示同意/不同意提示）来完善教程，并显示最重要的提示列表。</p>
+
+<p>让我们从后端开始，在业务逻辑对象中编写这些新功能的测试。我们将这些测试添加到 t/tipsy.t：</p>
 
 <pre><code>given $tipsy.latest-tips.head(3).list -&gt; @tips {
     $tipsy.agree(@tips[0].id) for ^3;
@@ -1149,7 +1161,10 @@ throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
 
 <p>The first part just adds some agreement and disagreement on the tips (they are sorted latest first). Next, we use the top-tips Supply and grab the first thing it emits (or should emit, at least), which is the current ordering at the point we tap the Supply. It checks that ordering is correct. A final test checks that for unrecognized IDs, we throw an exception.</p>
 
-<p>Here&rsquo;s the new exception type:</p>
+<p>Here&rsquo;s the new exception type:
+第一部分只是在提示上添加了一些协议和不同意见（它们最先排序）。接下来，我们使用top-tips供应并抓住它发出的第一个东西（或至少应该发出），这是我们点击Supply时的当前排序。它检查订购是否正确。最终测试检查对于无法识别的ID，我们抛出异常。</p>
+
+<p>这是新的异常类型：</p>
 
 <pre><code>class X::Tipsy::NoSuchId is Exception {
     has $.id;
@@ -1157,7 +1172,8 @@ throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
 }
 </code></pre>
 
-<p>Next up, we&rsquo;ll give the Tip class some methods that produce a new version of the Tip object with agreed or disagreed bumped one higher (we keep these instances immutable, since we share them outside of our monitor):</p>
+<p>Next up, we&rsquo;ll give the Tip class some methods that produce a new version of the Tip object with agreed or disagreed bumped one higher (we keep these instances immutable, since we share them outside of our monitor):
+接下来，我们将给Tip类提供一些方法，这些方法生成Tip对象的新版本，同意或不同意更高一些（我们将这些实例保持不变，因为我们在监视器之外共享它们）：</p>
 
 <pre><code>class Tip {
     has Int $.id is required;
@@ -1175,7 +1191,7 @@ throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
 }
 </code></pre>
 
-<p>The agree and disagree methods are easy enough:</p>
+<p>The agree and disagree methods are easy enough: 同意和不同意的方法很容易：</p>
 
 <pre><code>method agree(Int $tip-id --&gt; Nil) {
     with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
@@ -1196,7 +1212,8 @@ method disagree(Int $tip-id --&gt; Nil) {
 }
 </code></pre>
 
-<p>Hm, actually that&rsquo;s quite a bit of similarity. Let&rsquo;s use a private method to factor it out:</p>
+<p>Hm, actually that&rsquo;s quite a bit of similarity. Let&rsquo;s use a private method to factor it out:
+嗯，实际上这有点相似。让我们使用私有方法来解决它：</p>
 
 <pre><code>method agree(Int $tip-id --&gt; Nil) {
     self!with-tip: $tip-id, -&gt; $tip-ref is rw {
@@ -1220,7 +1237,8 @@ method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
 }
 </code></pre>
 
-<p>Finally, here&rsquo;s our first attempt at the top-tips method:</p>
+<p>Finally, here&rsquo;s our first attempt at the top-tips method:
+最后，这是我们对top-tips方法的第一次尝试：</p>
 
 <pre><code>method top-tips(--&gt; Supply) { 
     my @top-tips = %!tips-by-id.values
@@ -1232,7 +1250,8 @@ method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
 }
 </code></pre>
 
-<p>It passes the tests, and yet&hellip;something is missing. It&rsquo;s meant to emit an updated sorted list of tips every time there&rsquo;s either a new tip or a tip is agreed or disagreed with. Let&rsquo;s add some tests for that also:</p>
+<p>It passes the tests, and yet&hellip;something is missing. It&rsquo;s meant to emit an updated sorted list of tips every time there&rsquo;s either a new tip or a tip is agreed or disagreed with. Let&rsquo;s add some tests for that also:
+它通过了测试，然而&hellip;&hellip;缺少了一些东西。这意味着每当有新的小费或小费被同意或不同意时，会发出更新的排序提示列表。让我们为它添加一些测试：</p>
 
 <pre><code>my $new-tip-id;
 react {
@@ -1260,10 +1279,14 @@ react {
 }
 </code></pre>
 
-<p>To have this update, we need a Supplier that we can emit on to indicate a change to the agree/disagree counts.</p>
+<p>To have this update, we need a Supplier that we can emit on to indicate a change to the agree/disagree counts.
+要进行此更新，我们需要一个我们可以发出的供应商，以表明对同意/不同意计数的更改。</p>
 
-<p>has Supplier $!tip-change = Supplier.new;
-And to emit on it (easy after the factoring out earlier):</p>
+<pre><code>has Supplier $!tip-change = Supplier.new;
+</code></pre>
+
+<p>And to emit on it (easy after the factoring out earlier):
+并在其上发射（在之前的因子分解后很容易）：</p>
 
 <pre><code>method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
     with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
@@ -1276,7 +1299,8 @@ And to emit on it (easy after the factoring out earlier):</p>
 }
 </code></pre>
 
-<p>Finally, to update the top-tips method. There&rsquo;s a few ways we could do this, but the easiest way to be sure we&rsquo;re safe is to make sure the Supply keeps its own local state, which it can protect (again, remember that since the supply block is returned from, and lives beyond, the method, it is not going to be protected by the monitor).</p>
+<p>Finally, to update the top-tips method. There&rsquo;s a few ways we could do this, but the easiest way to be sure we&rsquo;re safe is to make sure the Supply keeps its own local state, which it can protect (again, remember that since the supply block is returned from, and lives beyond, the method, it is not going to be protected by the monitor).
+最后，更新top-tips方法。我们有几种方法可以做到这一点，但确保我们安全的最简单方法是确保供应保持其自身的本地状态，它可以保护（再次，请记住，因为供应块从中返回，并且超越，方法，它不会受到监视器的保护）。</p>
 
 <pre><code>method top-tips(--&gt; Supply) {
     my %initial-tips = %!tips-by-id;
@@ -1294,7 +1318,8 @@ And to emit on it (easy after the factoring out earlier):</p>
 }
 </code></pre>
 
-<p>With that done, it&rsquo;s time to expose this functionality to the outside world by updating lib/Routes.pm6. Its job is to map the business logic onto HTTP. The only thing we need to watch out for is to turn the &ldquo;no such ID&rdquo; exceptions into the appropriate HTTP response, which is a 404 Not Found. Otherwise, we&rsquo;d send back 500 Internal Server Error, which is wrong because it&rsquo;s not the server&rsquo;s fault that the client sent some bogus ID. Here goes:</p>
+<p>With that done, it&rsquo;s time to expose this functionality to the outside world by updating lib/Routes.pm6. Its job is to map the business logic onto HTTP. The only thing we need to watch out for is to turn the &ldquo;no such ID&rdquo; exceptions into the appropriate HTTP response, which is a 404 Not Found. Otherwise, we&rsquo;d send back 500 Internal Server Error, which is wrong because it&rsquo;s not the server&rsquo;s fault that the client sent some bogus ID. Here goes:
+完成后，是时候通过更新lib / Routes.pm6将此功能公开给外界。它的工作是将业务逻辑映射到HTTP。我们唯一需要注意的是将“无此ID”异常转换为适当的HTTP响应，即404 Not Found。否则，我们会发回500内部服务器错误，这是错误的，因为客户端发送了一些伪造的ID不是服务器的错。开始：</p>
 
 <pre><code>post -&gt; 'tips', Int $id, 'agree' {
     $tipsy.agree($id);
@@ -1317,7 +1342,8 @@ post -&gt; 'tips', Int $id, 'disagree' {
 }
 </code></pre>
 
-<p>The final step in the backend is to map the top tips out to another web socket:</p>
+<p>The final step in the backend is to map the top tips out to another web socket:
+后端的最后一步是将顶部提示映射到另一个Web套接字：</p>
 
 <pre><code>get -&gt; 'top-tips' {
     web-socket -&gt; $incoming {
@@ -1341,7 +1367,8 @@ post -&gt; 'tips', Int $id, 'disagree' {
 }
 </code></pre>
 
-<p>Now for the frontend. In frontend/actions.js, we&rsquo;ll add three new action type constants:</p>
+<p>Now for the frontend. In frontend/actions.js, we&rsquo;ll add three new action type constants:
+现在为前端。在 frontend/actions.js 中，我们将添加三个新的动作类型常量：</p>
 
 <pre><code>export const UPDATE_TOP_TIPS = 'UPDATE_TOP_TIPS';
 export const AGREE = 'AGREE';
@@ -1368,7 +1395,8 @@ export function disagree(id) {
 }
 </code></pre>
 
-<p>In the reducer, we&rsquo;ll tweak the initial state to have an empty set of top tips:</p>
+<p>In the reducer, we&rsquo;ll tweak the initial state to have an empty set of top tips:
+在reducer中，我们将调整初始状态以获得一组空的提示：</p>
 
 <pre><code>const initialState = {
     tipText: '',
@@ -1377,7 +1405,8 @@ export function disagree(id) {
 };
 </code></pre>
 
-<p>And then add an extra case statement to handle the new update action (we don&rsquo;t need to do anything much on agree/disagree, though in a real application we&rsquo;d want to give some user feedback that their vote was counted):</p>
+<p>And then add an extra case statement to handle the new update action (we don&rsquo;t need to do anything much on agree/disagree, though in a real application we&rsquo;d want to give some user feedback that their vote was counted):
+然后添加一个额外的case语句来处理新的更新操作（我们不需要在同意/不同意的情况下做任何事情，尽管在真实的应用程序中我们想要给一些用户反馈他们的投票被计算在内）：</p>
 
 <pre><code>case ActionTypes.UPDATE_TOP_TIPS:
     return {
@@ -1386,7 +1415,8 @@ export function disagree(id) {
     };
 </code></pre>
 
-<p>Next we need to get the second web socket connected up. That&rsquo;s just a little refactor away in frontend/index.js:</p>
+<p>Next we need to get the second web socket connected up. That&rsquo;s just a little refactor away in frontend/index.js:
+接下来我们需要连接第二个Web套接字。这只是frontend / index.js中的一点重构：</p>
 
 <pre><code>['latest-tips', 'top-tips'].forEach(endpoint =&gt; {
     let host = window.location.host;
@@ -1398,7 +1428,8 @@ export function disagree(id) {
 });
 </code></pre>
 
-<p>Next, we&rsquo;ll update the dispatch to props map, to include our new agree and disagree actions:</p>
+<p>Next, we&rsquo;ll update the dispatch to props map, to include our new agree and disagree actions:
+接下来，我们将把调度更新到道具地图，包括我们新的同意和不同意的行动：</p>
 
 <pre><code>function mapDispatch(dispatch) {
     return {
@@ -1410,7 +1441,8 @@ export function disagree(id) {
 }
 </code></pre>
 
-<p>Next up, we&rsquo;ll factor out showing a tip to a component that we can reuse in both the latest tips and top tips, which includes links to agree or disagree:</p>
+<p>Next up, we&rsquo;ll factor out showing a tip to a component that we can reuse in both the latest tips and top tips, which includes links to agree or disagree:
+接下来，我们将向您展示一个组件的提示，我们可以在最新的提示和重要提示中重复使用，其中包括同意或不同意的链接：</p>
 
 <pre><code>var Tip = props =&gt; (
     &lt;li&gt;
@@ -1420,7 +1452,8 @@ export function disagree(id) {
 );
 </code></pre>
 
-<p>And then showing a list of tips, with a heading:</p>
+<p>And then showing a list of tips, with a heading:
+然后显示一个提示列表，标题为：</p>
 
 <pre><code>var TipList = props =&gt; (
     &lt;div&gt;
@@ -1432,7 +1465,8 @@ export function disagree(id) {
 );
 </code></pre>
 
-<p>Finally, the App component becomes:</p>
+<p>Finally, the App component becomes:
+最后，App 组件变为：</p>
 
 <pre><code>var App = props =&gt; (
     &lt;div&gt;
@@ -1449,15 +1483,20 @@ export function disagree(id) {
 
 <p>And there we have it. npm run build, refresh, and give it a spin. Clicking agree or disagree in either list ends up with the sort order in the Top Tips list changing to reflect the votes.</p>
 
-<p>At last, we&rsquo;re done.</p>
+<p>At last, we&rsquo;re done.
+我们终于得到它了。 npm运行构建，刷新，并给它一个旋转。在任一列表中单击同意或不同意最终会更改顶部提示列表中的排序顺序以反映投票。</p>
+
+<p>最后，我们完成了。</p>
 
 <pre><code>$ git commit -m &quot;Add agree/disagree feature&quot; .
 [master 5d792bc] Add agree/disagree feature
  6 files changed, 188 insertions(+), 18 deletions(-)
 </code></pre>
 
-<p>Summing up§
-In this tutorial we&rsquo;ve gone from zero to reactive single page application. The frontend is written in modern ES6 using React and Redux. The backend is in Perl 6, using Cro. They communicate using both HTTP and web sockets. And both declare their dependencies, so getting started for a new developer is just a case of:</p>
+<h2 id="summing-up">Summing up</h2>
+
+<p>In this tutorial we&rsquo;ve gone from zero to reactive single page application. The frontend is written in modern ES6 using React and Redux. The backend is in Perl 6, using Cro. They communicate using both HTTP and web sockets. And both declare their dependencies, so getting started for a new developer is just a case of:
+在本教程中，我们从零到应用单页面应用程序。前端是使用React和Redux在现代ES6中编写的。使用Cro，后端在Perl 6中。它们使用HTTP和Web套接字进行通信。并且两者都声明了它们的依赖关系，因此新开发人员的入门只是以下情况：</p>
 
 <pre><code>zef install --deps-only .
 npm install .
@@ -1465,7 +1504,8 @@ npm run build
 cro run
 </code></pre>
 
-<p>One again, the code is available with the commit history described during this tutorial.</p>
+<p>One again, the code is available with the commit history described during this tutorial.
+再一次，代码可用于本教程中描述的提交历史记录。</p>
 
 
         
