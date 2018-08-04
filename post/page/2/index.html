@@ -201,6 +201,52 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-date-and-time-functions/">
+                <h2 class="post-title">Date and Time Functions</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Processing date and time in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (225 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6 包括几个处理时态信息的类：Date，DateTime，Instant 和 Duration。前三个是 dateish，所以它们混合了 Dateish 角色，它定义了处理日期的类应该采用的所有方法和属性。它还包括以 X::Temporal 为根的异常的类层次结构。
+我们将尝试在下一个（稍微扩展）的示例中说明这些类，这个示例可用于处理目录中的所有文件（默认情况下）。在目录中使用特定扩展名（默认为 .p6），根据他们的年龄对其进行排序，并计算每月创建的文件数量，以及在几个月的范围内表示的特定时期内修改的文件数量：
+use v6; sub MAIN( $path = &quot;.&quot;, $extension = &quot;p6&quot; ) { my DateTime $right = DateTime.now; my %metadata; my %files-month; my %files-period; for dir($path).grep( / \.$extension $/ ) -&gt; $file { CATCH { when X::Temporal { say &quot;Date-related problem&quot;, .payload } when X::IO { say &quot;File-related problem&quot;, .payload } default { .payload.say } } my Instant $modified = $file.
+                  <a href="https://ohmysummer.github.io/post/2018-07-07-date-and-time-functions/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/date/">Date</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/time/">Time</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/">
                 <h2 class="post-title">Hashes and Maps</h2>
 
@@ -615,53 +661,6 @@ use Digest::HMAC; use Digest; use Digest::SHA; use MIME::Base64; use URI::Encode
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/cookbook/">cookbook</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-05-06-dateish/">
-                <h2 class="post-title">Dateish</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Object that can be treated as a date
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on May 6, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (411 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  role Dateish { ... }  Date 和 DateTime 都支持访问 year, month 和 day-of-month 以及相关的函数，例如计算星期几。
-方法 year 方法 定义为：
-method year(Date:D: --&gt; Int:D)  返回日期的月份(1..12)。
-say Date.new('2015-12-31').month; # OUTPUT: «12» say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).month; # OUTPUT: «12»  day 方法 定义为：
-method day(Date:D: --&gt; Int:D)  返回日期中月份的天(1..31)。
-say Date.new('2015-12-31').day; # OUTPUT: «31» say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).day; # OUTPUT: «24»  formatter 方法 定义为：
-                  <a href="https://ohmysummer.github.io/post/2018-05-06-dateish/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/date/">Date</a>&nbsp;
                   
                 </div>
               

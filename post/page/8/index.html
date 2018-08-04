@@ -201,6 +201,55 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/">
+                <h2 class="post-title">第八天 – Adventures in NQP Land: Hacking the Rakudo Compiler</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    第八天 -  NQP 领地的冒险：破解 Rakudo 编译器
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 8, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (468 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 8 – Adventures in NQP Land: Hacking the Rakudo Compiler/ 对旧圣诞节经典“圣诞节十二天”的道歉，我给你一个 Perl 6 版本的第一行：
+在圣诞节的第一天，我真正的爱给了 pod 树上的 Perl 表格&hellip;&hellip;
+但是我得到的表格不是很漂亮！
+背景 我与 Perl 6 的第一次真正联系是在 2015 年春天，当时我决定检查它的状态，发现它已经准备好迎接黄金时段。在获得了该语言的一些经验之后，我开始在我可以提供帮助的地方贡献文档。我对文档的第一个贡献是清理其中没有很好呈现的表格。在我对本地主机上的 pod 表进行实验期间，我尝试了下表格：
+=begin table -r0c0 r0c1 =end table  这导致 Perl 6 抛出一个丑陋的, LTA（非常搓）的异常消息：
+&quot;===SORRY!=== Cannot iterate object with P6opaque representation&quot;  我解决了这个问题，但它让我感觉不爽，所以我开始调查 pod 和 tables 的内部。这导致我在 github.com/rakudo/src/Perl6/Pod.nqp 中发现了问题的根源。
+事实上，许多 pod 表格问题的真正问题最终都出现在该文件中。
+Not Quite Perl (NQP) nqp 是用于构建 Rakudo Perl 6 编译器的中间语言。它的 git 仓库在这里。本文的其余部分是关于修改 rakudo 编译器中的 nqp 代码，其仓库地址在这里。 Rakudo 在这里也有一个网站。
+                  <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/">
                 <h2 class="post-title">第七天 – Test All The Things</h2>
 
@@ -600,54 +649,6 @@ use v6; for $=finish.lines -&gt; $line { next if $++ &lt; 3 || $line ~~ / '-' /;
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-07-31-seq%E5%92%8C%E6%91%87%E6%BB%9A/">
-                <h2 class="post-title">Seq 和摇滚</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    How to make your very own Iterator object
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 31, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (978 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  这是这个系列的第二部分！请确保你已经阅读过第一部分, 在那里我们讨论了什么是 Seq, 并且怎么来缓存它们。
-今天, 我们把 Seq 单独拎出来, 看看里面到底有什么; 是什么驱动的它; 并且怎样让它实现我们的想法。
-第二部分: 快速迭代 使 Seq 做事情的主要部分是遵循 Iterator 角色的对象。 这个对象知道如何生成下一个值，什么时候从 Seq 中提取一个值，或者将其所有值推送到某个地方，或者简单地丢弃所有剩余的值。
-请记住，当使用 Seq 作为值的来源时，您不需要直接使用 Iterator 的方法。 它们被间接称为各种 Perl 6 结构。 自己调用这些方法的场景通常是我们制作一个由另一个 Iterator 提供的迭代器的时候，就像我们会看到的那样。
-Pull my finger 在最基本的形式中, 一个 Iterator 对象需要提供的只有一个方法: .pull-one
-my $seq := Seq.new: class :: does Iterator { method pull-one { return $++ if $++ &lt; 4; IterationEnd } }.new; .say for $seq;  输出:
-# OUTPUT: # 0 # 1 # 2 # 3  上面的例子中, 我们使用 Seq 的 .
-                  <a href="https://ohmysummer.github.io/post/2017-07-31-seq%E5%92%8C%E6%91%87%E6%BB%9A/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/seq/">Seq</a>&nbsp;
                   
                 </div>
               

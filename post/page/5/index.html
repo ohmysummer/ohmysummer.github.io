@@ -201,6 +201,51 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-perl-6/">
+                <h2 class="post-title">FatRat vs Rat in Perl 6</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    FatRat vs Rat in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 15, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (688 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  昨天，Solomon Foster 在 Facebook 的 Perl 6 小组上发布了一个例子:
+my @x = FatRat.new(1, 1), -&gt; $x { $x - ($x ** 2 - $N) / (2 * $x) } ... *  这段代码实现了牛顿找到 $N 平方根近似值的方法。重要的是它使用 FatRat 值来获得更高的准确性。
+让我们运行 9 的平方根：
+my $N = 9; my @x = Rat.new(1, 1), -&gt; $x { $x - ($x ** 2 - $N) / (2 * $x) } ... *; .say for @x[0..7];  很快，它收敛到正确的值：
+                  <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-perl-6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/">
                 <h2 class="post-title">A bit more on Rat vs FatRat in Perl 6</h2>
 
@@ -631,56 +676,6 @@ $ perl6 --target=ast -e 'say &quot;Hello, World!&quot;' [...] - QAST::Op(call &a
 <img src="https://wx2.sinaimg.cn/mw690/6c9ce165ly1fnwq4ekirwj21hc0xcqcx.jpg" alt="img" />
 <img src="https://upload-images.jianshu.io/upload_images/326727-e05292e819fa20a0.png" alt="img" /></p>
 
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-25-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B9%B6%E5%8F%91http%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0/">
-                <h2 class="post-title">第二十五天-圣诞奖金 - 并发HTTP服务器实施和scripter的方法</h2>
-
-                
-                  <h3 class="post-subtitle">
-                    Bonus Xmas – Concurrent HTTP Server implementation and the scripter’s approach
-                  </h3>
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 25, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (412 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Bonus Xmas – Concurrent HTTP Server implementation and the scripter’s approach 首先，我想强调 Jonathan Worthington 在 Rakudo Perl6 和 IO::Socket::Async 中的工作。谢谢 Jon！
-我喜欢制作脚本;编写组织良好的动作序列，获得结果并对它们进行处理。
-当我从 Perl6 开始时，我发现了一个壮观的生态系统，我可以按照自己喜欢的方式实践我的想法：脚本方式。其中一个想法是实现一个小型的 HTTP 服务器来玩玩。查看与 Perl6，HTTP 和套接字相关的其他项目和模块，我发现背后的作者是具有面向对象编程经验的程序员。
-Perl6 范式 Perl6 支持三种最流行的编程范式:
- 面向对象 函数式 过程式  我认为，当你设计一个将会增长的应用程序或服务时，面向对象的范式是很好的，它会做许多不同的事情并且会有很多变化。但我不喜欢那些变化太大，会有很多变化的东西;这就是为什么我喜欢使用原生过程式方法的脚本，因为它能够快速提升简单性和有效性。我喜欢小（一步一步）但能快速完成伟大东西的事物。
-函数式范式在我看来非常棒;你可以使用一个函数，并像 var 一样使用它，以及其他令人惊讶的事情。
-Perl6 Supplies 就像一个 V12 引擎 在我开始将 perl6intro.com 翻译成西班牙语后不久，我开始使用 Perl6。看看 Perl6 的文档，我发现了 Perl6 巨大的并发潜力。 Perl6在并发方面比我想象的更加强大。
-我使用 Perl6 的 HTTP 服务器的思想始于 Perl6 Supplies（具有多个订阅者的异步数据流），具体来说就是 IO::Socket::Async类。所有的套接字管理，数据传输和并发性实际上都是自动且易于理解的。制作并玩一玩小并发但强大的服务是极好的。
-基于 IO::Socket::Async 文档的示例，我开始在 mini-http-cgi-server 项目中实现一个支持 pseudoCGI 的小型 HTTP 服务器，并且按照我的预期工作。当我得到我想要的东西时，我很满意，我离开了这个项目一段时间。我不喜欢事情发展太多。
-                  <a href="https://ohmysummer.github.io/post/2017-12-25-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B9%B6%E5%8F%91http%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
 

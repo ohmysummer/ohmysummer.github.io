@@ -201,6 +201,51 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2015-08-29-%E6%8E%A2%E7%B4%A2perl6%E7%9A%84signatures%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/">
+                <h2 class="post-title">探索Perl6的Signatures,第二部分</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 29, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (484 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在我们探索 Perl 6 签名的第一部分中, 我们了解了怎么使用 Perl 6 强大而灵活的类型系统来约束具名参数和位置参数是如何被传递给子例程和方法的。我们还涉及了怎么使用 slurp 签名来创建能接收任意具名和位置参数列表的可变函数。
+Perl 6 的签名系统提供了更多。在这篇文章中我们将验证其中更高级的特性, 它们让 Perl 6 的调用语义更强大。
+Class 约束 你可以使用签名来指定传递进函数中的参数的类型约束。你使用的类型可以是任意类名。
+sub foo( Numeric $foo, Str $bar) { say &quot;my string is $bar and my number is $foo&quot; }  这个签名要求我们传递 Numeric 和 Str 类型的参数。但是因为 Perl 6 的内置类型实际上就是类(classes), 并且因为 Numeric 拥有几个子类型, 我们可以传递进任何数字类型, 它都能工作:
+foo(42, &quot;blah&quot;); foo(42.99, &quot;yoohoo&quot;); foo(3+9i, &quot;hellooooooo&quot;); # etc  我们自己定义的类中签名的工作原理也一样。
+class Foo { has $.prop is rw; } sub inspect-a-foo( Foo $my-foo ) { say &quot;this foo's property is &quot; ~ $my-foo.
+                  <a href="https://ohmysummer.github.io/post/2015-08-29-%E6%8E%A2%E7%B4%A2perl6%E7%9A%84signatures%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/signature/">Signature</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/%E7%AD%BE%E5%90%8D/">签名</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2015-08-25-perl6%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F/">
                 <h2 class="post-title">Perl 6 中的变量</h2>
 
@@ -579,52 +624,6 @@ say ('a'..'h').rotor(2 =&gt; 1).join('|'); # a b|d e|g h say ('a'..'h').rotor(3 
                 <div class="blog-tags">
                   
                     <a href="https://ohmysummer.github.io//tags/%E5%9C%A3%E8%AF%9E/">圣诞</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-07-25-introspection/">
-                <h2 class="post-title">Introspection</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 25, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (328 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6 支持&rdquo;泛型, roles 和 多重分发&rdquo;, 它们都是很好的特点, 并且已经在其它 advent calendar 中发布过了。
-但是今天我们要看的是 MOP。 &ldquo;MOP&rdquo;代表着元对象协议(&ldquo;Meta-Object Protocol&rdquo;)。那意味着, 它们实际上是你能从用户那边改变的一部分, 而不是对象、类等定义语言的东西。
-实际上, 在 Perl 6中, 你可以为类型添加方法, 移除某个方法, 包裹方法, 使用更多能力增强类(OO::Actors 和 OO::Monitors 就是两个这样的例子), 或者你可以完全重定义它(并且, 例如, 使用 Ruby-like 的对象系统。这儿有个例子)。
-但是今天, 我们首先看一下第一部分: 自省。在类型创建完之后查看它的类型, 了解它, 并使用这些信息。
-我们将要创建的模块是基于 Sixcheck 模块(一个 QuickCheck-like 模块)的需求: 为某个类型生成一些随机数据, 然后把数据喂给我们正测试的函数, 并检查某些后置条件(post-condition)。
-所以, 我们先写出第一个版本:
-my %special-cases{Mu} = (Int) =&gt; -&gt; { (1..50).pick }, (Str) =&gt; -&gt; { ('a'..'z').pick(50).join('') }, ; sub generate-data(Mu:U \t) { %special-cases{t} ?? %special-cases{t}() !
-                  <a href="https://ohmysummer.github.io/post/2015-07-25-introspection/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/introspection/">Introspection</a>&nbsp;
-                  
-                    <a href="https://ohmysummer.github.io//tags/%E8%87%AA%E7%9C%81/">自省</a>&nbsp;
                   
                 </div>
               
