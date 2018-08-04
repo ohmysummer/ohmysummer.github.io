@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 18 minutes (3814 words)
+  <i class="fa fa-clock-o"></i> 15 minutes (3176 words)
   
   
 </span>
@@ -1127,19 +1127,15 @@ var App = props =&gt; (
 
 <p>Reload it in the browser. Add a tip. See it show up. Open a second tab with the application. You&rsquo;ll see it shows the first tip. Add a second tip. Flip back to the first tab, and you&rsquo;ll see that tip magically showed up there too. We&rsquo;re now successfully sharing out the tips over the web socket. Hurrah! That calls for a commit.</p>
 
-<p>外部哈希是redux-websocket-action的“包络”，它告诉它注意消息并将其action属性作为Redux动作发送。</p>
+<p>外部哈希是 redux-websocket-action 的“信封”，它告诉它注意消息并将其 action 属性作为 Redux 动作发送。</p>
 
-<p>在浏览器中重新加载它。添加提示。看到它出现。使用该应用程序打开第二个选项卡。你会看到它显示第一个提示。添加第二个提示。翻回第一个标签，你会看到那个小费神奇地出现在那里。我们现在已成功通过Web套接字分享提示。欢呼！这需要提交。</p>
+<p>在浏览器中重新加载它。添加提示。看到它出现。使用该应用程序打开第二个选项卡。你会看到它显示第一个提示。添加第二个提示。翻回第一个标签，你会看到那个小费神奇地出现在那里。我们现在已成功通过 Web 套接字分享提示。欢呼！这需要提交一次。</p>
 
 <h2 id="agree-and-disagree">Agree and disagree</h2>
 
-<p>We&rsquo;ve spent a lot of time setting up the client-side infrastructure. Now it&rsquo;s in place, however, adding further features is a far quicker process. Let&rsquo;s round off the tutorial by implementing the Agree/Disagree feature (links to let the user indicate agreement/disagreement with the tips), and showing the list of top tips.</p>
+<p>我们花了很多时间来设置客户端(client-side)的基础架构。现在它已经到位，但是，添加更多功能是一个更快的过程。让我们通过实现同意/不同意功能（链接让用户表示同意/不同意提示）来完善教程，并显示最头部的提示列表。</p>
 
-<p>Let&rsquo;s start out in the very backend, by writing tests for these new features in the business logic object. We&rsquo;ll add these tests to t/tipsy.t:</p>
-
-<p>我们花了很多时间来设置客户端基础架构。现在它已经到位，但是，添加更多功能是一个更快的过程。让我们通过实现同意/不同意功能（链接让用户表示同意/不同意提示）来完善教程，并显示最重要的提示列表。</p>
-
-<p>让我们从后端开始，在业务逻辑对象中编写这些新功能的测试。我们将这些测试添加到 t/tipsy.t：</p>
+<p>让我们从后端开始，在业务逻辑对象中编写这些新功能的测试。我们将这些测试添加到 <code>t/tipsy.t</code>：</p>
 
 <pre><code>given $tipsy.latest-tips.head(3).list -&gt; @tips {
     $tipsy.agree(@tips[0].id) for ^3;
@@ -1159,10 +1155,7 @@ throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
     'Correct exception on no such tip';
 </code></pre>
 
-<p>The first part just adds some agreement and disagreement on the tips (they are sorted latest first). Next, we use the top-tips Supply and grab the first thing it emits (or should emit, at least), which is the current ordering at the point we tap the Supply. It checks that ordering is correct. A final test checks that for unrecognized IDs, we throw an exception.</p>
-
-<p>Here&rsquo;s the new exception type:
-第一部分只是在提示上添加了一些协议和不同意见（它们最先排序）。接下来，我们使用top-tips供应并抓住它发出的第一个东西（或至少应该发出），这是我们点击Supply时的当前排序。它检查订购是否正确。最终测试检查对于无法识别的ID，我们抛出异常。</p>
+<p>第一部分只是在提示上添加了一些 agreement 和 disagreement（最新的会拍在第一的位置）。接下来，我们使用 top-tips 供应并抓住它发出的第一个东西（或至少应该发出），这是我们点击 Supply 时的当前排序。它检查顺序是否正确。最终测试检查对于无法识别的 ID，我们抛出异常。</p>
 
 <p>这是新的异常类型：</p>
 
@@ -1172,8 +1165,7 @@ throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
 }
 </code></pre>
 
-<p>Next up, we&rsquo;ll give the Tip class some methods that produce a new version of the Tip object with agreed or disagreed bumped one higher (we keep these instances immutable, since we share them outside of our monitor):
-接下来，我们将给Tip类提供一些方法，这些方法生成Tip对象的新版本，同意或不同意更高一些（我们将这些实例保持不变，因为我们在监视器之外共享它们）：</p>
+<p>接下来，我们将给 Tip 类提供一些方法，这些方法生成 Tip 对象的新版本，同意或不同意更高一些（我们将这些实例保持不变，因为我们在监视器之外共享它们）：</p>
 
 <pre><code>class Tip {
     has Int $.id is required;
@@ -1191,7 +1183,7 @@ throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
 }
 </code></pre>
 
-<p>The agree and disagree methods are easy enough: 同意和不同意的方法很容易：</p>
+<p>同意和不同意的方法很容易：</p>
 
 <pre><code>method agree(Int $tip-id --&gt; Nil) {
     with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
@@ -1212,8 +1204,7 @@ method disagree(Int $tip-id --&gt; Nil) {
 }
 </code></pre>
 
-<p>Hm, actually that&rsquo;s quite a bit of similarity. Let&rsquo;s use a private method to factor it out:
-嗯，实际上这有点相似。让我们使用私有方法来解决它：</p>
+<p>嗯，实际上这有点相似。让我们使用私有方法来解决它：</p>
 
 <pre><code>method agree(Int $tip-id --&gt; Nil) {
     self!with-tip: $tip-id, -&gt; $tip-ref is rw {
@@ -1237,8 +1228,7 @@ method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
 }
 </code></pre>
 
-<p>Finally, here&rsquo;s our first attempt at the top-tips method:
-最后，这是我们对top-tips方法的第一次尝试：</p>
+<p>最后，这是我们对 top-tips 方法的第一次尝试：</p>
 
 <pre><code>method top-tips(--&gt; Supply) { 
     my @top-tips = %!tips-by-id.values
@@ -1250,8 +1240,7 @@ method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
 }
 </code></pre>
 
-<p>It passes the tests, and yet&hellip;something is missing. It&rsquo;s meant to emit an updated sorted list of tips every time there&rsquo;s either a new tip or a tip is agreed or disagreed with. Let&rsquo;s add some tests for that also:
-它通过了测试，然而&hellip;&hellip;缺少了一些东西。这意味着每当有新的小费或小费被同意或不同意时，会发出更新的排序提示列表。让我们为它添加一些测试：</p>
+<p>它通过了测试，然而&hellip;&hellip;缺少了一些东西。这意味着每当有新的提示或提示被同意或不同意时，会发出更新的排序提示列表。让我们为它添加一些测试：</p>
 
 <pre><code>my $new-tip-id;
 react {
@@ -1279,14 +1268,12 @@ react {
 }
 </code></pre>
 
-<p>To have this update, we need a Supplier that we can emit on to indicate a change to the agree/disagree counts.
-要进行此更新，我们需要一个我们可以发出的供应商，以表明对同意/不同意计数的更改。</p>
+<p>要进行此更新，我们需要一个我们可以发出的 Supplier，以表明对同意/不同意计数的更改。</p>
 
 <pre><code>has Supplier $!tip-change = Supplier.new;
 </code></pre>
 
-<p>And to emit on it (easy after the factoring out earlier):
-并在其上发射（在之前的因子分解后很容易）：</p>
+<p>并在其上发射（在之前的因子分解后很容易）：</p>
 
 <pre><code>method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
     with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
@@ -1299,8 +1286,7 @@ react {
 }
 </code></pre>
 
-<p>Finally, to update the top-tips method. There&rsquo;s a few ways we could do this, but the easiest way to be sure we&rsquo;re safe is to make sure the Supply keeps its own local state, which it can protect (again, remember that since the supply block is returned from, and lives beyond, the method, it is not going to be protected by the monitor).
-最后，更新top-tips方法。我们有几种方法可以做到这一点，但确保我们安全的最简单方法是确保供应保持其自身的本地状态，它可以保护（再次，请记住，因为供应块从中返回，并且超越，方法，它不会受到监视器的保护）。</p>
+<p>最后，更新 top-tips 方法。我们有几种方法可以做到这一点，但确保我们安全的最简单方法是确保 Supply 保持其自身的本地状态，它可以保护（再次，请记住，因为 supply 块从中返回，并且超越，方法，它不会受到监视器的保护）。</p>
 
 <pre><code>method top-tips(--&gt; Supply) {
     my %initial-tips = %!tips-by-id;
@@ -1318,8 +1304,7 @@ react {
 }
 </code></pre>
 
-<p>With that done, it&rsquo;s time to expose this functionality to the outside world by updating lib/Routes.pm6. Its job is to map the business logic onto HTTP. The only thing we need to watch out for is to turn the &ldquo;no such ID&rdquo; exceptions into the appropriate HTTP response, which is a 404 Not Found. Otherwise, we&rsquo;d send back 500 Internal Server Error, which is wrong because it&rsquo;s not the server&rsquo;s fault that the client sent some bogus ID. Here goes:
-完成后，是时候通过更新lib / Routes.pm6将此功能公开给外界。它的工作是将业务逻辑映射到HTTP。我们唯一需要注意的是将“无此ID”异常转换为适当的HTTP响应，即404 Not Found。否则，我们会发回500内部服务器错误，这是错误的，因为客户端发送了一些伪造的ID不是服务器的错。开始：</p>
+<p>完成后，是时候通过更新 lib/Routes.pm6 将此功能公开给外界。它的工作是将业务逻辑映射到 HTTP。我们唯一需要注意的是将 “no such ID” 的异常转换为适当的 HTTP 响应，即 404 Not Found。否则，我们会发回 500 内部服务器错误，这是错误的，因为客户端发送了一些伪造的 ID 不是服务器的错。开始：</p>
 
 <pre><code>post -&gt; 'tips', Int $id, 'agree' {
     $tipsy.agree($id);
@@ -1342,8 +1327,7 @@ post -&gt; 'tips', Int $id, 'disagree' {
 }
 </code></pre>
 
-<p>The final step in the backend is to map the top tips out to another web socket:
-后端的最后一步是将顶部提示映射到另一个Web套接字：</p>
+<p>后端的最后一步是将顶部提示映射到另一个 Web 套接字：</p>
 
 <pre><code>get -&gt; 'top-tips' {
     web-socket -&gt; $incoming {
@@ -1367,8 +1351,7 @@ post -&gt; 'tips', Int $id, 'disagree' {
 }
 </code></pre>
 
-<p>Now for the frontend. In frontend/actions.js, we&rsquo;ll add three new action type constants:
-现在为前端。在 frontend/actions.js 中，我们将添加三个新的动作类型常量：</p>
+<p>现在到前端了。在 frontend/actions.js 中，我们将添加三个新的 action 类型常量：</p>
 
 <pre><code>export const UPDATE_TOP_TIPS = 'UPDATE_TOP_TIPS';
 export const AGREE = 'AGREE';
@@ -1395,8 +1378,7 @@ export function disagree(id) {
 }
 </code></pre>
 
-<p>In the reducer, we&rsquo;ll tweak the initial state to have an empty set of top tips:
-在reducer中，我们将调整初始状态以获得一组空的提示：</p>
+<p>在 reducer 中，我们将调整初始状态以获得一组空的 top 提示：</p>
 
 <pre><code>const initialState = {
     tipText: '',
@@ -1405,8 +1387,7 @@ export function disagree(id) {
 };
 </code></pre>
 
-<p>And then add an extra case statement to handle the new update action (we don&rsquo;t need to do anything much on agree/disagree, though in a real application we&rsquo;d want to give some user feedback that their vote was counted):
-然后添加一个额外的case语句来处理新的更新操作（我们不需要在同意/不同意的情况下做任何事情，尽管在真实的应用程序中我们想要给一些用户反馈他们的投票被计算在内）：</p>
+<p>然后添加一个额外的 case 语句来处理新的更新操作（我们不需要在同意/不同意的情况下做任何事情，尽管在真实的应用程序中我们想要给一些用户反馈他们的投票被计算在内）：</p>
 
 <pre><code>case ActionTypes.UPDATE_TOP_TIPS:
     return {
@@ -1415,8 +1396,7 @@ export function disagree(id) {
     };
 </code></pre>
 
-<p>Next we need to get the second web socket connected up. That&rsquo;s just a little refactor away in frontend/index.js:
-接下来我们需要连接第二个Web套接字。这只是frontend / index.js中的一点重构：</p>
+<p>接下来我们需要连接第二个 Web 套接字。这只是 frontend/index.js 中的一点重构：</p>
 
 <pre><code>['latest-tips', 'top-tips'].forEach(endpoint =&gt; {
     let host = window.location.host;
@@ -1428,8 +1408,7 @@ export function disagree(id) {
 });
 </code></pre>
 
-<p>Next, we&rsquo;ll update the dispatch to props map, to include our new agree and disagree actions:
-接下来，我们将把调度更新到道具地图，包括我们新的同意和不同意的行动：</p>
+<p>接下来，我们将把调度更新到 props map，包括我们新的同意和不同意的 action：</p>
 
 <pre><code>function mapDispatch(dispatch) {
     return {
@@ -1441,8 +1420,7 @@ export function disagree(id) {
 }
 </code></pre>
 
-<p>Next up, we&rsquo;ll factor out showing a tip to a component that we can reuse in both the latest tips and top tips, which includes links to agree or disagree:
-接下来，我们将向您展示一个组件的提示，我们可以在最新的提示和重要提示中重复使用，其中包括同意或不同意的链接：</p>
+<p>接下来，我们将向您展示一个组件的提示，我们可以在最新的提示和重要提示中重复使用，其中包括同意或不同意的链接：</p>
 
 <pre><code>var Tip = props =&gt; (
     &lt;li&gt;
@@ -1452,8 +1430,7 @@ export function disagree(id) {
 );
 </code></pre>
 
-<p>And then showing a list of tips, with a heading:
-然后显示一个提示列表，标题为：</p>
+<p>然后显示一个提示列表，标题为：</p>
 
 <pre><code>var TipList = props =&gt; (
     &lt;div&gt;
@@ -1465,8 +1442,7 @@ export function disagree(id) {
 );
 </code></pre>
 
-<p>Finally, the App component becomes:
-最后，App 组件变为：</p>
+<p>最后，App 组件变为：</p>
 
 <pre><code>var App = props =&gt; (
     &lt;div&gt;
@@ -1481,10 +1457,7 @@ export function disagree(id) {
 );
 </code></pre>
 
-<p>And there we have it. npm run build, refresh, and give it a spin. Clicking agree or disagree in either list ends up with the sort order in the Top Tips list changing to reflect the votes.</p>
-
-<p>At last, we&rsquo;re done.
-我们终于得到它了。 npm运行构建，刷新，并给它一个旋转。在任一列表中单击同意或不同意最终会更改顶部提示列表中的排序顺序以反映投票。</p>
+<p>我们终于得到它了。 npm run build，刷新，并给它一个旋转。在任一列表中单击同意或不同意最终会更改顶部提示列表中的排序顺序以反映投票。</p>
 
 <p>最后，我们完成了。</p>
 
@@ -1495,8 +1468,7 @@ export function disagree(id) {
 
 <h2 id="summing-up">Summing up</h2>
 
-<p>In this tutorial we&rsquo;ve gone from zero to reactive single page application. The frontend is written in modern ES6 using React and Redux. The backend is in Perl 6, using Cro. They communicate using both HTTP and web sockets. And both declare their dependencies, so getting started for a new developer is just a case of:
-在本教程中，我们从零到应用单页面应用程序。前端是使用React和Redux在现代ES6中编写的。使用Cro，后端在Perl 6中。它们使用HTTP和Web套接字进行通信。并且两者都声明了它们的依赖关系，因此新开发人员的入门只是以下情况：</p>
+<p>在本教程中，我们从零到应用单页面应用程序。前端是使用 React 和 Redux 在现代 ES6 中编写的。使用 Cro，后端在 Perl 6 中。它们使用 HTTP 和 Web 套接字进行通信。并且两者都声明了它们的依赖关系，因此新开发人员的入门只是以下情况：</p>
 
 <pre><code>zef install --deps-only .
 npm install .
@@ -1504,8 +1476,7 @@ npm run build
 cro run
 </code></pre>
 
-<p>One again, the code is available with the commit history described during this tutorial.
-再一次，代码可用于本教程中描述的提交历史记录。</p>
+<p>再一次，代码可用于本教程中描述的提交历史记录。</p>
 
 
         
