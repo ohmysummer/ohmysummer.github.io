@@ -201,6 +201,52 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2016-01-28-perl6%E4%B8%AD%E7%9A%84s%E6%93%8D%E4%BD%9C%E7%AC%A6/">
+                <h2 class="post-title">Perl 6 中的 S/// 操作符</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 28, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (447 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Perl 6: S/// 操作符 By Zoffix Znet
+来自 Perl 5 背景的我， 第一次使用 Perl 6 的非破坏性替换操作符 S/// 的经历就像下面这样:
+进展会更好的。我不但会改善错误信息，而且会解释当前的所有事情。
+智能匹配 我有问题的原因是因为，看到外形相似的操作符，我就简单地把 Perl 5 中的绑定操作符(=~)转换为 Perl 6 中的智能匹配操作符(~~) 还期望它能正常工作。事实上我是异想天开。S/// 操作符没有文档，并且结合令人困惑的(那个时候)警告信息，这就是我痛苦的根源：
+my $orig = 'meowmix'; my $new = $orig ~~ S/me/c/; say $new; # OUTPUT warning: # Smartmatch with S/// can never succeed  这个丑陋的警告说这儿的 ~~ 操作符是个错误的选择并且确实如此。~~ 操作符不是 Perl 5 的 =~ 操作符的等价物。~~ 智能操作符把它左边的东西起了个叫做 $_ 的别名，然后 ~~ 计算它右侧的东西，然后在右侧这个东西身上调用 .ACCEPTS($_) 方法。这就是所有的魔法。
+所以上面的例子实际上发生了:
+ 我们到达 S/// 的时候， $orig 被起了个叫做 $_ 的别名。 S/// 非破坏性地在 $_ 身上执行了替换并返回那个结果字符串。这是智能匹配将要操作的东西。 智能匹配，按照 Str 与 Str 相匹配的规则，会根据替换是否发生来给出 True 或 False（令人困惑的是，True 意味着没发生）  结果一路下来，我们并没有得到我们想要的：替换过的字符串。
+                  <a href="https://ohmysummer.github.io/post/2016-01-28-perl6%E4%B8%AD%E7%9A%84s%E6%93%8D%E4%BD%9C%E7%AC%A6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/s////">S///</a>&nbsp;
+                  
+                    <a href="https://ohmysummer.github.io//tags/given/">given</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2016-01-21-roles/">
                 <h2 class="post-title">Roles</h2>
 
@@ -615,48 +661,6 @@ my $1 = -&gt; $a { splice($a,1,3,[1,2,3]); $a }; say (^6).map( { $_ &lt; 4 ?? 0 
                     <a href="https://ohmysummer.github.io//tags/unspace/">unspace</a>&nbsp;
                   
                     <a href="https://ohmysummer.github.io//tags/rotor/">rotor</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2015-12-11-%E7%B1%BB%E4%B8%AD%E7%9A%84twigils/">
-                <h2 class="post-title">类中的twigils</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 11, 2015
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (289 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Perl 6中的 . 和 ! twigil 是什么？ . twigil 的意思是&rdquo;这是类公用的&rdquo;, ! twigil 的意思是“这是类私有的”, 只能用在类的内部。
-class ScoreKeeper { has @.options; has %!player-points; }  普通的符号表明了词法作用域或包作用域, 但是 twigils 就像是 sigils 的兄弟, 表明了不同的作用域, 它影响了变量的作用域。. 和 ! 是二级 sigils。
-属性存在于每个类的实例中, 在类的内部, 可以直接使用 !访问到实例的属性:
-class Point { has $.x; has $.y; method Str() { &quot;($!x, $!y)&quot; } }  那么 . twigil 和 ! twigil 之间有什么关系呢？下面看一个例子:
-use v6; class Point { has $.x; has $.
-                  <a href="https://ohmysummer.github.io/post/2015-12-11-%E7%B1%BB%E4%B8%AD%E7%9A%84twigils/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/twigil/">twigil</a>&nbsp;
                   
                 </div>
               

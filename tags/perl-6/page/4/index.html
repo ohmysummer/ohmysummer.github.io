@@ -201,6 +201,65 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/">
+                <h2 class="post-title">第十六天-Perl 6 性能改进</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 16, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (84 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶 在英国，我们缺乏感恩节给圣诞节带来了新的一年，感谢和反思。为此，我想围绕Perl 6性能的状态放置一些我已经坐了一段时间的零碎片断，这些片断强调了这个过程需要付出多少努力。我不确定更广泛的编程社区对正在发生的努力的速度和数量表示赞赏。
+我不是核心开发人员，但自2010年推出Rakudo *之后，我一直是Perl 6的低级用户。通常情况下，已经进入Rakudo的努力被未知的努力所掩盖。人们重新审视Rakudo Perl 6时尤其如此，他可能会想象下一个圣诞节将会如何。但是Perl 6在历史上证明，在下一个圣诞节之前，事情总会有所改善，无论您选择哪个圣诞节，
+回到2014年的圣诞节，我写了一篇关于为什么我认为Perl 6能够完成生物信息学工作的出色文章。那篇文章中没有提到的是，为什么在Rakudo上实现Perl 6根本没有准备好去做任何严肃的生物信息学。表演真的没有！我在Perl 6中的第一次尝试（当Parrot虚拟机完全使用时）让我执行了几十分钟的简单操作，我期望它是毫秒级的性能。这很遗憾，因为我没有跟踪时间。但这当然不是一个好起点。
+然而，快速转发到2014年和MoarVM，我觉得自己写这篇来临邮件感觉很舒服，因为我知道在作为用户的4年中有多少改进。而且，所有的发展都是在完成语言定义和正确的实施。然而，我是一直在等待perf到达那里的用户。我认为大部分时间到了。为此，我要感谢所有核心开发者所付出的巨大的日常努力。观看它展现出令人难以置信的动力。对我来说，这个圣诞节是圣诞节的目标，它已经到来。 👏🏻🎊
+我一直在为我的BioInfo模块运行和计时测试，这些模块对生物序列数据进行了多年的基本操作。它以非常糟糕的方式做到了这一点。在紧密循环中分配和丢弃哈希时出现了很多错误等等。但是我已经将这些代码留给了现在 - 在五年多的时间里。悄悄地进行私人基准测试，偶尔鼓励在IRC频道看到大幅飞跃的努力。 Sub 10s是一个很大的！它从30/40秒突然发生。在我暗示IRC一个地方，我的代码在分析时特别慢，这是一次跳跃！
+这是一个长期观点，如果我放大去年的这一年，可以看到，如果时间不是很长，整个系数的性能仍然在提高。
+请记住，所有这些配置文件都不是来自Rakudo编译器的发布版本，而是来自当天的HEAD。所以偶尔会有一些奇怪的表现回归，正如你上面看到的，通常不会留下来发布。
+发生什么了？情况如何变好？有几个原因。 Perl 6中的许多算法选择和核心功能都已经在源代码级别（更晚些时候）逐步和积极地进行了优化。但支持Rakudo的MoarVM虚拟机的优化能力也得到了提高，并且可以降低到原生代码和内联专用版本的代码。这部分得益于2014年以来Rakudo Perl 6提供的-profile选项，它提供了所有这些信息。
+在上面关于MoarVM如何处理我编译过的Perl 6测试的代码框的情节中，应该很清楚的是，自从今年夏天以来，有相当多的框架被JIT编译，解释较少，并且几乎所有专用框架（橙色）结束原生JIT（绿色）。如果您想了解更多有关“spesh”MoarVM代码专门工具的最新工作，您可以在他的博客上阅读Jonathan Worthington的4篇文章。 Baart Weigmans还有一篇博客概述了他在JIT编译器方面的工作，最近还谈到了许多尚未登陆的新功能，希望能让许多新开发人员加入并帮助改进JIT。所以如果这对你来说是一件有趣的事情，我建议你查看一下上面的链接。
+所以这是我的基准和我的目标，其中大部分是围绕数据结构创建和解析。但是，数字作品等其他内容呢？那也保持了吗？没有任何人推动，就像我推动我对事情可以改进的地方的看法。答案是肯定的！
+曾几何时，早在2013年，一位名叫Tim King的绅士就开始对Perl 6中的素数感兴趣.Tim对他发现的性能颇为不满。正确如此。他从以下漂亮的代码开始：
+通过定义一个素数的交叉点找到任何素数，真是一个不错的优雅解决方案！但是蒂姆惊讶地发现联赛很慢，上面的代码让他看到了前1000个素数。今天，超级高级代码需要0.96s。
+对于基于联结的代码的缓慢程度，蒂姆继续做更标准的迭代方法感到不满。 Tim在这些帖子后不久就从网上消失。但他留下了我继续留下的遗产。他的主要基准测试代码和我对时间结果的适应性可以在这个要点中找到。以下是另一张图表，其中显示了每个超过100次试验找到前1000个素数所需的平均时间。 2015年的垂直线是较高的标准偏差。
+再次以最近的放大视图（最新的数据点让我担心一点，我以某种方式搞砸了&hellip;&hellip;）
+上面的收敛到一个点，是启动和停止Rakudo运行时和MoarVM的开销。发现素数并不是它曾经的努力，它比Rakudo的开始稍微慢一些。无论您选择的代码解决方案的级别和优雅程度如何，至少要快一个数量级。
+好吧，我们已经看到MoarVM获得了一些闪亮的新运动部件。但是像Liz，jnthn，Zoffix以及最近在字符串Samcv世界中开发人员已经付出了巨大的努力，以改进MoarVM和Rakudo在算法上实际上正在做的事情。
+旁注：我相信我根本不会做大多数其他开发人员的正义，特别是在这篇文章中忽略了JVM的努力。我建议每个人都去，并检查提交日志，看看有多少人现在参与使Rakudo更快，更好，更强大。我确定他们想在本文的底部看到您的感谢！  因此，节省你一份查看提交日志的工作我已经做了一些挖掘，看看自上个圣诞节以来与提高性能有关的提交。 N％或Nx更快的东西。如下所示：
+3c6277c77 Have .codes use nqp::codes op. 350% faster for short strings ee4593601 Make Baggy (^) Baggy about 150x faster  这两项承诺将以一年的核心发展时间表推动编程项目的发展。但是，今年，它们仅仅是数百次提交中的两次。
+                  <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/">
                 <h2 class="post-title">第十五天-带有 Promise 的简单网络爬虫</h2>
 
@@ -592,51 +651,6 @@ use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call
                 
                   <p><a href="https://perl6advent.wordpress.com/2017/12/06/">https://perl6advent.wordpress.com/2017/12/06/</a></p>
 
-                
-              </div>
-
-              
-                <div class="blog-tags">
-                  
-                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
-                  
-                </div>
-              
-
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/">
-                <h2 class="post-title">第三天 – LetterOps with Perl6</h2>
-
-                
-              </a>
-
-              <p class="post-meta">
-                <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 3, 2017
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (404 words)
-  
-  
-</span>
-
-              </p>
-              <div class="post-entry">
-                
-                  Day 3 – LetterOps with Perl6 规模 “规模！规模就是一切！“。
-当圣诞老人的声音传到他们身上时，精灵散落在四面八方。
-“这个 operation 是为三十四个孩子准备的？现在我们有无数的！大人也送信！“
-小精灵 Buzzius 站了出来，喷出“但现在我们有电脑！”，又回到他精灵的追求。
-“他们有什么好处？请告诉我，如果我仍然需要阅读每一封信，我该怎么办？“。
-小精灵 Diodius 短暂地从藏身处抬起头，说：“告诉孩子们发一封文字信”。
-圣诞老人停止了叫喊，并抓住了他有胡子的下巴。 “我可以做到这一点”。早期的儿童采用者就像这样发了一封信。
-Dear Santa: I have been a good boy so I want you to bring me a collection of scythes and an ocean liner with a captain and a purser and a time travel machine and instructions to operate it and I know I haven't been so good at times but that is why I'm asking the time machine so that I can make it good and well and also find out what happened on July 13th which I completely forgot.
-                  <a href="https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/" class="post-read-more">[Read More]</a>
                 
               </div>
 
