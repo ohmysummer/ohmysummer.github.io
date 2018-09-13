@@ -727,16 +727,699 @@ my $n = Net::AMQP.new( host =&gt; 'localhost', port =&gt; 5672, login =&gt; 'gue
 
             </article>
           
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/">
+                <h2 class="post-title">第十五天-带有 Promise 的简单网络爬虫</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 15 – A Simple Web Spider With Promises
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 15, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (218 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 15 – A Simple Web Spider With Promises 承诺，承诺 去年夏天，我申请了一项编程工作，面试官要求我编写一个程序来抓取给定的域，只在该域中的链接之后，找到它引用的所有页面。我被允许以任何语言编写程序，但我选择使用Go语言执行任务，因为这是该公司使用的主要语言。这对于并发编程来说是一个理想的任务，并且Go具有非常好的现代化功能，即使有些低级别的并发支持。网络蜘蛛中的主要工作是执行与在域中发现的唯一锚链接相同的次数，即在每个页面上执行HTTP GET并解析页面文本以获取新链接。这个任务可以并行安全地完成，因为没有可能（除非你做得很糟糕），任何调用爬取代码都会干扰其他任何调用。
+Go和Perl 6的创造者受到安东尼霍尔爵士1978年的开创性工作“沟通顺序过程”的启发，但值得注意的是，Perl 6代码更加简洁，因此更容易隐藏到博客文章中。事实上，Go设计者总是将他们的结构称为“并发原语”。 Go为我的作业应用程序编写的并发spider代码大约有200行，而在Perl 6中大小不到这个大小的一半。
+下面我们来看看如何在Perl 6中实现一个简单的Web爬虫。内置的Promise类允许您启动，调度和检查异步计算的结果。所有你需要做的就是给Promise.start方法一个代码引用，然后调用await方法，这会阻塞，直到promise完成执行。然后您可以测试结果方法以确定承诺是否已被保留或中断。
+您可以通过将其保存到本地文件中来运行本文中的代码，例如网络spider.p6。如果您希望抓取https网站，请使用zef安装HTML :: Parser :: XML和HTTP :: UserAgent以及IO :: Socket :: SSL。我会提醒你，SSL支持目前看起来有点狼狈，所以最好坚持http站点。 Perl 6程序中的MAIN子程序存在时表示一个独立程序，这就是执行开始的地方。 MAIN的参数表示命令行参数。我编写了这个程序，以便默认情况下它会抓取Perlmonks站点，但是您可以覆盖它，如下所示：
+$ perl6 web-spider.p6 [–domain=http://example.com]  简单的Perl 6域蜘蛛
+use HTML::Parser::XML; use XML::Document; use HTTP::UserAgent; sub MAIN(:$domain=&quot;http://www.perlmonks.org&quot;) { my $ua = HTTP::UserAgent.new; my %url_seen; my @urls=($domain); loop { my @promises; while ( @urls ) { my $url = @urls.
+                  <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/">
+                <h2 class="post-title">第十四天-在 Perl 6 中构建和测试 Big Grammars</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    The Little Match Girl: Building and Testing Big Grammars in Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 14, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (319 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  The Little Match Girl: Building and Testing Big Grammars in Perl 6 Perl 6 Grammars 很棒，但在项目中使用它们会是什么样呢？在圣诞节前和圣诞节后，我的经历是一个令人心酸的故事。你可以在这里找到版本库。我不是来自计算机科学背景，所以也许它看起来很简陋，但是当我学习 Perl 6 Grammars 时，这是我的困难和胜利。
+第一根火柴 就像卖火柴的小女孩一样，我们的故事发生在圣诞节前。卖火柴的小女孩的任务是在圣诞节前夕销售一捆火柴棍（实际上是新年，我确实回去读了那个故事。圣诞节更适合 Perl 6），而我的任务是从 Modelica 模型中提取注释渲染为矢量图形。现在，Modelica 是一个非常棒的面向对象的建模语言，除了提及其附录中包含一个具体语法部分的非常好的规范文档（pdf）之外，我将完全理解它。仔细阅读本节，我意识到“语法元符号”和“词法单位”看起来像我最近读过的一篇博客文章中的 Perl 6 Grammars，并且急于尝试。
+来自 Modelica 的示例具体语法：
+class-definition : [ encapsulated ] class-prefixes class-specifier  Perl 6 rule 的示例:
+rule class_definition { [&lt;|w&gt;'encapsulated'&lt;|w&gt;]? &lt;class_prefixes&gt; &lt;class_specifier&gt; }  这就像卖火柴的小女孩划第一颗火柴一样，第一次看到了一个超越她现实的奇妙世界。一个温暖的小炉子。然后它熄灭了。
+它非常接近，我把它放到了一个文本编辑器中，并且用一些 Perl 6 的东西替换了不是 Perl 6 的部分，以查看它是否会运行。它没有运行。我砍掉了它，我指出了不同的位来解决更小的块。无处不在的空白符号，正则表达式，标记，规则。我能够解析某些部分，其他部分神秘地没有起效。回顾过去，这一定很糟糕。与此同时，我们一起破解传统的正则表达式来提取注释，并将我的 Grammar 放在架子上。
+第二根火柴 不久之后，发布了 Grammar::Profiler 和 Grammar::Debugger，并且我受到启发，决定再试一试。我被授予了对我的规则出乎意料表现的很好的见解。我能够比以前更深入地理解 grammar。第二支火柴一直亮着，我有一场盛宴。然后它熄灭了。
+                  <a href="https://ohmysummer.github.io/post/2017-12-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E5%A4%A9-%E5%9C%A8perl-6%E4%B8%AD%E6%9E%84%E5%BB%BA%E5%92%8C%E6%B5%8B%E8%AF%95%E5%A4%A7grammars/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-13-%E7%AC%AC%E5%8D%81%E4%B8%89%E5%A4%A9-%E4%BD%BF%E7%94%A8-perl-6-%E6%8C%96%E6%8E%98%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91/">
+                <h2 class="post-title">第十三天 - 使用 Perl 6 挖掘维基百科</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Day 13 – Mining Wikipedia with Perl 6
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 13, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 12 minutes (2512 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  介绍 大家好!
+今天，让我介绍一下如何用 Perl 6 挖掘维基百科的 Infobox。
+维基百科信息框在自然语言处理中扮演着非常重要的角色，并且有许多应用程序可以利用维基百科信息框：
+ 构建知识库（例如 DBpedia[0]） 排名属性的重要性[1] 问答[2]  其中，我将重点讨论信息框提取问题，并演示如何使用 Grammars 和 Actions 解析信息框的复杂结构。
+Grammar 和 Actions 难学吗? 不，他们不是！
+你只需要知道五件事情：
+ Grammar
+ token 是最基础的一个。你通常使用它。 rule 让空白符有意义。 regex 让匹配引擎回溯。  Actions
+ make 准备一个对象用于返回当 made calls on it。 made 在它的调用者身上调用并返回准备好的对象。   欲了解更多信息, 请查看: https://docs.perl6.org/language/grammars
+什么是 Infobox? 你有没有听过 &ldquo;Infobox&rdquo; 这个词?
+对于那些没听说过的人，我会简单地解释一下。
+理解信息框的一个简单方法是使用一个真实的例子：
+你可以看到，信息框会在页面的右上方显示页面主题的属性-值对儿。例如, 在这个例子中, 它说 Perl 6 的设计者 (ja: 設計者)是 Larry Wall(ja: ラリー・ウォール)。
+欲了解更多信息, 请查看: https://en.
+                  <a href="https://ohmysummer.github.io/post/2017-12-13-%E7%AC%AC%E5%8D%81%E4%B8%89%E5%A4%A9-%E4%BD%BF%E7%94%A8-perl-6-%E6%8C%96%E6%8E%98%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-12-%E7%AC%AC%E5%8D%81%E4%BA%8C%E5%A4%A9the-year-of-perl-6-books/">
+                <h2 class="post-title">第十二天 – The Year of Perl 6 Books</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 12, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (1 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  <p><a href="https://perl6advent.wordpress.com/2017/12/12/day-12-the-year-of-perl-6-books/">https://perl6advent.wordpress.com/2017/12/12/day-12-the-year-of-perl-6-books/</a></p>
+
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9perl6%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E7%9A%84%E6%98%9F%E5%8F%B7/">
+                <h2 class="post-title">第十一天-Perl 6 中所有的星号</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    All the Stars of Perl 6, or * ** *
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 11, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1213 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  在今年的 Perl 6 Advent Calendar 中, 雪花被今天的博客文章承包了。 我们将检阅使用了 * 字符的结构。 在 Perl 6 中，根据上下文的不同，您可以叫它星星（或者，如果你愿意的话，可以叫它星号）或者 *whatever*。
+Perl 6 不是一个隐秘的编程语言， 在许多方面它的语法比 Perl 5 更加一致。另一方面，有些地方需要花时间来开启对语法的信心。
+让我们看看 * 的不同用法，从最简单的开始，旨在了解最烧脑的例如 * ** *。
+前两种用法很简单，不需要太多的讨论：
+1. 乘法 单个星号用于乘法。严格来讲, 这是一个中缀操作符 infix:&lt;*&gt;, 它的返回值为 Numeric。
+say 20 * 18; # 360  2. 幂 两个星号 ** 是幂操作符。再次, 这是一个中缀操作符 infix:&lt;**&gt;, 它返回 Numeric 结果, 计算两个给定值点幂。
+say pi ** e; # 22.4591577183611  正则表达式中同样也使用了两个标记（* 或 **），它们表示不同的东西。 Perl 6 的一个特点是它可以很容易地在不同的语言之间切换。 正则表达式和 grammar 都是这样的内部语言的例子，其中同样的符号在 Perl 6 中可能意味着不同的含义。
+                  <a href="https://ohmysummer.github.io/post/2017-12-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9perl6%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E7%9A%84%E6%98%9F%E5%8F%B7/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/whatever/">Whatever</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-10-%E7%AC%AC%E5%8D%81%E5%A4%A9wrapping-rats/">
+                <h2 class="post-title">第十天 – Wrapping Rats</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 10, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (416 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 10 – Wrapping Rats 沿着烟囱向下是一件危险的事情。
+烟囱可能很窄，很高，有时候建造得不够好。
+今年，圣诞老人想要做好准备。因此，他正在将烟囱检查与交付礼物结合起来。
+烟囱检查涉及确保每层砖都处于正确的高度; 即砂浆层的高度是一致的，并且砖的高度也是一致的。
+例如，对于 2¼” 高的砖和厚度为 ⅜” 的砂浆，测量序列应该如下所示：
+ 🎅 ─██─ || layer total ░░░░░░░░░░ ░░░░░░░░░░░░░░░ ░░░░░░░░░░ 2¼ ░░░░░░░░░░ ░░░░░░░░░░░░░░░ ░░░░░░░░░░ ░░░░░░░░░░ ░░░░░░░░░░░░░░░ ░░░░░░░░░░ ⅜ ‾‾??? ░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░ 2¼ ░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░ ░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░ ⅜ ‾‾5⅝ ░░░░░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ 2¼ ░░░░░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░░░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ⅜ ‾‾3 ░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░ 2¼ ░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░ ░░░░░░ ░░░░░░░░░░░░░ ░░░░░░░░░░░░ ░░░ ⅜ _____________________________________‾‾⅜  这个计划是让精灵们下降到烟囱的底部，手中拿着卷尺，然后回来，确保每个砖块的顶部恰好位于卷尺上的正确位置。
+                  <a href="https://ohmysummer.github.io/post/2017-12-10-%E7%AC%AC%E5%8D%81%E5%A4%A9wrapping-rats/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/">
+                <h2 class="post-title">第九天 – HTTP and Web Sockets with Cro</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 9, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (613 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 9 – HTTP and Web Sockets with Cro 礼物不仅仅是圣诞节的时候才有。今年夏天，在瑞士 Perl 工作室 - 精美地坐落在阿尔卑斯山 - 我有幸透露了 Cro。 Cro 是一组用于在 Perl 6 中构建服务的库，以及一些用于 stub，run 和跟踪服务的开发工具。 Cro 主要关注使用 HTTP（包括HTTP/2.0）和 Web 套接字构建服务，但可以提供对 ZeroMQ 的早期支持，并计划在未来推出一系列其他选项。
+响应式管道 Cro 遵循 Perl 的设计原则，使简单的事情变得简单，并且让困难的事情变得可能。就像 Git 一样，Cro 可以被认为是具有瓷器（使简单的事情变得简单）和管道（使困难的事情成为可能）。管道水平由组成管道的组件组成。这些组件具有不同的形状，例如源，传输和下沉。这是一个将 HTTP 请求转换为 HTTP 响应的转换：
+use Cro; use Cro::HTTP::Request; use Cro::HTTP::Response; class MuskoxApp does Cro::Transform { method consumes() { Cro::HTTP::Request } method produces() { Cro::HTTP::Response } method transformer(Supply $pipeline --&gt; Supply) { supply whenever $pipeline -&gt; $request { given Cro::HTTP::Response.
+                  <a href="https://ohmysummer.github.io/post/2017-12-09-%E7%AC%AC%E4%B9%9D%E5%A4%A9http-and-web-sockets-with-cro/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/">
+                <h2 class="post-title">第八天 – Adventures in NQP Land: Hacking the Rakudo Compiler</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    第八天 -  NQP 领地的冒险：破解 Rakudo 编译器
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 8, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (468 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 8 – Adventures in NQP Land: Hacking the Rakudo Compiler/ 对旧圣诞节经典“圣诞节十二天”的道歉，我给你一个 Perl 6 版本的第一行：
+在圣诞节的第一天，我真正的爱给了 pod 树上的 Perl 表格&hellip;&hellip;
+但是我得到的表格不是很漂亮！
+背景 我与 Perl 6 的第一次真正联系是在 2015 年春天，当时我决定检查它的状态，发现它已经准备好迎接黄金时段。在获得了该语言的一些经验之后，我开始在我可以提供帮助的地方贡献文档。我对文档的第一个贡献是清理其中没有很好呈现的表格。在我对本地主机上的 pod 表进行实验期间，我尝试了下表格：
+=begin table -r0c0 r0c1 =end table  这导致 Perl 6 抛出一个丑陋的, LTA（非常搓）的异常消息：
+&quot;===SORRY!=== Cannot iterate object with P6opaque representation&quot;  我解决了这个问题，但它让我感觉不爽，所以我开始调查 pod 和 tables 的内部。这导致我在 github.com/rakudo/src/Perl6/Pod.nqp 中发现了问题的根源。
+事实上，许多 pod 表格问题的真正问题最终都出现在该文件中。
+Not Quite Perl (NQP) nqp 是用于构建 Rakudo Perl 6 编译器的中间语言。它的 git 仓库在这里。本文的其余部分是关于修改 rakudo 编译器中的 nqp 代码，其仓库地址在这里。 Rakudo 在这里也有一个网站。
+                  <a href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/">
+                <h2 class="post-title">第七天 – Test All The Things</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 7, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (274 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  https://perl6advent.wordpress.com/2017/12/07/day-7-test-all-the-things/
+Perl 6 与其大姐姐 Perl 5一样，具有很悠久的测试传统。当您安装任何 Perl 模块时，安装程​​序通常会运行该模块的测试套件。当然，作为新兴的 Perl 6 模块作者，您需要创建自己的测试套件。或者，也许你会在创建模块之前勇于创建测试套件。这实际上有几个好处，其中最主要的是你的第一个用户，甚至在它被写之前。
+但在实际代码之前，我想提一下我经常使用的两个 shell 别名 -
+alias 6='perl6 -Ilib' alias 6p=&quot;prove -e'perl6 -Ilib'&quot;  这些别名使我可以快速运行测试文件，而不必去安装我的代码。如果我在项目目录中，我可以运行
+$ 6 t/01-core.t ok 1 - call with number ok 2 - call with text ok 3 - call with formatted string 1..3  它会告诉我我运行了哪些测试以及它们是否全部通过。就像它的大姐姐Perl 5一样，Perl 6使用&rsquo;t /&lsquo;目录作为测试文件，并按照惯例使用后缀&rsquo;.t&rsquo;来区分测试文件和软件包或脚本。它还有一个内置的单元测试模块，我们在上面使用。如果我们正在测试sprintf（）内部，它可能看起来像
+use Test; ok sprintf(1), 'call with number'; ok sprintf(&quot;text&quot;), 'call with text'; ok sprintf(&quot;%d&quot;,1), 'call with formatted string'; done-testing;  ok和done-testing功能会自动导出给我们。我在这里使用规范的Perl 6风格，而不是太依赖括号。在这种情况下，我确实需要使用圆括号来确保sprintf（）不会“认为”“空调用”是它的参数。
+                  <a href="https://ohmysummer.github.io/post/2017-12-07-%E7%AC%AC%E4%B8%83%E5%A4%A9test-all-the-things/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-06-%E7%AC%AC%E5%85%AD%E5%A4%A9-perl-6-%E4%B9%A6%E8%AF%84/">
+                <h2 class="post-title">第六天-Perl 6 书评</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Five golden rings, Four calling birds, Three French hens, Two kinds of programmers?, And a book review in a Perl tree! (or Rakudo Tree? ;-)
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 6, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (1 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  <p><a href="https://perl6advent.wordpress.com/2017/12/06/">https://perl6advent.wordpress.com/2017/12/06/</a></p>
+
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/">
+                <h2 class="post-title">第五天 - 使用 Perl 6 签名解构参数</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Destructure your Arguments with Perl 6 Signatures
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 5, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (398 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  第五天 - 使用 Perl 6 签名解构参数 在许多其他关键的 Perl 6 特性中，我认为 Signatures 是众多&rdquo;杀手级&rdquo;特性之一。 它们的功能如此丰富而强大，我怀疑关于如何使用它们可以写一整本书。 我想探索一下我原来忽略但是非常珍惜的一些特定功能。
+您可能已经看到了基本的子程序签名：
+sub myfunc($x, $y, $z) {...}  它给函数声明了 3 个标量参数, 并在函数体里面给了它们 $x, $y, $z 的名字。
+太简单了。
+你可以更有爱心, 给它们加上指定的类型:
+sub myfunc(Str $x, Int $y, Rat $z) {...}  你可以使用笑脸符号 :D 让参数值是有定义的:
+sub myfunc(Str:D $x, Int:D $y, Rat:D $z) {...}  还有很多其它花哨的说明符你可以使用，在这里我不深入了。
+但是如果你的参数更复杂呢？ （不是 Complex - 虽然它也起作用..）
+For example, you might want to restrict a specific parameter to a Positional argument like an Array, or an Associative one like a Hash using the respective sigils, @ or %.
+                  <a href="https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/signatures/">Signatures</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/">
+                <h2 class="post-title">第四天-使用 Grammars 进行解析</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Parsing with Grammars (Book Extract)
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 4, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 9 minutes (1862 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  第四天-使用 Grammars 进行解析 下面是从 Parsing with Perl 6 Regexes and Grammars: A Recursive Descent into Parsing 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。
+这本书马上就要出版了。至少该书的电子版这个月应该可以购买, 纸质版的可以在 亚马逊 预定了。原本最迟会在 2018 年元月发出, 但是幸运的是, 圣诞节你就可以看到了。
+下面你会看到第九章, 使用 Grammars 进行解析。前面的章节详细探讨了创建正则表达式块儿、正则表达式怎么和 Perl 6 代码进行交互、匹配对象、正则力学、常用正则技术，还有重用和组合正则。你可以通过阅读正则表达式官方文档来获取更多关于正则的背景。
+后面的章节涵盖了 action 类和对象, 怎么报告高质量的解析错误, Unicode 支持, 最后还有三个案例研究。
+现在, 尽情享受吧！
+Grammar 是众人皆知的用于解析的瑞士军刀。
+在本章中，我们将更详细地探讨它们。 最重要的是，我们将讨论如何利用他们的威力。
+理解 Grammars Grammars 实现了自顶向下的解析方法。 入口点，通常是 TOP regex 正则表达式，它知道粗粒度的结构，并调用下降到繁复细节的更深一步的正则表达式。 也会涉及到递归。 例如，如果解析算术表达式，则操作符可以是一对括号内的任意表达式。
+这是一个自顶向下的结构，或者更确切地说是一个递归下降分析方法。 如果不涉及回溯，我们称之为*预测分析法*，因为在字符串中的每个位置，我们确切地知道我们在寻找什么 - 我们可以预测下一个 token 将会是什么（即使我们只能预测它可能是一组可选分支的其中之一）。
+结果匹配树在结构上完全对应于 grammar 中正则表达式的调用结构。 让我们考虑解析一个只包含运算符 *，+和用于分组的括号的算术表达式：
+                  <a href="https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/grammars/">Grammars</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/">
+                <h2 class="post-title">第三天 – LetterOps with Perl6</h2>
+
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 3, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (404 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  Day 3 – LetterOps with Perl6 规模 “规模！规模就是一切！“。
+当圣诞老人的声音传到他们身上时，精灵散落在四面八方。
+“这个 operation 是为三十四个孩子准备的？现在我们有无数的！大人也送信！“
+小精灵 Buzzius 站了出来，喷出“但现在我们有电脑！”，又回到他精灵的追求。
+“他们有什么好处？请告诉我，如果我仍然需要阅读每一封信，我该怎么办？“。
+小精灵 Diodius 短暂地从藏身处抬起头，说：“告诉孩子们发一封文字信”。
+圣诞老人停止了叫喊，并抓住了他有胡子的下巴。 “我可以做到这一点”。早期的儿童采用者就像这样发了一封信。
+Dear Santa: I have been a good boy so I want you to bring me a collection of scythes and an ocean liner with a captain and a purser and a time travel machine and instructions to operate it and I know I haven't been so good at times but that is why I'm asking the time machine so that I can make it good and well and also find out what happened on July 13th which I completely forgot.
+                  <a href="https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-02-%E7%AC%AC%E4%BA%8C%E5%A4%A9-perl6%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E5%8F%98%E9%87%8F%E5%92%8C%E5%AE%B9%E5%99%A8/">
+                <h2 class="post-title">第二天-Perl 6: 符号, 变量和容器</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Sigils, Variables, and Containers
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 2, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 7 minutes (1425 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  第二天-Perl 6: 符号, 变量和容器 对容器的基本理解对于在 Perl 6 中进行愉快的编程是至关重要的。它们无处不在，不仅影响你获得的变量类型，还决定了 List 和 Map 在迭代时的行为方式。
+今天，我们将学习什么是容器，以及如何使用它们，但是首先，我希望你暂时忘记你对 Perl 6 的符号和变量的所有知识或怀疑，特别是如果你来自 Perl 5 的背景。 忘记一切。
+把钱拿出来 在 Perl 6 中，变量以 $ 符号为前缀，用绑定运算符（:=）赋值。 像这样：
+my $foo := 42; say &quot;The value is $foo&quot;; # OUTPUT: «The value is 42␤»  如果你已经按照我的建议来忘记你所知道的一切，那么学习 List 和 Hash 类型也是一样：
+my $ordered-things := &lt;foo bar ber&gt;; my $named-things := %(:42foo, :bar&lt;ber&gt;); say &quot;$named-things&lt;foo&gt; bottles of $ordered-things[2] on the wall&quot;; # OUTPUT: «42 bottles of ber on the wall␤» .
+                  <a href="https://ohmysummer.github.io/post/2017-12-02-%E7%AC%AC%E4%BA%8C%E5%A4%A9-perl6%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E5%8F%98%E9%87%8F%E5%92%8C%E5%AE%B9%E5%99%A8/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2017-12-01-%E7%AC%AC%E4%B8%80%E5%A4%A9-perl6%E9%AC%BC%E7%B2%BE%E7%81%B5-%E5%9C%A3%E8%AF%9E%E8%8A%82%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97/">
+                <h2 class="post-title">第一天 – Perl 6 鬼精灵: 圣诞节实用指南</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    A Practical Guide to Ruining Christmas
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 1, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (1062 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  第一天 – Perl 6 鬼精灵: 圣诞节实用指南 看看他们！同事、朋友和亲近的家人都在开心地笑着。他们都在享受着使用 Perl 6 的 6.c “圣诞”版编程的乐趣。给力的并发原语, 核心文法, 还有非常棒的对象模型。它让我印象深刻！
+但是等一下&hellip; 就一秒。我有个想法。一个可怕的想法。我想到了一个鬼主意! 我们可以在他们的&rdquo;圣诞&rdquo;上捣乱。需要的只有一点花招。哈哈哈哈哈哈！！
+欢迎来到 2017 年的 Perl 6 圣诞日历！每天，从今天直到圣诞节，我们都会有一篇很赞的关于 Perl6 的博客推送到你面前。
+今天，我们会展示我们淘气的一面并且故意地做些淘气的事情。确实，这有点用，但是淘气点更快乐。我们开始吧！
+But True does False 你听过 but 操作符吗？一个好玩的东西：
+say True but False ?? 'Tis true' !! 'Tis false'; # OUTPUT: «Tis false␤» my $n = 42 but 'forty two'; say $n; # OUTPUT: «forty two␤» say $n + 7; # OUTPUT: «49␤»  它是一个中缀操作符，它首先拷贝它左边的对象，然后把它右边提供的 role 混进这个拷贝中：
+                  <a href="https://ohmysummer.github.io/post/2017-12-01-%E7%AC%AC%E4%B8%80%E5%A4%A9-perl6%E9%AC%BC%E7%B2%BE%E7%81%B5-%E5%9C%A3%E8%AF%9E%E8%8A%82%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
         </div>
-        
-          <ul class="pager main-pager">
-            
-            
-              <li class="next">
-                <a href="/categories/perl-6-calendar/page/2/">Older Posts &rarr;</a>
-              </li>
-            
-          </ul>
         
       </div>
     </div>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 中的容器</title>
+  <meta property="og:title" content="Perl 6 中的容器" />
+  <meta name="twitter:title" content="Perl 6 中的容器" />
+  <meta name="description" content="binding and containers">
+  <meta property="og:description" content="binding and containers">
+  <meta name="twitter:description" content="binding and containers">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-08-29-perl6%E4%B8%AD%E7%9A%84%E5%AE%B9%E5%99%A8/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.41" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-29-perl6%E4%B8%AD%E7%9A%84%E5%AE%B9%E5%99%A8/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 中的容器</h1>
+                
+                  
+                    <h2 class="post-subheading">binding and containers</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 29, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (481 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>在本系列的<a href="https://opensource.com/article/18/7/migrating-perl-5-perl-6">第一篇</a>文章中，将 Perl 5 与 Perl 6 进行了比较，我们研究了将代码迁移到 Perl 6 时可能遇到的一些问题。在<a href="https://opensource.com/article/18/7/garbage-collection-perl-6">第二篇</a>文章中，我们研究了垃圾收集在 Perl 6 中的工作原理。第三篇文章，我们将重点介绍 Perl 5 的引用以及如何在 Perl 6 中处理它们，并介绍绑定和容器的概念。</p>
+
+<h2 id="引用">引用</h2>
+
+<p>Perl 6 中没有引用，这对许多习惯于 Perl 5 语义的人来说都是令人惊讶的。但不要担心：因为没有引用，所以您不必担心是否应该解引用某些内容。</p>
+
+<pre><code class="language-perl5"># Perl 5
+my $foo = \@bar;   # must add reference \ to make $foo a reference to @bar
+say @bar[1];       # no dereference needed
+say $foo-&gt;[1];     # must add dereference -&gt;
+</code></pre>
+
+<pre><code class="language-perl6"># Perl 6
+my $foo = @bar;    # $foo now contains @bar
+say @bar[1];       # no dereference needed, note: sigil does not change
+say $foo[1];       # no dereference needed either
+</code></pre>
+
+<p>有人可能会说 Perl 6 中的所有东西都是引用。来自 Perl 5（其中一个对象是一个受祝福的引用），这将是关于 Perl 6 的逻辑结论，其中所有的东西都是对象（或者可以被认为是一个对象）。但这并不能完全符合 Perl 6 中的情况，并且会妨碍你理解 Perl 6 的工作原理。谨防<a href="https://en.wikipedia.org/wiki/False_friend">虚假的朋友</a>！</p>
+
+<h2 id="绑定">绑定</h2>
+
+<p>在我们完成赋值之前，了解 Perl 6 中绑定的概念很重要。您可以使用 <code>:=</code> 运算符将某些东西显式绑定到其他东西上。定义词法变量时，可以将值绑定到它：</p>
+
+<pre><code class="language-perl6">my $foo := 42;  # note: := instead of =
+</code></pre>
+
+<p>简单地说，这会在词法填充（lexpad）中创建一个名为 &ldquo;<strong>$foo</strong>&rdquo; 的键（您可以将其视为编译时哈希，其中包含有关该词法范围内可见事物的信息）并使其 42 为字面值。因为这是一个文字常量，所以你无法改变它。试图这样做会导致异常。所以不要那样做！</p>
+
+<p>在许多情况下，这种绑定操作在引擎盖下使用，例如在迭代时：</p>
+
+<pre><code class="language-perl6">my @a = 0..9;    # can also be written as ^10
+say @a;          # [0 1 2 3 4 5 6 7 8 9]
+for @a { $_++ }  # $_ is bound to each array element and incremented
+say @a;          # [1 2 3 4 5 6 7 8 9 10]
+</code></pre>
+
+<p>如果您尝试迭代常量列表，则 <code>**$_**</code> 绑定到字面值，您无法递增：</p>
+
+<pre><code class="language-perl6">for 0..9 { $_++ }  # error: requires mutable arguments
+</code></pre>
+
+<h2 id="赋值">赋值</h2>
+
+<p>如果你在 Perl 5 和 Perl 6 中比较“创建一个词法变量并赋值给它”，它在外面看起来是一样的：</p>
+
+<pre><code class="language-perl6">my $bar = 56;  # both Perl 5 and Perl 6
+</code></pre>
+
+<p>在 Perl 6 中，这也会在 lexpad 中创建一个名为 “<strong>$bar</strong>” 的键。但是不是直接将值绑定到该 lexpad 条目，而是为您创建一个容器（<strong>Scalar</strong>对象），并将其绑定到“<strong>$bar</strong>”的 lexpad 条目。然后，56 被存储为该容器中的值。在伪代码中，您可以将其视为：</p>
+
+<pre><code class="language-perl6">my $bar := Scalar.new( value =&gt; 56 );
+</code></pre>
+
+<p>请注意，<strong>Scalar</strong> 对象已绑定，未分配。 Perl 5 中最接近它的是绑定标量。但当然“= <strong>56</strong>”的类型要少得多！</p>
+
+<p>诸如 <strong>Array</strong> 和 <strong>Hash</strong> 之类的数据结构也会自动将值放在绑定到结构的容器中。</p>
+
+<pre><code class="language-perl6">my @a;       # empty Array
+@a[5] = 42;  # bind a Scalar container to 6th element and put 42 in it
+</code></pre>
+
+<h2 id="容器">容器</h2>
+
+<p>对于 Perl 6 中的大多数操作，<strong>Scalar</strong> 容器对象是不可见的，因此大多数情况下您不必考虑它。例如，每当您使用变量作为参数调用子例程（或方法）时，它将绑定到容器中的值。而且因为您无法分配值，您会得到：</p>
+
+<pre><code class="language-perl6">sub frobnicate($this) {
+    $this = 42;
+}
+my $foo = 666;
+frobnicate($foo); # Cannot assign to a readonly variable or a value
+</code></pre>
+
+<p>如果要允许分配外部值，可以将 <strong>is rw</strong> trait 添加到签名中的变量。这会将签名中的变量绑定到指定变量的容器，从而允许赋值：</p>
+
+<pre><code class="language-perl6">sub oknicate($this is rw) {
+    $this = 42;
+}
+my $foo = 666;
+oknicate($foo); # no problem
+say $foo;       # 42
+</code></pre>
+
+<h2 id="proxy">Proxy</h2>
+
+<p>从概念上讲，Perl 6 中的 <strong>Scalar</strong> 对象有一个 <strong>FETCH</strong> 方法（用于生成对象中的值）和一个 <strong>STORE</strong> 方法（用于更改对象中的值），就像 Perl 5 中的绑定标量一样。</p>
+
+<p>假设您稍后将值 <strong>768</strong> 分配给 <strong>$bar</strong> 变量：</p>
+
+<pre><code class="language-perl6">$bar = 768;
+</code></pre>
+
+<p>发生的事情在概念上相当于：</p>
+
+<pre><code class="language-perl6">$bar.STORE(768);
+</code></pre>
+
+<p>假设您要在 <strong>$bar</strong> 中的值中添加 <strong>20</strong>：</p>
+
+<pre><code class="language-perl6">$bar = $bar + 20;
+</code></pre>
+
+<p>概念上发生的是：</p>
+
+<pre><code class="language-perl6">$bar.STORE( $bar.FETCH + 20 );
+</code></pre>
+
+<p>如果要在容器上指定自己的 <strong>FETCH</strong> 和 <strong>STORE</strong> 方法，可以通过绑定到 <a href="https://docs.perl6.org/type/Proxy">Proxy</a> 对象来实现。例如，要创建一个始终报告分配给它的值的两倍的变量：</p>
+
+<pre><code class="language-perl6">my $double := do {  # $double now a Proxy, rather than a Scalar container
+    my $value;
+    Proxy.new(
+      FETCH =&gt; method ()     { $value + $value },
+      STORE =&gt; method ($new) { $value = $new }
+    )
+}
+</code></pre>
+
+<p>请注意，您需要一个额外的变量来保存存储在这样一个容器中的值。</p>
+
+<h2 id="约束和默认值">约束和默认值</h2>
+
+<p>除了值之外，<a href="https://docs.perl6.org/type/Scalar">Scalar</a> 还包含额外信息，例如类型约束和默认值。采用这个定义：</p>
+
+<pre><code class="language-perl6">my Int $baz is default(42) = 666;
+</code></pre>
+
+<p>它创建一个名为 “<strong>$baz</strong>” 的标量绑定到 lexpad，将该容器中的值约束为使用 <strong>Int</strong> 成功智能匹配的类型，将容器的默认值设置为 <strong>42</strong>，并将值 <strong>666</strong> 放入容器中。</p>
+
+<p>由于类型约束，为该变量分配字符串将失败：</p>
+
+<pre><code class="language-perl6">$baz = &quot;foo&quot;;
+# Type check failed in assignment to $baz; expected Int but got Str (&quot;foo&quot;)
+</code></pre>
+
+<p>如果在定义变量时未给出类型约束，则将假定为 <strong>Any</strong> 类型。如果未指定默认值，则将假定类型约束。</p>
+
+<p>将 <strong>Nil</strong>（相当于 Perl 5 的 <strong>undef</strong> 的 Perl 6）分配给该变量会将其重置为默认值：</p>
+
+<pre><code class="language-perl6">say $baz;   # 666
+$baz = Nil;
+say $baz;   # 42
+</code></pre>
+
+<h2 id="总结">总结</h2>
+
+<p>Perl 5 具有值和值的引用。 Perl 6 没有引用，但它有值和容器。 Perl 6 中有两种类型的容器：<a href="https://docs.perl6.org/type/Proxy">Proxy</a>（很像 Perl 5 中的绑定标量）和 <a href="https://docs.perl6.org/type/Scalar">Scalar</a>。简单地说，变量以及 <a href="https://docs.perl6.org/type/List">List</a>，<a href="https://docs.perl6.org/type/Array">Array</a> 或 <a href="https://docs.perl6.org/type/Hash">Hash</a> 的元素是值（如果它已绑定）或容器（如果已分配）。无论何时调用子例程（或方法），给定的参数都被解除容器化并绑定到子例程的参数（除非另有说明）。容器还保留类型约束和默认值等信息。将Nil分配给变量会将其返回到其默认值，如果未指定类型约束，则为Any。</p>
+
+<h2 id="原文连接">原文连接</h2>
+
+<p><a href="https://opensource.com/article/18/8/containers-perl-6">https://opensource.com/article/18/8/containers-perl-6</a></p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/container/">container</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-08-07-command-line-arguments-in-perl-6/" data-toggle="tooltip" data-placement="top" title="Command Line Arguments in Perl 6">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-13-toptic-variable/" data-toggle="tooltip" data-placement="top" title="Toptic Variable">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.41</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+
