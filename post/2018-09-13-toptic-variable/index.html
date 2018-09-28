@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (508 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (710 words)
   
   
 </span>
@@ -262,6 +262,35 @@ say $_ given 'a';       # same, even though it's not a block
 # 20180105000000
 # 20180106000000
 # 20180107000000
+</code></pre>
+
+<p>对象初始化：</p>
+
+<pre><code class="language-perl6">class Employee {
+    subset Salary         of Real where * &gt; 0;
+    subset NonEmptyString of Str  where * ~~ /\S/; 
+
+    has NonEmptyString $.name    is rw;
+    has NonEmptyString $.surname is rw;
+    has Salary         $.salary  is rw;
+
+    method gist {
+        return qq:to[END];
+        Name:    {$.name}
+        Surname: {$.surname}
+        Salary:  {$.salary}
+        END
+    }
+}
+my $employee = Employee.new();
+
+given $employee {
+    .name    = 'Sally';
+    .surname = 'Ride';
+    .salary  = 200;
+}
+
+say $employee;
 </code></pre>
 
 <h2 id="regex">regex</h2>
@@ -378,6 +407,40 @@ Perl
 &amp;block.signature.say; # (;; $_? is raw)
 </code></pre>
 
+<pre><code class="language-perl6">my class Employee {
+   has Str $.name;
+   has Rat $.wage;
+}
+
+my $boss     = Employee.new( name =&gt; &quot;Frank Myers&quot;     , wage =&gt; 6755.85 );
+my $driver   = Employee.new( name =&gt; &quot;Aaron Fast&quot;      , wage =&gt; 2530.40 );
+my $worker   = Employee.new( name =&gt; &quot;John Dude&quot;       , wage =&gt; 2200.00 );
+my $salesman = Employee.new( name =&gt; &quot;Frank Mileeater&quot; , wage =&gt; 4590.12 );
+
+my @team = $boss, $driver, $worker, $salesman;
+
+say @team.sort({.wage} )».name;
+.name.say for @team.sort: {.wage};
+</code></pre>
+
+<p>块里面会默认有一个 <code>$_</code>：</p>
+
+<pre><code class="language-perl6">my $tiles := (&lt; T S R E A N D &gt;).Bag;
+my $total := $tiles.total;
+
+my @results = lazy '/usr/share/dict/SOWPODS'.IO.lines.grep: {
+    .chars ≤ $total &amp;&amp;
+    .substr(0, 1) ∈ $tiles &amp;&amp;
+    .comb.Bag ⊆ $tiles
+}
+
+for @results -&gt; $word {
+    say $word;
+}
+
+say &quot;\n&quot; ~ &quot;Found {@results.elems} words in {now - INIT now} seconds&quot;;
+</code></pre>
+
 
         
           <div class="blog-tags">
@@ -397,6 +460,10 @@ Perl
               <a href="https://ohmysummer.github.io/post/2018-08-29-perl6%E4%B8%AD%E7%9A%84%E5%AE%B9%E5%99%A8/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的容器">&larr; Previous Post</a>
             </li>
           
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-28-how-naming-of-variables-works-in-perl-6/" data-toggle="tooltip" data-placement="top" title="How Naming of Variables Works in Perl 6">Next Post &rarr;</a>
+            </li>
           
         </ul>
       
