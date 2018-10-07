@@ -6,10 +6,48 @@
     <description>Recent content on Young For Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 28 Sep 2018 20:18:30 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 05 Oct 2018 21:33:03 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Perl 6 中的命令行参数</title>
+      <link>https://ohmysummer.github.io/post/2018-10-05-command-line-arguments-in-perl-6/</link>
+      <pubDate>Fri, 05 Oct 2018 21:33:03 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-10-05-command-line-arguments-in-perl-6/</guid>
+      <description>Sub MAIN 在 Perl 6 中，命令行参数的解析是通过 MAIN 子例程完成的，MAIN 子例程是一种特殊的子例程，它根据 MAIN 子例程的签名解析命令行参数。与其他子例程一样，MAIN 子例程可以具有命名参数和位置参数、可选(和必需)参数、多重分派等等。
+有了 MAIN 子例程的定义，USAGE 子例程将由编译器自动生成。可以修改此子例程以返回定制的使用消息。所有命令行参数也可以在特殊变量 @*ARGS 中使用，它可以在 MAIN 处理之前发生转变。
+命名参数和位置参数 命名参数 让我们从一个简单的程序开始(保存为 prog.p6):
+use v6; sub MAIN( Str :$name = &#39;John&#39;, Str :$last-name = &#39;Doe&#39;, ) { my $formatted-name = &amp;quot;$name.tc() $last-name.tc()&amp;quot;; say $formatted-name; }  在这个 MAIN 子句中，我们通过前置 : 到子例程签名中的每个变量上，创建了两个带有类型约束(Str)的命名参数，$name 和 $last-name。这些参数也有默认值，这是通过给参数赋值来实现的。在本例中，我们将 $name 设置为默认值 “John”，将 $last-name 设置为 “Doe”。如果执行 prog.p6 时命令行参数与 MAIN 签名匹配，则会打印出一个格式化的全名:
+$ perl6 prog.p6 John Doe $ perl6 prog.</description>
+    </item>
+    
+    <item>
+      <title>Rmarkdown 中的 Perl 6 代码</title>
+      <link>https://ohmysummer.github.io/post/2018-10-04-perl-6-code-in-rmarkdown/</link>
+      <pubDate>Thu, 04 Oct 2018 21:32:27 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-10-04-perl-6-code-in-rmarkdown/</guid>
+      <description>安装 首先，首先安装 R 编程语言。在此之后，运行 R 并执行以下命令来安装 rmarkdown: install.packages(&amp;quot;rmarkdown&amp;quot;)。在安装 rmarkdown 时，我收到以下错误消息:
+Error: .onLoad failed in loadNamespace() for &#39;tcltk&#39;, details: call: dyn.load(file, DLLpath = DLLpath, ...) error: unable to load shared object &#39;/usr/lib/R/library/tcltk/libs/tcltk.so&#39;: libtk8.6.so: cannot open shared object file: No such file or directory  这可以通过安装包 tk 来解决，然后继续安装 rmarkdown。
+Rmarkdown 的代码块 你可以用 rmarkdown 做的几乎所有都可以用“常规” markdown 来做的事情。然而，rmarkdown 的一个突出特性是它能够执行代码块并返回结果。为此，rmarkdown 使用了 knitr 包，这是一个使用 R 生成动态报告的引擎，除了 R 之外，它还支持其他语言引擎，您可以使用这些引擎来计算来自其他语言的代码。要列出可用引擎的名称，请在 R REPL 中执行 names(knitr::knit_engines$get()) 命令。就像“常规” markdown 一样，代码块可以用三个反勾号创建，然后是代码，最后是另外三个反勾号。如果希望计算代码块，请在花括号 {} 中指定语言，该语言位于前三个反勾号之后。例如，要执行 Perl 5 代码，可以在 {} 中指定 perl:</description>
+    </item>
+    
+    <item>
+      <title>Perl 6 面向对象简单入门</title>
+      <link>https://ohmysummer.github.io/post/2018-10-03-a-naive-introduction-to-object-orientation-in-perl-6/</link>
+      <pubDate>Wed, 03 Oct 2018 21:13:31 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-10-03-a-naive-introduction-to-object-orientation-in-perl-6/</guid>
+      <description>序言 介绍 本教程最多只关注 Perl 6 中的面向对象编程(OOP)的基本知识。因此，对语句/表达式、变量、条件、循环、子例程(函数)等有一个基本的了解是很重要的，如果不在 Perl 6 中，至少在另一种编程语言中是这样的。此外，您至少应该对类、属性和方法有一般的了解。作为对 Perl 6 的介绍，我强烈推荐 Perl 6 introduction。下一步是 Perl 6 文档。
+确保你已经设置好了 Perl 6 编译器。如果你还没有设置好，请看这里。 从这里开始，你可能会厌倦代词“我们”，但它的使用是经过深思熟虑的。这是一个教程，希望你能跟上。所以，是的，我们在一起工作，你应该做好准备。顺便说一下，本教程是冗长的，这是故意的，但也是手把手教程的副产品。
+问题陈述 我们将从现实生活中的问题开始，并尝试以面向对象的方式对其进行建模。问题陈述如下: 在她的数学101课程中，一位教授记录了三个作业(2个作业和1个考试)的分数，按照学生交作业的顺序:
+Bill Jones:1:35 Sara Tims:2:45 Sara Tims:1:39 Bill Jones:1:42 Bill Jones:E1:72  在一个名为 MATH-101 的简单文本文件中。您可以假设有更多的学生，而这只是数据文件的一个代表性块。在这个文件中，每行记录学生的姓名、作业编号(作业编号为1,2，第一次考试为E1)和学生获得的原始分数。 教授使用另一个扩展名为 .std 的文件存储她课程的学生名单:
+Bill Jones Ana Smith Sara Tims Frank Horza  除了 MATH-101，这位教授还教其他课程，并设计了一个扩展名为 .cfg 的配置文件来存储给定课程的配置格式。她这样做的目的是在她的其他课程中也使用它。配置文件格式指定了作业的类型、作业编号、作业的总分以及作业对最终课程成绩的贡献。她的数学101课程的 .cfg 文件如下:
+Homework:1:50:25 Homework:2:50:25 Exam:1:75:50  您的任务是创建一个名为 report.p6 的程序。该程序生成一个报告，其中列出了班级中每个学生的姓名、每次作业的分数和最终成绩。该程序应该假设具有扩展名 .cgf 和 .std 的文件在执行该程序的目录中可用。另一方面，包含学生成绩的文件必须通过命令行传递给程序。为了简单起见，您可以假设每个文件都是根据课程命名的。对于她的数学101课程，教授会有以下的文件: MATH-101, MATH-101.</description>
+    </item>
     
     <item>
       <title>How Naming of Variables Works in Perl 6</title>
