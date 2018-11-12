@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第十二章. 类</title>
+  <meta property="og:title" content="第十二章. 类" />
+  <meta name="twitter:title" content="第十二章. 类" />
+  <meta name="description" content="Classes">
+  <meta property="og:description" content="Classes">
+  <meta name="twitter:description" content="Classes">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-09-12-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0.-%E7%B1%BB/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-12-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0.-%E7%B1%BB/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第十二章. 类</h1>
+                
+                  
+                    <h2 class="post-subheading">Classes</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 12, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 23 minutes (4837 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="声明">声明</h1>
+
+<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+
+<h1 id="第十二章-类">第十二章. 类</h1>
+
+<p>A class is the blueprint for an object and manages an object and its behavior. It declares attributes to define what an object will store and <em>methods</em> to define how an object can behave. Classes model the world in a way that makes it easier for your program to do its job.</p>
+
+<p>类是对象的蓝图，用于管理对象及其行为。它声明属性以定义对象将存储的内容以及定义对象行为方式的方法。类以一种使程序更容易完成其工作的方式对世界建模。</p>
+
+<p>I’m mostly going to ignore object-oriented analysis and design. This chapter is about the mechanism of classes and objects. The examples show you how things work and do not endorse a particular way. Use what works for your task and stop using that when it doesn’t.</p>
+
+<p>我大多会忽略面向对象的分析和设计。本章是关于类和对象的机制。这些例子向你展示了如何运作并且不支持某种特定方式。使用适用于你的任务的内容，并在不执行任务时停止使用。</p>
+
+<h1 id="your-first-class">Your First Class</h1>
+
+<p>Declare a class by giving it a name and a <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> of code:</p>
+
+<p>通过给出一个名称和一个代码块来声明一个类：</p>
+
+<pre><code>class Butterfly {}
+</code></pre>
+
+<p>That’s it! It looks like this class is empty, but it’s not. You get much of its basic behavior for free even though you don’t see it explicitly. Try calling some methods on it. You can see that it derives from <a href="https://docs.perl6.org/type/Any.html"><code>Any</code></a> and <a href="https://docs.perl6.org/type/Mu.html"><code>Mu</code></a> and that you can create new objects:</p>
+
+<p>而已！看起来这个类是空的，但事实并非如此。即使你没有明确地看到它，你也可以免费获得许多基本行为。尝试调用一些方法。你可以看到它派生自 <a href="https://docs.perl6.org/type/Any.html"><code>Any</code></a> 和 <a href="https://docs.perl6.org/type/Mu.html"><code>Mu</code></a>，你可以创建新对象：</p>
+
+<pre><code>% perl6
+&gt; class Butterfly {}
+(Butterfly)
+&gt; Butterfly.^mro
+((Butterfly) (Any) (Mu))
+&gt; my $object = Butterfly.new
+Butterfly.new
+&gt; $object.^name
+Butterfly
+&gt; $object.defined
+True
+</code></pre>
+
+<p>You can have as many of these class declarations as you like in one file:</p>
+
+<p>你可以在一个文件中包含任意数量的类声明：</p>
+
+<pre><code>class Butterfly {}
+class Moth {}
+class Lobster {}
+</code></pre>
+
+<p>These types are available to your program as soon as they are defined in the code, but not before. If you try to use one before you define it you get a compilation error:</p>
+
+<p>只要在代码中定义了这些类型，就可以使用这些类型，但没定义之前不能使用。如果在定义类之前就尝试使用它，则会出现编译错误：</p>
+
+<pre><code class="language-perl6">my $butterfly = Butterfly.new;  # Too soon!
+
+class Butterfly {};  # Error: Illegally post-declared type
+</code></pre>
+
+<p>Instead of defining all of your classes at the beginning of the file (and having to scroll past all of them to get to the good stuff), you’re more likely to want one class per file so you can easily find the class definition again. In that case you can use <code>unit</code> to declare that the entire file is your class definition. You don’t use a <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>:</p>
+
+<p>而不是在文件的开头定义所有类（并且必须滚动浏览所有类以获得好的东西），你更可能每个文件都需要一个类，这样你就可以轻松地再次找到类定义。在这个例子中，你可以使用 <code>unit</code> 声明整个文件是你的类定义。你没使用<a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>：</p>
+
+<pre><code>unit class Butterfly;
+</code></pre>
+
+<p>Put your class in <em>Butterfly.pm6</em> (or <em>Butterfly.pm</em>) and load it from your program:</p>
+
+<p>将你的类放在 Butterfly.pm6（或 Butterfly.pm）中并从你的程序中加载它：</p>
+
+<pre><code>use Butterfly;
+</code></pre>
+
+<p>EXERCISE 12.1Create a single-file program that has the <code>Butterfly</code>, <code>Moth</code>, and <code>Lobster</code> empty class definitions. Create a new object for each, even though the objects don’t do anything interesting yet.</p>
+
+<p>练习12.1创建一个具有 <code>Butterfly</code>，<code>Moth</code> 和 <code>Lobster</code> 的空类定义的单文件程序。为每个类创建一个新对象，即使对象没有做任何有趣的事情。</p>
+
+<p>EXERCISE 12.2Define the <code>Butterfly</code>, <code>Moth</code>, and <code>Lobster</code> classes in separate files named after the classes they contain. The class files should be in the same directory as the program that loads them. Load those files in your program and create new objects for each.</p>
+
+<p>练习12.2将 <code>Butterfly</code>，<code>Moth</code> 和 <code>Lobster</code> 类定义在以它们包含的类命名的单独文件中。类文件应与加载它们的程序位于同一目录中。在程序中加载这些文件并为每个文件创建新对象。</p>
+
+<h1 id="定义方法">定义方法</h1>
+
+<p>Methods are like subroutines but know who called them and can be inherited; instead of <code>sub</code> you define these with <code>method</code>. This example uses it to output the type name:</p>
+
+<p>方法就像子程序，但知道是谁调用它们并且可以继承;  你用 <code>method</code> 而不是 <code>sub</code> 来定义方法。此示例使用方法来输出类型名称：</p>
+
+<pre><code>class Butterfly {
+    method who-am-i () { put &quot;I am a &quot; ~ self.^name }
+    }
+
+Butterfly.who-am-i;
+</code></pre>
+
+<p>That <code>self</code> term is the invocant of the method. That’s the object that called the method. It doesn’t need to be in the signature. It also doesn’t need to be in the method. Calling a method on <code>$</code> does the same thing (you’ll see why later):</p>
+
+<p>那个 <code>self</code> 是该方法的调用者。这是调用方法的对象。它不需要在签名中。它也不需要在方法中。在 <code>$</code> 上调用方法会做同样的事情（稍后你会明白为什么）：</p>
+
+<pre><code>class Butterfly {
+    method who-am-i () { put &quot;I am a &quot; ~ $.^name }
+    }
+
+Butterfly.who-am-i;  # I am a Butterfly
+</code></pre>
+
+<p>Give the invocant a different name by putting it before a colon in the signature. C++ people might like <code>$this</code>:</p>
+
+<p>通过将调用者放在签名中的冒号前面，为调用者指定一个不同的名称。 C++ 人可能会喜欢 <code>$this</code>：</p>
+
+<pre><code>method who-am-i ( $this : ) { put &quot;I am a &quot; ~ $this.^name }
+</code></pre>
+
+<p>A backslash makes the invocant name a term so you don’t need a sigil:</p>
+
+<p>反斜杠使调用名称成为一个项，因此你不需要使用 sigil：</p>
+
+<pre><code>method who-am-i ( \this : ) { put &quot;I am a &quot; ~ this.^name; }
+</code></pre>
+
+<p>The default topic can be the invocant, which means that it’s implicit inside the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>:</p>
+
+<p>默认主题可以是调用者，这意味着它隐含在 <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 中：</p>
+
+<pre><code>method who-am-i ( $_ : ) { put &quot;I am a &quot; ~ .^name; }
+</code></pre>
+
+<p>If you want to change the invocant name, choose something that describes what it represents:</p>
+
+<p>如果要更改调用者的名称，请选择描述其代表内容的东西：</p>
+
+<pre><code>method who-am-i ( $butterfly : ) { ... }
+</code></pre>
+
+<h2 id="私有方法">私有方法</h2>
+
+<p>A private method is available only inside the class where it’s defined. You use these to compartmentalize code that you don’t want code outside the class to know about.</p>
+
+<p>私有方法仅在定义它的类中可用。你可以使用它们来划分你不希望类外部代码知道的代码。</p>
+
+<p>Previously <code>who-am-i</code> directly called <code>.^name</code>. That’s a very specific way to figure out the “type.” You might want to change that later or use other methods to figure it out, and other methods in your class may need the same thing. Hide it in a method, <code>what's-the-name</code>:</p>
+
+<p>以前我是谁直接调用 <code>.^name</code>。这是一种非常具体的方法来确定“类型”。你可能希望稍后更改它或使用其他方法来解决它，并且你的类中的其他方法可能需要相同的东西。将其隐藏在一个方法中，<code>what's-the-name</code>：</p>
+
+<pre><code>class Butterfly {
+    method who-am-i () { put &quot;I am a &quot; ~ self.what's-the-name }
+
+    method what's-the-name () { self.^name }
+    }
+
+Butterfly.who-am-i;             # I am a Butterfly
+put Butterfly.what's-the-name;  # Butterfly
+</code></pre>
+
+<p>That works, but it’s now available as a method that you didn’t intend anyone to use outside of the class. Prefix the method name with a <code>!</code> to hide it from code outside the class. Replace the method call dot with a <code>!</code> too:</p>
+
+<p>这起作用了，但它现在可以作为一种方法，你不打算任何人在类外使用。在方法的名字上加上前缀 <code>!</code> 以从类外的代码中隐藏它。也用 <code>!</code> 替换方法调用点：</p>
+
+<pre><code>class Butterfly {
+    method who-am-i () { put &quot;I am a &quot; ~ self!what's-the-name }
+
+    method !what's-the-name () { self.^name }
+    }
+
+Butterfly.who-am-i;  # I am a Butterfly
+put Butterfly.what's-the-name;  # Butterfly
+</code></pre>
+
+<p>Now you get an error if you try to use it outside the class:</p>
+
+<p>现在，如果你尝试在类外使用它，则会出现错误：</p>
+
+<pre><code>No such method 'what's-the-name' for invocant of type 'Butterfly'.
+</code></pre>
+
+<h2 id="defining-subroutines">Defining Subroutines</h2>
+
+<p>A class can contain subroutines. Since subroutines are lexically scoped they are also invisible outside the class. A subroutine can do the same job as a private method. To make this work you need to pass the object as a subroutine argument:</p>
+
+<p>类可以包含子例程。由于子程序是词法作用域的，因此它们在类外也是不可见的。子例程可以执行与私有方法相同的工作。要完成这项工作，你需要将该对象作为子例程参数传递：</p>
+
+<pre><code>class Butterfly {
+    method who-am-i () { put &quot;I am a &quot; ~ what's-the-name( self ) }
+
+    sub what's-the-name ($self) { $self.^name }
+    }
+
+Butterfly.who-am-i;  # I am a Butterfly
+</code></pre>
+
+<h1 id="对象">对象</h1>
+
+<p>Objects are particular instances of a class; sometimes those terms are used interchangeably. Each object has its own variables and data, separate from all the others. Each object, however, still shares the behavior of the class.</p>
+
+<p>对象是类的特定实例;有时这些术语可以互换使用。每个对象都有自己的变量和数据，与其他对象分开。但是，每个对象仍然共享该类的行为。</p>
+
+<p>Start with the simplest class, as before. To create an object you need a constructor method. Any method that creates an object is a constructor. By default that is <code>.new</code>:</p>
+
+<p>像以前一样，从最简单的类开始。要创建对象，你需要一个构造函数方法。创建对象的任何方法都是构造函数。默认情况下是 <code>.new</code>：</p>
+
+<pre><code>class Butterfly {}
+
+my $butterfly = Butterfly.new;
+</code></pre>
+
+<p>The object is a defined instance of the class (the type object is the undefined one). The <code>.DEFINITE</code> method tells you which one you have:</p>
+
+<p>该对象是类的已定义实例（类型对象是未定义的对象）。 <code>.DEFINITE</code> 方法告诉你用的是哪一个：</p>
+
+<pre><code>put $butterfly.DEFINITE
+    ?? 'I have an object' !! 'I have a type';
+</code></pre>
+
+<h6 id="提示">提示</h6>
+
+<p>Every object also has a <code>.defined</code> method, but each class can change what that means. Any object of the <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a> class is undefined, so it’s always <code>False</code> as a conditional. Use <code>.DEFINITE</code> to avoid that gotcha.</p>
+
+<p>每个对象也有一个 <code>.defined</code> 方法，但每个类都可以改变它的含义。 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a> 类的任何对象都是未定义的，因此它作为条件总是 <code>False</code>。使用 <code>.DEFINITE</code> 来避免这种问题。</p>
+
+<h2 id="私有属性">私有属性</h2>
+
+<p>Attributes are per-object data. You declare these with <code>has</code>. The attribute variables use a twigil to denote their access. Before you see the easy way you should see the hard way so you appreciate it more. The <code>$!</code> twigil defines a private attribute:</p>
+
+<p>属性是每个对象都具有的数据。你用 <code>has</code> 声明属性。属性变量使用 twigil 来表示它们的访问权限。在你看到简单的方法之前，你应该看到困难的方式让你更加欣赏它。 <code>$!</code> twigil 定义一个私有属性：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name;
+}
+</code></pre>
+
+<p>By itself this <code>has</code> definition doesn’t effectively add anything to your class. Nothing can see the attribute, so you have no way to change its value.</p>
+
+<p>这个 <code>has</code> 定义本身并没有有效地为你的类添加任何东西。什么都看不到属性，所以你无法改变它的值。</p>
+
+<p>The special <code>.BUILD</code> method is automatically called after <code>.new</code> with the same arguments. You can define your own <code>.BUILD</code> to bind or assign a value to your private attribute (or do any other work that you want):</p>
+
+<p>使用相同的参数在 <code>.new</code> 之后自动调用特殊的 <code>.BUILD</code> 方法。你可以定义自己的 <code>.BUILD</code> 来绑定值到你的私有属性上或为你的私有属性赋值（或者执行你想要的任何其他工作）：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name;
+
+    method BUILD ( :$common-name ) {
+        $!common-name = $common-name;
+    }
+}
+
+my $butterfly = Butterfly.new: :common-name('Perly Cracker');
+</code></pre>
+
+<p>Be careful here. This <code>.BUILD</code> accepts all named parameters without warning. It doesn’t know which ones you intend to use or what they mean to your class. It’s a default way that almost everything uses to set up objects—but if you misspell a name, you won’t get a warning:</p>
+
+<p>这里要小心。此 <code>.BUILD</code> 接受所有命名参数而不发出警告。它不知道你打算使用哪些或它们对你的类意味着什么。这是几乎所有东西都用来设置对象的默认方式 - 但是如果你拼错了名字，你不会收到警告：</p>
+
+<pre><code>my $butterfly = Butterfly.new: :commen-name('Perly Cracker');
+</code></pre>
+
+<p>You also don’t get a warning for leaving something out. Maybe you don’t want to require every setting any time you build an object. You might not want this to fail:</p>
+
+<p>你也不会因为遗漏某些属性而得到警告。也许你不希望每次构建对象时就设置好所有的东西。你可能不希望这失败：</p>
+
+<pre><code>my $butterfly = Butterfly.new;
+</code></pre>
+
+<p>But if you want to require a named parameter you know how to do that. Put a <code>!</code> after it:</p>
+
+<p>但是如果你想要一个命名参数，你知道如何做到这一点。在命名参数后面放一个 <code>!</code>：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name;
+
+    method BUILD ( :$common-name! ) { # required now
+        $!common-name = $common-name;
+    }
+}
+</code></pre>
+
+<p>For the rest of this example that’s not what you want. You’re going to set default values and provide other ways to change the name.</p>
+
+<p>对于本示例的其余部分，这不是你想要的。你将设置默认值并提供更改名称的其他方法。</p>
+
+<p>You can add an accessor method to allow you to see the name that you’ve stored in the private attribute:</p>
+
+<p>你可以添加一个访问器方法，以允许你查看已存储在私有属性中的名称：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name;
+
+    method BUILD ( :$common-name ) {
+        $!common-name = $common-name;
+    }
+
+    method common-name { $!common-name }
+}
+
+my $butterfly = Butterfly.new: :common-name('Perly Cracker');
+put $butterfly.common-name;  # Perly Cracker
+</code></pre>
+
+<p>This is a problem if you don’t supply a <code>:common-name</code>. There’s nothing in <code>$!common-name</code> and you didn’t give <code>.BUILD</code> anything to work with. When you try to output it you get a warning about the empty value:</p>
+
+<p>如果你不提供 <code>:common-name</code>，则会出现问题。 <code>$!common-name</code> 中没有任何东西，你没有给 <code>.BUILD</code> 任何东西。当你尝试输出它时，你会收到有关空值的警告：</p>
+
+<pre><code>my $butterfly = Butterfly.new;
+put $butterfly.common-name;  # Warning!
+</code></pre>
+
+<p>A default value in the <code>common-name</code> method could solve this. If the attribute is not defined you could return an empty <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> (or <code>fail</code> or <code>warn</code>):</p>
+
+<p><code>common-name</code> 方法中的默认值可以解决此问题。如果未定义属性，则可以返回空<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>（或 <code>fail</code> 或 <code>warn</code>）：</p>
+
+<pre><code>method common-name { $!common-name // '' }
+</code></pre>
+
+<p>属性可以具有默认值：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name = '';
+    ...
+}
+</code></pre>
+
+<p>你可以使属性的默认值更有趣而不是使用空的<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name = 'Unnamed Butterfly';
+    ...
+}
+
+my $butterfly = Butterfly.new;
+put $butterfly.common-name;  # Unnamed Butterfly!
+</code></pre>
+
+<p>要更改 <code>$!common-name</code> 的值，你可以使用 <code>rw</code> trait 标记 <code>.common-name</code> 以使其可读可写。如果你为方法赋值，则更改<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中最后一个东西的值（如果你可以修改它，那就是）。这个<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中的最后一个东西是一个 <code>$!common-name</code> 容器：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name = 'Unnamed butterfly';
+
+    method BUILD ( :$common-name ) {
+        $!common-name = $common-name;
+    }
+
+    method common-name is rw { $!common-name }
+}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 'Perly Cracker';
+
+put $butterfly.common-name;  # Perly Cracker!
+</code></pre>
+
+<p>The attributes can be typed like other variables. Constraining the type to <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> means you can assign only thattype to <code>.common-name</code>:</p>
+
+<p>可以像其他变量一样类型化。将类型约束为<a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>意味着你只能将字符串类型赋值给 <code>.common-name</code>：</p>
+
+<pre><code>class Butterfly {
+    has Str $!common-name = 'Unnamed butterfly';
+    ...
+}
+</code></pre>
+
+<p>练习12.3 实现一个带有 <code>$!common-name</code> 私有属性的 <code>Butterfly</code> 类。添加 <code>$!color</code> 私有属性。创建一个新的 <code>Butterfly</code> 对象，设置其名称和颜色，然后输出这些值。</p>
+
+<h2 id="public-attributes">Public Attributes</h2>
+
+<p>But enough of the hard way. Public attributes do a lot of that work for you. Use <code>$.common-name</code> with a dot instead of a bang (<code>!</code>). The accessor method is automatically defined for you and the default <code>.BUILD</code> handles the setup by filling in the attributes from the named parameters in your call to <code>.new</code>:</p>
+
+<p>但足够艰难的方式。公共属性为你做了很多工作。使用带点的 <code>$.common-name</code> 而不是 <code>!</code> 。<code>.</code> 将自动为你定义存取方法，默认的 <code>.BUILD</code> 通过在你对 <code>.new</code> 的调用中填充命名参数的属性来处理设置：</p>
+
+<pre><code>class Butterfly {
+    has $.common-name = 'Unnamed Butterfly'
+}
+
+my $butterfly = Butterfly.new: :common-name('Perly Cracker');
+put $butterfly.common-name;  # Perly Cracker
+</code></pre>
+
+<p>Make it read-write with the <code>rw</code> trait immediately after the attribute name but before the default value. After you create the object you can assign to the <code>.common-name</code> method:</p>
+
+<p>在属性名称之后但在默认值之前立即使用 <code>rw</code>  trait 进行读写。创建对象后，可以给 <code>.common-name</code> 方法赋值：</p>
+
+<pre><code>class Butterfly {
+    has $.common-name is rw = 'An unknown butterfly';
+}
+
+my $butterfly = Butterfly.new;
+put $butterfly.common-name; # An unknown butterfly
+
+$butterfly.common-name = 'Hamadryas perlicus';
+put $butterfly.common-name; # Hamadryas perlicus
+</code></pre>
+
+<p>The attributes can have types just like other variables. Try to assign the wrong type and you get an exception:</p>
+
+<p>属性可以像其他变量一样具有类型。如果尝试分配错误的类型，你会得到一个异常：</p>
+
+<pre><code>class Butterfly {
+    has Str $.common-name is rw = 'Unnamed butterfly';
+    }
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 137;  # Error!
+</code></pre>
+
+<p>To have a mixture of private and public attributes you have to do some work. You probably don’t want to define your own <code>.BUILD</code> since you’d have to handle everything that the default one does for you. Instead, you can define a private attribute and assign to it later through a method. An <code>rw</code> trait on the method either returns or assigns to the value of the last thingy in the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>:</p>
+
+<p>要拥有私有属性和公共属性的混合，你必须费点劲。你可能不想定义自己的 <code>.BUILD</code>，因为你必须处理默认的一切。相反，你可以定义私有属性，稍后通过方法为其赋值。方法上的 <code>rw</code> 特质要么返回<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中的最后那个东西，要么给<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中最后一个东西赋值：</p>
+
+<pre><code>class Butterfly {
+    has Str $.common-name is rw = 'Unnamed butterfly';
+    has Str $!color;
+
+    method color is rw { $!color }
+}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 'Perly Cracker';
+$butterfly.color = 'Vermillion';
+
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<h1 id="multi-methods">multi Methods</h1>
+
+<p>Read-write methods are one way to handle private attributes, but you can also create <code>multi</code> methods for each case. Although this example looks simple, your validation and conversion requirements can be arbitrarily complex inside the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>s:</p>
+
+<p>读写方法是处理私有属性的一种方法，但你也可以为每种情况创建 <code>multi</code> 方法。虽然这个例子看起来很简单，但是你的验证和转换要求在<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中可以是任意复杂的：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name = 'Unnamed butterfly';
+    has $!color       = 'White';
+
+    multi method common-name ()         { $!common-name }
+    multi method common-name ( Str $s ) { $!common-name = $s }
+
+    multi method color ()         { $!color }
+    multi method color ( Str $s ) { $!color = $s }
+}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name: 'Perly Cracker';
+$butterfly.color: 'Vermillion';
+
+put $butterfly.common-name;  # Perly Cracker!
+</code></pre>
+
+<p>This gets annoying when you have many attributes. There’s another way that you could do this. Return the object in every method that sets a value. This allows you to chain methods to set many attributes in one statement where you don’t repeat the object each time:</p>
+
+<p>当你有许多属性时，这会很烦人。还有另一种方法可以做到这一点。在每个设置值的方法中返回对象。这允许你链接方法以在一个语句中设置许多属性，每次不重复对象：</p>
+
+<pre><code>class Butterfly {
+    has $!common-name = 'Unnamed butterfly';
+    has $!color       = 'White';
+
+    multi method common-name ()         { $!common-name; }
+    multi method common-name ( Str $s ) {
+        $!common-name = $s; self
+    }
+
+    multi method color ()         { $!color; }
+    multi method color ( Str $s ) { $!color = $s; self }
+}
+
+my $butterfly = Butterfly
+    .new
+    .common-name( 'Perly Cracker' )
+    .color( 'Vermillion' );
+
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<p>That looks similar to using <code>do given</code> to <em>topicalize</em> the object and call methods on it:</p>
+
+<p>这类似于使用 <code>do given</code> 来主题化对象并在其上调用方法：</p>
+
+<pre><code>my $butterfly = do given Butterfly.new {
+    .common-name( 'Perly Cracker' );
+    .color( 'Vermillion' );
+    };
+
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<p>Which technique you use depends on your task and personal preferences. You haven’t seen this with error handling or complex code, either. Those impact your choice too.</p>
+
+<p>你使用哪种技术取决于你的任务和个人喜好。你还没有看到错误处理或复杂代码。那些也会影响你的选择。</p>
+
+<h1 id="inheriting-types">Inheriting Types</h1>
+
+<p>An existing type might already do most of what you want. Instead of redefining everything that class already does, you can extend it, also known as inheriting from it. Declare the class with <code>is</code> and the type you want to extend:</p>
+
+<p>现有类型可能已经完成了你想要的大部分工作。你可以扩展它，而不是重新定义类已经执行的所有操作，也称为继承它。使用 <code>is</code> 和要扩展的类型声明类：</p>
+
+<pre><code>class Butterfly is Insect {};
+</code></pre>
+
+<p>You can do this inside the class definition with <code>also</code>:</p>
+
+<p>你也可以在类定义中使用 <code>also</code> 执行此操作：</p>
+
+<pre><code>class Butterfly {
+    also is Insect
+};
+</code></pre>
+
+<p>Here, <code>Insect</code> is a parent class (or super class or base class). <code>Butterfly</code> is the child class (or derived type). The terminology isn’t particularly important; the base type is the more general one and the derived type is the more specific one.</p>
+
+<p>在这里，<code>Insect</code> 是一个父类（或超类或基类）。 <code>Butterfly</code> 是子类（或派生类型）。术语不是特别重要;基类型是更通用的类型，派生类型是更具体的类型。</p>
+
+<p>Everything you’ve seen in the <code>Butterfly</code> class so far (a name and a color) applies to any insect. The name and color attributes are general things that describe any insect, so should be in the more general class. The<code>Butterfly</code> class now has nothing in it (a “null subclass”), but it should still work the same as it did before:</p>
+
+<p>到目前为止，你在 <code>Butterfly</code> 上看到的所有东西（名称和颜色）都适用于任何昆虫。名称和颜色属性是描述任何昆虫的通用的东西，因此应该在更通用的类中。 <code>Butterfly</code> 类现在没有任何内容（“null子类”），但它应该仍然像以前一样工作：</p>
+
+<pre><code>class Insect {
+    has $.common-name is rw = 'Unnamed insect';
+    has $.color       is rw = 'Brown';
+}
+
+class Butterfly is Insect {}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 'Perly Cracker';
+$butterfly.color = 'Vermillion';
+
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<p><code>Butterfly</code> can have its own <code>$.color</code> that overrides the one from <code>Insect</code>. Declaring the attribute in<code>Butterfly</code> effectively hides the one in its parent class:</p>
+
+<p><code>Butterfly</code>可以有自己的 <code>$.color</code> 来覆盖 <code>Insect</code> 的那个属性。在 <code>Butterfly</code> 中声明属性有效地隐藏了其父类中的属性：</p>
+
+<pre><code>class Insect {
+    has $.common-name is rw = 'Unnamed insect';
+    has $.color       is rw = 'Brown';
+}
+
+class Butterfly is Insect {
+    has $.color       is rw = 'Mauve';
+}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 'Perly Cracker';
+
+# Perly Cracker is Mauve
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<p>Sometimes that’s not the right thing to do. The parent class might need to run some code in its version of the method to make everything else work. Instead of hiding the parent method you want to <em>wrap</em> it (or extend it).</p>
+
+<p>有时这不是正确的事情。父类可能需要在其方法版本中运行一些代码才能使其他所有东西都有效。你想要包装它（或扩展它）的父方法而不是隐藏父方法。</p>
+
+<p>The <code>callsame</code> routine can do this for you. It redispatches the call with the same arguments. You run the parent method in your child method:</p>
+
+<p><code>callsame</code> 程序可以为你执行此操作。它使用相同的参数重新调度调用。你在子方法中运行父方法：</p>
+
+<pre><code>class Insect {
+    has $.common-name is rw = 'Unnamed insect';
+    has $!color = 'Brown';
+
+    method color is rw {
+        put &quot;In Insect.color!&quot;;
+        $!color
+    }
+}
+
+class Butterfly is Insect {
+    has $!color = 'Mauve';
+
+    method color is rw {
+        put &quot;In Butterfly.color!&quot;;
+        my $insect-color = callsame;
+        put &quot;Insect color was {$insect-color}!&quot;;
+        $!color
+    }
+}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 'Perly Cracker';
+
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<p>Inheritance isn’t the only way to add features to your class. You should save inheritance for specific cases where your class is a more specific type of the same thingy.</p>
+
+<p>继承不是向类添加功能的唯一方法。对于特定情况，你应该保存继承，其中你的类是更具体的类型。</p>
+
+<p>EXERCISE 12.4Create classes for the kingdom, phylum, class, order, family, and genus of a <em>Hamadryas</em> butterfly. The phylum inherits from kindgom, the class inherits from phylum, and so on. Each class notes its place in the hierarchy:<code>class Nymphalidae is Lepidoptera { }</code>Define a <code>.full-name</code> method in <code>Hamadryas</code> to join all the levels together.The genus <em>Hamadryas</em> is classified in <em>Animalia</em>, <em>Arthropodia</em>, <em>Insecta</em>, <em>Lepidoptera</em>, and <em>Nymphalidae</em>.</p>
+
+<p>练习12.4 为Hamadryas 蝴蝶的王国，门，阶级，秩序，家庭和属创建类。门继承自 kindgom，该类继承自门，等等。每个班级都记录了它在层次结构中的位置： <code>class Nymphalidae is Lepidoptera { }</code> 在 <code>Hamadryas</code> 中定义一个完整的名称方法以将所有级别连接在一起.Hamadryas属被分类为Animalia，Arthropodia，Insecta，Lepidoptera和Nymphalidae。</p>
+
+<h2 id="checking-inheritance">Checking Inheritance</h2>
+
+<p>You’ve already seen <code>.^mro</code> to get a <a href="https://docs.perl6.org/type/List.html"><code>List</code></a> of classes. The <code>.isa</code> method returns <code>True</code> or <code>False</code> if the type you specify is in that <a href="https://docs.perl6.org/type/List.html"><code>List</code></a>. You can test a type or an object with a type object as the argument (a <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>):</p>
+
+<p>你已经看过 <code>.^mro</code> 获得一个类<a href="https://docs.perl6.org/type/List.html"><code>列表</code></a>。如果你指定的类型在该<a href="https://docs.perl6.org/type/List.html"><code>列表</code></a>中，则 <code>.isa</code> 方法返回 <code>True</code> 或 <code>False</code>。你可以使用类型对象作为参数（<a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>）来测试类型或对象：</p>
+
+<pre><code>put Int.isa: 'Cool';        # True
+put Int.isa: Cool;          # True
+
+put Butterfly.isa: Insect;  # True;
+put Butterfly.isa: Int      # False;
+
+my $butterfly-object = Butterfly.new;
+put $butterfly.isa: Insect; # True
+</code></pre>
+
+<p>Smart matching does the same job. That’s what <code>when</code> is checking if you give it only a type:</p>
+
+<p>智能匹配可以完成同样的工作。这就是 <code>when</code> 检查你是否只给它一个类型：</p>
+
+<pre><code>if Butterfly ~~ Insect {
+    put &quot;Butterfly is an Insect&quot;;
+}
+
+if $butterfly ~~ Insect {
+    put &quot;Butterfly is an Insect&quot;;
+}
+
+put do given $butterfly {
+    when Int    { &quot;It's a integer&quot; }
+    when Insect { &quot;It's an insect&quot; }
+}
+</code></pre>
+
+<p>You may have been wondering about the name of the <code>.^mro</code> method. That’s for method resolution order in cases where you inherit from multiple classes:</p>
+
+<p>你可能一直想知道 <code>.^mro</code> 方法的名称。这是在你从多个类继承的情况下的方法解析顺序：</p>
+
+<pre><code>class Butterfly is Insect is Flier {...}
+</code></pre>
+
+<p>I’m not going to tell you more about multiple inheritance in the hopes that you never do it. It’s possible, but you’ll likely solve your problem with the roles you’ll see in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch13.html#camelia-roles">Chapter 13</a>.</p>
+
+<p>我不会告诉你更多关于多重继承的信息，希望你永远不会这样做。这是可能的，但你可能会用你在第13章中看到的角色来解决你的问题。</p>
+
+<h2 id="stub-methods">Stub Methods</h2>
+
+<p>A parent class can define a method but not implement it—this is known as an abstract method (or stub method). Use <code>!!!</code> inside the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> to denote that something later will implement a method with that name:</p>
+
+<p>父类可以定义一个方法但不实现它 - 这称为抽象方法（或存根方法）。在<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中使用  <code>!!!</code> 表示稍后会实现具有该名称的方法：</p>
+
+<pre><code>class Insect {
+    has $.color is rw = 'Brown';
+
+    method common-name { !!! }
+}
+
+class Butterfly is Insect {
+    has $.color is rw = 'Mauve';
+}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 'Perly Cracker';
+
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<p>When you run this the <code>!!!</code> throws an exception:</p>
+
+<p>当你运行这个代码时 <code>!!!</code> 抛出异常：</p>
+
+<pre><code>Stub code executed
+</code></pre>
+
+<p>Instead of the <code>!!!</code> you can use <code>...</code>. The triple dot calls <code>fail</code> instead of <code>die</code>. Either way something else needs to implement that method. A public attribute would do that for you:</p>
+
+<p>你可以使用 <code>...</code> 而不是 <code>!!!</code>。三点调用 <code>fail</code> 而不是 <code>die</code>。无论哪种方式，其他东西都需要实现该方法。公共属性会为你执行此操作：</p>
+
+<pre><code>class Butterfly is Insect {
+    has $.common-name is rw;
+    has $.color       is rw = 'Mauve';
+}
+</code></pre>
+
+<h1 id="controlling-object-creation">Controlling Object Creation</h1>
+
+<p>Sometimes you want more control over your object creation. When you call <code>.new</code> there are several steps and you’re able to hook into each of them. You don’t need all the gory details at the programmer level so I’ll spare you.</p>
+
+<p>有时你希望更好地控制对象创建。当你调用 <code>.new</code> 时，有几个步骤，你可以接入每个步骤。你不需要程序员级别的所有残酷细节，所以我会饶了你。</p>
+
+<p>When you call <code>.new</code> you’re reaching into the root of the object system, <a href="https://docs.perl6.org/type/Mu.html"><code>Mu</code></a>. <code>.new</code> calls <code>.bless</code>, which actually creates your object. Now you have an empty object. It’s not quite ready for use yet.</p>
+
+<p>当你调用 <code>.new</code> 时，你正在进入对象系统的根，即 <code>Mu</code>。 <code>.new</code> 调用 <code>.bless</code>，它实际上创建了你的对象。现在你有一个空对象。它尚未准备好使用。</p>
+
+<p><code>.bless</code> does some more work by calling <code>.BUILDALL</code> on your empty object, passing it all the same arguments that you passed to <code>.new</code>. <code>.BUILDALL</code> visits each class in your inheritance chain, starting with <a href="https://docs.perl6.org/type/Mu.html"><code>Mu</code></a>. You typically don’t want to mess with <code>.BUILDALL</code> since it’s driving the process rather than affecting your objects.</p>
+
+<p><code>.bless</code> 通过在空对象上调用 <code>.BUILDALL</code> 来做更多工作，并将所有传递给 <code>.new</code> 的相同参数传递给它。 <code>.BUILDALL</code> 访问继承链中的每个类，从 <a href="https://docs.perl6.org/type/Mu.html"><code>Mu</code></a> 开始。你通常不希望混淆 <code>.BUILDALL</code>，因为它正在推动流程而不是影响你的对象。</p>
+
+<p><code>.BUILDALL</code> calls the <code>.BUILD</code> method in your class if you’ve defined one. <code>.BUILD</code> gets the same arguments as <code>.new</code>. This is how your attributes get their values from your arguments. If no class defined a <code>.BUILD</code> you get the default one that fills in your attributes from the named parameters.</p>
+
+<p>如果你定义了一个，则 <code>.BUILDALL</code> 会在你的类中调用 <code>.BUILD</code> 方法。 <code>.BUILD</code> 获得与 <code>.new</code> 相同的参数。这是你的属性从参数中获取其值的方式。如果没有类定义 <code>.BUILD</code>，你将获得从命名参数填充属性的默认类。</p>
+
+<h6 id="note">NOTE</h6>
+
+<p>The default object creation mechanism wants to work with named parameters. You could rework everything for positional parameters but that would be a lot of work.</p>
+
+<p>默认对象创建机制希望使用命名参数。你可以为位置参数重做一切，但这将是很多工作。</p>
+
+<p>After <code>.BUILD</code> is done you have a completely built object that’s ready for use (but not the final object yet). The <code>.TWEAK</code> method gives you a chance to adjust that object before you move on to the next class to go through the process again.</p>
+
+<p>在 <code>.BUILD</code> 完成后，你有一个完全构建的对象可以使用（但还没有最终的对象）。 <code>.TWEAK</code> 方法让你有机会调整该对象，然后再转到下一个类再次完成该过程。</p>
+
+<p>You should declare both <code>.BUILD</code> and <code>.TWEAK</code> with <code>submethod</code>. This is a hybrid of <code>sub</code> and <code>method</code>; it acts just like a method but a subclass doesn’t inherit it (just like you don’t inherit subroutines):</p>
+
+<p>你应该用 <code>submethod</code> 声明 <code>.BUILD</code> 和 <code>.TWEAK</code>。这是 <code>sub</code> 和 <code>method</code> 的混合;它就像一个方法，但是一个子类不会继承它（就像你不继承子程序一样）：</p>
+
+<pre><code># $?CLASS is a compile-time variable for the current class
+# &amp;?ROUTINE is a compile-time variable for the current routine
+class Insect {
+    submethod BUILD { put &quot;In {$?CLASS.^name}.{&amp;?ROUTINE.name}&quot; }
+    submethod TWEAK { put &quot;In {$?CLASS.^name}.{&amp;?ROUTINE.name}&quot; }
+    }
+
+class Butterfly is Insect {
+    submethod BUILD { put &quot;In {$?CLASS.^name}.{&amp;?ROUTINE.name}&quot; }
+    submethod TWEAK { put &quot;In {$?CLASS.^name}.{&amp;?ROUTINE.name}&quot; }
+    }
+
+my $b = Butterfly.new;
+</code></pre>
+
+<p>The <code>.TWEAK</code> method is called before <code>.BUILDALL</code> moves on to the next class:</p>
+
+<p>在 <code>.BUILDALL</code> 之前调用 <code>.TWEAK</code> 方法进入下一个类：</p>
+
+<pre><code>In Insect.BUILD
+In Insect.TWEAK
+In Butterfly.BUILD
+In Butterfly.TWEAK
+</code></pre>
+
+<p>Now that you’ve seen the order in which things happen, let’s look at each step a little more closely.</p>
+
+<p>现在你已经看到了事情发生的顺序，让我们更仔细地看一下每一步。</p>
+
+<h2 id="building-objects">Building Objects</h2>
+
+<p><code>.BUILD</code> lets you decide how to treat your newly created object. Start with a <code>submethod</code> that does nothing:</p>
+
+<p><code>.BUILD</code>让你决定如何对待新创建的对象。从一个什么都不做的 <code>submethod</code> 开始：</p>
+
+<pre><code>class Butterfly {
+    has $.color;
+    has $.common-name;
+
+    submethod BUILD {} # does nothing
+}
+
+my $butterfly = Butterfly.new: :color('Magenta');
+
+put &quot;The butterfly is the color {$butterfly.color}&quot;;
+</code></pre>
+
+<p>The color isn’t set and you get a warning about an uninitialized value:</p>
+
+<p>颜色未设置，你会收到有关未初始化值的警告：</p>
+
+<pre><code>The butterfly is the color
+Use of uninitialized value of type Any in string context.
+</code></pre>
+
+<p><code>.BUILDALL</code> found your <code>.BUILD</code> so it used your version to set up the object. The color value in your call to <code>.new</code> isn’t assigned to the <code>$!color</code> attribute because your empty <code>.BUILD</code> didn’t handle that. You need to do that yourself. By default all the named parameters are in <code>%_</code> and <code>.BUILD</code> gets all of the same arguments as<code>.new</code>:</p>
+
+<p><code>.BUILDALL</code> 找到你的 <code>.BUILD</code> 所以它用你的版本来设置对象。调用 <code>.new</code> 的颜色值未分配给 <code>$!color</code> 属性，因为空的 <code>.BUILD</code> 没有处理它。你需要自己做。默认情况下，所有命名参数都在 <code>％_</code> 和 <code>.BUILD</code> 中获取所有相同的参数作为 <code>.new</code>：</p>
+
+<pre><code>class Butterfly {
+    has $.color;
+    has $.common-name;
+
+    submethod BUILD {
+        $!color = %_&lt;color&gt;;
+        }
+    }
+</code></pre>
+
+<p>Use the argument list for <code>.BUILD</code> to automatically define some named parameters to variables:</p>
+
+<p>使用 <code>.BUILD</code> 的参数列表自动为变量定义一些命名参数：</p>
+
+<pre><code>class Butterfly {
+has $.color;
+has $.common-name;
+
+submethod BUILD ( :$color ) {
+    $!color = $color;
+    }
+}
+</code></pre>
+
+<p>If you don’t specify a <code>color</code> named argument you get another warning because the value in <code>$color</code> is uninitialized. In some cases you might want that named parameter to be required, so you put a <code>!</code> after it:</p>
+
+<p>如果未指定 <code>color</code> 命名参数，则会收到另一个警告，因为 <code>$color</code> 中的值未初始化。在某些情况下，你可能希望该命名参数是必需的，所以你放一个 <code>!</code> 之后：</p>
+
+<pre><code>class Butterfly {
+    has $.color;
+    has $.common-name;
+
+    submethod BUILD ( :$color! ) {
+        $!color = $color;
+        }
+    }
+</code></pre>
+
+<p>Other times you might want to set a default value. Another attribute won’t work because the object build process hasn’t set its default value yet:</p>
+
+<p>其他时候你可能想要设置默认值。另一个属性不起作用，因为对象构建过程尚未设置其默认值：</p>
+
+<pre><code>class Butterfly {
+    has $!default-color = 'Wine'; # Won't work
+    has $.color;
+    has $.common-name;
+
+    submethod BUILD ( :$color! ) {
+        $!color = $color // $!default-color; # No setup yet!
+        }
+    }
+</code></pre>
+
+<p>A private method could work; a private method can only be seen from code inside the class and cannot be inherited. A <code>submethod</code> isn’t inheritable either but is still a public method:</p>
+
+<p>私有方法可以工作;私有方法只能从类中的代码中看到，不能被继承。<code>submethod</code> 也不是可继承的，但仍然是一种公共方法：</p>
+
+<pre><code>class Butterfly {
+    method default-color { 'Wine' }
+    has $.color;
+    has $.common-name;
+
+    submethod BUILD ( :$color ) {
+        $!color = $color // self.default-color;
+        }
+    }
+</code></pre>
+
+<p>Class variables can do the same job. A lexical variable defined in the class <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> is only visible to the code in the same <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> and the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>s inside it:</p>
+
+<p>类变量可以完成相同的工作。类<a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>中定义的词法变量仅对同一块中的代码及其中的块可见：</p>
+
+<pre><code>class Butterfly {
+    my $default-color = 'Wine';
+    has $.color;
+    has $.common-name;
+
+    submethod BUILD ( :$color ) {
+        $!color = $color // $default-color;
+        }
+    }
+</code></pre>
+
+<p>What’s more interesting to <code>.BUILD</code> is the extra setup you don’t want to be part of the interface. Perhaps you want to track when you used the default value so you can distinguish it from the case where the specified color happened to be the same:</p>
+
+<p>更有趣的是 <code>.BUILD</code> 是你不希望成为界面一部分的额外设置。你可能希望跟踪何时使用默认值，以便将其与指定颜色恰好相同的情况区分开来：</p>
+
+<pre><code>class Butterfly {
+    my $default-color = 'Wine';
+    has $.used-default-color;
+    has $.color;
+
+    submethod BUILD ( :$color ) {
+        if $color {
+            $!color = $color;
+            $!used-default-color = False;
+            }
+        else {
+            $!color = $default-color;
+            $!used-default-color = True;
+            }
+        }
+    }
+
+my $without = Butterfly.new;
+put &quot;Used the default color: {$without.used-default-color}&quot;;
+
+my $with = Butterfly.new: :color('Wine');
+put &quot;Used the default color: {$with.used-default-color}&quot;;
+</code></pre>
+
+<p>Even though those two butterflies are the same color, you know which one specified a color and which one didn’t:</p>
+
+<p>即使这两只蝴蝶是相同的颜色，你知道哪一种指定了颜色，哪一种没有指定颜色：</p>
+
+<pre><code>Used the default color: True
+Used the default color: False
+</code></pre>
+
+<h2 id="tweaking-objects">Tweaking Objects</h2>
+
+<p>When you create an object you can use <code>.TWEAK</code> to set either the color you supplied as a named argument or the default color:</p>
+
+<p>创建对象时，可以使用 <code>.TWEAK</code> 设置作为命名参数提供的颜色或默认颜色：</p>
+
+<pre><code>class Insect {
+    has $!default-color = 'Brown';
+    has $.common-name is rw = 'Unnamed insect';
+    has $.color       is rw;
+
+    submethod TWEAK ( :$color ) {
+        self.color = $color // $!default-color;
+        }
+    }
+
+class Butterfly is Insect {}
+
+my $butterfly = Butterfly.new;
+$butterfly.common-name = 'Perly Cracker';
+
+put &quot;{.common-name} is {.color}&quot; with $butterfly;
+</code></pre>
+
+<p>The output shows that you got the default from <code>Insect</code>. <code>.TWEAK</code> ran inside <code>Insect</code> and set an attribute inside <code>Insect</code>. The <code>.color</code> method is defined in <code>Insect</code> so it works out:</p>
+
+<p>输出显示你从 <code>Insect</code> 获得默认值。 <code>.TWEAK</code> 在 <code>Insect</code> 内部运行并在 <code>Insect</code> 中设置了一个属性。 <code>.color</code> 方法在 <code>Insect</code> 中定义，因此它可以解决：</p>
+
+<pre><code>Perly Cracker is Brown
+</code></pre>
+
+<p>If you specify a color, that color is actually set:</p>
+
+<p>如果指定颜色，则实际设置该颜色：</p>
+
+<pre><code>my $butterfly = Butterfly.new: :color('Purple');
+</code></pre>
+
+<p>You can modify <code>Butterfly</code> to have its own default color and <code>.TWEAK</code>. The <code>.TWEAK</code> method is the same but you wouldn’t want to inherit it. It depends on the presence of an attribute that it can’t know the child class has:</p>
+
+<p>你可以修改 <code>Butterfly</code> 以拥有自己的默认颜色和 <code>.TWEAK</code>。 <code>.TWEAK</code> 方法是相同的，但你不希望继承它。它取决于它无法知道子类具有的属性的存在：</p>
+
+<pre><code>class Butterfly is Insect {
+    has $.default-color = 'Vermillion';
+
+    submethod TWEAK ( :$color ) {
+        self.color = $color // $!default-color;
+        }
+    }
+</code></pre>
+
+<h1 id="private-classes">Private Classes</h1>
+
+<p>You can declare classes with <code>my</code> to make them private to the current scope. At the file level that class is only available in that file. If you load the file that contains it you won’t be able to see it:</p>
+
+<p>你可以使用 <code>my</code> 声明类，使其成为当前范围的私有。在文件级别，该类仅在该文件中可用。如果你加载包含它的文件，你将无法看到它：</p>
+
+<pre><code># PublicClass.pm6
+my class PrivateClass { # Hidden from outside the file
+    method hello { put &quot;Hello from {self.^name}&quot; }
+    }
+
+class PublicClass {
+    method hello { PrivateClass.hello }
+    }
+</code></pre>
+
+<p>In your program you can load <code>PublicClass</code> and call a method on the <code>PublicClass</code> type. <code>PublicClass</code>can see <code>PrivateClass</code> because it’s in the same file. From your program you can’t call <code>PrivateClass</code> directly, though. That scope doesn’t know about that type:</p>
+
+<p>在你的程序中，你可以加载 <code>PublicClass</code> 并在 <code>PublicClass</code> 类型上调用方法。 <code>PublicClass</code> 可以看到<code>PrivateClass</code>，因为它在同一个文件中。但是，从你的程序中，你无法直接调用 <code>PrivateClass</code>。该范围不知道该类型：</p>
+
+<pre><code>use PublicClass;
+PublicClass.hello;  # Hello from PrivateClass
+PrivateClass.hello; # Error: Undeclared name: PrivateClass
+</code></pre>
+
+<p>If you need a class only inside another class (and not the rest of the file), you can declare it inside the class. This can be handy to compartmentalize and organize behavior inside a class:</p>
+
+<p>如果你只需要一个类在另一个类（而不是文件的其余部分）中，你可以在类中声明它。这可以方便地划分和组织类中的行为：</p>
+
+<pre><code>class Butterfly {
+    my class PrivateHelper {}
+    }
+</code></pre>
+
+<p>Private classes are a great tool when you want to compartmentalize some behavior that you need but don’t want to expose to normal users. You can use them for intermediate objects that the main program never need know exist.</p>
+
+<p>当你想要划分某些你需要但不想向普通用户公开的行为时，私有类是一个很好的工具。你可以将它们用于主程序永远不需要知道的中间对象。</p>
+
+<p>EXERCISE 12.5Create a <code>Butterfly</code> class that contains a private class that tracks when the object was created and updated. Use it to count the number of updates to the class. A method in <code>Butterfly</code> should access the private class to output a summary.</p>
+
+<p>EXERCISE 12.5创建一个 <code>Butterfly</code> 类，它包含一个私有类，用于跟踪对象何时被创建和更新。用它来计算类的更新次数。 <code>Butterfly</code> 中的方法应该访问私有类以输出摘要。</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>Classes will likely be your main way of organizing information in your programs, though you don’t see it so much in this book because you need to see mostly syntactic topics rather than application design advice. I didn’t have the space for good coverage of object-oriented design or analysis, but you should definitely research those on your own. The right design will make your life so much easier.</p>
+
+<p>类可能是你在程序中组织信息的主要方式，尽管你在本书中没有看到这么多，因为你需要查看主要的语法主题而不是应用程序设计建议。我没有足够的空间来覆盖面向对象的设计或分析，但你绝对应该自己研究它们。正确的设计将使你的生活变得更加轻松。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-09-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0.-%E5%AD%90%E4%BE%8B%E7%A8%8B/" data-toggle="tooltip" data-placement="top" title="第十一章. 子例程">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-13-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0.-%E8%A7%92%E8%89%B2/" data-toggle="tooltip" data-placement="top" title="第十三章. 角色">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

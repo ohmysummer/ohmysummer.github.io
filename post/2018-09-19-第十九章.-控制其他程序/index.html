@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第十九章. 控制其他程序</title>
+  <meta property="og:title" content="第十九章. 控制其他程序" />
+  <meta name="twitter:title" content="第十九章. 控制其他程序" />
+  <meta name="description" content="Controlling Other Programs">
+  <meta property="og:description" content="Controlling Other Programs">
+  <meta name="twitter:description" content="Controlling Other Programs">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-09-19-%E7%AC%AC%E5%8D%81%E4%B9%9D%E7%AB%A0.-%E6%8E%A7%E5%88%B6%E5%85%B6%E4%BB%96%E7%A8%8B%E5%BA%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-19-%E7%AC%AC%E5%8D%81%E4%B9%9D%E7%AB%A0.-%E6%8E%A7%E5%88%B6%E5%85%B6%E4%BB%96%E7%A8%8B%E5%BA%8F/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第十九章. 控制其他程序</h1>
+                
+                  
+                    <h2 class="post-subheading">Controlling Other Programs</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 19, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (659 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="声明">声明</h1>
+
+<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+
+<h1 id="第十九章-控制其它程序">第十九章. 控制其它程序</h1>
+
+<p>有时你需要让其他程序为你做一些工作。 Perl 系列语言被称为“互联网的胶水”。开始一个著名的，稳定的，现有的程序比自己重新实现它更容易，更快。本章介绍了许多启动和控制外部程序的方法，以便根据你的意愿对其进行控制。</p>
+
+<h1 id="快速和容易">快速和容易</h1>
+
+<p><code>shell</code> 例程是运行外部命令或程序的快捷方式。它接受参数并在 shell 中运行它，就像你自己输入它一样。此示例使用类 Unix 的 shell 命令列出所有文件：</p>
+
+<pre><code>shell( 'ls -l' );
+</code></pre>
+
+<p>If you were on Windows you’d use a different command. There’s an implicit <code>cmd /c</code> in front of your command:</p>
+
+<p>如果你在 Windows 上，你会使用不同的命令。命令前面有一个隐式的 <code>cmd /c</code>：</p>
+
+<pre><code>shell( 'dir' );   # actually cmd /c dir
+</code></pre>
+
+<p>此命令的输出将转到程序输出所在的位置（只要你没有将标准输出或错误重定向到其他内容）。</p>
+
+<p>你可以通过检查 <code>$*DISTRO</code> 变量来选择命令。 <code>Distro</code> 对象有一个 <code>.is-win</code> 方法，如果它认为你的程序在该平台上运行，则返回 <code>True</code>：</p>
+
+<pre><code>my $command = $*DISTRO.is-win ?? 'dir' !! 'ls -l';
+shell( $command );
+</code></pre>
+
+<h6 id="警告">警告</h6>
+
+<p>注意变量作为 <code>shell</code> 的参数！一定要知道它们里面有什么。如果 shell 中的字符是特殊的，那么它在该值中也是特殊的。稍后详细介绍。</p>
+
+<p><code>shell</code> 返回一个 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象。当你在 sink 上下文中使用它（对结果不执行任何操作）并且命令失败时，<a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象会抛出异常：</p>
+
+<pre><code>shell( '/usr/bin/false' );  # throws X::Proc::Unsuccessful
+</code></pre>
+
+<p>当命令以 <code>0</code> 以外的值退出时，命令“失败”。这是一种 Unix 惯例，其中非零数字表示各种错误条件。并非所有程序都遵循该惯例，如果不遵循，你将不得不做更多的工作。</p>
+
+<p>你可以保存结果以避免异常。你可以检查 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象以查看发生的情况：</p>
+
+<pre><code>my $proc = shell( '/usr/bin/false' );
+unless $proc.so {
+    put &quot;{$proc.command} failed with exit code: {$proc.exitcode}&quot;;
+}
+</code></pre>
+
+<p>这仍然可能不是你想要的。如果你希望它返回非零值，你可能必须自己处理部分过程：</p>
+
+<pre><code>my $proc = shell( '/usr/bin/true' );
+given $proc {
+    unless .exitcode == 1 {
+        put &quot;{.command} returned: {.exitcode}&quot;;
+        X::Proc::Unsuccessful.new.throw;
+    }
+}
+</code></pre>
+
+<p>如果你不关心命令是否失败，则可以在返回的对象上调用 <code>.so</code>。这“处理”对象并阻止 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 抛出异常：</p>
+
+<pre><code>shell( '/usr/bin/false' ).so
+</code></pre>
+
+<h2 id="引起来的命令">引起来的命令</h2>
+
+<p>有时你想捕获命令的输出或将其保存在变量中。你可以使用带 <code>:x</code> 副词的引用从命令的输出创建一个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>：</p>
+
+<pre><code>my $output = Q:x{ls -1};
+my $output = q:x{ls -1};
+my $output = qq:x{$command};
+</code></pre>
+
+<p>这些是它们的稍短版本，可以做同样的事情：</p>
+
+<pre><code>my $output = Qx{dir};
+my $output = qx{dir};
+my $output = qqx{$command};
+</code></pre>
+
+<p>这些仅捕获标准输出。如果要合并标准错误，则需要在 shell 中处理。这适用于 Unix 和 Windows，使用 <code>2&gt;＆1</code> 。这会在句柄到达你的程序之前合并它们：</p>
+
+<pre><code>my $output = qq:x{$command 2&gt;&amp;1};
+</code></pre>
+
+<h2 id="更安全的命令">更安全的命令</h2>
+
+<p><code>run</code> 例程允许你将命令表示为列表。列表中的第一项是命令名，Perl 6 直接执行而没有 shell 交互。这个命令并不像它看起来那样令人讨厌，因为没有一个字符对 shell 来说是特殊的。那些分号不会结束命令并启动另一个命令：</p>
+
+<pre><code># don't do this, just in case
+run( '/bin/echo', '-n', ';;;; rm -rf /' );
+</code></pre>
+
+<p>如果你在 shell 中将其作为单个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>输入，则可以启动递归操作以删除所有文件。即使在开玩笑中也不要尝试这个（或者使用带有保存快照的虚拟机！）。</p>
+
+<p><code>run</code> 返回一个 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象; 以与 <code>shell</code> 相同的方式处理它：</p>
+
+<pre><code>unless run( ... ) {
+    put &quot;Command failed&quot;;
+}
+</code></pre>
+
+<p>你可能想要使用没有路径信息的裸命令名：</p>
+
+<pre><code>run( 'echo', '-n', 'Hello' );
+</code></pre>
+
+<p>这也不是特别安全。 <code>run</code> 将在 <code>PATH</code> 环境变量中查找匹配的文件。这是人们可以在你的程序之外设置的东西。有人可能会欺骗你的程序运行一些叫做 <em>echo</em> 的东西。</p>
+
+<p>你可以清除 <code>PATH</code>，强制程序始终指定命令的完整路径：</p>
+
+<pre><code>%*ENV{PATH} = '';  # won't find anything
+run( '/bin/echo', '-n', 'Hello' );
+</code></pre>
+
+<p>将 <code>PATH</code> 设置为你信任且允许的目录可能更容易：</p>
+
+<pre><code>%*ENV{PATH} = '/bin:/sbin:/usr/bin:/usr/sbin'
+run( 'echo', '-n', 'Hello' );
+</code></pre>
+
+<p>这并不意味着你找到的命令是正确的;有人可能已经篡改过。没有办法提供完美的安全性 - 但你不必太担心。每当你与程序之外的事物进行交互时，请考虑这一点。</p>
+
+<p>像 <code>shell</code> 一样，<code>run</code> 返回一个 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象。 <code>:out</code> 参数捕获标准输出并通过 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象使其可用。使用 <code>.slurp</code> 来提取它：</p>
+
+<pre><code>my $proc = run(
+    '/bin/some_command', '-n', '-t', $filename
+    :out,
+    );
+put &quot;Output is ｢{ $proc.out.slurp }｣&quot;;
+</code></pre>
+
+<p><code>:err</code> 参数对错误输出执行相同的操作：</p>
+
+<pre><code>my $proc = run(
+    '/bin/some_command', '-n', '-t', $filename
+    :out, :err,
+    );
+put &quot;Output is ｢{ $proc.out.slurp }｣&quot;;
+put &quot;Error is ｢{ $proc.err.slurp }｣&quot;;
+</code></pre>
+
+<p>如果你不希望它们作为单独的流，你可以合并它们：</p>
+
+<pre><code>my $proc = run(
+    '/bin/some_command', '-n', '-t', $filename
+    :out, :err, :merge
+    );
+put &quot;Output is ｢{ $proc.out.slurp }｣&quot;;
+</code></pre>
+
+<p>你还可以给它其命名参数以控制编码，环境和当前工作目录（以及其他内容）。</p>
+
+<p>练习19.1 使用 <code>run</code> 来获取当前目录的按文件大小排序的文件列表。输出那个长文件列表。 Unix 命令是 <code>ls -lrS</code>，Windows 命令是 <code>cmd /c dir /OS</code>。一旦你开始工作，过滤行只输出那些带有 <code>7</code> 的行。最后，你能让一个程序在两个平台上都能运行吗？</p>
+
+<h2 id="写入到-proc">写入到 Proc</h2>
+
+<p>进程可以从你的程序中接收数据。包括 <code>:in</code> 允许你写入到进程：</p>
+
+<pre><code>my $string = 'Hamadryas perlicus';
+
+my $hex = run 'hexdump', '-C', :in, :out;
+
+$hex.in.print: $string;
+$hex.in.close;
+
+$hex.out.slurp.put;
+</code></pre>
+
+<p>在此示例中，你将调用一次  <code>.print</code>，然后关闭输出。这对于 <em>hexdump</em> 来说很好，但其他程序可能表现不同。有些人可能会期待一些输入，给你一些输出，然后在你读取之后期望更多的输入。这如何工作取决于具体的程序，有时可能令人发狂：</p>
+
+<pre><code>my $string = 'Hamadryas perlicus';
+
+my $hex = run 'fictional-program', :in, :out;
+$hex.in.print: $string;
+$hex.out.slurp;
+$hex.in.print: $string;
+...;
+</code></pre>
+
+<p>你可以将一个外部程序的输出重定向到另一个外部程序的输入。此示例获取 <code>perl6 -v</code> 的输出并使其成为下一个<a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 的输入：</p>
+
+<pre><code>my $proc1 = run( 'perl6', '-v', :out );
+my $proc2 = run(
+    'tr', '-s', Q/[:lower:]/,  Q/[:upper:]/,
+    :in($proc1.out)
+    );
+</code></pre>
+
+<p>第二个 <code>run</code> 使用外部的 <code>tr</code> 命令将所有小写字母转换为大写字母：</p>
+
+<pre><code>THIS IS RAKUDO STAR VERSION 2018.04 BUILT ON MOARVM VERSION 2018.04
+IMPLEMENTING PERL 6.C.
+</code></pre>
+
+<h1 id="procs">Procs</h1>
+
+<p><a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象处理 <code>shell</code> 和 <code>run</code>。自己构造对象以获得更多控制。这分两步进行; <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 设置了稍后运行命令的东西：</p>
+
+<pre><code>my $proc = Proc.new: ...;
+</code></pre>
+
+<p>设置捕获并合并标准输出和错误流的通用 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>：</p>
+
+<pre><code>my $proc =  Proc.new: :err, :out, :merge;
+</code></pre>
+
+<p>当你准备好运行命令时，<code>.spawn</code> 它。你生成的进程使用你已经建立的设置。结果是基于程序退出状态的布尔值：</p>
+
+<pre><code>unless $proc.spawn: 'echo', '-n', 'Hello' {
+    ... # handle the error
+}
+</code></pre>
+
+<p>如果需要不同的设置，请在调用 <code>.spawn</code> 时指定当前工作目录和环境：</p>
+
+<pre><code>my $worked = $proc.spawn: :cwd($some-dir), :env(%hash);
+unless $worked {
+    ... # handle the error
+}
+</code></pre>
+
+<p>练习19.2 创建捕获标准输出和错误的 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>。生成命令以获取目录列表。</p>
+
+<h1 id="异步控制">异步控制</h1>
+
+<p>通过 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>（以及 <code>shell</code> 和 <code>run</code>）执行命令会使程序等待，直到外部程序完成其工作。使用 <a href="https://docs.perl6.org/type/Proc::Async.html"><code>Proc::Async</code></a> 允许这些程序在自己的 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 中运行，而程序的其余部分继续运行。</p>
+
+<p>运行外部 <code>find</code> 并等待它遍历所有文件系统可能几乎永远等不到（至少感觉像）：</p>
+
+<pre><code>my $proc = Proc.new: :out;
+$proc.spawn: 'find', '/', '-name', '*.txt';
+
+for $proc.out.lines -&gt; $line {
+    put $++, ': ', $line;
+}
+
+put 'Finished';
+</code></pre>
+
+<p>运行此程序时，你会看到 <em>find</em> 的所有输出行。完成后，可能需要很长时间，然后你将看到 <code>Finished</code> 消息。你可以异步地执行此操作。</p>
+
+<p>你可以在这些示例中看到 Unix *find*，但你还在第8章中创建了一个类似的目录列表程序，你可以将其用作外部程序来练习使用 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>：</p>
+
+<pre><code>my $proc = Proc.new: :out;
+$proc.spawn: 'perl6', 'dir-listing.p6';
+
+for $proc.out.lines -&gt; $line {
+    put $++, ': ', $line;
+}
+
+put 'Finished';
+</code></pre>
+
+<p><a href="https://docs.perl6.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的接口与 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 的有点不同。一旦有了对象，就可以使用第18章中看到的 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 和 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 功能。这个例子使用 <code>.lines</code> 将输出分解为行（而不是缓冲区的块），然后轻敲该 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 以处理进来的行：</p>
+
+<pre><code>my $proc = Proc::Async.new: 'find', '/', '-name', '*.txt';
+
+$proc.stdout.lines.Supply.tap: { put $++, ': &lt;', $^line, '&gt;' };
+my $promise = $proc.start;
+
+put 'Moving on';
+
+await $promise;
+</code></pre>
+
+<p>这是 <a href="https://docs.perl6.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的简单使用，但你可以将它与你已经看到的并发功能结合使用。调用 <code>.stdout</code> 可以获得输出行，但只能在调用 <code>.start</code> 之后。在<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中执行这两个操作：</p>
+
+<pre><code>my $proc = Proc::Async.new: 'find', '/', '-name', '*.txt';
+
+react {
+    whenever $proc.stdout.lines { put $_;  }
+    whenever $proc.start        { put &quot;Finished&quot;; done }
+};
+</code></pre>
+
+<p><code>.start</code> 返回一个在外部程序完成之前不会保留的 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>。即使 <code>whenever</code> 在程序开始时运行，<a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 都不会保留到最后，然后 <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 就会完成它的工作。</p>
+
+<p>练习19.3 实现异步 <em>find</em> 程序。修改它，使其在找到你在命令行上指定的文件数后停止。报告找到的文件数。</p>
+
+<h1 id="总结">总结</h1>
+
+<p>你可以运行程序并等待它们的输出或在后台触发它们并在它进入时处理它们的输出。扩展它以处理多个程序，你的程序成为外部资源的精细处理程序。你已经看到了它如何工作的机制，但你可以用它来设计更大更好的东西。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-09-18-%E7%AC%AC%E5%8D%81%E5%85%AB%E7%AB%A0.-supplies-channels-%E5%92%8C-promises/" data-toggle="tooltip" data-placement="top" title="第十八章.  Supplies, Channels 和 Promises">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-20-%E7%AC%AC%E4%BA%8C%E5%8D%81%E7%AB%A0.-%E9%AB%98%E7%BA%A7%E8%AF%9D%E9%A2%98/" data-toggle="tooltip" data-placement="top" title="第二十章. 高级话题">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

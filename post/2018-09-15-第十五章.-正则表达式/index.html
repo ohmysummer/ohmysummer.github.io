@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第十五章. 正则表达式</title>
+  <meta property="og:title" content="第十五章. 正则表达式" />
+  <meta name="twitter:title" content="第十五章. 正则表达式" />
+  <meta name="description" content="Regular Expressions">
+  <meta property="og:description" content="Regular Expressions">
+  <meta name="twitter:description" content="Regular Expressions">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-09-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E7%AB%A0.-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E7%AB%A0.-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第十五章. 正则表达式</h1>
+                
+                  
+                    <h2 class="post-subheading">Regular Expressions</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 15, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 22 minutes (4680 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="声明">声明</h1>
+
+<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+
+<h1 id="第十五章-正则表达式">第十五章. 正则表达式</h1>
+
+<p>Regular expressions (or <em>regexes</em>) are patterns that describe a possible set of matching texts. They are a little language of their own, and many characters have a special meaning inside patterns. They may look cryptic at first, but after you learn them you have quite a bit of power.</p>
+
+<p>Forget what you’ve seen about patterns in other languages. The Perl 6 pattern syntax started over. It’s less compact but also more powerful. In some cases it acts a bit differently.</p>
+
+<p>This chapter shows simple patterns that match particular characters or sets of characters. It’s just the start. In <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch16.html#camelia-regex2">Chapter 16</a> you’ll see fancier patterns and the side effects of matching. In <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch17.html#camelia-grammars">Chapter 17</a> you’ll take it all to the next level.</p>
+
+<p>正则表达式（或正则表达式）是描述可能的匹配文本集的模式。它们是自己的一种语言，许多字符在模式中具有特殊含义。它们起初可能看起来很神秘，但是在你学习它们之后你会有相当大的力量。</p>
+
+<p>忘记你在其他语言中看到的关于模式的内容。 Perl 6模式语法重新开始。它不那么紧凑，但也更强大。在某些情况下，它的作用有点不同。</p>
+
+<p>本章介绍与特定字符或字符集匹配的简单模式。这只是一个开始。在第16章中，您将看到更漂亮的模式和匹配的副作用。在第17章中，您将把它全部提升到一个新的水平。</p>
+
+<h1 id="the-match-operator">The Match Operator</h1>
+
+<p>A pattern describes a set of text values. The simple pattern <code>abc</code> describes all the values that have an <code>a</code> next to a <code>b</code> next to a <code>c</code>. The trick then is to decide if a particular value is in the set of matching values. There are no half or partial matches; it matches or it doesn’t.</p>
+
+<p>A pattern inside <code>m/.../</code> immediately applies itself to the value in <code>$_</code>. If the pattern is in the <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> the match operator returns something that evaluates to <code>True</code> in a condition:</p>
+
+<p>模式描述了一组文本值。简单模式abc描述了c旁边的b旁边的所有值。然后，技巧是确定特定值是否在匹配值集合中。没有半场比赛或部分比赛;它匹配或不匹配。</p>
+
+<p>m /&hellip;/中的模式立即将其自身应用于$ _中的值。如果模式在Str中，则匹配运算符返回在条件中评估为True的值：</p>
+
+<pre><code>$_ = 'Hamadryas';
+if m/Hama/ { put 'It matched!'; }
+else       { put 'It missed!';  }
+</code></pre>
+
+<p>That’s a bit verbose. The conditional operator takes care of that:</p>
+
+<p>这有点冗长。条件运算符负责：</p>
+
+<pre><code>put m/Hama/ ?? 'It matched!' !! 'It missed!';
+</code></pre>
+
+<p>You don’t have to match against <code>$_</code>. You can use the smart match to apply it to a different value. That’s the target:</p>
+
+<p>你不必匹配$ _。您可以使用智能匹配将其应用于其他值。这是目标：</p>
+
+<pre><code>my $genus = 'Hamadryas';
+put $genus ~~ m/Hama/ ?? 'It matched!' !! 'It missed!';
+</code></pre>
+
+<p>That target could be anything, including an <a href="https://docs.perl6.org/type/Array.html"><code>Array</code></a> or <a href="https://docs.perl6.org/type/Hash.html"><code>Hash</code></a>. These match a single item:</p>
+
+<p>该目标可以是任何东西，包括数组或哈希。这些匹配单个项目：</p>
+
+<pre><code>$genus                ~~ m/Hama/;
+@animals[0]           ~~ m/Hama/;
+%butterfly&lt;Hamadryas&gt; ~~ m/perlicus/;
+</code></pre>
+
+<p>But you can also match against multiple items. The object on the left side of the smart match decides how the pattern applies to the object. This matches if any of the elements in <code>@animals</code> matches:</p>
+
+<p>但您也可以匹配多个项目。智能匹配左侧的对象决定模式如何应用于对象。如果@animals中的任何元素匹配，则匹配：</p>
+
+<pre><code>if @animals ~~ m/Hama/ {
+    put &quot;Matches at least one animal&quot;;
+    }
+</code></pre>
+
+<p>This is the same as matching against a <a href="https://docs.perl6.org/type/Junction.html"><code>Junction</code></a>:</p>
+
+<p>这与针对Junction的匹配相同：</p>
+
+<pre><code>if any(@animals) ~~ m/Hama/ {
+    put &quot;Matches at least one animal&quot;;
+    }
+</code></pre>
+
+<p>The match operator is commonly used in the condition inside a <code>.grep</code>:</p>
+
+<p>匹配运算符通常用于.grep中的条件：</p>
+
+<pre><code>my @hama-animals = @animals.grep: /Hama/;
+</code></pre>
+
+<h2 id="match-operator-syntax">Match Operator Syntax</h2>
+
+<p>The match operator can use alternate delimiters, similar to the quoting mechanism:</p>
+
+<p>匹配运算符可以使用备用分隔符，类似于引用机制：</p>
+
+<pre><code>m{Hama}
+m!Hama!
+</code></pre>
+
+<p>Whitespace inside the match operator doesn’t matter. It’s not part of the pattern (until you say so, as you’ll see later). All of these are the same, including the last example with vertical whitespace:</p>
+
+<p>匹配运算符内的空格并不重要。它不是模式的一部分（直到你这么说，你将在后面看到）。所有这些都是相同的，包括最后一个带有垂直空格的例子：</p>
+
+<pre><code>m/ Hama /
+m{ Hama }
+m! Hama !
+m/
+    Hama
+/
+</code></pre>
+
+<p>You can put spaces between alphabetic characters, but you’ll probably get a warning because Perl 6 wants you to put those together:</p>
+
+<p>您可以在字母字符之间放置空格，但您可能会收到警告，因为Perl 6希望您将它们放在一起：</p>
+
+<pre><code>m/ Ha ma /
+</code></pre>
+
+<p>If you want a literal space inside the match operator you can escape it (along with other things you’ll see later):</p>
+
+<p>如果你想在匹配运算符中使用文字空间，你可以将其转义（以及稍后你会看到的其他内容）：</p>
+
+<pre><code>m/ Ha\ ma /
+</code></pre>
+
+<p>Quoting whitespace makes it literal too (the space around the quoted whitespace is still insignificant), or you can quote it all together:</p>
+
+<p>引用空格也使它成为字面值（引用的空格周围的空间仍然无关紧要），或者你可以将它们全部引用：</p>
+
+<pre><code>m/ Ha ' ' ma /
+m/ 'Ha ma' /
+</code></pre>
+
+<p>You need to quote or escape any character that’s not alphabetic or a number, even if those characters aren’t “special.” The other unquoted characters may be metacharacters that have special meaning in the pattern language.</p>
+
+<p>您需要引用或转义任何非字母或数字的字符，即使这些字符不是“特殊”。其他未加引号的字符可能是在模式语言中具有特殊含义的元字符。</p>
+
+<h2 id="successful-matches">Successful Matches</h2>
+
+<p>If the match operator succeeds it returns a <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object, which is always a <code>True</code> value. If you <code>put</code> that object it shows you the part of the <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> that matched. The <code>say</code> calls <code>.gist</code> and the output is a bit different:</p>
+
+<p>如果匹配运算符成功，则返回Match对象，该对象始终为True值。如果您放置该对象，它会向您显示匹配的Str部分。说调用.gist和输出有点不同：</p>
+
+<pre><code>$_ = 'Hamadryas';
+my $match = m/Hama/;
+put $match; # Hama
+say $match; # ?Hama?
+</code></pre>
+
+<p>The output of <code>say</code> gets interesting as the patterns get more complicated. That makes it useful for the regex chapters, and you’ll see more of that here compared to the rest of the book.</p>
+
+<p>If the match does not succeed it returns <a href="https://docs.perl6.org/type/Nil.html"><code>Nil</code></a>, which is always <code>False</code>:</p>
+
+<p>随着模式变得更加复杂，say的输出变得有趣。这使得它对正则表达式章节很有用，并且与本书的其余部分相比，您将在这里看到更多。</p>
+
+<p>如果匹配不成功，则返回Nil，它始终为False：</p>
+
+<pre><code>$_ = 'Hamadryas';
+my $match = m/Hama/;
+put $match.^name;    # Nil
+</code></pre>
+
+<p>It’s usually a good idea to check the result before you do anything with it:</p>
+
+<p>在对它做任何事情之前检查结果通常是个好主意：</p>
+
+<pre><code>if my $match = m/Hama/ { # matched
+    say $match;
+    }
+</code></pre>
+
+<p>You don’t need the <code>$match</code> variable though. The result of the last match shows up in the special variable <code>$/</code>, which you’ll see more of later:</p>
+
+<p>您不需要 <code>$match</code> 变量。最后一个匹配的结果显示在特殊变量$ /中，稍后您会看到更多：</p>
+
+<pre><code>if m/Hama/ { # matched
+    say $/;
+    }
+</code></pre>
+
+<h2 id="defining-a-pattern">Defining a Pattern</h2>
+
+<p>Useful patterns can get quite long and unwieldy. Use <code>rx//</code> to define a pattern (a <a href="https://docs.perl6.org/type/Regex.html"><code>Regex</code></a>) for later use. This pattern is not immediately applied to any target. This allows you to define a pattern somewhere that doesn’t distract from what you are doing:</p>
+
+<p>有用的模式可能会变得非常冗长和笨拙。使用rx //定义模式（正则表达式）供以后使用。此模式不会立即应用于任何目标。这允许您在某个地方定义一个不会分散您正在做的事情的模式：</p>
+
+<pre><code>my $genus = 'Hamadryas';
+my $pattern = rx/ Hama /; # something much more complicated
+$genus ~~ $pattern;
+</code></pre>
+
+<p>and reuse the pattern wherever you need it:</p>
+
+<p>并在任何需要的地方重用模式：</p>
+
+<pre><code>for lines() -&gt; $line {
+    put $line if $line ~~ $pattern;
+    }
+</code></pre>
+
+<p>It’s possible to combine saved patterns into a larger one. This allows you to decompose complicated patterns into smaller, more tractable ones that you can reuse later (which you’ll do extensively in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch17.html#camelia-grammars">Chapter 17</a>):</p>
+
+<p>可以将保存的模式组合成更大的模式。这允许您将复杂的模式分解为更小，更易处理的模式，以后可以重复使用（您将在第17章中进行广泛的讨论）：</p>
+
+<pre><code>my $genus = 'Hamadryas';
+
+my $hama  = rx/Hama/;
+my $dryas = rx/dryas/;
+my $match = $genus ~~ m/$hama$dryas/;
+
+say $match;
+</code></pre>
+
+<p>Rather than storing a variable in an object, declare a lexical pattern with <code>regex</code>. This looks like a subroutine because it has a <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> but it’s not code inside; it’s a pattern and uses that slang:</p>
+
+<p>不是将变量存储在对象中，而是使用正则表达式声明词法模式。这看起来像一个子程序，因为它有一个Block，但它不是代码;这是一种模式并使用俚语：</p>
+
+<pre><code>my regex hama { Hama }
+</code></pre>
+
+<p>Use this in a pattern by surrounding it with angle brackets:</p>
+
+<p>通过用尖括号包围它，在图案中使用它：</p>
+
+<pre><code>my $genus = 'Hamadryas';
+put $genus ~~ m/&lt;hama&gt;/ ?? 'It matched!' !! 'It missed!';
+</code></pre>
+
+<p>You can define multiple named regexes and use them together:</p>
+
+<p>您可以定义多个已命名的正则表达式并将它们一起使用：</p>
+
+<pre><code>my regex hama  { Hama }
+my regex dryas { dryas }
+
+$_ = 'Hamadryas';
+say m/&lt;hama&gt;&lt;dryas&gt;/;
+</code></pre>
+
+<p>Each named regex becomes a submatch. You can see the structure when you output it with <code>say</code>. It shows the overall result and the results of the subpatterns too:</p>
+
+<p>每个命名的正则表达式都成为一个子匹配。用say输出它时可以看到结构。它还显示了整个结果和子模式的结果：</p>
+
+<pre><code>?Hamadryas?
+ hama =&gt; ?Hama?
+ dryas =&gt; ?dryas?
+</code></pre>
+
+<p>Treat the <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object like a <a href="https://docs.perl6.org/type/Hash.html"><code>Hash</code></a> (although it isn’t) to get the parts that matched the named regexes. The name of the regex is the “key”:</p>
+
+<p>将Match对象视为Hash（尽管不是），以获得与命名正则表达式匹配的部分。正则表达式的名称是“关键”：</p>
+
+<pre><code>$_ = 'Hamadryas';
+my $result =  m/&lt;hama&gt;&lt;dryas&gt;/;
+
+if $result {
+    put &quot;First: $result&lt;hama&gt;&quot;;
+    put &quot;Second: $result&lt;dryas&gt;&quot;;
+    }
+</code></pre>
+
+<h2 id="predefined-patterns">Predefined Patterns</h2>
+
+<p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1-TABLE-predefined_patterns">Table 15-1</a> shows several of the predefined patterns that are ready for you to use. You can define your patterns in a library and export them just like you could with subroutines:</p>
+
+<p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1-TABLE-predefined_patterns">表15-1</a>显示了几个准备好的预定义模式供你使用。您可以在库中定义模式，并像子程序一样导出它们：</p>
+
+<pre><code># Patterns.pm6
+my regex hama is export { Hama }
+</code></pre>
+
+<p>Load the module and those named regexes are available to your patterns:</p>
+
+<p>加载模块和那些名为正则表达式的模式可用：</p>
+
+<pre><code>use lib &lt;.&gt;;
+use Hama;
+
+$_ = 'Hamadryas';
+say m/ &lt;hama&gt; /;
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>Predefined pattern</th>
+<th>What it matches</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>&lt;alnum&gt;</code></td>
+<td>Alphabetic and digit characters</td>
+</tr>
+
+<tr>
+<td><code>&lt;alpha&gt;</code></td>
+<td>Alphabetic characters</td>
+</tr>
+
+<tr>
+<td><code>&lt;ascii&gt;</code></td>
+<td>Any ASCII character</td>
+</tr>
+
+<tr>
+<td><code>&lt;blank&gt;</code></td>
+<td>Horizontal whitespace</td>
+</tr>
+
+<tr>
+<td><code>&lt;cntrl&gt;</code></td>
+<td>Control characters</td>
+</tr>
+
+<tr>
+<td><code>&lt;digit&gt;</code></td>
+<td>Decimal digits</td>
+</tr>
+
+<tr>
+<td><code>&lt;graph&gt;</code></td>
+<td><code>&lt;alnum&gt;</code> + <code>&lt;punct&gt;</code></td>
+</tr>
+
+<tr>
+<td><code>&lt;ident&gt;</code></td>
+<td>A valid identifier character</td>
+</tr>
+
+<tr>
+<td><code>&lt;lower&gt;</code></td>
+<td>Lowercase characters</td>
+</tr>
+
+<tr>
+<td><code>&lt;print&gt;</code></td>
+<td><code>&lt;graph&gt;</code> + <code>&lt;space&gt;</code>, but without <code>&lt;cntrl&gt;</code></td>
+</tr>
+
+<tr>
+<td><code>&lt;punct&gt;</code></td>
+<td>Punctuation and symbols beyond ASCII</td>
+</tr>
+
+<tr>
+<td><code>&lt;space&gt;</code></td>
+<td>Whitespace</td>
+</tr>
+
+<tr>
+<td><code>&lt;upper&gt;</code></td>
+<td>Uppercase characters</td>
+</tr>
+
+<tr>
+<td>`&lt;</td>
+<td>wb&gt;`</td>
+</tr>
+
+<tr>
+<td><code>&lt;word&gt;</code></td>
+<td><code>&lt;alnum&gt;</code> + Unicode marks + connectors, like ‘_’ (extra)</td>
+</tr>
+
+<tr>
+<td><code>&lt;ws&gt;</code></td>
+<td>Whitespace (required between word characters, optional otherwise)</td>
+</tr>
+
+<tr>
+<td><code>&lt;ww&gt;</code></td>
+<td>Within a word (an assertion rather than a character)</td>
+</tr>
+
+<tr>
+<td><code>&lt;xdigit&gt;</code></td>
+<td>Hexadecimal digits <code>[0-9A-Fa-f]</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>EXERCISE 15.1Create a program that uses a regular expression to output all of the matching lines from the files you specify on the command line.</p>
+
+<p>练习15.1创建一个程序，该程序使用正则表达式输出您在命令行中指定的文件中的所有匹配行。</p>
+
+<h1 id="matching-nonliteral-characters">Matching Nonliteral Characters</h1>
+
+<p>You don’t have to literally type a character to match it. You might have an easier time specifying its code point or name. You can use the same <code>\x[*CODEPOINT*]</code> or <code>\c[*NAME*]</code> that you saw in double-quoted <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>s in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings">Chapter 4</a>.</p>
+
+<p>If you specify a name it must be all uppercase.</p>
+
+<p>You could match the initial capital <em>H</em> by name, even though you have to type a literal <code>H</code> in the name:</p>
+
+<p>您不必逐字输入匹配它的字符。您可以更轻松地指定其代码点或名称。您可以使用在第4章中双引号Strs中看到的相同\ x [* CODEPOINT <em>]或\ c [</em> NAME *]。</p>
+
+<p>如果指定名称，则必须全部为大写。</p>
+
+<p>您可以按名称匹配初始大写字母H，即使您必须在名称中键入文字H：</p>
+
+<pre><code>my $pattern = rx/
+     \c[LATIN CAPITAL LETTER H] ama
+    /;
+$_ = &quot;Hamadryas&quot;;
+
+put $pattern ?? 'Matched!' !! 'Missed!';
+</code></pre>
+
+<p>You can do the same thing with the code point. If you specify a code point use the hexadecimal number (with either case):</p>
+
+<p>您可以使用代码点执行相同的操作。如果指定代码点，请使用十六进制数字（两种情况）：</p>
+
+<pre><code>my $pattern = rx/
+     \x[48] ama
+    /;
+$_ = &quot;Hamadryas&quot;;
+
+put $pattern ?? 'Matched!' !! 'Missed!';
+</code></pre>
+
+<p>This makes more sense if you want to match a character that’s either hard to type or hard to read. If the <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> has the 🐱 character (U+1F431 CAT FACE), you might not be able to distinguish that from 😸 (U+1F638 GRINNING CAT FACE WITH SMILING EYES) without looking very closely. Instead of letting another programmer mistake your intent, you can use the name to save some eyestrain:</p>
+
+<pre><code>my $pattern = rx/
+     \c[CAT FACE]  # or \x[1F431]
+    /;
+$_ = &quot;This is a catface: 🐱&quot;;
+put $pattern ?? 'Matched!' !! 'Missed!';
+</code></pre>
+
+<h2 id="matching-any-character">Matching Any Character</h2>
+
+<p>Patterns have <em>metacharacters</em> that match something other than their literal selves. Some of these are listed in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1-TABLE-chars_to_escape">Table 15-2</a> (and most you won’t see in this chapter). The <code>.</code> matches any character (<em>including</em> a newline). This pattern matches any target that has at least one character:</p>
+
+<p>模式具有与其文字自我匹配的元字符。其中一些列在表15-2中（大多数情况下，您不会在本章中看到）。这个。匹配任何字符（包括换行符）。此模式匹配具有至少一个字符的任何目标：</p>
+
+<pre><code>m/ . /
+</code></pre>
+
+<p>To match a <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> with an <em>a</em> and a <em>c</em> separated by a character, put the dot between them in the pattern. This skips the lines that don’t match that pattern:</p>
+
+<p>要将Str与由字符分隔的a和c匹配，请在模式中将它们放在它们之间。这会跳过与该模式不匹配的行：</p>
+
+<pre><code>for lines() {
+    next unless m/a.c/;
+    .put
+    }
+</code></pre>
+
+<h3 id="escaping-characters">ESCAPING CHARACTERS</h3>
+
+<p>Some characters have special meaning in patterns. The colon introduces an adverb and the <code>#</code> starts a comment. To match those as literal characters you need to escape them. A backslash will do:</p>
+
+<p>有些字符在模式中有特殊含义。冒号引入了一个副词，＃开始发表评论。要将它们作为文字字符进行匹配，您需要将它们转义。反斜杠可以：</p>
+
+<pre><code>my $pattern = rx/ \# \: Hama \. /
+</code></pre>
+
+<p>This means to match a literal backslash, you need to escape that too:</p>
+
+<p>这意味着匹配文字反斜杠，你也需要逃避它：</p>
+
+<pre><code>my $pattern = rx/ \# \: Hama \\ /
+</code></pre>
+
+<p>You can do the same thing with the other pattern metacharacters. To match a literal dot, escape it:</p>
+
+<p>您可以使用其他模式元字符执行相同的操作。要匹配文字点，请将其转义：</p>
+
+<pre><code>my $pattern = rx/ \. /
+</code></pre>
+
+<p>The backslash only escapes the character that comes immediately after it. You can’t escape a literal space character, and you can’t escape a character that isn’t special. <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1-TABLE-chars_to_escape">Table 15-2</a> shows what you need to escape, even though I haven’t shown you most of those features yet.</p>
+
+<p>反斜杠只会逃避紧随其后的字符。您无法转义文字空格字符，也无法转义不特殊的字符。表15-2显示了您需要逃脱的内容，即使我还没有向您展示大部分功能。</p>
+
+<table>
+<thead>
+<tr>
+<th>Metacharacter</th>
+<th>Why it’s special</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>#</code></td>
+<td>Starts a comment</td>
+</tr>
+
+<tr>
+<td><code>\</code></td>
+<td>Escapes the next character or a shortcut</td>
+</tr>
+
+<tr>
+<td><code>.</code></td>
+<td>Matches any character</td>
+</tr>
+
+<tr>
+<td><code>:</code></td>
+<td>Starts an adverb, or prevents backtracking</td>
+</tr>
+
+<tr>
+<td><code>(</code> and <code>)</code></td>
+<td>Starts a capture</td>
+</tr>
+
+<tr>
+<td><code>&lt;</code> and <code>&gt;</code></td>
+<td>Used to create higher-level thingys</td>
+</tr>
+
+<tr>
+<td><code>[</code>, <code>]</code>, and <code>'</code></td>
+<td>Used for grouping</td>
+</tr>
+
+<tr>
+<td><code>+</code>, `</td>
+<td><code>,</code>&amp;<code>,</code>-<code>, and</code>^`</td>
+</tr>
+
+<tr>
+<td><code>?</code>, <code>*</code>, <code>+</code>, and <code>%</code></td>
+<td>Quantifiers</td>
+</tr>
+
+<tr>
+<td>`</td>
+<td>`</td>
+</tr>
+
+<tr>
+<td><code>^</code> and <code>$</code></td>
+<td>Anchors</td>
+</tr>
+
+<tr>
+<td><code>$</code></td>
+<td>Starts a variable or named capture</td>
+</tr>
+
+<tr>
+<td><code>=</code></td>
+<td>Assigns to named captures</td>
+</tr>
+</tbody>
+</table>
+
+<p>Characters inside quotes are always their literal selves:</p>
+
+<p>引号内的字符总是它们的文字自我：</p>
+
+<pre><code>my $pattern = rx/ '#:Hama' \\ /
+</code></pre>
+
+<p>You can’t use the single quotes to escape the backslash since a single backslash will still try to escape the character that comes after it.</p>
+
+<p>您不能使用单引号来转义反斜杠，因为单个反斜杠仍会尝试转义后面的字符。</p>
+
+<h3 id="matching-literal-spaces">MATCHING LITERAL SPACES</h3>
+
+<p>You have a tougher time if you want to match literal spaces. You can’t escape a space with <code>\</code> because unspace isn’t allowed in a pattern. Instead, put quotes around the literal space:</p>
+
+<p>如果你想匹配文字空间，你会有更艰难的时间。您无法使用\来转义空格，因为模式中不允许使用空格。相反，在文字空间周围加上引号：</p>
+
+<pre><code>my $pattern = rx/ Hamadryas ' ' laodamia /;
+</code></pre>
+
+<p>Or put the entire sequence in quotes:</p>
+
+<p>或者将整个序列放在引号中：</p>
+
+<pre><code>my $pattern = rx/ 'Hamadryas laodamia' /;
+</code></pre>
+
+<p>Those single quotes can quickly obscure what belongs where; it can be helpful to spread the pattern across lines and note what you are trying to do:</p>
+
+<p>那些单引号很快就会模糊属于哪里;将图案分布在线条上并记下您要做的事情会很有帮助：</p>
+
+<pre><code>my $pattern = rx/
+    Hamadryas    # genus
+    ' '            # literal space
+    laodamia     # species
+    /;
+</code></pre>
+
+<p>You can make whitespace significant with the <code>:s</code> adverb:</p>
+
+<p>你可以使用：s副词使空白显着：</p>
+
+<pre><code>my $pattern = rx:s/ Hamadryas laodamia /;
+
+my $pattern = rx/ :s Hamadryas laodamia /;
+</code></pre>
+
+<p>The <code>:s</code> is the short form of <code>:sigspace</code>:</p>
+
+<p>：s是sigspace的缩写形式：sigspace：</p>
+
+<pre><code>my $pattern = rx:sigspace/ Hamadryas laodamia /;
+
+my $pattern = rx/ :sigspace Hamadryas laodamia /;
+</code></pre>
+
+<p>Notice that this will match <code>Hamadryas laodamia</code>, even though the pattern has whitespace at the beginning and end. The <code>:s</code> turns the whitespace in the pattern into a subrule <code>&lt;.ws&gt;</code>:</p>
+
+<p>请注意，这将匹配Hamadryas laodamia，即使该模式在开头和结尾都有空格。 ：s将模式中的空格转换为子规则&lt;.ws&gt;：</p>
+
+<pre><code>$_ = 'Hamadryas laodamia';
+my $pattern = rx/ Hamadryas &lt;.ws&gt; laodamia /;
+if m/$pattern/ {
+    say $/;  # ?Hamadryas laodamia?
+    }
+</code></pre>
+
+<p>You can combine adverbs, but they each get their own colon. Order does not matter. This pattern has significant whitespace and is case insensitive:</p>
+
+<p>你可以结合副词，但每个副词都有自己的冒号。订单无关紧要。此模式具有重要的空白并且不区分大小写：</p>
+
+<pre><code>my $pattern = rx:s:i/ Hamadryas Laodamia /;
+</code></pre>
+
+<h2 id="matching-types-of-characters">Matching Types of Characters</h2>
+
+<p>So far, you’ve matched literal characters. You typed out the characters you wanted, and escaped them in some cases. There are some sets of characters that are so common they get shortcuts. These start with a backslash followed by a letter that connotes the set of characters. <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1-TABLE-character_class_shortcuts">Table 15-3</a> shows the list of shortcuts.</p>
+
+<p>If you want to match any digit, you can use <code>\d</code>. This matches anything that is a digit, not just the Arabic digits:</p>
+
+<p>到目前为止，您已经匹配了字面字符。您键入了所需的字符，并在某些情况下将其转义。有一些字符组很常见，它们可以获得快捷方式。它们以反斜杠开头，后跟一个表示字符集的字母。表15-3显示了快捷方式列表。</p>
+
+<p>如果要匹配任何数字，可以使用\ d。这匹配任何数字，而不仅仅是阿拉伯数字：</p>
+
+<pre><code>/ \d /
+</code></pre>
+
+<p>Each of these shortcuts comes with a complement. <code>\D</code> matches any nondigit.</p>
+
+<p>这些快捷方式中的每一个都有补充。 \ D匹配任何非数字。</p>
+
+<table>
+<thead>
+<tr>
+<th>Shortcut</th>
+<th>Characters that match</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>\d</code></td>
+<td>Digits (Unicode property <code>N</code> )</td>
+</tr>
+
+<tr>
+<td><code>\D</code></td>
+<td>Anything that isn’t a digit</td>
+</tr>
+
+<tr>
+<td><code>\w</code></td>
+<td>Word characters: letters, digits, or underscores</td>
+</tr>
+
+<tr>
+<td><code>\W</code></td>
+<td>Anything that isn’t a word character</td>
+</tr>
+
+<tr>
+<td><code>\s</code></td>
+<td>Any kind of whitespace</td>
+</tr>
+
+<tr>
+<td><code>\S</code></td>
+<td>Anything that isn’t whitespace</td>
+</tr>
+
+<tr>
+<td><code>\h</code></td>
+<td>Horizontal whitespace</td>
+</tr>
+
+<tr>
+<td><code>\H</code></td>
+<td>Anything that isn’t horizontal whitespace</td>
+</tr>
+
+<tr>
+<td><code>\v</code></td>
+<td>Vertical whitespace</td>
+</tr>
+
+<tr>
+<td><code>\V</code></td>
+<td>Anything that isn’t vertical whitespace</td>
+</tr>
+
+<tr>
+<td><code>\t</code></td>
+<td>A tab character (specifically, only U+0009)</td>
+</tr>
+
+<tr>
+<td><code>\T</code></td>
+<td>Anything that isn’t a tab character</td>
+</tr>
+
+<tr>
+<td><code>\n</code></td>
+<td>A newline or carriage return/newline pair</td>
+</tr>
+
+<tr>
+<td><code>\N</code></td>
+<td>Anything that isn’t a newline</td>
+</tr>
+</tbody>
+</table>
+
+<p>EXERCISE 15.2Write a program that outputs only those lines of input that contain three decimal digits in a row. You wrote most of this program in the previous exercise.</p>
+
+<p>练习15.2编写一个程序，只输出那些包含三行十进制数字的输入行。你在上一个练习中写了大部分这个程序。</p>
+
+<h3 id="unicode-properties">UNICODE PROPERTIES</h3>
+
+<p>The Unicode Character Database (UCD) defines the code points and their names and assigns them one or more properties. Each character knows many things about itself, and you can use some of that information to match them. Place the name of the Unicode property in <code>&lt;:...&gt;</code>. That colon must come right after the opening angle bracket. If you wanted to match something that is a letter, you could use the property <code>Letter</code>:</p>
+
+<p>Unicode字符数据库（UCD）定义代码点及其名称，并为它们分配一个或多个属性。每个角色都知道很多关于自身的事情，你可以使用其中的一些信息来匹配它们。将Unicode属性的名称放在&lt;：&hellip;&gt;中。结肠必须在开角支架后面。如果你想匹配一个字母的东西，你可以使用属性字母：</p>
+
+<pre><code>/ &lt;:Letter&gt; /
+</code></pre>
+
+<p>Instead of matching a property, you can match characters that don’t have that particular property. Put a <code>!</code> in front of the property name to negate it. This matches characters that aren’t the title-case letters:</p>
+
+<p>您可以匹配没有该特定属性的字符，而不是匹配属性。放一个！在属性名称前面否定它。这匹配不是标题大小写字母的字符：</p>
+
+<pre><code>/ &lt;:!TitlecaseLetter&gt; /
+</code></pre>
+
+<p>Each property has a long form, like <code>Letter</code>, and a short form, in this case <code>L</code>. There are other properties, such as <code>Uppercase_Letter</code> and <code>Lu</code>, or <code>Number</code> and <code>N</code>:</p>
+
+<p>每个属性都有一个长格式，如Letter和短格式，在本例中为L.还有其他属性，如Uppercase_Letter和Lu，或Number和N：</p>
+
+<pre><code>/ &lt;:L&gt; /
+/ &lt;:N&gt; /
+</code></pre>
+
+<p>You can match the characters that belong to certain Unicode blocks or scripts:</p>
+
+<p>您可以匹配属于某些Unicode块或脚本的字符：</p>
+
+<pre><code>&lt;:Block('Basic Latin')&gt;
+&lt;:Script&lt;Latin&gt;&gt;
+</code></pre>
+
+<p>Even though you can abbreviate these property names I’ll use the longer names in this book. See the documentation for the other properties.</p>
+
+<p>即使您可以缩写这些属性名称，我也会在本书中使用较长的名称。请参阅其他属性的文档。</p>
+
+<h3 id="combining-properties">COMBINING PROPERTIES</h3>
+
+<p>One property might not be enough to describe what you want to match. To build fancier ones, combine them with character class set operators. These aren’t the same operators you saw in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions">Chapter 14</a>; they’re special to character classes.</p>
+
+<p>The <code>+</code> creates the union of the two properties. Any character that has either property will match:</p>
+
+<p>一个属性可能不足以描述您想要匹配的内容。要构建更高级的，将它们与字符类集合运算符组合。这些与第14章中看到的操作符不同;他们对角色课很特别。</p>
+
+<p>+创建两个属性的并集。任何具有任何属性的字符都将匹配：</p>
+
+<pre><code>/ &lt;:Letter + :Number&gt; /
+/ &lt;:Open_Punctuation + :Close_Punctuation&gt; /
+</code></pre>
+
+<p>Subtract one property from another with <code>-</code>. Any character with the first property that doesn’t have the second property will match this. The following example matches all the identifier characters (in the UCD sense, not the Perl 6 sense). There are the characters that can start an identifier and those that can be in the other positions:</p>
+
+<p>用 - 减去另一个属性。具有第一个属性但没有第二个属性的任何字符都将与此匹配。以下示例匹配所有标识符字符（在UCD意义上，而不是Perl 6意义上）。可以启动标识符的字符和可以位于其他位置的字符：</p>
+
+<pre><code>/ &lt;:ID_Continue - :Number&gt; /
+</code></pre>
+
+<p>You can shorten this to not match a character without a particular property. It looks like you leave off the first part of the subtraction; the <code>-</code> comes right after the opening angle bracket. That implies you’re subtracting from all characters. This matches all the characters that don’t have the <code>Letter</code> property:</p>
+
+<p>您可以将此缩短为与没有特定属性的角色不匹配。看起来你放弃了减法的第一部分; - 在打开角度支架后面。这意味着你要从所有角色中减去。这匹配所有没有Letter属性的字符：</p>
+
+<pre><code>/ &lt;-:Letter&gt; /
+</code></pre>
+
+<p>EXERCISE 15.3Write a program to count all of the characters that match either the <code>Letter</code> or <code>Number</code> properties. What percentage of the code points between 1 and 0xFFFD are either letters or numbers? The <code>.chr</code> method may be handy here.</p>
+
+<p>练习15.3编写一个程序来计算与Letter或Number属性匹配的所有字符。 1和0xFFFD之间的代码点百分比是字母还是数字？ .chr方法在这里可能很方便。</p>
+
+<h2 id="user-defined-character-classes">User-Defined Character Classes</h2>
+
+<p>You can define your own character classes. Put the characters that you want to match inside <code>&lt;[...]&gt;</code>. These aren’t the same square brackets that you saw earlier for grouping; these are inside the angle brackets. This character class matches either <code>a</code>, <code>b</code>, or <code>3</code>:</p>
+
+<p>您可以定义自己的角色类。将要匹配的字符放在&lt;[&hellip;]&gt;中。这些与您之前看到的用于分组的方括号不同;这些都在尖括号内。此字符类匹配a，b或3：</p>
+
+<pre><code>/ &lt;[ab3]&gt; /
+</code></pre>
+
+<p>As with everything else so far, this matches one character and that one character can be any of the characters in the character class. This character class matches either case at a single position:</p>
+
+<p>与目前为止的所有其他内容一样，它匹配一个字符，并且一个字符可以是字符类中的任何字符。此字符类匹配单个位置的任一个案例：</p>
+
+<pre><code>/ &lt;[Hh]&gt; ama /    # also / [ :i h ] ama /
+</code></pre>
+
+<p>You could specify the hexadecimal value of the code point. The whitespace is insignificant:</p>
+
+<p>您可以指定代码点的十六进制值。空白是微不足道的：</p>
+
+<pre><code>/ &lt;[ \x[48] \x[68] ]&gt; ama /
+</code></pre>
+
+<p>The character name versions work too:</p>
+
+<p>角色名称版本也适用：</p>
+
+<pre><code>/ &lt;[
+    \c[LATIN CAPITAL LETTER H]
+    \c[LATIN SMALL LETTER H]
+    ]&gt;
+/
+</code></pre>
+
+<p>You can make a long list of characters:</p>
+
+<p>您可以制作一长串字符：</p>
+
+<pre><code>/ &lt;[abcdefghijklmnopqrstuvwxyz]&gt; / # from a to z
+</code></pre>
+
+<p>Inside the character class the <code>#</code> is just a <code>#</code>. If you try to put a comment in there all of the characters in your message become part of the character class:</p>
+
+<p>在角色类中，＃只是一个＃。如果您尝试在其中放置注释，则消息中的所有字符都将成为字符类的一部分：</p>
+
+<pre><code>/ &lt;[
+    \x[48] # uppercase
+    \x[68] # lowercase
+  ]&gt;
+/
+</code></pre>
+
+<p>You’ll probably get warnings about repeated characters if you try to do that.</p>
+
+<p>如果您尝试这样做，您可能会收到有关重复字符的警告。</p>
+
+<h3 id="character-class-ranges">CHARACTER CLASS RANGES</h3>
+
+<p>But that’s too much work. You can use <code>..</code> to specify a range of characters. The literal characters work as well as the hexadecimal values and the names. Notice you don’t quote the literal characters in these ranges:</p>
+
+<p>但那工作太多了。您可以使用..指定一系列字符。文字字符以及十六进制值和名称都起作用。请注意，您不引用这些范围中的文字字符：</p>
+
+<pre><code>/ &lt;[a..z]&gt; /
+/ &lt;[ \x[61] .. \x[7a] ]&gt; /
+/ &lt;[ \c[LATIN SMALL LETTER A] .. \c[LATIN SMALL LETTER Z] ]&gt; /
+</code></pre>
+
+<p>The range doesn’t have to be the only thing in the square brackets:</p>
+
+<p>范围不一定是方括号中的唯一内容：</p>
+
+<pre><code>/ &lt;[a..z 123456789]&gt; /
+</code></pre>
+
+<p>You could have two ranges:</p>
+
+<p>你可以有两个范围：</p>
+
+<pre><code>/ &lt;[a..z 1..9]&gt; /
+</code></pre>
+
+<h3 id="negated-character-classes">NEGATED CHARACTER CLASSES</h3>
+
+<p>Sometimes it’s easier to specify the characters that can’t match. You can create a negated character class by adding a <code>-</code> between the opening angle bracket and the opening square bracket. This example matches any character that is <em>not</em> <code>a</code>, <code>b</code>, or <code>3</code>:</p>
+
+<p>有时，指定无法匹配的字符会更容易。您可以通过在开角括号和开始方括号之间添加 - 来创建否定字符类。此示例匹配任何不是a，b或3的字符：</p>
+
+<pre><code>/ &lt;-[ab3]&gt; /
+</code></pre>
+
+<p>Space inside a character class is also insignificant:</p>
+
+<p>字符类中的空格也是微不足道的：</p>
+
+<pre><code>/ &lt;-[ a b 3 ]&gt; /
+</code></pre>
+
+<p>You can use a negated character class of one character. Quotes inside the character class are literal characters because Perl 6 knows you aren’t quoting:</p>
+
+<p>您可以使用一个字符的否定字符类。字符类中的引号是文字字符，因为Perl 6知道您没有引用：</p>
+
+<pre><code>/ &lt;-[ ' ]&gt;  /   # not a quote character
+</code></pre>
+
+<p>This one matches any character that is not a newline:</p>
+
+<p>这个匹配任何不是换行符的字符：</p>
+
+<pre><code>/ &lt;-[ \n ]&gt; /   # not a newline
+</code></pre>
+
+<p>The predefined character class shortcuts can be part of your character class:</p>
+
+<p>预定义的字符类快捷方式可以是您的角色类的一部分：</p>
+
+<pre><code>/ &lt;-[ \d \s ]&gt; /   # digits or whitespace
+</code></pre>
+
+<p>Like the Unicode properties, you can combine sets of characters:</p>
+
+<p>与Unicode属性一样，您可以组合字符集：</p>
+
+<pre><code>/ &lt;[abc] + [xyz]&gt; /    # but, also &lt;[abcxyz]&gt;
+
+/ &lt;[a..z] - [ijk]&gt; /   # easier than two ranges
+</code></pre>
+
+<p>EXERCISE 15.4Create a program to output all the input lines. Skip any line that contains a letter unless it’s a vowel. Also skip any lines that are blank (that is, only have whitespace).</p>
+
+<p>练习15.4创建一个程序来输出所有输入行。跳过包含字母的任何行，除非它是元音。也跳过任何空白行（即只有空格）。</p>
+
+<h1 id="matching-adverbs">Matching Adverbs</h1>
+
+<p>You can change how the match operator works by applying adverbs, just like you changed how <code>Q</code> worked in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings">Chapter 4</a>. There are several, but you’ll only see the most commonly used here.</p>
+
+<p>您可以通过应用副词来更改匹配运算符的工作方式，就像您在第4章中更改Q的工作方式一样。有几个，但您只会看到此处最常用的。</p>
+
+<h2 id="matching-either-case">Matching Either Case</h2>
+
+<p>So far a character in your pattern matches exactly the same character in the target. An <code>H</code> only matches an uppercase <em>H</em> and not any other sort of <em>H</em>:</p>
+
+<p>到目前为止，模式中的字符与目标中的字符完全匹配。 H只匹配大写的H而不是任何其他类型的H：</p>
+
+<pre><code>my $pattern = rx/ Hama /;
+put 'Hamadryas' ~~ $pattern;  # Matches
+</code></pre>
+
+<p>Change your pattern by one character. Instead of an uppercase <code>H</code>, use a lowercase one:</p>
+
+<p>将模式更改为一个字符。而不是大写的H，使用小写的：</p>
+
+<pre><code>my $pattern = rx/ hama /;
+put 'Hamadryas' ~~ $pattern;  # Misses because h is not H
+</code></pre>
+
+<p>The pattern is case sensitive, so this doesn’t match. But you can make it case insensitive with an adverb. The <code>:i</code>adverb makes the literal alphabetic characters match either case. You can put the adverb right after the <code>rx</code> or the <code>m</code>:</p>
+
+<p>该模式区分大小写，因此不匹配。但是你可以用副词区分大小写。 ：iadverb使文字字母符合两种情况。你可以把副词放在rx或m之后：</p>
+
+<pre><code>my $pattern = rx:i/ hama /;
+put 'Hamadryas' ~~ $pattern;  # Matches, :i outside
+</code></pre>
+
+<p>This is the reason you can’t use the colon as the delimiter!</p>
+
+<p>When you use an adverb on the outside of the pattern, that adverb applies to the entire pattern. You can also put the adverb on the inside of the pattern:</p>
+
+<p>这就是你不能使用冒号作为分隔符的原因！</p>
+
+<p>在模式外部使用副词时，该副词适用于整个模式。你也可以把副词放在模式的内部：</p>
+
+<pre><code>my $pattern = rx/ :i hama /;
+put 'Hamadryas' ~~ $pattern;  # Matches, :i inside
+</code></pre>
+
+<p>Isn’t that interesting? Now you start to see why whitespace isn’t counted as part of the pattern. There’s much more going on besides literal matching of characters.</p>
+
+<p>The adverb applies from the point of its insertion to the end of the pattern. In this case it applies to the entire pattern because the <code>:i</code> is at the beginning. Put that adverb later in the pattern, and it applies from there to the rest of the pattern. Here the <code>ha</code> only match lowercase because the adverb shows up later. The rest of the pattern after the <code>:i</code> is case insensitive:</p>
+
+<p>那不是很有趣吗？现在你开始明白为什么空格不算作模式的一部分。除了字符的字面匹配之外还有更多的事情要做。</p>
+
+<p>副词从插入点到模式结尾。在这种情况下，它适用于整个模式，因为：i在开头。将该副词放在模式中，然后从那里应用到模式的其余部分。 ha只与小写匹配，因为副词会在稍后出现。在以下情况之后的其余模式：i不区分大小写：</p>
+
+<pre><code>my $pattern = rx/ ha :i ma /; # final ma case insensitive
+</code></pre>
+
+<p>You can group parts of patterns with square brackets. This example groups the <code>am</code> but doesn’t do much else because there’s nothing else special going on:</p>
+
+<p>您可以使用方括号对部分图案进行分组。这个例子对am进行分组，但没有做太多其他事情，因为没有其他特别的事情：</p>
+
+<pre><code>my $pattern = rx/ h [ am ] a /;
+</code></pre>
+
+<p>An adverb inside a group applies only to that group:</p>
+
+<p>组内的副词仅适用于该组：</p>
+
+<pre><code>my $pattern = rx/ h [ :i am ] a /;
+</code></pre>
+
+<p>The rules are the same: the adverb applies from the point of its insertion to the end of the group:</p>
+
+<p>规则是相同的：副词从插入点到组尾：</p>
+
+<pre><code>my $pattern = rx/ h [ a :i m ] a /; # matches haMa or hama
+</code></pre>
+
+<p>At this point, you’re probably going to start mixing up what’s going on. There’s another reason whitespace doesn’t matter—you can add comments to your pattern:</p>
+
+<p>在这一点上，你可能会开始混淆正在发生的事情。空白无关紧要的另一个原因 - 您可以为您的模式添加注释：</p>
+
+<pre><code>my $pattern = rx/
+    h
+    [       # group this next part
+        a
+        :i   # case insensitive to end of group
+        m
+    ]       # end of group
+    a
+    /;
+</code></pre>
+
+<p>Everything from the <code>#</code> character to the end of the line is a comment. You can use embedded comments too:</p>
+
+<p>从＃字符到行尾的所有内容都是注释。您也可以使用嵌入式注释：</p>
+
+<pre><code>my $pattern = rx/
+    :i #`( case insensitive ) Hama
+    /;
+</code></pre>
+
+<p>These aren’t particularly good comments because you’re annotating what the syntax already denotes. As a matter of good practice, you should comment what you are trying to match rather than what the syntax does. However, the world isn’t going to end if you leave a reminder for yourself of what a new concept does.</p>
+
+<p>EXERCISE 15.5Write a program that outputs only the lines of input that contain the text <code>ei</code>. You’ll probably want to save this program to build on in later exercises.</p>
+
+<p>这些并不是特别好的注释，因为您正在注释语法已经表示的内容。作为一种良好实践，您应该评论您要匹配的内容而不是语法的内容。但是，如果你给自己留下一个新概念的提醒，世界就不会结束。</p>
+
+<p>练习15.5编写一个只输出包含文本ei的输入行的程序。你可能想要保存这个程序，以便在以后的练习中继续使用。</p>
+
+<h2 id="ignoring-marks">Ignoring Marks</h2>
+
+<p>The <code>:ignoremark</code> adverb changes the pattern so that accents and other marks don’t matter. The marks can be there or not. It works if the marks are in the target or the pattern:</p>
+
+<p>：ignoremark副词会更改模式，以便重音和其他标记无关紧要。标记可以存在与否。如果标记在目标或模式中，它可以工作：</p>
+
+<pre><code>$_ = 'húdié';   # ??
+put m/ hudie /            ?? 'Matched' !! 'Missed';  # Missed
+put m:ignoremark/ hudie / ?? 'Matched' !! 'Missed';  # Matched
+
+$_ = 'hudie';
+put m:ignoremark/ húdié / ?? 'Matched' !! 'Missed';  # Matched
+</code></pre>
+
+<p>It even works if both the target and the pattern have different marks in the same positions:</p>
+
+<p>如果目标和模式在相同位置具有不同的标记，它甚至可以工作：</p>
+
+<pre><code>$_ = 'hüdiê';
+put m:ignoremark/ húdié / ?? 'Matched' !! 'Missed';  # Matched
+</code></pre>
+
+<p>Some adverbs can show up inside the pattern. They apply to the parts of the pattern that come after them:</p>
+
+<p>一些副词可以出现在模式中。它们适用于它们之后的模式部分：</p>
+
+<pre><code>$_ = 'hüdiê';
+put m/ :ignoremark hudie / ?? 'Matched' !! 'Unmatched';  # Matched
+</code></pre>
+
+<h2 id="global-matches">Global Matches</h2>
+
+<p>A pattern might be able to match several times in the same text. The <code>:global</code> adverb gets all of the nonoverlapping <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a>es. It returns a <a href="https://docs.perl6.org/type/List.html"><code>List</code></a>:</p>
+
+<p>模式可能能够在同一文本中多次匹配。 ：全局副词获取所有不重叠的匹配。它返回一个List：</p>
+
+<pre><code>$_ = 'Hamadryas perlicus';
+my $matches = m:global/ . s /;
+say $matches;   # (?as? ?us?)
+</code></pre>
+
+<p>No matches gets you an empty <a href="https://docs.perl6.org/type/List.html"><code>List</code></a>:</p>
+
+<p>没有匹配得到一个空列表：</p>
+
+<pre><code>$_ = 'Hamadryas perlicus';
+my $matches = m:global/ six /;
+say $matches;   # ()
+</code></pre>
+
+<p>The match operator can find overlapping matches too. Use <code>:overlap</code> to return a potentially longer list. The <code>?uta?</code> and <code>?ani?</code> here both match the same <em>a</em>:</p>
+
+<p>匹配运算符也可以找到重叠匹配。使用：重叠以返回可能更长的列表。 ？？和？ani？这里两个匹配相同的a：</p>
+
+<pre><code>$_ = 'Bhutanitis thaidina';
+
+my $global = m:global/ &lt;[aeiou]&gt; &lt;-[aeiou]&gt; &lt;[aeiou]&gt; /;
+say $global;  # (?uta? ?iti? ?idi?)
+
+my $overlap = m:overlap/ &lt;[aeiou]&gt; &lt;-[aeiou]&gt; &lt;[aeiou]&gt; /;
+say $overlap; # (?uta? ?ani? ?iti? ?idi? ?ina?)
+</code></pre>
+
+<h1 id="things-that-use-patterns">Things That Use Patterns</h1>
+
+<p>There are many features that you haven’t been able to use so far because you hadn’t seen regexes yet. Now you’ve seen regexes, so you can see these things. There are a couple of <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> methods that work with a pattern to transform values. This section is a taste of the features you’ll use most often.</p>
+
+<p>The <code>.words</code> and <code>.comb</code> methods break up text. The <code>.split</code> method is the general case of that. It takes a pattern to decide how to break up the text. Whatever it matches are the parts that disappear. You could break up a line on tabs, for instance:</p>
+
+<p>到目前为止，您还无法使用许多功能，因为您尚未看到正则表达式。现在你已经看过正则表达式，所以你可以看到这些东西。有一些Str方法可以使用模式来转换值。本节介绍了您最常使用的功能。</p>
+
+<p>.words和.comb方法分解文本。 .split方法就是这种情况的一般情况。它需要一种模式来决定如何分解文本。无论它匹配什么是消失的部分。你可以在标签上划分一条线，例如：</p>
+
+<pre><code>my @words = $line.split: / \t /;
+</code></pre>
+
+<p><code>.grep</code> can use the match operator to select things. If the match operator succeeds it returns something that’s <code>True</code>, and that element is part of the result:</p>
+
+<p><code>.grep</code>可以使用匹配运算符来选择事物。如果匹配运算符成功，则返回一些True，并且该元素是结果的一部分：</p>
+
+<pre><code>my @words-with-e = @word.grep: /:i e/;
+</code></pre>
+
+<p>Or, to put it all together:</p>
+
+<p>或者，把它们放在一起：</p>
+
+<pre><code>my @words-with-e = $line.split( / \t / ).grep( /:i e/ );
+</code></pre>
+
+<p><code>.split</code> can specify multiple possible separators. Not all of them need be matches. This breaks up a line on a literal comma or whitespace:</p>
+
+<p><code>.split</code>可以指定多个可能的分隔符。并非所有人都需要匹配。这会在文字逗号或空格上划分一行：</p>
+
+<pre><code>my @words-with-e = $line
+    .split( [ ',', / \s / ] )
+    .grep( /:i e/ );
+</code></pre>
+
+<p><code>.comb</code> does a job similar to <code>.split</code>, but it breaks up the text by keeping the parts that matched. This keeps all the nonoverlapping groups of three digits and discards everything else:</p>
+
+<p><code>.comb</code>的工作类似于.split，但它通过保留匹配的部分来分解文本。这将保留所有三个数字的非重叠组，并丢弃其他所有内容：</p>
+
+<pre><code>my @digits = $line.comb: /\d\d\d/;
+</code></pre>
+
+<p>With no argument <code>.comb</code> uses the pattern of the single <code>.</code> to match any character. This breaks up a <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> into its characters without discarding anything:</p>
+
+<p>没有参数.comb使用单一模式。匹配任何角色。这会将Str分解为其角色而不丢弃任何内容：</p>
+
+<pre><code>my @characters = $line.comb: /./;
+</code></pre>
+
+<h2 id="substitutions">Substitutions</h2>
+
+<p>The <code>.subst</code> method works with a pattern to substitute the matched text with other text:</p>
+
+<p>.subst方法使用模式将匹配的文本替换为其他文本：</p>
+
+<pre><code>my $line = &quot;This is PERL 6&quot;;
+put $line.subst: /PERL/, 'Perl';  # This is Perl 6
+</code></pre>
+
+<p>This one makes the substitution for the first match:</p>
+
+<p>这个替换第一场比赛：</p>
+
+<pre><code>my $line = &quot;PERL PERL PERL&quot;;
+put $line.subst: /PERL/, 'Perl';  # Perl PERL PERL
+</code></pre>
+
+<p>Use the <code>:g</code> adverb to make all possible substitutions:</p>
+
+<p>使用：g副词进行所有可能的替换：</p>
+
+<pre><code>my $line = &quot;PERL PERL PERL&quot;;
+put $line.subst: /PERL/, 'Perl';  # Perl Perl Perl
+</code></pre>
+
+<p>Each of these returns the modified <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> and leaves the original alone. Use <code>.subst-mutate</code> to change the original value:</p>
+
+<p>其中每个都返回修改后的Str并单独留下原始文件。使用.subst-mutate更改原始值：</p>
+
+<pre><code>my $line = &quot;PERL PERL PERL&quot;;
+$line.subst-mutate: /PERL/, 'Perl', :g;
+put $line;  # Perl Perl Perl
+</code></pre>
+
+<p>These will be much more useful with the regex features you’ll see in the next chapter.</p>
+
+<p>EXERCISE 15.6Using <code>.split</code>, output the third column of a tab-delimited file. The butterfly census file you made at the end of <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch09.html#camelia-hashes">Chapter 9</a> would do nicely here.</p>
+
+<p>对于您将在下一章中看到的正则表达式功能，这些功能将更加有用。</p>
+
+<p>EXERCISE 15.6使用.split，输出制表符分隔文件的第三列。你在第9章结尾处制作的蝴蝶人口普查文件在这里做得很好。</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>You haven’t seen the full power of regexes in this chapter since it was mostly about the mechanism of applying the patterns to text. That’s not a big deal—the patterns can be much more sophisticated, but the mechanisms are the same. In the next chapter you’ll see most of the fancier features you’ll regularly use.</p>
+
+<p>在本章中你没有看到正则表达式的全部功能，因为它主要是关于将模式应用于文本的机制。这不是什么大问题 - 模式可以更复杂，但机制是相同的。在下一章中，您将看到您经常使用的大多数更高级的功能。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-09-13-toptic-variable/" data-toggle="tooltip" data-placement="top" title="Toptic Variable">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E7%AB%A0.-%E6%9B%B4%E6%BC%82%E4%BA%AE%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" data-toggle="tooltip" data-placement="top" title="第十六章. 更漂亮的正则表达式">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

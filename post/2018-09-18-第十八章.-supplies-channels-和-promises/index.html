@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第十八章.  Supplies, Channels 和 Promises</title>
+  <meta property="og:title" content="第十八章.  Supplies, Channels 和 Promises" />
+  <meta name="twitter:title" content="第十八章.  Supplies, Channels 和 Promises" />
+  <meta name="description" content="Supplies, Channels, and Promises">
+  <meta property="og:description" content="Supplies, Channels, and Promises">
+  <meta name="twitter:description" content="Supplies, Channels, and Promises">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-09-18-%E7%AC%AC%E5%8D%81%E5%85%AB%E7%AB%A0.-supplies-channels-%E5%92%8C-promises/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-18-%E7%AC%AC%E5%8D%81%E5%85%AB%E7%AB%A0.-supplies-channels-%E5%92%8C-promises/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第十八章.  Supplies, Channels 和 Promises</h1>
+                
+                  
+                    <h2 class="post-subheading">Supplies, Channels, and Promises</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 18, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 23 minutes (4741 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="声明">声明</h1>
+
+<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+
+<h1 id="第十八章-supplies-channels-和-promises">第十八章.  Supplies, Channels 和 Promises</h1>
+
+<p>Supplies and channels provide ways to send data from one part of a program to another. A <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> is a direct line of communication from a source of data to possibly many consumers. A <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> allows any part of your program to add data to a queue that any part of your program can read.</p>
+
+<p>Supplies 和 channels 提供了将数据从程序的一部分发送到另一个程序的方法。  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 是从数据源到可能许多消费者的直接通信线。 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 允许程序的任何部分将数据添加到程序的任何部分都可以读取的队列中。</p>
+
+<p>A <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> allows code to run asynchronously (concurrently)—different bits of code can run in overlapping time frames. This is quite handy while employing either <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>s or <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>s (or both).</p>
+
+<p><a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 允许代码异步（并发）运行 - 不同的小片代码可以在重叠的时间帧中运行。使用 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>s或 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>s（或两者）时，这非常方便。</p>
+
+<h1 id="supplies">Supplies</h1>
+
+<p>A <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> emits a message to every <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> that has asked to receive its messages. This happens asynchronously; they do their work as your program does other things. You can process things in the background and handle the results as they come in rather than stopping the entire program to wait for all of the data. Other languages may call this “Publish–Subscribe” (or “PubSub”).</p>
+
+<p><a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> 向要求接收其消息的每个  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>  发出消息。这是异步发生的;当程序做其它的事情时它们完成他们的工作。你可以在后台处理事物并在结果进入时处理结果，而不是停止整个程序等待所有数据。其他语言可称之为“发布 - 订阅”（或“PubSub”）。</p>
+
+<p>Here’s a useless example. Set up a <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> and call <code>.emit</code> to send a message. Since you didn’t define any <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>s that message goes nowhere; it’s gone forever:</p>
+
+<p>这是一个无用的例子。设置  <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> 并调用 <code>.emit</code> 发送消息。由于你没有定义任何  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> ，消息无处可用， 它永远消失了：</p>
+
+<pre><code>my $supplier = Supplier.new;
+$supplier.emit: 3;
+</code></pre>
+
+<p>To receive that message ask the <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> for a <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> (yes, the terminology is a bit thick) by calling <code>.tap</code>with a <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>:</p>
+
+<p>要接收该消息，请通过调用 <code>.tap</code> 来要求  <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> 提供  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>（是的，术语有点多）：</p>
+
+<pre><code>my $supplier = Supplier.new;
+my $supply   = $supplier.Supply;
+my $tap      = $supply.tap: { put &quot;$^a * $^a = &quot;, $^a**2 };
+$supplier.emit: 3;
+</code></pre>
+
+<p>The <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> receives the <code>3</code> and passes that as the argument to the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>, which then outputs the message:</p>
+
+<p><a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 接收 <code>3</code> 并将其作为参数传递给 <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>，然后 Block 输出消息：</p>
+
+<pre><code>3 * 3 = 9
+</code></pre>
+
+<p>There are some useful builtin <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>s available. The <code>.interval</code> <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> <em>factory</em> automatically emits the next ordinal number at the number of seconds (possibly fractional) you specify. You don’t specify the <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> because that’s handled for you:</p>
+
+<p>有一些有用的内置  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 可用。 <code>.interval</code> <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>工厂会自动以指定的秒数（可能是小数）发出下一个序号。你没有指定 <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a>，因为已经为你处理好了：</p>
+
+<pre><code>my $fifth-second = Supply.interval: 0.2;
+$fifth-second.tap: { say &quot;First: $^a&quot; };
+
+sleep 1;
+</code></pre>
+
+<p>The output shows five lines. Why only five? There are five-fifths of a second until the program ends once the <code>sleep</code> finishes:</p>
+
+<p>输出显示五行。为什么只有五行？一旦 <code>sleep</code> 结束，程序结束时有五个零点二秒的时间：</p>
+
+<pre><code>First: 0
+First: 1
+First: 2
+First: 3
+First: 4
+</code></pre>
+
+<p>Once you start the tap it continues to handle values asynchronously until the program ends (or you turn off the tap). Two things happen once your program reaches the <code>sleep</code> statement. First, the program waits the amount of time that you specified. Second, the <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> emits values that the tap handles. Those two things happen concurrently. As you sleep the <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> is still working. All that in a couple of lines of code!</p>
+
+<p>一旦你开始点击它继续异步处理值，直到程序结束（或你关闭水龙头 tap）。一旦程序到达 <code>sleep</code> 语句，就会发生两件事。首先，程序会等待指定的时间。其次， <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> 会发出 tap 处理的值。这两件事同时发生。当你睡眠时， <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a>  仍然在工作。所有这些几行代码就完成了！</p>
+
+<h6 id="注意">注意</h6>
+
+<p>Concurrency isn’t parallelism. Concurrency allows two different things to progress during overlapping time frames. Parallelism means that two different things happen at the exact same time. People tend to be fuzzy with their definitions, though.</p>
+
+<p>并发不是并行。并发允许在重叠时间帧期间处理两个不同的事情。并行意味着两个不同的事情在同一时间发生。不过，人们往往对其定义模糊不清。</p>
+
+<p>If you took out the <code>sleep</code> statement you wouldn’t get any output—the program would end right away. The <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> doesn’t keep the program going. If you increase the <code>sleep</code> time to make the program run longer you get more output.</p>
+
+<p>如果你拿走 <code>sleep</code> 语句，你将无法获得任何输出 - 程序将立即结束。<a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a>  不会让程序继续运行。如果增加睡眠时间以使程序运行更长时间，则可获得更多输出。</p>
+
+<p>Here’s a counter that will loop forever but only makes one line. The carriage return goes back to the beginning of the line but doesn’t advance the line (terminal buffering might interfere though):</p>
+
+<p>这是一个永远循环但只产生一行的计数器。回车返回到行的开头但不推进行（终端缓冲可能会干扰）：</p>
+
+<pre><code>my $fifth-second = Supply.interval: 0.2;
+$fifth-second.tap: { print &quot;\x[D]$^a&quot; };
+
+loop { }
+</code></pre>
+
+<h2 id="multiple-taps">Multiple Taps</h2>
+
+<p>You aren’t limited to one tap; you can have as many as you like on the same <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>. This program will take two seconds to finish. The first tap will run for two seconds and the second tap will run for the last second:</p>
+
+<p>你不仅限于一个水龙头（tap）; 你可以在同一个 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 上拥有任意数量的 tap。该程序将需要两秒钟才能完成。第一次点击将运行两秒钟，第二次点击将运行最后一秒：</p>
+
+<pre><code>my $supply = Supply.interval: 0.5;
+
+$supply.tap: { say &quot;First: $^a&quot; };
+sleep 1;
+
+$supply.tap: { say &quot;Second: $^a&quot; };
+sleep 1;
+</code></pre>
+
+<p>Each tap labels its output:</p>
+
+<p>每个点击（tap）标记其输出：</p>
+
+<pre><code>First: 0
+First: 1
+Second: 0
+First: 2
+First: 3
+Second: 1
+</code></pre>
+
+<p>Notice anything strange here? The second tap started at 0 again instead of getting the same number as the first tap got at the same time. The <code>.interval</code> method creates an on-demand supply. It starts to produce values when a tap asks for them and it generates the interval fresh for each new tap. Each time a tap wants a value it gets the next one in line, independently of any other taps.</p>
+
+<p>注意这里有什么奇怪的东西吗？第二次点击再次从0开始，而不是获得与第一次点击相同的数字。 <code>.interval</code> 方法创建按需供应（supply）。当水龙头要求它们时它开始产生值，并且它为每个新水龙头（tap）产生新鲜的间隔。每次点击（tap）想要一个值时，它就会获得下一个值，与任何其他点击无关。</p>
+
+<p>The code in a <code>tap</code> must completely finish before that code runs again with another value. This ensures that your code doesn’t get confused when it has persistent variables. If this <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> ran again before the first run finished then the value of <code>$n</code> would increment a couple of times before the first run could output its message:</p>
+
+<p>在该代码再次使用其他值运行之前，tap中的代码必须完全完成。这可确保你的代码在具有持久变量时不会混淆。如果此  <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 在第一次运行完成之前再次运行，则 <code>$n</code> 的值将在第一次运行输出其消息之前增加几次：</p>
+
+<pre><code>$supply.tap: {
+    state $n = 0; $n++;
+    sleep 1;  # misses a couple of emitted values!
+    say &quot;$n: $^a&quot;
+    };
+</code></pre>
+
+<p>EXERCISE 18.1Create a <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a> that emits lines of input. Tap that so that you output only the names you have not seen previously. You might use the butterfly census file from the Downloads section of the <a href="https://www.learningperl6.com/">website</a>.</p>
+
+<p>练习18.1创建一个发出输入行的  <a href="https://docs.perl6.org/type/Supplier.html"><code>Supplier</code></a>。点击它，这样你只输出以前没有见过的名字。你可以使用 <a href="https://www.learningperl6.com/">website</a>下载部分的蝴蝶人口普查文件。</p>
+
+<h2 id="live-supplies">Live Supplies</h2>
+
+<p>A live supply is different from the <em>on-demand</em> ones you’ve encountered so far. It emits a single stream of values that all taps share. When a new value is available the old one is discarded even if no tap has read it. Each new tap starts with the current value from that single stream. Turn an on-demand supply into a live supply with <code>.share</code>:</p>
+
+<p>实时供应（supply）与你目前遇到的按需供应（supply）不同。它会发出所有分流器（taps）共享的单个值流。当有新值可用时，即使没有点击（tap）已读取旧值，也会丢弃旧值。每个新点击（tap）都以该单个流的当前值开始。使用 <code>.share</code> 将按需供应（supply）转变为实时供应（supply）：</p>
+
+<pre><code>my $supply   = Supply.interval(0.5).share;
+
+$supply.tap: { say &quot;First: $^a&quot; };
+sleep 1;
+
+$supply.tap: { say &quot;Second: $^a&quot; };
+sleep 1;
+</code></pre>
+
+<p>The output is different in two ways. First, the <code>0</code> value is missing. The <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> emitted that before the first tap had a chance to see it. After one second the second tap starts and the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> emits <code>2</code>; both taps see <code>2</code>. After that both taps continue to see the same values until the end of the program:</p>
+
+<p>输出在两个方面有所不同。首先，缺少 <code>0</code> 值。在第一次 tap 有机会看到它之前，<a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>  就发出了它。一秒钟后，第二次点击开始， <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 发出 <code>2</code>;两个水龙头（tap）都看到 <code>2</code>.之后，两个水龙头（tap）在程序结束前继续看到相同的值：</p>
+
+<pre><code>First: 1
+First: 2
+Second: 2
+First: 3
+Second: 3
+First: 4
+Second: 4
+</code></pre>
+
+<p>When you no longer need a tap you can close it; it will no longer receive values:</p>
+
+<p>当你不再需要水龙头（tap）时，你可以关闭它;它将不再接收值：</p>
+
+<pre><code>my $supply = Supply.interval(0.4).share;
+
+my $tap1 = $supply.tap: { say &quot;1. $^a&quot; };
+sleep 1;
+
+my $tap2 = $supply.tap: { say &quot;2. $^a&quot; };
+sleep 1;
+
+$tap2.close;
+
+sleep 1;
+</code></pre>
+
+<p>At the start the first tap is handling everything. The second tap starts after the first <code>sleep</code> finishes. Then both taps handle things for a second, then the first tap closes and it’s only the second tap still working:</p>
+
+<p>在开始时，第一个水龙头处理一切。第一次睡眠结束后，第二次点击（tap）开始。然后两个水龙头（taps）都处理了一秒钟，然后第一个水龙头（tap）关闭，只有第二个水龙头（tap）仍在工作：</p>
+
+<pre><code>First: 1
+First: 2
+First: 3
+Second: 3
+First: 4
+Second: 4
+Second: 5
+Second: 6
+Second: 7
+</code></pre>
+
+<p>So far this section has dealt with only <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>s that you created. Many other objects can provide a <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>. The <code>.lines</code> method returns a <a href="https://docs.perl6.org/type/Seq.html"><code>Seq</code></a> which can turn into a <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>:</p>
+
+<p>到目前为止，本节仅涉及你创建的  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>。许多其他对象可以提供  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>。 <code>.lines</code>  方法返回一个可以转变成  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 的  <a href="https://docs.perl6.org/type/Seq.html"><code>Seq</code></a>：</p>
+
+<pre><code>my $supply = $*ARGFILES.lines.Supply;  # IO::ArgFiles
+$supply.tap: { put $++ ~ &quot;: $^a&quot; };
+
+$supply.tap: {
+    state %Seen;
+    END { put &quot;{%Seen.keys.elems} unique lines&quot; }
+    %Seen{$^a}++;
+    };
+</code></pre>
+
+<p>Most things that are <a href="https://docs.perl6.org/type/List.html"><code>List</code></a>s (or can turn into <a href="https://docs.perl6.org/type/List.html"><code>List</code></a>s) can do this:</p>
+
+<p>大多数列表（或可以转变成列表）可以做到这一点：</p>
+
+<pre><code>my $list = List.new: 1, 4, 9, 16;
+my $supply = $list.Supply;
+$supply.tap: { put &quot;Got $^a&quot; }
+</code></pre>
+
+<p>Even an infinite sequence will work:</p>
+
+<p>即使是无限序列也会起作用：</p>
+
+<pre><code>my $seq := 1, 2, * + 1 ... *;
+my $supply2 = $seq.Supply;
+$supply2.tap: { put &quot;Got $^a&quot; }
+</code></pre>
+
+<p>Notice that these examples don’t need a <code>sleep</code> to delay the end of the program. They aren’t “on the clock” like <code>.interval</code>; they go through each of their values.</p>
+
+<p>请注意，这些示例不需要 <code>sleep</code> 来延迟程序结束。它们不像 <code>.interval</code> 那样“在时钟上”;他们遍历了每一个值。</p>
+
+<p>EXERCISE 18.2Create a live <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> that emits a number every second. After three seconds, tap it and output the number it emitted. After another three seconds, tap it again to output the same thing. Wait three more seconds, then close the second tap. Finally, after another three seconds close the first tap.</p>
+
+<p>练习18.2创建一个每秒发出一个数字的实时供应（<a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>）。三秒钟后，点击（tap）它并输出它发出的数字。再过三秒钟，再次点击（tap）它输出相同的东西。再等三秒钟，然后关闭第二个水龙头（tap）。最后，再过三秒后关闭第一个水龙头（tap）。</p>
+
+<h1 id="channels">Channels</h1>
+
+<p><a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>s are first-come, first-served queues. They ensure that something is processed exactly once. Anything can put thingys into the channel and anything can take thingys off the channel. The code on either side of the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> doesn’t need to know about the other. Several threads can share a <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>, but once something asks for the next thingy that thingy disappears from the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> and can’t be processed by other code.</p>
+
+<p><a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>s 是先到先得的队列。他们确保东西只被准确地处理一次。任何东西都可以将东西放入 Channel，任何东西都可以从 Channels 中将东西拿走。<a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 两侧的代码无需了解另一方。几个线程可以共享一个 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>，但是一旦有东西要求下一个东西，那个东西就会从 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 中消失而不能被其他代码处理。</p>
+
+<p>Create a <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>. Add to it with <code>.send</code> and take a thingy with <code>.receive</code>. When you are done with the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>, <code>.close</code> it:</p>
+
+<p>创建一个  <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>。使用 <code>.send</code> 添加并使用 <code>.receive</code> 接收。处理完 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 后，关闭（<code>close</code>）它：</p>
+
+<pre><code>my $channel = Channel.new;
+$channel.send: 'Hamadryas';
+put 'Received: ', $channel.receive;
+$channel.close;
+</code></pre>
+
+<p>The output shows the value you added:</p>
+
+<p>输出显示你添加的值：</p>
+
+<pre><code>Received: Hamadryas
+</code></pre>
+
+<p>After the <code>.close</code> you can’t send more values to the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>. Anything you’ve already added is still in the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> and available to process. You can <code>.receive</code> until the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> is empty:</p>
+
+<p>在关闭（<code>.close</code>） Channel 之后，你无法向 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 发送更多值。你已添加的任何内容仍在 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 中，可供处理。你可以 <code>.receive</code> 直到 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 为空：</p>
+
+<pre><code>my $channel = Channel.new;
+$channel.send: $_ for &lt;Hamadryas Rhamma Melanis&gt;;
+put 'Received: ', $channel.receive;
+$channel.close;  # no more sending
+
+while $channel.poll -&gt; $thingy {
+    put &quot;while received $thingy&quot;;
+    }
+</code></pre>
+
+<p>The <code>while</code> uses <code>.poll</code> instead of <code>.receive</code>. If there is a thingy, <code>.poll</code> returns it. If there are no more thingys currently available it returns <code>Nil</code> (ending the looping):</p>
+
+<p><code>while</code> 使用 <code>.poll</code> 而不是 <code>.receive</code>。如果有东西，<code>.poll</code> 会返回它。如果当前没有更多东西可用，则返回<code>Nil</code>（结束循环）：</p>
+
+<pre><code>Received: Hamadryas
+while received Rhamma
+while received Melanis
+</code></pre>
+
+<p>When <code>.poll</code> returns <code>Nil</code> you don’t know if there will ever be more thingys available. If the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> is still open something can add more thingys; if the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> is closed there will never be anything more to <code>.receive</code>. Calling <code>.fail</code> closes the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>, and <code>.receive</code> will throw an error if you call it again. You can <code>CATCH</code> the <a href="https://docs.perl6.org/type/Exception.html"><code>Exception</code></a> to end the loop:</p>
+
+<p>当 <code>.poll</code> 返回 <code>Nil</code> 时，你不知道是否会有更多可用的东西。如果 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 仍处于打开状态，可以添加更多东西; 如果 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 关闭，将永远不会有更多的东西可以接收（<code>.receive</code>）。调用 <code>.fail</code> 会关闭 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>，如果再次调用，则 <code>.receive</code> 会抛出错误。你可以捕获<a href="https://docs.perl6.org/type/Exception.html">异常</a>以结束循环：</p>
+
+<pre><code>my $channel = Channel.new;
+$channel.send: $_ for &lt;Hamadryas Rhamma Melanis&gt;;
+put 'Received: ', $channel.receive;
+$channel.fail('End of items');   # X::AdHoc
+
+loop {
+    CATCH {
+        default { put &quot;Channel is closed&quot;; last }
+        }
+    put &quot;loop received: &quot;, $channel.receive;
+    }
+</code></pre>
+
+<p>Instead of a loop you can <code>tap</code> the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>; it calls <code>.receive</code> for you:</p>
+
+<p>你可以点击（<code>tap</code>） <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 代替 loop 循环;它为你调用 <code>.receive</code>：</p>
+
+<pre><code>my $channel = Channel.new;
+$channel.send: $_ for &lt;Hamadryas Rhamma Melanis&gt;;
+put 'Received: ', $channel.receive;
+$channel.fail('End of items');
+
+$channel.Supply.tap: { put &quot;Received $_&quot; }
+CATCH { default { put &quot;Channel is closed&quot; } }
+</code></pre>
+
+<p>The output is the same either way:</p>
+
+<p>输出相同：</p>
+
+<pre><code>Received: Hamadryas
+loop received: Rhamma
+loop received: Melanis
+Channel is closed
+</code></pre>
+
+<p>EXERCISE 18.3Create a <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> and tap it. Send lines of input to the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> but only print the ones with prime line numbers.</p>
+
+<p>练习18.3创建一个  <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 并点按（tap）它。将输入行发送到  <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>  但仅打印具有主要行号的输入。</p>
+
+<h1 id="promises">Promises</h1>
+
+<p>A <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is a bit of code that will produce a result sometime later, and that later might not be soon. It schedules work to happen in another thread while the rest of your program moves on. These are the underpinnings of Perl 6’s concurrency and they do most of the hard work for you.</p>
+
+<p><a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 是一小片会在稍后产生结果的代码，所说的&rdquo;稍后&rdquo;可能不会很快。它安排工作在另一个线程中发生，而程序的其余部分继续。这些是 Perl 6 并发性的基础，它们为你完成了大部分艰苦的工作。</p>
+
+<p>Every <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> has a status. It might be waiting to run, currently running, or finished. How it finishes decides its status: a <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is <code>Kept</code> when it succeeds or <code>Broken</code> when it fails. While it’s working it’s <code>Planned</code>.</p>
+
+<p>每个 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 都有一个状态。它可能正在等待运行，当前正在运行或已完成。它如何完成决定它的状态：<a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 在成功时是 <code>Kept</code>，在失败时是 <code>Broken</code>。当它正在运行时是 <code>Planned</code>。</p>
+
+<p>A simple <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is a timer. The <code>.in</code> method makes a <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> that will be kept after the number of seconds you specify:</p>
+
+<p>一个简单的 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 是一个计时器。 <code>.in</code> 方法生成一个 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>，它将在你指定的秒数后变成 kept 状态：</p>
+
+<pre><code>my $five-seconds-from-now = Promise.in: 5;
+
+loop {
+    sleep 1;
+    put &quot;Promise status is: &quot;, $five-seconds-from-now.status;
+    }
+</code></pre>
+
+<p>At first the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is <code>Planned</code>. After five seconds (roughly) the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> converts to <code>Kept</code>. At that point you know that five seconds have passed:</p>
+
+<p>起初 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 是 <code>Planned</code>。五秒钟后（大致）， <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 转换为 <code>Kept</code>。那时你知道已经过了五秒钟：</p>
+
+<pre><code>Promise status is: Planned
+Promise status is: Planned
+Promise status is: Planned
+Promise status is: Planned
+Promise status is: Kept
+Promise status is: Kept
+...
+</code></pre>
+
+<p>You don’t need to continually check the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>. Use <code>.then</code> to set up code to run when it is kept:</p>
+
+<p>你不需要不断检查  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>。使用 <code>.then</code> 设置代码在 <code>kept</code> 时运行：</p>
+
+<pre><code>my $five-seconds-from-now = Promise.in: 5;
+$five-seconds-from-now.then: { put &quot;It's been 5 seconds&quot; };
+</code></pre>
+
+<p>Nothing happens when you run this program; the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> isn’t kept before the program ends. Planned <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s don’t prevent the program from ending.</p>
+
+<p>运行此程序时没有任何反应;在程序结束之前不保留 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>。计划的 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 不会阻止程序结束。</p>
+
+<p>You could give your program enough time for five seconds to elapse. A <code>sleep</code> extends the program time:</p>
+
+<p>你可以给你的程序足够的时间，让你的时间过去五秒钟。睡眠（<code>sleep</code>）延长了程序时间：</p>
+
+<pre><code>my $five-seconds-from-now = Promise.in: 5;
+$five-seconds-from-now.then: { put &quot;It's been 5 seconds&quot; };
+
+sleep 7;
+</code></pre>
+
+<p>Now you see the output from the code in <code>.then</code>:</p>
+
+<p>现在你看到 <code>.then</code> 中代码的输出：</p>
+
+<pre><code>It's been 5 seconds
+</code></pre>
+
+<h2 id="waiting-for-promises">Waiting for Promises</h2>
+
+<p>Instead of sleeping (and guessing the time you need to be idle), you can use <code>await</code>, which blocks your program until the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is either kept or broken:</p>
+
+<p>你可以使用 <code>await</code> 而不是 <code>sleep</code> （并猜测你需要空闲的时间）来阻塞你的程序，直到 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 被保留或损坏：</p>
+
+<pre><code>my $five-seconds-from-now = Promise.in: 5;
+$five-seconds-from-now.then: { put &quot;It's been 5 seconds&quot; };
+
+await $five-seconds-from-now;
+</code></pre>
+
+<p>These examples use <code>await</code> because you need the program to keep running. In something more interesting your program is likely doing a lot of other work, so you might not need to keep the program alive.</p>
+
+<p>这些示例使用 <code>await</code>，因为你需要程序继续运行。更有趣的是，你的程序很可能会做很多其他的工作，所以你可能不需要让程序活着。</p>
+
+<p>Instead of a relative time you can use <code>.at</code> with an absolute time. That could be an <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a> value or something that you can coerce to an <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a> (or a <a href="https://docs.perl6.org/type/Numeric.html"><code>Numeric</code></a> value that represents an <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a>):</p>
+
+<p>你可以使用绝对时间的 <code>.at</code> 而不是相对时间。这可以是 <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a> 值或者你可以强制为 <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a>（或表示 <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a> 的数值）的值：</p>
+
+<pre><code>my $later = Promise.at: now + 7;
+$later.then: { put &quot;It's now $datetime&quot; };
+
+await $later;
+</code></pre>
+
+<p>The <code>start</code> keyword creates a <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>. When the code completes the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is finished:</p>
+
+<p><code>start</code> 关键字创建一个  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>。代码完成后， <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 完成：</p>
+
+<pre><code>my $pause = start {
+    put &quot;Promise starting at &quot;, now;
+    sleep 5;
+    put &quot;Promise ending at &quot;, now;
+    };
+await $pause;
+</code></pre>
+
+<p>The output shows the start and end of the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>:</p>
+
+<p>输出显示  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 的开始和结束：</p>
+
+<pre><code>Promise starting at Instant:1507924913.012565
+Promise ending at Instant:1507924918.018444
+</code></pre>
+
+<p>A <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is broken if it throws an <a href="https://docs.perl6.org/type/Exception.html"><code>Exception</code></a>. You can return all the <code>False</code> values you like, but until you<code>fail</code> or throw an <a href="https://docs.perl6.org/type/Exception.html"><code>Exception</code></a> with an error your <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> will be kept. This succeeds even though it returns <code>False</code>:</p>
+
+<p>如果  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 抛出<a href="https://docs.perl6.org/type/Exception.html">异常</a>，它就会被破坏。你可以返回你喜欢的所有 <code>False</code> 值，但是直到你失败或抛出一个带有错误的 <a href="https://docs.perl6.org/type/Exception.html">Exception</a>，你的  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 将被保留。即使它返回 <code>False</code>，这也会成功：</p>
+
+<pre><code>my $return-false = start {
+    put &quot;Promise starting at &quot;, now;
+    sleep 5;
+    put &quot;Promise ending at &quot;, now;
+    return False;  # still kept
+    };
+await $return-false;
+</code></pre>
+
+<p>This example breaks the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> because you explicitly <code>fail</code>:</p>
+
+<p>下面这个示例打破了  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>，因为你显式地调用了 <code>fail</code>：</p>
+
+<pre><code>my $five-seconds-from-now = start {
+    put &quot;Promise starting at &quot;, now;
+    sleep 5;
+    fail;
+    put &quot;Promise ending at &quot;, now;
+    };
+await $five-seconds-from-now;
+</code></pre>
+
+<p>You get part of the output, but the <code>fail</code> stops that <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> before you get the rest of the output:</p>
+
+<p>你获得了输出的一部分，但 <code>fail</code> 会在你获得其余输出之前停止该 <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>：</p>
+
+<pre><code>Promise starting at Instant:1522698239.054087
+An operation first awaited:
+  in block &lt;unit&gt; at ...
+
+Died with the exception:
+    Failed
+      in block  at ...
+</code></pre>
+
+<h2 id="waiting-for-multiple-promises">Waiting for Multiple Promises</h2>
+
+<p>The <code>Await</code> can take a list of <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s:</p>
+
+<p><code>Await</code> 可以接收一个  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 列表：</p>
+
+<pre><code>put &quot;Starting at {now}&quot;;
+my @promises =
+    Promise.in( 5 ).then( { put '5 finished' } ),
+    Promise.in( 3 ).then( { put '3 finished' } ),
+    Promise.in( 7 ).then( { put '7 finished' } ),
+    ;
+
+await @promises;
+
+put &quot;Ending at {now}&quot;;
+</code></pre>
+
+<p>The program doesn’t end until all of the <a href="https://docs.perl6.org/type/Promises.html">Promises</a> are kept:</p>
+
+<p>在所有的  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 变成 kept 状态之前，程序不会结束：</p>
+
+<pre><code>Starting at Instant:1524856233.733533
+3 finished
+5 finished
+7 finished
+Ending at Instant:1524856240.745510
+</code></pre>
+
+<p>If any of the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s are broken then the entire <code>await</code> is done and the planned <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s are abandoned:</p>
+
+<p>如果任何一个  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 被破坏，则整个 <code>await</code> 完成并且计划的  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 被放弃：</p>
+
+<pre><code>put &quot;Starting at {now}&quot;;
+my @promises =
+    start { sleep 5; fail &quot;5 failed&quot; },
+    Promise.in( 3 ).then( { put '3 finished' } ),
+    Promise.in( 7 ).then( { put '7 finished' } ),
+    ;
+
+await @promises;
+
+put &quot;Ending at {now}&quot;;
+</code></pre>
+
+<p>If the <code>.in( 3 )</code> <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is kept then the one with <code>start</code> fails:</p>
+
+<p>如果 <code>.in( 3 )</code> <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 变为 kept 状态 ，那么带有  <code>start</code> 的那个 Promise 失败：</p>
+
+<pre><code>Starting at Instant:1524856385.367019
+3 finished
+An operation first awaited:
+  in block &lt;unit&gt; at await-list.p6 line 9
+
+Died with the exception:
+    5 failed
+      in block  at await-list.p6 line 4
+</code></pre>
+
+<h2 id="managing-your-own-promises">Managing Your Own Promises</h2>
+
+<p>In the previous examples there was something else managing the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s for you. You can do that all yourself. Start by making a bare <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>:</p>
+
+<p>在前面的例子中，还有其他东西为你管理  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 。你可以自己做。首先制作一个裸的  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>：</p>
+
+<pre><code>my $promise = Promise.new;
+</code></pre>
+
+<p>Check its status by smart matching against the constants from <a href="https://docs.perl6.org/type/PromiseStatus.html"><code>PromiseStatus</code></a> (which you get for free):</p>
+
+<p>通过与  <a href="https://docs.perl6.org/type/PromiseStatus.html"><code>PromiseStatus</code></a>（你免费获得）的常量进行智能匹配来检查其状态：</p>
+
+<pre><code>put do given $promise.status {
+    when Planned { &quot;Still working on it&quot; }
+    when Kept    { &quot;Everything worked out&quot; }
+    when Broken  { &quot;Oh no! Something didn't work&quot; }
+    }
+</code></pre>
+
+<p>At this point <code>$promise</code> is planned and will stay that way. This will loop forever:</p>
+
+<p>在这一点上，<code>$promise</code> 计划并将保持这种方式。这将永远循环：</p>
+
+<pre><code>loop {
+    put do given $promise.status {
+        when Planned { &quot;Still working on it&quot; }
+        when Kept    { &quot;Everything worked out&quot; }
+        when Broken  { &quot;Oh no! Something didn't work&quot; }
+        }
+
+    last unless $promise.status ~~ Planned;
+    sleep 1;
+    }
+</code></pre>
+
+<p>You can use <code>now</code> to note the start time and to check that if it’s five seconds later to make your own <code>.at</code> or <code>.in</code>. Some time after five seconds you call <code>.keep</code> to change the status:</p>
+
+<p>你现在可以使用 <code>now</code> 来记录开始时间，并检查是否在五秒后制作你自己的 <code>.at</code> 或 <code>.in</code>。五秒后的一段时间，你可以调用 <code>.keep</code> 改变状态：</p>
+
+<pre><code>my $promise = Promise.new;
+
+my $start = now;
+loop {
+    $promise.keep if now &gt; $start + 5;
+    given $promise.status {
+        when Planned { put &quot;Still working on it&quot; }
+        when Kept    { put &quot;Everything worked out&quot; }
+        when Broken  { put &quot;Oh no! Something didn't work&quot; }
+        }
+
+    last unless $promise.status ~~ Planned;
+    sleep 1;
+    }
+</code></pre>
+
+<p>Now the loop stops after five seconds:</p>
+
+<p>现在循环在五秒后停止：</p>
+
+<pre><code>Still working on it
+Still working on it
+Still working on it
+Still working on it
+Still working on it
+Everything worked out
+</code></pre>
+
+<p>This <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> can still call code with <code>.then</code>:</p>
+
+<p>这个  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 仍然可以使用 <code>.then</code> 调用代码：</p>
+
+<pre><code>my $promise = Promise.new;
+$promise.then: { put &quot;Huzzah! I'm kept&quot; }
+
+my $start = now;
+loop { ... } # same as before
+</code></pre>
+
+<p>The output shows the output from the <code>.then</code> code:</p>
+
+<p>输出显示 <code>.then</code> 代码的输出：</p>
+
+<pre><code>Still working on it
+Still working on it
+Still working on it
+Still working on it
+Still working on it
+Everything worked out
+Huzzah! I'm kept
+</code></pre>
+
+<p>Or you might break the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>. Either way your <code>.then</code> code runs, and you need to distinguish between those cases. The <code>.then</code> code has one argument; that’s the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> itself. If you don’t name the argument it’s in <code>$_</code>:</p>
+
+<p>或者你可能破坏了  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>。无论哪种方式你的 <code>.then</code> 代码运行，你需要区分这些情况。 <code>.then</code> 代码有一个参数;这就是 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 本身。如果你没有将参数命名为 <code>$_</code>：</p>
+
+<pre><code>my $promise = Promise.new;
+$promise.then: {
+    put do given .status {
+        when Kept { 'Huzzah!' }
+        when Broken { 'Darn!' }
+        }
+    }
+
+my $start = now;
+loop {
+    $promise.break if now &gt; $start + 5;
+    last unless $promise.status ~~ Planned;
+    sleep 1;
+    }
+</code></pre>
+
+<h2 id="promise-junctions">Promise Junctions</h2>
+
+<p>You can use <a href="https://docs.perl6.org/type/Junction"><code>Junction</code></a>s to create an über-<a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>. The <code>.allof</code> method creates a <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> that is kept if all of its included <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s are kept:</p>
+
+<p>你可以使用  <a href="https://docs.perl6.org/type/Junction"><code>Junction</code></a> 来创建一个超级 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>。 <code>.allof</code> 方法创建一个 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>，如果它包含的所有 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 都变成 kept 状态，则该 Promise 为 kept 状态：</p>
+
+<pre><code>my $all-must-pass = await Promise.allof:
+    Promise.in(5).then( { put 'Five seconds later' } ),
+    start { sleep 3; put 'Three seconds later'; },
+    Promise.at( now + 1 ).then( { put 'One second later' } );
+put $all-must-pass;
+</code></pre>
+
+<p>The <code>.anyof</code> <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is kept if any of its included <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s are kept. All except one of them can be broken and the larger <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is still kept:</p>
+
+<p>如果 <code>.anyof</code> <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 中的任何一个 Promise 是 kept 状态，那么该 Promise 为 kept 状态。除了其中一个之外的所有部分都可以是 broken 状态，而更大的 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 仍然是 kept 状态：</p>
+
+<pre><code>my $any-can-pass = await Promise.anyof:
+    Promise.in(5).then( { put 'Five seconds later' } ),
+    start { sleep 3; put 'Three seconds later'; fail },
+    Promise.at( now + 1 ).then( { put 'One second later' } );
+put $any-can-pass;
+</code></pre>
+
+<p>Both of these succeed. In the <code>.allof</code> case you see the output from all three <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s. Then you see the output from one of the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s from <code>.anyof</code>. Not all of those <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s need to finish because the overall <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> already knows it can succeed:</p>
+
+<p>这两个都成功了。在 <code>.allof</code> 情况下，你可以看到所有三个  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 的输出。然后你会看到来自 <code>.anyof</code> 的一个  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 的输出。并非所有  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 都需要完成，因为整体  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 已经知道它可以成功：</p>
+
+<pre><code>One second later
+Three seconds later
+Five seconds later
+True
+One second later
+True
+</code></pre>
+
+<h1 id="reactive-programming">Reactive Programming</h1>
+
+<p>A <code>react</code> <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> allows you to run some code when new values are available. It keeps running until it runs out of values to handle. It’s similar to an event loop. Here’s a very simple example:</p>
+
+<p>当有新值可用时， <code>react</code> <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>允许运行一些代码。它一直运行，直到它用完了要处理的值。它类似于事件循环。这是一个非常简单的例子：</p>
+
+<pre><code>react {
+    whenever True { put 'Got something that was true' }
+    }
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>You use <code>whenever</code> to supply values to the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> of code. In this case you have the single value <code>True</code>. This isn’t a <em>conditional</em> expression or a test, as in <code>if</code> or <code>while</code>. The <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> reacts to that single value and runs the <code>whenever</code> code. After that there are no more values and the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> exits:</p>
+
+<p>你可以使用 <code>whenever</code> 为  <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 块提供值。在这个例子中，你具有单个值 <code>True</code>。这不是条件表达式或测试，如 <code>if</code> 或 <code>while</code>。  <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 对该单个值作出反应并运行 <code>whenever</code> 代码。之后没有更多的值， <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 退出：</p>
+
+<pre><code>Got something that was true
+End of the program
+</code></pre>
+
+<p>You might be tempted to think of this as a looping construct, but it’s not quite the same thing. It’s not doing everything in the <code>react</code> <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> then starting the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> again. The <code>whenever</code> for <code>True</code> only runs once, instead of running forever as you’d expect with a <code>loop</code>:</p>
+
+<p>你可能会想到这是一个循环结构，但它并不完全相同。它没有在 <code>react</code>  <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>中执行所有操作，然后再次启动<a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>。<code>True</code> 的 <code>whenever</code> 只运行一次，而不是像你期望的那样永远运行：</p>
+
+<pre><code>loop {
+    if True { put 'Got something that was true'  }
+    }
+</code></pre>
+
+<p>Change the <code>whenever</code> from <code>True</code> to a <code>Supply.interval</code> and you never see the end-of-program message:</p>
+
+<p>将 <code>whenever</code> 从 <code>True</code> 更改为 <code>Supply.interval</code>，你永远不会看到程序结束消息：</p>
+
+<pre><code>my $supply = Supply.interval: 1;
+
+react {
+    whenever $supply { put &quot;Got $^a&quot; }
+    }
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>As long as the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> has values for <code>whenever</code>, the <code>react</code> <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> keeps going:</p>
+
+<p>只要 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 具有 <code>whenever</code> 可用的值，<code>react</code> <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 就会继续：</p>
+
+<pre><code>Got 0
+Got 1
+Got 2
+...
+</code></pre>
+
+<p>You could have both the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> and the <code>True</code> at the same time:</p>
+
+<p>你可以同时拥有  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>  和 <code>True</code>：</p>
+
+<pre><code>my $supply = Supply.interval: 1;
+
+react {
+    whenever $supply { put &quot;Got $^a&quot; }
+    whenever True { put 'Got something that was true' }
+    }
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>The <code>whenever</code> with the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> reacts immediately and outputs the first value in the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>. The <code>whenever</code> with the <code>True</code> reacts next and exhausts its values (the single <code>True</code>). After that the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> continues until you give up and interrupt the program:</p>
+
+<p><code>whenever</code> 和  <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 立即作出反应并输出 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 中的第一个值。接下来 <code>whenever</code> 和 <code>True</code> 做出反应并耗尽其值（单个 <code>True</code>）。之后，<a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 继续，直到你放弃并中断程序：</p>
+
+<pre><code>Got 0
+Got something that was true
+Got 1
+Got 2
+...
+</code></pre>
+
+<p>If you reverse the <code>whenever</code>s the <code>True</code> will probably react first:</p>
+
+<p>如果你把两个 <code>whenever</code> 的顺序对调，那么 <code>True</code> 可能会先做出反应：</p>
+
+<pre><code>my $supply = Supply.interval: 1;
+
+react {
+    whenever True { put 'Got something that was true' }
+    whenever $supply { put &quot;Got $^a&quot; }
+    }
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>The output is slightly different, but there’s nothing that says this has to be the case. Perhaps future implementations will choose differently. This is concurrency; you can’t depend on strict order of happenings:</p>
+
+<p>输出略有不同，但没有任何说法必须如此。未来的实现可能会有不同的选择。这是并发;你不能依赖严格的发生顺序：</p>
+
+<pre><code>Got something that was true
+Got 0
+Got 1
+Got 2
+...
+</code></pre>
+
+<p>Instead of interrupting the program to get the <code>react</code> to stop, you can do it from within the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> with <code>done</code>. You can use a <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> with <code>.in</code> to provide a value after some interval:</p>
+
+<p>你可以在  <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>  使用 <code>done</code> 中完成，而不是中断程序以使响应停止。你可以使用带有 <code>.in</code> 的  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 在一段时间后提供一个值：</p>
+
+<pre><code>my $supply = Supply.interval: 1;
+
+react {
+    whenever $supply { put &quot;Got $^a&quot; }
+    whenever True { put 'Got something that was true' }
+    whenever Promise.in(5) { put 'Timeout!'; done }
+    }
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>After five seconds the <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> is kept and the <code>whenever</code> kicks in. It outputs the timeout message and uses <code>done</code> to end the <code>react</code>:</p>
+
+<p>五秒后， <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>  变为 kept，然后 <code>whenever</code>  执行。它输出超时消息并使用 <code>done</code> 结束 <code>react</code>：</p>
+
+<pre><code>Got 0
+Got something that was true
+Got 1
+Got 2
+Got 3
+Got 4
+Got 5
+Timeout!
+End of the program
+</code></pre>
+
+<p>Add another <code>react</code> and the process starts over with a fresh <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>:</p>
+
+<p>添加另一个  <code>react</code>，然后重新开始一个新的  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>：</p>
+
+<pre><code>my $supply = Supply.interval: 1;
+
+react {
+    whenever $supply { put &quot;Got $^a&quot; }
+    whenever True { put 'Got something that was true' }
+    whenever Promise.in(5) { put 'Timeout!'; done }
+    }
+
+put &quot;React again&quot;;
+
+react {
+    whenever $supply { put &quot;Got $^a&quot; }
+    }
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>The output for the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> starts again, but at the beginning of the interval:</p>
+
+<p><a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 的输出再次开始，但在间隔开始时：</p>
+
+<pre><code>Got 0
+Got something that was true
+Got 1
+Got 2
+Got 3
+Got 4
+Timeout!
+React again
+Got 0
+Got 1
+</code></pre>
+
+<p>EXERCISE 18.4Modify the double <code>react</code> example to use a live <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> instead of an on-demand one. How does the output change?</p>
+
+<p>练习18.4修改双反应示例以使用实时供应而不是按需供应。输出如何变化？</p>
+
+<h2 id="reacting-in-the-background">Reacting in the Background</h2>
+
+<p>The <code>react</code> is a way that you can respond to values when they are available. So far you’ve seen the <code>react</code> as a top-level <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>. It keeps running—and holds up the rest of the program—until it’s done.</p>
+
+<p><code>react</code> 是一种可以在值可用时响应值的方式。到目前为止，你已经看到了作为顶级Block的 <code>react</code>。它一直运行 - 并持有程序的其余部分 - 直到完成。</p>
+
+<p>Instead, you most likely want your <code>react</code> to do its work in the background as your program does other things. You can wrap the <code>react</code> in a <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> with a <code>start</code>. That allows the <code>react</code> to work in a thread as the rest of the program continues:</p>
+
+<p>相反，你最有可能希望你的 <code>react</code> 能够在后台执行其工作，因为你的程序会执行其他操作。你可以用 <code>start</code> 将<code>react</code> 包装在  <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 中。这允许 <code>react</code> 在程序的其余部分继续时在线程中工作：</p>
+
+<pre><code>my $supply = Supply.interval: 1;
+
+my $promise = start {
+    react {
+        whenever $supply { put &quot;Got $^a&quot; }
+        whenever True { put 'Got something that was true' }
+        whenever Promise.in(5) { put 'Timeout!'; done }
+        }
+    }
+
+put 'After the react loop';
+
+await $promise;
+put 'After the await';
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>The first line of the output is from the <code>put</code> after the <code>start</code> block. The <code>react</code> is starting its work, but it’s not blocking the rest of the program:</p>
+
+<p>输出的第一行来自 <code>start</code> 块之后的 <code>put</code>。<code>react</code> 开始了它的工作，但它没有阻塞程序的其余部分：</p>
+
+<pre><code>After the react loop
+Got 0
+Got something that was true
+Got 1
+Got 2
+Got 3
+Got 4
+Timeout!
+After the await
+End of the program
+</code></pre>
+
+<p>Take it up a notch. Add a <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> into it. Move the <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> inside the <code>whenever</code>. When that <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> has a value it executes the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> to output the same thing it did before. It also sends the value to the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> if it is a multiple of 2.</p>
+
+<p>把它提升一个档次。添加一个  <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>。把 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 移动到 <code>whenever</code> 里。当该 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>  有一个值时，它执行 <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 以输出它之前执行的相同操作。如果它是 2 的倍数，它还会将值发送到  <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>。</p>
+
+<p>Add a second <code>whenever</code> to read the values available on the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>. You need to convert the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> to a <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>; that’s easy because there’s a <code>.Supply</code> method. The <code>whenever</code> taps that <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>:</p>
+
+<p>添加第二个 <code>whenever</code> 以读取  <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 上可用的值。你需要将  <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 转换为 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>; 这很简单，因为有一个 <code>.Supply</code> 方法。<code>whenever</code> 点击 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>：</p>
+
+<pre><code>my $channel = Channel.new;
+
+my $promise = start {
+    react {
+        whenever Supply.interval: 1
+            { put &quot;Got $^a&quot;; $channel.send: $^a if $^a %% 2 }
+        whenever $channel.Supply
+            { put &quot;Channel got $^a&quot; }
+        whenever True
+            { put 'Got something that was true' }
+        whenever Promise.in(5)
+            { put 'Timeout!'; done }
+        }
+    }
+
+put 'After the react loop';
+
+await $promise;
+put 'After the await';
+
+END put &quot;End of the program&quot;;
+</code></pre>
+
+<p>The output is mostly the same as before with the <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> output inserted:</p>
+
+<p>插入 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 输出时输出与以前大致相同：</p>
+
+<pre><code>After the react loop
+Got 0
+Got something that was true
+Channel got 0
+Got 1
+Got 2
+Channel got 2
+Got 3
+Got 4
+Channel got 4
+Timeout!
+After the await
+End of the program
+</code></pre>
+
+<p>EXERCISE 18.5Use <a href="https://docs.perl6.org/type/IO::Notification.html"><code>IO::Notification</code></a> to output a message every time there’s a change to a file you specify on the command line.</p>
+
+<p>练习18.5使用 <a href="https://docs.perl6.org/type/IO::Notification.html"><code>IO::Notification</code></a> 在每次对命令行指定的文件进行更改时输出消息。</p>
+
+<h1 id="summary">Summary</h1>
+
+<p><a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s are the basis of concurrency, and there are various ways that you can create them to get what you what. Decompose your problem into independent bits and run them as <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>s, which can run in separate threads (or maybe even on different cores). With those, <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a>s and <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a>s provide a way to pass data between disconnected parts of your program. To get the most out of all of these you need to think differently from the procedural stuff you’ve seen so far. You’ll get that with practice.</p>
+
+<p><a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>是并发的基础，有多种方法可以创建它们来获得你的东西。将你的问题分解为独立的部分并将它们作为<a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 运行，它可以在不同的线程中运行（甚至可以在不同的核心上运行）。有了这些，<a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 和 <a href="https://docs.perl6.org/type/Channel.html"><code>Channel</code></a> 提供了一种在程序的断开连接部分之间传递数据的方法。为了充分利用所有这些，你需要与迄今为止看到的程序性内容进行不同的思考。通过练习你会掌握它。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-09-17-%E7%AC%AC%E5%8D%81%E4%B8%83%E7%AB%A0.-grammars/" data-toggle="tooltip" data-placement="top" title="第十七章. Grammars">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-19-%E7%AC%AC%E5%8D%81%E4%B9%9D%E7%AB%A0.-%E6%8E%A7%E5%88%B6%E5%85%B6%E4%BB%96%E7%A8%8B%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="第十九章. 控制其他程序">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第二章. 猜数字</title>
+  <meta property="og:title" content="第二章. 猜数字" />
+  <meta name="twitter:title" content="第二章. 猜数字" />
+  <meta name="description" content="Number Guessing">
+  <meta property="og:description" content="Number Guessing">
+  <meta name="twitter:description" content="Number Guessing">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-09-02-%E7%AC%AC%E4%BA%8C%E7%AB%A0.-%E7%8C%9C%E6%95%B0%E5%AD%97/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-02-%E7%AC%AC%E4%BA%8C%E7%AB%A0.-%E7%8C%9C%E6%95%B0%E5%AD%97/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第二章. 猜数字</h1>
+                
+                  
+                    <h2 class="post-subheading">Number Guessing</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 2, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 26 minutes (5494 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="声明">声明</h1>
+
+<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+
+<h1 id="第二章-猜数字">第二章. 猜数字</h1>
+
+<p>You’re about to be thrown in the deep end. There are some basic things you need to know to write useful programs, and you’ll meet a lot of them in this chapter so you can write a number-guessing program by the end. It’s quite a bit to take in all at once but it should make the rest of the chapters more interesting.</p>
+
+<p>你将要陷入深渊。编写有用的程序需要了解一些基本的东西，本章中你会遇到很多基本的东西，所以你可以在最后编写一个数字猜测程序。一下子就可以完全接受它，但它应该让其他章节更有趣。</p>
+
+<h1 id="binding-and-assignment">Binding and Assignment</h1>
+
+<p>You read a little about variables in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch01.html#camelia-introduction">Chapter 1</a>. To store a value in a variable you assign to it. The item assignment operator, <code>=</code>, stores a single thingy for you. <code>$number</code> is a scalar variable; it can store exactly one thingy. This is item assignment because there’s one thingy. This “sets” the value:</p>
+
+<p>您将在第1章中阅读一些关于变量的内容。将值存储在您为其分配的变量中。项目赋值运算符=为您存储单个东西。 $ number是一个标量变量;它可以存储一个东西。这是项目分配，因为有一个东西。这“设置”了价值：</p>
+
+<pre><code>my $number = 2;
+</code></pre>
+
+<p>If you decide that you don’t want that value you can replace it:</p>
+
+<p>如果您认为不需要该值，则可以替换它：</p>
+
+<pre><code>$number = 3;
+</code></pre>
+
+<p>Sometimes you want a value that you can’t change (more likely a value you don’t want another part of your program to change). Instead of the assignment operator you can use the binding operator, <code>:=</code>, to set the value:</p>
+
+<p>有时你想要一个你无法改变的值（更可能是你不希望程序的另一部分改变的值）。您可以使用绑定运算符：=来设置值，而不是赋值运算符：</p>
+
+<pre><code>my $sides-of-a-square := 4;
+$sides-of-a-square = 5
+</code></pre>
+
+<p>When you try to change the value you get an error:</p>
+
+<p>当您尝试更改该值时，您会收到错误：</p>
+
+<pre><code>Cannot assign to an immutable value
+</code></pre>
+
+<p>It’s not the binding operator that makes the variable immutable. It merely makes the thingy on the left the same as the one on the right. In this case, <code>$sides-of-square</code> is actually <code>4</code> and not just a variable that happens to store <code>4</code>. You can’t assign to <code>4</code>, so you can’t assign to <code>$sides-of-a-square</code>.</p>
+
+<p>If you first assign to a scalar variable then <em>bind</em> to that variable you end up with two names for the same variable:</p>
+
+<p>它不是使变量成为不可变的绑定运算符。它只是让左边的东西和右边的东西相同。在这种情况下，$ sides-of-square实际上是4而不仅仅是恰好存储4的变量。你不能分配给4，所以你不能分配到$ side-of-a-square。</p>
+
+<p>如果您首先分配给标量变量然后绑定到该变量，则最终会为同一个变量使用两个名称：</p>
+
+<pre><code>my $number = 3;
+my $sides := $number;
+</code></pre>
+
+<p>You can change <code>$sides</code> or <code>$number</code>, and the “other” will change. But there is no “other” to change because they are the same thing! You might think of these as aliases, but it’s a bit more complicated.</p>
+
+<p>There’s an important concept here that you should learn early. A variable assignment with <code>=</code> creates a container, then puts a value in that container. A container is just a box that can store a value. You can add, remove, and replace the value in that box. This is mostly invisible to you because the language handles it for you.</p>
+
+<p>The binding operator skips this containerization. It aliases the thingy on the right side directly. If it’s already a container that’s what you bind to. You can break down the action of assignment into two steps. First you bind to an anonymous container. That’s right: a container can exist without a name. An anonymous container is just the <code>$</code> sigil:</p>
+
+<p>您可以更改$ sides或$ number，“other”将更改。但是没有“其他”可以改变，因为它们是同一个东西！您可能会将这些视为别名，但它有点复杂。</p>
+
+<p>这里有一个重要的概念，你应该尽早学习。带=的变量赋值创建一个容器，然后在该容器中放入一个值。容器只是一个可以存储值的盒子。您可以添加，删除和替换该框中的值。这对你来说几乎是不可见的，因为语言会为你处理它。</p>
+
+<p>绑定操作员跳过此容器化。它直接在右侧别名。如果它已经是一个与你绑定的容器。您可以将分配操作分解为两个步骤。首先绑定到匿名容器。没错：容器可以没有名字而存在。一个匿名的容器只是$ sigil：</p>
+
+<pre><code>my $number := $;
+</code></pre>
+
+<p>After that you can change the value in the container using <code>=</code>:</p>
+
+<p>之后，您可以使用=更改容器中的值：</p>
+
+<pre><code>$number = 3;
+</code></pre>
+
+<p>Sometimes you’ll need to know if the thingy you have is a container, and there will be times you’ll want to skip the container. Start thinking about this early, before you develop bad habits, and your programming life will be easier.</p>
+
+<p>有时你需要知道你拥有的东西是否是一个容器，有时候你会想要跳过容器。在你养成坏习惯之前就开始考虑这个问题，你的编程生活会更容易。</p>
+
+<h1 id="a-main-program">A MAIN Program</h1>
+
+<p>In <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch01.html#camelia-introduction">Chapter 1</a> you saw some examples of statements. This is a complete program:</p>
+
+<p>在第1章中，您看到了一些语句示例。这是一个完整的程序：</p>
+
+<pre><code>put 'Hello Perl 6!';
+</code></pre>
+
+<p>If you’ve programmed in some other languages you may have encountered a subroutine called <code>main</code> or something similar. Those languages probably required you to put your program inside that routine; when you ran your program it automatically ran that subroutine for you. Perl 6 is a little different because it assumes that your entire file is already that <code>main</code>.</p>
+
+<p>You can still have such a subroutine though. If you define a <code>MAIN</code> subroutine (all caps!) your program will call that automatically if you run the program:</p>
+
+<p>如果您使用其他语言进行编程，则可能遇到了一个名为main或类似的子程序。那些语言可能要求你把你的程序放在那个例程中;当你运行程序时，它会自动为你运行该子程序。 Perl 6有点不同，因为它假设您的整个文件已经是主要文件。</p>
+
+<p>你仍然可以拥有这样的子程序。如果你定义一个MAIN子程序（所有大写！），你的程序将在你运行程序时自动调用它：</p>
+
+<pre><code>sub MAIN {
+    put 'Hello Perl 6!'
+    }
+</code></pre>
+
+<p>You won’t read about subroutines until <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch11.html#camelia-subroutines">Chapter 11</a>, so trust me for a bit on this one. You’ll read more of an explanation of <code>MAIN</code> as you go through the book.</p>
+
+<p>EXERCISE 2.1Create both versions of the “Hello Perl 6” program. The one-line version and <code>MAIN</code> version should give you the same output.</p>
+
+<p>在第11章之前，你不会阅读关于子程序的内容，所以请相信我一点。在阅读本书时，您将阅读更多关于MAIN的解释。</p>
+
+<p>EXERCISE 2.1创建“Hello Perl 6”程序的两个版本。单行版本和MAIN版本应该为您提供相同的输出。</p>
+
+<h2 id="program-arguments">Program Arguments</h2>
+
+<p>You probably have seen other command-line programs that take arguments. The filenames you give to <em>more</em> or <em>type</em> are arguments that tell those programs which file’s contents you want to see:</p>
+
+<p>您可能已经看过其他带参数的命令行程序。您提供给更多或类型的文件名是告诉这些程序您想要查看哪些文件内容的参数：</p>
+
+<pre><code>% more hello-world.p6
+
+C:\ type hello-world.p6 
+</code></pre>
+
+<p>Your Perl 6 program can take arguments too. When you try it with your existing program you get a help message instead of the output that you expected:</p>
+
+<p>你的Perl 6程序也可以参数。当您使用现有程序尝试它时，您会得到一条帮助消息，而不是您期望的输出：</p>
+
+<pre><code>% perl6 hello-world-main.p6 1 2 3
+Usage:
+  hello-world-main.p6
+</code></pre>
+
+<p>To accept arguments you have to tell <code>MAIN</code> to expect them. Your program had an implicit set of empty parentheses in it. Those parentheses define the parameters, which are the templates for the arguments. Arguments are what you get; parameters are what you wanted. In this case you didn’t specify any parameters, so your program expects no arguments and complains if you try to give it some:</p>
+
+<p>要接受参数，你必须告诉MAIN期望它们。你的程序中有一组隐含的空括号。这些括号定义参数，这些参数是参数的模板。争论就是你得到的;参数是你想要的。在这种情况下，您没有指定任何参数，因此如果您尝试给它一些，您的程序不需要参数和抱怨：</p>
+
+<pre><code>sub MAIN () {
+    put 'Hello Perl 6!'
+    }
+</code></pre>
+
+<p>You can change this. You can specify a variable in the parameter list. One parameter allows your <code>MAIN</code> subroutine to take exactly one argument. Change your <code>put</code> statement to output the value in <code>$thingy</code> by defining a signature after the subroutine name:</p>
+
+<p>你可以改变这个。您可以在参数列表中指定变量。一个参数允许MAIN子例程只取一个参数。通过在子例程名称后定义签名，更改put语句以输出$ thingy中的值：</p>
+
+<pre><code>sub MAIN ( $thingy ) {
+    put $thingy;
+    }
+</code></pre>
+
+<p>When you run this program with no command-line arguments you get a different help message. You needed one argument and gave it none. Curiously, the help message tells you the name of the variable you used in the parameter:</p>
+
+<p>如果在没有命令行参数的情况下运行此程序，则会收到不同的帮助消息。你需要一个论点并且没有给它。奇怪的是，帮助消息告诉您在参数中使用的变量的名称：</p>
+
+<pre><code>% perl6 main-one-thingy.p6
+Usage:
+  main-one-thingy.p6 &lt;thingy&gt;
+
+% perl6 main-one-thingy.p6 Hello
+Hello
+</code></pre>
+
+<p>Quote the entire value or escape the whitespace (Unix shells only) to preserve whitespace inside a value you want to give to the thingy:</p>
+
+<p>引用整个值或转义空格（仅限Unix shell）以保留要为thingy赋值的内部空格：</p>
+
+<pre><code>% perl6 main-one-thingy.p6 &quot;Hello Perl 6&quot;
+Hello Perl 6
+
+% perl6 main-one-thingy.p6 Hello\ Perl\ 6
+Hello Perl 6
+</code></pre>
+
+<p>You can specify more than one parameter by separating them with commas. You can also output multiple things in a single <code>put</code> by separating them with commas:</p>
+
+<p>您可以通过用逗号分隔多个参数来指定它们。您也可以通过用逗号分隔它们来输出单个put中的多个内容：</p>
+
+<pre><code>sub MAIN ( $thingy1, $thingy2 ) {
+    put '1: ', $thingy1;
+    put '2: ', $thingy1;
+    }
+</code></pre>
+
+<p>Now you have to give your program two arguments. If you don’t give it exactly two arguments it doesn’t work:</p>
+
+<p>现在你必须给你的程序两个参数。如果你不准确地给它两个参数它不起作用：</p>
+
+<pre><code>% perl6 main-two-thingys.p6 Hamadryas
+Usage:
+  main-two-thingys.p6 &lt;thingy1&gt; &lt;thingy2&gt;
+
+% perl6 main-two-thingys.p6 Hamadryas perlicus
+1: Hamadryas
+2: perlicus
+</code></pre>
+
+<h6 id="note">NOTE</h6>
+
+<p><em>Hamadryas perlicus</em> is the (un)scientific name I’ve given to the butterfly on the cover. Sometimes I call him “Hama” for short because it rhymes with “llama.”</p>
+
+<p>Sometimes you don’t want to specify two arguments even though you need two values. You can specify a default value for some parameters. Use the <code>=</code> to specify the default:</p>
+
+<p>Hamadryas perlicus *是我在封面上给蝴蝶的（非）学名。有时我称他为“哈马”，因为它与“美洲驼”押韵。</p>
+
+<p>有时您不希望指定两个参数，即使您需要两个值。您可以为某些参数指定默认值。使用=指定默认值：</p>
+
+<pre><code>sub MAIN ( $thingy1, $thingy2 = 'perlicus' ) {
+    put '1: ', $thingy1;
+    put '2: ', $thingy2;
+    }
+</code></pre>
+
+<p>When you call it with two arguments it works as before, but when you specify exactly one argument it uses the default for the second:</p>
+
+<p>当你用两个参数调用它时，它像以前一样工作，但是当你指定一个参数时，它使用第二个参数的默认值：</p>
+
+<pre><code>% perl6 main-two-thingys-default.p6 Hamadryas februa
+1: Hamadryas
+2: februa
+
+% perl6 main-two-thingys-default.p6 Hamadryas
+1: Hamadryas
+2: perlicus
+</code></pre>
+
+<p>Any parameters with defaults have to show up after those without them. You’ll see much more about parameters in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch11.html#camelia-subroutines">Chapter 11</a>.</p>
+
+<p>EXERCISE 2.2Create a program that takes three command-line arguments and outputs them on separate, numbered lines. Give two of the parameters default values.</p>
+
+<p>任何带有默认值的参数都必须显示在没有它们的参数之后。您将在第11章中看到有关参数的更多信息。</p>
+
+<p>练习2.2创建一个带有三个命令行参数的程序，并将它们输出到不同的编号行上。给出两个参数默认值。</p>
+
+<h2 id="prompting-for-values">Prompting for Values</h2>
+
+<p>The <code>prompt</code> routine outputs a message asking for input. When you type some text followed by Return <code>prompt</code>reads that text and returns it. You can assign that value to a variable:</p>
+
+<p>提示例程输出要求输入的消息。当您键入一些文本，然后返回提示时，将读取该文本并将其返回。您可以将该值分配给变量：</p>
+
+<pre><code>my $answer = prompt 'What is your favorite number? ';
+put 'Your answer was [', $answer, ']';
+</code></pre>
+
+<p>When you run the program you see the prompt and start typing right after it on the same line:</p>
+
+<p>运行程序时，您会看到提示并在同一行后面开始输入：</p>
+
+<pre><code>% perl6 prompt.p6
+What is your favorite number? 137
+Your answer was [137]
+</code></pre>
+
+<p>The value you get back from <code>prompt</code> does not include the line ending from Return.</p>
+
+<p>EXERCISE 2.3Write a program that asks for your name and then outputs a greeting to that name. If your name is Gilligan it should output “Hello Gilligan.” Can you use a <code>MAIN</code> subroutine and only prompt if there’s no command-line argument?</p>
+
+<p>从提示中返回的值不包括以Return结尾的行。</p>
+
+<p>练习2.3写一个程序，询问你的名字，然后输出一个问候语到该名称。如果你的名字是Gilligan，它应该输出“Hello Gilligan。”你能使用MAIN子程序，只有在没有命令行参数的情况下才会提示吗？</p>
+
+<h1 id="literal-numbers">Literal Numbers</h1>
+
+<p>Literal values are those that you type directly into the program. They are fixed and are sometimes called “hardcoded” values because they exist directly in the program instead of coming from input or configuration. These are terms, and you can write them in several ways.</p>
+
+<p>An integer is a whole number. These are the numbers of everyday life expressed with the digits from 0 to 9:</p>
+
+<p>文字值是您直接在程序中键入的值。它们是固定的，有时称为“硬编码”值，因为它们直接存在于程序中，而不是来自输入或配置。这些是术语，您可以通过多种方式编写它们。</p>
+
+<p>整数是整数。这些是用0到9的数字表示的日常生活数量：</p>
+
+<pre><code>137
+4
+-19
+0
+</code></pre>
+
+<p>Digital computers are more comfortable with powers of two. Prefix a literal number with <code>0x</code> to specify a hexadecimal number. That’s base 16 and uses the digits 0 to 9 and the letters <em>A</em> to <em>F</em> (in either case) to represent 0 to 15:</p>
+
+<p>数字计算机更适合两种能力。使用0x前缀一个文字数字以指定十六进制数字。这是基数16并使用数字0到9和字母A到F（在任何一种情况下）代表0到15：</p>
+
+<pre><code>0x89
+0xBEEF
+-0x20
+</code></pre>
+
+<p>Octal numbers are base 8 and use the digits 0 to 7. Prefix a literal octal number with <code>0o</code>:</p>
+
+<p>八进制数是基数8并使用数字0到7.用0o前缀一个文字八进制数：</p>
+
+<pre><code>0o211
+-0o177
+</code></pre>
+
+<p>Binary numbers are base 2 and use the digits 0 and 1. These are handy when you deal with binary formats. Prefix them with <code>0b</code>:</p>
+
+<p>二进制数字是基数2并使用数字0和1.当您处理二进制格式时，这些都很方便。用0b作为前缀：</p>
+
+<pre><code>0b10001001
+</code></pre>
+
+<p>Choose a representation that’s easy for you to understand or that’s natural for the task. The compiler converts those representations into values that the physical computer can use. It doesn’t care which one you use; they are just numbers. These are all the same value:</p>
+
+<p>选择一个易于理解或对任务而言很自然的表示。编译器将这些表示转换为物理计算机可以使用的值。它并不关心你使用哪一个;他们只是数字。这些都是相同的价值：</p>
+
+<pre><code>137           # decimal,     base 10
+0b10001001    # binary,      base  2
+0o211         # octal,       base  8
+0x89          # hexadecimal, base 16
+</code></pre>
+
+<p>EXERCISE 2.4In the REPL try the different base examples. What decimal value does the REPL echo?</p>
+
+<p>Perhaps you don’t like the ASCII digits 0 to 9. You can use any digits that Unicode supports; Perl 6 knows about anything that’s a number character. Eastern Arabic numerals work. Notice that the radix prefixes are the same:</p>
+
+<p>EXERCISE 2.4在REPL中尝试不同的基础示例。 REPL回显的十进制值是多少？</p>
+
+<p>也许您不喜欢ASCII数字0到9.您可以使用Unicode支持的任何数字; Perl 6知道任何数字角色。东部阿拉伯数字工作。请注意，基数前缀是相同的：</p>
+
+<pre><code>١٣٧
+0b١٠٠٠١٠٠١
+0o٢١١
+0x٨٩
+</code></pre>
+
+<p>So do Bengali digits:</p>
+
+<p>孟加拉语数字也是如此：</p>
+
+<pre><code>১৩৭
+0b১০০০১০০১
+0o২১১
+0x৮৯
+</code></pre>
+
+<p>I don’t encourage you to represent numbers like this in your program, but Perl 6 understands them. This is useful when you are processing text that contains them. Your program will be able to convert these to a number type.</p>
+
+<p>You can choose other bases up to base 36. You’ve already seen base 16, which uses 0 to 9 and <em>A</em> to <em>F</em>. Base 17 would add <em>G</em>, and so on up to base 36, which includes <em>Z</em>. Use a colon before the base (in decimal), then put the digits inside angle brackets:</p>
+
+<p>我不鼓励你在你的程序中代表这样的数字，但Perl 6理解它们。当您处理包含它们的文本时，这非常有用。您的程序将能够将这些转换为数字类型。</p>
+
+<p>您可以选择基数为36的其他基数。您已经看过基数为16，使用0到9和A到F.基数17将添加G，依此类推到基数36，其中包括Z.使用冒号之前基数（十进制），然后将数字放在尖括号内：</p>
+
+<pre><code>:7&lt;254&gt;
+:19&lt;IG88&gt;
+:26&lt;HAL9000&gt;
+:36&lt;THX1138&gt;
+</code></pre>
+
+<p>EXERCISE 2.5Try the unusual base examples in the REPL. What decimal numbers are they?</p>
+
+<p>练习2.5尝试REPL中不寻常的基础示例。它们的十进制数是多少？</p>
+
+<h2 id="formatting-numbers">Formatting Numbers</h2>
+
+<p>Literal numbers are objects. You can call methods on objects. The <code>.base</code> method allows you to specify the base that you want to represent:</p>
+
+<p>文字数字是对象。您可以在对象上调用方法。 .base方法允许您指定要表示的基数：</p>
+
+<pre><code>put 0x89.base: 10;     #  137
+</code></pre>
+
+<p>You can choose some other base, up to 36:</p>
+
+<p>您可以选择其他一些基地，最多36个：</p>
+
+<pre><code>put 0x89.base:  2;     # 10001001
+put 0x89.base:  8;     # 211
+put 0x89.base: 16;     # 89
+</code></pre>
+
+<p>EXERCISE 2.6Write a program that takes a decimal number as its single command-line argument. Output its binary, octal, decimal, and hexadecimal values. What happens if you give it a hexadecimal number on the command line? What if you specify the decimal number in Eastern Arabic digits?</p>
+
+<p>In the previous exercise you couldn’t specify a hexadecimal number as an argument. That’s because you weren’t actually specifying a number as an argument. It was text made up of digit characters. If you want to use a hexadecimal number you have to tell your program how to convert the number. You can use <code>.parse-base</code> for that. You tell it which base you expect and it does the rest:</p>
+
+<p>练习2.6编写一个以十进制数作为单个命令行参数的程序。输出二进制，八进制，十进制和十六进制值。如果在命令行上给它一个十六进制数，会发生什么？如果您在东部阿拉伯数字中指定十进制数怎么办？</p>
+
+<p>在上一个练习中，您无法将十六进制数指定为参数。那是因为你实际上没有指定一个数字作为参数。它是由数字字符组成的文本。如果要使用十六进制数，则必须告诉程序如何转换数字。你可以使用.parse-base。你告诉它你期望的基础，剩下的就是：</p>
+
+<pre><code>my $number = $thingy.parse-base: 16;
+</code></pre>
+
+<p>EXERCISE 2.7Modify your answer from the previous exercise to accept a hexadecimal number command-line argument. Your program will now only handle hexadecimal numbers if you’re using only what you’ve seen so far.</p>
+
+<p>练习2.7修改上一练习中的答案以接受十六进制数字命令行参数。如果你只使用到目前为止看到的内容，你的程序现在只能处理十六进制数字。</p>
+
+<h1 id="numeric-operations">Numeric Operations</h1>
+
+<p>Numeric operators transform numbers into new values. The simplest demonstration is to immediately output the result. The <code>+</code> is the addition operator:</p>
+
+<p>数字运算符将数字转换为新值。最简单的演示是立即输出结果。 +是加法运算符：</p>
+
+<pre><code>put 2 + 2;
+</code></pre>
+
+<p>You can also store the result in a variable and then output it. The item assignment is an operation and so is the addition. The <code>+</code> happens first because it has higher precedence:</p>
+
+<p>您还可以将结果存储在变量中，然后将其输出。项目分配是一项操作，添加也是如此。 +首先发生，因为它具有更高的优先级：</p>
+
+<pre><code>my $sum = 2 + 2;
+put $sum;
+</code></pre>
+
+<p>There are operators for subtraction (<code>-</code>), multiplication (<code>*</code>), division (<code>/</code>), and exponentiation (<code>**</code>). You’ll see more in the next chapter.</p>
+
+<p>Outputting a single number is easy. If you want to output a series of numbers, you could have multiple lines:</p>
+
+<p>有减法（ - ），乘法（*），除法（/）和取幂（**）的运算符。您将在下一章中看到更多内容。</p>
+
+<p>输出单个数字很容易。如果要输出一系列数字，可以有多行：</p>
+
+<pre><code>my $sum = 0;
+put $sum + 1;
+put $sum + 1 + 1;
+put $sum + 1 + 1 + 1;
+</code></pre>
+
+<p>Each time you add one more to it. That repeats a lot of structure. You can back up a little to make an improvement where the <code>put</code> statement is the same in each case:</p>
+
+<p>每次再添加一个。这重复了很多结构。在每种情况下，put语句相同时，您可以稍微备份以进行改进：</p>
+
+<pre><code>my $sum = 0;
+
+$sum = $sum + 1;
+put $sum;
+
+$sum = $sum + 1;
+put $sum;
+
+$sum = $sum + 1;
+put $sum;
+</code></pre>
+
+<p>The <code>$sum</code> variable shows up on the left and right of the assignment. That’s okay; the compiler’s not going to get confused. It evaluates everything on the right side using the current value of <code>$sum</code>. When it’s reduced the right side to its value it assigns that to <code>$sum</code>, replacing the value that’s already there. You’re still doing the same thing over and over again, but now that same thing looks exactly like the other things.</p>
+
+<p>Now it’s time to introduce <code>loop</code>. It repeatedly executes the code inside its braces. This code will run until you interrupt the program (probably with Control-C):</p>
+
+<p>$ sum变量显示在赋值的左侧和右侧。没关系;编译器不会混淆。它使用$ sum的当前值评估右侧的所有内容。当它将右侧减少到它的值时，它会将其分配给$ sum，替换已存在的值。你仍然一遍又一遍地做同样的事情，但现在同样的事情看起来和其他事情完全一样。</p>
+
+<p>现在是时候介绍循环了。它重复执行括号内的代码。此代码将一直运行，直到您中断程序（可能使用Control-C）：</p>
+
+<pre><code>my $sum = 0;
+loop {
+    $sum = $sum + 1;
+    put $sum;
+    }
+</code></pre>
+
+<p>You can combine the two statements inside <code>loop</code>. The result of an assignment is the value that you assigned. Here, you add to <code>$sum</code> then assign that result back to <code>$sum</code>, and use that expression as the value you give to <code>put</code>:</p>
+
+<p>您可以在循环内组合这两个语句。赋值的结果是您指定的值。在这里，您添加$ sum然后将该结果分配回$ sum，并将该表达式用作您放置的值：</p>
+
+<pre><code>my $sum = 0;
+loop {
+    put $sum = $sum + 1;
+    }
+</code></pre>
+
+<p>This sort of structure is so common that it has its own operator: the <code>++</code> unary prefix autoincrement operator. It adds one before you use the value:</p>
+
+<p>这种结构很常见，它有自己的运算符：++一元前缀自动增量运算符。它在您使用该值之前添加一个：</p>
+
+<pre><code>my $sum = 0;
+loop {
+    put ++$sum;
+    }
+</code></pre>
+
+<p>There’s also a unary postfix version. It adds one to the value, but after you use it:</p>
+
+<p>还有一个一元的后缀版本。它会在值中添加一个，但在您使用它之后：</p>
+
+<pre><code>my $sum = 0;
+loop {
+    put $sum++;
+    }
+</code></pre>
+
+<p>EXERCISE 2.8What’s the difference in output in the two programs that use the prefix and postfix autoincrement operators? Can you figure it out without running the programs?</p>
+
+<p>So far you’ve declared variables with <code>my</code>. That limits their definition to the current scope. That’s a problem for variables you want in a <code>loop</code> if they should keep their values. This wouldn’t work because each time through the <code>loop</code> would get a new variable even though you used the same name:</p>
+
+<p>练习2.8使用前缀和后缀自动增量运算符的两个程序的输出差异是什么？如果不运行程序，你能搞清楚吗？</p>
+
+<p>到目前为止，你已经用我的声明了变量。这将他们的定义限制在当前范围内。如果它们应该保留它们的值，那么在循环中你想要的变量就是一个问题。这不起作用，因为即使您使用相同的名称，每次循环都会获得一个新变量：</p>
+
+<pre><code>loop {
+    my $sum = 0;
+    put $sum++;
+    }
+</code></pre>
+
+<p>Declare the variable with <code>state</code> instead: this makes the variable private to the block but doesn’t reset it each time through it. A <code>state</code> declaration only executes the first time through the block and is ignored after that. The assignment to <code>$sum</code> happens once:</p>
+
+<p>用状态声明变量：这使得变量对块是私有的，但每次都不会重置它。状态声明仅在块中第一次执行，之后将被忽略。 $ sum的赋值发生一次：</p>
+
+<pre><code>loop {
+    state $sum = 0;
+    put $sum++;
+    }
+</code></pre>
+
+<p>This is a bit nicer because everything about <code>$sum</code> is contained inside the block. Always try to give variables the smallest scope they need. If they don’t need to be outside the block define them inside it.</p>
+
+<p>Those operators add or subtract one. If you want to increment by a different number you’re back to using <code>+</code>:</p>
+
+<p>这有点好，因为$ sum的所有内容都包含在块中。始终尝试为变量提供所需的最小范围。如果他们不需要在块之外定义它们。</p>
+
+<p>那些运营商增加或减少一个。如果你想增加一个不同的数字，你就回到了使用+：</p>
+
+<pre><code>loop {
+    state $sum = 0;
+    put $sum = $sum + 2;
+    }
+</code></pre>
+
+<p>That’s still one too many <code>$sum</code>s in that code. There’s a special form of the assignment operator that lets you shorten this. You can put the infix operator before the <code>=</code>, like this:</p>
+
+<p>那段代码中仍然有太多$ sum。有一种特殊形式的赋值运算符可以让你缩短它。您可以在=之前放置中缀运算符，如下所示：</p>
+
+<pre><code>$sum += 2;
+</code></pre>
+
+<p>This convenient shorthand is binary assignment. It’s the same as using the variable on both sides of the <code>=</code> but it’s easier to type:</p>
+
+<p>这种方便的简写是二进制赋值。它与在=的两侧使用变量相同，但更容易输入：</p>
+
+<pre><code>$sum = $sum + 2;
+</code></pre>
+
+<p>Most binary operators can do this, even if they are multiple characters:</p>
+
+<p>大多数二元运算符都可以执行此操作，即使它们是多个字符：</p>
+
+<pre><code>$product *= 5;
+$quotient /= 2;
+$is-divisible %%= 3;
+</code></pre>
+
+<p>EXERCISE 2.9Rewrite the looping program to output only multiples of three by adding the appropriate interval to the previous value. Further modify the program to accept the multiple as a command-line argument.</p>
+
+<p>练习2.9通过将适当的间隔添加到上一个值，重写循环程序以仅输出三的倍数。进一步修改程序以接受多个作为命令行参数。</p>
+
+<h1 id="conditional-execution">Conditional Execution</h1>
+
+<p>This chapter has been working its way to a number-guessing program. You know a little bit about numbers, command-line arguments, prompting, and looping. Next you need to know how to decide between two or more paths in your code. That comes in two parts: comparing things to get an answer and using that answer to select the next thing to do.</p>
+
+<p>本章一直致力于数字猜测程序。您对数字，命令行参数，提示和循环有一点了解。接下来，您需要知道如何在代码中的两个或多个路径之间做出决定。这分为两部分：比较事情以获得答案并使用该答案选择下一步要做的事情。</p>
+
+<h2 id="boolean-values">Boolean Values</h2>
+
+<p>Boolean values are logical values that can be one thing or the other: yes or no, on or off, or <code>True</code> or <code>False</code>. These are of type <a href="https://docs.perl6.org/type/Bool.html"><code>Bool</code></a>. You’ll use these values to decide between different paths in your program. First, a little Boolean math.</p>
+
+<p>You can combine Boolean values with logical operators. The <code>&amp;&amp;</code> logical AND operator evaluates to <code>True</code> if both operands are <code>True</code>. The <code>||</code> logical OR operator evaluates to <code>True</code> if one or more operators are <code>True</code>:</p>
+
+<p>布尔值是逻辑值，可以是一个或另一个：是或否，打开或关闭，或者是True或False。这些是Bool类型。您将使用这些值来决定程序中的不同路径。首先，一点布尔数学。</p>
+
+<p>您可以将布尔值与逻辑运算符组合使用。如果两个操作数均为True，则&amp;&amp; logical AND运算符的计算结果为True。 ||如果一个或多个运算符为True，则逻辑OR运算符的计算结果为True：</p>
+
+<pre><code>% perl6
+&gt; True &amp;&amp; True
+True
+&gt; True &amp;&amp; False
+False
+&gt; True || True
+True
+&gt; True || False
+True
+</code></pre>
+
+<p>All of these operators have spelled out “word” versions. These are the lowest-precedence operators (aside from the sequence operators). These operations always happen last:</p>
+
+<p>所有这些运营商都拼写出“单词”版本。这些是优先级最低的运算符（除了序列运算符）。这些操作总是最后发生：</p>
+
+<pre><code>% perl6
+&gt; True and True
+True
+&gt; True and False
+False
+&gt; True or False
+True
+</code></pre>
+
+<p>The <code>!</code> unary prefix operator changes one <a href="https://docs.perl6.org/type/Bool.html"><code>Bool</code></a> value to the other one: <code>True</code> becomes <code>False</code>, and the other way around. This is called negating the condition. <code>not</code> is the low-precedence version of that:</p>
+
+<p>的！一元前缀运算符将一个Bool值更改为另一个：True变为False，反之亦然。这被称为否定条件。不是那个低优先级的版本：</p>
+
+<pre><code>% perl6
+&gt; ! True
+False
+&gt; ! False
+True
+&gt; not True
+False
+&gt; not False
+True
+</code></pre>
+
+<p>Many objects can collapse themselves to a <a href="https://docs.perl6.org/type/Bool.html">Bool</a> value when needed, but it’s up to each object how it does that. For numbers, <code>0</code> is <code>False</code> and everything else is <code>True</code>.</p>
+
+<p>For most objects (not just numbers) you can use a prefix <code>?</code> to coerce into either <code>True</code> or <code>False</code>. It calls the <code>.Bool</code> method on the object. The builtin types know how to convert their values to Booleans using whatever rule they decide. For numbers, <code>0</code> is <code>False</code> and everything else is <code>True</code>:</p>
+
+<p>许多对象可以在需要时将自身折叠为Bool值，但是由每个对象决定它是如何做到的。对于数字，0为False，其他所有为True。</p>
+
+<p>对于大多数对象（不仅仅是数字），您可以使用前缀？强迫无论是真还是假。它在对象上调用.Bool方法。内置类型知道如何使用他们决定的任何规则将其值转换为布尔值。对于数字，0为False，其他一切为True：</p>
+
+<pre><code>% perl6
+&gt; ?1
+True
+&gt; ?0
+False
+&gt; ?-1
+True
+&gt; 1.Bool
+True
+&gt; 0.Bool
+False
+&gt; (-1).Bool
+True
+</code></pre>
+
+<p>The <code>.so</code> method and <code>so</code> routine do the same thing:</p>
+
+<p>.so方法和例程也做同样的事情：</p>
+
+<pre><code>&gt; 1.so
+True
+&gt; 0.so
+False
+&gt; (-1).so
+True
+&gt; so 0
+False
+&gt; so 1
+True
+</code></pre>
+
+<p>Type objects know what they are but they have no concrete value. They are always <code>False</code>:</p>
+
+<p>类型对象知道它们是什么，但它们没有具体的价值。他们总是错的：</p>
+
+<pre><code>% perl6
+&gt; Int.so
+False
+</code></pre>
+
+<p>Some things that want Boolean values will implicitly do these coercions for you.</p>
+
+<p>一些需要布尔值的东西会隐式地为你做这些强制。</p>
+
+<h3 id="short-circuit-operators">SHORT-CIRCUIT OPERATORS</h3>
+
+<p>The logical operators don’t really evaluate to Boolean values. <code>&amp;&amp;</code> and <code>||</code> test their expressions for <code>True</code> or <code>False</code>, but the entire structure evaluates to the last expression it evaluated.</p>
+
+<p><code>||</code> needs only one expression to be <code>True</code> for the entire thing to be <code>True</code>. If it gets back anything that’s <code>True</code>, then the entire thing is <code>True</code>. All of these are <code>False</code>, but you can see the last expression <code>||</code> evaluated:</p>
+
+<p>逻辑运算符并不真正评估为布尔值。 &amp;&amp;和||测试他们的表达式是True还是False，但整个结构的计算结果是它评估的最后一个表达式。</p>
+
+<p>||只需要一个表达式为True，整个事物就是True。如果它返回任何真实的东西，那么整个事情就是真的。所有这些都是假的，但你可以看到最后一个表达式||评价：</p>
+
+<pre><code>% perl6
+&gt; 0 || Nil
+Nil
+&gt; 0 || False
+False
+&gt; 0 || Failure
+(Failure)
+</code></pre>
+
+<p>These are <code>True</code>. When <code>||</code> finds any value that would evaluate to <code>True</code> as a Boolean it stops right away. These are sometimes called short-circuit operators:</p>
+
+<p>这些是真的。当||找到任何值将被评估为True的值作为它立即停止的布尔值。这些有时被称为短路运营商：</p>
+
+<pre><code>% perl6
+&gt; True || 0
+True
+&gt; 137 || True
+137
+</code></pre>
+
+<p>It’s the same with <code>&amp;&amp;</code>. It returns the last expression it evaluated. If that value is <code>False</code> then one of those expressions was <code>False</code>:</p>
+
+<p>与&amp;&amp;相同。它返回它评估的最后一个表达式。如果该值为False，则其中一个表达式为False：</p>
+
+<pre><code>% perl6
+&gt; 0 &amp;&amp; 137
+0
+&gt; 42 &amp;&amp; 8
+8
+</code></pre>
+
+<p>There’s a third operator that’s similar. The defined-or operator, <code>//</code>, tests its left side for definedness. If the left value is defined that’s the result, even if that value is <code>False</code>:</p>
+
+<p>还有第三个类似的运营商。定义的或运算符//测试其左侧的定义。如果定义左值是结果，即使该值为False：</p>
+
+<pre><code>% perl6
+&gt; 0 // 137
+0
+&gt; Nil // 19
+19
+</code></pre>
+
+<p>A type object is never defined:</p>
+
+<p>永远不会定义类型对象：</p>
+
+<pre><code>% perl6
+&gt; Int // 7
+7
+</code></pre>
+
+<p>The defined-or is part of a common technique to set a value if a variable doesn’t already have one (or has one that is not defined). You’ll see it as a binary assignment:</p>
+
+<p>如果变量还没有（或者没有定义一个变量），则定义或者是设置值的常用技术的一部分。您会将其视为二进制赋值：</p>
+
+<pre><code>$value //= 137;
+</code></pre>
+
+<h2 id="comparing-things">Comparing Things</h2>
+
+<p>A comparator evaluates to <code>True</code> or <code>False</code> based on some relative measure. The numeric equality operator, <code>==</code>, compares two numbers to test if they are exactly the same. If they are the same it evaluates to <code>True</code>; otherwise it evaluates to <code>False</code>:</p>
+
+<p>比较器根据某些相对度量计算为True或False。数字相等运算符==，比较两个数字以测试它们是否完全相同。如果它们相同则评估为True;否则评估为False：</p>
+
+<pre><code>% perl6
+&gt; 1 == 1
+True
+&gt; 1 == 3
+False
+</code></pre>
+
+<p>The numeric inequality operator <code>!=</code> tests that two numbers are <em>not</em> the same:</p>
+
+<p>数值不等式运算符！=测试两个数字不相同：</p>
+
+<pre><code>% perl6
+&gt; 1 != 1
+False
+&gt; 1 != 3
+True
+</code></pre>
+
+<p>Some operators have two versions. You just saw the “ASCII” version, but there’s also a “fancy” Unicode version with <code>≠</code>:</p>
+
+<p>一些运营商有两个版本。您刚看到“ASCII”版本，但也有一个“奇特”的Unicode版本，≠：</p>
+
+<pre><code>% perl6
+&gt; 1 ≠ 3
+True
+</code></pre>
+
+<p>Instead of a literal value you can compare a variable. It doesn’t matter which side you put the values on:</p>
+
+<p>您可以比较变量而不是文字值。将值放在哪一方并不重要：</p>
+
+<pre><code>% perl6
+&gt; my $number = 37
+37
+&gt; $number == 38
+False
+&gt; 39 == $number
+False
+&gt; $number == 37
+True
+</code></pre>
+
+<p>You can have an expression on either side of the comparator or variables on both sides:</p>
+
+<p>您可以在比较器的任一侧或两侧的变量上都有一个表达式：</p>
+
+<pre><code>% perl6
+&gt; 2 + 2 == 4
+True
+&gt; 5 == 2
+False
+&gt; my $thing1 = 17
+17
+&gt; my $thing2 = 13
+13
+&gt; $thing1 == $thing2
+False
+&gt; $thing1 != $thing2
+True
+</code></pre>
+
+<p>The <code>&gt;</code> tests that the first operand is numerically greater than the second number and the <code>&lt;</code> tests that the first is less than the second:</p>
+
+<p><code>&gt;</code> 测试第一个操作数在数值上大于第二个数字，并且&lt;测试第一个操作数小于第二个数字：</p>
+
+<pre><code>% perl6
+&gt; 1 &gt; 3
+False
+&gt; 1 &lt; 3
+True
+&gt; 3 &lt; 3
+False
+</code></pre>
+
+<p>With an equals sign the test can include the number. <code>&gt;=</code> tests that the first number is numerically equal to or greater than the second, and <code>&lt;=</code> tests that it is less than or equal:</p>
+
+<p>使用等号，测试可以包括数字。 &gt; =测试第一个数字在数值上等于或大于第二个数字，并且&lt;=测试它是否小于或等于：</p>
+
+<pre><code>% perl6
+&gt; 3 &lt; 3
+False
+&gt; 3 &lt;= 3
+True
+&gt; 7 &gt; 7
+False
+&gt; 7 &gt;= 7
+True
+</code></pre>
+
+<p>You can also write these with fancier symbols: <code>&gt;=</code> as <code>≥</code> and <code>&lt;=</code> as <code>≤</code>.</p>
+
+<p>Although not a comparator, the <code>%%</code> operator also returns a Boolean. It tests if the number on the left side is evenly divisible by the number on the right side. This is quite handy:</p>
+
+<p>您也可以使用更高的符号来编写这些符号：&gt; =as≥且&lt;=as≤。</p>
+
+<p>虽然不是比较器，但%%运算符也返回一个布尔值。它测试左侧的数字是否可以被右侧的数字整除。这非常方便：</p>
+
+<pre><code>% perl6
+&gt; 10 %% 2
+True
+&gt; 10 %% 3
+False
+</code></pre>
+
+<h3 id="chained-comparisons">CHAINED COMPARISONS</h3>
+
+<p>You can chain comparison operators. You can test that a number is inside or outside of a window (remember the <code>&gt;</code> at the start of the input lines is the REPL prompt) like this:</p>
+
+<p>您可以链接比较运算符。您可以测试一个数字是在窗口内部还是外部（请记住输入行开头的&gt;是REPL提示符），如下所示：</p>
+
+<pre><code>% perl6
+&gt; $n  = 10
+10
+&gt; 7 &lt; $n &lt; 15
+True
+&gt; 7 &lt;= $n &lt; 15
+True
+&gt; 7 &lt; $n &gt; 15
+False
+&gt; 7 &gt; $n &lt; 15
+False
+</code></pre>
+
+<p>Without this you’d have to perform additional and separate comparisons:</p>
+
+<p>如果没有这个，你必须进行额外的和单独的比较：</p>
+
+<pre><code>&gt; 7 &lt; $n and $n &lt; 15
+True
+</code></pre>
+
+<h3 id="conditionally-running-a-statement">CONDITIONALLY RUNNING A STATEMENT</h3>
+
+<p>The <code>if</code> keyword allows you to evaluate a statement only when some condition is satisfied. The postfix form is the easiest. The part after the <code>if</code> is the condition; it evaluates to <code>True</code> or <code>False</code>:</p>
+
+<p>if关键字允许您仅在满足某些条件时评估语句。后缀形式是最简单的。 if之后的部分是条件;它评估为真或假：</p>
+
+<pre><code>my $number = 10;
+put 'The number is even' if $number %% 2;
+</code></pre>
+
+<p>The condition is satisfied when it evaluates to <code>True</code>. “Satisfaction” is getting what you want; the <code>if</code> wants (roughly) its condition to be <code>True</code> before it allows the statement to run. If the condition is <code>False</code> the program skips that statement.</p>
+
+<p>The <code>if</code> condition is a Boolean context; it calls <code>.Bool</code> for you when you don’t do it explicitly. All of these are the same, but you’ll probably do the last one:</p>
+
+<p>在评估为True时满足条件。 “满意”正在得到你想要的东西;在允许语句运行之前，if（大致）将其条件设置为True。如果条件为False，程序将跳过该语句。</p>
+
+<p>if条件是布尔上下文;当你不明确地做它时，它会调用.Bool。所有这些都是一样的，但你可能会做最后一个：</p>
+
+<pre><code>put 'Always outputs' if 1.Bool;
+put 'Always outputs' if 1.so;
+put 'Always outputs' if ?1;
+put 'Always outputs' if 1;
+</code></pre>
+
+<p>With this you can improve your looping program. Previously you had no way to stop it. The <code>last</code> keyword immediately leaves the loop:</p>
+
+<p>有了这个，你可以改善你的循环程序。以前你无法阻止它。最后一个关键字立即离开循环：</p>
+
+<pre><code>loop {
+    state $sum = 0;
+    put $sum++;
+    last;
+    }
+</code></pre>
+
+<p>This outputs one line then finishes the loop. That’s what <code>last</code> said to do, but that’s not very useful. This version evaluates <code>last</code> only when <code>$sum</code> is <code>5</code>:</p>
+
+<p>这输出一行然后完成循环。这就是上次说的，但这并不是很有用。仅当$ sum为5时，此版本才会评估最后一次：</p>
+
+<pre><code>loop {
+    state $sum = 0;
+    put $sum++;
+    last if $sum == 5;
+    }
+</code></pre>
+
+<p>EXERCISE 2.10What is the output of this program? Can you work it out without running the program?</p>
+
+<p>The <code>next</code> command is similar to <code>last</code>, but it goes on to the next iteration of the loop. You can use a postfix <code>if</code>to skip numbers that are divisible by two (when more than one thingy is using a variable in a condition it’s probably better to change it in a separate step):</p>
+
+<p>练习2.10这个程序的输出是什么？你可以在不运行程序的情况下解决问题吗？</p>
+
+<p>下一个命令与last类似，但它继续循环的下一次迭代。您可以使用后缀if跳过可被2整除的数字（当一个条件中有多个东西使用变量时，最好在单独的步骤中更改它）：</p>
+
+<pre><code>loop {
+    state $sum = 0;
+    $sum += 1;
+    next if $sum %% 2;
+    put $sum;
+    last if $sum &gt; 5;
+    }
+</code></pre>
+
+<p>Now you get the odd numbers:</p>
+
+<p>现在你得到奇数：</p>
+
+<pre><code>1
+3
+5
+7
+</code></pre>
+
+<h2 id="conditional-branching">Conditional Branching</h2>
+
+<p>You can also write <code>if</code> in a block form. The code inside the block runs only when the <code>if</code> is satisfied:</p>
+
+<p>你也可以用块形式写。块中的代码仅在满足if时运行：</p>
+
+<pre><code>if $number %% 2 {
+    put 'The number is even';
+    }
+</code></pre>
+
+<p>You can use parentheses for <em>grouping</em> if you like but they can’t be immediately next to the <code>if</code>; there must be some whitespace:</p>
+
+<p>如果您愿意，可以使用括号进行分组，但不能紧跟if;必须有一些空白：</p>
+
+<pre><code>if ($number %% 2) {
+    put 'The number is even';
+    }
+</code></pre>
+
+<p>With no space between the <code>if</code> and the <code>(</code> it looks like a subroutine call, which it isn’t. This is a syntax error:</p>
+
+<p>if和the之间没有空格（它看起来像子程序调用，它不是。这是语法错误：</p>
+
+<pre><code>if($number %% 2) {  # ERROR!
+    put 'The number is even';
+    }
+</code></pre>
+
+<p>An <code>unless</code> is the opposite sense of <code>if</code>. It executes its block when the condition is <code>False</code>. Another way to think about that is that it skips the block when the condition is <code>True</code>:</p>
+
+<p>除非是相反的if。它在条件为False时执行其块。另一种思考方式是在条件为True时跳过块：</p>
+
+<pre><code>unless $number %% 2 {
+    put 'The number is odd';
+    }
+</code></pre>
+
+<p>Some people prefer an <code>if</code> with a negated condition:</p>
+
+<p>有些人更喜欢具有否定条件的if：</p>
+
+<pre><code>if ! $number %% 2 {
+    put 'The number is odd';
+    }
+</code></pre>
+
+<p>An <code>else</code> allows you to provide a default block to run when the <code>if</code> is not satisfied:</p>
+
+<p>如果不满足if，则允许您提供默认块以运行：</p>
+
+<pre><code>if $number %% 2 {
+    put 'The number is even';
+    }
+else {
+    put 'The number is odd';
+    }
+</code></pre>
+
+<p>These different possibilities are branches of your code. You go down one or the other branch but not both. This is one example of a control structure that decides which code runs.</p>
+
+<p>The entire <code>if</code> structure evaluates to a value when you put a <code>do</code> in front of it. The <code>do</code> allows you to treat a control structure as an expression. The result is the last evaluated expression from inside the structure. This way you can isolate only the parts that are different, then use one statement for output:</p>
+
+<p>这些不同的可能性是代码的分支。你去一个或另一个分支，但不是两个。这是决定运行哪些代码的控制结构的一个示例。</p>
+
+<p>当你在它前面放置一个do时，整个if结构的计算结果为一个值。 do允许您将控制结构视为表达式。结果是结构内部的最后一个计算表达式。这样，您只能隔离不同的部分，然后使用一个语句进行输出：</p>
+
+<pre><code>my $type = do if $number %% 2 { 'even' }
+              else            { 'odd'  }
+
+put 'The number is ', $type;
+</code></pre>
+
+<p>You can skip the intermediate variable (although if that’s confusing it’s okay to do it the longer way):</p>
+
+<p>你可以跳过中间变量（虽然如果这让人感到困惑，可以用更长的方式去做）：</p>
+
+<pre><code>put 'The number is ',
+    do if $number %% 2 { 'even' }
+       else            { 'odd'  }
+</code></pre>
+
+<p>There’s a shortcut for this. The conditional operator has three parts: the condition, the <code>True</code> branch, and the <code>False</code> branch. Between those parts are <code>??</code> and <code>!!</code>:</p>
+
+<p>这有一个捷径。条件运算符有三个部分：条件，True分支和False分支。那些部分之间是??和!!：</p>
+
+<pre><code>CONDITION ?? TRUE BRANCH !! FALSE BRANCH
+</code></pre>
+
+<p>Using this operator you can rewrite the preceding example. The particular formatting isn’t important, but this fits nicely on the page and lines up the different parts. You don’t use a block, which makes this useful for short bits of code:</p>
+
+<p>使用此运算符可以重写前面的示例。特定的格式并不重要，但这非常适合页面并排列不同的部分。你不使用一个块，这使得这对短代码有用：</p>
+
+<pre><code>put 'The number is ',
+    $number %% 2 ?? 'even' !! 'odd';
+</code></pre>
+
+<p>An <code>elsif</code> specifies another branch with its own condition, so you have three ways this code might run. Some people think zero is neither odd nor even, and they can add another branch for that:</p>
+
+<p>elsif指定另一个具有自己条件的分支，因此您可以通过三种方式运行此代码。有些人认为零既不是奇数也不是偶数，他们可以为此添加另一个分支：</p>
+
+<pre><code>if $number == 0 {
+    put 'The number is zero';
+    }
+elsif $number %% 2 {
+    put 'The number is even';
+    }
+else {
+    put 'The number is odd';
+    }
+</code></pre>
+
+<p>This code works, but it has some repeated structure because each branch has a <code>put</code>. A <code>do</code> cleans that up nicely. Here’s another way to write that:</p>
+
+<p>这段代码有效，但它有一些重复的结构，因为每个分支都有一个put。 A做得很好清理。这是写另一种方式：</p>
+
+<pre><code>put 'The number is ', do
+       if $number == 0 { 'zero' }
+    elsif $number %% 2 { 'even' }
+    else               { 'odd'  }
+</code></pre>
+
+<p>EXERCISE 2.11Create a program that outputs the numbers from 1 to 100. However, if the number is a multiple of three, output “Fizz” instead of the number. If it’s a multiple of five, output “Buzz”. If it’s a multiple of both three and five, output “FizzBuzz”.</p>
+
+<p>练习2.11创建一个从1到100输出数字的程序。但是，如果数字是3的倍数，则输出“Fizz”而不是数字。如果它是五的倍数，则输出“Buzz”。如果它是三个和五个的倍数，则输出“FizzBuzz”。</p>
+
+<h1 id="putting-it-all-together">Putting It All Together</h1>
+
+<p>With a few more things you can now write the number-guessing program. The <code>.rand</code> method returns a fractional number between 0 and the integer (exclusively):</p>
+
+<p>通过更多的东西，你现在可以编写数字猜测程序。 .rand方法返回0和整数（仅限）之间的小数：</p>
+
+<pre><code>% perl6
+&gt; 100.rand
+62.549491627582
+</code></pre>
+
+<p>The <code>.Int</code> method coerces that to a whole number. It discards the fractional portion; it does not round the number. Put that together with <code>.rand</code> and you get a whole number between 0 and the starting number:</p>
+
+<p>.Int方法强制转换为整数。它丢弃了小数部分;它没有数字。将它与.rand一起放在0和起始编号之间的整数：</p>
+
+<pre><code>% perl6
+&gt; 100.rand.Int
+23
+</code></pre>
+
+<p>Put that together in a complete program. Choose the number, then test what side of another number (sometimes called the “pivot”) it’s on:</p>
+
+<p>把它放在一个完整的程序中。选择数字，然后测试它所在的另一个数字（有时称为“数据透视”）的哪一侧：</p>
+
+<pre><code>my $number = 100.rand.Int;
+
+if $number &gt; 50 {
+    put 'The number is greater than 50';
+    }
+elsif $number &lt; 50 {
+    put 'The number is less than 50';
+    }
+else {
+    put 'The number is 50';
+    }
+</code></pre>
+
+<p>Run that several times and you should get different output eventually:</p>
+
+<p>运行几次，你最终会得到不同的输出：</p>
+
+<pre><code>% perl6 random.p6
+The number is less than 50
+% perl6 random.p6
+The number is less than 50
+% perl6 random.p6
+The number is greater than 50
+</code></pre>
+
+<p>EXERCISE 2.12Wrap the pivot program in a <code>MAIN</code> subroutine so you can specify the highest possible number as a command-line argument. Default to <code>100</code> if you don’t supply an argument. Adjust that so the program can take another command-line argument to specify the pivot number.</p>
+
+<p>In the previous exercise you set the default for the second argument using a hard-coded literal integer:</p>
+
+<p>练习2.12在MAIN子例程中包含pivot程序，以便您可以将最高可能的数字指定为命令行参数。如果您不提供参数，则默认为100。调整它，以便程序可以使用另一个命令行参数来指定数据透视表编号。</p>
+
+<p>在上一个练习中，您使用硬编码的文字整数设置第二个参数的默认值：</p>
+
+<pre><code>sub MAIN ( $highest = 100, $pivot = 50 ) { ... }
+</code></pre>
+
+<p>If you run the program with one command-line argument that is less than <code>50</code> (or whatever you chose as your default) the output will always be the same:</p>
+
+<p>如果使用一个小于50的命令行参数（或者您选择作为默认值的任何内容）运行程序，则输出将始终相同：</p>
+
+<pre><code>% perl6 number-program.p6 37
+The number is less than 50
+</code></pre>
+
+<p>You can use parameters you’ve already specified to compute defaults for other parameters. Use <code>$highest</code> to compute <code>$pivot</code>:</p>
+
+<p>您可以使用已指定的参数来计算其他参数的默认值。使用$ highest来计算$ pivot：</p>
+
+<pre><code>sub MAIN ( $highest = 100, $pivot = $highest / 2 ) {
+</code></pre>
+
+<p>EXERCISE 2.13Modify your answer to the previous exercise so you can set the pivot to half the highest value. Default to <code>50</code> if you don’t specify two arguments.</p>
+
+<p>Now you have everything you need to write your number-guessing program. Your program chooses a secret number that you then have to figure out. This early in the book that seems like a complicated program, but you’ve seen just enough to make it:</p>
+
+<p>练习2.13修改上一练习的答案，以便将枢轴设置为最高值的一半。如果未指定两个参数，则默认为50。</p>
+
+<p>现在，您拥有编写数字猜测程序所需的一切。您的程序会选择一个您必须弄清楚的密码。在本书的早期，这看起来像一个复杂的程序，但你已经看到了足够的成就：</p>
+
+<ul>
+<li>Choose a secret number (<code>.rand</code>).</li>
+<li>Loop repeatedly until the person guesses the number (<code>next</code> and <code>last</code>).</li>
+<li>Get the person’s guess (<code>prompt</code>).</li>
+<li>Give the person a hint about their guess. Tell them if they are too high or low (comparators, <code>if</code>).</li>
+</ul>
+
+<p>•选择一个密码（•。和•）。</p>
+
+<p>反复循环，直到该人猜到该号码（下一个和最后一个）。</p>
+
+<p>得到这个人的猜测（提示）。</p>
+
+<p>给这个人一个关于他们猜测的暗示。告诉他们是否太高或太低（比较，如果）。</p>
+
+<p>EXERCISE 2.14Implement the number-guessing program. If you supply a command-line argument use that as the maximum number; otherwise use 100. It may help to immediately output the secret number as you get your program working.</p>
+
+<p>练习2.14实施数字猜测程序。如果提供命令行参数，请将其用作最大数字;否则使用100.当您的程序正常工作时，可能有助于立即输出密码。</p>
+
+<h1 id="summary">Summary</h1>
+
+<p>You made it! First chapters are typically the toughest because you’re getting your bearings. You’ve made at least one meaty program that incorporates several things that you haven’t seen in depth yet. You can take input from the command line or from a prompt. You can compare values and follow different code branches. Not bad for a first chapter.</p>
+
+<p>你做到了！第一章通常是最难的，因为你得到了你的支持。你已经制作了至少一个丰富的程序，其中包含了一些你还没有深入见过的东西。您可以从命令行或提示中获取输入。您可以比较值并遵循不同的代码分支。对于第一章来说还不错。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-09-01-%E7%AC%AC%E4%B8%80%E7%AB%A0.-%E4%BB%8B%E7%BB%8D/" data-toggle="tooltip" data-placement="top" title="第一章. 介绍">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-03-%E7%AC%AC%E4%B8%89%E7%AB%A0.-%E6%95%B0%E5%AD%97/" data-toggle="tooltip" data-placement="top" title="第三章. 数字">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

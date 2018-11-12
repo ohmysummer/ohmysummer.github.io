@@ -6,10 +6,26 @@
     <description>Recent content in Perl6 on Young For Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 05 Oct 2018 21:33:03 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 07 Oct 2018 21:10:29 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/categories/perl6/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Traps to Avoid</title>
+      <link>https://ohmysummer.github.io/post/2018-10-07-traps-to-avoid/</link>
+      <pubDate>Sun, 07 Oct 2018 21:10:29 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-10-07-traps-to-avoid/</guid>
+      <description>在学习一门编程语言时，可能有熟悉另一门编程语言的背景，总有一些事情会让您感到惊讶，并且可能会耗费宝贵的调试和发现时间。
+本文件旨在展示常见的误解，以避免它们。
+在编写 Perl 6 的过程中，我们付出了巨大的努力来消除语法中的瑕疵。然而，当你消灭一个瑕疵的时候，有时另一个会突然冒出来。所以我们花了很多时间去寻找最小数量的瑕疵或者试图把它们放在它们很少被看到的地方。正因为如此，Perl 6 的瑕疵出现在了不同的地方，而不是来自另一种语言时所期望的那样。
+变量和常量 常量在编译时计算 常量是在编译时计算的，所以如果在模块中使用它们，请记住，由于模块本身的预编译，它们的值将被冻结:
+# WRONG (most likely): unit module Something::Or::Other; constant $config-file = &amp;quot;config.txt&amp;quot;.IO.slurp;  $config-file 将在预编译时一次性被读入。config.txt 文件的更改不会在你再次启动脚本时重新加载;只有当模块被重新编译时才会重新加载。
+避免使用容器，而倾向于将值绑定到提供类似于常量行为的变量上，但允许更新值:
+# Good; file gets updated from &#39;config.txt&#39; file on each script run: unit module Something::Or::Other; my $config-file := &amp;quot;config.txt&amp;quot;.IO.slurp;  赋值为 Nil 产生不同的值, 通常是 Any 实际上，赋给 Nil 会将变量还原为其默认值。所以:
+my @a = 4, 8, 15, 16; @a[2] = Nil; say @a; # OUTPUT: «[4 8 (Any) 16]␤»  在本例中，Any 是 Array 元素的默认值。</description>
+    </item>
     
     <item>
       <title>Perl 6 中的命令行参数</title>

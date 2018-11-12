@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第八章. 文件和目录,输入和输出</title>
+  <meta property="og:title" content="第八章. 文件和目录,输入和输出" />
+  <meta name="twitter:title" content="第八章. 文件和目录,输入和输出" />
+  <meta name="description" content="Files and Directories, Input and Output ">
+  <meta property="og:description" content="Files and Directories, Input and Output ">
+  <meta name="twitter:description" content="Files and Directories, Input and Output ">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/avatar-icon.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-09-08-%E7%AC%AC%E5%85%AB%E7%AB%A0.-%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Young For Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-08-%E7%AC%AC%E5%85%AB%E7%AB%A0.-%E6%96%87%E4%BB%B6%E5%92%8C%E7%9B%AE%E5%BD%95%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Young For Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Young For Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Young For Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/avatar-icon.jpg" alt="Young For Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Young For Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第八章. 文件和目录,输入和输出</h1>
+                
+                  
+                    <h2 class="post-subheading">Files and Directories, Input and Output </h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 8, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 11 minutes (2214 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="声明">声明</h1>
+
+<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+
+<h1 id="第八章-文件和目录-输入和输出">第八章. 文件和目录, 输入和输出</h1>
+
+<p>读写文本是许多你想要编写的程序的基础。你将数据存储在文件中并稍后检索该数据。本章是关于你需要执行此操作的所有功能。在此过程中，你将看到如何处理文件路径，移动文件以及使用目录。大多数情况都是使用你已经看过的相同语法完成的，但现在使用不同对象的类型。</p>
+
+<p>本章中的许多任务可能由于程序之外的原因而失败。如果你希望在不同的目录中工作或希望某个文件存在，那么如果这些条件不为真，你可能不希望继续。这只是一个处理外部资源的程序的事实。</p>
+
+<h1 id="文件路径">文件路径</h1>
+
+<p><a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a> 对象表示文件路径。它知道如何根据文件系统的规则组合和拆分路径。只要路径的形式符合这些规则，该路径与实际存在的文件无关。你马上会看到如何处理丢失的文件。现在，在任何<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>上调用 <code>.IO</code> 将其转换为 <a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a> 对象：</p>
+
+<pre><code>my $unix-path = '/home'.IO;
+my $windows-path = 'C:/Users'.IO;
+</code></pre>
+
+<p>要构建更深的路径，请使用 <code>.add</code>。你一次可以有多个层级。 <code>.add</code> 不会改变原始对象;它为你提供了一个新对象：</p>
+
+<pre><code>my $home-directory = $unix-path.add: 'hamadryas';
+my $file = $unix-path.add: 'hamadryas/file.txt';
+</code></pre>
+
+<p>如果要在那里构建路径，请赋值回原始对象：</p>
+
+<pre><code>$unix-path  = $unix-path.add: 'hamadryas/file.txt';
+</code></pre>
+
+<p>二元赋值形式可能更有用：</p>
+
+<pre><code>$unix-path .= add: 'hamadryas/file.txt';
+</code></pre>
+
+<p><code>.basename</code> 和 <code>.parent</code> 方法拆分路径：</p>
+
+<pre><code>my $home = '/home'.IO;
+my $user = 'hamadryas';    # Str or IO::File will work
+my $file = 'file.txt'.IO;
+
+my $path = $home.add( $user ).add( $file );
+
+put 'Basename: ', $path.basename;  # Basename: file.txt
+put 'Dirname: ',  $path.parent;    # Dirname: /home/hamadryas
+</code></pre>
+
+<h6 id="注意">注意</h6>
+
+<p><code>.basename</code>返回一个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>，而不是另一个 <a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a>。如果需要，可以再次使用 <code>.IO</code>。</p>
+
+<p>使用 <code>.parent</code>，你可以决定向上升多少个层级：</p>
+
+<pre><code>my $home = '/home'.IO;
+my $user = 'hamadryas';
+my $file = 'file.txt'.IO;
+
+my $path = $home.add( $user ).add( $file );
+
+put $path;                        # /home/hamadryas/file.txt
+put 'One up:', $path.parent;      # One up: /home/hamadryas
+put 'Two up: ', $path.parent(2);  # Two up: /home
+</code></pre>
+
+<p>你可以提出问题，以确定你是否有绝对路径或相对路径：</p>
+
+<pre><code>my $home = '/home'.IO;
+my $user = 'hamadryas';
+my $file = 'file.txt'.IO;
+
+for $home, $file {
+    put &quot;$_ is &quot;, .is-absolute ?? 'absolute' !! 'relative';
+    # put &quot;$_ is &quot;, .is-relative ?? 'relative' !! 'absolute';
+}
+</code></pre>
+
+<p>使相对路径成为绝对路径。没有参数 <code>.absolute</code> 在你创建 <a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a> 对象时使用当前工作目录。如果你想要一些其他的基目录，给它一个参数。无论哪种方式，你得到一个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>而不是另一个 <a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a> 对象。 <code>.absolute</code> 方法不关心该路径是否实际存在：</p>
+
+<pre><code>my $file = 'file.txt'.IO;
+put $file.absolute;           # /home/hamadryas/file.txt
+put $file.absolute( '/etc' ); # /etc/file.txt
+put $file.absolute( '/etc/../etc' ); # /etc/../etc/file.txt
+</code></pre>
+
+<p>调用 <code>.resolve</code> 会检查文件系统。它弄清楚了 <code>.</code> 和 <code>..</code> 并将符号链接转换为目标。请注意 <code>/etc/..</code> 被替换为 <code>/private</code>，因为 <code>/etc</code> 是 macOS 上 <code>/private/etc</code> 的符号链接：</p>
+
+<pre><code>my $file = 'file.txt'.IO;
+put $file.absolute( '/etc/..' ); # /etc/../file.txt
+put $file.absolute( '/etc/..' ).IO.resolve; # /private/file.txt
+</code></pre>
+
+<p>你可以使用 <code>:completely</code> 强调该文件存在。如果路径的任何部分（除了最后的部分）不存在或无法解析，则会收到错误：</p>
+
+<pre><code>my $file = 'file.txt'.IO;
+
+{
+CATCH {
+    default { put &quot;Caught {.^name}&quot; }   # Caught X::IO::Resolve
+    }
+put $file.absolute( '/homer/..' ).IO.resolve: :completely; # fails
+}
+</code></pre>
+
+<h2 id="文件测试操作符">文件测试操作符</h2>
+
+<p>文件测试操作符回答有关文件路径的问题。他们中的大多数都返回 <code>True</code> 或 <code>False</code>。从<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>开始调用 <code>.IO</code> 方法来创建 <a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a> 对象。使用 <code>.e</code> 检查文件是否存在（表8-1显示了其他文件测试）：</p>
+
+<pre><code>my $file = '/some/path';
+
+unless $file.IO.e {
+    put &quot;The file &lt;$file&gt; does not exist!&quot;;
+}
+</code></pre>
+
+<p>为什么是 <code>.e</code>？它来自 Unix 测试程序，它使用命令行开关（例如 <code>-e</code>）来回答有关路径的问题。那些相同的字母成为方法的名称。表8-1显示了文件测试。其中大多数与类似语言中的相同，尽管一些多字母将多个测试组合成一个。</p>
+
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>The question it answers</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>e</code></td>
+<td>存在</td>
+</tr>
+
+<tr>
+<td><code>d</code></td>
+<td>是一个目录</td>
+</tr>
+
+<tr>
+<td><code>f</code></td>
+<td>是一个普通文件</td>
+</tr>
+
+<tr>
+<td><code>s</code></td>
+<td>文件大小(字节)</td>
+</tr>
+
+<tr>
+<td><code>l</code></td>
+<td>是一个符号连接</td>
+</tr>
+
+<tr>
+<td><code>r</code></td>
+<td>对当前用户是可读的</td>
+</tr>
+
+<tr>
+<td><code>w</code></td>
+<td>对当前用户是可写的</td>
+</tr>
+
+<tr>
+<td><code>rw</code></td>
+<td>对当前用户是可读和可写的</td>
+</tr>
+
+<tr>
+<td><code>x</code></td>
+<td>对当前用户是可执行的</td>
+</tr>
+
+<tr>
+<td><code>rwx</code></td>
+<td>对当前用户是可读，可写，可执行的</td>
+</tr>
+
+<tr>
+<td><code>z</code></td>
+<td>文件存在，零字节</td>
+</tr>
+</tbody>
+</table>
+
+<p>Almost all of the file tests return a <a href="https://docs.perl6.org/type/Bool">Boolean</a> value. The one odd test is <code>.s</code>, which asks for the file size in bytes. That’s not a <a href="https://docs.perl6.org/type/Bool">Boolean</a>, so how would it note a problem such as a missing file? It might return <code>0</code> in that case, because a file can have nothing in it (hence the <code>.z</code> method to ask if it exists with zero size). <code>.s</code> returns a <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>instead of <code>False</code> if there’s a problem:</p>
+
+<p>几乎所有文件测试都返回一个<a href="https://docs.perl6.org/type/Bool">布尔值</a>。一个奇怪的测试是 <code>.s</code>，它以字节为单位询问文件大小。这不是<a href="https://docs.perl6.org/type/Bool">布尔值</a>，那么它会如何记录丢失文件等问题？在这种情况下，它可能返回 <code>0</code>，因为文件中可能没有任何内容（因此 <code>.z</code> 方法询问它是否存在，大小为零）。如果出现问题，<code>.s</code> 会返回 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a> 而不是 <code>False</code>：</p>
+
+<pre><code>my $file = 'not-there';
+given $file.IO {
+    CATCH {
+        # $_ in here is the exception
+        when X::IO::NotAFile
+            { put &quot;$file is not a plain file&quot; }
+        when X::IO::DoesNotExist
+            { put &quot;$file does not exist&quot;      }
+        }
+    put &quot;Size is { .s }&quot;;
+    }
+</code></pre>
+
+<p>在尝试获取其大小之前，你可能会检查文件是否存在并且是纯文件（尽管 <code>.f</code> 表示 <code>.e</code> ），但这种方式可能不太安全，因为文件可能会在你进入<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>和当你尝试获取文件大小之间消失：</p>
+
+<pre><code>my $file = 'not-there';
+given $file.IO {
+    when .e &amp;&amp; .f { put &quot;Size is { .s }&quot;   }
+    when .e       { put &quot;Not a plain file&quot; }
+    default       { put &quot;Does not exist&quot;   }
+}
+</code></pre>
+
+<p>但这不是文件测试的唯一语法。还有副词版本。你可以智能地匹配你想要的测试。此示例使用 <a href="https://docs.perl6.org/type/Junction.html"><code>Junction</code></a> 来组合测试，即使你在第14章之前不会看到这些测试：</p>
+
+<pre><code>if $file.IO ~~ :e &amp; :f {  # Junction!
+    put &quot;Size is { .s }&quot;
+}
+</code></pre>
+
+<p>练习8.1 创建一个程序，该程序从命令行参数中获取文件列表，并报告当前用户是否可读，可写或可执行。如果文件不存在，你会怎么做？</p>
+
+<h2 id="文件元数据">文件元数据</h2>
+
+<p>文件记录的不仅仅是其内容。他们保留有关自己的额外信息;这就是元数据。 <code>.mode</code> 方法返回文件的 POSIX 权限（如果你的文件系统支持这样的事情）。这是一个整数，表示用户，组和其他所有人的设置：</p>
+
+<pre><code>my $file = '/etc/hosts';
+my $mode = $file.IO.mode;
+put $mode.fmt: '%04o';   # 0644
+</code></pre>
+
+<h6 id="注意-1">注意</h6>
+
+<p>某些 POSIX 或 Unix 特定的想法不适用于 Windows。在我写的时候，没有特定于 Windows 的模块来填补这些空白。</p>
+
+<p>每组权限需要三位：一个用于读，一个用于写和一个用于执行。你使用位运算符（你还没有看到它们）从单个数字中提取单独的权限。</p>
+
+<p>按位 AND 运算符 <code>+&amp;</code>，使用位掩码（例如以下示例中的 <code>0o700</code>）隔离集合。按位右移运算符 <code>+&gt;</code>，提取正确的数字：</p>
+
+<pre><code>my $file = '/etc/hosts';
+my $mode = $file.IO.mode;
+put $mode.fmt: '%04o';   # 0644
+
+my $user  = ( $mode +&amp; 0o700 ) +&gt; 6;
+my $group = ( $mode +&amp; 0o070 ) +&gt; 3;
+my $all   = ( $mode +&amp; 0o007 );
+</code></pre>
+
+<p>在每个权限集内，你可以使用另一个掩码来隔离你想要的位。在这部分你将最终得到 <code>True</code> 或 <code>False</code>：</p>
+
+<pre><code>put qq:to/END/;
+mode: { $mode.fmt: '%04o' }
+  user:  $user
+    read:    { ($user +&amp; 0b100).so }
+    write:   { ($user +&amp; 0b010).so }
+    execute: { ($user +&amp; 0b001).so }
+  group: { $group }
+  all:   { $all }
+END
+</code></pre>
+
+<p>你可以使用 <code>chmod</code> 子例程更改这些权限。给它相同的数字。将它表示为十进制数字可能最简单：</p>
+
+<pre><code>chmod $file.IO.chmod: 0o755;
+</code></pre>
+
+<h3 id="file-times">FILE TIMES</h3>
+
+<p><code>.modified</code>，<code>.accessed</code> 和 <code>.changed</code> 方法返回表示文件的修改，访问和 inode 更改时间的 <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a> 对象（如果你的系统支持这些）。你可以使用 <code>.DateTime</code> 方法将 <a href="https://docs.perl6.org/type/Instant.html"><code>Instant</code></a> 转换为人类可读的日期：</p>
+
+<pre><code>my $file = '/home/hamadryas/.bash_profile';
+
+given $file.IO {
+    if .e {
+        put qq:to/HERE/
+            Name:    $_
+                Modified: { .modified.DateTime }
+                Accessed: { .accessed.DateTime }
+                Changed:  { .changed.DateTime  }
+                Mode:     { .mode     }
+            HERE
+    }
+}
+</code></pre>
+
+<p>这给出了这样的东西：</p>
+
+<pre><code>Name:    /home/hamadryas/.bash_profile
+    Modified: 2018-08-15T01:19:09Z
+    Accessed: 2018-08-16T10:07:00Z
+    Changed:  2018-08-15T01:19:09Z
+    Mode:     0664
+</code></pre>
+
+<h2 id="linking-and-unlinking-files">Linking and Unlinking Files</h2>
+
+<p>文件名是你存储在某处的某些数据的标签。重要的是要记住名称不是数据。同样，目录或文件夹的隐喻就是这样。它并不真正“包含”文件。它知道它应该记住的文件名列表。牢记这一点应该使下一部分更容易掌握。</p>
+
+<p>名称是数据的链接，相同的数据可以有多个链接。只要有链接，你就可以获得该数据。这并不意味着数据在没有链接时会消失。存储的那些部分仅用于其他部分。这就是你有时可以恢复数据的原因。你的特定文件系统可能会以不同的方式执行操作，但这是基本的想法。</p>
+
+<h6 id="注意-2">注意</h6>
+
+<p>通常，你删除链接的能力取决于目录权限，而不是文件权限。你实际上是从目录所包含的文件列表中删除该文件。</p>
+
+<p>要删除文件，请使用 <code>.unlink</code> 删除指向它的链接。你没有删除数据;这就是为什么它不被称为 <code>.delete</code> 或类似的东西的原因。其他指向相同数据的链接可能仍然存在。如果 <code>.unlink</code> 可以删除该文件，则返回 <code>True</code>。如果失败则返回 <code>X::IO::Unlink</code>：</p>
+
+<pre><code>my $file = '/etc/hosts'.IO;
+
+try {
+CATCH {
+    when X::IO::Unlink { put .message }
+    }
+$file.unlink;
+}
+</code></pre>
+
+<p>你可以使用子例程形式同时删除多个文件。它返回你必须从备份还原的文件的名称（也称为成功取消链接的文件）：</p>
+
+<pre><code>my @unlinked-files = unlink @files;
+</code></pre>
+
+<p><a href="https://docs.perl6.org/type/Set.html"><code>集合</code></a> 的差集在这里很有用，虽然在第 14 章之前你不会看到 <a href="https://docs.perl6.org/type/Set.html"><code>Set</code></a>。请注意，你可以取消链接不存在的文件，它们不会出现在 <code>@error-files</code> 中：</p>
+
+<pre><code>my @error-files = @files.Set (-) @unlinked-files.Set;
+</code></pre>
+
+<p>你可以删除原始文件名，但数据仍然存在。文件背后的数据一直存在，直到所有链接消失。这些都不能删除目录，但你马上会看到如何做到这一点。</p>
+
+<p>使用 <code>.link</code> 为某些数据创建新标签。该路径必须与数据位于同一磁盘或分区上。如果这不起作用，则失败并抛出 <code>X::IO::Link</code> 异常：</p>
+
+<pre><code>my $file = '/Users/hamadryas/test.txt'.IO;
+
+{
+CATCH {
+    when X::IO::Unlink { ... }
+    when X::IO::Link { ... }
+    }
+
+$file.link: '/Users/hamadryas/test2.txt';
+$file.unlink;
+}
+</code></pre>
+
+<p>还有另一种链接，称为符号链接（简称“符号链接”）。这不是一个实际的链接;它是指向另一个文件名（“目标”）的文件。当文件系统遇到符号链接时，它会使用目标路径。</p>
+
+<p>目标是最终文件名。你创建的符号链接指向该文件名。在目标上调用 <code>.symlink</code> 来创建指向它的文件：</p>
+
+<pre><code>{
+CATCH {
+    when X::IO::Symlink { ... }
+    }
+
+$target.symlink: '/opt/different/disk/test.txt';
+}
+</code></pre>
+
+<h2 id="重命名和复制文件">重命名和复制文件</h2>
+
+<p>要更改文件名，请使用 <code>.rename</code>。与 <code>.link</code> 一样，这仅适用于同一磁盘或分区。它会在不移动数据的情况下更改标签。如果它无法做到这一点，则会失败并抛出 <code>X::IO::Rename</code> 异常：</p>
+
+<pre><code>my $file = '/Users/hamadryas/test.txt'.IO;
+
+{
+CATCH {
+    when X::IO::Rename { put .message }
+    }
+$file.rename: '/home/hamadryas/other-dir/new-name.txt';
+}
+</code></pre>
+
+<p>你可以将数据复制（<code>.copy</code>）到其他设备或分区。这会将数据物理地放在磁盘上的新位置上。原始数据及其链接保留在原地，复制的数据有自己的链接。之后，两者没有连接，你有两个单独的数据副本。如果它不起作用，则会失败并抛出 <code>X::IO::Copy</code> 异常：</p>
+
+<pre><code>my $file = '/Users/hamadryas/test.txt'.IO;
+
+{
+CATCH {
+    when X::IO::Copy { put .message }
+    }
+$file.copy: '/opt/new-name.txt';
+}
+</code></pre>
+
+<p>使用 <code>.move</code> 首先复制数据然后删除原始数据。如果文件已经存在， <code>.copy</code> 将替换新文件（并且它具有正确的权限））：</p>
+
+<pre><code>my $file = '/Users/hamadryas/test.txt'.IO;
+
+{
+CATCH {
+    when X::IO::Move { put .message }
+    }
+$file.copy: '/opt/new-name.txt';
+}
+</code></pre>
+
+<p>使用 <code>:create-only</code> 副词来阻止替换：</p>
+
+<pre><code>$file.copy: '/opt/new-name.txt', :create-only;
+</code></pre>
+
+<p><code>.move</code> 方法结合了 <code>.copy</code> 和 <code>.unlink</code>：</p>
+
+<pre><code>$file.move: '/opt/new-name.txt';
+</code></pre>
+
+<p>复制文件后 <code>.move</code> 可能无法删除原始文件。你可能希望在开始之前检查该权限，但无法保证权限不会更改。</p>
+
+<h1 id="操作目录">操作目录</h1>
+
+<p>程序启动时，会知道它的当前工作目录。当前工作目录存储在特殊变量 <code>$*CWD</code> 中。处理相对文件路径时，程序会在当前目录中查找：</p>
+
+<pre><code>put &quot;Current working directory is $*CWD&quot;;
+</code></pre>
+
+<p>要更改该目录，请使用 <code>chdir</code>。给它一个绝对路径来改变到那个目录：</p>
+
+<pre><code>chdir( '/some/other/path' );
+</code></pre>
+
+<p>给它一个相对路径来改变到当前工作目录的子目录：</p>
+
+<pre><code>chdir( 'a/relative/path' );
+</code></pre>
+
+<p>如果失败，则返回带有<code>X::IO::Chdir</code> <a href="https://docs.perl6.org/type/Exception.html"><code>异常</code></a>的 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>：</p>
+
+<pre><code>unless my $dir = chdir $subdir {
+    ... # handle the error
+}
+</code></pre>
+
+<p>不带参数的<code>chdir</code>会给你一个错误。你可能希望转到你的家目录。如果需要，请使用 <code>$*HOME</code> 作为参数。这是存储家目录的特殊变量：</p>
+
+<pre><code>chdir( $*HOME );
+</code></pre>
+
+<p>如何设置 <code>$*HOME</code> 取决于你的特定系统。在类 Unix 系统上，这可能是 <code>HOME</code> 环境变量。在 Windows 上，它可能是 <code>HOMEPATH</code>。</p>
+
+<p>练习8.2 输出你的家目录路径。创建一个现有子目录的新路径并切换到该目录。输出当前工作目录的值。如果子目录不存在会发生什么？</p>
+
+<p>有时你只需要为程序的一小部分更改目录，之后你就想回到你开始的地方。 <code>indir</code> 子例程接收目录和代码块并运行该代码，就好像它是当前的工作目录一样。它实际上并没有弄乱 <code>$*CWD</code>：</p>
+
+<pre><code>my $result = indir $dir, { ... };
+unless $result {
+    ... # handle the error
+}
+</code></pre>
+
+<p>如果一切正常，则 <code>indir</code> 返回块的结果，尽管可能是 <code>False</code> 值甚至是 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>。如果 <code>indir</code> 无法更改到目录，则返回 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>。小心你正在处理的情况！</p>
+
+<h2 id="目录清单">目录清单</h2>
+
+<p><code>dir</code>获取目录中的文件<a href="https://docs.perl6.org/type/Seq.html"><code>序列</code></a>作为 <a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a> 对象。它包含隐藏文件（但不包括 <code>.</code> 和 <code>..</code> 虚拟文件）。如果不带参数则它使用当前目录：</p>
+
+<pre><code>my @files = dir();
+my $files = dir();
+</code></pre>
+
+<p>With an argument it gets a <a href="https://docs.perl6.org/type/Seq.html"><code>Seq</code></a> of the files in the specified directory:</p>
+
+<p>如果 <code>dir</code> 带参数，则它获取指定目录中的文件<a href="https://docs.perl6.org/type/Seq.html"><code>序列</code></a>：</p>
+
+<pre><code>my @files = dir( '/etc' );
+
+for dir( '/etc' ) -&gt; $file {
+    put $file;
+}
+</code></pre>
+
+<p><a href="https://docs.perl6.org/type/Seq.html"><code>序列</code></a>中的元素包含该路径组件。相对目录参数返回相对路径。如果在创建<a href="https://docs.perl6.org/type/Seq.html"><code>序列</code></a>后更改工作目录，那些路径可能无效：</p>
+
+<pre><code>say dir( '/etc' ); # (&quot;/etc/emond.d&quot;.IO ...)
+say dir( 'lib' ); # (&quot;lib/perl6&quot;.IO ...)
+</code></pre>
+
+<p>如果遇到问题，<code>dir</code>会返回 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>，例如不存在的目录。</p>
+
+<p><code>dir</code> 的另一个不错的功能是：它知道要跳过哪些条目。有一个可选的第二个参数，可以测试条目以决定它们是否应该成为结果的一部分。默认情况下，测试是一个 <a href="https://docs.perl6.org/type/Junction.html"><code>Junction</code></a>（第14章），它排除了 <code>.</code> 和 <code>..</code> 虚拟目录：</p>
+
+<pre><code>say dir( 'lib', test =&gt; none( &lt;. ..&gt; ) );
+</code></pre>
+
+<p>练习8.3 输出另一个目录中所有文件的列表。每行显示一个并给每行编号。你能对文件列表进行排序吗？如果你没有想要浏览的目录，请在类 Unix 系统上尝试 <code>/etc</code>，或在 Windows 上尝试 <code>C:\rakudo</code>。</p>
+
+<p>练习8.4 创建一个接收目录名并列出其中所有文件的程序。下降到子目录并列出他们的文件。稍后你将在第19章中使用该程序。</p>
+
+<h2 id="创建目录">创建目录</h2>
+
+<p>你可以使用 <code>mkdir</code> 创建自己的目录。如果这是你要求的，它可以立即为你创建多层级的子目录。如果 <code>mkdir</code> 无法创建目录，则会抛出 <code>X::IO::Mkdir</code>  <a href="https://docs.perl6.org/type/Exception.html"><code>异常</code></a>：</p>
+
+<pre><code>try {
+    CATCH {
+        when X::IO::Mkdir { put &quot;Exception is {.message}&quot; }
+    }
+    my $subdir = 'Butterflies'.IO.add: 'Hamadryas';
+    mkdir $subdir;
+}
+</code></pre>
+
+<p>可选的第二个参数是 Unix 风格的八进制模式（Windows 忽略此参数）。 Unix 权限最容易读作八进制数：</p>
+
+<pre><code>mkdir $subdir, 0o755;
+</code></pre>
+
+<p>你也可以从<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>开始，然后使用 <code>.IO</code> 将其转换为 <a href="https://docs.perl6.org/type/IO::Path.html"><code>IO::Path</code></a> 对象，然后在所有这些对象上调用 <code>.mkdir</code>。你省略或不省略模式都可以：</p>
+
+<pre><code>$subdir.IO.mkdir;
+$subdir.IO.mkdir: 0o755;
+</code></pre>
+
+<p>练习8.5 编写一个程序来创建一个在命令行中指定的子目录。将完整路径指定为参数时会发生什么？如果目录已经存在怎么办？</p>
+
+<h2 id="移除目录">移除目录</h2>
+
+<p>有两种方法可以删除目录，但你可能只想使用其中一种。在开始使用这些之前，你可能会考虑使用虚拟机的快照或在无法删除任何重要内容的特殊帐户中工作。小心！</p>
+
+<p>第一个是 <code>rmdir</code>，只要目录是空的（没有文件或子目录）就删除一个或多个目录：</p>
+
+<pre><code>my @directories-removed = rmdir @dirs;
+</code></pre>
+
+<p>使用方法形式，你可以一次删除一个。如果失败则抛出 <code>X::IO::Rmdir</code> <a href="https://docs.perl6.org/type/Exception.html"><code>异常</code></a>：</p>
+
+<pre><code>try {
+    CATCH {
+        when X::IO::Rmdir { ... }
+    }
+    $directory.IO.rmdir;
+}
+</code></pre>
+
+<p>这有点不方便。通常，你希望删除目录及其包含的所有内容。 <code>File::Directory::Tree</code> 中的 <code>rmtree</code> 子例程对此非常有用：</p>
+
+<pre><code>use File::Directory::Tree;
+my $result = try rmtree $directory;
+</code></pre>
+
+<h1 id="格式化输出">格式化输出</h1>
+
+<p>你可以在输出值之前格式化值，也可以将值插入到<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>中。选项遵循你在其他语言中已经看到的内容，因此你只能在这里体验它们。</p>
+
+<p>将模板<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>赋予 <code>.fmt</code> 以描述值的显示方式。模板使用指令; 这些指令以 <code>%</code> 开头，并用字符来描述格式。下面这些是以十六进制（<code>%x</code>），八进制（<code>%o</code>）和二进制（<code>％b</code>）格式化的同一个数字：</p>
+
+<pre><code>$_ = 108;
+
+put .fmt: '%x';    # 6c
+put .fmt: '%X';    # 6C (uppercase!)
+put .fmt: '%o';    # 154
+put .fmt: '%b';    # 1101100
+</code></pre>
+
+<p>某些指令有额外的选项，这些选项出现在 <code>％</code> 和字母之间。数字指定列的最小宽度（尽管可能会溢出）。前导零使用零填充未使用的列。插值<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>时可以看到这种情况;格式化输出周围的字符清楚地表明 <code>.fmt</code> 创建了什么：</p>
+
+<pre><code>put &quot;$_ is ={.fmt: '%b'}=&quot;;    # 108 is =1101100=
+put &quot;$_ is ={.fmt: '%8b'}=&quot;;   # 108 is = 1101100=
+put &quot;$_ is ={.fmt: '%08b'}=&quot;;  # 108 is =01101100=
+</code></pre>
+
+<p>模板文本可以包含其他字符。如果这些不是指令的一部分，则它们是字面字符。这会将前面的示例翻出来，因此所有字符都在模板中：</p>
+
+<pre><code>put .fmt: &quot;$_ is =%08b=&quot;;  # 108 is =01101100=
+</code></pre>
+
+<p>如果你想要一个字面的 <code>％</code> 符号则用另一个 <code>％</code> 转义它。 <code>％f</code> 指令格式化一个浮点数，这对百分比很方便。你可以指定总宽度（包括小数点）和小数位数：</p>
+
+<pre><code>my $n = 1;
+my $d = 7;
+put (100*$n/$d).fmt: &quot;$n/$d is %5.2f%%&quot;;  # 1/7 is 14.29%
+</code></pre>
+
+<p>省略总宽度仍然有效，并允许你仅指定小数位数。这会将最终显示的十进制数字舍入：</p>
+
+<pre><code>put (100*$n/$d).fmt: &quot;$n/$d is %.2f%%&quot;;  # 1/7 is 14.29%
+</code></pre>
+
+<p>Calling <code>.fmt</code> on a <a href="https://docs.perl6.org/type/Positional.html"><code>Positional</code></a> formats each element according to the template, joins them with a space, and gives you a single <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>:</p>
+
+<p>在 <a href="https://docs.perl6.org/type/Positional.html"><code>Positional</code></a> 上调用 <code>.fmt</code> 会根据模板格式化每个元素，将它们与空格连接，并为你提供单个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>：</p>
+
+<pre><code>put ( 222, 173, 190, 239 ).fmt: '%02x';  # de ad be ef
+</code></pre>
+
+<p><code>.fmt</code> 的第二个参数更改分隔符：</p>
+
+<pre><code>put ( 222, 173, 190, 239 ).fmt: '%02x', '';  # deadbeef
+</code></pre>
+
+<p><code>sprintf</code>可以通过更多的控制来完成同样的工作。这是一个例程，它接收同样的模板作为它的第一个参数，然后是一个值列表。每个值按顺序填充一个指令。你不必输出结果：</p>
+
+<pre><code>my $string = sprintf( '%2d %s', $line-number, $line );
+</code></pre>
+
+<p><code>printf</code>执行相同的操作并直接将结果输出到标准输出（不添加换行符）：</p>
+
+<pre><code>printf '%2d %s', $line-number, $line;
+</code></pre>
+
+<p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch08.html#camelia-files-TABLE-directives">表8-2</a>列出了一些可用的 <code>sprintf</code> 指令。</p>
+
+<table>
+<thead>
+<tr>
+<th>Directive</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>%d</code></td>
+<td>十进制有符号整数</td>
+</tr>
+
+<tr>
+<td><code>%u</code></td>
+<td>十进制无符号整数</td>
+</tr>
+
+<tr>
+<td><code>%o</code></td>
+<td>八进制无符号整数</td>
+</tr>
+
+<tr>
+<td><code>%x</code></td>
+<td>十六进制无符号整数 (小写)</td>
+</tr>
+
+<tr>
+<td><code>%X</code></td>
+<td>十六进制无符号整数 (大写)</td>
+</tr>
+
+<tr>
+<td><code>%b</code></td>
+<td>二进制无符号整数</td>
+</tr>
+
+<tr>
+<td><code>%f</code></td>
+<td>浮点数</td>
+</tr>
+
+<tr>
+<td><code>%s</code></td>
+<td>文本值</td>
+</tr>
+</tbody>
+</table>
+
+<p>练习8.6 创建一个使用 <code>printf</code> 的程序，并将右对齐文本输出到你指定的列数。输出标尺线可能会对你有所帮助。</p>
+
+<h2 id="常见的格式化任务">常见的格式化任务</h2>
+
+<p>使用 <code>％f</code> 舍入数字。指定整个模板的宽度和小数位数。小数点和后续数字计为宽度的一部分：</p>
+
+<pre><code>put (2/3).fmt: '%4.2f';  # 0.67;
+</code></pre>
+
+<p>但是，总宽度不限制列。它至少是那个列数，但可能更多：</p>
+
+<pre><code>put (2/3).fmt: '%4.5f';  # 0.66667;
+</code></pre>
+
+<p>如果你不关心宽度，可以将其省略。这只是将值舍入为你指定的小数位数：</p>
+
+<pre><code>put (2/3).fmt: '%.3f';  # 0.667;
+</code></pre>
+
+<p><code>%</code> 之后的 <code>#</code> 添加了数字系统前缀，但不是 Perl 6 使用的前缀。它是宇宙其余部分使用的前缀; 八进制数得到前导零：</p>
+
+<pre><code>put 108.fmt: '%#x'; # 0x6c
+put 108.fmt: '%#o'; # 0154
+</code></pre>
+
+<p><code>％s</code> 格式化文本值。使用宽度它将值向右推，并在必要时用空格填充它。 宽度前面的 <code>-</code> 将文本推向左侧：</p>
+
+<pre><code>put 'Hamadryas'.fmt: '|%s|';    # |Hamadryas|
+put 'Hamadryas'.fmt: '|%15s|';  # |      Hamadryas|
+put 'Hamadryas'.fmt: '|%-15s|'; # |Hamadryas      |
+</code></pre>
+
+<p>使用 <code>sprintf</code> 创建柱状输出。宽度使一切排成一行：</p>
+
+<pre><code>my $line = sprintf '%02d %-20s %5d %5d %5d', @values;
+</code></pre>
+
+<p>练习8.7 输出你在命令行中指定的两个数字的百分比。将输出限制为三位小数。</p>
+
+<p>练习8.8 输出一个12乘12的乘法表。</p>
+
+<h1 id="标准文件句柄">标准文件句柄</h1>
+
+<p>文件句柄是程序和文件之间的连接。你可以免费获得其中的三个。两个用于输出，一个用于输入。标准输出是你从本书开始以来一直使用的输出。它是输出的默认文件句柄。你还使用了标准错误，因为这是用于警告和错误的文件句柄。标准输入将你的程序连接到某人试图提供的数据上。</p>
+
+<p>在继续阅读和编写任意文件的一般过程之前，你可能会发现查看基本文件句柄很有用。如果你已经知道这些事情，那么跳过本节并无不妥。</p>
+
+<h2 id="标准输出">标准输出</h2>
+
+<p>标准输出是大多数输出方法的默认文件句柄。当你在其例程形式中使用其中任何一个时，你就正在使用标准输出：</p>
+
+<pre><code>put $up-the-dishes;
+say $some-stuff;
+print $some-stuff;
+printf $template, $thing1, $thing2;
+</code></pre>
+
+<p>在 <code>$*OUT</code> 上调用方法会使其显式化。这是保存默认文件句柄的特殊变量：</p>
+
+<pre><code>$*OUT.put: $up-the-dishes;
+$*OUT.say: $some-stuff;
+$*OUT.print: $some-stuff;
+$*OUT.printf: $template, $thing1, $thing2;
+</code></pre>
+
+<p>你可能在某些时候在命令行上使用了重定向。 <code>&gt;</code> 将程序的标准输出发送到文件（或其他地方）：</p>
+
+<pre><code>% perl6 program.p6 &gt; output.txt 
+</code></pre>
+
+<p>如果要运行程序但不关心输出，可以将其发送到空设备。输出无处可去，然后消失了。这在 Unix 系统和 Windows 中略有不同：</p>
+
+<pre><code>% perl6 program.p6 &gt; /dev/null 
+C:\ perl6 program.p6 &gt; NUL 
+</code></pre>
+
+<p>练习8.9 创建一个将内容写入标准输出的程序。运行该程序并将输出重定向到文件。再次运行它并将输出重定向到空设备。</p>
+
+<h2 id="标准错误">标准错误</h2>
+
+<p>标准错误是输出的另一种途径。当程序不希望影响正常输出时，程序通常会对警告和其他消息使用标准错误。你可以在不搞乱格式化输出的情况下获得警告。</p>
+
+<p><code>warn</code> 将其消息输出到标准错误，程序继续。顾名思义，当你遇到一个你可以预料到并且你认为有人应该知道的情况时，它就是为警告而设计的：</p>
+
+<pre><code>warn 'You need to use a number between 0 and 255';
+</code></pre>
+
+<p><code>fail</code> 和 <code>die</code> 是相似的。他们将消息发送到标准错误，但他们也可以停止你的程序，除非你捕获或处理它们。</p>
+
+<p><code>note</code> 就像 <code>say</code>;它在其参数上调用 <code>.gist</code> 并将结果输出到标准错误。这对调试输出很有用：</p>
+
+<pre><code>note $some-object;
+</code></pre>
+
+<p>通常这种输出是通过某些命令行开关或其他设置启用的：</p>
+
+<pre><code>note $some-object if $debugging &gt; 0;
+</code></pre>
+
+<p>输出方法适用于 <code>$*ERR</code>，它保存默认错误文件句柄：</p>
+
+<pre><code>$*ERR.put: 'This is a warning message';
+</code></pre>
+
+<p>当你在终端中工作时，通常会同时看到标准输出和标准错误（或“合并”）。用 <code>2&gt;</code> 重定向错误输出;获取文件描述符编号 2（标准错误）并将其发送到不是终端的某个地方。如果你不理解任何一个，只需按照例子：</p>
+
+<pre><code>% perl6 program.p6 2&gt; error_output.txt 
+C:\ perl6 program.p6 2&gt; error_output.txt 
+
+% perl6 program.p6 2&gt; /dev/null 
+C:\ perl6 program.p6 2&gt; NUL 
+</code></pre>
+
+<p>将文件描述符 2 重定向到文件描述符 1 以合并标准输出和错误。同样，你可以按照示例进行操作，而无需追根究底：</p>
+
+<pre><code>% perl6 program.p6 2&gt;&amp;1 /dev/null 
+</code></pre>
+
+<p>练习8.10 创建一个程序，输出标准输出和标准错误。运行它并将标准输出重定向到文件。再次运行它，但将标准错误重定向到空设备。</p>
+
+<h2 id="标准输入">标准输入</h2>
+
+<p>当你使用没有命令行参数的 <code>lines()</code> 时，它会从标准输入读取。数据流入你的程序：</p>
+
+<pre><code>for lines() {
+    put ++$, ': ', $_;
+}
+</code></pre>
+
+<p>你的程序会等待你输入内容并将其输出给你：</p>
+
+<pre><code>% perl6 no-args.p6
+Hello Perl 6
+0: Hello Perl 6
+this is the second line
+1: this is the second line
+</code></pre>
+
+<p>If you only want standard input you can explicitly use <code>$*IN</code>. Call <code>.lines</code> as follows:</p>
+
+<p>如果你只想要标准输入，则可以显式地使用 <code>$*IN</code>。像下面这样调用 <code>.lines</code> ：</p>
+
+<pre><code>for $*IN.lines() {
+    put ++$, ': ', $_;
+}
+</code></pre>
+
+<p>标准输入也可以来自另一个程序。你可以将一个程序的输出传递给另一个程序的输入：</p>
+
+<pre><code>% perl6 out-err.p6 | perl6 no-args.p6
+</code></pre>
+
+<p>练习8.11 创建两个程序。第一个应输出包含第一个参数的命令行文件中的所有行。将其输出通过管道输出到第二个程序，读取其输入并以全部大写形式输出。将第一个程序的输出通过管道输入到第二个程序。</p>
+
+<h1 id="读取输入">读取输入</h1>
+
+<p>你已经看到了将数据导入程序的几种方法。<code>prompt</code> 例程输出一条消息并等待一行输入：</p>
+
+<pre><code>my $answer = prompt( 'Enter some stuff&gt; ' );
+</code></pre>
+
+<p>用 <code>slurp</code> 一次性读取整个文件。<code>slup</code> 作为方法或例程：</p>
+
+<pre><code>my $entire-file = $filename.IO.slurp;
+my $entire-file = slurp $filename;
+</code></pre>
+
+<p>如果你无法阅读该文件，你将收到 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>。始终检查你是否能够做你想做的事情：</p>
+
+<pre><code>unless my $entire-file = slurp $filename.IO.slurp {
+    ... # handle error
+}
+</code></pre>
+
+<h2 id="读取行">读取行</h2>
+
+<p>在第6章中，你了解了如何使用 <code>lines()</code> 从你在命令行中指定的文件名中读取行。通过 <code>@*ARGS</code> 并在单个文件上调用 <code>lines</code> 来自己完成此操作。你可以过滤掉不存在或存在其他问题的文件（<code>lines()</code> 不执行的操作）：</p>
+
+<pre><code>for @*ARGS {
+    put '=' x 20, ' ', $_;
+
+    # maybe more error checking here
+    unless .IO.e { put 'Does not exist'; next }
+
+    for .IO.lines() {
+        put &quot;$_:&quot;, ++$, ' ', $_;
+    }
+}
+</code></pre>
+
+<p>这代码有点太多了。 <code>lines()</code> 从 <code>$*ARGFILES</code> 文件句柄读取。这与显式使用它是一样的：</p>
+
+<pre><code>for $*ARGFILES.lines() {
+    put ++$, ': ', $_;
+}
+</code></pre>
+
+<p>使用 <code>$*ARGFILES.path</code> 提取当前文件名：</p>
+
+<pre><code>for $*ARGFILES.lines() {
+    put &quot;{$*ARGFILES.path}:&quot;, ++$, ' ', $_;
+}
+</code></pre>
+
+<p>这不会处理为每个文件开始编号为新鲜的行，但是有一个技巧：<code>$*ARGFILES</code> 知道在切换文件时让你在发生这种情况时运行一些代码。给  <code>.on-switch</code> 一个代码块，以便在文件更改时运行。用它来重置持久计数器：</p>
+
+<pre><code>for lines() {
+    state $lines = 1;
+    FIRST { $*ARGFILES.on-switch = { $lines = 1 } }
+
+    put &quot;{$*ARGFILES.path}:{$lines++} $_&quot;;
+}
+</code></pre>
+
+<h6 id="注意-3">注意</h6>
+
+<p>当我写这篇文章时，如果 <code>lines</code> 遇到一个无法读取的文件，则抛出一个你无法恢复的<a href="https://docs.perl6.org/type/Exception.html"><code>异常</code></a>。我会忽略这一点，因为我希望情况很快就会改变。</p>
+
+<p>练习8.12 创建一个程序，输出你在命令行中指定的所有文件的行。在输出每个文件的行之前输出显示其名称的文件横幅。完成上一个文件后会发生什么？</p>
+
+<h2 id="读取文件">读取文件</h2>
+
+<p>Both <code>slurp</code> and <code>lines</code> handle the details implicitly. <code>open</code> lets you do it in whatever manner you like. It returns a filehandle that you use to get the data from the file. If there’s a problem <code>open</code> returns a <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>:</p>
+
+<p><code>slurp</code> 和 <code>lines</code> 都隐式地处理细节。 <code>open</code> 允许你以任何你喜欢的方式来做。它返回一个文件句柄，用于从文件中获取数据。如果出现问题，则 <code>open</code> 返回<a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>：</p>
+
+<pre><code>my $fh = open 'not-there';
+unless $fh {
+    put &quot;Error: { $fh.exception }&quot;;
+    exit;
+}
+
+for $fh.lines() { .put }
+</code></pre>
+
+<p>你可能更喜欢方法形式：</p>
+
+<pre><code>my $fh = $filename.IO.open;
+</code></pre>
+
+<p>你可以更改编码，行结束处理和特定行结束。 <code>:enc</code> 副词设置输入编码：</p>
+
+<pre><code>my $fh = open 'not-there', :enc('latin1');
+</code></pre>
+
+<p>To keep the line endings instead of autochomping them, use <code>:chomp</code>:</p>
+
+<p>要保留行结尾而不是自动切除，请使用 <code>:chomp</code>：</p>
+
+<pre><code>my $fh = open 'not-there', :chomp(False);
+</code></pre>
+
+<p>行结尾设置为 <code>:nl-in</code> 并且可以是多个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>，其中任何一个都可以工作：</p>
+
+<pre><code>my $fh = open 'not-there', :nl-in( &quot;\f&quot; );
+my $fh = open 'not-there', :nl-in( [ &quot;\f&quot;, &quot;\v&quot; ] );
+</code></pre>
+
+<p>如果你不想结束行（比如 <code>slurp</code>），空的<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>或 <code>False</code> 会起作用：</p>
+
+<pre><code>my $fh = open 'not-there', :nl-in( '' );
+my $fh = open 'not-there', :nl-in( False );
+</code></pre>
+
+<p>你可以读取单行。告诉 <code>.lines</code> 你想要多少行：</p>
+
+<pre><code>my $next-line = $fh.lines: 1;
+</code></pre>
+
+<p><code>.lines</code> 是惰性的。那实际上没有读取一行。直到你尝试使用 <code>$next-line</code> 时它才会这样做。如果你想让它立即发生，你可以让它急切：</p>
+
+<pre><code>my $next-line = $fh.lines(1).eager;
+</code></pre>
+
+<p>如果你想要所有的行你仍然可以从文件句柄 <code>.slurp</code>：</p>
+
+<pre><code>my $rest-of-data = $fh.slurp;
+</code></pre>
+
+<p>完成后关闭文件句柄。程序将在某些时候自动为你执行此操作，但你不希望这些事情可能会在程序结束时出现：</p>
+
+<pre><code>$fh.close;
+</code></pre>
+
+<p>练习8.13 打开在命令行中指定的每个文件。输出第一行和最后一行。在这两者之间报告你遗漏的行数。</p>
+
+<h1 id="写出">写出</h1>
+
+<p>写文件的最简单方法是使用 <code>spurt</code>。给它一个文件名和一些数据，它为你完成剩下的工作：</p>
+
+<pre><code>spurt $path, $data;
+</code></pre>
+
+<p>如果文件已存在，则会覆盖已存在的任何内容。要添加已经存在的内容，请使用 <code>:append</code> 副词：</p>
+
+<pre><code>spurt $path, $data, :append;
+</code></pre>
+
+<p>仅当文件尚不存在时，你才可以通过指定 <code>:exclusive</code> 来输出数据。如果文件已经存在，则会失败：</p>
+
+<pre><code>spurt $path, $data, :exclusive;
+</code></pre>
+
+<p>当 <code>spurt</code> 工作时，它返回 <code>True</code>。如果出现问题则返回 <a href="https://docs.perl6.org/type/Failure.html"><code>Failure</code></a>：</p>
+
+<pre><code>unless spurt $path, $data {
+    ... # handle error
+}
+</code></pre>
+
+<h2 id="打开文件以写入">打开文件以写入</h2>
+
+<p>使用 <code>spurt</code> 可能很方便，但每次使用它时，你真正打开了一个文件，写入文件并关闭它。如果你想继续添加到文件中，你可以自己打开文件并保持打开状态，直到完成为止：</p>
+
+<pre><code>unless my $fh = open $path, :w {
+    ...;
+    }
+
+$fh.print: $data;
+$fh.print: $more-data;
+</code></pre>
+
+<p>任何输出方法都适用于文件句柄：</p>
+
+<pre><code>$fh.put: $data;
+$fh.say: $data;
+</code></pre>
+
+<p>完成文件后调用 <code>.close</code>。这可确保较低级别可能已缓冲的任何数据都会进入文件：</p>
+
+<pre><code>$fh.close;
+</code></pre>
+
+<p>如果你不喜欢默认行分隔符，则可以指定自己的行分割符。当你有多行的项要包含在一起作为单个记录时，换页符<code>\f</code>，作为“行”分隔符很方便：</p>
+
+<pre><code>unless my $fh = open $path, :w, :nl-out(&quot;\f&quot;) {
+    ...;  # handle the error
+    }
+
+$fh.print: ...;
+</code></pre>
+
+<p>使用 <code>try</code> 可能更干净：</p>
+
+<pre><code>my $fh = try open $path, :w, :exclusive, :enc('latin1'), :nl-out(&quot;\f&quot;);
+if $! {
+    ... # handle the error
+}
+</code></pre>
+
+<p>练习8.14 创建一个程序，该程序将你在命令行中指定的两个数字之间的所有素数写入文件。如果文件已存在，你应该怎么做？</p>
+
+<h1 id="二进制文件">二进制文件</h1>
+
+<p>二进制文件不是基于字符的。图像，电影等都是例子。你不希望文件阅读器将这些解码为 Perl 的内部字符格式;你想要原始数据。使用带有 <code>:bin</code> 副词的 <code>slurp</code> 来读取。它返回一 <a href="https://docs.perl6.org/type/Buf.html"><code>Buf</code></a> 而不是返回一个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>。你可以像任何其他 <a href="https://docs.perl6.org/type/Positional.html"><code>Positional</code></a> 一样处理 <a href="https://docs.perl6.org/type/Buf.html"><code>Buf</code></a>：</p>
+
+<pre><code>my $buffer = slurp $filename, :bin;  # Buf object
+for @$buffer { ... }
+</code></pre>
+
+<p>使用相同的 <code>:bin</code> 副词打开文件以获取其原始内容：</p>
+
+<pre><code>unless my $fh = open $path, :bin {
+    ... # handle the error
+}
+</code></pre>
+
+<h2 id="移动">移动</h2>
+
+<p>告诉 <code>.read</code> 要读取多少个八位字节，它返回一个 <a href="https://docs.perl6.org/type/Buf.html"><code>Buf</code></a>，其中每个元素是 0 到 255 之间的整数（无符号8位范围）：</p>
+
+<pre><code>my Buf $buffer = $fh-&gt;read( $count );
+</code></pre>
+
+<p><a href="https://docs.perl6.org/type/Buf.html"><code>Buf</code></a> 是一种 <a href="https://docs.perl6.org/type/Positional.html"><code>Positional</code></a>。每个八位字节都是缓冲区的一个元素，你可以通过它的位置获得一个八位字节：</p>
+
+<pre><code>my $third_byte = $buffer[2];
+</code></pre>
+
+<p>下次调用 <code>.read</code> 时，你将从文件中你离开的位置开始获取八位字节。使用 <code>.seek</code> 移动到其他位置。指定<code>SeekFromCurrent</code> 从你离开的位置移动：</p>
+
+<pre><code>my $relative_position = 137;
+$fh.seek( $relative_position, SeekFromCurrent );
+</code></pre>
+
+<p>使用负值向后移动：</p>
+
+<pre><code>my $negative_position = -137;
+$fh.seek( $negative_position, SeekFromCurrent );
+</code></pre>
+
+<p>如果指定 <code>SeekFromBeginning</code>，它将从文件的开头开始计数并移动到你指定的绝对位置：</p>
+
+<pre><code>my $absolute_position = 1370;
+$fh.seek( $absolute_position, SeekFromBeginning );
+</code></pre>
+
+<p>EXERCISE 8.15 写一个小的十六进制转储程序。一次读取16个八位字节的原始文件。打印每个八位字节的十六进制值，它们之间有空格，末尾有换行符。每行应该有这样的形式：<code>20 50 65 72 6c 20 36 2c 20 4d 6f 61 72 56 4d 20</code></p>
+
+<h2 id="写二进制文件">写二进制文件</h2>
+
+<p>另一方面，你可以将八位字节写入文件。使用相同的 <code>:bin</code> 副词打开文件进行写入：</p>
+
+<pre><code>unless my $fh = open $path, :w, :bin {
+    ...;
+}
+</code></pre>
+
+<p>使用 <code>.write</code> 并给它一个 <a href="https://docs.perl6.org/type/Buf.html"><code>Buf</code></a> 对象。每个元素必须是 0 到 255 之间的整数：</p>
+
+<pre><code>my $buf = Buf.new: 82, 97, 107, 117, 100, 111, 10;
+$fh.write: $buf;
+</code></pre>
+
+<p>用十六进制表示它们可能更容易：</p>
+
+<pre><code>my $buf = Buf.new: &lt;52 61 6b 75 64 6f 0a&gt;.map: *.parse-base: 16;
+</code></pre>
+
+<p>练习8.16 实现程序将 <a href="https://docs.perl6.org/type/Buf.html"><code>Buf</code></a> 写入文件。最终文件中的内容是什么？</p>
+
+<h1 id="总结">总结</h1>
+
+<p>你在本章中看到的功能可能是你编写的许多有用程序的核心。你可以将数据放入文件中，以后再检索该数据。你可以创建目录，将文件移动到这些目录中，或者将它们全部删除。大多数操作简单明了;一旦你知道了正确的对象，你就能轻松找到所需的方法。然而，这些东西中的大多数都与外部世界相互作用，并在事情无法解决时抱怨。不要忽视那些抱怨！</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-09-07-%E7%AC%AC%E4%B8%83%E7%AB%A0.-%E5%BD%93%E5%87%BA%E9%94%99%E7%9A%84%E6%97%B6%E5%80%99/" data-toggle="tooltip" data-placement="top" title="第七章. 当出错的时候">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-09-09-%E7%AC%AC%E4%B9%9D%E7%AB%A0.-associatives/" data-toggle="tooltip" data-placement="top" title="第九章. Associatives">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+
