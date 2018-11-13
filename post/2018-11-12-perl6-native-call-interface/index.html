@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 11 minutes (2265 words)
+  <i class="fa fa-clock-o"></i> 11 minutes (2222 words)
   
   
 </span>
@@ -507,8 +507,7 @@ Element at position 4 is 5
 
 <h2 id="结构体">结构体</h2>
 
-<p>由于表示多态性，可以声明一个看起来很正常的 Perl 6 类，实际上，C 编译器将它们放置在类似结构体定义中相同的方式存储其属性。 所需要的只是快速使用“repr” trait：
-感谢表示多态性，你可以声明一个普通的 Perl 6类，实际上，C 编译器会把它们放在类似的结构体定义中，以相同的方式保存 attributes。所有你需要做到就是使用“repr”trait：</p>
+<p>由于表示多态性，可以声明一个看起来很正常的 Perl 6 类，实际上，C 编译器将它们放置在类似的结构体定义中以相同的方式存储其属性。 所需要的只是快速使用“repr” trait：</p>
 
 <pre><code class="language-perl6">class Point is repr('CStruct') {
     has num64 $.x;
@@ -516,53 +515,147 @@ Element at position 4 is 5
 }
 </code></pre>
 
-<p>声明的属性只能是 NativeCall 已知的可以转换成结构体字段的类型，目前，结构体中可以包含机器字长的整数，doubles，strings以及其它 NativeCall 对象（CArrays，还有 CPointer 以及 CStruct reprs）。除此之外，你可以做一些跟类一样的常用的设置，你设置可以拥有一些从 roles 中得到的或者继承自其它类的属性。当然，方法也完全没有问题，Go wild!
-CStruct 对象以引用的形式传递到原生函数，并且原生函数必须返回 CStruct 对象的引用，对于这些引用的内存管理规则跟数组很像，因为一个结构体的大小是不变的。当你创建一个结构体，内存也一并帮你分配好，当指向 CStruct 实例的变量生命期结束，GC会负责将它释放。当 CStruct-based 类型作为原生函数的返回值时，GC并不帮你管理它的内存。
-当前，NativeCall 并不把对象成员放到容器里面，所以不能对对象进行赋值操作，作为替代，你可以将私有的成员绑定到新的值上：$!struct-member := StructObj.new;。
-正如你预测的那样，空（null）值是由结构体类型的类型对象实现的。</p>
+<p>声明的属性只能是 NativeCall 已知的可以转换成结构体字段的类型，目前，结构体中可以包含机器大小的整数，doubles，strings 以及其它 NativeCall 对象（CArrays，还有 CPointer 以及 CStruct reprs）。除此之外，你可以做一些跟类一样的常用的设置，你甚至可以让某些属性来自于角色或者从其它的类继承。当然，方法也完全没有问题，疯狂!</p>
+
+<p>CStruct 对象以引用的形式传递到原生函数，并且原生函数必须返回 CStruct 对象的引用，对于这些引用的内存管理规则跟数组的内存管理规则很像，尽管更简单，因为结构体的大小是不变的。当你创建一个结构体，内存也一并为你分配好，当指向 CStruct 实例的变量的生命期结束，GC 会负责释放内存。当基于 CStruct 的类型作为原生函数的返回类型时，GC 并不帮你管理它的内存。</p>
+
+<p>NativeCall 目前并不把对象成员放到容器里面，所以不能对对象进行赋（使用 =）新值。 相反，你必须将新值绑定到私有成员上：</p>
+
+<pre><code class="language-perl6">class MyStruct is repr('CStruct') {
+    has CArray[num64] $!arr;
+    has Str $!str;
+    has Point $!point; # Point is a user-defined class 
+ 
+    submethod TWEAK {
+        my $arr := CArray[num64].new;
+        $arr[0] = 0.9e0;
+        $arr[1] = 0.2e0;
+        $!arr := $arr;
+        $!str := 'Perl 6 is fun';
+        $!point := Point.new;
+    }
+}
+</code></pre>
+
+<p>正如你预测的那样，空指针由结构体类型的类型对象表示的。</p>
 
 <h2 id="cunions">CUnions</h2>
 
-<p>同样地，我们可以声明一个 Perl 6 类，它的属性拥有和 C 编译器中联合体（union）的相同的内存布局，这可以使用CUnion声明：</p>
+<p>同样地，我们可以声明一个 Perl 6 类，它的属性拥有和 C 编译器中联合体（<code>union</code>）的相同的内存布局，这可以使用 <code>CUnion</code> 表示：</p>
 
-<p>class MyUnion is repr(&lsquo;CUnion&rsquo;) {
+<pre><code class="language-perl6">use NativeCall;
+ 
+class MyUnion is repr('CUnion') {
     has int32 $.flags32;
     has int64 $.flags64;
-}</p>
-
-<p>say nativesizeof(MyUnion.new); # 输出 8 同 max(sizeof(MyUnion.flags32), sizeof(MyUnion.flags64))</p>
+}
+ 
+say nativesizeof(MyUnion.new);  # 8, ie. max(sizeof(MyUnion.flags32), sizeof(MyUnion.flags64)) 
+</code></pre>
 
 <h2 id="嵌套的-cstructs-和-cunions">嵌套的 CStructs 和 CUnions</h2>
 
-<p>你可以引用 CStructs 和 CUnions，或者将它们嵌入到其他的 CStructs 和 CUnions 里面，前者我们像往常一样使用has来声明，而后者则使用HAS替代：</p>
+<p>反过来, CStructs 和 CUnions 可以被周围的 CStruct 和 CUnion 引用，或者嵌入到其他的 CStructs 和 CUnions 里面，如果是引用我们则像往常一样使用 <code>has</code> 来声明，如果是嵌入则使用 <code>HAS</code> 代替：</p>
 
-<p>class MyStruct is repr(&lsquo;CStruct&rsquo;) {
-    has Point $.point; # 引用
+<pre><code class="language-perl6">class MyStruct is repr('CStruct') {
+    has Point $.point;  # referenced 
     has int32 $.flags;
-}</p>
-
-<p>say nativesizeof(MyStruct.new); # 输出 16 同 sizeof(struct Point *) + sizeof(int32_t)</p>
-
-<p>class MyStruct2 is repr(&lsquo;CStruct&rsquo;) {
-    HAS Point $.point; # 嵌入
+}
+ 
+say nativesizeof(MyStruct.new);  # 16, ie. sizeof(struct Point *) + sizeof(int32_t) 
+ 
+class MyStruct2 is repr('CStruct') {
+    HAS Point $.point;  # embedded 
     has int32 $.flags;
-}</p>
-
-<p>say nativesizeof(MyStruct2.new); # 输出 24 同 sizeof(struct Point) + sizeof(int32_t)</p>
+}
+ 
+say nativesizeof(MyStruct2.new);  # 24, ie. sizeof(struct Point) + sizeof(int32_t) 
+</code></pre>
 
 <h3 id="注意内存管理">注意内存管理</h3>
 
+<p>分配结构体以用作结构体时，请确保在 C 函数中分配自己的内存。 如果要将结构体传递给需要提前分配的 <code>Str/char*</code> 的C函数，请确保在将结构体传递给函数之前为 <code>Str</code> 类型的变量分配容器。</p>
+
+<h4 id="在你的-perl-6-代码中">在你的 Perl 6 代码中&hellip;</h4>
+
+<pre><code class="language-perl6">class AStringAndAnInt is repr(&quot;CStruct&quot;) {
+  has Str $.a_string;
+  has int32 $.an_int32;
+ 
+  sub init_struct(AStringAndAnInt is rw, Str, int32) is native('simple-struct') { * }
+ 
+  submethod BUILD(:$a_string, :$an_int) {
+    init_struct(self, $a_string, $an_int);
+  }
+}
+</code></pre>
+
+<p>在此代码中，我们首先设置我们的成员 <code>$.a_string</code> 和 <code>$.an_int32</code>。 之后，我们声明 <code>init_struct()</code> 函数以使 <code>init()</code> 方法包装; 然后从 <code>BUILD</code> 调用此函数以在返回创建的对象之前有效地分配值。</p>
+
+<h4 id="在你的-c-代码中">在你的 C 代码中 &hellip;</h4>
+
+<pre><code class="language-perl6">typedef struct a_string_and_an_int32_t_ {
+  char *a_string;
+  int32_t an_int32;
+} a_string_and_an_int32_t;
+</code></pre>
+
+<p>这是结构体。 注意我们在那里有怎么得到一个 <code>char *</code>。</p>
+
+<pre><code class="language-c">void init_struct(a_string_and_an_int32_t *target, char *str, int32_t int32) {
+  target-&gt;an_int32 = int32;
+  target-&gt;a_string = strdup(str);
+ 
+  return;
+}
+</code></pre>
+
+<p>在这个函数中，我们通过按值分配整数并通过引用传递字符串来初始化 C 结构体。 该函数在复制字符串时将 <code>&lt;point * a_string&gt;</code> 指向的内存分配到结构中。 （注意，你还必须管理内存的释放以避免内存泄漏。）</p>
+
+<pre><code class="language-perl6"># A long time ago in a galaxy far, far away... 
+my $foo = AStringAndAnInt.new(a_string =&gt; &quot;str&quot;, an_int =&gt; 123);
+say &quot;foo is {$foo.a_string} and {$foo.an_int32}&quot;;
+# OUTPUT: «foo is str and 123␤» 
+</code></pre>
+
 <h2 id="类型指针">类型指针</h2>
 
-<p>TBD more
-你可以使用Pointer作为传递的参数，这不但对原生类型可用，同样包括CArray以及CStruct自定义类型，NativeCall 将不会显式为他们分配内存，即使使用new运算符也不会。这适用于那种 C 函数返回指针或者CStruct包含指针的情况。
-你需要主动调用.deref获取它的内置类型。</p>
+<p>将 <code>Pointer</code> 作为参数传递时可以类型化你的 <code>Pointer</code>。这不但对原生类型可用，同样适用于 <code>CArray</code> 以及 <code>CStruct</code> 定义类型，NativeCall 将不会显式为他们分配内存，即使在它们身上调用 <code>new</code> 方法也不会。这适用于那种 C 函数返回指针或者 <code>CStruct</code> 中嵌入的指针情况。</p>
 
-<p>my Pointer[int32] $p; # 一个int32类型的指针
-my Pointer[MyStruct] $p2 = some_c_function();
-my MyStruct $mc = $p2.deref;</p>
+<pre><code class="language-perl6">use NativeCall;
+sub strdup(Str $s --&gt; Pointer[Str]) is native {*}
+my Pointer[Str] $p = strdup(&quot;Success!&quot;);
+say $p.deref;
+</code></pre>
 
-<p>say $mc.field1;</p>
+<p>原生函数返回指向元素的数组的指针是很常见的。 可以将类型化指针解引用为数组以获取单个元素。</p>
+
+<pre><code class="language-perl6">my $n = 5;
+# returns a pointer to an array of length $n 
+my Pointer[Point] $plot = some_other_c_routine($n);
+# display the 5 elements in the array 
+for 1 .. $n -&gt; $i {
+    my $x = $plot[$i - 1].x;
+    my $y = $plot[$i - 1].y;
+    say &quot;$i: ($x, $y)&quot;;
+}
+</code></pre>
+
+<p>指针也可以更新以引用数组中的连续元素：</p>
+
+<pre><code class="language-perl6">my Pointer[Point] $elem = $plot;
+# show differences between successive points 
+for 1 ..^ $n {
+    my Point $lo = $elem.deref;
+    ++$elem; # equivalent to $elem = $elem.add(1); 
+    my Point $hi = (++$elem).deref;
+    my $dx = $hi.x = $lo.x;
+    my $dy = $hi.y = $lo.y;
+    say &quot;$_: delta ($dx, $dy)&quot;;
+}
+</code></pre>
+
+<p>通过声明 <code>Pointer[void]</code> 也可以使用 Void 指针。 有关该主题的更多信息，请参阅<a href="https://docs.perl6.org/language/nativetypes#The_void_type">原生类型文档</a>。</p>
 
 <h2 id="字符串">字符串</h2>
 
@@ -656,59 +749,63 @@ sub getpwuid(uint32 $uid)    returns PwStruct     is native(Str) { * }</p>
 
 <h2 id="例子">例子</h2>
 
+<p>一些具体示例，以及在特定平台上使用上述示例的说明。</p>
+
 <h3 id="postgresql">PostgreSQL</h3>
 
-<p>git仓库zavolaj（NativeCall 最初开发的地方）列举了一些如何使用 NativeCall 的例子。
-更多的例子可以在[DBIsh]（<a href="https://github.com/perl6/DBIish/tree/master/lib/DBDish）仓库找到。">https://github.com/perl6/DBIish/tree/master/lib/DBDish）仓库找到。</a></p>
+<p><a href="https://github.com/perl6/DBIish/blob/master/examples/pg.p6">DBIish</a> 中的 PostgreSQL 示例使用 NativeCall 库，并且<code>原生使用</code> Windows 中的原生 <code>_putenv</code> 函数调用。</p>
 
-<h3 id="mysql">MYSQL</h3>
+<h3 id="mysql">MySQL</h3>
 
-<p>这是一个如何使用MYSQL客户端库的例子，这个工程包装了这些函数做成一个DBI兼容的接口，(???)你可能需要安装下面的库，在基于Debian的发行版上可以这么安装：</p>
+<p>注意：请记住，自 Stretch 版本以来，Debian 已经将 MySQL 替换为 MariaDB，因此如果要安装 MySQL，请使用 <a href="https://dev.mysql.com/downloads/repo/apt/">MySQL APT 存储库</a>而不是默认存储库。</p>
 
-<p>sudo apt-get install libmysqlclient
-在运行例子之前，你需要一些准备工作：</p>
+<p>要在 <a href="https://github.com/perl6/DBIish/blob/master/examples/mysql.p6">DBIish</a> 中使用 MySQL 示例，您需要在本地安装 MySQL 服务器; 在Debian-esque 系统上，它可以安装如下：</p>
 
-<p>$ mysql -u root -p
-CREATE DATABASE zavolaj;
-CREATE USER &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo; IDENTIFIED BY &lsquo;testpass&rsquo;;
-GRANT CREATE         ON zavolaj.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;
-GRANT DROP           ON zavolaj.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;
-GRANT INSERT         ON zavolaj.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;
-GRANT DELETE         ON zavolaj.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;
-GRANT SELECT         ON zavolaj.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;
-GRANT LOCK TABLES    ON zavolaj.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;
-GRANT SELECT         ON   mysql.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;</p>
+<pre><code class="language-shell">wget https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb
+sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb # Don't forget to select 5.6.x 
+sudo apt-get update
+sudo apt-get install mysql-community-server -y
+sudo apt-get install libmysqlclient18 -y
+</code></pre>
 
-<h1 id="or-maybe-otherwise">or maybe otherwise</h1>
+<p>在尝试示例之前，请按照这些方法准备系统：</p>
 
-<p>GRANT ALL PRIVILEGES ON zavolaj.* TO &lsquo;testuser&rsquo;@&lsquo;localhost&rsquo;;
-通过一个简单的mysql连接， 你将会看到下面的结果：</p>
-
-<p>$ mysql -utestuser -ptestpass
-USE zavolaj;
-SHOW TABLES;
-SELECT * FROM nom;
-Microsoft Windows
-win32-api-call.p6脚本文件展示了一些通过 Perl 6 调用 windows API 的例子，参见这里。</p>
+<pre><code>$ mysql -u root -p
+SET PASSWORD = PASSWORD('sa');
+DROP DATABASE test;
+CREATE DATABASE test;
+</code></pre>
 
 <h3 id="microsoft-windows">Microsoft Windows</h3>
 
-<h3 id="short-tutorial-on-calling-a-c-function">Short tutorial on calling a C function</h3>
+<p>这是一个 Windows API 调用的例子：</p>
 
-<p>This is an example for calling a standard function and using the returned information in a Perl 6 program.</p>
+<pre><code class="language-perl6">use NativeCall;
+ 
+sub MessageBoxA(int32, Str, Str, int32)
+    returns int32
+    is native('user32')
+    { * }
+ 
+MessageBoxA(0, &quot;We have NativeCall&quot;, &quot;ohai&quot;, 64);
+</code></pre>
 
-<p>getaddrinfo is a POSIX standard function for obtaining network information about a network node, e.g., google.com. It is an interesting function to look at because it illustrates a number of the elements of NativeCall.</p>
+<h3 id="关于调用-c-函数的简明指南">关于调用 C 函数的简明指南</h3>
 
-<p>The Linux manual provides the following information about the C callable function:</p>
+<p>这是一个调用标准函数并在 Perl 6 程序中使用返回信息的示例。</p>
+
+<p><code>getaddrinfo</code> 是 POSIX 标准函数，用于获取有关网络节点的网络信息，例如 <code>google.com</code>。 这是一个有趣的功能，因为它说明了 NativeCall 的许多元素。</p>
+
+<p>Linux 手册提供了有关 C 可调用函数的以下信息：</p>
 
 <pre><code class="language-c">int getaddrinfo(const char *node, const char *service,
        const struct addrinfo *hints,
        struct addrinfo **res);
 </code></pre>
 
-<p>The function returns a response code 0 = error, 1 = success. The data are extracted from a linked list of addrinfo elements, with the first element pointed to by res.</p>
+<p>该函数返回响应码 0 = 错误，1 = 成功。 数据是从 <code>addrinfo</code> 元素的链表中提取的，第一个元素由 <code>res</code> 指向。</p>
 
-<p>From the table of NativeCall Types we know that an int is int32. We also know that a char * is one of the forms C for a C Str, which maps simply to Str. But addrinfo is a structure, which means we will need to write our own Type class. However, the function declaration is straightforward:</p>
+<p>从 NativeCall 类型表我们知道 <code>int</code> 是 <code>int32</code>。 我们也知道 <code>char *</code> 是 C <code>Str</code> 的形式 C 之一，它简单地映射到 Str。 但是 <code>addrinfo</code> 是一个结构体，这意味着我们需要编写自己的 Type 类。 但是，函数声明很简单：</p>
 
 <pre><code class="language-perl6">sub getaddrinfo( Str $node, Str $service, Addrinfo $hints, Pointer $res is rw )
     returns int32
@@ -716,9 +813,9 @@ win32-api-call.p6脚本文件展示了一些通过 Perl 6 调用 windows API 的
     { * }
 </code></pre>
 
-<p>Note that $res is to be written by the function, so it must be labeled as rw. Since the library is standard POSIX, the library name can be the Type definition or null.</p>
+<p>请注意，<code>$res</code> 将由函数写入，因此必须将其标记为 <code>rw</code>。 由于库是标准 POSIX，因此库名称可以是 Type 定义或 null。</p>
 
-<p>We now have to handle structure Addrinfo. The Linux Manual provides this information:</p>
+<p>我们现在必须处理结构体 <code>Addrinfo</code>。 Linux 手册提供了以下信息：</p>
 
 <pre><code class="language-c">struct addrinfo {
                int              ai_flags;
@@ -732,11 +829,11 @@ win32-api-call.p6脚本文件展示了一些通过 Perl 6 调用 windows API 的
            };
 </code></pre>
 
-<p>The int, char* parts are straightforward. Some research indicates that socklen_t can be architecture dependent, but is an unsigned integer of at least 32 bits. So socklen_t can be mapped to the uint32 type.</p>
+<p><code>int</code>，<code>char *</code> 部分很简单。 一些研究表明 <code>socklen_t</code> 可以依赖于架构，但是是一个至少32位的无符号整数。 所以 <code>socklen_t</code> 可以映射到 <code>uint32</code> 类型。</p>
 
-<p>The complication is sockaddr which differs depending on whether ai_socktype is undefined, INET, or INET6 (a standard v4 IP address or a v6 address).</p>
+<p>复杂的是 <code>sockaddr</code>，它取决于 <code>ai_socktype</code> 是否是未定义的，INET 还是 INET6（标准的v4 IP 地址或 v6 地址）。</p>
 
-<p>So we create a Perl 6 class to map to the C struct addrinfo; while we&rsquo;re at it, we also create another class for SockAddr which is needed for it.</p>
+<p>所以我们创建一个 Perl 6 类来映射到 C <code>struct addrinfo</code>; 当我们在它的时候，我们还为 <code>SockAddr</code> 创建了另一个类。</p>
 
 <pre><code class="language-perl6">class SockAddr is repr('CStruct') {
     has int32    $.sa_family;
@@ -756,22 +853,22 @@ class Addrinfo is repr('CStruct') {
 }
 </code></pre>
 
-<p>The is rw on the last three attributes reflects that these were defined in C to be pointers.</p>
+<p>最后三个属性的 <code>is rw</code> 反映了这些在 C 中被定义为指针。</p>
 
-<p>The important thing here for mapping to a C Struct is the structure of the state part of the class, that is the attributes. However, a class can have methods and NativeCall does not &lsquo;touch&rsquo; them for mapping to C. This means that we can add extra methods to the class to unpack the attributes in a more readable manner, e.g.,</p>
+<p>映射到 C <code>Struct</code> 的重要一点是类的状态部分的结构，即属性。 但是，类可以有方法，而 <code>NativeCall</code> 不会“触摸”它们以映射到C.这意味着我们可以向类添加额外的方法以更易读的方式解包属性，例如，</p>
 
 <pre><code class="language-perl6">method flags {
     do for AddrInfo-Flags.enums { .key if $!ai_flags +&amp; .value }
 }
 </code></pre>
 
-<p>By defining an appropriate enum, flags will return a string of keys rather than a bit packed integer.</p>
+<p>通过定义适当的 <code>enum</code>，<code>flags</code> 将返回一串键而不是一个打包的整数。</p>
 
-<p>The most useful information in the sockaddr structure is the address of node, which depends on the family of the Socket. So we can add method address to the Perl 6 class that interprets the address depending on the family.</p>
+<p><code>sockaddr</code> 结构中最有用的信息是节点的地址，它取决于 Socket 的族。 因此，我们可以将方法地址添加到 Perl 6 类中，该类根据族来解释地址。</p>
 
-<p>In order to get a human readable IP address, there is the C function inet_ntop which returns a char * given a buffer with the addrinfo.</p>
+<p>为了获得人类可读的 IP 地址，有一个 C 函数 <code>inet_ntop</code>，它给出一个带有 <code>addrinfo</code> 的缓冲区的 <code>char *</code>。</p>
 
-<p>Putting all these together, leads to the following program:</p>
+<p>将所有这些组合在一起会产生以下程序：</p>
 
 <pre><code class="language-perl6">#!/usr/bin/env perl6 
  
@@ -906,7 +1003,7 @@ sub MAIN() {
 }
 </code></pre>
 
-<p>This produces the following output:</p>
+<p>这产生如下输出:</p>
 
 <pre><code>return val: 0
 Name: google.com
