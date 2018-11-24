@@ -8,16 +8,9 @@
   <title>引号结构</title>
   <meta property="og:title" content="引号结构" />
   <meta name="twitter:title" content="引号结构" />
-  <meta name="description" content="The Q Lang 在 Perl 6 中, 字符串通常使用一些引号结构来表示. 这些引号结构中,最简单的就是 Q, 通过便捷方式 ｢…｣ 或 Q 后跟着由任意一对儿分隔符包围着的文本. 大多数时候, 你需要的只是 &#39;…&#39; 或 &quot;…&quot;.
-Literal strings: Q Q[A literal string] ｢More plainly.｣ Q ^Almost any non-word character can be a delimiter!^  分隔符能够嵌套, 但是在普通的 Q 形式中, 反斜线转义是不允许的. 换种说法就是, Q 字符串尽可能被作为字面量.
-Q&lt;Make sure you &lt;match&gt; opening and closing delimiters&gt; Q{This is still a closing brace → \}  这些例子产生:
-A literal string More plainly. Almost any non-word character can be a delimiter!">
-  <meta property="og:description" content="The Q Lang 在 Perl 6 中, 字符串通常使用一些引号结构来表示. 这些引号结构中,最简单的就是 Q, 通过便捷方式 ｢…｣ 或 Q 后跟着由任意一对儿分隔符包围着的文本. 大多数时候, 你需要的只是 &#39;…&#39; 或 &quot;…&quot;.
-Literal strings: Q Q[A literal string] ｢More plainly.｣ Q ^Almost any non-word character can be a delimiter!^  分隔符能够嵌套, 但是在普通的 Q 形式中, 反斜线转义是不允许的. 换种说法就是, Q 字符串尽可能被作为字面量.
-Q&lt;Make sure you &lt;match&gt; opening and closing delimiters&gt; Q{This is still a closing brace → \}  这些例子产生:
-A literal string More plainly. Almost any non-word character can be a delimiter!">
-  <meta name="twitter:description" content="The Q Lang 在 Perl 6 中, 字符串通常使用一些引号结构来表示. 这些引号结构中,最简单的就是 Q, 通过便捷方式 ｢…｣ 或 Q 后跟着由任意一对儿分隔符包围着的文本. 大多数时候, 你需要的只是 &#39;…&#39; 或 &quot;…&quot;.
-Literal strings: Q Q[A literal string] ｢More plainly.｣ Q ^Almost any …">
+  <meta name="description" content="Writing strings, word lists, and regexes in Perl 6">
+  <meta property="og:description" content="Writing strings, word lists, and regexes in Perl 6">
+  <meta name="twitter:description" content="Writing strings, word lists, and regexes in Perl 6">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -207,6 +200,10 @@ if (!doNotTrack) {
             <div class="post-heading">
               <h1>引号结构</h1>
                 
+                  
+                    <h2 class="post-subheading">Writing strings, word lists, and regexes in Perl 6</h2>
+                  
+                
                 
                   <span class="post-meta">
   
@@ -215,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (686 words)
+  <i class="fa fa-clock-o"></i> 7 minutes (1374 words)
   
   
 </span>
@@ -238,46 +235,142 @@ if (!doNotTrack) {
 
 <h2 id="the-q-lang">The Q Lang</h2>
 
-<hr />
-
 <p>在 Perl 6 中, 字符串通常使用一些引号结构来表示. 这些引号结构中,最简单的就是 <code>Q</code>, 通过便捷方式 <code>｢…｣</code> 或 <code>Q</code> 后跟着由任意一对儿分隔符包围着的文本. 大多数时候, 你需要的只是 <code>'…'</code> 或 <code>&quot;…&quot;</code>.</p>
 
 <h3 id="literal-strings-q">Literal strings: Q</h3>
 
-<hr />
-
 <pre><code class="language-perl6">Q[A literal string]
 ｢More plainly.｣
 Q ^Almost any non-word character can be a delimiter!^
+Q ｢｢Delimiters can be repeated/nested if they are adjacent.｣｣
 </code></pre>
 
 <p>分隔符能够嵌套, 但是在普通的 Q 形式中, 反斜线转义是不允许的. 换种说法就是, Q 字符串尽可能被作为字面量.</p>
 
-<pre><code class="language-perl6">Q&lt;Make sure you &lt;match&gt; opening and closing delimiters&gt;
-Q{This is still a closing brace → \}
+<p>在 <code>Q</code>、<code>q</code> 或 <code>qq</code> 之后不允许立即使用一些分隔符。<a href="https://docs.perl6.org/language/syntax#Identifiers">标识符</a>中允许的任何字符都不允许使用，因为在这种情况下，引号结构和这些字符一起被解释为标识符。此外，<code>( )</code> 是不允许的，因为它被解释为函数调用。如果你仍然希望使用这些字符作为分隔符，请用空格将它们与 <code>Q</code>、<code>q</code> 或 <code>qq</code> 分隔开。请注意，一些自然语言在字符串的右侧使用左分隔引号。<code>Q</code> 不支持这些，因为它依赖unicode 属性来区分左分隔符和右分隔符。</p>
+
+<pre><code class="language-perl6">Q'this will not work!'
+Q(this won't work either!)
 </code></pre>
 
-<p>这些例子产生:</p>
+<p>上面对例子会产生错误。然而，下面这个能起作用：</p>
 
-<pre><code class="language-perl6">A literal string
-More plainly.
-Almost any non-word character can be a delimiter!
+<pre><code class="language-perl6">Q (this is fine, because of space after Q)
+Q 'and so is this'
+Q&lt;Make sure you &lt;match&gt; opening and closing delimiters&gt;
+Q{This is still a closing curly brace → \}
+</code></pre>
+
+<p>这些例子产生：</p>
+
+<pre><code>this is fine, because of space after Q
+and so is this
 Make sure you &lt;match&gt; opening and closing delimiters
-This is still a closing brace → \
+This is still a closing curly brace → \
 </code></pre>
+
+<p>引号结构的行为可以用副词修改，后面的章节会详细解释。</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Short</th>
+<th align="left">Long</th>
+<th align="left">Meaning</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">:x</td>
+<td align="left">:exec</td>
+<td align="left">Execute as command and return results</td>
+</tr>
+
+<tr>
+<td align="left">:w</td>
+<td align="left">:words</td>
+<td align="left">Split result on words (no quote protection)</td>
+</tr>
+
+<tr>
+<td align="left">:ww</td>
+<td align="left">:quotewords</td>
+<td align="left">Split result on words (with quote protection)</td>
+</tr>
+
+<tr>
+<td align="left">:q</td>
+<td align="left">:single</td>
+<td align="left">Interpolate \, \qq[&hellip;] and escaping the delimiter with </td>
+</tr>
+
+<tr>
+<td align="left">:qq</td>
+<td align="left">:double</td>
+<td align="left">Interpolate with :s, :a, :h, :f, :c, :b</td>
+</tr>
+
+<tr>
+<td align="left">:s</td>
+<td align="left">:scalar</td>
+<td align="left">Interpolate $ vars</td>
+</tr>
+
+<tr>
+<td align="left">:a</td>
+<td align="left">:array</td>
+<td align="left">Interpolate @ vars</td>
+</tr>
+
+<tr>
+<td align="left">:h</td>
+<td align="left">:hash</td>
+<td align="left">Interpolate % vars</td>
+</tr>
+
+<tr>
+<td align="left">:f</td>
+<td align="left">:function</td>
+<td align="left">Interpolate &amp; calls</td>
+</tr>
+
+<tr>
+<td align="left">:c</td>
+<td align="left">:closure</td>
+<td align="left">Interpolate {&hellip;} expressions</td>
+</tr>
+
+<tr>
+<td align="left">:b</td>
+<td align="left">:backslash</td>
+<td align="left">Enable backslash escapes (\n, \qq, \$foo, etc)</td>
+</tr>
+
+<tr>
+<td align="left">:to</td>
+<td align="left">:heredoc</td>
+<td align="left">Parse result as heredoc terminator</td>
+</tr>
+
+<tr>
+<td align="left">:v</td>
+<td align="left">:val</td>
+<td align="left">Convert to allomorph if possible</td>
+</tr>
+</tbody>
+</table>
 
 <h3 id="escaping-q">Escaping: q</h3>
 
-<hr />
-
-<pre><code class="language-perl6">'Very plain'
-q[This back\slash stays]
-q[This back\\slash stays] # Identical output
-q{This is not a closing brace → \}, but this is → }
-Q :q $There are no backslashes here, only lots of \$\$\$!$
-'(Just kidding. There\'s no money in that string)'
-'No $interpolation {here}!'
-Q:q#Just a literal &quot;\n&quot; here#
+<pre><code class="language-perl6">'Very plain';
+q[This back\slash stays];
+q[This back\\slash stays]; # Identical output 
+q{This is not a closing curly brace → \}, but this is → };
+Q :q $There are no backslashes here, only lots of \$\$\$&gt;!$;
+'(Just kidding. There\'s no money in that string)';
+'No $interpolation {here}!';
+Q:q!Just a literal &quot;\n&quot; here!;
 </code></pre>
 
 <p><code>q</code> 形式的引号结构允许使用反斜线转义可能会结束字符串的字符. 反斜线自身也能被转义, 就像上面的第三个例子那样. 通常的形式是 <code>'...'</code> 或 <code>q</code> 后跟着分隔符, 但是它也能作为 Q 上的副词使用, 就像上面的第五个和最后一个例子那样.</p>
@@ -294,9 +387,14 @@ No $interpolation {here}!
 Just a literal &quot;\n&quot; here
 </code></pre>
 
-<h3 id="interpolation-qq">Interpolation: qq</h3>
+<p><code>\qq[...]</code> 转义序列允许 <a href="https://docs.perl6.org/language/quoting#Interpolation%3A_qq">qq 插值</a> 的一部分字符串。当字符串中有 HTML 标记时，使用这个转义序列非常方便，可以避免将尖括号解释为散列键:</p>
 
-<hr />
+<pre><code class="language-perl6">my $var = 'foo';
+say '&lt;code&gt;$var&lt;/code&gt; is &lt;var&gt;\qq[$var.uc()]&lt;/var&gt;';
+# OUTPUT: «&lt;code&gt;$var&lt;/code&gt; is &lt;var&gt;FOO&lt;/var&gt;␤» 
+</code></pre>
+
+<h3 id="interpolation-qq">Interpolation: qq</h3>
 
 <pre><code class="language-perl6">my $color = 'blue';
 say &quot;My favorite color is $color!&quot; # My favorite color is blue!
@@ -321,7 +419,7 @@ say &quot;Therefore its volume should be { $x * $y * $z } m³!&quot;
 Therefore its volume should be 42 m³!
 </code></pre>
 
-<p>默认情况下, 只有带有 &lsquo;$&rsquo; 符号的变量才能正常插值. 这时, <code>&quot;documentation@perl6.org&quot;</code> 不会插值  <code>@perl6</code> 变量. 如果呢确实想那么做, 在变量名后面添加一个 <code>[]</code>:</p>
+<p>默认情况下, 只有带有 <code>$</code> 符号的变量才能正常插值. 这时, <code>&quot;documentation@perl6.org&quot;</code> 不会插值  <code>@perl6</code> 变量. 如果你确实想那么做, 在变量名后面添加一个 <code>[]</code>:</p>
 
 <pre><code class="language-perl6">my @neighbors = &quot;Felix&quot;, &quot;Danielle&quot;, &quot;Lucinda&quot;;
 say &quot;@neighbors[] and I try our best to coexist peacefully.&quot;
@@ -329,43 +427,124 @@ say &quot;@neighbors[] and I try our best to coexist peacefully.&quot;
 
 <p>输出:</p>
 
-<pre><code class="language-perl6">Felix Danielle Lucinda and I try our best to coexist peacefully.
+<pre><code>Felix Danielle Lucinda and I try our best to coexist peacefully.
 </code></pre>
 
-<p>通常使用一个方法调用会更合适. 只有在 qq 引号中, 方法调用后面有圆括号, 就能进行插值:</p>
+<p>通常使用一个方法调用会更合适. 只有在 <code>qq</code> 引号中, 方法调用后面有圆括号, 就能进行插值:</p>
 
 <pre><code class="language-perl6">say &quot;@neighbors.join(', ') and I try our best to coexist peacefully.&quot;
 </code></pre>
 
 <p>输出:</p>
 
-<pre><code class="language-perl6">Felix, Danielle, Lucinda and I try our best to coexist peacefully.
+<pre><code>Felix, Danielle, Lucinda and I try our best to coexist peacefully.
 </code></pre>
 
 <p>而 <code>&quot;@example.com&quot;</code> 产生 <code>@example.com</code>.</p>
 
-<h3 id="word-quoting-qw">Word quoting: qw</h3>
+<p>要调用子例程请使用 <code>&amp;</code> 符号。</p>
 
-<hr />
-
-<pre><code class="language-perl6">&lt;a b c&gt; eqv ('a', 'b', 'c')
-qw|! @ # $ % ^ &amp; * \| &lt; &gt; | eqv '! @ # $ % ^ &amp; | &lt; &gt;'.words
-Q:w { [ ] \{ \} } eqv ('[', ']', '{', '}')
+<pre><code class="language-perl6">say &quot;abc&amp;uc(&quot;def&quot;)ghi&quot;;
+# OUTPUT: «abcDEFghi␤» 
 </code></pre>
 
-<p><code>:w</code> 通常写作 <code>&lt;...&gt;</code> 或 <code>qw</code>, 把字符串分割为&rdquo;words&rdquo; (单词). 在这种情景下, 单词被定义为由空格分割的一串非空白字符. <code>q:w</code> 和 <code>qw</code> 继承了 <code>q</code> 的插值和转义语法, 还有单引号字符串分割符, 而 <code>Qw</code> 和 <code>Q:w</code> 继承了 <code>Q</code> 的非转义语法.</p>
+<p>后环缀操作符和 <a href="https://docs.perl6.org/language/subscripts">subscripts</a> 也会被插值。</p>
+
+<pre><code class="language-perl6">my %h = :1st; say &quot;abc%h&lt;st&gt;ghi&quot;;
+# OUTPUT: «abc1ghi␤» 
+</code></pre>
+
+<p>要输入 unicode 序列，请使用 <code>\x</code> 或 <code>\x[]</code> 加上字符的十六进制编码或字符列表。</p>
+
+<pre><code class="language-perl6">my $s = &quot;I \x2665 Perl 6!&quot;;
+say $s;
+# OUTPUT: «I ♥ Perl 6!␤» 
+ 
+$s = &quot;I really \x[2661,2665,2764,1f495] Perl 6!&quot;;
+say $s;
+# OUTPUT: «I really ♡♥❤💕 Perl 6!␤» 
+</code></pre>
+
+<p>您还可以在 <a href="https://docs.perl6.org/language/unicode#Entering_unicode_codepoints_and_codepoint_sequences">\c[]</a> 中使用 <a href="https://docs.perl6.org/language/unicode#Entering_unicode_codepoints_and_codepoint_sequences">unicode 名称</a>、<a href="https://docs.perl6.org/language/unicode#Named_sequences">命名序列</a>和<a href="https://docs.perl6.org/language/unicode#Name_aliases">名称别名</a>。</p>
+
+<pre><code class="language-perl6">my $s = &quot;Camelia \c[BROKEN HEART] my \c[HEAVY BLACK HEART]!&quot;;
+say $s;
+# OUTPUT: «Camelia 💔 my ❤!␤» 
+</code></pre>
+
+<p>对未定义值进行插值将引发控件异常，该异常可以在当前控件块中使用 <a href="https://docs.perl6.org/language/phasers#CONTROL">CONTROL</a> 捕获。</p>
+
+<pre><code class="language-perl6">sub niler {Nil};
+my Str $a = niler;
+say(&quot;$a.html&quot;, &quot;sometext&quot;);
+say &quot;alive&quot;; # this line is dead code 
+CONTROL { .die };
+</code></pre>
+
+<h3 id="word-quoting-qw">Word quoting: qw</h3>
+
+<pre><code class="language-perl6">qw|! @ # $ % ^ &amp; * \| &lt; &gt; | eqv '! @ # $ % ^ &amp; * | &lt; &gt;'.words.list
+q:w { [ ] \{ \} } eqv ('[', ']', '{', '}')
+Q:w | [ ] { } | eqv ('[', ']', '{', '}')
+</code></pre>
+
+<p><code>:w</code> 通常写作 <code>qw</code>, 把字符串分割为 &ldquo;words&rdquo; (单词). 在这种情景下, 单词被定义为由空格分割的一串非空白字符. <code>q:w</code> 和 <code>qw</code> 继承了 <code>q</code> 的插值和转义语法, 还有单引号字符串分割符, 而 <code>Qw</code> 和 <code>Q:w</code> 继承了 <code>Q</code> 的非转义语法.</p>
 
 <pre><code class="language-perl6">my @directions = 'left', 'right,', 'up', 'down';
 </code></pre>
 
 <p>这样读和写都更容易:</p>
 
-<pre><code class="language-perl6">my @directions = &lt;left right up down&gt;;
+<pre><code class="language-perl6">my @directions = qw|left right up down|;
+</code></pre>
+
+<h3 id="word-quoting">Word quoting: &lt;&gt;</h3>
+
+<pre><code class="language-perl6">say &lt;a b c&gt; eqv ('a', 'b', 'c');   # OUTPUT: «True␤»
+say &lt;a b 42&gt; eqv ('a', 'b', '42'); # OUTPUT: «False␤», the 42 became an IntStr allomorph
+say &lt; 42 &gt; ~~ Int; # OUTPUT: «True␤»
+say &lt; 42 &gt; ~~ Str; # OUTPUT: «True␤»
+</code></pre>
+
+<p>尖括号的引号类似于 <code>qw</code>，但有一个额外的特性，可以让你构造特定数字的<a href="https://docs.perl6.org/language/glossary#index-entry-Allomorph">同质异形体</a>或字面量:</p>
+
+<pre><code class="language-perl6">say &lt;42 4/2 1e6 1+1i abc&gt;.perl;
+# OUTPUT: «(IntStr.new(42, &quot;42&quot;), RatStr.new(2.0, &quot;4/2&quot;), NumStr.new(1000000e0, &quot;1e6&quot;), ComplexStr.new(&lt;1+1i&gt;, &quot;1+1i&quot;), &quot;abc&quot;)␤» 
+</code></pre>
+
+<p>要构造 <a href="https://docs.perl6.org/type/Rat">Rat</a> 或 <a href="https://docs.perl6.org/type/Complex">Complex</a> 字面量，请在数字周围使用尖括号，不带任何额外的空格:</p>
+
+<pre><code class="language-perl6">say &lt;42/10&gt;.^name;   # OUTPUT: «Rat␤» 
+say &lt;1+42i&gt;.^name;   # OUTPUT: «Complex␤» 
+say &lt; 42/10 &gt;.^name; # OUTPUT: «RatStr␤» 
+say &lt; 1+42i &gt;.^name; # OUTPUT: «ComplexStr␤» 
+</code></pre>
+
+<p>与 <code>42/10</code> 和 <code>1+42i</code> 相比，不涉及除法(或加法)运算。这对于例程签名中的字面量很有用，例如:</p>
+
+<pre><code class="language-perl6">sub close-enough-π (&lt;355/113&gt;) {
+    say &quot;Your π is close enough!&quot;
+}
+close-enough-π 710/226; # OUTPUT: «Your π is close enough!␤» 
+ 
+# WRONG: can't do this, since it's a division operation 
+ 
+sub compilation-failure (355/113) {}
+</code></pre>
+
+<h3 id="word-quoting-with-quote-protection-qww">Word quoting with quote protection: qww</h3>
+
+<p>单词引用的 <code>qw</code> 格式将按字面意思处理引用字符，将它们保留在结果单词中:</p>
+
+<pre><code class="language-perl6">say qw{&quot;a b&quot; c}.perl; # OUTPUT: «(&quot;\&quot;a&quot;, &quot;b\&quot;&quot;, &quot;c&quot;)␤» 
+</code></pre>
+
+<p>因此，如果您希望在结果单词中保留引用的子字符串作为单个项，则需要使用 <code>qww</code> 变体:</p>
+
+<pre><code class="language-perl6">say qww{&quot;a b&quot; c}.perl; # OUTPUT: «(&quot;a b&quot;, &quot;c&quot;)␤» 
 </code></pre>
 
 <h3 id="word-quoting-with-interpolation-qqw">Word quoting with interpolation: qqw</h3>
-
-<hr />
 
 <p><code>qw</code> 形式的 word quoting 不会进行变量插值:</p>
 
@@ -379,30 +558,61 @@ my @list = qqw{$a b c};
 say @list;                # 42 b c
 </code></pre>
 
-<p>或者同样的:</p>
+<p>注意，变量插值发生在单词分割之前:</p>
 
-<pre><code class="language-perl6">my $a = 42;
-my @list = «$a b c»;
-say @list;                # 42 b c
+<pre><code class="language-perl6">my $a = &quot;a b&quot;;
+my @list = qqw{$a c};
+.say for @list; # OUTPUT: «a␤b␤c␤» 
+</code></pre>
+
+<h3 id="word-quoting-with-interpolation-and-quote-protection-qqww">Word quoting with interpolation and quote protection: qqww</h3>
+
+<p><code>qqw</code> 形式的单词引用会把引起的字符当作字面量，将引起的字符留在结果单词中:</p>
+
+<pre><code class="language-perl6">my $a = 42; say qqw{&quot;$a b&quot; c}.perl;  # OUTPUT: «(&quot;\&quot;42&quot;, &quot;b\&quot;&quot;, &quot;c&quot;)␤» 
+</code></pre>
+
+<p>因此，如果希望在结果单词中保留引起的子字符串为单个项，则需要使用 <code>qqww</code> 变体:</p>
+
+<pre><code class="language-perl6">my $a = 42; say qqww{&quot;$a b&quot; c}.perl; # OUTPUT: «(&quot;42 b&quot;, &quot;c&quot;)␤» 
+</code></pre>
+
+<p>引号保护发生在插值之前，插值发生在分词之前，所以来自插值变量内部的引号只是字面引号字符:</p>
+
+<pre><code class="language-perl6">my $a = &quot;1 2&quot;;
+say qqww{&quot;$a&quot; $a}.perl; # OUTPUT: «(&quot;1 2&quot;, &quot;1&quot;, &quot;2&quot;)␤» 
+my $b = &quot;1 \&quot;2 3\&quot;&quot;;
+say qqww{&quot;$b&quot; $b}.perl; # OUTPUT: «(&quot;1 \&quot;2 3\&quot;&quot;, &quot;1&quot;, &quot;\&quot;2&quot;, &quot;3\&quot;&quot;)␤» 
+</code></pre>
+
+<h3 id="word-quoting-with-interpolation-and-quote-protection">Word quoting with interpolation and quote protection: « »</h3>
+
+<p>这种引用方式类似于 <code>qqww</code>，但它具有构造 <a href="https://docs.perl6.org/language/glossary#index-entry-Allomorph">allomorphs</a> 的额外好处(使其功能相当于 <a href="https://docs.perl6.org/language/quoting#index-entry-%3Aval_%28quoting_adverb%29">qq:ww:v</a>)。与 <code>«»</code> 等价的 ASCII 是双尖括号 <code>&lt;&lt; &gt;&gt;</code>。</p>
+
+<pre><code class="language-perl6"># Allomorph Construction 
+my $a = 42; say «  $a b c    ».perl;  # OUTPUT: «(IntStr.new(42, &quot;42&quot;), &quot;b&quot;, &quot;c&quot;)␤» 
+my $a = 42; say &lt;&lt; $a b c   &gt;&gt;.perl;  # OUTPUT: «(IntStr.new(42, &quot;42&quot;), &quot;b&quot;, &quot;c&quot;)␤» 
+ 
+# Quote Protection 
+my $a = 42; say «  &quot;$a b&quot; c  ».perl;  # OUTPUT: «(&quot;42 b&quot;, &quot;c&quot;)␤» 
+my $a = 42; say &lt;&lt; &quot;$a b&quot; c &gt;&gt;.perl;  # OUTPUT: «(&quot;42 b&quot;, &quot;c&quot;)␤» 
 </code></pre>
 
 <h3 id="shell-quoting-qx">Shell quoting: qx</h3>
 
-<hr />
-
-<p>把一个字符串作为一个外部程序运行,  在 Perl 6 中反引号不再用于 shell quoting, 并且 qx 不再插值 Perl 变量, 因此:</p>
+<p>要将字符串作为外部程序运行，不仅可以将字符串传递给 <code>shell</code> 或 <code>run</code> 函数，还可以执行 shell 引用。然而，有一些微妙之处需要考虑。<code>qx</code> 引号不插入变量。因此</p>
 
 <pre><code class="language-perl6">my $world = &quot;there&quot;;
 say qx{echo &quot;hello $world&quot;}
 </code></pre>
 
-<p>仅仅打印 hello. 然而, 如果你在调用 perl6 之前声明了一个环境变量, 这在 qx 里是可用的, 例如:</p>
+<p>仅仅打印 <code>hello</code>. 然而, 如果你在调用 <code>perl6</code> 之前声明了一个环境变量, 这在 <code>qx</code> 里是可用的, 例如:</p>
 
 <pre><code class="language-perl6">WORLD=&quot;there&quot; perl6
 &gt; say qx{echo &quot;hello $WORLD&quot;}
 </code></pre>
 
-<p>现在会打印 hello there.</p>
+<p>现在会打印 <code>hello there</code>.</p>
 
 <p>调用 <code>qx</code> 会返回结果, 所以这个结果能被赋值给一个变量以便后来使用:</p>
 
@@ -412,9 +622,7 @@ say $output;    # hello!
 
 <h3 id="shell-quoting-with-interpolation-qqx">Shell quoting with interpolation: qqx</h3>
 
-<hr />
-
-<p>带插值的 Shell quoting:</p>
+<p>如果希望在外部命令中使用 Perl 6 变量的内容，那么应该使用 <code>qqx</code> shell 引用结构:</p>
 
 <pre><code class="language-perl6">my $world = &quot;there&quot;;
 say qqx{echo &quot;hello $world&quot;};  # hello there
@@ -430,11 +638,11 @@ my $output = qqx{grep $option $word $file};
 say $output;      # Cooley␤Cooley's␤Coolidge␤Coolidge's␤cool␤ ...
 </code></pre>
 
+<p>有关执行外部命令的更好方法，请参见 <a href="https://docs.perl6.org/routine/run">run</a> 和 <a href="https://docs.perl6.org/type/Proc::Async">Proc::Async</a>。</p>
+
 <h3 id="heredocs-to">Heredocs: :to</h3>
 
-<hr />
-
-<p><code>heredocs</code> 是多行字符串字面量的便捷方式, 你能选择自己的分隔符:</p>
+<p>一种方便的写多行字符串字面量的方式是 *heredocs*，它让你选择自己的分隔符:</p>
 
 <pre><code class="language-perl6">say q:to/END/;
 Here is
@@ -443,7 +651,7 @@ string
 END
 </code></pre>
 
-<p>heredoc 的内容从下一行开始.</p>
+<p>heredoc 的内容总是从下一行开始，所以你可以(也应该)完成这一行。</p>
 
 <pre><code class="language-perl6">my $escaped = my-escaping-function(q:to/TERMINATOR/, language =&gt; 'html');
 Here are the contents of the heredoc.
@@ -466,6 +674,54 @@ TERMINATOR
 some multi line
     string
 </code></pre>
+
+<p>heredoc 包含了终止符之前的换行符。</p>
+
+<p>要允许对变量进行插值，可以使用 <code>qq</code> 形式，但如果不是已定义变量的标识符，则必须转义元字符 <code>{\</code> 和 <code>$</code>。例如:</p>
+
+<pre><code class="language-perl6">my $f = 'db.7.3.8';
+my $s = qq:to/END/; 
+option \{
+    file &quot;$f&quot;;
+};
+END
+say $s;
+</code></pre>
+
+<p>会产生：</p>
+
+<pre><code class="language-perl6">option {
+    file &quot;db.7.3.8&quot;;
+};
+</code></pre>
+
+<p>您可以在同一行开始多个 heredoc。</p>
+
+<pre><code class="language-perl6">my ($first, $second) = qq:to/END1/, qq:to/END2/; 
+  FIRST
+  MULTILINE
+  STRING
+  END1
+   SECOND
+   MULTILINE
+   STRING
+   END2 
+</code></pre>
+
+<h3 id="unquoting">Unquoting</h3>
+
+<p>字面量字符串允许使用转义序列插入内嵌的引用结构，例如:</p>
+
+<pre><code class="language-perl6">my $animal=&quot;quaggas&quot;;
+say 'These animals look like \qq[$animal]'; # OUTPUT: «These animals look like quaggas␤» 
+say 'These animals are \qqw[$animal or zebras]'; # OUTPUT: «These animals are quaggas or zebras␤» 
+</code></pre>
+
+<p>在本例中，<code>\qq</code> 将做双引号内插，<code>\qqw</code> 文字内插。如上所述，转义任何其他引用结构都将以相同的方式进行，从而允许在字面量字符串中进行插值。</p>
+
+<h3 id="regexes">Regexes</h3>
+
+<p>有关在 regexes 中应用的引用的信息，请参阅<a href="https://docs.perl6.org/language/regexes">正则表达式文档</a>。</p>
 
 
         
