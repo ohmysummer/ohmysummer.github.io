@@ -5,24 +5,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Send-Data-to-Socket</title>
-  <meta property="og:title" content="Send-Data-to-Socket" />
-  <meta name="twitter:title" content="Send-Data-to-Socket" />
-  <meta name="description" content="发送数据到 Socket">
-  <meta property="og:description" content="发送数据到 Socket">
-  <meta name="twitter:description" content="发送数据到 Socket">
+  <title>Perl 6 Adevnt Calendar</title>
+  <meta property="og:title" content="Perl 6 Adevnt Calendar" />
+  <meta name="twitter:title" content="Perl 6 Adevnt Calendar" />
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-11-23-send-data-to-socket/" />
+  <meta property="og:url" content="https://ohmysummer.github.io/tags/perl-6-adevnt-calendar/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rakudo Perl 6" />
 
   <meta name="generator" content="Hugo 0.49" />
-  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-11-23-send-data-to-socket/" />
-  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="canonical" href="https://ohmysummer.github.io/tags/perl-6-adevnt-calendar/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/tags/perl-6-adevnt-calendar/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -181,43 +178,14 @@ if (!doNotTrack) {
 
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="post-heading">
-              <h1>Send-Data-to-Socket</h1>
-                
-                  
-                    <h2 class="post-subheading">发送数据到 Socket</h2>
-                  
-                
-                
-                  <span class="post-meta">
-  
-  
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on November 23, 2018
-  
-  
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (92 words)
-  
-  
-</span>
-
-                
+            <div class="page-heading">
+              <h1>#Perl 6 Adevnt Calendar</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -225,121 +193,66 @@ if (!doNotTrack) {
     </div>
   </header>
 
-
     
-<div class="container" role="main">
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-      <article role="main" class="blog-post">
-        <p>发送数据到 Socket 的 3333 端口，并把所发送的数据保存到文件中。</p>
-
-<pre><code class="language-perl">my $vin = 'LSJA0000000000091';
-my $last_meter = 0; 
-
-react {
-    whenever IO::Socket::Async.listen('0.0.0.0', 3333) -&gt; $conn {
-        my $fh = open 'events.txt', :w;
-        react {
-            my Bool:D $ignore = True;
-
-            whenever Supply.interval(5).rotor(1, 1 =&gt; 1) {
-                $ignore = !$ignore;
-            }
-    
-            whenever Supply.interval(1) {
-                next if $ignore;
-                $fh.print: sprintf(&quot;\{'vin':'%s','createTime':%s,'mileage':%s}\n&quot;, $vin, DateTime.now.posix, $last_meter);
-                $conn.print: sprintf(&quot;\{'vin':'%s','createTime':%s,'mileage':%s}\n&quot;, $vin, DateTime.now.posix, $last_meter++);
-            }
+  <div class="container" role="main">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
-            whenever signal(SIGINT) {
-                say &quot;Done.&quot;;
-                $fh.close;
-                done;
-            }
-        } 
-    }
-    CATCH {
-        default {
-            say .^name, ': ', .Str;
-            say &quot;handled in $?LINE&quot;;
-        }
-    }
-}
-</code></pre>
-
-<p>在终端中消费实时发送的数据：</p>
-
-<pre><code class="language-shell">telnet 0.0.0.0 3333
-</code></pre>
-
-<p>可以看到如下所示的数据：</p>
-
-<p><img src="https://upload-images.jianshu.io/upload_images/326727-af5e7fb596463cf5.png?imageMogr2/auto-orient/" alt="img" /></p>
-
-
-        
-          <div class="blog-tags">
-            
-              <a href="https://ohmysummer.github.io//tags/socket/">socket</a>&nbsp;
-            
-              <a href="https://ohmysummer.github.io//tags/react/">react</a>&nbsp;
-            
-              <a href="https://ohmysummer.github.io//tags/whenever/">whenever</a>&nbsp;
-            
-          </div>
-        
-
-        
-      </article>
-
-      
-        <ul class="pager blog-pager">
+        <div class="posts-list">
           
-            <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-11-15-make-empty/" data-toggle="tooltip" data-placement="top" title="Make Empty">&larr; Previous Post</a>
-            </li>
-          
-          
-            <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-02-document-every-thing/" data-toggle="tooltip" data-placement="top" title="Day 2 – Like 6 Perls in a Pod: document everything (and test the documentation)">Next Post &rarr;</a>
-            </li>
-          
-        </ul>
-      
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-12-02-document-every-thing/">
+                <h2 class="post-title">Day 2 – Like 6 Perls in a Pod: document everything (and test the documentation)</h2>
 
+                
+                  <h3 class="post-subtitle">
+                    Pod6
+                  </h3>
+                
+              </a>
 
-      
-        
-          <div class="disqus-comments">
-            <div id="disqus_thread"></div>
-<script type="application/javascript">
-    var disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-          </div>
-        
-        
-      
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 2, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (739 words)
+  
+  
+</span>
 
+              </p>
+              <div class="post-entry">
+                
+                  Like 6 Perls in a Pod: document everything 圣诞节即将到来，圣诞老人很沮丧。 他的收件箱被来自全国各地的男孩和女孩的来信塞爆了。
+但，
+这些信是写给圣诞老人的吗？ 是否通过签名正确识别了孩子，以便将礼物送给对的人而不是给其他可能不值得的人？ 他们是针对圣诞老人的，而不是那些冒名顶替者，复活节兔子，或者更糟糕的是，三个所谓的 - 我不知道为什么 - 来自东方的智者？ 最糟糕的是，他个人是否必须通过他的王室和神圣的自我来检查所有这些东西？
+没有。
+Perl 6 以下面的方式来救援：
+grammar
+unit grammar Santa-Letter; token TOP { &lt;dear&gt; \v+ &lt;paragraph&gt; [\v+ &lt;paragraph&gt;]* \v+ &lt;signature&gt;\v*} token paragraph { &lt;superword&gt;[ \h+ &lt;superword&gt;]+ } token superword { &lt;word&gt; | &lt;enhanced-word&gt; } token word { \w+ } token enhanced-word { &lt;word&gt; [\,|\.|\:] } token dear { Dear \h+ [S|s]anta [\,|\:]? } token signature { \h+ \w+ \h* \w* }  该单位向圣诞老人宣布一封致敬的信，其后是一个或多个段落，最后是一个签名，其前面应有一个水平的空格，如 \h 所示。
+                  <a href="https://ohmysummer.github.io/post/2018-12-02-document-every-thing/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6-adevnt-calendar/">Perl 6 Adevnt Calendar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+        </div>
+        
+      </div>
     </div>
   </div>
-</div>
 
     <footer>
   <div class="container">
@@ -350,7 +263,7 @@ react {
           
           <li>
             
-            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            <a href="https://ohmysummer.github.io/tags/perl-6-adevnt-calendar/index.xml" title="RSS">
             
               <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
