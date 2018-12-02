@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Day 1 - Porting Vigilance, integrating Perl 6 with standard tools</title>
+  <meta property="og:title" content="Day 1 - Porting Vigilance, integrating Perl 6 with standard tools" />
+  <meta name="twitter:title" content="Day 1 - Porting Vigilance, integrating Perl 6 with standard tools" />
+  <meta name="description" content="Porting Vigilance, integrating Perl 6 with standard tools">
+  <meta property="og:description" content="Porting Vigilance, integrating Perl 6 with standard tools">
+  <meta name="twitter:description" content="Porting Vigilance, integrating Perl 6 with standard tools">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Day 1 - Porting Vigilance, integrating Perl 6 with standard tools</h1>
+                
+                  
+                    <h2 class="post-subheading">Porting Vigilance, integrating Perl 6 with standard tools</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 2, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (852 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="移植-vigilance-将perl-6与标准工具集成在一起">移植 Vigilance，将Perl 6与标准工具集成在一起</h1>
+
+<p>大家好，今天我们将采用基础设施脚本并将其从Perl 5移植到Perl 6.本文基于James Clark的一对帖子，你可以在这里找到：</p>
+
+<ul>
+<li><a href="http://blog.lazycat.com.au/2014/05/integrating-integrity-part-1.html">第1部分</a></li>
+<li><a href="http://blog.lazycat.com.au/2014/05/integrating-integrity-part-2.html">第2部分</a></li>
+</ul>
+
+<p>此脚本用于创建和验证MD5总和。 这些是128位值，可用于验证数据完整性。 虽然MD5已经被证明在防范恶意行为者方面不安全，但它对于检测磁盘损坏仍然很有用。</p>
+
+<p>Perl 6生态系统正在发展，其中包含多种工具，这些工具可以从Perl 5 CPAN移植，也可以替代。 我将介绍原始脚本和移植的几个方面，并说明我为什么要进行一些特定的更改。 希望这会鼓励你出去移植你自己的小脚本。</p>
+
+<h2 id="shebang-和导入">Shebang 和导入</h2>
+
+<p>Perl 5版本使用一些基础设施和一些实用程序来处理Unicode并使命令行输出更好：</p>
+
+<pre><code class="language-perl">#!/usr/bin/perl -CSDA
+
+use strict;
+use warnings;
+use utf8;
+use Encode qw/encode_utf8 decode_utf8/;
+use Getopt::Long;
+use Digest::MD5;
+use Term::ANSIColor;
+use Term::ProgressBar;
+use File::Find;
+use File::Basename;
+use Data::Dumper;
+</code></pre>
+
+<p>Perl 6默认启用了警告和限制，并且内置了Unicode支持，因此我们可以将其保留。 Data::Dumper也已经实现，它具有非常有用的IO功能。 将所有这些加在一起我们可以得到一个非常精益的标头：</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+use v6;
+
+use Digest::MD5;
+use Terminal::ANSIColor;
+use Terminal::Spinners;
+</code></pre>
+
+<h2 id="命令行选项">命令行选项</h2>
+
+<p>Perl 5有许多用于处理命令行参数的很棒的模块，在我们使用 Getopt::Long 的原始脚本中：</p>
+
+<pre><code class="language-perl"># Define our command-line arguments.
+my %opts = ( 'blocksize' =&gt; 16384 );
+GetOptions(\%opts, &quot;verify=s&quot;, &quot;create=s&quot;, &quot;update=s&quot;, &quot;files&quot;, &quot;blocksize=s&quot;, &quot;help!&quot;);
+</code></pre>
+
+<p>在Perl 6中，我们可以直接在MAIN方法中定义命令行选项。 我们使用多个调度来根据传递的参数来控制脚本的执行：</p>
+
+<pre><code class="language-perl6">multi MAIN (Str :$create, *@files where { so @files }) { ... }
+multi MAIN (Str :$update, *@files) { ... }
+multi MAIN (Str :$verify, *@files) { ... }
+multi MAIN (*@files where { so @files }) { ... }
+</code></pre>
+
+<p>这也意味着我们不必定义帮助选项/sub，因为我们可以文档化我们的MAIN子例程，因此：</p>
+
+<pre><code class="language-perl6">#| Verify the MD5 sums in a file that conforms to md5sum output:
+#|   
+multi MAIN (Str :$verify, *@files) { ... }
+</code></pre>
+
+<p>您可能已经注意到Perl 6版本没有定义blocksize选项，我将回过头来看看。</p>
+
+<h2 id="io-读写文件">IO: 读写文件</h2>
+
+<p>我们将校验和存储在一个文件中，其中每一行的格式都与GNU coreutils中的md5sum程序的输出相同：32个十六进制数字，两个空格和文件名。</p>
+
+<p>一些基本的IO，我们使用正则表达式来解析每一行。 使用有意义的空格有助于保持每个正则表达式相当简洁：</p>
+
+<pre><code class="language-perl6">sub load_md5sum_file
+{
+	my ($filename) = @_;
+	my @plan;
+	
+	open(my $fh, '&lt;:utf8', $filename) or die &quot;Couldn't open '$filename' : $!\n&quot;;
+	my $linenum = 0;
+	while (my $line = &lt;$fh&gt;) {
+		chomp $line;
+		$linenum++;
+		if ($line =~ /^(?\p{ASCII_Hex_Digit}{32})  (?.*)$/) {
+			# Checksum and filename compatible with md5sum output.
+			push @plan, create_plan_for_filename($+{filename}, $+{md5});
+			
+		} elsif ($line =~ /^(?\p{ASCII_Hex_Digit}{32})  (?.*)$/) {
+			# Checksum and filename compatible with md5sum's manpage but not valid for the actual program.
+			# We'll use it, but complain.
+			print STDERR colored(&quot;Warning: &quot;, 'bold red'), colored(&quot;md5sum entry '&quot;, 'red'), $line, colored(&quot;' on line $linenum of file $filename is using only one space, not two - this doesn't match the output of the actual md5sum program!.&quot;, 'red'), &quot;\n&quot;;
+			push @plan, create_plan_for_filename($+{filename}, $+{md5});
+			
+		} elsif ($line =~ /^\s*$/) {
+			# Blank line, ignore.
+			
+		} else {
+			# No idea. Best not to keep quiet, it could be a malformed checksum line and we don't want to just quietly skip the file if so.
+			print STDERR colored(&quot;Warning: &quot;, 'bold red'), colored(&quot;Unrecognised md5sum entry '&quot;, 'red'), $line, colored(&quot;' on line $linenum of file $filename.&quot;, 'red'), &quot;\n&quot;;
+			push @plan, { error =&gt; &quot;Unrecognised md5sum entry&quot; };
+		}
+	}
+	close($fh) or die &quot;Couldn't close '$filename' : $!\n&quot;;
+	
+	return @plan;
+}
+</code></pre>
+
+<p>Perl 6允许我们验证我们是否通过签名传递了实际存在的文件。 此外，我们用 grammar 替换正则表达式，如果需要，我们可以在脚本的不同位置使用该 grammar：</p>
+
+<pre><code class="language-perl6">grammar MD5SUM {
+	token TOP        { &lt;md5&gt; &lt;spacer&gt; &lt;filehandle&gt; }
+	token md5        { &lt;xdigit&gt; ** 32 }
+	token spacer     { \s+ }
+	token filehandle { .* }
+}
+
+sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
+	my MD5Plan @plans;
+
+	PARSE: for $filehandle.IO.lines(:close) -&gt; $line {
+		next PARSE if !$line; # We don't get worked up over blank lines.
+
+		my $match = MD5SUM.parse($line);
+
+		if (!$match) {
+			say $*ERR: colored(&quot;Couldn't parse $line&quot;, $ERROR_COLOUR);
+			next PARSE;
+		}
+
+		if (!$match&lt;filehandle&gt;.IO.f) {
+			say $*ERR: colored(&quot;{ $match&lt;filehandle&gt; } isn't an existing file.&quot;, $ERROR_COLOUR);
+			next PARSE;
+		}
+
+		if ($match&lt;spacer&gt;.chars == 2) {
+			@plans.push(MD5Plan.new($match&lt;filehandle&gt;.Str, $match&lt;md5&gt;.Str));
+		}
+		else {
+			say $*ERR: colored(&quot;'$line' does not match the output of md5sum: wrong number of spaces.&quot;, $WARNING_COLOUR);
+			@plans.push(MD5Plan.new($match&lt;filehandle&gt;.Str, $match&lt;md5&gt;.Str));
+		}
+	}
+
+	 return @plans;
+}
+</code></pre>
+
+<p>写出数据非常相似：</p>
+
+<pre><code class="language-perl">sub save_md5sum_file
+{
+	my ($filename, @plan) = @_;
+	
+	my $fh;
+	unless (open($fh, '&gt;:utf8', $filename)) {
+		...
+	}
+	foreach my $plan_entry (@plan) {
+		next unless $plan_entry-&gt;{correct_md5} &amp;&amp; $plan_entry-&gt;{filename};
+		print $fh &quot;$plan_entry-&gt;{correct_md5}  $plan_entry-&gt;{filename}\n&quot;;
+	}
+	close($fh) or die &quot;Couldn't close '$filename' : $!\n&quot;;
+}
+</code></pre>
+
+<p>值得注意的是，Perl 6默认以Unicode格式写入文件：</p>
+
+<pre><code class="language-perl6">sub save-md5sum-file (Str $filehandle, @plans) {
+	my $io = $filehandle.IO.open: :w;
+
+	WRITE: for @plans -&gt; $plan {
+		next WRITE unless $plan.computed-md5 &amp;&amp; $plan.filehandle;
+
+		$io.say(&quot;{ $plan.computed-md5 }  { $plan.filehandle }&quot;);
+	}
+
+	$io.close;
+}
+</code></pre>
+
+<h2 id="获得md5校验和">获得MD5校验和</h2>
+
+<p>Perl 5版本的Digest::MD5使用了相当多的XS来提高性能。 XS中包含了以块的形式添加数据以进行整体解析的方法。 这允许我们使用ProgressBar向用户展示用户等待时的进度：</p>
+
+<pre><code class="language-perl">sub run_md5_file
+{
+	my ($plan_entry, $progress_fn) = @_;
+	
+	# We use the OO interface to Digest::MD5 so we can feed it data a chunk at a time.
+	my $md5 = Digest::MD5-&gt;new();
+	my $current_bytes_read = 0;
+	my $buffer;
+	$plan_entry-&gt;{start_time} = time();
+	$plan_entry-&gt;{elapsed_time} = 0;
+	$plan_entry-&gt;{elapsed_bytes} = 0;
+	
+	# 3 argument form of open() allows us to specify 'raw' directly instead of using binmode and is a bit more modern.
+	open(my $fh, '&lt;:raw', $plan_entry-&gt;{filename}) or die &quot;Couldn't open file $plan_entry-&gt;{filename}, $!\n&quot;;
+	
+	# Read the file in chunks and feed into md5.
+	while ($current_bytes_read = read($fh, $buffer, $opts{blocksize})) {
+		$md5-&gt;add($buffer);
+		$plan_entry-&gt;{elapsed_bytes} += $current_bytes_read;
+		$plan_entry-&gt;{elapsed_time} = time() - $plan_entry-&gt;{start_time};
+		&amp;$progress_fn($plan_entry-&gt;{elapsed_bytes});
+	}
+	# The loop will exit as soon as read() returns 0 or undef. 0 is normal EOF, undef indicates an error.
+	die &quot;Error while reading $plan_entry-&gt;{filename}, $!\n&quot; if ( ! defined $current_bytes_read);
+	
+	close($fh) or die &quot;Couldn't close file $plan_entry-&gt;{filename}, $!\n&quot;;
+	
+	# We made it out of the file alive. Store the md5 we computed. Note that this resets the Digest::MD5 object.
+	$plan_entry-&gt;{computed_md5} = $md5-&gt;hexdigest();
+}
+</code></pre>
+
+<p>Perl 6版本使用纯Perl并且缺少添加功能，因此我使用微调器而不是进度条。 我们还需要专门设置我们的编码，以避免在将二进制数据读取为Unicode时出现的错误：</p>
+
+<pre><code class="language-perl6">sub calc-md5-sum (MD5Plan $plan) {
+    my $md5 = Digest::MD5.new;
+
+    print &quot;Calculating MD5 sum for { $plan.filehandle }       &quot;; # We need some space for the spinner to take up.
+	                                                             # I like 'bounce', so I need 6 spaces for the spinner
+	                                                             # + an extra one to separate it from the filehandle.
+
+	my Buf $buffer = $plan.filehandle.IO.slurp(:close, :bin);
+
+	my $decoded = $buffer.decode('iso-8859-1');
+
+	my $spinner = Spinner.new(type =&gt; 'bounce');
+
+	my $promise = Promise.start({
+		$md5.md5_hex($decoded)
+	});
+
+	until $promise.status {
+		$spinner.next;
+	}
+
+	say ''; # Add a new line after the spinner.
+
+	$plan.computed-md5 = $promise.result;
+}
+</code></pre>
+
+<h2 id="结束之前的思考">结束之前的思考</h2>
+
+<p>我没有在我的系统上使用Perl 6版本因为Digest::MD5的低性能，在我的系统上我用md5sum调用替换它。 其他可能性是使用Inline::Perl5和Perl 5版本的Digest::MD5，或使用惊人的Perl 6原生调用接口来运行C实现。 我希望这篇文章能激发您将一些自己的Perl 5脚本移植到Perl 6，或者至少为您提供一些命令行交互的技巧。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6-adevnt-calendar/">Perl 6 Adevnt Calendar</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-12-02-document-every-thing/" data-toggle="tooltip" data-placement="top" title="Day 2 – Like 6 Perls in a Pod: document everything (and test the documentation)">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+
