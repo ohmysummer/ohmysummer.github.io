@@ -6,24 +6,10 @@
     <description>Recent content in Perl 6 Adevnt Calendar on Rakudo Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 02 Dec 2018 21:49:03 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 02 Dec 2018 11:01:52 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/tags/perl-6-adevnt-calendar/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Day 1 - Porting Vigilance, integrating Perl 6 with standard tools</title>
-      <link>https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/</link>
-      <pubDate>Sun, 02 Dec 2018 21:49:03 +0800</pubDate>
-      
-      <guid>https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/</guid>
-      <description>移植 Vigilance，将Perl 6与标准工具集成在一起 大家好，今天我们将采用基础设施脚本并将其从Perl 5移植到Perl 6.本文基于James Clark的一对帖子，你可以在这里找到：
- 第1部分 第2部分  此脚本用于创建和验证MD5总和。 这些是128位值，可用于验证数据完整性。 虽然MD5已经被证明在防范恶意行为者方面不安全，但它对于检测磁盘损坏仍然很有用。
-Perl 6生态系统正在发展，其中包含多种工具，这些工具可以从Perl 5 CPAN移植，也可以替代。 我将介绍原始脚本和移植的几个方面，并说明我为什么要进行一些特定的更改。 希望这会鼓励你出去移植你自己的小脚本。
-Shebang 和导入 Perl 5版本使用一些基础设施和一些实用程序来处理Unicode并使命令行输出更好：
-#!/usr/bin/perl -CSDA use strict; use warnings; use utf8; use Encode qw/encode_utf8 decode_utf8/; use Getopt::Long; use Digest::MD5; use Term::ANSIColor; use Term::ProgressBar; use File::Find; use File::Basename; use Data::Dumper;  Perl 6默认启用了警告和限制，并且内置了Unicode支持，因此我们可以将其保留。 Data::Dumper也已经实现，它具有非常有用的IO功能。 将所有这些加在一起我们可以得到一个非常精益的标头：
-#!/usr/bin/env perl6 use v6; use Digest::MD5; use Terminal::ANSIColor; use Terminal::Spinners;  命令行选项 Perl 5有许多用于处理命令行参数的很棒的模块，在我们使用 Getopt::Long 的原始脚本中：</description>
-    </item>
     
     <item>
       <title>Day 2 – Like 6 Perls in a Pod: document everything (and test the documentation)</title>
@@ -38,6 +24,20 @@ Shebang 和导入 Perl 5版本使用一些基础设施和一些实用程序来�
 Perl 6 以下面的方式来救援：
 grammar
 unit grammar Santa-Letter; token TOP { &amp;lt;dear&amp;gt; \v+ &amp;lt;paragraph&amp;gt; [\v+ &amp;lt;paragraph&amp;gt;]* \v+ &amp;lt;signature&amp;gt;\v*} token paragraph { &amp;lt;superword&amp;gt;[ \h+ &amp;lt;superword&amp;gt;]+ } token superword { &amp;lt;word&amp;gt; | &amp;lt;enhanced-word&amp;gt; } token word { \w+ } token enhanced-word { &amp;lt;word&amp;gt; [\,|\.|\:] } token dear { Dear \h+ [S|s]anta [\,|\:]? } token signature { \h+ \w+ \h* \w* }  该单位向圣诞老人宣布一封致敬的信，其后是一个或多个段落，最后是一个签名，其前面应有一个水平的空格，如 \h 所示。</description>
+    </item>
+    
+    <item>
+      <title>Day 1 - Porting Vigilance, integrating Perl 6 with standard tools</title>
+      <link>https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/</link>
+      <pubDate>Sat, 01 Dec 2018 21:49:03 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/</guid>
+      <description>移植 Vigilance，将Perl 6与标准工具集成在一起 大家好，今天我们将采用基础设施脚本并将其从Perl 5移植到Perl 6.本文基于James Clark的一对帖子，你可以在这里找到：
+ 第1部分 第2部分  此脚本用于创建和验证MD5总和。 这些是128位值，可用于验证数据完整性。 虽然MD5已经被证明在防范恶意行为者方面不安全，但它对于检测磁盘损坏仍然很有用。
+Perl 6生态系统正在发展，其中包含多种工具，这些工具可以从Perl 5 CPAN移植，也可以替代。 我将介绍原始脚本和移植的几个方面，并说明我为什么要进行一些特定的更改。 希望这会鼓励你出去移植你自己的小脚本。
+Shebang 和导入 Perl 5版本使用一些基础设施和一些实用程序来处理Unicode并使命令行输出更好：
+#!/usr/bin/perl -CSDA use strict; use warnings; use utf8; use Encode qw/encode_utf8 decode_utf8/; use Getopt::Long; use Digest::MD5; use Term::ANSIColor; use Term::ProgressBar; use File::Find; use File::Basename; use Data::Dumper;  Perl 6默认启用了警告和限制，并且内置了Unicode支持，因此我们可以将其保留。 Data::Dumper也已经实现，它具有非常有用的IO功能。 将所有这些加在一起我们可以得到一个非常精益的标头：
+#!/usr/bin/env perl6 use v6; use Digest::MD5; use Terminal::ANSIColor; use Terminal::Spinners;  命令行选项 Perl 5有许多用于处理命令行参数的很棒的模块，在我们使用 Getopt::Long 的原始脚本中：</description>
     </item>
     
   </channel>
