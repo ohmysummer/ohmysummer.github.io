@@ -201,6 +201,108 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-12-08-make-your-perl6-grammar-compact/">
+                <h2 class="post-title">第八天 — Make your Perl 6 grammar compact</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    grammar
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 8, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (614 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  欢迎来到今年的 Perl 6 Advent Calendar 的第8天！
+Grammars 是使 Perl 6 成为一种优秀编程语言的众多因素之一。 我甚至不会尝试预测轮询的结果，以便在 grammars，Unicode 支持，并发功能，超运算符或集合语法之间进行选择，或者选择 Whatever star。 谷歌发现了自己在互联网上发布的最好的 Perl 6 功能列表。
+无论如何，今天我们将讨论 Perl 6 grammars，我将分享一些技巧，用于使 grammars 更紧凑。
+1.拆分 actions 假设您正在编写 grammar 来解析 Perl 的变量声明。 您希望它与以下语句匹配：
+my $s; my @a;  它们都声明了一个变量，因此我们可以制定一个通用规则来解析这两种情况。 下面是完整的程序：
+grammar G { rule TOP { &lt;variable-declaration&gt;* %% ';' } rule variable-declaration { | &lt;scalar-declaration&gt; | &lt;array-declaration&gt; } rule scalar-declaration { 'my' '$' &lt;variable-name&gt; } rule array-declaration { 'my' '@' &lt;variable-name&gt; } token variable-name { \w+ } } class A { has %!
+                  <a href="https://ohmysummer.github.io/post/2018-12-08-make-your-perl6-grammar-compact/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-12-07-automatic-on-a-cellular-level/">
+                <h2 class="post-title">第七天 – Automatic on a Cellular Level</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    细胞自动机
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (918 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  今天的降临日历帖子涉及Cellular Automata。
+什么是细胞自动机？我很高兴你问！它们是由几个部分组成的系统：由细胞组成的一种场或“世界”，每个细胞可以在任何点处的一组状态，描述每个细胞可见的细胞的“邻域” ，以及一套规则，用于管理一个单元将其状态改变为什么状态以及其邻域中所有单元的状态。
+当然，这是一个非常抽象的描述，所以让我举一些个别部分的例子，希望能让你了解你在细胞自动机中看到的内容：
+在典型的世界中，你可能会发现细胞像串珠一样排列，或者像国际象棋或中国跳棋板上的字段。您还可以组成更多奇特的配置：任何二维场都可以映射到任何表面，例如斯坦福兔子
+你可以在野外找到的状态集是“从0到n的数字”，“这里有细菌”，“黑白颜色”（或更多）。由于您基本上可以将任何信息表示为“数字”，并且允许任意数量的状态，因此还可以存在表示“此时此单元格中有多少粒子在上升，下降，向左或向右移动的状态？ “作为整数或甚至浮点数。
+邻域可以被认为是细胞“连接在一起”的模式。典型的社区将是“前面的一个，后面的一个”的“串珠”字段，以及“北，东，南，西”或“北，东北，东，东南，南，西南，西，西北“对于棋盘场 - 这两个分别是冯诺依曼附近和摩尔附近。
+管理每个单元的邻域中的状态的一组规则将导致哪个状态转到其他状态可被视为特定元胞自动机的核心。
+在今天的降临日历中，我们将探索您可能称之为最简单的自动机。我们将字段串起来像字符串上的珠子，我们将尝试一个或两个和一些不同的状态集。
+为了让家里的人感兴趣，我将为您提供链接，让您在浏览器中运行示例代码，或在家中使用您的本地perl6编译器！
+为学习而做 让我们开始，然后：
+首先，我们需要什么？世界上必须有存储空间，需要一些代码来获得一个符合条件的邻居，以及一些代码来计算一个单元的下一个状态，给定它自己的状态和邻居的状态。最重要的是，我们想看看发生了什么，所以我们也有一些代码。
+在确定每个单元可以具有哪些状态之后，我们将知道什么存储适合于我们的世界。使用8位整数数组将允许我们从任何不超过255个单独状态的状态集中进行选择。不过，让我们现在共计3个州。我们可以随心所欲地初始化世界，但是将每个字段设置为随机有效状态是一个很好的起点。另一个是将一个状态的单个单元放在中间，并使每个其他单元具有不同的状态。
+constant number-of-states = 3; constant field-width = 60; my int8 @field; sub init-field { @field = (^number-of-states).roll(field-width); }  显示字段非常简单，具体取决于我们使用的输出。 这是一段可以在任何控制台中运行的代码，下面是一个6pad的链接，它在pad的HTML部分输出很少的彩色方块。
+sub output-a-row { for @field { # Using the unicode characters &quot;Light shade&quot;, &quot;Medium shade&quot;, and &quot;Dark shade&quot; # and printing each field twice so they look square rather than slim and tall.
+                  <a href="https://ohmysummer.github.io/post/2018-12-07-automatic-on-a-cellular-level/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-12-06-lazy-and-industrious-elves/">
                 <h2 class="post-title">第六天 - Lazy and Industrious Elves</h2>
 
