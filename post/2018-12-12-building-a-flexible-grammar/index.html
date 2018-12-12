@@ -5,23 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>第十一天 - Testing Your Times Tables With Perl 6</title>
-  <meta property="og:title" content="第十一天 - Testing Your Times Tables With Perl 6" />
-  <meta name="twitter:title" content="第十一天 - Testing Your Times Tables With Perl 6" />
-  <meta name="description" content="这文章有点水啊">
-  <meta property="og:description" content="这文章有点水啊">
-  <meta name="twitter:description" content="这文章有点水啊">
+  <title>第十二天 - Building a flexible grammar</title>
+  <meta property="og:title" content="第十二天 - Building a flexible grammar" />
+  <meta name="twitter:title" content="第十二天 - Building a flexible grammar" />
+  <meta name="description" content="构建灵活的 grammar">
+  <meta property="og:description" content="构建灵活的 grammar">
+  <meta name="twitter:description" content="构建灵活的 grammar">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-perl-6/" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-12-12-building-a-flexible-grammar/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rakudo Perl 6" />
 
   <meta name="generator" content="Hugo 0.49" />
-  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-perl-6/" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-12-building-a-flexible-grammar/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -198,21 +198,21 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>第十一天 - Testing Your Times Tables With Perl 6</h1>
+              <h1>第十二天 - Building a flexible grammar</h1>
                 
                   
-                    <h2 class="post-subheading">这文章有点水啊</h2>
+                    <h2 class="post-subheading">构建灵活的 grammar</h2>
                   
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 11, 2018
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 12, 2018
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (279 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (567 words)
   
   
 </span>
@@ -231,87 +231,137 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>这几乎是在北极附近的精灵小学冬季学期结束之时。对于精灵而言，敏锐的人物头脑非常重要，而小精灵的数学老师 Hopper 女士希望确保他们在任期的倒数第二天保持他们的算术技能。（学期的最后一天保留用于观看电影和玩耍 -  很嗨皮）。</p>
+        <p>圣诞老人夫人写了一个基础的 Grammar，以配合 GDPR 无知精灵从世界各地收集的有关今年 naughty 或 nice 的人的简单列表。</p>
 
-<p>小精灵刚刚学会了他们的时间表（乘法表），最多12个，但他们并不像他们所想的那样擅长，其中一些人在圣诞节前将在玩具工作坊帮忙，那时候他们可能需要快速告诉大精灵有多少特定类型的玩具。</p>
+<p>每个记录都是一个名称，后跟一个标签，后跟一个地址，然后是一个标签，然后是 naughty 或 nice 的评估，然后用换行符结束。</p>
 
-<p>幸运的是，Elf Hopper 是一个非常聪明的精灵，拥有出色的数学和编码能力 - 自己。所以她起了一个快速的控制台应用程序来运行小精灵的学校颁发的 Perlix 6.0 boxen。</p>
+<pre><code>Batman 1 Batman Street, Gotham Nice
+Joker 5 Joker Street, Arkham Naughty
+Riddler 12 Riddler Street, Arkham Naughty
+Robin 2 Robin Street, Gotham Nice
+</code></pre>
 
-<p>该程序允许小精灵通过运行它们在2至12次表中测试自己，或者如果它们提供单个数字参数，他们可以尝试任何他们喜欢的乘法表。</p>
+<p>她希望将 naughty 的人排除在一个列表中，将 nice 的人过滤到另一个列表中，因为 Krampus 将在今年处理所有 naughty 的人。</p>
 
-<pre><code class="language-perl6">#!/usr/bin/env perl6
+<p>S.夫人用这样的 grammar 开头：</p>
 
-use v6;
-
-my $fixednum;
-my %score;
-my @exits = &lt;exit quit&gt;;
-
-$fixednum = @*ARGS[0] || 0;
-put &quot;Type the answer, or quit or exit to end the test.&quot;;
-
-
-loop {
-    my $coefficient = (2..12).pick;
-    my $number = $fixednum || (2..12).pick;
-
-    my $answer = prompt ( &quot;$coefficient × $number = &quot; );
-    my $rightanswer = $coefficient × $number;
-
-    last if $answer.lc ~~ any @exits;
-
-    if $answer == $rightanswer {
-        put &quot;Correct!&quot;;
-        %score&lt;correct&gt;++;
-    } else {
-        put &quot;Sorry, that wasn't right! The answer is $rightanswer&quot;;
-    }
-    %score&lt;total&gt;++;
-}
-
-if %score&lt;total&gt;:exists {
-    my $pc = 100 * %score&lt;correct&gt; / %score&lt;total&gt;;
-    put &quot;You scored %score&lt;correct&gt; out of %score&lt;total&gt;, i.e. &quot;, sprintf &quot;%2.2f%%.&quot;, $pc;
+<pre><code class="language-perl6">grammar naughty-nice-list {
+    token TOP { &lt;details&gt;+ } # Find one or more records made up of name, address, assessment (defined below)
+    
+    token details { &lt;name&gt; &lt;address&gt; &lt;assessment&gt; }  # Find the elements from below, in this order
+    
+    token name { .*? \t } # Find any characters up to the earliest tab
+    
+    token address { .*? \t } # Find any characters up to the earliest tab
+    
+    token assessment { Naughty|Nice \n } # Find either 'Naughty' or 'Nice' followed by a newline
 }
 </code></pre>
 
-<p>Elf Hopper 向其它小精灵解释代码如下。</p>
+<p>并在列表上调用它，如下所示：</p>
 
-<p>“可爱的小精灵们！这是关于程序如何工作的一些背景知识。</p>
+<pre><code class="language-perl6">naughty-nice-list.parsefile(&quot;./list.txt&quot;);
+</code></pre>
 
-<p>我在顶部附近添加了 <code>use v6;</code>，以便代码也可以在 Perl 5下 运行，它将自动使用 Perl 6 仿真器。</p>
+<p>但是，当然，她必须做一些事情将细节放入单独的列表中。</p>
 
-<p>您将看到程序在特殊的 <code>@*ARGS</code> 数组的命令行上运行时选择一个可选参数。这是 Perl 5 的 <code>@ARGV</code> 数组的 Perl6 等价物。</p>
+<p>为此，她创建了一个 action 动作类：</p>
 
-<p>在 Perl 6 中，数组，数组元素和数组切片总是使用 <code>@</code> sigil，与 Perl 5 不同，其中各个数组元素使用 <code>$</code> sigil。同样，哈希和哈希元素现在总是带有 <code>%</code> sigil，无论是整个哈希，它的切片还是单个元素都在使用。</p>
+<pre><code class="language-perl6">class santa-list-actions {
+    has %!filtered-lists; # Create a private hash for this class
 
-<p>那里还有另一个符号，星号 &lsquo;twigil&rsquo;，<code>*</code>。这表明 <code>@*ARGS</code> 是一个动态特殊变量。</p>
+    method show { return %!filtered-lists } # Create a method to return our hash to the user
 
-<p><code>prompt</code> 和 <code>loop</code> 关键字是 Perl 6 中的新功能，两者都是令人钦佩的名字！</p>
+    # This method is automatically called when the token with the same name makes a match
+    method details ($/) {
+        # Create an array of just the name and address matches converted to strings
+        my @details.push($&lt;name&gt;.Str, $&lt;address&gt;.Str);
+        # Push the @details array into an array accessed with the 'Naughty' or 'Nice' key
+        # Note the curly braces to interpolate { $ } instead of .
+        # Otherwise we would get literally what we typed for the hash key.
+        %!filtered-lists{ $&lt;assessment&gt;.Str }.push(@details);
+    };
+};
+</code></pre>
 
-<ul>
-<li><code>prompt</code> 只返回用户输入的值，在本例中为变量。<br /></li>
-<li><code>loop</code> 是 Perl 6 的新块控制关键字之一。像这样的简单循环块只是创建了一个无限循环，可以由程序员以显式的方式结束，例如在满足条件时使用 <code>last</code> 关键字;或者例如由用户手动终止程序。<br /></li>
-<li>或者，循环可以采用三个参数，并且表现得像传统的C风格 <code>for</code> 循环。 （在 Perl 6 中，小精灵，<code>for</code> 只用于迭代列表或其他容器。）<br /></li>
-</ul>
+<p>她这样使用:</p>
 
-<p>在循环内部，小精灵，你可以看到范围对象。一切都是 Perl 6 中的一个对象，所以我可以在范围上调用 <code>pick</code> 方法来返回一个随机数。（好吧，无论如何，这是一个非加密安全的伪随机数！）</p>
+<pre><code class="language-perl6">my $actions = santa-list-actions.new;
+naughty-nice-list.parsefile(&quot;./list.txt&quot;, actions=&gt;$actions); # As Mrs S. called the object 'actions', the same as the keyword, she could write :$actions instead of actions=&gt;$actions
+my %hash-naughty-nice = $actions.show;
+</code></pre>
 
-<p><code>any</code> 关键字将 <code>@exits</code> 数组转换为 Perl 6 中许多新的有用数据结构之一：一个 <a href="https://perl6advent.wordpress.com/2009/12/13/">Junction</a>。这使得使用 smartmatch 运算符 <code>~~</code> 直截了当地找到一个数组元素。<code>last</code> 关键字退出循环，如 Perl 5 中所示。</p>
+<p>圣诞老人非常开心，她现在有一个哈希表，其中包含 &lsquo;Naughty&rsquo; 和 &lsquo;Nice&rsquo; 的键，每个键都包含一系列每个人的详细信息。</p>
 
-<p><a href="https://docs.perl6.org/type/Junction">Junction</a> 是一种新类型的容器或列表，允许进行许多最有用的比较，例如 <code>any</code>，<code>all</code>，<code>one</code> 或 <code>none</code>，我们在 Perl 5 中使用 <code>grep</code> 或 <code>List::Util</code> 等模块进行比较，但它使它们成为可能键入更容易，并允许它们同时执行！这样做的一个副作用是 junction 是无序的：但它们主要是为了产生单个真值或假值，所以通常都可以。如果你想快速想要根据一些特定值的简短列表检查一个值，那么 junction 就很棒。但是如果需要的话，它们还能够让你匹配更大的值集。</p>
+<p>但是钓鱼洞里总是有一只北极熊爪子，尽管有圣诞老人的保证，来自世界各地的精灵们并不只是 “Naughty” 或 “Nice”。他们用自己的语言说出来！</p>
 
-<p>在最后一个代码段落的顶部，您将看到 <code>:exists</code> 应用于 <code>%score&lt;total&gt;</code> 哈希键。<code>:exists</code> 是一个 Perl 6 副词！副词通常会修改方法的工作方式。<code>:exists</code> 是下标副词。它是一个副词，因为它改变了读取哈希键时发生的事情：不是返回值，而是查明值是否存在。这通常是使用 Perl 5 类中关注的那些熟悉的已定义方法的更好的替代方法。</p>
+<p>圣诞老人特别问过，但圣诞老人坚持不懈。只有 &lsquo;Naughty&rsquo; 或 &lsquo;Nice&rsquo;。但有些列表看起来像这样。</p>
 
-<p>当然，<code>exists</code> 测试就是为了确保在用户第一次退出程序时不会出现错误。</p>
+<pre><code>Batman 1 Bat Street, Gotham Nice
+Joker 5 Joker Street, Arkham Naughty
+Riddler 12 Riddler Street, Arkham Naughty
+Robin 2 Robin Street, Gotham Nice
+El Gato Negro 1 Gato Street, South Texas Bueno
+Victor Mancho 3 Mancho Street, New York City Malo
+</code></pre>
 
-<p>为什么我使用锯齿形符号来引用哈希键？好吧，花括号 <code>{}</code> 是散列键的标准下标运算符，如 Perl 5. 但是，大多数情况下你可能想要使用尖括号/锯齿形符号，因为它们提供单字键的自动引用。用于在 Perl 5 中执行此操作的简单<code>{}</code> 括号，但在 Perl 6 中不再执行此操作。需要引起括号内的字符串。</p>
+<p>圣诞老人简单地认为只是对新词进行硬编码，但她知道这不是懒惰的时候。世界各地都有精灵，她需要能够进化的东西。</p>
 
-<p>在 Perl 6 中，放置了用于向终端输出文本的标准命令。这将输出以下列表项，然后是换行符。<code>say</code> 和 <code>print</code> 仍然可用; <code>say</code> 和 <code>put</code> 这两个都打印到标准输出并添加换行符; <code>print</code> 不会追加换行符。</p>
+<p>所以，为了现在调用她的脚本，她创建了两个数组并将它们传递给 grammar：</p>
 
-<p>如果你使用这个程序以及知道它是如何工作的，小精灵，你将有选择和知识，是否，何时以及如何在你自己的头脑中执行乘法，以及什么时候最好让 Perl 6 -有动力的电脑做它。您的圣诞节作业是让您自己熟悉<a href="https://docs.perl6.org/">https://docs.perl6.org</a> 上的 Perl 6 文档。“</p>
+<pre><code class="language-perl6">my @nice = ['Nice', 'Bueno'];
+my @naughty = ['Naughty', 'Malo'];
+naughty-nice-list.parsefile(&quot;./list.txt&quot;, args=&gt;(@nice, @naughty), actions=&gt;$actions);
+</code></pre>
 
-<p>小精灵开始使用乘法测试程序，试图超越对方以获得最高的完美分数。他们发现它如此令人上瘾，以至于比赛甚至会加时到在学校的最后一天，当时他们应该正在观看&rsquo;精灵&rsquo;！</p>
+<p>她改变了这样的 grammar 来使用新的数组：</p>
+
+<pre><code class="language-perl6">grammar naughty-nice-list {
+    token TOP (@*nice-words, @*naughty-words) { &lt;details&gt;+ } # Create dynamic arrays with the passed in arrays, available throughout the grammar
+    token details { &lt;name&gt; &lt;address&gt; &lt;assessment&gt; }
+    token name { .*? \t }
+    token address { .*? \t }
+    token assessment { @*naughty-words|@*nice-words \n } # Find either a word from the naughty-words array or from the nice-words array followed by a newline
+}
+</code></pre>
+
+<p>但是S.太太意识到她现在最终会在她的 action 动作类中的哈希表中创建许多不同的键。 键将是 &lsquo;Nice&rsquo;，&rsquo;Naughty&rsquo;，&rsquo;Bueno&rsquo; 或 &lsquo;Malo&rsquo;，因为这些将是 <code>$</code> 可能拥有的匹配单词（未来有更多可能出现）。</p>
+
+<p>因此，她进行了另一项更改，为评估令牌命名语法中的潜在匹配：</p>
+
+<pre><code class="language-perl6">token assessment { $&lt;Naughty&gt;=@*naughty-words|$&lt;Nice&gt;=@*nice-words \n } # Mrs S. has now added names to the potential matches
+</code></pre>
+
+<p>在 action 动作类中，必须进行更改以适应这种情况。使用 <code>make</code> 和 <code>made</code>，圣诞老人将存储相应匹配的名称：</p>
+
+<pre><code class="language-perl6">class santa-list-actions {
+    has %!filtered-lists;
+
+    method show { return %!filtered-lists };
+
+    method details ($/) {
+        my @details.push($&lt;name&gt;.Str, $&lt;address&gt;.Str);
+        %filtered-lists{ $&lt;assessment&gt;.made }.push(@details); # This will now use the value from 'assessment.made' as the key, rather than the match in 'assessment.Str'
+    };
+
+    method assessment ($/) {
+        if $&lt;Naughty&gt; { # If the named pattern 'Naughty' matched...
+            make &quot;Naughty&quot; # ... set assessment.made to &quot;Naughty&quot;
+        } elsif $&lt;Nice&gt;; { # Or if the named pattern 'Nice' matched...
+            make &quot;Nice&quot; # ... set assessment.made to &quot;Nice&quot;
+        };
+     };
+};
+</code></pre>
+
+<p>一旦圣诞老人将数据捕获到她自己的哈希中，她就可以轻松地检查出今年已经被马洛的 Victor Mancho 将其列入正确的列表：</p>
+
+<pre><code class="language-perl6">say %hash-naughty-nice&lt;Naughty&gt;[2][0]; # Produces the output 'Victor Mancho'
+</code></pre>
+
+<p>所以现在，圣诞老人可以将 “Naughty” 或 “Nice” 的任何新翻译添加到相关数组，而不会触及 grammar。</p>
+
+<p>圣诞老人发现自己对 Perl 6 grammar 的灵活性非常满意。圣诞老人对这个问题的研究起初不那么重要&hellip;&hellip;但是她知道她在确保每个人都能得到一个礼物或者在这个圣诞节的窗户上扔蛋的方法上做得很好。</p>
 
 
         
@@ -329,13 +379,9 @@ if %score&lt;total&gt;:exists {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-12-10-jmp-starting-your-work-flow/" data-toggle="tooltip" data-placement="top" title="第十天 - jmp starting your work flow">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-perl-6/" data-toggle="tooltip" data-placement="top" title="第十一天 - Testing Your Times Tables With Perl 6">&larr; Previous Post</a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-12-building-a-flexible-grammar/" data-toggle="tooltip" data-placement="top" title="第十二天 - Building a flexible grammar">Next Post &rarr;</a>
-            </li>
           
         </ul>
       
