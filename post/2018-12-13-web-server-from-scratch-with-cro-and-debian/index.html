@@ -5,23 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>第十二天 - Building a flexible grammar</title>
-  <meta property="og:title" content="第十二天 - Building a flexible grammar" />
-  <meta name="twitter:title" content="第十二天 - Building a flexible grammar" />
-  <meta name="description" content="构建灵活的 grammar">
-  <meta property="og:description" content="构建灵活的 grammar">
-  <meta name="twitter:description" content="构建灵活的 grammar">
+  <title>第十三天 - Web server from scratch with Cro and Debian</title>
+  <meta property="og:title" content="第十三天 - Web server from scratch with Cro and Debian" />
+  <meta name="twitter:title" content="第十三天 - Web server from scratch with Cro and Debian" />
+  <meta name="description" content="水文一篇">
+  <meta property="og:description" content="水文一篇">
+  <meta name="twitter:description" content="水文一篇">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-12-12-building-a-flexible-grammar/" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-12-13-web-server-from-scratch-with-cro-and-debian/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rakudo Perl 6" />
 
   <meta name="generator" content="Hugo 0.49" />
-  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-12-building-a-flexible-grammar/" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-13-web-server-from-scratch-with-cro-and-debian/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -198,21 +198,21 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>第十二天 - Building a flexible grammar</h1>
+              <h1>第十三天 - Web server from scratch with Cro and Debian</h1>
                 
                   
-                    <h2 class="post-subheading">构建灵活的 grammar</h2>
+                    <h2 class="post-subheading">水文一篇</h2>
                   
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 12, 2018
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 13, 2018
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (567 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (310 words)
   
   
 </span>
@@ -231,137 +231,127 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>圣诞老人夫人写了一个基础的 Grammar，以配合 GDPR 无知精灵从世界各地收集的有关今年 naughty 或 nice 的人的简单列表。</p>
+        
 
-<p>每个记录都是一个名称，后跟一个标签，后跟一个地址，然后是一个标签，然后是 naughty 或 nice 的评估，然后用换行符结束。</p>
+<p>我和圣诞老人​​谈过，他说他不知道如何在 <strong>Debian</strong> 上安装 <strong>Cro</strong>，所以我对自己说：我要帮助他。</p>
 
-<pre><code>Batman 1 Batman Street, Gotham Nice
-Joker 5 Joker Street, Arkham Naughty
-Riddler 12 Riddler Street, Arkham Naughty
-Robin 2 Robin Street, Gotham Nice
+<p>如果您对 <strong>Apache</strong> 等 Web 服务器有一些经验，并且您已经听说过 <strong>Perl6</strong> 强大的并发/响应方面，那么您肯定有兴趣了解 <a href="https://cro.services/">Cro 服务</a>。这篇文章的受众是<strong>具有 Debian 基本经验的人</strong>，或者在 <strong>Perl6</strong> 新手&hellip;就像圣诞老人一样。</p>
+
+<p><strong>Cro</strong> 是一个 <strong>Perl6 模块</strong>，它提供了轻松构建反应式和并发服务所需的一切，例如：Web 服务器。</p>
+
+<p>在这篇文章中，我们将看到如何在 <strong>Debian</strong> 中安装 <strong>Cro</strong>，这是最受欢迎的 Linux 发行版之一。然后，我将解释 <strong>Cro</strong> 的演示示例。</p>
+
+<p>我们将使用 <strong>Debian 9,64 位</strong>（Stretch），我们将在安装后启动它。</p>
+
+<h2 id="安装-rakudo-perl6-编译器">安装 Rakudo Perl6 编译器</h2>
+
+<p><a href="https://rakudo.org/">Rakudo</a> 是 <strong>Cro</strong> 模块运行的当前 <strong>Perl6</strong> 编译器。安装 <strong>Rakudo</strong> 的常规方法是安装 <a href="https://rakudo.org/files">Rakudo Star</a>，但我更喜欢快速的方式：<a href="https://github.com/nxadm/rakudo-pkg">rakudo-pkg</a> &hellip;&hellip;怎么样？只需从此 <a href="https://github.com/nxadm/rakudo-pkg#direct-downloads">repo</a> 下载并安装相应的 <strong>Debian 软件包</strong>。在我们的例子中，是来自 <strong>Debian 9, 64位</strong>的 <strong>.deb</strong> 文件。</p>
+
+<p>使用 <strong>Debian</strong> 中的 root 用户，我们可以在 root home 中为 <strong>Rakudo</strong> 创建一个包文件夹，进入这个目录，下载 <strong>Debian 9, 64 位</strong>的当前 <strong>Rakudo</strong> 包，并安装它。就我而言：</p>
+
+<pre><code class="language-perl6">mkdir ~/rakudo-packages &amp;&amp; cd $_
+wget https://github.com/nxadm/rakudo-pkg/releases/download/v2018.10-02/rakudo-pkg-Debian9_2018.10-02_amd64.deb
+dpkg -i rakudo-pkg-Debian9_2018.10-02_amd64.deb
 </code></pre>
 
-<p>她希望将 naughty 的人排除在一个列表中，将 nice 的人过滤到另一个列表中，因为 Krampus 将在今年处理所有 naughty 的人。</p>
+<p><strong>Rakudo</strong> 运行时编译器和相关工具现在安装在 <strong>/opt/rakudo-pkg</strong> 文件夹中。在 <strong>export PATH</strong> 行之前，让所有用户在 <strong>/etc/profile</strong> 文件中插入以下行：</p>
 
-<p>S.夫人用这样的 grammar 开头：</p>
+<pre><code>PATH=$PATH:/opt/rakudo-pkg/bin
+</code></pre>
 
-<pre><code class="language-perl6">grammar naughty-nice-list {
-    token TOP { &lt;details&gt;+ } # Find one or more records made up of name, address, assessment (defined below)
-    
-    token details { &lt;name&gt; &lt;address&gt; &lt;assessment&gt; }  # Find the elements from below, in this order
-    
-    token name { .*? \t } # Find any characters up to the earliest tab
-    
-    token address { .*? \t } # Find any characters up to the earliest tab
-    
-    token assessment { Naughty|Nice \n } # Find either 'Naughty' or 'Nice' followed by a newline
+<p>最后运行：</p>
+
+<pre><code class="language-shell">source /etc/profile
+</code></pre>
+
+<p>为所有用户重新加载 <strong>Debian</strong> 配置文件。</p>
+
+<p>输入 <strong>perl6 -v</strong>:</p>
+
+<pre><code class="language-shell">perl6 -v
+This is Rakudo version 2018.10 built on MoarVM version 2018.10
+implementing Perl 6.c.
+</code></pre>
+
+<p>欢迎来到 <strong>Rakudo Perl6!</strong></p>
+
+<h2 id="安装-cro-服务">安装 Cro 服务</h2>
+
+<p><strong>Cro</strong> 是 Perl6 模块，<strong>Zef</strong> 是已经安装的当前 <strong>Perl6</strong> 模块管理器。我们来安装 <strong>Cro</strong> 吧！</p>
+
+<p>首先，我们将安装一些 <strong>Cro 包依赖项</strong>，例如 <strong>git</strong> 来连接和下载来自 Cro 相关存储库的文件，<strong>libssl-dev</strong> 以提供对安全套接字层的支持，<strong>build-essential</strong> 用于构建在安装期间 <strong>Cro</strong> 所使用的一些依赖项：</p>
+
+<pre><code class="language-shell">apt-get install git libssl-dev build-essential
+</code></pre>
+
+<p>如果您位于仅允许 Web 流量（端口80和443）的防火墙下，它将阻止 <strong>git</strong> 协议使用的端口，并且 <strong>Cro</strong> 安装将失败。要避免这种情况，请键入：</p>
+
+<pre><code class="language-shell">git config --global url.&quot;https://&quot;.insteadOf git://
+</code></pre>
+
+<p>这告诉 <strong>git</strong> 使用 <strong>https</strong> 而不是 <strong>git</strong> 协议来连接 git 远程仓库。</p>
+
+<p>现在我们准备用 <strong>Zef</strong>（及其所有依赖项）安装 <strong>Cro</strong>：</p>
+
+<pre><code class="language-shell">zef install cro
+</code></pre>
+
+<p>如果在测试阶段安装失败，请尝试：</p>
+
+<pre><code class="language-shell">zef install --/test cro
+</code></pre>
+
+<p>如果 <strong>Cro</strong> 安装正确完成，<strong>Cro</strong> 就准备好了。</p>
+
+<h2 id="cro-实战">Cro 实战</h2>
+
+<p>让我们继续演示脚本。创建一个工作区文件夹，输入它并将下面的代码粘贴到名为 <strong>server.p6</strong> 的新文件中：</p>
+
+<pre><code class="language-perl6">use Cro::HTTP::Router;
+use Cro::HTTP::Server;
+
+my $application = route {
+  get -&gt; 'greet', $name {
+  content 'text/plain', &quot;Hello, $name!&quot;;
+  }
 }
+
+my Cro::Service $hello = Cro::HTTP::Server.new(:host&lt;0.0.0.0&gt;, :port&lt;10000&gt;, :$application);
+
+$hello.start;
+
+react whenever signal(SIGINT) { $hello.stop; exit; }
 </code></pre>
 
-<p>并在列表上调用它，如下所示：</p>
+<p>这个脚本有 <strong>4个部分</strong>：</p>
 
-<pre><code class="language-perl6">naughty-nice-list.parsefile(&quot;./list.txt&quot;);
+<p>“use”使<strong>路由</strong>和<strong>服务</strong>类可用于下面。</p>
+
+<p><strong>$application</strong> 是包含我们的 Web 应用程序的路由逻辑的对象，接收数据并将数据从客户端分发到我们的服务器。在这种情况下，<strong>get  -&gt;&lsquo;greet&rsquo;，$name</strong> 映射来自客户端 Web 浏览器的传入 URL <strong>/greet/Ramiro</strong>，在对象 <strong>$name</strong> 中推送 Ramiro。然后将代码转换为花括号 {}，返回响应 HTTP 请求头 <strong>content &lsquo;text/plain&rsquo;</strong> 和 HTTP 请求体 <strong>Hello, Ramiro!</strong> 到客户端 Web 浏览器。在一个严肃的应用程序中，在这部分中将会调用应用程序本身，并且它将等待响应，如示例所示。</p>
+
+<p><strong>$hello</strong> 是一个服务对象，它使传入的数据通过新的侦听套接字传递给我们的 <strong>$application</strong>。它有3个参数，<strong>:host<0.0.0.0></strong> 是服务启动的 localhost, <strong>:port<10000></strong> 是用于监听传入数据的端口，<strong>$application</strong> 是我们的Web 应用程序。 下面的行 <strong>$hello.start</strong> 开始侦听。</p>
+
+<p><strong>react whenever</strong> 等待按下 CTRL-C 时停止 Web 服务。</p>
+
+<p>现在是从 shell 运行 Web 服务的时刻：</p>
+
+<pre><code class="language-shell">perl6 server.p6
 </code></pre>
 
-<p>但是，当然，她必须做一些事情将细节放入单独的列表中。</p>
+<p>现在您需要知道服务器主机的当前 IP 地址，尝试使用 <strong>ip addr</strong>。我的 Ip 地址是: <strong>192.168.1.48</strong>。</p>
 
-<p>为此，她创建了一个 action 动作类：</p>
+<p>然后，从同一网络中的其他主机，打开 Web 浏览器并键入（在我这儿）：</p>
 
-<pre><code class="language-perl6">class santa-list-actions {
-    has %!filtered-lists; # Create a private hash for this class
-
-    method show { return %!filtered-lists } # Create a method to return our hash to the user
-
-    # This method is automatically called when the token with the same name makes a match
-    method details ($/) {
-        # Create an array of just the name and address matches converted to strings
-        my @details.push($&lt;name&gt;.Str, $&lt;address&gt;.Str);
-        # Push the @details array into an array accessed with the 'Naughty' or 'Nice' key
-        # Note the curly braces to interpolate { $ } instead of .
-        # Otherwise we would get literally what we typed for the hash key.
-        %!filtered-lists{ $&lt;assessment&gt;.Str }.push(@details);
-    };
-};
+<pre><code class="language-shell">http://192.168.1.48:10000/greet/Ramiro
 </code></pre>
 
-<p>她这样使用:</p>
+<p>答案应该是 <strong>Hello, Ramiro!</strong></p>
 
-<pre><code class="language-perl6">my $actions = santa-list-actions.new;
-naughty-nice-list.parsefile(&quot;./list.txt&quot;, actions=&gt;$actions); # As Mrs S. called the object 'actions', the same as the keyword, she could write :$actions instead of actions=&gt;$actions
-my %hash-naughty-nice = $actions.show;
-</code></pre>
+<h2 id="总结">总结</h2>
 
-<p>圣诞老人非常开心，她现在有一个哈希表，其中包含 &lsquo;Naughty&rsquo; 和 &lsquo;Nice&rsquo; 的键，每个键都包含一系列每个人的详细信息。</p>
+<p>从 <strong>Debian</strong> 的新安装开始，我们已经了解了如何安装 <strong>Cro</strong> 并运行演示脚本。现在，您已准备好继续使用 Cro 文档，并发现 <strong>Perl6</strong> 可提供的最有前途的并发/异步服务平台。</p>
 
-<p>但是钓鱼洞里总是有一只北极熊爪子，尽管有圣诞老人的保证，来自世界各地的精灵们并不只是 “Naughty” 或 “Nice”。他们用自己的语言说出来！</p>
-
-<p>圣诞老人特别问过，但圣诞老人坚持不懈。只有 &lsquo;Naughty&rsquo; 或 &lsquo;Nice&rsquo;。但有些列表看起来像这样。</p>
-
-<pre><code>Batman 1 Bat Street, Gotham Nice
-Joker 5 Joker Street, Arkham Naughty
-Riddler 12 Riddler Street, Arkham Naughty
-Robin 2 Robin Street, Gotham Nice
-El Gato Negro 1 Gato Street, South Texas Bueno
-Victor Mancho 3 Mancho Street, New York City Malo
-</code></pre>
-
-<p>圣诞老人简单地认为只是对新词进行硬编码，但她知道这不是懒惰的时候。世界各地都有精灵，她需要能够进化的东西。</p>
-
-<p>所以，为了现在调用她的脚本，她创建了两个数组并将它们传递给 grammar：</p>
-
-<pre><code class="language-perl6">my @nice = ['Nice', 'Bueno'];
-my @naughty = ['Naughty', 'Malo'];
-naughty-nice-list.parsefile(&quot;./list.txt&quot;, args=&gt;(@nice, @naughty), actions=&gt;$actions);
-</code></pre>
-
-<p>她改变了这样的 grammar 来使用新的数组：</p>
-
-<pre><code class="language-perl6">grammar naughty-nice-list {
-    token TOP (@*nice-words, @*naughty-words) { &lt;details&gt;+ } # Create dynamic arrays with the passed in arrays, available throughout the grammar
-    token details { &lt;name&gt; &lt;address&gt; &lt;assessment&gt; }
-    token name { .*? \t }
-    token address { .*? \t }
-    token assessment { @*naughty-words|@*nice-words \n } # Find either a word from the naughty-words array or from the nice-words array followed by a newline
-}
-</code></pre>
-
-<p>但是S.太太意识到她现在最终会在她的 action 动作类中的哈希表中创建许多不同的键。 键将是 &lsquo;Nice&rsquo;，&rsquo;Naughty&rsquo;，&rsquo;Bueno&rsquo; 或 &lsquo;Malo&rsquo;，因为这些将是 <code>$</code> 可能拥有的匹配单词（未来有更多可能出现）。</p>
-
-<p>因此，她进行了另一项更改，为评估令牌命名语法中的潜在匹配：</p>
-
-<pre><code class="language-perl6">token assessment { $&lt;Naughty&gt;=@*naughty-words|$&lt;Nice&gt;=@*nice-words \n } # Mrs S. has now added names to the potential matches
-</code></pre>
-
-<p>在 action 动作类中，必须进行更改以适应这种情况。使用 <code>make</code> 和 <code>made</code>，圣诞老人将存储相应匹配的名称：</p>
-
-<pre><code class="language-perl6">class santa-list-actions {
-    has %!filtered-lists;
-
-    method show { return %!filtered-lists };
-
-    method details ($/) {
-        my @details.push($&lt;name&gt;.Str, $&lt;address&gt;.Str);
-        %filtered-lists{ $&lt;assessment&gt;.made }.push(@details); # This will now use the value from 'assessment.made' as the key, rather than the match in 'assessment.Str'
-    };
-
-    method assessment ($/) {
-        if $&lt;Naughty&gt; { # If the named pattern 'Naughty' matched...
-            make &quot;Naughty&quot; # ... set assessment.made to &quot;Naughty&quot;
-        } elsif $&lt;Nice&gt;; { # Or if the named pattern 'Nice' matched...
-            make &quot;Nice&quot; # ... set assessment.made to &quot;Nice&quot;
-        };
-     };
-};
-</code></pre>
-
-<p>一旦圣诞老人将数据捕获到她自己的哈希中，她就可以轻松地检查出今年已经被马洛的 Victor Mancho 将其列入正确的列表：</p>
-
-<pre><code class="language-perl6">say %hash-naughty-nice&lt;Naughty&gt;[2][0]; # Produces the output 'Victor Mancho'
-</code></pre>
-
-<p>所以现在，圣诞老人可以将 “Naughty” 或 “Nice” 的任何新翻译添加到相关数组，而不会触及 grammar。</p>
-
-<p>圣诞老人发现自己对 Perl 6 grammar 的灵活性非常满意。圣诞老人对这个问题的研究起初不那么重要&hellip;&hellip;但是她知道她在确保每个人都能得到一个礼物或者在这个圣诞节的窗户上扔蛋的方法上做得很好。</p>
+<p>我希望在阅读这篇文章并查看 <a href="https://cro.services/docs">Cro 文档</a>后，圣诞老人可以将他的网站迁移到 Cro Services。</p>
 
 
         
@@ -379,13 +369,9 @@ naughty-nice-list.parsefile(&quot;./list.txt&quot;, args=&gt;(@nice, @naughty), 
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-perl-6/" data-toggle="tooltip" data-placement="top" title="第十一天 - Testing Your Times Tables With Perl 6">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-12-building-a-flexible-grammar/" data-toggle="tooltip" data-placement="top" title="第十二天 - Building a flexible grammar">&larr; Previous Post</a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-13-web-server-from-scratch-with-cro-and-debian/" data-toggle="tooltip" data-placement="top" title="第十三天 - Web server from scratch with Cro and Debian">Next Post &rarr;</a>
-            </li>
           
         </ul>
       
