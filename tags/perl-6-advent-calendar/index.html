@@ -201,6 +201,60 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-12-18-an-avg-christmas-tree/">
+                <h2 class="post-title">第十八天 - 一棵 AVG 格式的圣诞树</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    An SVG Christmas Tree
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 18, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1076 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  圣诞树是一种传统的象征，可以追溯到欧洲四百多年前，所以对于一篇关于创造圣诞树图像的出现文章来说，这可能更好。
+树的典型，简化的表示是几个尺寸逐渐减小的三角形，彼此叠加并且具有小的重叠，因此使用计算机程序很容易创建。
+在这里，我将使用可缩放矢量图形（SVG）绘制图像，如上所述，它似乎非常适合任务。
+关于SVG并创建它 SVG是一种XML文档格式，它将图像描述为点之间的一组矢量，它具有线条和形状的基元，并提供所描述对象的样式。
+也许最简单的SVG文档是这样的：
+&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:svg=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; width=&quot;100&quot; height=&quot;100&quot;&gt; &lt;g&gt; &lt;rect x=&quot;5&quot; y=&quot;5&quot; width=&quot;90&quot; height=&quot;90&quot; stroke=&quot;black&quot; fill=&quot;green&quot; /&gt; &lt;/g&gt; &lt;/svg&gt;  这描述了侧面90的绿色填充正方形（单元基本上是抽象的并且相对于显示器的尺寸，因为图像的可缩放特性意味着它们可能不等同于例如像素。）
+现在我们可以在程序中使用一些变量插值打印出XML，但是对于比上面的例子更复杂的事情，这可能会非常繁琐且容易出错。幸运的是Perl 6有一个方便的SVG模块，它负责从描述它的数据结构中实际创建格式良好的XML文档。因此，我们的示例矩形可以使用以下内容创建：
+use SVG; say SVG.serialize( svg =&gt; [ width =&gt; 100, height =&gt; 100, :g[:rect[:x&lt;5&gt;, :y&lt;5&gt;, :width&lt;90&gt;, :height&lt;90&gt;, :stroke&lt;black&gt;, :file&lt;green&gt;]], ], );  本质上，参数serialize是一组嵌套的Pairs：其中value是标量类型，键和值用于形成XML属性，其中值是List of Pairs，这将创建一个以键命名的XML元素，列表中的每个对都被解释为如上所述，从而允许以简单的声明方式构建复杂文档。
+所以我们可以通过构造适当的数据结构来生成我们的示例圣诞树，但是因为我们的图像中可能至少有四个对象（三个三角形和一个用于树干的矩形）及其相关属性，这可能会非常不合适如果我们想改变某些东西，很难改变。
+所以…
+我们抽象吧！ 为了使我们的SVG生成更加灵活并为未来的代码重用开辟了机会，创建一组代表我们可能想要使用的SVG原语的类并抽象出将要生成的数据结构可能是有意义的。序列化为XML。
+所以让我们从可以生成原始矩形示例的东西开始：
+use SVG; class SVG::Drawing { role Element { method serialize() { ... } } has Element @.
+                  <a href="https://ohmysummer.github.io/post/2018-12-18-an-avg-christmas-tree/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-12-17-compiling-our-way-to-happiness/">
                 <h2 class="post-title">第十七天 - 通往幸福的编译之路</h2>
 
