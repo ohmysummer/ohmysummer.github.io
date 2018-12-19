@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第19天 - 交互式桌面应用</title>
+  <meta property="og:title" content="第19天 - 交互式桌面应用" />
+  <meta name="twitter:title" content="第19天 - 交互式桌面应用" />
+  <meta name="description" content="Interactive Desktop Apps">
+  <meta property="og:description" content="Interactive Desktop Apps">
+  <meta name="twitter:description" content="Interactive Desktop Apps">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-12-19-interactive-desktop-apps/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.49" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-19-interactive-desktop-apps/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第19天 - 交互式桌面应用</h1>
+                
+                  
+                    <h2 class="post-subheading">Interactive Desktop Apps</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 19, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (674 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>我是地下城与龙等角色扮演游戏的忠实粉丝。这些游戏中的大多数都有屏幕来帮助你隐藏你在运行游戏时所做的事情，并为你提供游戏中使用的一些图表，以减少书中的内容。</p>
+
+<p>我的游戏收藏很广泛而且我宁愿使用我的笔记本电脑不仅隐藏在后面并跟踪信息，而且我还可以自动化骰子和图表使用。虽然我可以用文本编辑器和命令行魔法拼凑一些东西，但我宁愿拥有一些时髦的桌面应用程序，我可以向人们展示。</p>
+
+<p>输入<a href="https://github.com/perl6/gtk-simple">GTK::Simple</a>是Linux Gnome桌面使用的gtk3 UI库的包装器，但也可以在Windows和Mac上使用。该库通过Native Call 的强大功能为你提供了一个简单易用的界面，让你可以创建简单的桌面应用程序。</p>
+
+<h2 id="骰子滚动">骰子滚动</h2>
+
+<p>由于历史原因，角色扮演游戏大多数倾向于选择使用基于柏拉图固体的骰子。骰子的标准组合是4,6,8,10,12,20，并且通过组合2个10面骰子100的骰子。骰子可以多次滚动，用于写入的标准符号是“ x<strong>d</strong>y ”，其中 “*x*“ 是掷骰子的数量，”*y*“ 是掷骰子的大小。单个骰子在开始时跳过1，例如“roll a d6”意味着掷出六面骰子。</p>
+
+<p>有趣的是，在 Perl 6 中制作 “<strong>d</strong>” 运算符非常简单：</p>
+
+<pre><code class="language-perl6">sub infix: ( UInt $count, UInt $size ) { (1..$size).roll($count) }
+sub prefix: ( UInt $size ) { 1 d $size }
+</code></pre>
+
+<p>请注意，你需要将数字与空格分开，并且 “<strong>d</strong>” 运算符或编译器会混淆。</p>
+
+<p>我想要的是一个骰子滚轮应用程序，它提供了选择滚动标准骰子组的选项。现在我不会看到一些游戏使用的不同骰子，或者修改滚动，很多游戏都使用这些骰子。我想看看每个掷骰子，因为这可能很重要，具体取决于系统。如果可能的话，我也想要总数。</p>
+
+<h2 id="简单的-gtk-simple">简单的 GTK::Simple</h2>
+
+<p>GTK::Simple 的基本用法很简单。创建一个应用程序，添加内容，放入一些事件处理程序，然后离开。</p>
+
+<p>首先，我们创建我们的应用程序，如下所示：</p>
+
+<pre><code class="language-perl">#!/usr/bin/env perl6
+
+# Get the GTK::Simple libraries
+use GTK::Simple;
+use GTK::Simple::App;
+
+# Create the main app
+my $app = GTK::Simple::App.new( title =&gt; &quot;Dice Roller&quot; );
+
+# Start the app running
+$app.run;
+</code></pre>
+
+<p>但…。这不是很有趣：</p>
+
+<p><img src="https://perl6advent.files.wordpress.com/2018/12/empty.png?w=788" alt="空" /></p>
+
+<h2 id="网格布局">网格布局</h2>
+
+<p>要在应用程序中布局小部件，我们有各种选项，但建议使用的是网格。网格布局从左上角的0,0开始并根据需要延伸的小部件。</p>
+
+<p>正是在这一点上，我尝试构建一个应用程序，我打了一个墙。网格选项很好，我在下面的最后一个例子中使用它但是当我尝试的时候它没有按照我的预期工作。我仍然可以得到一个简单的网格，所以显示它的工作，但似乎需要更多的学习。无论如何这里是一个基本网格：</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+# Get the GTK::Simple libraries
+use GTK::Simple;
+use GTK::Simple::App;
+
+# Create the main app
+my $app = GTK::Simple::App.new( title =&gt; &quot;Grid&quot; );
+
+$app.set-content(
+    GTK::Simple::Grid.new(
+        # Grid key is [x,y,height,width]
+        [0,0,1,1] =&gt; GTK::Simple::Button.new( label =&gt; &quot;a&quot; ),
+        # A Button is a simple push button with a label
+        [0,1,1,1] =&gt; GTK::Simple::Button.new( label =&gt; &quot;b&quot; ),
+        [0,2,1,1] =&gt; GTK::Simple::Button.new( label =&gt; &quot;c&quot; ),
+        [1,0,1,3] =&gt; GTK::Simple::Button.new( label =&gt; &quot;d&quot; ),
+    )
+);
+
+$app.border-width = 10;
+# Start the app
+$app.run;
+</code></pre>
+
+<p>这个产生：</p>
+
+<p><img src="https://perl6advent.files.wordpress.com/2018/12/grid-1.png?w=788" alt="格" /></p>
+
+<h2 id="交互">交互</h2>
+
+<p>这很整洁，但按钮还没有做任何事情。为此，我们需要事件处理程序。GUI应用程序需要事件驱动才能对用户操作做出反应，幸运的是 Perl 6 具有处理 Supplies 形式的事件的功能。每个按钮都有一个名为 clicked 的 supply，它可以附加一个 tap 处理程序。</p>
+
+<p>事件处理程序可以执行各种操作，包括操作其他UI对象。例如 ：</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+# Get the GTK::Simple libraries
+use GTK::Simple;
+use GTK::Simple::App;
+
+# Create the main app
+my $app = GTK::Simple::App.new( title =&gt; &quot;Grid&quot; );
+
+$app.set-content(
+    GTK::Simple::Grid.new(
+        # As we want to refer to our buttons later we assign them
+        # to variables
+        [0,0,1,1] =&gt; my $b1 = GTK::Simple::Button.new( label =&gt; &quot;Push Me&quot; ),
+        [1,1,1,1] =&gt; my $b2 = GTK::Simple::Button.new( label =&gt; &quot;---&quot; ),
+        [2,2,1,1] =&gt; my $b3 = GTK::Simple::Button.new( label =&gt; &quot;---&quot; ),
+        [3,3,1,1] =&gt; my $b4 = GTK::Simple::Button.new( label =&gt; &quot;---&quot; ),
+    )
+);
+
+# The sensitive flag controls whether you can click on the button
+$b2.sensitive = False;
+$b3.sensitive = False;
+$b4.sensitive = False;
+
+# In the 
+$b1.clicked.tap( { 
+    # $_ is the clicked button. Turn it off
+    .sensitive = False; 
+    # Change the label on the next button
+    $b2.label = &quot;Now Me!&quot;; 
+    # Make it clickable
+    $b2.sensitive = True 
+} );
+
+# Leaving on one line to cut down on space
+$b2.clicked.tap( { .sensitive = False; $b3.label = &quot;Me Next&quot;; $b3.sensitive = True } );
+$b3.clicked.tap( { .sensitive = False; $b4.label = &quot;Me! Me!&quot;; $b4.sensitive = True } );
+# App.exit closes the app.
+$b4.clicked.tap( { $app.exit } );
+
+$app.border-width = 10;
+# Start the app
+$app.run;
+</code></pre>
+
+<p>这使得：</p>
+
+<p><img src="https://perl6advent.files.wordpress.com/2018/12/buttons.png?w=788" alt="纽扣" /></p>
+
+<h2 id="把它们放在一起">把它们放在一起</h2>
+
+<p>有了这个和另一个小部件，Label 给了我们一些文本，我们可以把骰子滚动应用程序放在一起：</p>
+
+<pre><code class="language-perl6">#!/usr/bin/env perl6
+
+# Get the GTK::Simple libraries
+use GTK::Simple;
+use GTK::Simple::App;
+
+# Define our `d` operator
+sub infix: ( UInt $count, UInt $size ) { (1..$size).roll($count) }
+
+# Create the main app
+my $app = GTK::Simple::App.new( title =&gt; &quot;Dice Roller&quot; );
+
+# Output Box : Define here so the buttons can access it.
+my $output = GTK::Simple::Label.new( text =&gt; 'Roll : ');
+
+# Ouput box updater.
+sub roll( $label, $count, $size ) {
+    my @roll = $count d $size;
+    $label.text = &quot;Roll : {@roll.join(&quot; + &quot;)} = {@roll.sum}&quot;; 
+}
+
+# Create a grid and put the output box at the bottom filling the width
+my @grid = ( [0,6,7,1] =&gt; $output );
+
+# Track our depth in tthe grid
+my $y = 0;
+
+# Loop through counts
+for (1..6) -&gt; $count {
+
+    # Track our postion along the grid
+    my $x = 0;
+
+    # Loop through standard dice sizes
+    for (4,6,8,10,12,20,100) -&gt; $size {
+
+	# Standard labelling 
+	my $label = $count &gt; 1 ?? &quot;{$count}d{$size}&quot; !! &quot;d{$size}&quot;;
+
+	# Create our button
+	my $button = GTK::Simple::Button.new(label =&gt; $label);
+
+	# Buttons get a supply which emit when they are clicked
+	# Assign our roll function with the current count and size to it
+	# Note we do it in a block so it's not called right now but when
+	# the button is clicked
+	$button.clicked.tap(
+	    { roll( $output, $count, $size ) }
+	);
+
+	# Put the button in the valid place in the grid taking up one space
+	@grid.push( [$x,$y,1,1] =&gt; $button );
+
+	$x++;
+    }
+    $y++
+}
+
+# Create a grid object and assign it to the app.
+$app.set-content(
+    GTK::Simple::Grid.new( |@grid )
+);
+
+$app.border-width = 10;
+
+# Start the app running
+$app.run;
+</code></pre>
+
+<p>看起来像（这里滚动3d6）：</p>
+
+<p><img src="https://perl6advent.files.wordpress.com/2018/12/dice-roller.png?w=788" alt="骰子辊" /></p>
+
+<h2 id="最后的想法">最后的想法</h2>
+
+<p>考虑到我今天早上没有触及 GTK::Simple，我对我的最终结果非常满意。我认为我可以构建许多其他游戏工具。此外，我可能会参与模块本身的工作，尝试将更多的GTK功能添加到其中，并添加一些文档。</p>
+
+<p>尽管如此，使用 GTK::Simple 还是很容易使桌面应用程序在Perl6中遇到特殊的问题，而且代码并不多。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-12-18-an-avg-christmas-tree/" data-toggle="tooltip" data-placement="top" title="第十八天 - 一棵 AVG 格式的圣诞树">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.49</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+
