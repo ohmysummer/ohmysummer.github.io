@@ -201,6 +201,106 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-12-22-testing-cro-http-apis/">
+                <h2 class="post-title">第二十二天 - 测试 Cro HTTP API</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    Testing Cro HTTP APIs
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 22, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (964 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  测试Cro HTTP API 今年我花了大量的工作时间用于构建一些 Perl 6 应用程序。经过为 Perl 6 编译器和运行时开发贡献代码十年之后，最终使用它来提供解决实际问题的生产解决方案感觉很棒。我还不确定在我创建的IDE中编写代码，使用我设计的HTTP库，由我实现大部分的编译器编译，并在我扮演架构师的VM上运行，是否会使我成为世界上最差的“尚未发明”的案例，或者只是真正的全栈。
+无论我在做什么，我都非常重视自动化测试。每一次通过测试我都知道有东西能工作了 - 当我改进有问题的软件时，我不会破坏这些测试。即使使用自动化测试，也会发生错误，但是添加测试来弥补错误至少意味着我将来会犯下*不同的*错误，这可能有点可以原谅。
+我目前正在处理的系统中的大多数代码和复杂性都在其域对象中。这些是通过使用Cro实现的HTTP API实现的 - 与系统的其他部分一样，此 HTTP API 具有自动化测试。他们使用我的一个旧模块Test::Mock- 以及今年发布的新模块，Cro::HTTP::Test。在今天的 Advent 文章中，我将讨论我如何一起使用它们，结果我觉得非常讨人喜欢。
+一个示例问题 这是 advent 日历，所以当然我需要一个足够节日化的例子问题。对我而言，中欧圣诞时间的亮点之一是圣诞市场，有许多都坐落在美丽的历史城市广场上。除了香肠和热葡萄酒之外，我们还需要在广场上吗？当然，这是一棵高大帅气的圣诞树！但如何找到最好的树？好吧，我们通过建立一个系统来提供互联网帮助，他们可以提交他们认为可能适合的圣诞树的建议。什么可能出错？
+可以 PUT 到路由 /trees/{latitude}/{longitude} 以在该位置提交候选圣诞树。预期的有效负载是带有树的高度( height) 的 JSON blob，以及 10-200 个文本字符的描述(description)，解释为什么这棵圣诞树太棒了。如果同一位置已经提交了圣诞树，则应返回 409 Conflict 响应。如果圣诞树被接受，那么将生成一个简单的 200 OK 响应，并带有一个 JSON 格式的主体描述该圣诞树。
+同一 URI 的 GET 将返回相关树的描述，而 GET /trees 将返回已提交的树，最高的圣诞树排第一个。
+可测性 回到高中，科学课肯定是我最喜欢的。我们不时地做实验。当然，每个实验都需要编写 - 包括之前的计划，结果和对它们的分析。规划中最重要的部分之一是关于如何确保“公平测试”：我们如何试图控制我们还未尝试测试的所有事情，以便我们可以信任我们的观察并从中得出结论？
+软件测试涉及大致相同的思考过程：我们如何运用我们感兴趣的组件，同时控制它们运行的上下文？有时，我们很幸运，我们正在测试纯粹的逻辑：它不依赖于我们提供给它的东西以外的任何东西。事实上，我们可以在这方面*创造自己的运气*，发现我们系统中可以是纯函数或不可变对象的部分。从我正在研究的当前系统中获取示例：
+ 我们有一个由一堆规范文件构建的对象模型。 构建它的过程非常复杂，包括一系列健全性 检查，一些图形算法等等。但结果是 一堆*不可变的对象*。一旦建成，它们永远不会改变。 测试很简单：丢出一堆测试输入，并检查它是否 构建了预期的对象。 我们有一个计算器的小语言。 语言中表达式使用的数据作为参数传递给计算器， 然后我们可以检查结果是否符合预期。因此，计算器 是一个*纯函数*。  因此，为可测试性做的第一件事就是找到可以像这样的系统部分并以这种方式构建它们。唉，并非所有事情都如此简单。HTTP API 通常是可变状态的网关，数据库操作等。此外，良好的 HTTP API 会将域级别的错误条件映射到适当的 HTTP 状态代码。我们希望能够在我们的测试中创建这样的情况，以便覆盖它们。这是一个类似 Test::Mock工具入场的地方, 但要使用它，我们需要以一种对测试友好的方式考虑我们的Cro服务。
+                  <a href="https://ohmysummer.github.io/post/2018-12-22-testing-cro-http-apis/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://ohmysummer.github.io/post/2018-12-21-a-red-secret-santa/">
+                <h2 class="post-title">第二十一天 - 一个红色的圣诞老人</h2>
+
+                
+                  <h3 class="post-subtitle">
+                    A Red Secret Santa
+                  </h3>
+                
+              </a>
+
+              <p class="post-meta">
+                <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 21, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (858 words)
+  
+  
+</span>
+
+              </p>
+              <div class="post-entry">
+                
+                  这一年即将结束，我们有很多值得庆祝的事情！与家人和朋友相比，庆祝今年年底更好的方式是什么？为了帮助实现这一目标，在我家，我们决定开办秘密圣诞老人游戏！所以，我的目标是写一个秘密圣诞老人计划！这就是我可以使用这个名为Red的精彩项目的地方。
+Red是一个仍在开发中的perl6的ORM （对象关系模型），尚未作为模块发布。但它正在增长，而且接近发布。
+因此，让我们创建我们的第一张桌子：一张桌子，用于存储参与我们的秘密圣诞老人的人。代码：
+use Red; model Person { has UInt $.id is serial; has Str $.name is column; has Str $.email is column{ :nullable }; } my $*RED-DB = database &quot;SQLite&quot;; Person.^create-table; Person.^create: :name&lt;Fernando&gt;, :email&lt;fco@aco.com&gt;; Person.^create: :name&lt;Aline&gt;, :email&lt;aja@aco.com&gt;; Person.^create: :name&lt;Fernanda&gt;; Person.^create: :name&lt;Sophia&gt;; .say for Person.^all.grep(*.email.defined).map: *.name;  Red将关系数据库映射 到OOP。每个表都映射到一个 Red类（*模型*），每个表的 *对象*代表*一行*。
+我们创建*模型的方式*是使用模型特殊单词。一个*模型*仅仅是延伸的正常类红::型号 ，具有MetamodelX ::红::型号的对象作为它的 *元类*。 Red不会向您的模型添加任何未明确创建的方法。因此，要与*数据库*进行交互，您应该使用*元类*。
+但是让我们继续吧。
+代码创建一个名为 *Person*的新*模型*。此*模型*表示的*表*的名称将与模型名称相同：“Person”。如有必要，您可以使用特征更改表的名称 （例如 *:)*。is table&lt;...&gt; model Person is table&lt;another_name&gt; {...}
+该*模型*有3个*属性*：
+ $ .
+                  <a href="https://ohmysummer.github.io/post/2018-12-21-a-red-secret-santa/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+                <div class="blog-tags">
+                  
+                    <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+                  
+                </div>
+              
+
+            </article>
+          
+            <article class="post-preview">
               <a href="https://ohmysummer.github.io/post/2018-12-20-perl6%E4%B8%AD%E7%9A%84%E5%91%BD%E9%A2%98%E7%BB%84%E5%90%88/">
                 <h2 class="post-title">第二十天 - Perl 6 中的命题组合</h2>
 
