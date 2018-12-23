@@ -6,10 +6,37 @@
     <description>Recent content in Perl 6 Advent Calendar on Rakudo Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 22 Dec 2018 10:28:35 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 23 Dec 2018 09:02:45 +0800</lastBuildDate>
     
 	<atom:link href="https://ohmysummer.github.io/tags/perl-6-advent-calendar/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Blin，很快就到圣诞节了！</title>
+      <link>https://ohmysummer.github.io/post/2018-12-23-blin-it-is-christmas-soon/</link>
+      <pubDate>Sun, 23 Dec 2018 09:02:45 +0800</pubDate>
+      
+      <guid>https://ohmysummer.github.io/post/2018-12-23-blin-it-is-christmas-soon/</guid>
+      <description>两年前我已经在出现一篇 advent 文章里提到过 Bisectable，但自那时以来发生了很多变化，所以我觉得是时候简要介绍一下 bisectable 机器人和它的朋友们了。
+首先，让我们来定义正在解决的问题。有时会发生提交引入意外更改行为（错误）。通常我们称之为回归，在某些情况下，找出错误并修复它的最简单方法是首先找到引入回归的提交。
+Rakudo 2015.12 和 2018.12 之间有9000个提交，尽管它不*超过9000*，但仍然很多。
+幸运的是，我们不需要测试所有修改。假设行为不是一直来回变化，我们可以使用二分法查找。
+git bisect 和二分法查找 基本上，给定任何提交范围，我们在范围的“中间”取一个提交提交并测试它。如果它是“坏”或者它显示“新”（现在是不正确的）行为，那么我们就可以抛弃我们范围的后半部分（因为我们知道更改必须在该提交之前发生或完全在该提交之后）。同样，如果它是“好”（或“旧”），我们会扔掉另一半。因此，我们只需检查log n个修改（≈13），而不是测试所有 9000 次提交。
+Git 附带了git bisect为您实现二分法查找逻辑的命令。你所要做的就是给它一些起点，然后对于每次提交它跳转过去，告诉它是好还是坏。如果你做了足够多次，它会告诉你哪个提交有问题。
+这一切都很好，但有两个问题。
+问题❶：跳过 让我们想象一下2 + 2用来返回的情况4（正确！），但现在返回42（&amp;hellip;&amp;hellip;也正确，但不完全对）。
+所以你启动了 bisection 过程，git 在修改之间跳转，你测试它们。如果它是4那么good（或old），如果它是42那么它是bad（或new）。但后来你偶然发现了这种行为：
+&amp;gt; 2 + 2 Merry Christmas!  … 怎么办？显然，那个具体修改有点特殊。我们无法判断我们的错误是否存在，我们根本无法知道。是的，它不会打印4，但我们正在寻找一个非常具体的错误，因此它也不会被归类为“新”行为。当然，我们可以抛硬币并随机标记为old或者new，并希望圣诞节奇迹&amp;hellip;&amp;hellip;但是有50％的概率（如果我们只看到其中一个）将二分法查找转移到错误的方向。
+对于这些情况，git 提供了一个特殊skip命令。
+如果你是手动测试，那么处理这些修改就有点简单（只要你记得你应该跳过(skip)他们）。但是，由于问题❷，很多人都倾向于使用git bisect run脚本自动化过程。也可以使用脚本跳过修改（使用退出代码125），但是如何确定应该跳过哪些修改并不是那么明显。
+问题❷：构建时间 让我们用乐观的数字13来估计我们要测试的修改量。请记住，它不包括我们必须跳过的提交，以及可能需要测试的其他额外构建。
+构建rakudo所需的时间因硬件而异，但我们乐观地说，在特定的提交中构建rakudo需要2分钟时间并对其进行测试。
+13 × 2 = 26 (minutes)  那不是很方便，对吧？如果在此过程中出现问题&amp;hellip;&amp;hellip;你重新开始，然后等待。
+Bisectable 在2016年，在看到那些必须手动运行 git bisect 的人（实际上，大部分是我自己）的痛苦之后，我想知道：
+ 有没有人想过为每一次提交构建rakudo，以便你可以快速运行git bisect？
+ 该想法的成本效益分析受到了迅速质疑：
+ AlexDaniel：你认为未来二分法将会很普遍吗？</description>
+    </item>
     
     <item>
       <title>第二十二天 - 测试 Cro HTTP API</title>
