@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Key on 焉知非鱼</title>
-    <link>http://ohmysummer.github.io/tags/key/</link>
-    <description>Recent content in Key on 焉知非鱼</description>
+    <title>Key on Rakudo Perl 6</title>
+    <link>https://ohmysummer.github.io/tags/key/</link>
+    <description>Recent content in Key on Rakudo Perl 6</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <language>zh-cn</language>
     <lastBuildDate>Mon, 26 Sep 2016 12:17:59 +0000</lastBuildDate>
     
-	<atom:link href="http://ohmysummer.github.io/tags/key/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ohmysummer.github.io/tags/key/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>I left my keys in a side-channel</title>
-      <link>http://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/</link>
+      <link>https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/</link>
       <pubDate>Mon, 26 Sep 2016 12:17:59 +0000</pubDate>
       
-      <guid>http://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/</guid>
+      <guid>https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/</guid>
       <description>当我尝试把选项聚合到一个模块中时我无意中发现了一个常见问题的简洁解决办法。我想拥有一个子例程作为吞噬具名参数、做一些检查、并且要么返回 True 以满足那个 where 从句, 要么死掉并抛出一个合适的错误信息的 where 从句。 那很简单但是不彻底。那个 where 从句没有提供它所检查的参数的名字, 这需要拥有一个合适的错误信息。我们来简化下代码。
 sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {}  子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Perl 6 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
 如你所见 checker 接收一组冒号对(colon-pairs)。剩下的问题我们能提供给我们可能要输出的异常，特别的附加信息。如果我们希望该参数是可选的，避免奇怪的语法。我们可以有一个可选的位置，但我们就不能在checker中混合位置和具名参数。存储该值将是微不足道，因为返回的匿名子例程可以具有闭包变量。我们只需要填充它。幸运的是，子返回作为引用返回，然后由那个 where 从句调用。我们可以偷偷加进另一个呼叫，只要我们大家别忘了把代码引用返回给匿名子例程(sub)。
@@ -26,10 +26,10 @@ use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$
     
     <item>
       <title>These keys are LTA</title>
-      <link>http://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/</link>
+      <link>https://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/</link>
       <pubDate>Mon, 26 Sep 2016 12:15:14 +0000</pubDate>
       
-      <guid>http://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/</guid>
+      <guid>https://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/</guid>
       <description>在折腾枚举作为子例程布尔选项的时候, 我发现默认的错误信息不够酷。
  Constraint type check failed for parameter &#39;@options&#39;  让错误信息变得更具体有点困难。我们来创建几个 exceptions 来告诉我们当东西出错时究竟发生了什么。
 class X::Paramenter::Exclusive is Exception { has $.type; method message { &amp;quot;Parameters of {$.type.perl} are mutual exclusive&amp;quot; } }  现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
@@ -38,10 +38,10 @@ class X::Paramenter::Exclusive is Exception { has $.type; method message { &amp;
     
     <item>
       <title>键是可选的</title>
-      <link>http://ohmysummer.github.io/post/2016-09-26-%E9%94%AE%E6%98%AF%E5%8F%AF%E9%80%89%E7%9A%84/</link>
+      <link>https://ohmysummer.github.io/post/2016-09-26-%E9%94%AE%E6%98%AF%E5%8F%AF%E9%80%89%E7%9A%84/</link>
       <pubDate>Mon, 26 Sep 2016 12:04:56 +0000</pubDate>
       
-      <guid>http://ohmysummer.github.io/post/2016-09-26-%E9%94%AE%E6%98%AF%E5%8F%AF%E9%80%89%E7%9A%84/</guid>
+      <guid>https://ohmysummer.github.io/post/2016-09-26-%E9%94%AE%E6%98%AF%E5%8F%AF%E9%80%89%E7%9A%84/</guid>
       <description>Keys are optional Keys are optional
 在我探索一个并发的 File::Find 模块时我发现我需要一组排序用的参数(例如 Bool)和互相排斥的参数。枚举相当易于组合, 把好用的名字引入到作用域中(直接地或通过 export)并且应该让相互排斥变得容易。容易的那部分有点幼稚因为类型化的吞噬参数尚未支持(还没有)。如果没有容易的方式, 肯定会有一个可行的困难的方式。
 首先, 我们定义两个枚举用作要查找的选项。
@@ -51,10 +51,10 @@ package Find { enum Type (&amp;lt;File Dir Symlink&amp;gt;); enum Options (&amp;
     
     <item>
       <title>这些是你的键吗</title>
-      <link>http://ohmysummer.github.io/post/2016-09-26-%E8%BF%99%E4%BA%9B%E6%98%AF%E4%BD%A0%E7%9A%84%E9%94%AE%E5%90%97/</link>
+      <link>https://ohmysummer.github.io/post/2016-09-26-%E8%BF%99%E4%BA%9B%E6%98%AF%E4%BD%A0%E7%9A%84%E9%94%AE%E5%90%97/</link>
       <pubDate>Mon, 26 Sep 2016 12:01:22 +0000</pubDate>
       
-      <guid>http://ohmysummer.github.io/post/2016-09-26-%E8%BF%99%E4%BA%9B%E6%98%AF%E4%BD%A0%E7%9A%84%E9%94%AE%E5%90%97/</guid>
+      <guid>https://ohmysummer.github.io/post/2016-09-26-%E8%BF%99%E4%BA%9B%E6%98%AF%E4%BD%A0%E7%9A%84%E9%94%AE%E5%90%97/</guid>
       <description>Are these your keys? are these your keys
 在键是常量的散列中我经常打错键的名字。通过混合一个重载方法 AT-KEY 的 role 让键限制在一个给定的字符串列表中并不困难。但是那会是一个运行时错误并且用一个运行时错误代替另一个运行时错误。
 枚举确实拥有一组常量值的键并提供散列能使用的同一性。Perl 6 的确允许枚举作为键的约束并且如果我们查询了一个没有定义为枚举的键的话会在编译时抛出异常。 然而, 如果我们把散列限制为一组给定的键, 我们可能想要输出所有可能的键, 而不仅仅是有关联值的那些键。我们可以通过混进一个 role 来解决它。
