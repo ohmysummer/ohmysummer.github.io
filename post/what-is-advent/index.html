@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="ohmysummer">
+    <meta name="description" content="ohmysummer&#39;s personal website">
+    <meta name="keywords" content="Perl6,Rakudo">
+
+    <base href="http://ohmysummer.github.io/">
+    <title>
+  第二十四天 - 使用 Perl 6 进行主题建模 · 焉知非鱼
+</title>
+
+    <link rel="canonical" href="http://ohmysummer.github.io/post/what-is-advent/">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700|Merriweather:300,700|Source+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.cd087ace86754b082dec94545567f8361cba42e84f8e15edbc4a9f6e52bd1f6a.css" integrity="sha256-zQh6zoZ1Swgt7JRUVWf4Nhy6QuhPjhXtvEqfblK9H2o=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+      <link rel="stylesheet" href="http://ohmysummer.github.io/css/style.css">
+    
+
+    <link rel="icon" type="image/png" href="http://ohmysummer.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="http://ohmysummer.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    
+
+    <meta name="generator" content="Hugo 0.49" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="http://ohmysummer.github.io/">
+      焉知非鱼
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/post">博客</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/categories">归档</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/page/about/">关于</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="/tags">标签</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container page">
+  <article>
+    <header>
+      <h1>第二十四天 - 使用 Perl 6 进行主题建模</h1>
+    </header>
+
+    
+
+<p>嗨，大家好。</p>
+
+<p>今天，让我介绍<a href="https://github.com/titsuki/p6-Algorithm-LDA">Algorithm :: LDA</a>。
+该模块是用于主题建模的Latent Dirichlet Allocation（即LDA）实现。</p>
+
+<h1 id="介绍">介绍</h1>
+
+<p>什么是LDA？LDA是一种流行的无监督机器学习方法。
+它模拟文档生成过程，并将每个文档表示为主题的混合。</p>
+
+<p>那么，“混合主题”是什么意思呢？图1显示了一篇文章，其中一些单词以三种颜色突出显示：黄色，粉红色和蓝色。关于遗传学的词语用黄色标出; 关于进化生物学的文字用粉红色标出; 有关数据分析的文字标有蓝色。想象一下，本文中的所有单词都是彩色的，然后我们可以将这篇文章表示为主题（即颜色）的混合。</p>
+
+<p>图1 :( 此图片来自“概率主题模型”。（David Blei 2012））
+<a href="https://camo.githubusercontent.com/464a19ca7cf15ea83e712cd8145afacc46c55cae/68747470733a2f2f7065726c36616476656e742e66696c65732e776f726470726573732e636f6d2f323031382f31322f73637265656e73686f742d66726f6d2d323031382d31322d31302d30302d31342d33312e706e673f773d363830"><img src="https://camo.githubusercontent.com/464a19ca7cf15ea83e712cd8145afacc46c55cae/68747470733a2f2f7065726c36616476656e742e66696c65732e776f726470726573732e636f6d2f323031382f31322f73637265656e73686f742d66726f6d2d323031382d31322d31302d30302d31342d33312e706e673f773d363830" alt="图。1" /></a></p>
+
+<p>好的，那么我将在下一节中演示如何使用Algorithm :: LDA。</p>
+
+<h1 id="建模报价">建模报价</h1>
+
+<p>在本文中，我们将探索<a href="https://www.wikiquote.org/">Wikiquote</a>。Wikiquote是一个提供源代码报价的云源平台。
+通过使用Wikiquote API，我们获得用于LDA估计的报价。之后，我们执行LDA并绘制结果。
+最后，我们使用生成的模型创建信息检索应用程序。</p>
+
+<h2 id="初步">初步</h2>
+
+<h3 id="wikiquote-api">Wikiquote API</h3>
+
+<p>Wikiquote具有<a href="https://en.wikiquote.org/w/api.php?action=help&amp;modules=query">动作API</a>，提供获取Wikiquote资源的方法。
+例如，您可以按如下方式获取主页面的内容：</p>
+
+<pre><code class="language-shell">$ curl &quot;https://en.wikiquote.org/w/api.php?action=query&amp;prop=revisions&amp;titles=Main%20Page&amp;rvprop=content&amp;format=json&quot;
+</code></pre>
+
+<p>上述命令的结果是：</p>
+
+<pre><code class="language-html">{&quot;batchcomplete&quot;:&quot;&quot;,&quot;warnings&quot;:{&quot;main&quot;:{&quot;*&quot;:&quot;Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes. Use [[Special:ApiFeatureUsage]] to see usage of deprecated features by your application.&quot;},&quot;revisions&quot;:{&quot;*&quot;:&quot;Because \&quot;rvslots\&quot; was not specified, a legacy format has been used for the output. This format is deprecated, and in the future the new format will always be used.&quot;}},&quot;query&quot;:{&quot;pages&quot;:{&quot;1&quot;:{&quot;pageid&quot;:1,&quot;ns&quot;:0,&quot;title&quot;:&quot;Main Page&quot;,&quot;revisions&quot;:[{&quot;contentformat&quot;:&quot;text/x-wiki&quot;,&quot;contentmodel&quot;:&quot;wikitext&quot;,&quot;*&quot;:&quot;\n
+{{Main page header}}
+\n
+{{Main Page Quote of the day}}
+\n&lt;/div&gt;\n\n \n{{Main Page Selected pages}}\n{{Main categories}}\n\n\n \n{{New pages}}\n{{Main Page Community}}\n\n\n\n==Wikiquote's sister projects==\n{{otherwiki}}\n\n==Wikiquote languages==\n{{Wikiquotelang}}\n\n__NOTOC__ __NOEDITSECTION__\n{{noexternallanglinks:ang|simple}}\n[[Category:Main page]]&quot;}]}}}}
+</code></pre>
+
+<h3 id="www">WWW</h3>
+
+<p><a href="https://github.com/zoffixznet/perl6-WWW">WWW</a>通过Zoffix Znet是它提供了易于使用的API，包括获取和解析JSON非常简单的库。
+例如，正如README所说，您可以轻松地按<code>jget(URL)&lt;HASHKEY&gt;</code>样式获取内容：</p>
+
+<pre><code class="language-perl6">say jget('https://httpbin.org/get?foo=42&amp;bar=x')&lt;args&gt;&lt;foo&gt;;
+</code></pre>
+
+<p>要安装WWW：</p>
+
+<pre><code class="language-shell">zef install WWW
+</code></pre>
+
+<h3 id="chart-gnuplot">Chart::Gnuplot</h3>
+
+<p><a href="https://github.com/titsuki/p6-Chart-Gnuplot">Chart::Gnuplot</a> by titsuki是<a href="http://www.gnuplot.info/">gnuplot</a>的绑定。</p>
+
+<p>要安装 Chart::Gnuplot：</p>
+
+<pre><code>$ zef install Chart::Gnuplot
+</code></pre>
+
+<p>在本文中，我们使用此模块; 但是，如果你不熟悉gnuplot，有很多选择：<a href="https://github.com/moritz/svg-plot">SVG::Plot</a>，<a href="https://github.com/azawawi/perl6-graphics-plplot">Graphics::PLplot</a>，<a href="https://0racle.info/articles/matplotlib_in_p6_intro">通过Inline::Python调用matplotlib函数</a>。</p>
+
+<h3 id="来自nltk的stopwords">来自NLTK的Stopwords</h3>
+
+<p>NLTK是一个用于自然语言处理的工具包。
+不仅是 API，它还提供语料库。
+您可以通过“70”获得英语的停用词。关键词语料库“：<a href="http://www.nltk.org/nltk_data/">http</a>：//www.nltk.org/nltk_data/</p>
+
+<h2 id="练习1-获取报价并创建已清理的文档">练习1：获取报价并创建已清理的文档</h2>
+
+<p>一开始，我们必须从Wikiquote获取引用并创建干净的文档。</p>
+
+<p>本部分的主要目标是根据以下格式创建文档：</p>
+
+<pre><code>&lt;docid&gt; &lt;personid&gt; &lt;word&gt; &lt;word&gt; &lt;word&gt; ...
+&lt;docid&gt; &lt;personid&gt; &lt;word&gt; &lt;word&gt; &lt;word&gt; ...
+&lt;docid&gt; &lt;personid&gt; &lt;word&gt; &lt;word&gt; &lt;word&gt; ...
+</code></pre>
+
+<p>整个源代码是：</p>
+
+<pre><code class="language-perl6">use v6.c;
+use WWW;
+use URI::Escape;
+
+sub get-members-from-category(Str $category --&gt; List) {
+    my $member-url = &quot;https://en.wikiquote.org/w/api.php?action=query&amp;list=categorymembers&amp;cmtitle={$category}&amp;cmlimit=100&amp;format=json&quot;;
+    @(jget($member-url)&lt;query&gt;&lt;categorymembers&gt;.map(*&lt;title&gt;));
+}
+
+sub get-pages(Str @members, Int $batch = 50 --&gt; List) {
+    my Int $start = 0;
+    my @pages;
+    while $start &lt; @members {
+        my $list = @members[$start..^List($start + $batch, +@members).min].map({ uri_escape($_) }).join('%7C');
+        my $url = &quot;https://en.wikiquote.org/w/api.php?action=query&amp;prop=revisions&amp;rvprop=content&amp;format=json&amp;formatversion=2&amp;titles={$list}&quot;;
+        @pages.push($_) for jget($url)&lt;query&gt;&lt;pages&gt;.map({ %(body =&gt; .&lt;revisions&gt;[0]&lt;content&gt;, title =&gt; .&lt;title&gt;) });
+        $start += $batch;
+    }
+    @pages;
+}
+
+sub create-documents-from-pages(@pages, @members --&gt; List) {
+    my @documents;
+    for @pages -&gt; $page {
+        my @quotations = $page&lt;body&gt;.split(&quot;\n&quot;)\
+        .map(*.subst(/\[\[$&lt;text&gt;=(&lt;-[\[\]|]&gt;+?)\|$&lt;link&gt;=(&lt;-[\[\]|]&gt;+?)\]\]/, { $&lt;text&gt; }, :g))\
+        .map(*.subst(/\[\[$&lt;text&gt;=(&lt;-[\[\]|]&gt;+?)\]\]/, { $&lt;text&gt; }, :g))\
+        .map(*.subst(&quot;[&quot;, &quot;[&quot;, :g))\
+        .map(*.subst(&quot;]&quot;, &quot;]&quot;, :g))\
+        .map(*.subst(&quot;&amp;amp;&quot;, &quot;&amp;&quot;, :g))\
+        .map(*.subst(&quot;&amp;nbsp;&quot;, &quot;&quot;, :g))\
+        .map(*.subst(/:i [ \&lt;\/?\s?br\&gt; | \&lt;br\s?\/?\&gt; ]/, &quot; &quot;, :g))\
+        .grep(/^\*&lt;-[*]&gt;/)\
+        .map(*.subst(/^\*\s+/, &quot;&quot;));
+
+        # Note: The order of array wikiquote API returned is agnostic.
+        my Int $index = @members.pairs.grep({ .value eq $page&lt;title&gt; }).map(*.key).head;
+        @documents.push(%(body =&gt; $_, personid =&gt; $index)) for @quotations;
+    }
+    @documents.sort({ $^a&lt;personid&gt; &lt;=&gt; $^b&lt;personid&gt; }).pairs.map({ %(docid =&gt; .key, personid =&gt; .value&lt;personid&gt;, body =&gt; .value&lt;body&gt;) }).list
+}
+
+my Str @members = get-members-from-category(&quot;Category:1954_births&quot;);
+my @pages = get-pages(@members);
+my @documents = create-documents-from-pages(@pages, @members);
+
+my $docfh = open &quot;documents.txt&quot;, :w;
+$docfh.say((.&lt;docid&gt;, .&lt;personid&gt;, .&lt;body&gt;).join(&quot; &quot;)) for @documents;
+$docfh.close;
+
+my $memfh = open &quot;members.txt&quot;, :w;
+$memfh.say($_) for @members;
+$memfh.close;
+</code></pre>
+
+<p>首先，我们获得“Category：1954births”页面中列出的成员。我选择了Perl 6设计师诞生的那一年：</p>
+
+<pre><code class="language-perl6">my Str @members = get-members-from-category(&quot;Category:1954_births&quot;);
+</code></pre>
+
+<p>其中，<code>get-members-from-category</code>通过维基语录API获取成员：</p>
+
+<pre><code class="language-perl6">sub get-members-from-category(Str $category --&gt; List) {
+    my $member-url = &quot;https://en.wikiquote.org/w/api.php?action=query&amp;list=categorymembers&amp;cmtitle={$category}&amp;cmlimit=100&amp;format=json&quot;;
+    @(jget($member-url)&lt;query&gt;&lt;categorymembers&gt;.map(*&lt;title&gt;));
+}
+</code></pre>
+
+<p>接下来，调用<code>get-pages</code>：</p>
+
+<pre><code class="language-perl6">my @pages = get-pages(@members);
+</code></pre>
+
+<p><code>get-pages</code> 获取给定标题（即成员）页面的子例程：</p>
+
+<pre><code class="language-perl6">sub get-pages(Str @members, Int $batch = 50 --&gt; List) {
+    my Int $start = 0;
+    my @pages;
+    while $start &lt; @members {
+        my $list = @members[$start..^List($start + $batch, +@members).min].map({ uri_escape($_) }).join('%7C');
+        my $url = &quot;https://en.wikiquote.org/w/api.php?action=query&amp;prop=revisions&amp;rvprop=content&amp;format=json&amp;formatversion=2&amp;titles={$list}&quot;;
+        @pages.push($_) for jget($url)&lt;query&gt;&lt;pages&gt;.map({ %(body =&gt; .&lt;revisions&gt;[0]&lt;content&gt;, title =&gt; .&lt;title&gt;) });
+        $start += $batch;
+    }
+    @pages;
+}
+</code></pre>
+
+<p>其中<code>@members[$start..^List($start + $batch, +@members).min]</code>是一段长度<code>$batch</code>，并且切片的元素由百分比编码<code>uri_escase</code>和联合<code>%7C</code>（即，编码的管道符号百分比）。
+在这种情况下，结果之一<code>$list</code>是</p>
+
+<pre><code>Mumia%20Abu-Jamal%7CRene%20Balcer%7CIain%20Banks%7CGerard%20Batten%7CChristie%20Brinkley%7CJames%20Cameron%20%28director%29%7CEugene%20Chadbourne%7CJackie%20Chan%7CChang%20Yu-hern%7CLee%20Child%7CHugo%20Ch%C3%A1vez%7CDon%20Coscarelli%7CElvis%20Costello%7CDaayiee%20Abdullah%7CThomas%20H.%20Davenport%7CGerardine%20DeSanctis%7CAl%20Di%20Meola%7CKevin%20Dockery%20%28author%29%7CJohn%20Doe%20%28musician%29%7CF.%20J.%20Duarte%7CIain%20Duncan%20Smith%7CHerm%20Edwards%7CAbdel%20Fattah%20el-Sisi%7CRob%20Enderle%7CRecep%20Tayyip%20Erdo%C4%9Fan%7CAlejandro%20Pe%C3%B1a%20Esclusa%7CHarvey%20Fierstein%7CCarly%20Fiorina%7CGary%20L.%20Francione%7CAshrita%20Furman%7CMary%20Gaitskill%7CGeorge%20Galloway%7C%C5%BDeljko%20Glasnovi%C4%87%7CGary%20Hamel%7CFran%C3%A7ois%20Hollande%7CKazuo%20Ishiguro%7CJean-Claude%20Juncker%7CAnish%20Kapoor%7CGuy%20Kawasaki%7CRobert%20Francis%20Kennedy%2C%20Jr.%7CLawrence%20M.%20Krauss%7CAnatoly%20Kudryavitsky%7CAnne%20Lamott%7CJoep%20Lange%7CAng%20Lee%7CLi%20Bin%7CRay%20Liotta%7CPeter%20Lipton%7CJames%20D.%20Macdonald%7CKen%20MacLeod
+</code></pre>
+
+<p>请注意，<code>get-pages</code>子例程使用哈希上下文相关器<code>%()</code>来创建哈希序列：</p>
+
+<pre><code class="language-perl6">@pages.push($_) for jget($url)&lt;query&gt;&lt;pages&gt;.map({ %(body =&gt; .&lt;revisions&gt;[0]&lt;content&gt;, title =&gt; .&lt;title&gt;) });
+</code></pre>
+
+<p>在那之后，我们调用 <code>create-documents-from-pages</code>：</p>
+
+<pre><code class="language-perl6">my @documents = create-documents-from-pages(@pages, @members);
+</code></pre>
+
+<p><code>create-documents-from-pages</code> 从每个页面创建文档：</p>
+
+<pre><code class="language-perl6">sub create-documents-from-pages(@pages, @members --&gt; List) {
+    my @documents;
+    for @pages -&gt; $page {
+        my @quotations = $page&lt;body&gt;.split(&quot;\n&quot;)\
+        .map(*.subst(/\[\[$&lt;text&gt;=(&lt;-[\[\]|]&gt;+?)\|$&lt;link&gt;=(&lt;-[\[\]|]&gt;+?)\]\]/, { $&lt;text&gt; }, :g))\
+        .map(*.subst(/\[\[$&lt;text&gt;=(&lt;-[\[\]|]&gt;+?)\]\]/, { $&lt;text&gt; }, :g))\
+        .map(*.subst(&quot;[&quot;, &quot;[&quot;, :g))\
+        .map(*.subst(&quot;]&quot;, &quot;]&quot;, :g))\
+        .map(*.subst(&quot;&amp;amp;&quot;, &quot;&amp;&quot;, :g))\
+        .map(*.subst(&quot;&amp;nbsp;&quot;, &quot;&quot;, :g))\
+        .map(*.subst(/:i [ \&lt;\/?\s?br\&gt; | \&lt;br\s?\/?\&gt; ]/, &quot; &quot;, :g))\
+        .grep(/^\*&lt;-[*]&gt;/)\
+        .map(*.subst(/^\*\s+/, &quot;&quot;));
+
+        # Note: The order of array wikiquote API returned is agnostic.
+        my Int $index = @members.pairs.grep({ .value eq $page&lt;title&gt; }).map(*.key).head;
+        @documents.push(%(body =&gt; $_, personid =&gt; $index)) for @quotations;
+    }
+    @documents.sort({ $^a&lt;personid&gt; &lt;=&gt; $^b&lt;personid&gt; }).pairs.map({ %(docid =&gt; .key, personid =&gt; .value&lt;personid&gt;, body =&gt; .value&lt;body&gt;) }).list
+}
+</code></pre>
+
+<p>其中<code>.map(*.subst(/\[\[$&lt;text&gt;=(&lt;-[\[\]|]&gt;+?)\|$&lt;link&gt;=(&lt;-[\[\]|]&gt;+?)\]\]/, { $&lt;text&gt; }, :g))</code>和<code>.map(*.subst(/\[\[$&lt;text&gt;=(&lt;-[\[\]|]&gt;+?)\]\]/, { $&lt;text&gt; }, :g))</code>是隐藏命令，提取文本以显示和删除文本，以便从锚文本进行内部链接。例如，<code>[[Perl]]</code>被缩减为<code>Perl</code>。有关更多语法信息，请参阅：<a href="https://docs.perl6.org/language/regexes#Named_captures">https</a>：<a href="https://docs.perl6.org/language/regexes#Named_captures">//docs.perl6.org/language/regexes#Named_captures</a>或<a href="https://docs.perl6.org/routine/subst">https://docs.perl6.org/routine/subst</a></p>
+
+<p>经过一些清理操作（.eg，<code>.map(*.subst(&quot;[&quot;, &quot;[&quot;, :g))</code>）后，我们提取引号线。</p>
+
+<p><code>.grep(/^\*&lt;-[*]&gt;/)</code>查找以单星号开头的行，因为大多数引号都出现在这种行中。</p>
+
+<p>接下来，<code>.map(*.subst(/^\*\s+/, &quot;&quot;))</code>删除每个星号，因为星号本身不是每个报价的组成部分。</p>
+
+<p>最后，我们保存文档和成员（即标题）：</p>
+
+<pre><code class="language-perl6">my $docfh = open &quot;documents.txt&quot;, :w;
+$docfh.say((.&lt;docid&gt;, .&lt;personid&gt;, .&lt;body&gt;).join(&quot; &quot;)) for @documents;
+$docfh.close;
+
+my $memfh = open &quot;members.txt&quot;, :w;
+$memfh.say($_) for @members;
+$memfh.close;
+</code></pre>
+
+<h2 id="练习2-执行lda并可视化结果">练习2：执行LDA并可视化结果</h2>
+
+<p>在上一节中，我们保存了已清理的文档。
+在本节中，我们使用文档进行LDA估计并将结果可视化。
+本部分的目标是绘制文档主题分布并编写主题词表。</p>
+
+<p>整个源代码是：</p>
+
+<pre><code class="language-perl6">use v6.c;
+use Algorithm::LDA;
+use Algorithm::LDA::Formatter;
+use Algorithm::LDA::LDAModel;
+use Chart::Gnuplot;
+use Chart::Gnuplot::Subset;
+
+sub create-model(@documents --&gt; Algorithm::LDA::LDAModel) {
+    my $stopwords = &quot;stopwords/english&quot;.IO.lines.Set;
+    my &amp;tokenizer = -&gt; $line { $line.words.map(*.lc).grep(-&gt; $w { ($stopwords !(cont) $w) and $w !~~ /^[ &lt;:S&gt; | &lt;:P&gt; ]+$/ }) };
+    my ($documents, $vocabs) = Algorithm::LDA::Formatter.from-plain(@documents.map({ my ($, $, *@body) = .words; @body.join(&quot; &quot;) }), &amp;tokenizer);
+    my Algorithm::LDA $lda .= new(:$documents, :$vocabs);
+    my Algorithm::LDA::LDAModel $model = $lda.fit(:num-topics(10), :num-iterations(500), :seed(2018));
+    $model
+}
+
+sub plot-topic-distribution($model, @members, @documents, $search-regex = rx/Larry/) {
+    my $target-personid = @members.pairs.grep({ .value ~~ $search-regex }).map(*.key).head;
+    my $docid = @documents.map({ my ($docid, $personid, *@body) = .words; %(docid =&gt; $docid, personid =&gt; $personid, body =&gt; @body.join(&quot; &quot;)) })\
+    .grep({ .&lt;personid&gt; == $target-personid and .&lt;body&gt; ~~ /:i &lt;&lt; perl &gt;&gt;/}).map(*&lt;docid&gt;).head;
+
+    note(&quot;@documents[$docid] is selected&quot;);
+    my ($row-size, $col-size) = $model.document-topic-matrix.shape;
+    my @doc-topic = gather for ($docid X ^$col-size) -&gt; ($i, $j) { take $model.document-topic-matrix[$i;$j]; }
+    my Chart::Gnuplot $gnu .= new(:terminal(&quot;png&quot;), :filename(&quot;topics.png&quot;));
+    $gnu.command(&quot;set boxwidth 0.5 relative&quot;);
+    my AnyTicsTic @tics = @doc-topic.pairs.map({ %(:label(.key), :pos(.key)) });
+    $gnu.legend(:off);
+    $gnu.xlabel(:label(&quot;Topic&quot;));
+    $gnu.ylabel(:label(&quot;P(z|theta,d)&quot;));
+    $gnu.xtics(:tics(@tics));
+    $gnu.plot(:vertices(@doc-topic.pairs.map({ @(.key, .value.exp) })), :style(&quot;boxes&quot;), :fill(&quot;solid&quot;));
+    $gnu.dispose;
+}
+
+sub write-nbest($model) {
+  my $topics := $model.nbest-words-per-topic(10);
+  for ^(10/5) -&gt; $part-i {
+    say &quot;|&quot; ~ (^5).map(-&gt; $t { &quot;topic { $part-i * 5 + $t }&quot; }).join(&quot;|&quot;) ~ &quot;|&quot;;
+    say &quot;|&quot; ~ (^5).map({ &quot;----&quot; }).join(&quot;|&quot;) ~ &quot;|&quot;;
+    for ^10 -&gt; $rank {
+        say &quot;|&quot; ~ gather for ($part-i * 5)..^($part-i * 5 + 5) -&gt; $topic {
+            take @($topics)[$topic;$rank].key;
+        }.join(&quot;|&quot;) ~ &quot;|&quot;;
+    }
+    &quot;&quot;.say;
+  }
+}
+
+sub save-model($model) {
+  my @document-topic-matrix := $model.document-topic-matrix;
+  my ($document-size, $topic-size) = @document-topic-matrix.shape;
+  my $doctopicfh = open &quot;document-topic.txt&quot;, :w;
+
+  $doctopicfh.say: ($document-size, $topic-size).join(&quot; &quot;);
+  for ^$document-size -&gt; $doc-i {
+    $doctopicfh.say: gather for ^$topic-size -&gt; $topic { take @document-topic-matrix[$doc-i;$topic] }.join(&quot; &quot;);
+  }
+  $doctopicfh.close;
+
+  my @topic-word-matrix := $model.topic-word-matrix;
+  my ($, $word-size) = @topic-word-matrix.shape;
+  my $topicwordfh = open &quot;topic-word.txt&quot;, :w;
+
+  $topicwordfh.say: ($topic-size, $word-size).join(&quot; &quot;);
+  for ^$topic-size -&gt; $topic-i {
+    $topicwordfh.say: gather for ^$word-size -&gt; $word { take @topic-word-matrix[$topic-i;$word] }.join(&quot; &quot;);
+  }
+  $topicwordfh.close;
+
+  my @vocabulary := $model.vocabulary;
+  my $vocabfh = open &quot;vocabulary.txt&quot;, :w;
+
+  $vocabfh.say($_) for @vocabulary;
+  $vocabfh.close;
+}
+
+my @documents = &quot;documents.txt&quot;.IO.lines;
+my $model = create-model(@documents);
+my @members = &quot;members.txt&quot;.IO.lines;
+plot-topic-distribution($model, @members, @documents);
+write-nbest($model);
+save-model($model);
+</code></pre>
+
+<p>首先，我们加载已清理的文档并调用<code>create-model</code>：</p>
+
+<pre><code class="language-perl6">my @documents = &quot;documents.txt&quot;.IO.lines;
+my $model = create-model(@documents);
+</code></pre>
+
+<p><code>create-model</code>通过加载给定文档来创建LDA模型：</p>
+
+<pre><code class="language-perl6">sub create-model(@documents --&gt; Algorithm::LDA::LDAModel) {
+    my $stopwords = &quot;stopwords/english&quot;.IO.lines.Set;
+    my &amp;tokenizer = -&gt; $line { $line.words.map(*.lc).grep(-&gt; $w { ($stopwords !(cont) $w) and $w !~~ /^[ &lt;:S&gt; | &lt;:P&gt; ]+$/ }) };
+    my ($documents, $vocabs) = Algorithm::LDA::Formatter.from-plain(@documents.map({ my ($, $, *@body) = .words; @body.join(&quot; &quot;) }), &amp;tokenizer);
+    my Algorithm::LDA $lda .= new(:$documents, :$vocabs);
+    my Algorithm::LDA::LDAModel $model = $lda.fit(:num-topics(10), :num-iterations(500), :seed(2018));
+    $model
+}
+</code></pre>
+
+<p><code>$stopwords</code>来自NLTK的一组英语停用词在哪里（我提到了初步部分），并且<code>&amp;tokenizer</code>是一个自定义标记器<code>Algorithm::LDA::Formatter.from-plain</code>。标记器转换给定句子如下：</p>
+
+<ul>
+<li>1. 通过空格拆分句子并生成令牌列表。</li>
+<li>1. 用小写字符替换标记的每个字符。</li>
+<li>1. 删除停用词列表中存在的令牌或分类为符号或标点符号的单长令牌。</li>
+</ul>
+
+<p><code>Algorithm::LDA::Formatter.from-plain</code> 创建数字原生文档（即，文档中的每个单词被映射到其对应的词汇表id，并且该id由C int32表示）和来自文本列表的词汇表。</p>
+
+<p>在<code>Algorithm::LDA</code>使用上述数值文档创建实例后，我们可以通过启动LDA估计<code>Algorithm::LDA.fit</code>。在此示例中，我们将主题数设置为10，将迭代次数设置为100，将srand的种子设置为2018。</p>
+
+<p>接下来，我们绘制文档主题分布。在此绘图之前，我们加载已保存的成员</p>
+
+<pre><code class="language-perl6">my @members = &quot;members.txt&quot;.IO.lines;
+plot-topic-distribution($model, @members, @documents);
+</code></pre>
+
+<p><code>plot-topic-distribution</code> 使用Chart :: Gnuplot绘制主题分布：</p>
+
+<pre><code class="language-perl6">sub plot-topic-distribution($model, @members, @documents, $search-regex = rx/Larry/) {
+    my $target-personid = @members.pairs.grep({ .value ~~ $search-regex }).map(*.key).head;
+    my $docid = @documents.map({ my ($docid, $personid, *@body) = .words; %(docid =&gt; $docid, personid =&gt; $personid, body =&gt; @body.join(&quot; &quot;)) })\
+    .grep({ .&lt;personid&gt; == $target-personid and .&lt;body&gt; ~~ /:i &lt;&lt; perl &gt;&gt;/}).map(*&lt;docid&gt;).head;
+
+    note(&quot;@documents[$docid] is selected&quot;);
+    my ($row-size, $col-size) = $model.document-topic-matrix.shape;
+    my @doc-topic = gather for ($docid X ^$col-size) -&gt; ($i, $j) { take $model.document-topic-matrix[$i;$j]; }
+    my Chart::Gnuplot $gnu .= new(:terminal(&quot;png&quot;), :filename(&quot;topics.png&quot;));
+    $gnu.command(&quot;set boxwidth 0.5 relative&quot;);
+    my AnyTicsTic @tics = @doc-topic.pairs.map({ %(:label(.key), :pos(.key)) });
+    $gnu.legend(:off);
+    $gnu.xlabel(:label(&quot;Topic&quot;));
+    $gnu.ylabel(:label(&quot;P(z|theta,d)&quot;));
+    $gnu.xtics(:tics(@tics));
+    $gnu.plot(:vertices(@doc-topic.pairs.map({ @(.key, .value.exp) })), :style(&quot;boxes&quot;), :fill(&quot;solid&quot;));
+    $gnu.dispose;
+}
+</code></pre>
+
+<p>在这个例子中，我们绘制了Larry Wall的引文的主题分布（“虽然Perl口号是不仅仅有一种方法可以做到这一点，但我还是犹豫了10种方法来做某事。”）：</p>
+
+<p><img src="https://camo.githubusercontent.com/787f04318d3c341aa81deaa2c2793054d48403ee/68747470733a2f2f7065726c36616476656e742e66696c65732e776f726470726573732e636f6d2f323031382f31322f746f706963732d312e706e673f773d363430" alt="img" /></p>
+
+<p>在绘图之后，我们称之为<code>write-nbest</code>：</p>
+
+<pre><code class="language-perl6">write-nbest($model);
+</code></pre>
+
+<p>在LDA中，XXX表示的主题表示为单词列表。<code>write-nbest</code>写一个降价风格的主题词分配表：</p>
+
+<pre><code class="language-perl6">sub write-nbest($model) {
+  my $topics := $model.nbest-words-per-topic(10);
+  for ^(10/5) -&gt; $part-i {
+    say &quot;|&quot; ~ (^5).map(-&gt; $t { &quot;topic { $part-i * 5 + $t }&quot; }).join(&quot;|&quot;) ~ &quot;|&quot;;
+    say &quot;|&quot; ~ (^5).map({ &quot;----&quot; }).join(&quot;|&quot;) ~ &quot;|&quot;;
+    for ^10 -&gt; $rank {
+        say &quot;|&quot; ~ gather for ($part-i * 5)..^($part-i * 5 + 5) -&gt; $topic {
+            take @($topics)[$topic;$rank].key;
+        }.join(&quot;|&quot;) ~ &quot;|&quot;;
+    }
+    &quot;&quot;.say;
+  }
+}
+</code></pre>
+
+<p>结果是：</p>
+
+<table>
+<thead>
+<tr>
+<th>topic 0</th>
+<th>topic 1</th>
+<th>topic 2</th>
+<th>topic 3</th>
+<th>topic 4</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>would</td>
+<td>scotland</td>
+<td>black</td>
+<td>could</td>
+<td>one</td>
+</tr>
+
+<tr>
+<td>itâ€™s</td>
+<td>country</td>
+<td>mr.</td>
+<td>first</td>
+<td>work</td>
+</tr>
+
+<tr>
+<td>believe</td>
+<td>one</td>
+<td>lot</td>
+<td>law</td>
+<td>new</td>
+</tr>
+
+<tr>
+<td>one</td>
+<td>political</td>
+<td>play</td>
+<td>college</td>
+<td>human</td>
+</tr>
+
+<tr>
+<td>took</td>
+<td>world</td>
+<td>official</td>
+<td>basic</td>
+<td>process</td>
+</tr>
+
+<tr>
+<td>much</td>
+<td>need</td>
+<td>new</td>
+<td>speak</td>
+<td>business</td>
+</tr>
+
+<tr>
+<td>donâ€™t</td>
+<td>must</td>
+<td>reacher</td>
+<td>language</td>
+<td>becomes</td>
+</tr>
+
+<tr>
+<td>ever</td>
+<td>national</td>
+<td>five</td>
+<td>every</td>
+<td>good</td>
+</tr>
+
+<tr>
+<td>far</td>
+<td>many</td>
+<td>car</td>
+<td>matter</td>
+<td>world</td>
+</tr>
+
+<tr>
+<td>fighting</td>
+<td>us</td>
+<td>road</td>
+<td>right</td>
+<td>knowledge</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>topic 5</th>
+<th>topic 6</th>
+<th>topic 7</th>
+<th>topic 8</th>
+<th>topic 9</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>apple</td>
+<td>united</td>
+<td>people</td>
+<td>like</td>
+<td>*/</td>
+</tr>
+
+<tr>
+<td>likely</td>
+<td>war</td>
+<td>would</td>
+<td>one</td>
+<td>die</td>
+</tr>
+
+<tr>
+<td>company</td>
+<td>states</td>
+<td>i’m</td>
+<td>something</td>
+<td>und</td>
+</tr>
+
+<tr>
+<td>jobs</td>
+<td>years</td>
+<td>know</td>
+<td>think</td>
+<td>quantum</td>
+</tr>
+
+<tr>
+<td>even</td>
+<td>would</td>
+<td>think</td>
+<td>way</td>
+<td>play</td>
+</tr>
+
+<tr>
+<td>steve</td>
+<td>american</td>
+<td>want</td>
+<td>things</td>
+<td>noble</td>
+</tr>
+
+<tr>
+<td>life</td>
+<td>president</td>
+<td>get</td>
+<td>perl</td>
+<td>home</td>
+</tr>
+
+<tr>
+<td>like</td>
+<td>human</td>
+<td>going</td>
+<td>long</td>
+<td>dog</td>
+</tr>
+
+<tr>
+<td>end</td>
+<td>must</td>
+<td>say</td>
+<td>always</td>
+<td>student</td>
+</tr>
+
+<tr>
+<td>small</td>
+<td>us</td>
+<td>go</td>
+<td>really</td>
+<td>ist</td>
+</tr>
+</tbody>
+</table>
+
+<p>正如你所看到的那样，引用“虽然Perl Slogan不仅仅是一种方法，我还有10种方法可以做某事。”包含“one”，“way”和“perl”。这就是为什么这个引用主要由主题8组成的原因。</p>
+
+<p>对于下一节，我们按<code>save-model</code>子程序保存模型：</p>
+
+<pre><code class="language-perl6">sub save-model($model) {
+  my @document-topic-matrix := $model.document-topic-matrix;
+  my ($document-size, $topic-size) = @document-topic-matrix.shape;
+  my $doctopicfh = open &quot;document-topic.txt&quot;, :w;
+
+  $doctopicfh.say: ($document-size, $topic-size).join(&quot; &quot;);
+  for ^$document-size -&gt; $doc-i {
+    $doctopicfh.say: gather for ^$topic-size -&gt; $topic { take @document-topic-matrix[$doc-i;$topic] }.join(&quot; &quot;);
+  }
+  $doctopicfh.close;
+
+  my @topic-word-matrix := $model.topic-word-matrix;
+  my ($, $word-size) = @topic-word-matrix.shape;
+  my $topicwordfh = open &quot;topic-word.txt&quot;, :w;
+
+  $topicwordfh.say: ($topic-size, $word-size).join(&quot; &quot;);
+  for ^$topic-size -&gt; $topic-i {
+    $topicwordfh.say: gather for ^$word-size -&gt; $word { take @topic-word-matrix[$topic-i;$word] }.join(&quot; &quot;);
+  }
+  $topicwordfh.close;
+
+  my @vocabulary := $model.vocabulary;
+  my $vocabfh = open &quot;vocabulary.txt&quot;, :w;
+
+  $vocabfh.say($_) for @vocabulary;
+  $vocabfh.close;
+}
+</code></pre>
+
+<h2 id="练习3-创建报价搜索引擎">练习3：创建报价搜索引擎</h2>
+
+<p>在本节中，我们创建一个报价搜索引擎，它使用上一节中创建的模型。
+更具体地说，我们创建了基于LDA的文档模型（Xing Wei和W. Bruce Croft 2006），并创建了一个可以搜索报价的CLI工具。（注意，“token”和“word”这两个词在本节中是可互换的）</p>
+
+<p>整个源代码是：</p>
+
+<pre><code class="language-perl6">use v6.c;
+
+sub MAIN(Str :$query!) {
+    my \doc-topic-iter = &quot;document-topic.txt&quot;.IO.lines.iterator;
+    my \topic-word-iter = &quot;topic-word.txt&quot;.IO.lines.iterator;
+    my ($document-size, $topic-size) = doc-topic-iter.pull-one.words;
+    my ($, $word-size) = topic-word-iter.pull-one.words;
+
+    my Num @document-topic[$document-size;$topic-size];
+    my Num @topic-word[$topic-size;$word-size];
+
+    for ^$document-size -&gt; $doc-i {
+        my \maybe-line := doc-topic-iter.pull-one;
+        die &quot;Error: Something went wrong&quot; if maybe-line =:= IterationEnd;
+        my Num @line = @(maybe-line).words&gt;&gt;.Num;
+        for ^@line {
+            @document-topic[$doc-i;$_] = @line[$_];
+        }
+    }
+
+    for ^$topic-size -&gt; $topic-i {
+        my \maybe-line := topic-word-iter.pull-one;
+        die &quot;Error: Something went wrong&quot; if maybe-line =:= IterationEnd;
+        my Num @line = @(maybe-line).words&gt;&gt;.Num;
+        for ^@line {
+            @topic-word[$topic-i;$_] = @line[$_];
+        }
+    }
+
+    my %vocabulary = &quot;vocabulary.txt&quot;.IO.lines.pairs&gt;&gt;.antipair.hash;
+    my @members = &quot;members.txt&quot;.IO.lines;
+    my @documents = &quot;documents.txt&quot;.IO.lines;
+    my @docbodies = @documents.map({ my ($, $, *@body) = .words; @body.join(&quot; &quot;) });
+    my %doc-to-person = @documents.map({ my ($docid, $personid, $) = .words; %($docid =&gt; $personid) }).hash;
+    my @query = $query.words.map(*.lc);
+
+    my @sorted-list = gather for ^$document-size -&gt; $doc-i {
+        my Num $log-prob = gather for @query -&gt; $token {
+            my Num $log-ml-prob = Pml(@docbodies, $doc-i, $token);
+            my Num $log-lda-prob = Plda($token, $topic-size, $doc-i, %vocabulary, @document-topic, @topic-word);
+            take log-sum(log(0.2) + $log-ml-prob, log(0.8) + $log-lda-prob);
+        }.sum;
+        take %(doc-i =&gt; $doc-i, log-prob =&gt; $log-prob);
+    }.sort({ $^b&lt;log-prob&gt; &lt;=&gt; $^a&lt;log-prob&gt; });
+
+    for ^10 {
+        my $docid = @sorted-list[$_]&lt;doc-i&gt;;
+        sprintf(&quot;\&quot;%s\&quot; by %s %f&quot;, @docbodies[$docid], @members[%doc-to-person{$docid}], @sorted-list[$_]&lt;log-prob&gt;).say;
+    }
+
+}
+
+sub Pml(@docbodies, $doc-i, $token --&gt; Num) {
+    my Int $num-tokens = @docbodies[$doc-i].words.grep({ /:i^ $token $/ }).elems;
+    my Int $total-tokens = @docbodies[$doc-i].words.elems;
+    return -100e0 if $total-tokens == 0 or $num-tokens == 0;
+    log($num-tokens) - log($total-tokens);
+}
+
+sub Plda($token, $topic-size, $doc-i, %vocabulary is raw, @document-topic is raw, @topic-word is raw --&gt; Num) {
+    gather for ^$topic-size -&gt; $topic {
+        if %vocabulary{$token}:exists {
+            take @document-topic[$doc-i;$topic] + @topic-word[$topic;%vocabulary{$token}];
+        } else {
+            take -100e0;
+        }
+    }.reduce(&amp;log-sum);
+}
+
+sub log-sum(Num $log-a, Num $log-b --&gt; Num) {
+    if $log-a &lt; $log-b {
+        return $log-b + log(1 + exp($log-a - $log-b))
+    } else {
+        return $log-a + log(1 + exp($log-b - $log-a))
+    }
+}
+</code></pre>
+
+<p>在beggining，我们加载保存的模型和准备<code>@document-topic</code>，<code>@topic-word</code>，<code>%vocabulary</code>，<code>@documents</code>，<code>@docbodies</code>，<code>%doc-to-person</code>和<code>@members</code></p>
+
+<pre><code class="language-perl6"> my \doc-topic-iter = &quot;document-topic.txt&quot;.IO.lines.iterator;
+    my \topic-word-iter = &quot;topic-word.txt&quot;.IO.lines.iterator;
+    my ($document-size, $topic-size) = doc-topic-iter.pull-one.words;
+    my ($, $word-size) = topic-word-iter.pull-one.words;
+
+    my Num @document-topic[$document-size;$topic-size];
+    my Num @topic-word[$topic-size;$word-size];
+
+    for ^$document-size -&gt; $doc-i {
+        my \maybe-line = doc-topic-iter.pull-one;
+        die &quot;Error: Something went wrong&quot; if maybe-line =:= IterationEnd;
+        my Num @line = @(maybe-line).words&gt;&gt;.Num;
+        for ^@line {
+            @document-topic[$doc-i;$_] = @line[$_];
+        }
+    }
+
+    for ^$topic-size -&gt; $topic-i {
+        my \maybe-line = topic-word-iter.pull-one;
+        die &quot;Error: Something went wrong&quot; if maybe-line =:= IterationEnd;
+        my Num @line = @(maybe-line).words&gt;&gt;.Num;
+        for ^@line {
+            @topic-word[$topic-i;$_] = @line[$_];
+        }
+    }
+
+    my %vocabulary = &quot;vocabulary.txt&quot;.IO.lines.pairs&gt;&gt;.antipair.hash;
+    my @members = &quot;members.txt&quot;.IO.lines;
+    my @documents = &quot;documents.txt&quot;.IO.lines;
+    my @docbodies = @documents.map({ my ($, $, *@body) = .words; @body.join(&quot; &quot;) });
+    my %doc-to-person = @documents.map({ my ($docid, $personid, $) = .words; %($docid =&gt; $personid) }).hash;
+</code></pre>
+
+<p>接下来，我们<code>@query</code>使用选项设置<code>:$query</code>：</p>
+
+<pre><code class="language-perl6">my @query = $query.words.map(*.lc);
+</code></pre>
+
+<p>之后，我们计算<code>P(query|document)</code>基于Eq 的概率。前面提到的9篇文章（注意我们使用对数来避免不流动并将参数mu设置为零）并对它们进行排序。</p>
+
+<pre><code class="language-perl6">    my @sorted-list = gather for ^$document-size -&gt; $doc-i {
+        my Num $log-prob = gather for @query -&gt; $token {
+            my Num $log-ml-prob = Pml(@docbodies, $doc-i, $token);
+            my Num $log-lda-prob = Plda($token, $topic-size, $doc-i, %vocabulary, @document-topic, @topic-word);
+            take log-sum(log(0.2) + $log-ml-prob, log(0.8) + $log-lda-prob);
+        }.sum;
+        take %(doc-i =&gt; $doc-i, log-prob =&gt; $log-prob);
+    }.sort({ $^b&lt;log-prob&gt; &lt;=&gt; $^a&lt;log-prob&gt; });
+</code></pre>
+
+<p><code>Plda</code>为每个主题添加给定文档概率（即lnP（主题| theta，文档））和单词给定主题概率（即lnP（word | phi，topic））的对数主题，并将它们加起来<code>.reduce(&amp;log-sum);</code>：</p>
+
+<pre><code class="language-perl6">sub Plda($token, $topic-size, $doc-i, %vocabulary is raw, @document-topic is raw, @topic-word is raw --&gt; Num) {
+    gather for ^$topic-size -&gt; $topic {
+        if %vocabulary{$token}:exists {
+            take @document-topic[$doc-i;$topic] + @topic-word[$topic;%vocabulary{$token}];
+        } else {
+            take -100e0;
+        }
+    }.reduce(&amp;log-sum);
+}
+</code></pre>
+
+<p>而且 <code>Pml</code>（ml表示最大似然）计数<code>$token</code>并将其标准化为文档中的总标记（注意，此计算也在日志空间中进行）：</p>
+
+<pre><code class="language-perl6">sub Pml(@docbodies, $doc-i, $token --&gt; Num) {
+    my Int $num-tokens = @docbodies[$doc-i].words.grep({ /:i^ $token $/ }).elems;
+    my Int $total-tokens = @docbodies[$doc-i].words.elems;
+    return -100e0 if $total-tokens == 0 or $num-tokens == 0;
+    log($num-tokens) - log($total-tokens);
+}
+</code></pre>
+
+<p>好的，那就让我们执行吧！</p>
+
+<p>查询“perl”：</p>
+
+<pre><code>$ perl6 search-quotation.p6 --query=&quot;perl&quot;
+&quot;Perl will always provide the null.&quot; by Larry Wall -3.301156
+&quot;Perl programming is an *empirical* science!&quot; by Larry Wall -3.345189
+&quot;The whole intent of Perl 5's module system was to encourage the growth of Perl culture rather than the Perl core.&quot; by Larry Wall -3.490238
+&quot;I dunno, I dream in Perl sometimes...&quot; by Larry Wall -3.491790
+&quot;At many levels, Perl is a 'diagonal' language.&quot; by Larry Wall -3.575779
+&quot;Almost nothing in Perl serves a single purpose.&quot; by Larry Wall -3.589218
+&quot;Perl has a long tradition of working around compilers.&quot; by Larry Wall -3.674111
+&quot;As for whether Perl 6 will replace Perl 5, yeah, probably, in about 40 years or so.&quot; by Larry Wall -3.684454
+&quot;Well, I think Perl should run faster than C.&quot; by Larry Wall -3.771155
+&quot;It's certainly easy to calculate the average attendance for Perl conferences.&quot; by Larry Wall -3.864075
+</code></pre>
+
+<p>查询“apple”：</p>
+
+<pre><code class="language-shell">$ perl6 search-quotation.p6 --query=&quot;apple&quot;
+&quot;Steve Jobs is the&quot;With phones moving to technologies such as Apple Pay, an unwillingness to assure security could create a Target-like exposure that wipes Apple out of the market.&quot; by Rob Enderle -3.841538
+&quot;*:From Joint Apple / HP press release dated 1 January 2004 available [http://www.apple.com/pr/library/2004/jan/08hp.html here].&quot; by Carly Fiorina -3.904489
+&quot;Samsung did to Apple what Apple did to Microsoft, skewering its devoted users and reputation, only better. ... There is a way for Apple to fight back, but the company no longer has that skill, and apparently doesn't know where to get it, either.&quot; by Rob Enderle -3.940359
+&quot;[W]hen it came to the iWatch, also a name that Apple didn't own, Apple walked away from it and instead launched the Apple Watch. Certainly, no risk of litigation, but the product's sales are a fraction of what they otherwise might have been with the proper name and branding.&quot; by Rob Enderle -4.152145
+&quot;[W]hen Apple wanted the name &quot;iPhone&quot; and it was owned by Cisco, Steve Jobs just took it, and his legal team executed so he could keep it. It turned out that doing this was surprisingly inexpensive. And, as the Apple Watch showcased, the Apple Phone likely would not have sold anywhere near as well as the iPhone.&quot; by Rob Enderle -4.187223
+&quot;The cause of [Apple v. Qualcomm] appears to be an effort by Apple to pressure Qualcomm into providing a unique discount, largely because Apple has run into an innovation wall, is under increased competition from firms like Samsung, and has moved to a massive cost reduction strategy. (I've never known this to end well, as it causes suppliers to create unreliable components and outright fail.)&quot; by Rob Enderle -4.318575
+&quot;Apple tends to aggressively work to not discover problems with products that are shipped and certainly not talk about them.&quot; by Rob Enderle -4.380863
+&quot;Apple no longer owns the tablet market, and will likely lose dominance this year or next. ... this level of sustained dominance doesn't appear to recur with the same vendor even if it launched the category.&quot; by Rob Enderle -4.397954
+&quot;Apple is becoming more and more like a typical tech firm â€” that is, long on technology and short on magic. ... Apple is drifting closer and closer to where it was back in the 1990s. It offers advancements that largely follow those made by others years earlier, product proliferation, a preference for more over simple elegance, and waning excitement.&quot; by Rob Enderle -4.448473
+&quot;[T]he litigation between Qualcomm and Apple/Intel ... is weird. What makes it weird is that Intel appears to think that by helping Apple drive down Qualcomm prices, it will gain an advantage, but since its only value is as a lower cost, lower performing, alternative to Qualcomm's modems, the result would be more aggressively priced better alternatives to Intel's offerings from Qualcomm/Broadcom, wiping Intel out of the market. On paper, this is a lose/lose for Intel and even for Apple. The lower prices would flow to Apple competitors as well, lowering the price of competing phones. So, Apple would not get a lasting benefit either.&quot; by Rob Enderle -4.469852 Ronald McDonald of Apple, he is the face.&quot; by Rob Enderle -3.822949
+&quot;With phones moving to technologies such as Apple Pay, an unwillingness to assure security could create a Target-like exposure that wipes Apple out of the market.&quot; by Rob Enderle -3.849055
+&quot;*:From Joint Apple / HP press release dated 1 January 2004 available [http://www.apple.com/pr/library/2004/jan/08hp.html here].&quot; by Carly Fiorina -3.895163
+&quot;Samsung did to Apple what Apple did to Microsoft, skewering its devoted users and reputation, only better. ... There is a way for Apple to fight back, but the company no longer has that skill, and apparently doesn't know where to get it, either.&quot; by Rob Enderle -4.052616
+&quot;*** The previous line contains the naughty word '$&amp;'.\n if /(ibm|apple|awk)/; # :-)&quot; by Larry Wall -4.088445
+&quot;The cause of [Apple v. Qualcomm] appears to be an effort by Apple to pressure Qualcomm into providing a unique discount, largely because Apple has run into an innovation wall, is under increased competition from firms like Samsung, and has moved to a massive cost reduction strategy. (I've never known this to end well, as it causes suppliers to create unreliable components and outright fail.)&quot; by Rob Enderle -4.169533
+&quot;[T]he litigation between Qualcomm and Apple/Intel ... is weird. What makes it weird is that Intel appears to think that by helping Apple drive down Qualcomm prices, it will gain an advantage, but since its only value is as a lower cost, lower performing, alternative to Qualcomm's modems, the result would be more aggressively priced better alternatives to Intel's offerings from Qualcomm/Broadcom, wiping Intel out of the market. On paper, this is a lose/lose for Intel and even for Apple. The lower prices would flow to Apple competitors as well, lowering the price of competing phones. So, Apple would not get a lasting benefit either.&quot; by Rob Enderle -4.197869
+&quot;Apple tends to aggressively work to not discover problems with products that are shipped and certainly not talk about them.&quot; by Rob Enderle -4.204618
+&quot;Today's tech companies aren't built to last, as Apple's recent earnings report shows all too well.&quot; by Rob Enderle -4.209901
+&quot;[W]hen it came to the iWatch, also a name that Apple didn't own, Apple walked away from it and instead launched the Apple Watch. Certainly, no risk of litigation, but the product's sales are a fraction of what they otherwise might have been with the proper name and branding.&quot; by Rob Enderle -4.238582
+</code></pre>
+
+<h1 id="结论">结论</h1>
+
+<p>在本文中，我们探索了Wikiquote，并使用Algoritm :: LDA创建了一个LDA模型。
+之后我们构建了一个信息检索应用程序。</p>
+
+<p>感谢您阅读我的文章！下次见！</p>
+
+<h1 id="引文">引文</h1>
+
+<ul>
+<li>Blei，David M.“Probabilistic topic models。”ACM 55.4（2012）的通讯：77-84。</li>
+<li>Wei，Xing和W. Bruce Croft。“基于LDA的文档模型，用于临时检索。”第29届年度国际ACM SIGIR研究与开发信息检索会议论文集。ACM，2006。</li>
+</ul>
+
+  </article>
+</section>
+
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+      <p>ohmysummer ❤ Perl 6</p>
+    
+    
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
