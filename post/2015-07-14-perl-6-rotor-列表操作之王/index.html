@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 6 rotor--列表操作之王</title>
+  <meta property="og:title" content="Perl 6 rotor--列表操作之王" />
+  <meta name="twitter:title" content="Perl 6 rotor--列表操作之王" />
+  <meta name="description" content="Perl 6 .rotor - The King of List Manipulation
+对于 Perl 6 程序员, .rotor是一个强大的列表操作工具。
+分段 最简单的, .rotor接收一个整数$number并把列表分成多个子列表, 每个子列表含有 $number 个元素:
+say &lt;a b c d e f g h&gt;.rotor: 3 # ((a b c) (d e f))  我们有一个含有 8 个元素的列表, 我们在该列表上调用接收参数 3 的 .rotor方法, 它返回 2 个列表, 每个列表中含有 3 个元素。不包括原列表中的最后 2 个元素, 因为它们没有组成一个完整的3个元素的列表。然而它们可以被包含进来, 使用 :partial具名参数设置为 True:
+say &lt;a b c d e f g h&gt;.rotor: 3, :partial # ((a b c) (d e f) (g h)) say &lt;a b c d e f g h&gt;.">
+  <meta property="og:description" content="Perl 6 .rotor - The King of List Manipulation
+对于 Perl 6 程序员, .rotor是一个强大的列表操作工具。
+分段 最简单的, .rotor接收一个整数$number并把列表分成多个子列表, 每个子列表含有 $number 个元素:
+say &lt;a b c d e f g h&gt;.rotor: 3 # ((a b c) (d e f))  我们有一个含有 8 个元素的列表, 我们在该列表上调用接收参数 3 的 .rotor方法, 它返回 2 个列表, 每个列表中含有 3 个元素。不包括原列表中的最后 2 个元素, 因为它们没有组成一个完整的3个元素的列表。然而它们可以被包含进来, 使用 :partial具名参数设置为 True:
+say &lt;a b c d e f g h&gt;.rotor: 3, :partial # ((a b c) (d e f) (g h)) say &lt;a b c d e f g h&gt;.">
+  <meta name="twitter:description" content="Perl 6 .rotor - The King of List Manipulation
+对于 Perl 6 程序员, .rotor是一个强大的列表操作工具。
+分段 最简单的, .rotor接收一个整数$number并把列表分成多个子列表, 每个子列表含有 $number 个元素:
+say &lt;a b c d e f g h&gt;.rotor: 3 # ((a b c) (d e f)) …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-07-14-perl-6-rotor-%E5%88%97%E8%A1%A8%E6%93%8D%E4%BD%9C%E4%B9%8B%E7%8E%8B/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-07-14-perl-6-rotor-%E5%88%97%E8%A1%A8%E6%93%8D%E4%BD%9C%E4%B9%8B%E7%8E%8B/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 6 rotor--列表操作之王</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 14, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (554 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>Perl 6 .rotor - The King of List Manipulation</p>
+
+<p>对于 Perl 6 程序员, <code>.rotor</code>是一个强大的列表操作工具。</p>
+
+<h4 id="分段">分段</h4>
+
+<p>最简单的, <code>.rotor</code>接收一个整数<strong>$number</strong>并把列表分成多个子列表, 每个子列表含有 <strong>$number</strong> 个元素:</p>
+
+<pre><code class="language-perl6">say &lt;a b c d e f  g h&gt;.rotor: 3
+# ((a b c) (d e f))
+</code></pre>
+
+<p>我们有一个含有 8 个元素的列表, 我们在该列表上调用接收参数 3 的 <code>.rotor</code>方法, 它返回 2 个列表, 每个列表中含有 3 个元素。不包括原列表中的最后 2 个元素, 因为它们没有组成一个完整的3个元素的列表。然而它们可以被包含进来, 使用 <code>:partial</code>具名参数设置为 <strong>True</strong>:</p>
+
+<pre><code class="language-perl6">say &lt;a b c  d e f  g h&gt;.rotor: 3, :partial
+# ((a b c) (d e f) (g h))
+
+say &lt;a b c  d e f  g h&gt;.rotor: 3, :partial(True)
+# ((a b c) (d e f) (g h))
+
+say &lt;a b c  d e f  g h&gt;.rotor: 3, :partial(False)
+# ((a b c) (d e f))
+
+</code></pre>
+
+<p>下面应用一下我们刚刚学到的。把字符串分成列宽相等的几段:</p>
+
+<pre><code class="language-perl6">&quot;foobarberboorboozebazmeow&quot;.comb.rotor(10, :partial)».join».say
+# foobarberb
+# oorboozeba
+# zmeow
+</code></pre>
+
+<p>分行然后每行前面添加 4 个空格:</p>
+
+<pre><code class="language-perl6">&quot;foobarberboorboozebazmeow&quot;.comb.rotor(10, :partial)&gt;&gt;.join&gt;&gt;.indent(4)&gt;&gt;.say
+#    foobarberb
+#    oorboozeba
+#    zmeow
+</code></pre>
+
+<p>但是这最好被写为:</p>
+
+<pre><code class="language-perl6">&quot;foobarberboorboozebazmeow&quot;.comb(10)».say
+</code></pre>
+
+<h4 id="注意缝隙">注意缝隙</h4>
+
+<p>假设你正在接受输入: 你得到一个单词, 它的法语翻译和它的西班牙语翻译, 等一堆单词。你只想输出特定语言, 所以我们需要在我们的列表中跳过某些项。 <code>.rotor</code>来拯救来了!</p>
+
+<p>指定一对儿(Pair)整数作为 rotor 的参数会让每个列表中含有 <strong>$key</strong> 个元素, 每个列表之间有 <strong>$value</strong> 个空隙。看例子更简单一些:</p>
+
+<pre><code class="language-perl6">say ^10 .rotor: 3 =&gt; 1, :partial
+&gt;&gt;&gt;OUTPUT: ((0 1 2) (4 5 6) (8 9))
+say ^10 .rotor: 2 =&gt; 2, :partial
+&gt;&gt;&gt;OUTPUT: ((0 1) (4 5) (8 9))
+</code></pre>
+
+<p>第一个例子我们把缝隙设置为 1, 第二个例子我们把缝隙增加为 2。</p>
+
+<pre><code class="language-perl6">enum &lt;English French Spanish&gt;;
+say join &quot; &quot;, &lt;Good Bon Buenos morning matin días&gt;[French..*].rotor: 1 =&gt; 2;
+&gt;&gt;&gt;OUTPUT: Bon matin
+</code></pre>
+
+<p>其中 <code>[French..*]</code>意思为 <code>[1..*]</code>, 例子中 French 被枚举化为整数 1。</p>
+
+<h4 id="重叠">重叠</h4>
+
+<p>当我们让缝隙变为负数的时候, 分段的列表中就会有元素重叠:</p>
+
+<pre><code class="language-perl6">say &lt;a a b c c c d&gt;.rotor: 2 =&gt; -1
+&gt;&gt;&gt;OUTPUT: ((a a) (a b) (b c) (c c) (c c) (c d))
+say &lt;a a b c c c d&gt;.rotor(2 =&gt; -1).map: {$_[0] eq $_[1] ?? &quot;same&quot; !! &quot;different&quot;}
+&gt;&gt;&gt;OUTPUT: (same different different same same different)
+</code></pre>
+
+<h4 id="全力以赴">全力以赴</h4>
+
+<p><code>.rotor</code>不单单只能接受单个 <strong>Int</strong> 值或 <strong>Pair</strong>, 你可以指定额外的 <strong>Int</strong> 或 <strong>Pairs</strong> 位置参数来把列表分成不同尺寸大小的子列表, 列表之间的缝隙也不同。下面以一个日志文件为例:</p>
+
+<pre><code class="language-perl6">IP: 198.0.1.22
+Login: suser
+Time: 1454017107
+Resource: /report/accounting/x23gs
+Input: x=42,y=32
+Output: success
+===================================================
+IP: 198.0.1.23
+Login: nanom
+Time: 1454027106
+Resource: /report/systems/boot
+Input: mode=standard
+Output: success
+</code></pre>
+
+<p>每段之间有一行双划线。</p>
+
+<p>我们想这样输出: <strong>Header</strong> 里包含 IP, Login, Time, Resource; <strong>Operation</strong> 里包含 Resource, Input, Output。</p>
+
+<pre><code class="language-perl6">for 'report.txt'.IO.lines».indent(4).rotor( 4 =&gt; -1, 3 =&gt; 1 ) -&gt; $head, $op {
+    .say for &quot;Header:&quot;,    |$head,
+             &quot;Operation:&quot;, |$op, '';
+}
+
+&gt;&gt;&gt;OUTPUT:
+    Header:
+        IP: 198.0.1.22
+        Login: suser
+        Time: 1454017107
+        Resource: /report/accounting/x23gs
+    Operation:
+        Resource: /report/accounting/x23gs
+        Input: x=42,y=32
+        Output: success
+
+    Header:
+        IP: 198.0.1.23
+        Login: nanom
+        Time: 1454027106
+        Resource: /report/systems/boot
+    Operation:
+        Resource: /report/systems/boot
+        Input: mode=standard
+        Output: success
+</code></pre>
+
+<p>先是 4 个元素一块, 缝隙为 -1(有重叠), 然后是 3 个元素一块, 缝隙为 1。这就在每个分段的列表中包含了 Resource 字段。因为 <code>$op</code> 和 <code>$head</code>是列表, 我们使用管道符号 <code>|</code>来展平列表。</p>
+
+<p>记住, 你提供给 <code>.rotor</code>方法的模式可以动态地生成! 这儿我们使用 sine 函数来生成:</p>
+
+<pre><code class="language-perl6">say ^92 .rotor(
+    (0.2, 0.4 ... 3).map: (10 * *.sin).Int # pattern we supply to .rotor
+).join: &quot;\n&quot;'
+&gt;&gt;&gt;OUTPUT:
+    0
+    1 2 3
+    4 5 6 7 8
+    9 10 11 12 13 14 15
+    16 17 18 19 20 21 22 23
+    24 25 26 27 28 29 30 31 32
+    33 34 35 36 37 38 39 40 41
+    42 43 44 45 46 47 48 49 50
+    51 52 53 54 55 56 57 58 59
+    60 61 62 63 64 65 66 67 68
+    69 70 71 72 73 74 75 76
+    77 78 79 80 81 82
+    83 84 85 86 87
+    88 89 90
+    91
+
+</code></pre>
+
+<p>再举个例子:</p>
+
+<p>我现在想要将同类的序列（字符串）进行合并，比如有这样一个文件：</p>
+
+<pre><code>&gt;seq-1A
+GACACAGTCACCCGAGCCT
+&gt;seq-1B
+TCAATCAATACTGAAGCGA
+&gt;seq-1C
+AAAACTAGTCGAGAAGAGAG
+&gt;seq-1D
+CGTGGAAAACTCCAG
+&gt;seq-2A
+TAAAAGGCGTTCATTGGATATTTC
+&gt;seq-2B
+ACTGGCAGTGCATCC
+</code></pre>
+
+<p>我想要进行合并 得到这样的结果：</p>
+
+<pre><code>&gt;seq-1
+GACACAGTCACCCGAGCCTTCAATCAATACTGAAGCGAAAAACTAGTCGAGAAGAGAGCGTGGAAAACTCCAG
+&gt;seq-2
+TAAAAGGCGTTCATTGGATATTTCACTGGCAGTGCATCC
+</code></pre>
+
+<p>使用 rotor 来实现:</p>
+
+<pre><code class="language-perl6">use v6;
+
+my %re;
+for 'input.txt'.IO.lines».rotor(2, :partial) -&gt; $header, $data {
+    my $key = $header;
+    $key ~~ s/&lt;upper&gt;$//;
+    %re{$key} ~= $data;
+}
+
+for %re.kv -&gt; $key, $value {
+    say &quot;$key\n$value&quot;;
+}
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/rotor/">rotor</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/%E5%88%97%E8%A1%A8%E6%93%8D%E4%BD%9C/">列表操作</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/" data-toggle="tooltip" data-placement="top" title="Grammar 笔记">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-07-15-perl6%E4%B8%AD%E7%9A%84role/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的 Role">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+
