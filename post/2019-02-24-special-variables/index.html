@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Perl 5 to Perl 6 guide - special variables</title>
+  <meta property="og:title" content="Perl 5 to Perl 6 guide - special variables" />
+  <meta name="twitter:title" content="Perl 5 to Perl 6 guide - special variables" />
+  <meta name="description" content="A comparison of special variables in Perl 5 and Perl 6">
+  <meta property="og:description" content="A comparison of special variables in Perl 5 and Perl 6">
+  <meta name="twitter:description" content="A comparison of special variables in Perl 5 and Perl 6">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2019-02-24-special-variables/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2019-02-24-special-variables/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Perl 5 to Perl 6 guide - special variables</h1>
+                
+                  
+                    <h2 class="post-subheading">A comparison of special variables in Perl 5 and Perl 6</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 25, 2019
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (1013 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="描述">描述</h2>
+
+<p>一个（希望）全面的 Perl 5 特殊变量列表及其 Perl 6 等价物，并在必要时记录它们之间的变化。</p>
+
+<h2 id="注意">注意</h2>
+
+<p>本文档试图引导读者从 Perl 5 中的特殊变量到 Perl 6 中的等效变量。有关 Perl 6 特殊变量的完整文档，请参阅每个变量的 Perl 6 文档。</p>
+
+<h2 id="特殊变量">特殊变量</h2>
+
+<h3 id="通用变量">通用变量</h3>
+
+<ul>
+<li>$ARG<br /></li>
+<li>$_<br /></li>
+</ul>
+
+<p>值得庆幸的是， <code>$_</code> 是 Perl 5 中的常规默认变量。Perl 6 的主要区别在于现在你可以在它身上调用方法。 例如，Perl 5 的 <code>say $_</code> 可以在 Perl 6 中以 <code>$_.say</code> 表示。 此外，因为它是默认变量，您甚至不需要使用变量名称。 前面的例子也可以 通过使用 <code>.say</code> 实现。</p>
+
+<ul>
+<li>@ARG<br /></li>
+<li>@_<br /></li>
+</ul>
+
+<p>由于 Perl 6 现在具有函数签名，您的参数可以去那里，而不是依赖于 <code>@_</code>。 事实上，如果你使用函数签名，使用 <code>@_</code> 会吐出你告诉它不能覆盖一个现有签名。</p>
+
+<p>但是，如果您不使用函数签名，则 <code>@_</code> 将包含您传递给函数的参数, 就像它在Perl 5中那样。再次，与 <code>$_</code> 一样 ，您可以在其上调用方法。 与 <code>$_</code> 不同，你不能假设 <code>@_</code> 为 这些方法的默认变量（即 <code>@_.shift</code> works， <code>.shift</code> 不 work）。</p>
+
+<ul>
+<li>$LIST_SEPARATOR</li>
+<li>$&rdquo;<br /></li>
+</ul>
+
+<p>目前，Perl 6 中没有与 List Separator 变量等效的设计文档 S28 在那里说 不是一个，所以你可能不想屏住呼吸。</p>
+
+<ul>
+<li>$PROCESS_ID<br /></li>
+<li>$PID<br /></li>
+<li>$$<br /></li>
+</ul>
+
+<p>在 Perl 6 中用 <code>$*PID</code> 替换 <code>$$</code></p>
+
+<ul>
+<li>$PROGRAM_NAME<br /></li>
+<li>$0<br /></li>
+</ul>
+
+<p>您可以通过 <code>$*PROGRAM-NAME</code> 访问 Perl 6 中的程序名称 。 注意： Perl 6 中的 <code>$0</code> 是保持正则表达式匹配中第一个捕获值的变量（即捕获变量现在从 <code>$0</code> 而不是 <code>$1</code> 开始 )。</p>
+
+<ul>
+<li>$REAL_GROUP_ID<br /></li>
+<li>$GID<br /></li>
+<li>$(<br />
+<br /></li>
+</ul>
+
+<p>在 Perl 6 中，组信息由 <code>$*GROUP</code> 处理 ，它包含一个 IntStr 类型的对象  因此 可以在字符串或数字上下文中使用。 因此，组ID通过 <code>+$*GROUP</code> 获得 ， 而组名通过 <code>~$*GROUP</code> 获得 。</p>
+
+<ul>
+<li>$EFFECTIVE_GROUP_ID<br /></li>
+<li>$EGID<br /></li>
+<li>$)<br /></li>
+</ul>
+
+<p>Perl 6目前似乎没有提供有效的组ID。</p>
+
+<ul>
+<li>$REAL_USER_ID<br /></li>
+<li>$UID<br /></li>
+<li>$&lt;<br /></li>
+</ul>
+
+<p>在 Perl 6 中，用户信息由 <code>$*USER</code>处理 ，后者持有 IntStr 类型的对象，因此可以 可以在字符串或数字上下文中使用（这类似于处理组信息的方式） 由 <code>$*GROUP</code> 对象）。 因此，用户ID通过 <code>+$*USER</code> 获得 ，而用户名通过 <code>~$*USER</code> 获得 。</p>
+
+<ul>
+<li>$EFFECTIVE_USER_ID<br /></li>
+<li>$EUID<br /></li>
+<li>$&gt;<br /></li>
+</ul>
+
+<p>Perl 6当前似乎没有提供有效的用户ID。</p>
+
+<ul>
+<li>$SUBSCRIPT_SEPARATOR<br /></li>
+<li>$SUBSEP<br /></li>
+<li>$;<br /></li>
+</ul>
+
+<p>Perl 6中不包含下标分隔符变量。坦率地说，如果你的Perl 5代码正在使用它，那就是 几乎可以肯定，真的很老。</p>
+
+<ul>
+<li>$a<br /></li>
+<li>$b<br /></li>
+</ul>
+
+<p><code>$a</code> 和 <code>$b</code> 在 Perl 6 中没有特殊含义 <code>.sort()</code> 不会将它们用于任何特殊的东西。 他们只是常规的旧变量。 通过使用具有更多功能的占位符参数的块来扩展此功能。 占位符变量是使用 <code>^twigil</code> 创建的 （例如 <code>$^z</code> 。它们可以在裸块中使用或在没有显式参数列表的子程序。 块的参数将分配给占位符 Unicode 顺序中的变量。 I. e。 即使变量出现在块中的顺序 （<code>$^q</code>, <code>$^z</code>, <code>$^a</code>） ，它们将按顺序分配 （<code>$^a</code>, <code>$^q</code>, <code>$^z</code>） 。 人机工程学：</p>
+
+<pre><code class="language-perl6">sort { $^a cmp $^z }, 1, 5, 6, 4, 2, 3;
+# OUTPUT: «(1 2 3 4 5 6)␤» 
+sort { $^g cmp $^a }, 1, 5, 6, 4, 2, 3;
+# OUTPUT: «(6 5 4 3 2 1)␤» 
+for 1..9 { say $^c, $^a, $^b; last }
+# OUTPUT: «312␤» 
+</code></pre>
+
+<p>有关占位符变量的更多信息，请参阅<a href="https://docs.perl6.org/language/variables#The_%5E_Twigil">此页面</a></p>
+
+<ul>
+<li>%ENV</li>
+</ul>
+
+<p>％ENV已被Perl 6中的％*ENV取代。请注意，此哈希的键可能不完全是 在Perl 5和Perl 6之间相同。例如， Perl 6的％ENV中缺少OLDPWD 。</p>
+
+<ul>
+<li>$OLD_PERL_VERSION<br /></li>
+<li>$]<br /></li>
+</ul>
+
+<p>Perl 6 的运行版本由 <code>$*PERL</code> 特殊变量保存，即一个对象。 正在运行的版本是 通过 <code>$*PERL.version</code> 检索 ，返回类似 <code>v6.c</code> 的内容 ; Perl 的完整字符串化版本解释器是通过 <code>~$*PERL</code> 获得的 ，它返回类似于 Perl 6（6.c）的内容 。</p>
+
+<ul>
+<li>$SYSTEM_FD_MAX<br /></li>
+<li>$^F<br /></li>
+</ul>
+
+<p>虽然设计文件（S28）表明这可能会变成 <code>$*SYS_FD_MAX</code> ，但这还没有b被实现。</p>
+
+<ul>
+<li>@F<br /></li>
+</ul>
+
+<p>[需要进一步研究]此时有点混乱。 设计文档S28表示 @F in Perl 5在Perl 6中被 @_ 取代 ，但目前还不清楚它是如何工作的。 另一方面，它是目前的 有点问题，因为 Perl 5 to Perl 6 Translation doc 指出 <code>-a</code> 和 <code>-F</code> 命令 - rakudo 尚未实现行开关。</p>
+
+<ul>
+<li>@INC<br /></li>
+</ul>
+
+<p>Perl 6 中不再存在。请使用“use lib”来操作要搜索的模块存储库。 该 最接近 <code>@INC</code> 的是 <code>$*REPO</code>。 但这与@INC完全不同 因为 Perl 6 的预编译功能。</p>
+
+<pre><code class="language-perl6"># Print out a list of compunit repositories 
+.say for $*REPO.repo-chain;
+</code></pre>
+
+<ul>
+<li>%INC<br /></li>
+</ul>
+
+<p>Perl 6 中不再存在。因为每个 Repository 都负责记住哪些模块已经装好了。 您可以获得所有已加载模块（编译单元）的列表，如下所示：</p>
+
+<pre><code class="language-perl6">use Test;
+use MyModule;
+say flat $*REPO.repo-chain.map(*.loaded); #-&gt; (MyModule Test) 
+</code></pre>
+
+<ul>
+<li>$INPLACE_EDIT<br /></li>
+<li>$^I<br /></li>
+</ul>
+
+<p>S28 建议使用 <code>$*INPLACE_EDIT</code>，但它尚不存在。</p>
+
+<ul>
+<li>$^M<br /></li>
+</ul>
+
+<p>S28 建议使用 <code>$*EMERGENCY_MEMORY</code>，但它尚不存在。</p>
+
+<ul>
+<li>$OSNAME<br /></li>
+<li>$^o<br /></li>
+</ul>
+
+<p>这有点不清楚。 它可能取决于你的意思是“操作系统的名称” 作为设计文档 <a href="https://design.perl6.org/S28.html">S28</a> 有三个不同的建议，所有建议都给出了不同的答案。</p>
+
+<p>目前有三个主要对象包含有关“运行环境”的信息：</p>
+
+<ul>
+<li><code>$*KERNEL</code> 提供有关正在运行的操作系统内核的信息;<br /></li>
+<li><code>$*DISTRO</code> 提供有关操作系统分发的信息;<br /></li>
+<li><code>$*VM</code> 提供有关 Perl 6 的运行后端机器的信息。<br /></li>
+</ul>
+
+<p>以上所有对象都有共同的方法：</p>
+
+<ul>
+<li><code>version</code> 提供该组件的版本号;<br /></li>
+<li><code>name</code> 提供该组件的助记符名称;<br /></li>
+<li><code>auth</code> 为该组件提供已知作者。<br /></li>
+</ul>
+
+<p>作为一个简短示例，以下代码打印有关上述所有组件的信息：</p>
+
+<pre><code class="language-perl6">for $*KERNEL, $*DISTRO, $*VM -&gt; $what {
+    say $what.^name;
+    say 'version '  ~ $what.version
+        ~ ' named ' ~ $what.name
+        ~ ' by '    ~ $what.auth;
+}
+ 
+# Kernel 
+# version 4.10.0.42.generic named linux by unknown 
+# Distro 
+# version 17.04.Zesty.Zapus named ubuntu by https://www.ubuntu.com/ 
+# VM 
+# version 2017.11 named moar by The MoarVM Team 
+</code></pre>
+
+<p>上面所有的 <code>Str</code> 方法产生了当前时间的信息的短版本名字 。</p>
+
+<p>所有对象都有其他方法，在尝试识别正确运行的实例时非常有用， 有关更多信息，请使用 <code>&lt;.^methods&gt;</code> 来内省以上所有内容。</p>
+
+<ul>
+<li>%SIG<br /></li>
+</ul>
+
+<p>没有等效变量。 要在接收信号时执行代码，您可以调用 <a href="https://docs.perl6.org/routine/signal#%28Supply%29_sub_signal">signal</a> 子程序，返回可以点击的 <code>Supply</code> 。</p>
+
+<pre><code class="language-perl6">$SIG{&quot;INT&quot;} = sub { say &quot;bye&quot;; exit }
+</code></pre>
+
+<pre><code class="language-perl6">signal(SIGINT).tap: { say &quot;bye&quot;; exit }; loop {}
+</code></pre>
+
+<p>或者，如果您有一个通用代码，想知道它得到了哪个信号：</p>
+
+<pre><code class="language-perl6">signal(SIGINT).tap: -&gt; $signal { say &quot;bye with $signal&quot;; exit }; loop {}
+</code></pre>
+
+<p>在事件驱动的情况下使用信号的更惯用的方式：</p>
+
+<pre><code class="language-perl6">react {
+    whenever signal(SIGINT) {
+        say &quot;goodbye&quot;;
+        done
+    }
+}
+</code></pre>
+
+<ul>
+<li>$BASETIME<br /></li>
+<li>$^T<br /></li>
+</ul>
+
+<p>在 Perl 6 中用 <code>$*INIT-INSTANT</code> 替换 。 与 Perl 5 不同，这不是自纪元以来的秒数，而是一个 <a href="https://docs.perl6.org/type/Instant">Instant</a> 对象，以原子秒计，带有分数。</p>
+
+<ul>
+<li>$PERL_VERSION<br /></li>
+<li>$^V<br /></li>
+</ul>
+
+<p>与 <code>$]</code> 一样，这已被 <code>$*PERL.version</code> 取代。</p>
+
+<ul>
+<li>${^WIN32_SLOPPY_STAT}<br /></li>
+</ul>
+
+<p>在 Perl 6 中没有类似的东西。</p>
+
+<ul>
+<li>$EXECUTABLE_NAME<br /></li>
+<li>$^X<br /></li>
+</ul>
+
+<p>这已被 <code>$*EXECUTABLE-NAME</code> 取代 。 请注意，还有 <code>$*EXECUTABLE</code> ，这在 Perl 6 中是一个 <code>IO</code> 对象。</p>
+
+<h3 id="与正则表达式相关的变量">与正则表达式相关的变量</h3>
+
+<h4 id="性能问题">性能问题</h4>
+
+<p>如下所示，  <code>$</code><code>,</code>$&amp;<code>和</code>$&rsquo;<code>从 Perl 6 中删除了，主要由</code>$/` 和它的变体代替， 消除它们，Perl 5 中的相关性能问题不适用。</p>
+
+<ul>
+<li><code>$&lt;digits&gt; ($1, $2, ...)</code><br /></li>
+</ul>
+
+<p>Perl 6 中的这些现有变量与 Perl 5 中的相同，除了它们现在从 <code>$0</code> 开始而不是 <code>$1</code>。 此外，它们是匹配变量 <code>$/</code> 中索引项的同义词。 例如  <code>$0</code> 相当于 <code>$/[0]，</code>$1<code>相当于</code>$/[1]`等。</p>
+
+<ul>
+<li>$MATCH<br /></li>
+<li>$＆<br /></li>
+</ul>
+
+<p><code>$/</code> 现在包含<a href="https://docs.perl6.org/type/Match">匹配</a>对象，因此 <code>$＆</code> 的 Perl 5 行为可以通过字符串化来获得，即 <code>~$/</code> 。 请注意，虽然 <code>$/.Str</code> 也可以工作， 但 <code>~$/</code> 目前是更常见的用法。</p>
+
+<ul>
+<li>${^MATCH}<br /></li>
+</ul>
+
+<p>由于以前的性能问题已经废除，因此 Perl 6 中没有使用此变量。</p>
+
+<ul>
+<li>$PREMATCH<br /></li>
+<li>$`<br /></li>
+</ul>
+
+<p>替换为 <code>$/.prematch</code> 。</p>
+
+<ul>
+<li>${^PREMATCH}<br /></li>
+</ul>
+
+<p>由于以前的性能问题已经废除，因此 Perl 6 中没有使用此变量。</p>
+
+<ul>
+<li>$POSTMATCH<br /></li>
+<li>$&rsquo;<br /></li>
+</ul>
+
+<p>替换为 <code>$/.postmatch</code>。</p>
+
+<ul>
+<li>${^POSTMATCH}<br /></li>
+</ul>
+
+<p>由于以前的性能问题已经废除，因此 Perl 6 中没有使用此变量。</p>
+
+<ul>
+<li>$LAST_PAREN_MATCH<br /></li>
+<li>$+<br /></li>
+</ul>
+
+<p>在 Perl 6 中不存在，但你可以使用 <code>$/[*-1].Str</code> 获得相同的信息。(<code>$/[*-1]</code> 将是匹配对象，而不是实际的字符串)。</p>
+
+<p>如果您想了解其工作原理，可以查看以下文档：</p>
+
+<ul>
+<li><a href="https://docs.perl6.org/routine/[%20]#language_documentation_Operators">[]routine</a> 例程<br /></li>
+<li><a href="https://docs.perl6.org/type/Whatever">Whatever</a><br /></li>
+</ul>
+
+<p>可能</p>
+
+<ul>
+<li><a href="https://design.perl6.org/S02.html#line_1126">https://design.perl6.org/S02.html#line_1126</a></li>
+</ul>
+
+<p>虽然设计文件并不总是最新的。</p>
+
+<ul>
+<li>$LAST_SUBMATCH_RESULT<br /></li>
+<li>$^N<br /></li>
+</ul>
+
+<p>S28 建议 <code>$*MOST_RECENT_CAPTURED_MATCH</code> ，但似乎没有任何实现的变量匹配 <code>$^N</code>.</p>
+
+<ul>
+<li>@LAST_MATCH_END<br /></li>
+<li>@+<br /></li>
+</ul>
+
+<p>与大多数正则表达式相关的变量一样，此功能至少部分地移至 Perl 6 中的 <code>$/</code>  变量。或者，在这种情况下，编号变量是索引的别名。 偏移是通过使用 <code>.to</code> 方法找到。 例如, 第一个偏移是 <code>$/[0].to</code> ，它与 <code>$0.to</code> 同义。 Perl 5 提供的 <code>$+[0]</code>  由 <code>$/.to</code> 提供。</p>
+
+<ul>
+<li>%LAST_PAREN_MATCH<br /></li>
+<li>%+<br /></li>
+</ul>
+
+<p>再一次，我们转移到 <code>$/</code>。 前面的 <code>$+{$match}</code> 是 <code>$/{$match}</code>。</p>
+
+<ul>
+<li>@LAST_MATCH_START<br /></li>
+<li>@-<br /></li>
+</ul>
+
+<p>类似于使用 <code>.to</code> 方法替换 <code>@+</code> ，使用 <code>$/</code> 上的 <code>.from</code> 方法替换 <code>@-</code> 及其变化。 第一个偏移是 <code>$/[0].from</code> 或等价的 <code>$0.from</code>。 Perl 5 的 <code>$-[0]</code> 是 <code>$/.from</code>。</p>
+
+<ul>
+<li>%LAST_MATCH_START<br /></li>
+<li>%-<br /></li>
+</ul>
+
+<p>与 <code>%+</code> 非常相似 ，使用 <code>%-{$match}</code> 将替换为 <code>$/{$match}</code> 。</p>
+
+<ul>
+<li>$LAST_REGEXP_CODE_RESULT<br /></li>
+<li>$^R</li>
+</ul>
+
+<p>没有等价物。</p>
+
+<ul>
+<li>${^RE_DEBUG_FLAGS}</li>
+</ul>
+
+<p>没有等价物。</p>
+
+<ul>
+<li>${^RE_TRIE_MAXBUF}<br /></li>
+</ul>
+
+<p>没有等价物。</p>
+
+<h4 id="与文件句柄相关的变量">与文件句柄相关的变量</h4>
+
+<ul>
+<li>$ARGV<br /></li>
+</ul>
+
+<p>读取行时当前文件的名称可以通过 <code>$*ARGFILES.path</code> 获得。</p>
+
+<ul>
+<li>@ARGV<br /></li>
+</ul>
+
+<p><code>@*ARGS</code> 包含命令行参数。</p>
+
+<ul>
+<li>ARGV<br /></li>
+</ul>
+
+<p>这被 <code>$*ARGFILES</code> 取代 。</p>
+
+<ul>
+<li>ARGVOUT<br /></li>
+</ul>
+
+<p>由于尚未实现 <code>-i</code> 命令行开关，因此还没有相当于 <code>ARGVOUT</code> 的功能 。</p>
+
+<ul>
+<li>$OUTPUT_FIELD_SEPARATOR<br /></li>
+<li>$OFS<br /></li>
+<li>$<br /></li>
+</ul>
+
+<p>目前没有明显的等价物</p>
+
+<ul>
+<li>$INPUT_LINE_NUMBER<br /></li>
+<li>$NR<br /></li>
+<li>$.<br /></li>
+</ul>
+
+<p>不存在直接替代品。</p>
+
+<p>迭代时使用 行方法 <a href="https://docs.perl6.org/type/IO::Path">IO::Path</a> 或 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handle</a> 类型，您可以在其上调用 <code>.kv</code> 方法 获取交错的索引和值列表（然后每个循环迭代2次）：</p>
+
+<pre><code class="language-perl6">for &quot;foo&quot;.IO.lines.kv -&gt; $n, $line {
+    say &quot;{$n + 1}: $line&quot;
+}
+# OUTPUT: 
+# 1: a 
+# 2: b 
+# 3: c 
+# 4: d 
+</code></pre>
+
+<p>对于 <a href="https://docs.perl6.org/type/IO::CatHandle">IO::CatHandle</a> 类型（其中 <code>$*ARGFILES</code> 是一个），你可以使用 <a href="https://docs.perl6.org/type/IO::CatHandle#method_on-switch">on-switch</a> hook 在句柄开关上重置行号，并手动递增。 另请参阅 <a href="https://modules.perl6.org/repo/IO::CatHandle::AutoLines">IO::CatHandle::AutoLines</a> 和 <a href="https://modules.perl6.org/repo/LN">LN</a> 模块简化此操作。</p>
+
+<ul>
+<li>$INPUT_RECORD_SEPARATOR<br /></li>
+<li>$RS<br /></li>
+<li>$/<br /></li>
+</ul>
+
+<p>这可以通过文件句柄上的 <code>.nl-in</code> 方法访问 。 例如。 <code>$*IN.nl-in</code>。</p>
+
+<ul>
+<li>$OUTPUT_RECORD_SEPARATOR<br /></li>
+<li>$ORS<br /></li>
+<li>$\<br /></li>
+</ul>
+
+<p>这可以通过文件句柄上的 <code>.nl-out</code> 方法访问 。 例如 <code>$*OUT.nl-out</code>。</p>
+
+<ul>
+<li>$OUTPUT_AUTOFLUSH<br /></li>
+<li>$|<br /></li>
+</ul>
+
+<p>没有全球替代品。 对于其他设置，TTY 句柄默认是无缓冲的 <a href="https://docs.perl6.org/routine/out-buffer">out-buffer</a> 设置为零或者使用 <code>:!out-buffer</code> 在特定的 <a href="https://docs.perl6.org/type/IO::Handle">IO::Handle</a>上和 open 一块使用 。</p>
+
+<ul>
+<li>${^LAST_FH}<br /></li>
+</ul>
+
+<p>在 Perl 6 中没有实现。</p>
+
+<h4 id="与格式相关的变量">与格式相关的变量</h4>
+
+<p>Perl 6中没有内置格式。</p>
+
+<h3 id="错误变量">错误变量</h3>
+
+<p>关于 Perl 6 中的错误变量如何变化，因此这里不再详细说明。</p>
+
+<p>引用 Perl 6 <a href="https://docs.perl6.org/language/variables#index-entry-%2524%21">docs</a> 中的说法，<code>$!</code> 是错误变量。</p>
+
+<p>与 Perl 6 的其余部分一样，它是一个根据类型返回各种内容的错误类型或<a href="https://docs.perl6.org/type/Exception">异常</a> 。</p>
+
+<p>特别是在处理<a href="https://docs.perl6.org/type/Exception">异常</a>时, <code>$!</code> 提供有关抛出异常的信息， 假设程序没有停止：</p>
+
+<pre><code class="language-perl6">try {
+    fail &quot;Boooh&quot;;
+    CATCH {
+        # within the catch block 
+        # the exception is placed into $_ 
+        say 'within the catch:';
+        say $_.^name ~ ' : ' ~ $_.message;
+        $_.resume; # do not abort 
+    }
+}
+ 
+# outside the catch block the exception is placed 
+# into $! 
+say 'outside the catch:';
+say $!.^name ~ ' : ' ~ $!.message;
+</code></pre>
+
+<p>以上代码生成以下输出</p>
+
+<pre><code class="language-perl6">within the catch:
+X::AdHoc : Boooh
+outside the catch:
+X::AdHoc : Boooh
+</code></pre>
+
+<p>因此，如前所述， <code>$!</code> 变量保存异常对象。</p>
+
+<h3 id="与解释器状态相关的变量">与解释器状态相关的变量</h3>
+
+<ul>
+<li>$COMPILING<br /></li>
+<li>$^C<br /></li>
+<li>$^D</li>
+</ul>
+
+<p>目前没有这些变量的等价物。</p>
+
+<ul>
+<li>${^ENCODING}<br /></li>
+</ul>
+
+<p>虽然在 Perl 5 中已弃用 ，但在 <code>$?ENC</code> 中 可能有某种等价物 ，但这还远未明朗。</p>
+
+<ul>
+<li>${^GLOBAL_PHASE}</li>
+</ul>
+
+<p>没有 Perl 6 等价物。</p>
+
+<ul>
+<li>$^H<br /></li>
+<li>%^H<br /></li>
+<li>${^OPEN}<br /></li>
+</ul>
+
+<p>在 Perl 6 中可能有也可能没有这些等价物，但它们是内部的，你不应该搞乱 与他们在一起 - 当然，如果您对 Perl 6 的理解需要您阅读本文，那么肯定不会阅读该文献&hellip;</p>
+
+<ul>
+<li>$PERLDB<br /></li>
+<li>$^P<br /></li>
+</ul>
+
+<p>Perl 6 调试器与 Perl 5 调试器相似的可能性最小，此时此处也是如此，似乎不等于这个变量。</p>
+
+<ul>
+<li>${^TAINT}<br /></li>
+</ul>
+
+<p>S28 声称这个变量是“待定”的。 目前不在 Perl 6 中。</p>
+
+<ul>
+<li>${^UNICODE}<br /></li>
+<li>${^UTF8CACHE}<br /></li>
+<li>${^UTF8LOCALE}<br /></li>
+</ul>
+
+<p>这些与 Unicode 相关的变量似乎不存在于 Perl 6 中，但是 - 也许？ - 可能在某处有 <code>$?ENC</code> 类似物吗？  然而，这完全未经证实。</p>
+
+<h3 id="弃用和删除变量">弃用和删除变量</h3>
+
+<p>不言而喻，因为已经从 Perl 5 中删除了这些，所以应该没有必要告诉你如何在 Perl 6 中使用它们。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2019-02-25-python-to-perl6-nutshell/" data-toggle="tooltip" data-placement="top" title="Python to Perl6 - nutshell">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+
