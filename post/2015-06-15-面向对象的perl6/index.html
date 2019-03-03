@@ -8,24 +8,9 @@
   <title>面向对象的 Perl 6</title>
   <meta property="og:title" content="面向对象的 Perl 6" />
   <meta name="twitter:title" content="面向对象的 Perl 6" />
-  <meta name="description" content="Perl 6 有很多预先定义好的类型，这些类型可以归为 2 类：普通类型和原生类型。原生类型用于底层类型（例如 uint 64）。原生类型没有和对象同样的功能，尽管你可以在它们身上调用方法， 它们还是被包装成普通的对象。所有你能存储到变量中的东西要么是一个原生的 value， 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。
-使用对象 方法可以有参数， 但是方法名和参数列表之间不可以有空格：
-say &quot;abc&quot;.uc; # ^^^ 不带参数的方法调用 my @words = $string.comb(/\w&#43;/); # ^^^^^^^^^^^^ 带一个参数的方法调用  另外一种方法调用的语法将方法名和参数列表用一个冒号分开(冒号紧跟方法名, 中间不能有空格):
-say @*INC.join: &#39;:&#39;;  方法能返回一个可变容器, 这种情况下 你可以赋值给方法调用的返回值.
-$*IN.input-line-separator = &quot;\r\n&quot;;  类型对象 Types本身就是对象 ，你可以使用类型的名字获取 type object :
-my $int-type-obj = Int;  你可以通过调用 WHAT 方法查看任何对象的 type object(它实际上是一个方法形式的macro):
-my $int-type-obj = 1.WHAT;  使用 === 操作符可以比较 类型对象的相等性：
-sub f(Int $x) { if $x.">
-  <meta property="og:description" content="Perl 6 有很多预先定义好的类型，这些类型可以归为 2 类：普通类型和原生类型。原生类型用于底层类型（例如 uint 64）。原生类型没有和对象同样的功能，尽管你可以在它们身上调用方法， 它们还是被包装成普通的对象。所有你能存储到变量中的东西要么是一个原生的 value， 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。
-使用对象 方法可以有参数， 但是方法名和参数列表之间不可以有空格：
-say &quot;abc&quot;.uc; # ^^^ 不带参数的方法调用 my @words = $string.comb(/\w&#43;/); # ^^^^^^^^^^^^ 带一个参数的方法调用  另外一种方法调用的语法将方法名和参数列表用一个冒号分开(冒号紧跟方法名, 中间不能有空格):
-say @*INC.join: &#39;:&#39;;  方法能返回一个可变容器, 这种情况下 你可以赋值给方法调用的返回值.
-$*IN.input-line-separator = &quot;\r\n&quot;;  类型对象 Types本身就是对象 ，你可以使用类型的名字获取 type object :
-my $int-type-obj = Int;  你可以通过调用 WHAT 方法查看任何对象的 type object(它实际上是一个方法形式的macro):
-my $int-type-obj = 1.WHAT;  使用 === 操作符可以比较 类型对象的相等性：
-sub f(Int $x) { if $x.">
-  <meta name="twitter:description" content="Perl 6 有很多预先定义好的类型，这些类型可以归为 2 类：普通类型和原生类型。原生类型用于底层类型（例如 uint 64）。原生类型没有和对象同样的功能，尽管你可以在它们身上调用方法， 它们还是被包装成普通的对象。所有你能存储到变量中的东西要么是一个原生的 value， 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。
-使用对象 方法可以有参数， 但是方法名和参数列表之间不 …">
+  <meta name="description" content="Object orientation in Perl 6">
+  <meta property="og:description" content="Object orientation in Perl 6">
+  <meta name="twitter:description" content="Object orientation in Perl 6">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -215,6 +200,10 @@ if (!doNotTrack) {
             <div class="post-heading">
               <h1>面向对象的 Perl 6</h1>
                 
+                  
+                    <h2 class="post-subheading">Object orientation in Perl 6</h2>
+                  
+                
                 
                   <span class="post-meta">
   
@@ -223,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1111 words)
+  <i class="fa fa-clock-o"></i> 14 minutes (2823 words)
   
   
 </span>
@@ -244,41 +233,79 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p>Perl 6 有很多预先定义好的类型，这些类型可以归为 2 类：<code>普通类型</code>和<code>原生类型</code>。原生类型用于<code>底层类型</code>（例如 uint 64）。原生类型没有和对象同样的功能，尽管你可以在它们身上调用方法， 它们还是被包装成普通的对象。所有你能存储到变量中的东西要么是一个原生的 value， 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。</p>
+<p><a href="https://docs.perl6.org/language/objects">https://docs.perl6.org/language/objects</a></p>
+
+<p>Perl 6 为<a href="https://en.wikipedia.org/wiki/Object-oriented_programming">面向对象编程(OOP)</a>提供强大支持。尽管 Perl 6 允许程序员以多种范式进行编程，但面向对象编程是该语言的核心。</p>
+
+<p>Perl 6 带有丰富的预定义类型，可分为两类：常规类型和<a href="https://docs.perl6.org/language/nativetypes">原生类型</a>。所有你能存储到变量中的东西要么是一个原生的 value, 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。</p>
+
+<p>原生类型用于<code>底层类型</code>（例如 <code>uint64</code>）。尽管原生类型没有和对象同样的功能，如果在其上调用方法，它们也会自动装入普通对象。</p>
+
+<p>一切不是原生值的东西都是一个对象。对象确实允许<a href="https://en.wikipedia.org/wiki/Object-oriented_programming#Inheritance_and_behavioral_subtyping">继承</a>和<a href="https://en.wikipedia.org/wiki/Object-oriented_programming#Encapsulation">封装</a>。</p>
 
 <h2 id="使用对象">使用对象</h2>
 
-<p>方法可以有参数， 但是方法名和参数列表之间不可以有空格：</p>
+<p>要在对象上调用方法，请在对象名上添加一个点，然后添加方法名称：</p>
 
-<pre><code class="language-perl6">say &quot;abc&quot;.uc;                   
-#        ^^^ 不带参数的方法调用
-my @words = $string.comb(/\w+/);
-#                  ^^^^^^^^^^^^ 带一个参数的方法调用
+<pre><code class="language-perl6">say &quot;abc&quot;.uc;
+# OUTPUT: «ABC␤» 
 </code></pre>
 
-<p>另外一种方法调用的语法将方法名和参数列表用一个冒号分开(冒号紧跟方法名, 中间不能有空格):</p>
+<p>这将在 &ldquo;abc&rdquo; 上调用 <code>uc</code> 方法, 这是一个 <code>Str</code> 类型的对象。要为方法提供参数, 请在方法后面的括号内添加参数。</p>
 
-<pre><code class="language-perl6">say @*INC.join: ':';
+<pre><code class="language-perl6">my $formatted-text = &quot;Fourscore and seven years ago...&quot;.indent(8);
+say $formatted-text;
+# OUTPUT: «        Fourscore and seven years ago...
+» 
 </code></pre>
 
-<p>方法能返回一个可变容器, 这种情况下 你可以赋值给方法调用的返回值.</p>
+<p><code>$formatted-text</code> 现在包含上面的文本，但缩进了8个空格。</p>
 
-<pre><code class="language-perl6">$*IN.input-line-separator = &quot;\r\n&quot;;
+<p>多个参数由逗号分隔：</p>
+
+<pre><code class="language-perl6">my @words = &quot;Abe&quot;, &quot;Lincoln&quot;;
+@words.push(&quot;said&quot;, $formatted-text.comb(/\w+/));
+say @words;
+# OUTPUT: «[Abe Lincoln said (Fourscore and seven years ago)]␤» 
 </code></pre>
+
+<p>类似地，可以通过在方法后放置冒号并使用逗号分隔参数列表来指定多个参数：</p>
+
+<pre><code class="language-perl6">say @words.join('--').subst: 'years', 'DAYS';
+# OUTPUT: «Abe--Lincoln--said--Fourscore and seven DAYS ago␤» 
+</code></pre>
+
+<p>如果要在没有括号的情况下传递参数，则必须在方法之后添加一个 <code>:</code>，因此没有冒号或括号的方法调用明确地是没有参数列表的方法调用：</p>
+
+<pre><code class="language-perl6">say 4.log:   ; # OUTPUT: «1.38629436111989␤» ( natural logarithm of 4 ) 
+say 4.log: +2; # OUTPUT: «2␤» ( base-2 logarithm of 4 ) 
+say 4.log  +2; # OUTPUT: «3.38629436111989␤» ( natural logarithm of 4, plus 2 )
+</code></pre>
+
+<p>许多看起来不像方法调用的操作（例如，智能匹配或将对象插值到字符串中）可能会导致方法调用。</p>
+
+<p>方法可以返回可变容器，在这种情况下，您可以分配方法调用的返回值。这是使用对象的可读写属性的方式：</p>
+
+<pre><code class="language-perl6">$*IN.nl-in = &quot;\r\n&quot;;
+</code></pre>
+
+<p>在这里，我们在 <code>$*IN</code> 对象上调用 <code>nl-in</code> 方法, 不带参数，并使用 <code>=</code> 运算符将其赋值给它返回的容器。</p>
+
+<p>所有对象都支持类<a href="https://docs.perl6.org/type/Mu">Mu</a>的方法，它是层次结构的根。所有对象都来自 <code>Mu</code>。</p>
 
 <h2 id="类型对象">类型对象</h2>
 
-<p>Types本身就是对象 ，你可以使用类型的名字获取 type object :</p>
+<p>类型本身是对象，你可以使用类型的名字获取类型对象:</p>
 
 <pre><code class="language-perl6">my $int-type-obj = Int;
 </code></pre>
 
-<p>你可以通过调用 WHAT 方法查看任何对象的 type object(它实际上是一个方法形式的macro):</p>
+<p>你可以通过调用 <code>WHAT</code> 方法查看任何对象的 type object(它实际上是一个方法形式的宏):</p>
 
 <pre><code class="language-perl6">my $int-type-obj = 1.WHAT;
 </code></pre>
 
-<p>使用 === 操作符可以比较 类型对象的相等性：</p>
+<p>使用 <a href="https://docs.perl6.org/routine/===">===</a> 恒等运算符可以比较类型对象(<a href="https://docs.perl6.org/type/Mu">Mu</a>除外)的相等性：</p>
 
 <pre><code class="language-perl6">sub f(Int $x) {
     if $x.WHAT === Int {
@@ -290,7 +317,17 @@ my @words = $string.comb(/\w+/);
 }
 </code></pre>
 
-<p>子类型可以使用 smart-matching来检查：</p>
+<p>虽然，在大多数情况下，<a href="https://docs.perl6.org/routine/isa"><code>.isa</code></a>方法就足够了：</p>
+
+<pre><code class="language-perl6">sub f($x) {
+    if $x.isa(Int) {
+        ...
+    }
+    ...
+}
+</code></pre>
+
+<p>子类型可以使用 <a href="https://docs.perl6.org/language/operators#infix_~~">smartmatching</a> 来检查：</p>
 
 <pre><code class="language-perl6">if $type ~~ Real {
     say '$type contains Real or a subtype thereof';
@@ -299,19 +336,19 @@ my @words = $string.comb(/\w+/);
 
 <h2 id="类">类</h2>
 
-<p>使用 class 关键字进行类的定义：</p>
+<p>使用 <code>class</code> 关键字进行类的声明，通常后跟类名：</p>
 
 <pre><code class="language-perl6">class Journey {
 }
 </code></pre>
 
-<p>声明一个词法作用域的类：</p>
+<p>此声明会创建类型对象并将其安装在名字 <code>Journey</code> 下的当前包和当前词法作用域中。您还可以通过词法声明类</p>
 
 <pre><code class="language-perl6">my class Journey {
 }
 </code></pre>
 
-<p>这在嵌套类中很有用。</p>
+<p>这限制了它们对当前词法范围的可见性，如果该类是嵌套在模块或另一个类中的实现细节，这可能很有用。</p>
 
 <h2 id="属性">属性</h2>
 
@@ -325,7 +362,7 @@ my @words = $string.comb(/\w+/);
 }
 </code></pre>
 
-<p>然而, 没有像这样的公共(甚至保护属性)属性, 不过有一种方式能<code>自动生成访问方法</code>: 使用 <code>.</code>代替 <code>!</code> twigil 。(那个 <code>.</code> 应该让你想起了<strong>方法调用</strong>).</p>
+<p>虽然没有公共(甚至保护属性)属性, 不过有一种方式可以自动生成访问器方法: 使用 <code>.</code> twigil 代替 <code>!</code>  twigil 。(那个 <code>.</code> 应该让你想起了<strong>方法调用</strong>)。</p>
 
 <pre><code class="language-perl6">class Journey {
     has $.origin;
@@ -335,7 +372,7 @@ my @words = $string.comb(/\w+/);
 }
 </code></pre>
 
-<p>这默认提供了一种<strong>只读</strong>的取值方法, 为了允许更改属性, 要添加 <code>is rw</code> 特性:</p>
+<p>这默认提供<strong>只读</strong>访问器, 为了允许更改属性, 要添加 <code>is rw</code> 特性:</p>
 
 <pre><code class="language-perl6">class Journey {
     has $.origin;
@@ -345,7 +382,21 @@ my @words = $string.comb(/\w+/);
 }
 </code></pre>
 
-<p>因为类默认继承于构造器 <code>Mu</code>, 我们也要求类为我们生成一些<strong>存取方法</strong>.</p>
+<p>现在，<code>Journey</code>对象创建之后，它的 <code>.origin</code>，<code>.destination</code> 和 <code>.notes</code> 都能从类的外部访问，但只有 <code>.notes</code> 可以被修改。</p>
+
+<p>如果在没有某些属性（例如 <code>origin</code> 或 <code>destination</code>）的情况下实例化对象，我们可能无法获得想要的结果。要防止这种情况，请提供默认值或通过使用<a href="https://docs.perl6.org/routine/is%20required">is required</a> trait 来标记属性以确保在对象创建时设置属性。</p>
+
+<pre><code class="language-perl6">class Journey {
+    # error if origin is not provided 
+    has $.origin is required;
+    # set the destination to Orlando as default (unless that is the origin!) 
+    has $.destination = self.origin eq 'Orlando' ?? 'Kampala' !! 'Orlando';
+    has @!travelers;
+    has $.notes is rw;
+}
+</code></pre>
+
+<p>因为类从 <code>Mu</code> 继承了一个默认的构造器, 并且我们也要求类为我们生成一些<strong>访问器方法</strong>.</p>
 
 <pre><code class="language-perl6"># 创建一个新的类的实例.
 my $vacation = Journey.new(
@@ -353,17 +404,17 @@ my $vacation = Journey.new(
     destination =&gt; 'Switzerland',
     notes       =&gt; 'Pack hiking gear!'
 );
-# 使用存取器; 这打印出 Sweden.
+# 使用访问器; 这打印出 Sweden.
 say $vacation.origin;
 # 使用 rw 存取器来更改属性的值.
 $vacation.notes = 'Pack hiking gear and sunglasses!';
 </code></pre>
 
-<p>注意, 默认的构造器只会设置含有存取器方法的属性.</p>
+<p>请注意，虽然默认构造函数可以初始化只读属性，但它只会设置具有访问器方法的属性。也就是说，即使您传递<code>travelers =&gt; [&quot;Alex&quot;, &quot;Betty&quot;]</code>给默认构造函数，<code>@!travelers</code>也不会初始化该属性。</p>
 
 <h2 id="方法">方法</h2>
 
-<p>使用 <code>method</code> 关键字定义类中的方法：</p>
+<p>使用 <code>method</code> 关键字在类的 body 中声明方法：</p>
 
 <pre><code class="language-perl6">class Journey {
     has $.origin;
@@ -386,9 +437,65 @@ $vacation.notes = 'Pack hiking gear and sunglasses!';
 }
 </code></pre>
 
-<p>方法可以有签名, 就像子例程一样。 方法中能访问对象的属性,  并且总是能使用 <code>!</code> twigil, 即使属性是用 <code>.</code> twigil 声明的. 这是因为, . twigil 是在那个位置上使用 ! twigil 声明了属性, 然后额外又添加了一个取值器方法.</p>
+<p>方法可以有签名, 就像子例程一样。 属性可以在方法中使用，并且可以始终与<code>!</code>twigil 一起使用, 即使属性是用 <code>.</code> twigil 声明的。 这是因为 <code>.</code> twigil 声明了 <code>!</code> twigil 并生成一个访问方法。</p>
 
-<p>即 <code>has $.attribute</code> 等价于:</p>
+<p>看看上面的代码，在方法 <code>describe</code> 中使用 <code>$!origin</code> 和 <code>$.origin</code> 有一个微妙但重要的区别。<code>$!origin</code> 是一种廉价且明显的属性查找。<code>$.origin</code> 是一个方法调用，因此可以在子类中重写。只在你想要允许覆盖时使用 <code>$.origin</code>。</p>
+
+<p>与子例程不同，其他命名参数不会产生编译时或运行时错误。这允许通过<a href="https://docs.perl6.org/language/functions#Re-dispatching">重新分派</a>来链接方法。</p>
+
+<p>你可以编写自己的访问器来覆盖任何或所有自动生成的访问器。</p>
+
+<pre><code class="language-perl6">my $ⲧ = &quot; &quot; xx 4; # A tab-like thing 
+class Journey {
+    has $.origin;
+    has $.destination;
+    has @.travelers;
+    has Str $.notes is rw;
+ 
+    multi method notes() { &quot;$!notes\n&quot; };
+    multi method notes( Str $note ) { $!notes ~= &quot;$note\n$ⲧ&quot; };
+ 
+    method Str { &quot;⤷ $!origin\n$ⲧ&quot; ~ self.notes() ~ &quot;$!destination ⤶\n&quot; };
+}
+ 
+my $trip = Journey.new( :origin&lt;Here&gt;, :destination&lt;There&gt;,
+                        travelers =&gt; &lt;þor Freya&gt; );
+ 
+$trip.notes(&quot;First steps&quot;);
+notes $trip: &quot;Almost there&quot;;
+print $trip;
+ 
+# OUTPUT: 
+#⤷ Here 
+#       First steps 
+#       Almost there 
+# 
+#There ⤶ 
+</code></pre>
+
+<p>声明的multi方法 <code>notes</code> 使用不同的签名进行读写，<code>notes</code> 覆盖了 <code>$.notes</code> 声明中隐含的自动生成的方法。</p>
+
+<p>请注意，在 <code>notes $trip: &quot;Almost there&quot;</code> 中我们使用了间接调用语法，它首先放置方法名称，然后放置对象，然后用冒号分隔参数：<code>method invocant: arguments</code>。只要感觉比经典的句点和括号更自然，我们就可以使用这种语法。它的工作原理完全相同。</p>
+
+<p>可以在运行时使用<code>.&quot;&quot;</code>运算符解析方法名称。</p>
+
+<pre><code class="language-perl6">class A { has $.b };
+my $name = 'b';
+A.new.&quot;$name&quot;().say;
+# OUTPUT: «(Any)␤» 
+</code></pre>
+
+<p>相对于先前的<a href="https://docs.perl6.org/language/objects#Attributes">属性</a>部分，过去用于更新 <code>$.notes</code> 的语法在本节已改变。代替赋值：</p>
+
+<pre><code class="language-perl6">$vacation.notes = 'Pack hiking gear and sunglasses!';
+</code></pre>
+
+<p>我们现在做一个方法调用:</p>
+
+<pre><code class="language-perl6">$trip.notes(&quot;First steps&quot;);
+</code></pre>
+
+<p>覆盖默认的自动生成的访问器意味着它在返回赋值时提供可变容器不再可用。方法调用是将属性的更新添加到计算和逻辑的首选方法。许多现代语言可以通过使用 “setter” 方法重载赋值来更新属性。虽然 Perl 6 可以为此目的使用 <a href="https://github.com/perl6/roast/blob/master/S12-attributes/mutators.t"><code>Proxy</code></a> 对象重载赋值运算符，但是目前不鼓励使用复杂逻辑重载赋值运算符来设置属性作为<a href="https://6guts.wordpress.com/2016/11/25/perl-6-is-biased-towards-mutators-being-really-simple-thats-a-good-thing/">弱面向对象设计</a>。</p>
 
 <pre><code class="language-perl6">    has $!attribute
     method attribute() { ... }
@@ -409,35 +516,159 @@ $vacation.notes = 'Pack hiking gear and sunglasses!';
 }
 </code></pre>
 
-<p>在 describe 方法中使用 $!origin 和 $.origin ,这之间有一个微小但很重要的差别.  $!origin 只是属性的简单查看. 它是廉价的, 并且你知道它是类中声明的属性. $.origin 真正的是一个方法调用, 因此能在子类中被覆写. 如果你真的显式地要覆写它才使用 $.origin 吧.</p>
+<h2 id="类和实例方法">类和实例方法</h2>
+
+<p>方法的签名可以有一个<em>调用者</em>(invocant)作为第一个参数, 后跟一个冒号，这允许该方法引用它被调用的对象。</p>
+
+<pre><code class="language-perl6">class Foo {
+    method greet($me: $person) {
+        say &quot;Hi, I am $me.^name(), nice to meet you, $person&quot;;
+    }
+}
+Foo.new.greet(&quot;Bob&quot;);    # OUTPUT: «Hi, I am Foo, nice to meet you, Bob␤» 
+</code></pre>
+
+<p>在方法签名中提供调用者还允许通过使用<a href="https://docs.perl6.org/type/Signature#Type_constraints">类型约束</a>将方法定义为类方法或对象方法。<code>::?CLASS</code> 变量可用于在编译时提供类名，与 <code>:U</code>（对于类方法）或 <code>:D</code>（对于实例方法）结合使用。</p>
+
+<pre><code class="language-perl6">class Pizza {
+    has $!radius = 42;
+    has @.ingredients;
+ 
+    # 类方法: construct from a list of ingredients 
+    method from-ingredients(::?CLASS:U $pizza: @ingredients) {
+        $pizza.new( ingredients =&gt; @ingredients );
+    }
+ 
+    # 实例方法 
+    method get-radius(::?CLASS:D:) { $!radius }
+}
+my $p = Pizza.from-ingredients: &lt;cheese pepperoni vegetables&gt;;
+say $p.ingredients;     # OUTPUT: «[cheese pepperoni vegetables]␤» 
+say $p.get-radius;      # OUTPUT: «42␤» 
+say Pizza.get-radius;   # This will fail. 
+CATCH { default { put .^name ~ &quot;:\n&quot; ~ .Str } };
+# OUTPUT: «X::Parameter::InvalidConcreteness:␤ 
+#          Invocant of method 'get-radius' must be 
+#          an object instance of type 'Pizza', 
+#          not a type object of type 'Pizza'. 
+#          Did you forget a '.new'?» 
+</code></pre>
+
+<p>通过使用<a href="https://docs.perl6.org/syntax/multi">multi</a>声明符，方法既可以是类方法也可以是对象方法：</p>
+
+<pre><code class="language-perl6">class C {
+    multi method f(::?CLASS:U:) { say &quot;class method&quot;  }
+    multi method f(::?CLASS:D:) { say &quot;object method&quot; }
+}
+C.f;       # OUTPUT: «class method␤» 
+C.new.f;   # OUTPUT: «object method␤» 
+</code></pre>
 
 <h2 id="self">self</h2>
 
-<p>在方法内部, self 是可用的, 它被绑定到调用者, 例如方法调用的对象. self 能用于在调用者上调用深层的方法, 例如:</p>
+<p>在方法内部，术语 <code>self</code> 可用并绑定到调用对象。<code>self</code> 可以用来调用调用者的其他方法，包括构造函数：</p>
 
-<h3 id="私有方法">私有方法</h3>
-
-<p>在方法的名字前面引入一个感叹号, 这个方法就变为类的私有方法, 这个方法只在内的内部使用, 不能在其它任何地方调用.</p>
-
-<p>私有方法的调用要使用感叹号而非点号:</p>
-
-<pre><code class="language-perl6">method !do-something-private($x) {
-    ...
-}
-method public($x) {
-    if self.precondition {
-        self!do-something--private(2 * $x)
-    }
+<pre><code class="language-perl6">class Box {
+  has $.data;
+ 
+  method make-new-box-from() {
+      self.new: data =&gt; $!data;
+  }
 }
 </code></pre>
 
-<p>私有方法不能被子类继承.</p>
+<p><code>self</code> 也可以用在类方法或实例方法中，但要注意尝试从另一个方法调用一种类型的方法：</p>
+
+<pre><code class="language-perl6">class C {
+    method g()            { 42     }
+    method f(::?CLASS:U:) { self.g }
+    method d(::?CLASS:D:) { self.f }
+}
+C.f;        # OUTPUT: «42␤» 
+C.new.d;    # This will fail. 
+CATCH { default { put .^name ~ &quot;:\n&quot; ~ .Str } };
+# OUTPUT: «X::Parameter::InvalidConcreteness:␤ 
+#          Invocant of method 'f' must be a type object of type 'C', 
+#          not an object instance of type 'C'.  Did you forget a 'multi'?» 
+</code></pre>
+
+<p><code>self</code> 也可以与属性一起使用，只要它们具有访问器。<code>self.a</code> 将为声明为 <code>has $.a</code> 的属性调用访问器。然而，<code>self.a</code> 和 <code>$.a</code> 之间存在差异，因为后者将项化;  <code>$.a</code> 将等同于 <code>self.a.item</code> 或 <code>$(self.a)</code>。</p>
+
+<pre><code class="language-perl6">class A {
+    has $.x = (1, 2, 3);
+    method b() { .say for self.x; .say for $.x }
+};
+A.new.b; # OUTPUT: «1␤2␤3␤(1 2 3)␤» 
+</code></pre>
+
+<p>方法调用的冒号语法仅支持使用方法调用<code>self</code>，而不支持快捷方式。</p>
+
+<p>请注意，如果 <a href="https://docs.perl6.org/type/Mu">Mu</a> 中的相关方法 <code>bless</code>，<code>CREATE</code> 没有重载，<code>self</code> 将指向这些方法的类型对象。</p>
+
+<p>在另一方面，在初始化的不同阶段，在实例上调用子方法 <code>BUILD</code> 和 <code>TWEAK</code>。子类中同名的子方法尚未运行，因此你不应该依赖这些方法中的潜在虚方法调用。</p>
+
+<h3 id="私有方法">私有方法</h3>
+
+<p>方法名前带有感叹号的方法不能从定义类之外的任何地方调用; 这些方法是私有的，因为它们在声明它们的类之外是不可见的。使用感叹号而不是点号调用私有方法：</p>
+
+<pre><code class="language-perl6">class FunMath {
+    has $.value is required;
+    method !do-subtraction( $num ) {
+        if $num ~~ Str {
+            return $!value + (-1 * $num.chars);
+        }
+        return $!value + (-1 * $num);
+    }
+    method minus( $minuend: $subtrahend ) {
+        # invoking the private method on the explicit invocant 
+        $minuend!do-subtraction($subtrahend);
+    }
+}
+my $five = FunMath.new(value =&gt; 5);
+say $five.minus(6);         # OUTPUT: «-1␤» 
+ 
+say $five.do-subtraction(6);
+CATCH { default { put .^name ~ &quot;:\n&quot; ~ .Str } }
+# OUTPUT: «X::Method::NotFound: 
+# No such method 'do-subtraction' for invocant of type 
+# 'FunMath'. Did you mean '!do-subtraction'?␤» 
+</code></pre>
+
+<p>私有方法不能被子类继承。</p>
 
 <h3 id="子方法">子方法</h3>
 
-<p>submethod  是不会被子类继承的公开方法。从词干名来看它们在语义上与子例程类似。</p>
+<p>子方法是子类不继承的公共方法。该名称源于它们在语义上与子例程类似的事实。</p>
 
-<p>Submethods 对于对象构建和解构任务很有用。</p>
+<p>子方法对于对象构造和销毁任务以及特定于特定类型的任务非常有用，因此子类型必须重写它们。</p>
+
+<p>例如，<a href="https://docs.perl6.org/type/Mu#method_new">默认方法 new</a> 在<a href="https://docs.perl6.org/language/objects#Inheritance">继承</a>链中的每个类上调用 submethod <code>BUILD</code>:</p>
+
+<pre><code class="language-perl6">class Point2D {
+    has $.x;
+    has $.y;
+ 
+    submethod BUILD(:$!x, :$!y) {
+        say &quot;Initializing Point2D&quot;;
+    }
+}
+ 
+class InvertiblePoint2D is Point2D {
+    submethod BUILD() {
+        say &quot;Initializing InvertiblePoint2D&quot;;
+    }
+    method invert {
+        self.new(x =&gt; - $.x, y =&gt; - $.y);
+    }
+}
+ 
+say InvertiblePoint2D.new(x =&gt; 1, y =&gt; 2);
+# OUTPUT: «Initializing Point2D␤» 
+# OUTPUT: «Initializing InvertiblePoint2D␤» 
+# OUTPUT: «InvertiblePoint2D.new(x =&gt; 1, y =&gt; 2)␤» 
+</code></pre>
+
+<p>另请参见：<a href="https://docs.perl6.org/language/objects#Object_construction">Object_construction</a>。</p>
 
 <h2 id="继承">继承</h2>
 
@@ -446,44 +677,74 @@ method public($x) {
 <pre><code class="language-perl6">class Child is Parent1 is Parent2 { }
 </code></pre>
 
-<p>如果在子类中调用一个方法, 但是子类没有提供那个方法, 就会调用父类中同名的方法, 如果父类中存在那个方法的话. 父类被询问的顺序就叫做方法解析顺序(MRO). Perl 6 使用 C3 方法解析顺序. 你可以通过调用一个类型的元类型方法得知这个类型的 MRO.</p>
+<p>如果在子类上调用一个方法, 但是子类没有提供该方法, 则调用其中一个父类中同名方法(如果存在)。 父类被查询的顺序就叫做<em>方法解析顺序(MRO)</em>. Perl 6 使用 <a href="https://en.wikipedia.org/wiki/C3_linearization">C3 方法解析顺序</a>。 你可以通过调用类型的元类型方法得知这个类型的 MRO.</p>
 
 <pre><code class="language-perl6">say Parcel.^mro;    # Parcel() Cool() Any() Mu()
 </code></pre>
 
-<p>如果一个类没有指定它的父类, 就假定默认为 <code>Any</code>. 所有的类都直接或间接的派生于 Mu-类型层级的根.</p>
+<p>如果一个类没有指定它的父类, 就默认使用 <a href="https://docs.perl6.org/type/Any">Any</a>. 所有的类都直接或间接的派生于 <a href="https://docs.perl6.org/type/Mu">Mu</a> - 类型层级结构的根。</p>
+
+<p>所有对公共方法的调用都是 C++ 意义上的“虚拟”，这意味着对象的实际类型决定了要调用的方法，而不是声明的类型：</p>
+
+<pre><code class="language-perl6">class Parent {
+    method frob {
+        say &quot;the parent class frobs&quot;
+    }
+}
+ 
+class Child is Parent {
+    method frob {
+        say &quot;the child's somewhat more fancy frob is called&quot;
+    }
+}
+ 
+my Parent $test;
+$test = Child.new;
+$test.frob;          # calls the frob method of Child rather than Parent 
+# OUTPUT: «the child's somewhat more fancy frob is called␤» 
+</code></pre>
 
 <h2 id="对象构造">对象构造</h2>
 
-<p>对象通常通过方法调用创建, 或者通过类型对象或者通过同类型的其它对象创建. 类 Mu 提供了一个叫做 new 的构造器方法, 这个方法接收命名参数然后使用它们来初始化公共属性.</p>
+<p>对象通常通过方法调用创建, 或者通过类型对象或者通过同类型的其它对象创建。</p>
+
+<p>类 <a href="https://docs.perl6.org/type/Mu">Mu</a> 提供了一个名为 <a href="https://docs.perl6.org/routine/new">new</a> 的构造函数方法，它接受命名<a href="https://docs.perl6.org/language/functions#Arguments">参数</a>并使用它们来初始化公共属性。</p>
 
 <pre><code class="language-perl6">class Point {
     has $.x;
-    has $.y = 2 * $!x;
+    has $.y;
 }
-my $p = Point.new( x =&gt; 1, y =&gt; 2);
-#             ^^^ 继承自类 Mu
+my $p = Point.new( x =&gt; 5, y =&gt; 2);
+#             ^^^ inherited from class Mu 
+say &quot;x: &quot;, $p.x;
+say &quot;y: &quot;, $p.y;
+# OUTPUT: «x: 5␤» 
+# OUTPUT: «y: 2␤» 
 </code></pre>
 
-<p><code>Mu.new</code> 在调用者身上调用 <code>bless</code> 方法, 传递所有的具名参数. bless 创建新的对象, 然后调用该对象的 <code>BUILDALL</code> 方法.  <strong>BUILDALL</strong> 以<code>相反的</code>方法解析顺序(继承层级树自上而下)遍历所有子类(例如, 从 Mu 到 派生类), 并且在每个类中检查名为 <code>BUILD</code> 的方法是否存在。 如果存在就调用它, 再把传递给 new 方法的所有具名参数传递给这个 <code>BUILD</code> 方法。 如果没有, 这个类的公开属性就会用<code>同名的</code>具名参数进行初始化.  这两种情况下, 如果 <strong>BULID</strong> 方法和 <strong>默认构造函数</strong> 都没有对属性进行初始化, 就会应用默认值 (上面例子中的 <code>2 * $!x</code>)。</p>
+<p><code>Mu.new</code> 在调用者身上调用 <code>bless</code> 方法, 传递所有的命名<a href="https://docs.perl6.org/language/functions#Arguments">参数</a>。 <code>bless</code> 创建新的对象, 然后以反向方法解析顺序(即从<a href="https://docs.perl6.org/type/Mu">Mu</a>到大多数派生类)遍历所有子类, 并且在每个类中检查是否存在名为 <code>BUILD</code> 的方法。 如果该方法存在, 则使用该方法中的所有命名参数调用该 <code>new</code> 方法。如果不存在名为 <code>BUILD</code> 的方法, 这个类的公开属性就会用<code>同名的</code>命名参数进行初始化。  在任何一种情况下, 如果 <strong>BULID</strong> 方法和 <strong>默认构造函数</strong> 都没有对属性进行初始化, 则应用默认值。这意味着 <code>BUILD</code> 可以更改属性，但它无权访问声明为其默认值的属性的内容; 这些只在 <code>TWEAK</code>（见下文）中可用，它可以“看到”在类的声明中初始化的属性的内容。</p>
 
-<p>这种构造模式对于自定义构造器有几处暗示. 首先, 自定义 BUILD 方法应该总是子方法(submethod), 否则它们会中断子类中的属性初始化. 第二, BUILD 子方法能用于在对象构造时执行自定义代码. 它们也能用于为属性初始化<strong>创建别名</strong>:</p>
+<p>在 <code>BUILD</code> 被调用之后, 名为 <code>TWEAK</code> 的方法会被调用，如果它们存在，传递给 <code>new</code> 的所有命名参数也会传递给 <code>TWEAK</code>。请参阅下面的使用示例。</p>
+
+<p>由于 <code>BUILD</code> 和 <code>TWEAK</code> 子方法的默认行为，派生于 <code>Mu</code> 的 <code>new</code> 构造函数的命名参数可直接对应的任何方法解析顺序类的公共属性，或对应于任何 <code>BUILD</code> 或 <code>TWEAK</code> 子方法的任何命名参数。</p>
+
+<p>此对象构造方案对自定义构造函数有几个含义。首先，自定义 <code>BUILD</code> 方法应始终是子方法，否则它们会破坏子类中的属性初始化。其次，<code>BUILD</code> 子方法可用于在对象构造时运行自定义代码。它们还可用于为属性初始化创建别名：</p>
 
 <pre><code class="language-perl6">class EncodedBuffer {
     has $.enc;
     has $.data;
-
+ 
     submethod BUILD(:encoding(:$enc), :$data) {
-        $!enc  := $enc;
+        $!enc  :=  $enc;
         $!data := $data;
     }
 }
 my $b1 = EncodedBuffer.new( encoding =&gt; 'UTF-8', data =&gt; [64, 65] );
 my $b2 = EncodedBuffer.new( enc      =&gt; 'UTF-8', data =&gt; [64, 65] );
-#  现在 enc 和 encoding 都被允许
+#  both enc and encoding are allowed now 
 </code></pre>
 
-<p>因为传递实参给子例程把实参绑定给了形参, 如果把属性用作形参,单独绑定那一步就不需要了. 所以上面的例子可以写为:</p>
+<p>因为传递实参给子例程把实参绑定给了形参, 如果把属性用作形参, 则不需要单独的绑定步骤。 所以上面的例子可以写为:</p>
 
 <pre><code class="language-perl6">submethod BUILD(:encoding(:$!enc), :$!data) {
     # nothing to do here anymore, the signature binding
@@ -491,22 +752,92 @@ my $b2 = EncodedBuffer.new( enc      =&gt; 'UTF-8', data =&gt; [64, 65] );
 }
 </code></pre>
 
-<p>第三个暗示是如果你想要一个接收位置参数的构造函数, 你必须自己写 new 方法:</p>
+<p>但是，当属性可能具有特殊类型要求（例如<code>:$!id</code>必须为正整数）时，请谨慎使用此属性的自动绑定。请记住，除非您专门处理此属性，否则将分配默认值，并且该默认值将为 <code>Any</code>, 这会导致类型错误。</p>
+
+<p>第三个含义是，如果你想要一个接受位置参数的构造函数，你必须编写自己的 <code>new</code> 方法：</p>
 
 <pre><code class="language-perl6">class Point {
     has $.x;
     has $.y;
     method new($x, $y) {
-        self.bless(*, :$x, :$y);
+        self.bless(:$x, :$y);
     }
 }
 </code></pre>
 
-<p>然而, 这不是最佳实践, 因为这让来自子类的对象的初始化正确更难了.</p>
+<p>然而, 这不是最佳实践, 因为它使得从子类正确地初始化对象变得更难了。</p>
 
-<h2 id="roles">Roles</h2>
+<p>另外需要注意的是，名字  <code>new</code> 在 Perl 6 中并不特别。它只是一个常见的约定，在<a href="https://docs.perl6.org/routine/new">大多数Perl 6类中</a>都非常彻底。你可以从在调用的任何方法调用 <code>bless</code>，或者使用 <code>CREATE</code> 来摆弄低级别的工作。</p>
 
-<p>Roles 在某种程度上和类相似, 它们都是属性和方法的集合. 不同之处在于,  roles 是用来描述对象行为的某<strong>一部分</strong>的, 和 roles 怎样应用于类中. 或怎样解析。 类用于管理对象实例, 而 roles 用于<strong>管理行为</strong>和<strong>代码复用</strong>。</p>
+<p><code>TWEAK</code> 子方法允许你在对象构造后检查或修改属性：</p>
+
+<pre><code class="language-perl6">class RectangleWithCachedArea {
+    has ($.x1, $.x2, $.y1, $.y2);
+    has $.area;
+    submethod TWEAK() {
+        $!area = abs( ($!x2 - $!x1) * ( $!y2 - $!y1) );
+    }
+}
+ 
+say RectangleWithCachedArea.new( x2 =&gt; 5, x1 =&gt; 1, y2 =&gt; 1, y1 =&gt; 0).area;
+# OUTPUT: «4␤» 
+</code></pre>
+
+<h2 id="对象克隆">对象克隆</h2>
+
+<p>克隆是使用所有对象上可用的<a href="https://docs.perl6.org/routine/clone">clone</a>方法完成的，这些克隆方法可以浅克隆公共和私有属性。公共属性的新值可以作为命名参数提供。</p>
+
+<pre><code class="language-perl6">class Foo {
+    has $.foo = 42;
+    has $.bar = 100;
+}
+ 
+my $o1 = Foo.new;
+my $o2 = $o1.clone: :bar(5000);
+say $o1; # Foo.new(foo =&gt; 42, bar =&gt; 100) 
+say $o2; # Foo.new(foo =&gt; 42, bar =&gt; 5000) 
+</code></pre>
+
+<p>有关如何<a href="https://docs.perl6.org/routine/clone">克隆</a>非标量属性的详细信息，请参阅文档以获取克隆，以及实现自己的自定义克隆方法的示例。</p>
+
+<h2 id="角色">角色</h2>
+
+<p>角色是属性和方法的集合; 但是，与类不同，角色仅用于描述对象行为的一部分; 这就是为什么一般来说，角色应该*在*类和对象中*混合使用*。通常，类用于管理对象，而角色用于管理对象内的行为和代码重用。</p>
+
+<p>角色使用关键字  <code>role</code> 放在所声明的角色名称前面。角色使用 <code>does</code> 关键字 mixed in,  does 关键字放在角色名之前。</p>
+
+<pre><code class="language-perl6">constant ⲧ = &quot; &quot; xx 4; #Just a ⲧab 
+role Notable {
+    has Str $.notes is rw;
+ 
+    multi method notes() { &quot;$!notes\n&quot; };
+    multi method notes( Str $note ) { $!notes ~= &quot;$note\n&quot; ~ ⲧ };
+ 
+}
+ 
+class Journey does Notable {
+    has $.origin;
+    has $.destination;
+    has @.travelers;
+ 
+    method Str { &quot;⤷ $!origin\n&quot; ~ ⲧ ~ self.notes() ~ &quot;$!destination ⤶\n&quot; };
+}
+ 
+my $trip = Journey.new( :origin&lt;Here&gt;, :destination&lt;There&gt;,
+                        travelers =&gt; &lt;þor Freya&gt; );
+ 
+$trip.notes(&quot;First steps&quot;);
+notes $trip: &quot;Almost there&quot;;
+print $trip;
+# OUTPUT: 
+#⤷ Here 
+#       First steps 
+#       Almost there 
+# 
+#There ⤶ 
+</code></pre>
+
+<p>一旦编译器解析角色声明的结束大括号，角色就是不可变的。</p>
 
 <pre><code class="language-perl6">role Serializable {
     method serialize() {
@@ -529,50 +860,109 @@ say $clone-of-p.x;      # 1
 
 <p>编译器一解析到 role 声明的闭合花括号, roles 就不可变了。</p>
 
-<h2 id="role-application">Role Application</h2>
+<h2 id="应用角色">应用角色</h2>
 
-<p>Role 应用和类继承有重大不同。 当 role 应用到类中时, 那个 role 的方法被复制到类中。如果多个 roles 被应用到同一个类中, 冲突( 例如同名的非 multi 方法(s) )会导致编译时错误, 这可以通过在类中提供一个同名的方法来解决冲突。
-这比多重继承更安全, 在冲突从来不会被编译器检测到的地方, 但是代替的是借助于在 MRO 中出现更早的父类, 这可能是也可能不是程序员想要的。</p>
+<p>角色应用程序与类继承有很大不同。将角色应用于类时，该角色的方法将复制到类中。如果将多个角色应用于同一个类，则冲突（例如，同名的属性或 non-multi 方法）会导致编译时错误，这可以通过在类中提供同名的方法来解决。</p>
 
-<p>当一个 role 被应用到第二个 role上, 实际的程序被延迟直到第二个 role 被应用到类, 这时两个 roles 才都被应用到那个类中。 因此：</p>
+<p>这比多重继承安全得多，其中编译器从不检测冲突，而是解析为方法解析顺序中较早出现的超类，这可能不是程序员想要的。</p>
+
+<p>例如，如果你已经发现了一种有效的方法来骑牛，并试图把它作为一种新的流行交通形式推销，你可能会有一个 <code>Bull</code> 类，对于你在房子周围的所有公牛，以及一个 <code>Automobile</code> 类，你可以驾驶的东西。</p>
+
+<pre><code class="language-perl6">class Bull {
+    has Bool $.castrated = False;
+    method steer {
+        # Turn your bull into a steer 
+        $!castrated = True;
+        return self;
+    }
+}
+class Automobile {
+    has $.direction;
+    method steer($!direction) { }
+}
+class Taurus is Bull is Automobile { }
+ 
+my $t = Taurus.new;
+say $t.steer;
+# OUTPUT: «Taurus.new(castrated =&gt; Bool::True, direction =&gt; Any)␤» 
+</code></pre>
+
+<p>通过这种设置，您的贫困客户将发现自己无法转动他们的金牛座，您将无法生产更多的产品！在这种情况下，使用角色可能更好：</p>
+
+<pre><code class="language-perl6">role Bull-Like {
+    has Bool $.castrated = False;
+    method steer {
+        # Turn your bull into a steer 
+        $!castrated = True;
+        return self;
+    }
+}
+role Steerable {
+    has Real $.direction;
+    method steer(Real $d = 0) {
+        $!direction += $d;
+    }
+}
+class Taurus does Bull-Like does Steerable { }
+</code></pre>
+
+<p>这段代码会死于：</p>
+
+<pre><code>===SORRY!===
+Method 'steer' must be resolved by class Taurus because it exists in
+multiple roles (Steerable, Bull-Like)
+</code></pre>
+
+<p>这项检查可以为你省去很多麻烦：</p>
+
+<pre><code class="language-perl6">class Taurus does Bull-Like does Steerable {
+    method steer($direction?) {
+        self.Steerable::steer($direction)
+    }
+}
+</code></pre>
+
+<p>将角色应用于第二个角色时，实际应用程序将延迟，直到第二个角色应用于类，此时两个角色都将应用于该类。从而</p>
 
 <pre><code class="language-perl6">role R1 {
-    # methods here
+    # methods here 
 }
 role R2 does R1 {
-    # methods here
+    # methods here 
 }
 class C does R2 { }
 </code></pre>
 
-<p>等价于：</p>
+<p>产生相同类 <code>C</code> 为</p>
 
-<pre><code class="language-perl">role R1 {
-    # methods here
+<pre><code class="language-perl6">role R1 {
+    # methods here 
 }
 role R2 {
-    # methods here
+    # methods here 
 }
-class C does R2 does R1 { }
+class C does R1 does R2 { }
 </code></pre>
 
 <h2 id="stubs">Stubs</h2>
 
-<p>当 role 中包含了一个 stubbed 方法, 在这个 role 被应用到类中时, 必须提供一个同名的非 stubbed 版本的方法。这允许你创建如抽象接口那样的 roles。这有点像 Swift 中的 Protocol 协议。</p>
+<p>当角色包含 <a href="https://docs.perl6.org/routine/....html">stubbed</a> 方法时，必须在将角色应用于类时提供同名方法的 non-stubbed  版本。这允许您创建充当抽象接口的角色。</p>
 
 <pre><code class="language-perl6">role AbstractSerializable {
-    method serialize() { ... }  # 字面的三个点 ... 把方法标记为 stub
+    method serialize() { ... }        # literal ... here marks the 
+                                      # method as a stub 
 }
-
-#  下面是一个编译时错误, 例如
-#        Method 'serialize' must be implemented by APoint because
-#        it is required by a role
+ 
+# the following is a compile time error, for example 
+#        Method 'serialize' must be implemented by Point because 
+#        it's required by a role 
+ 
 class APoint does AbstractSerializable {
     has $.x;
     has $.y;
 }
-
-# 这个有效:
+ 
+# this works: 
 class SPoint does AbstractSerializable {
     has $.x;
     has $.y;
@@ -580,15 +970,191 @@ class SPoint does AbstractSerializable {
 }
 </code></pre>
 
-<p>那个 stubbed 方法的实现也可能由另外一个 role 提供。</p>
+<p>stubbed 方法的实现也可以由另一个角色提供。</p>
 
-<p>TODO: 参数化的 roles</p>
+<h2 id="继承-1">继承</h2>
+
+<p>角色不能从类继承，但它们可以*携带*类，导致任何具有该角色的类从承载的类继承。所以，如果你写：</p>
+
+<pre><code class="language-perl6">role A is Exception { }
+class X::Ouch does A { }
+X::Ouch.^parents.say # OUTPUT: «((Exception))␤»
+</code></pre>
+
+<p>然后 <code>X::Ouch</code> 将直接从 Exception 继承，我们可以通过列出其父项来看到。</p>
+
+<p>由于它们不使用可能称为继承的东西，因此角色不是类层次结构的一部分。使用 <code>.^roles</code> 元方法列出角色，它使用 <code>transitive</code> 标记来包含所有级别或仅包含第一个级别。尽管如此，仍然可以使用智能匹配或类型约束来测试类或实例，以查看它是否起作用。</p>
+
+<pre><code class="language-perl6">role F { }
+class G does F { }
+G.^roles.say;                    # OUTPUT: «((F))␤» 
+role Ur {}
+role Ar does Ur {}
+class Whim does Ar {}; Whim.^roles(:!transitive).say;   # OUTPUT: «((Ar))␤» 
+say G ~~ F;                      # OUTPUT: «True␤» 
+multi a (F $a) { &quot;F&quot;.say }
+multi a ($a)   { &quot;not F&quot;.say }
+a(G);                            # OUTPUT: «F␤» 
+</code></pre>
+
+<h2 id="主从秩序">主从秩序</h2>
+
+<pre><code class="language-perl6">role M {
+  method f { say &quot;I am in role M&quot; }
+}
+ 
+class A {
+  method f { say &quot;I am in class A&quot; }
+}
+ 
+class B is A does M {
+  method f { say &quot;I am in class B&quot; }
+}
+ 
+class C is A does M { }
+ 
+B.new.f; # OUTPUT «I am in class B␤» 
+C.new.f; # OUTPUT «I am in role M␤» 
+</code></pre>
+
+<p>请注意，multi-method 的每个候选项都是它自己的方法。在这种情况下，以上仅适用于两个这样的候选项具有相同签名的情况。否则，没有冲突，候选者只是添加到 multi-method 中。</p>
+
+<h2 id="自动角色双关">自动角色双关</h2>
+
+<p>任何直接实例化角色或将其用作类型对象的尝试都将自动创建一个与角色同名的类，从而可以透明地使用角色，就好像它是一个类一样。</p>
+
+<pre><code class="language-perl6">role Point {
+    has $.x;
+    has $.y;
+    method abs { sqrt($.x * $.x + $.y * $.y) }
+    method dimensions { 2 }
+}
+say Point.new(x =&gt; 6, y =&gt; 8).abs; # OUTPUT «10␤» 
+say Point.dimensions;              # OUTPUT «2␤» 
+</code></pre>
+
+<p>我们把这种自动创建的类叫*双关*，并且将生成的类叫*双关语*。</p>
+
+<p>但是，Punning 不是由大多数<a href="https://docs.perl6.org/language/mop">元编程</a>构造引起的，因为它们有时用于直接使用角色。</p>
+
+<h2 id="参数化角色">参数化角色</h2>
+
+<p>角色可以通过在方括号中给它们签名来参数化：</p>
+
+<pre><code class="language-perl6">role BinaryTree[::Type] {
+    has BinaryTree[Type] $.left;
+    has BinaryTree[Type] $.right;
+    has Type $.node;
+ 
+    method visit-preorder(&amp;cb) {
+        cb $.node;
+        for $.left, $.right -&gt; $branch {
+            $branch.visit-preorder(&amp;cb) if defined $branch;
+        }
+    }
+    method visit-postorder(&amp;cb) {
+        for $.left, $.right -&gt; $branch {
+            $branch.visit-postorder(&amp;cb) if defined $branch;
+        }
+        cb $.node;
+    }
+    method new-from-list(::?CLASS:U: *@el) {
+        my $middle-index = @el.elems div 2;
+        my @left         = @el[0 .. $middle-index - 1];
+        my $middle       = @el[$middle-index];
+        my @right        = @el[$middle-index + 1 .. *];
+        self.new(
+            node    =&gt; $middle,
+            left    =&gt; @left  ?? self.new-from-list(@left)  !! self,
+            right   =&gt; @right ?? self.new-from-list(@right) !! self,
+        );
+    }
+}
+ 
+my $t = BinaryTree[Int].new-from-list(4, 5, 6);
+$t.visit-preorder(&amp;say);    # OUTPUT: «5␤4␤6␤» 
+$t.visit-postorder(&amp;say);   # OUTPUT: «4␤6␤5␤» 
+</code></pre>
+
+<p>这里, 签名只包含类型捕获，但任何签名都可以：</p>
+
+<pre><code class="language-perl6">enum Severity &lt;debug info warn error critical&gt;;
+ 
+role Logging[$filehandle = $*ERR] {
+    method log(Severity $sev, $message) {
+        $filehandle.print(&quot;[{uc $sev}] $message\n&quot;);
+    }
+}
+ 
+Logging[$*OUT].log(debug, 'here we go'); # OUTPUT: «[DEBUG] here we go␤» 
+</code></pre>
+
+<p>您可以拥有多个同名角色，但签名不同; 多重分派的正常规则适用于选择多个候选者。</p>
+
+<h2 id="混合角色">混合角色</h2>
+
+<p>角色可以混合到对象中。角色的给定属性和方法将添加到对象已有的方法和属性中。支持多个mixin和匿名角色。</p>
+
+<pre><code class="language-perl6">role R { method Str() {'hidden!'} };
+my $i = 2 but R;
+sub f(\bound){ put bound };
+f($i); # OUTPUT: «hidden!␤» 
+my @positional := &lt;a b&gt; but R;
+say @positional.^name; # OUTPUT: «List+{R}␤» 
+</code></pre>
+
+<p>请注意，对象混合了角色，而不是对象的类或容器。因此，@-sigiled 容器将需要绑定以使角色坚持，如示例中的 <code>@positional</code> 所示。某些运算符将返回一个新值，从而有效地从结果中删除 mixin。这就是为什么使用<code>does</code> 在变量声明中混合角色可能更为清晰：</p>
+
+<pre><code class="language-perl6">role R {};
+my @positional does R = &lt;a b&gt;;
+say @positional.^name; # OUTPUT: «Array+{R}␤» 
+</code></pre>
+
+<p>运算符 <code>infix:&lt;but&gt;</code>比列表构造函数窄。提供要混合的角色列表时，请始终使用括号。</p>
+
+<pre><code class="language-perl6">role R1 { method m {} }
+role R2 { method n {} }
+my $a = 1 but R1,R2; # R2 is in sink context, issues a WARNING 
+say $a.^name;
+# OUTPUT: «Int+{R1}␤» 
+my $all-roles = 1 but (R1,R2);
+say $all-roles.^name; # OUTPUT: «Int+{R1,R2}␤» 
+</code></pre>
+
+<p>Mixins 可用于对象生命中的任何一点。</p>
+
+<pre><code class="language-perl6"># A counter for Table of Contents 
+role TOC-Counter {
+    has Int @!counters is default(0);
+    method Str() { @!counters.join: '.' }
+    method inc($level) {
+        @!counters[$level - 1]++;
+        @!counters.splice($level);
+        self
+    }
+}
+ 
+my Num $toc-counter = NaN;     # don't do math with Not A Number 
+say $toc-counter;              # OUTPUT: «NaN␤» 
+$toc-counter does TOC-Counter; # now we mix the role in 
+$toc-counter.inc(1).inc(2).inc(2).inc(1).inc(2).inc(2).inc(3).inc(3);
+put $toc-counter / 1;          # OUTPUT: «NaN␤» (because that's numerical context) 
+put $toc-counter;              # OUTPUT: «2.2.2␤» (put will call TOC-Counter::Str) 
+</code></pre>
+
+<p>角色可以是匿名的。</p>
+
+<pre><code class="language-perl6">my %seen of Int is default(0 but role :: { method Str() {'NULL'} });
+say %seen&lt;not-there&gt;;          # OUTPUT: «NULL␤» 
+say %seen&lt;not-there&gt;.defined;  # OUTPUT: «True␤» (0 may be False but is well defined) 
+say Int.new(%seen&lt;not-there&gt;); # OUTPUT: «0␤» 
+</code></pre>
 
 <h2 id="元对象编程和自省">元对象编程和自省</h2>
 
-<p>Perl 6 有一个元对象系统, 这意味着对象,类,roles,grammars,enums 它们自身的行为都被其它对象控制; 那些对象叫做元对象(想想元操作符, 它操作的对象是普通操作符). 元对象, 像普通对象一样,  是类的实例, 这时我们称它们为元类.</p>
+<p>Perl 6 有一个元对象系统, 这意味着对象,类,角色,grammars,enums 等行为本身由其它对象控制; 这些对象叫做元对象(想想元操作符, 它操作的对象是普通操作符). 像普通对象一样,  元对象是类的实例, 这时我们称它们为元类.</p>
 
-<p>对每个对象或类, 你能通过调用 <code>.HOW</code>方法获取元对象. 注意, 尽管这看起来像是一个方法调用, 然而它实际上是编译器中的特殊案列, 所以它更像一个 macro.</p>
+<p>对每个对象或类, 你能通过调用 <code>.HOW</code>方法获取元对象. 注意, 尽管这看起来像是一个方法调用, 但它更像宏.</p>
 
 <p>所以, 你能用元对象干些什么呢? 你可以通过比较元类的相等性来检查两个对象是否具有同样的元类:</p>
 

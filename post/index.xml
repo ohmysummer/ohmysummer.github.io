@@ -3847,14 +3847,16 @@ a: 3 b: 0 c: 1 d: 0 e: 3 f: 0 g: 0 h: 2 i: 1 j: 0 k: 0 l: 0 m: 0 n: 2 o: 3 p: 0 
       <pubDate>Mon, 15 Jun 2015 00:00:00 +0000</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2015-06-15-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84perl6/</guid>
-      <description>Perl 6 有很多预先定义好的类型，这些类型可以归为 2 类：普通类型和原生类型。原生类型用于底层类型（例如 uint 64）。原生类型没有和对象同样的功能，尽管你可以在它们身上调用方法， 它们还是被包装成普通的对象。所有你能存储到变量中的东西要么是一个原生的 value， 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。
-使用对象 方法可以有参数， 但是方法名和参数列表之间不可以有空格：
-say &amp;quot;abc&amp;quot;.uc; # ^^^ 不带参数的方法调用 my @words = $string.comb(/\w+/); # ^^^^^^^^^^^^ 带一个参数的方法调用  另外一种方法调用的语法将方法名和参数列表用一个冒号分开(冒号紧跟方法名, 中间不能有空格):
-say @*INC.join: &#39;:&#39;;  方法能返回一个可变容器, 这种情况下 你可以赋值给方法调用的返回值.
-$*IN.input-line-separator = &amp;quot;\r\n&amp;quot;;  类型对象 Types本身就是对象 ，你可以使用类型的名字获取 type object :
-my $int-type-obj = Int;  你可以通过调用 WHAT 方法查看任何对象的 type object(它实际上是一个方法形式的macro):
-my $int-type-obj = 1.WHAT;  使用 === 操作符可以比较 类型对象的相等性：
-sub f(Int $x) { if $x.</description>
+      <description>https://docs.perl6.org/language/objects
+Perl 6 为面向对象编程(OOP)提供强大支持。尽管 Perl 6 允许程序员以多种范式进行编程，但面向对象编程是该语言的核心。
+Perl 6 带有丰富的预定义类型，可分为两类：常规类型和原生类型。所有你能存储到变量中的东西要么是一个原生的 value, 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。
+原生类型用于底层类型（例如 uint64）。尽管原生类型没有和对象同样的功能，如果在其上调用方法，它们也会自动装入普通对象。
+一切不是原生值的东西都是一个对象。对象确实允许继承和封装。
+使用对象 要在对象上调用方法，请在对象名上添加一个点，然后添加方法名称：
+say &amp;quot;abc&amp;quot;.uc; # OUTPUT: «ABC␤»  这将在 &amp;ldquo;abc&amp;rdquo; 上调用 uc 方法, 这是一个 Str 类型的对象。要为方法提供参数, 请在方法后面的括号内添加参数。
+my $formatted-text = &amp;quot;Fourscore and seven years ago...&amp;quot;.indent(8); say $formatted-text; # OUTPUT: « Fourscore and seven years ago... »  $formatted-text 现在包含上面的文本，但缩进了8个空格。
+多个参数由逗号分隔：
+my @words = &amp;quot;Abe&amp;quot;, &amp;quot;Lincoln&amp;quot;; @words.push(&amp;quot;said&amp;quot;, $formatted-text.comb(/\w+/)); say @words; # OUTPUT: «[Abe Lincoln said (Fourscore and seven years ago)]␤»  类似地，可以通过在方法后放置冒号并使用逗号分隔参数列表来指定多个参数：</description>
     </item>
     
     <item>
