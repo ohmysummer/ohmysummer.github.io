@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (818 words)
+  <i class="fa fa-clock-o"></i> 9 minutes (1904 words)
   
   
 </span>
@@ -233,15 +233,18 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="perl-6-colonoscopy-https-perl6-eu-colonoscopy-html"><a href="https://perl6.eu/colonoscopy.html">Perl 6 Colonoscopy</a></h1>
+<h1 id="perl-6-colonoscopy">Perl 6 Colonoscopy</h1>
 
-<p>我保证，这不会伤害你。太多&hellip;</p>
+<p>I promise, this will not hurt. Much&hellip;</p>
 
-<p>在本文中，我们将研究 Perl 6 中的冒号，把它们放置在哪里以及它们的含义。</p>
+<p>In this article we&rsquo;ll look into colons in Perl 6, where to place them, and what they mean.
+我保证，这不会受到伤害。许多&hellip;</p>
+
+<p>在本文中，我们将研究Perl 6中的冒号，放置它们的位置以及它们的含义。</p>
 
 <h2 id="sigils">Sigils</h2>
 
-<p>但我们先绕个弯。在处理变量时，Perl 6 领域的新手不能错过 sigils 的重要性。他们是：</p>
+<p>But first a short detour. A newcomer to the Perl 6 universe cannot miss the significance of sigils when dealing with variables. They are:</p>
 
 <ul>
 <li><code>$</code> (Anything)</li>
@@ -250,7 +253,7 @@ if (!doNotTrack) {
 <li><code>&amp;</code> (Callable)</li>
 </ul>
 
-<p>sigil 是变量名的一部分，并且不会根据上下文发生变化（如 Perl 5 中所示）：</p>
+<p>The sigil is part of the variable name, and is not changed depending on the context (as in Perl 5):</p>
 
 <table>
 <thead>
@@ -307,72 +310,83 @@ if (!doNotTrack) {
 </tbody>
 </table>
 
-<p>Perl 6 还有 Twigils，它是 igil 和变量名之间的二级字符，其稍微改变了变量的含义。我们不会在本文中介绍（有一个例外，冒号）。</p>
+<p>Perl 6 also has Twigils, a secondary character between the sigil and the variable name, that slightly alters the meaning of the variable. We&rsquo;ll not get into that in this article (with one exception, the colon).</p>
 
-<p>有关变量，Sigil 和 Twigils 的更多信息，请参阅 [docs.perl6.org/language/variables](<a href="https://docs.perl6.org/language/variables）。">https://docs.perl6.org/language/variables）。</a></p>
+<p>See <a href="https://docs.perl6.org/language/variables">docs.perl6.org/language/variables</a> for more information about Variables, Sigils and Twigils.</p>
 
-<h3 id="命名空间">命名空间</h3>
+<h3 id="namespaces">Namespaces</h3>
 
-<p>双冒号(<code>::</code>)用于处理另一个名称空间中的名称（变量，过程或类）。</p>
+<p>A double colon (</p>
 
-<p>假设我们有一个模块 <code>Foo</code>，带有一个过程 <code>bar</code> 和一个变量 <code>$bar</code>。我们可以像这样访问它们（假如模块使它们在外部代码中可用）：</p>
+<pre><code>::
+</code></pre>
 
-<pre><code class="language-perl6">use Foo;
+<p>) is used to address a name (variable, procedure or class) in another namespace.</p>
+
+<p>Let us say that the have a module <code>Foo</code> with a procedure <code>bar</code> and a variable <code>$bar</code>. We can access them like this (if the module has made them available for outside code):</p>
+
+<pre><code>use Foo;
 
 Foo::bar;       # A procedure call
 
 say $Foo::bar;  # Accessing a variable
 </code></pre>
 
-<p>我们也可以直接使用命名空间（但不建议这样做）：</p>
+<p>We can also use namespaces directly (but it isn&rsquo;t recommended):</p>
 
 <p>File: namespace</p>
 
-<pre><code class="language-perl6">my $a = 10;
+<pre><code>my $a = 10;
 my $FOO::BAR::a = 20;
 
 say $a + $FOO::BAR::a;  # -&gt; 30
 </code></pre>
 
-<p>两个冒号也在自己的工作上，并让我们访问有关当前作用域的元信息（据我所知）：</p>
-
 <p>Two colons on their own work as well, and gives us access to meta information about the current scope (as far as I understand it):</p>
 
-<pre><code class="language-perl6">&gt; say ::
+<pre><code>&gt; say ::
 PseudoStash.new((!UNIT_MARKER =&gt; (!UNIT_MARKER), $=pod =&gt; [],
   $?PACKAGE =&gt; (GLOBAL), $_ =&gt; (Any), ::?PACKAGE =&gt; (GLOBAL),
   EXPORT =&gt; (EXPORT), GLOBALish =&gt; (GLOBAL)))
 </code></pre>
 
-<p>有关 PseudoStash 类型的信息，请参阅 [docs.perl6.org/type/PseudoStash](<a href="https://docs.perl6.org/type/PseudoStash），但要准备好（或保持）混淆。">https://docs.perl6.org/type/PseudoStash），但要准备好（或保持）混淆。</a></p>
+<p>See <a href="https://docs.perl6.org/type/PseudoStash">docs.perl6.org/type/PseudoStash</a> for information about the PseudoStash type, but be prepared to be (or stay) confused.</p>
 
 <h3 id="versioned-modules">Versioned Modules</h3>
 
-<p>模块可以具有可选的版本和/或作者值（以及其他的一些东西）。它们在模块名称后面加上一个冒号，如下所示：</p>
+<p>A module can have an optional</p>
 
-<pre><code class="language-perl6">module Foo:ver&lt;1.00&gt;:auth { ... }
+<p>version</p>
+
+<p>and/or</p>
+
+<p>author</p>
+
+<p>value (and some others). They are affixed after the module name with a single colon, like this:</p>
+
+<pre><code>module Foo:ver&lt;1.00&gt;:auth { ... }
 </code></pre>
 
 <h3 id="inline-perl5">Inline::Perl5</h3>
 
-<p>该模块可以使用 Perl 5 模块。它是间接使用的，其中 «Foo::Bar» 是一个 Perl 5 模块：</p>
+<p>This module makes it possible to use Perl 5 modules. It is used indirectly like this, where «Foo::Bar» is a Perl 5 module:</p>
 
-<pre><code class="language-perl6">use Foo::Bar:from&lt;Perl5&gt;;
+<pre><code>use Foo::Bar:from&lt;Perl5&gt;;
 </code></pre>
 
-<p>这也适用于其他语言。有关可用语言的列表，请参阅 <a href="https://modules.perl6.org/search/?q=inline">modules.perl6.org/search/?q=inline</a>。支持可能不完整，请阅读文档。</p>
+<p>This works for other languages as well. See <a href="https://modules.perl6.org/search/?q=inline">modules.perl6.org/search/?q=inline</a> for a list of available languages. The support may be incomplete, so read the documentation.</p>
 
-<h3 id="标签">标签</h3>
+<h3 id="labels">Labels</h3>
 
-<p>标签只是一个标签。它本身没有任何作用。</p>
+<p>A label is just a label. It doesn&rsquo;t do anything by itself.</p>
 
-<p>我们不能用它在代码中跳转，因为 Perl 6 没有 <code>goto</code> 命令。但我们可以使用它来跳出循环（或其中的循环），使用 <code>last</code>，<code>next</code> 或 <code>redo</code> 命令。</p>
+<p>We cannot use it to jump around in the code, as Perl 6 doesn&rsquo;t have a <code>goto</code>command. But we can use it to jump <em>out of loops</em> (or around in them), with the<code>last</code>, <code>next</code> or <code>redo</code> commands.</p>
 
-<p>不使用标签考虑 <code>last</code> 命令：</p>
+<p>Consider the <code>last</code> command without using a label:</p>
 
 <p>File: last</p>
 
-<pre><code class="language-perl6">for 1 .. 10 -&gt; $a
+<pre><code>for 1 .. 10 -&gt; $a
 {
   for 1 .. 00 -&gt; $b
   {
@@ -382,11 +396,11 @@ PseudoStash.new((!UNIT_MARKER =&gt; (!UNIT_MARKER), $=pod =&gt; [],
 }
 </code></pre>
 
-<p>如果满足条件，则 <code>last</code> 将退出内循环。如果我们使用标签，我们可以让它在另一个层面上行动：</p>
+<p>The <code>last</code> will exit the inner loop if the condition is met. We can get it to act on another level if we use a label:</p>
 
 <p>File: last2</p>
 
-<pre><code class="language-perl6">outer: for 1 .. 10 -&gt; $a
+<pre><code>outer: for 1 .. 10 -&gt; $a
 {
   inner: for 1 .. 10 -&gt; $b
   {
@@ -396,91 +410,100 @@ PseudoStash.new((!UNIT_MARKER =&gt; (!UNIT_MARKER), $=pod =&gt; [],
 }
 </code></pre>
 
-<p>这次它在满足条件时退出外部循环（和程序，因为没有更多的代码可以执行）。</p>
+<p>This time it exits the outer loop (and the program, as there isn&rsquo;t any more code to execute) when the condition is met.</p>
 
-<p>大写字母通常用于标签，但如果您碰巧选择 Perl 6 内部已使用的名称，这将导致错误。标签本身不是问题，因为尾部冒号告诉编译器它是一个标签。用作裸字的用法会导致问题，并且无法修复它。</p>
+<p>Upper Case letters are normally used for labels, but this will cause an error if you happen to choose a name that is already in use internally by Perl 6. The label itself isn&rsquo;t a problem, as the trailing colon tells the compiler that it is a label. The usage, where it is used as a bareword causes the problem, and there is no way to fix it.</p>
 
-<p>一些例子：</p>
+<p>Some examples:</p>
 
 <ul>
-<li>OUTER，作为标签名称似乎完全合乎逻辑，将给出运行时错误（«无法解析下一个调用者（OUTER:U）; &hellip;»），因为 <code>OUTER</code> 是内置包名称而 Perl 6 不是聪明到足以发现它在这种情况下被用作标签。</li>
-<li>LAST 使用起来并不是很诱人，但是会给出编译错误（«Missing block»），因为 <code>LAST</code> 是一个 *Phaser*，期待它之后有一个块。<br /></li>
+<li><code>OUTER</code>, which seems perfectly logical as a label name, will give the run time error («Cannot resolve caller next(OUTER:U); &hellip;»), as <code>OUTER</code> is a built-in <a href="https://docs.perl6.org/language/packages#index-entry-OUTER_%28package%29">package name</a> and Perl 6 isn&rsquo;t clever enough to spot that it is used as a label in this case.</li>
+<li><code>LAST</code> isn&rsquo;t equally tempting to use, but will give the compilation error («Missing block»), as <code>LAST</code> is a <em>Phaser</em>, expecting a block after it.</li>
 </ul>
 
-<p>有关要避免的包名称的更多信息，请参阅 <a href="https://docs.perl6.org/language/packages#Pseudo-packages">docs.perl6.org/language/packages#Pseudo-packages</a> 。</p>
+<p>See <a href="https://docs.perl6.org/language/packages#Pseudo-packages">docs.perl6.org/language/packages#Pseudo-packages</a> for more information about Package Names to avoid.</p>
 
-<p>有关Phasers的更多信息，请参见 <a href="https://docs.perl6.org/language/phasers">docs.perl6.org/language/phasers</a>。</p>
+<p>See <a href="https://docs.perl6.org/language/phasers">docs.perl6.org/language/phasers</a> for more information about Phasers.</p>
 
-<p>如果在使用标签时收到错误消息，即使您已避免使用保留的 packagae 名称和 Phasers，请尝试通过以下方式更改名称：附加一个数字。或者使用小写字母。</p>
+<p>If you get an error message when using a label, even if you have avoided reserved packagae Names and Phasers, try changing the name by e.g. appending a digit to it. Or use lower case letters.</p>
 
-<h3 id="数字">数字</h3>
+<h3 id="numbers">Numbers</h3>
 
-<p>我们可以在任何基数（从2到16）指定数字，如下所示;</p>
+<p>We can specify numbers in any base (from 2 to 16) like this;</p>
 
-<pre><code class="language-perl6">my $b = :2&lt;11110000&gt;;  # -&gt; 240   ## A binary (base 2) number
+<pre><code>my $b = :2&lt;11110000&gt;;  # -&gt; 240   ## A binary (base 2) number
 my $a = :16&lt;FF&gt;;       # -&gt; 255   ## A hexadecimal (base 16) number
 </code></pre>
 
-<p>请注意，如果我们想让它看起来像过程调用，我们可以使用圆括号和引号：</p>
+<p>Note that we can use parens and quotes if we want to make it look like a procedure call:</p>
 
-<pre><code class="language-perl6">my $b = :2(&quot;11110000&quot;);  # -&gt; 240   ## A binary (base 2) number
+<pre><code>my $b = :2(&quot;11110000&quot;);  # -&gt; 240   ## A binary (base 2) number
 </code></pre>
 
 <h3 id="pair">Pair</h3>
 
-<p>pair 是单个键和值。它们是 Hashes 和命名参数的构建块（我们将返回）。</p>
+<p>A pair is a single key and value. They are the building blocks of Hashes and named parameters (which we&rsquo;ll get back to).</p>
 
-<p>我们可以用几种方法构造一个 Pair，使用 «fat arrow»(<code>=&gt;</code>)：</p>
+<p>We can construct a Pair in several ways, using the «fat arrow» (<code>=&gt;</code>):</p>
 
-<pre><code class="language-perl6">Pair('key' =&gt; 'value')
+<pre><code>Pair('key' =&gt; 'value')
 ('key' =&gt; 'value')
 'key' =&gt; 'value'
 key =&gt; 'value'    # As long as the key doesn't contain spaces.
 </code></pre>
 
-<p>我们不必使用«胖箭头»：</p>
+<p>We don&rsquo;t <em>have to</em> use the «fat arrow»:</p>
 
-<pre><code class="language-perl6">Pair.new('key', 'value')
+<pre><code>Pair.new('key', 'value')
 </code></pre>
 
-<p>只要键不包含空格，我们就可以使用特殊的冒号语法：</p>
+<p>We can use the special colon syntax, as long as the key doesn&rsquo;t contain spaces:</p>
 
-<pre><code class="language-perl6">:key&lt;value&gt;  # The same as «key =&gt; 'value'»
+<pre><code>:key&lt;value&gt;  # The same as «key =&gt; 'value'»
 </code></pre>
 
-<p>我们也可以使用圆括号：</p>
+<p>We can use parens as well:</p>
 
-<pre><code class="language-perl6">:foo(127) # The same as «foo =&gt; 127»
+<pre><code>:foo(127) # The same as «foo =&gt; 127»
 </code></pre>
 
-<p>如果键使用字母而值仅使用数字，我们可以这样做：</p>
+<p>If the key uses letters, and the value digits only, we can do this:</p>
 
-<pre><code class="language-perl6">:127foo  # The same as  «foo =&gt; 127»
+<pre><code>:127foo  # The same as  «foo =&gt; 127»
 </code></pre>
 
-<p>如果值是布尔值，我们可以进一步缩短它：</p>
+<p>If the value is a Boolean, we can shorten it even further:</p>
 
-<pre><code class="language-perl6">:key    # The same as «key =&gt; True»
+<pre><code>:key    # The same as «key =&gt; True»
 :!key   # The same as «key =&gt; False»
 </code></pre>
 
-<h3 id="变量">变量</h3>
+<h3 id="variables">Variables</h3>
 
-<p>我们可以在三个可能的位置向变量添加冒号:</p>
+<p>There are three possible locations where we can add a colon to a variable (</p>
+
+<pre><code>$variable
+</code></pre>
+
+<p>):</p>
 
 <ul>
-<li>在 sigil 之前(<code>:$variable</code>)<br /></li>
-<li>在 sigil 和变量名之间(<code>$:variable</code>)<br /></li>
-<li>在变量名之后 (<code>$variable:</code>)<br /></li>
+<li>Before the sigil (<code>:$variable</code>)</li>
+<li>Between the sigil and variable name (<code>$:variable</code>)</li>
+<li>After the variable name (<code>$variable:</code>)</li>
 </ul>
 
-<p>他们都是合法的。</p>
+<p>And they are all legal.</p>
 
 <h4 id="variable">:$variable</h4>
 
-<p>这是一个在过程调用中使用的命名变量（或者一个 Pair 构造函数，如本节末尾所述）：</p>
+<p>This is a</p>
 
-<pre><code class="language-perl6">sub foo (:$one, :$two)
+<p>named variable</p>
+
+<p>used in a procedure call (or a Pair constructor, as described in the end of this section):</p>
+
+<pre><code>sub foo (:$one, :$two)
 {
   return $one + 2 * $two;
 }
@@ -489,11 +512,11 @@ say foo(one =&gt; 12, two =&gt;  3);  # -&gt; 18
 say foo(two =&gt;  3, one =&gt; 12);  # -&gt; 18
 </code></pre>
 
-<p>顺序无关紧要。</p>
+<p>The order doesn&rsquo;t matter.</p>
 
-<p>如果我们给变量赋予*相同名称*作为参数，我们可以使用一个简短形式（显示在最后一行）：</p>
+<p>If we give the variable the <em>same name</em> as the argument, we can use a short form (shown on the last line):</p>
 
-<pre><code class="language-perl6">sub foo (:$one, :$two)
+<pre><code>sub foo (:$one, :$two)
 {
   return $one + 2 * $two;
 }
@@ -505,11 +528,11 @@ say foo(one =&gt; $one, two =&gt;  $two);  # -&gt; 18
 say foo(:$one, :$two);               # -&gt; 18
 </code></pre>
 
-<p>当我们有几个参数时，命名变量很有用，因为可以将顺序与正常*位置参数*混淆。当我们有可选参数时，它也很方便，因为我们可以只指定我们想要使用的参数。</p>
+<p>Named variables are useful when we have several parameters, as it is possible to mix up the order with normal <em>positional parameters</em>. It is also handy when we have optional parameters, as we can specify just the one(s) we want to use.</p>
 
-<p>如果命名参数的值为“True”，我们可以删除显式值：</p>
+<p>If the value of the named argument is <code>True</code>, we can drop the explicit value:</p>
 
-<pre><code class="language-perl6">sub debug (:$debug)
+<pre><code>sub debug (:$debug)
 {
   say &quot;Debug&quot; if $debug;
   return 32;
@@ -518,25 +541,29 @@ say foo(:$one, :$two);               # -&gt; 18
 my $x = foo(:debug);
 </code></pre>
 
-<p>我们可以否定它（冒号和名字之间带有感叹号），传递 &lsquo;False`：</p>
+<p>And we can negate it (with an exclamation mark between the colon and the name), to pass <code>False</code>:</p>
 
-<pre><code class="language-perl6">my $x = foo(:!debug);
+<pre><code>my $x = foo(:!debug);
 </code></pre>
 
-<p>默认情况下，命名变量是可选的，但我们可以通过在过程头中添加一个尾随的 <code>!</code>（感叹号）来强制它们。</p>
+<p>Named variables are optional by default, but we can make them mandatory by adding a trailing <code>!</code> (exclamation mark) in the procedure head.</p>
 
-<p>我们可以将任何变量转换为 <code>Pair</code>，变量名作为键：</p>
+<p>We can turn any variable into a <code>Pair</code>, with the variable name as the key:</p>
 
-<pre><code class="language-perl6">my $age = 14;
+<pre><code>my $age = 14;
 my $p = :$age; 
 say $p; # -&gt; age =&gt; 10
 </code></pre>
 
 <h4 id="variable-1">$:variable</h4>
 
-<p>这是一个命名的占位符变量，在我们跳过声明过程头中的参数的过程中使用：</p>
+<p>This is a</p>
 
-<pre><code class="language-perl6">sub foo
+<p>named placeholder variable</p>
+
+<p>used in procedures where we skipped declaring the arguments in the procedure head:</p>
+
+<pre><code>sub foo
 {
   return $:one + 2 * $:two;
 }
@@ -544,29 +571,49 @@ say $p; # -&gt; age =&gt; 10
 say foo(one =&gt; 12, two =&gt; 3);  # -&gt; 18
 </code></pre>
 
-<p>请注意，名称必须匹配 - 并且只有在没有签名（参数列表）的情况下指定过程时它才会起作用！</p>
+<p>Note that the names must match - and it will only work if the procedure is specified without a signature (argument list)!</p>
 
-<p>这是冒号是 Twigil 的那个。</p>
+<p>This is the one where the colon is a Twigil.</p>
 
-<p>(我们也可以使用*占位符变量*作为位置参数，使用 Twigil。参见 <a href="https://docs.perl6.org/language/variables#The_^_twigil">docs.perl6.org/language/variables#The_^_twigil</a> 了解更多信息。)</p>
+<p>(We can also use <em>placeholder variables</em> for positional arguments, with the <code>^</code>Twigil. See <a href="https://docs.perl6.org/language/variables#The_^_twigil">docs.perl6.org/language/variables#The_^_twigil</a> for more information.)</p>
 
 <h4 id="variable-2">$variable:</h4>
 
-<p>如果我们有一个对象 <code>$foo</code> 并想在其上调用方法 <code>bar</code>，通常的方法是：</p>
+<p>If we have an object</p>
 
-<pre><code class="language-perl6">$foo.bar;
+<pre><code>$foo
 </code></pre>
 
-<p>但我们也可以使用更多类似语法的过程，如下所示：</p>
+<p>and want to call a method</p>
 
-<pre><code class="language-perl6">bar($foo:);
+<pre><code>bar
 </code></pre>
 
-<h3 id="带参数的方法调用">带参数的方法调用</h3>
+<p>on it, the usual way is this:</p>
 
-<p>如果我们有一个对象 <code>$foo</code> 并且想要用一些参数调用它上面的方法 <code>bar</code>，通常的方法是：</p>
+<pre><code>$foo.bar;
+</code></pre>
 
-<pre><code class="language-perl6">class foo
+<p>But we can also use a more procedure like syntax, like this:</p>
+
+<pre><code>bar($foo:);
+</code></pre>
+
+<h3 id="method-call-with-arguments">Method Call with arguments</h3>
+
+<p>If we have an object</p>
+
+<pre><code>$foo
+</code></pre>
+
+<p>and want to call a method</p>
+
+<pre><code>bar
+</code></pre>
+
+<p>on it with some argumenets, the usual way is this:</p>
+
+<pre><code>class foo
 {
   ...;
     
@@ -578,23 +625,27 @@ my $foo1 = foo.new;
 $foo1.bar(1, 2);
 </code></pre>
 
-<p>不可能跳过圆括号（我们可以通过过程调用），但我们也可以在这里使用特殊的*冒号语法*：</p>
+<p>It isn&rsquo;t possible to skip the parens (as we can with a procedure call), but we can use the special <em>colon syntax</em> here as well:</p>
 
-<pre><code class="language-perl6">$foo1.bar: 1, 2;
+<pre><code>$foo1.bar: 1, 2;
 </code></pre>
 
-<p>像语法这样的过程也适用，但要带上圆括号：</p>
+<p>The procedure like syntax works here as well, with parens:</p>
 
-<pre><code class="language-perl6">bar($foo1: 1, 2);
+<pre><code>bar($foo1: 1, 2);
 </code></pre>
 
 <h3 id="binding">:= (Binding)</h3>
 
-<p>普通变量是一个*命名容器*（也称为桶），它可以包含一个或多个值，具体取决于类型。</p>
+<p>A normal variable is a</p>
 
-<p>绑定会跳过容器，并直接使用该值。在值上使用时，这会给出一个常量：</p>
+<p>named container</p>
 
-<pre><code class="language-perl6">my $a := 10;
+<p>(also called a bucket) that can contain one ore more values, depending on the type.</p>
+
+<p>Binding skips the container, and works directly with the value. When used on a value, this gives a constant:</p>
+
+<pre><code>my $a := 10;
 
 say $a;  # -&gt; 10;
 
@@ -603,41 +654,54 @@ Cannot resolve caller postfix:&lt;++&gt;(Int:D); the following candidates
 match the type but require mutable argument ...
 </code></pre>
 
-<p>如果我们绑定到另一个变量，我们得到一个别名：</p>
+<p>If we bind to another variable, we get an alias:</p>
 
-<pre><code class="language-perl6">my $a = 10;
+<pre><code>my $a = 10;
 
 my $b := $a; say $b;  # -&gt; 10;
 $a++; say $b;         # -&gt; 11;
 $b++; say $a;         # -&gt; 12;
 </code></pre>
 
-<p><code>$b</code> 自增是有效的，因为它已被绑定到我们从 <code>$a</code> 获得的容器上。</p>
+<p>Incrementing <code>$b</code> works, because it has been binded to the container we got from <code>$a</code>.</p>
 
-<h3 id="容器恒等">=:= (容器恒等)</h3>
+<h3 id="container-identity">=:= (Container Identity)</h3>
 
-<p>如果两个参数都绑定到同一个容器，则该操作符返回 <code>True</code>：</p>
+<p>This operator returns</p>
 
-<pre><code class="language-perl6">my $a = 10;
+<pre><code>True
+</code></pre>
+
+<p>if both argumentes are bound to</p>
+
+<p>the same</p>
+
+<p>container:</p>
+
+<pre><code>my $a = 10;
 
 my $b  = 10; say $a =:= $b;  # -&gt; False
 my $c := $a; say $a =:= $c;  # -&gt; True
 </code></pre>
 
-<p>即使我们没有任何容器它也工作（因为它们绑定到*同一个值*上）：</p>
+<p>It works even if we don&rsquo;t have any containers (as they are bound to <em>the same value</em>):</p>
 
-<pre><code class="language-perl6">my $a := 10; my $b := 10;
+<pre><code>my $a := 10; my $b := 10;
 
 say $a =:= $b;  # -&gt; True
 </code></pre>
 
 <h3 id="class">::?CLASS</h3>
 
-<p>这个*编译时*变量告诉我们我们所在的类的名称：</p>
+<p>This</p>
+
+<p>Compile Time variable</p>
+
+<p>tells us the name of the class we are in:</p>
 
 <p>File: class-doublecolon</p>
 
-<pre><code class="language-perl6">class FOO
+<pre><code>class FOO
 {
   method bar { return ::?CLASS; }
 }
@@ -647,42 +711,46 @@ my FOO $foo = FOO.new;
 say $foo.bar;  # -&gt; (FOO)
 </code></pre>
 
-<p>如果我们不在类里面，它就会失败：</p>
+<p>It fails if we are not in a class:</p>
 
-<pre><code class="language-perl6">say ::?CLASS;
+<pre><code>say ::?CLASS;
 ===SORRY!=== Error while compiling:
 No such symbol '::?CLASS'
 </code></pre>
 
 <h3 id="variable-3">::($variable)</h3>
 
-<p>使用此语法在运行时将字符串转换为变量名称：</p>
+<p>Use this syntax to turn a string into a variable name at runtime:</p>
 
 <p>File: variable-doublecolon</p>
 
-<pre><code class="language-perl6">my ($a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10) = &lt;12 9 8 27 75 5 18 21 36 99&gt;;
+<pre><code>my ($a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10) = &lt;12 9 8 27 75 5 18 21 36 99&gt;;
 
 say &quot;$_: &quot;, ::{ '$a' ~ $_ } for 1 .. 10;
 </code></pre>
 
-<p>单引号是必不可少的，因为我们绝对不希望对字符串进行插值（因为不存在）。</p>
+<p>The single quotes are essential, as we definitely do not want the string to be interpolated (as <code>$a</code> doesn&rsquo;t exist).</p>
 
-<p>如果要检查变量是否存在（已定义），请使用 <code>defined</code>，因为 «normal» 查找不会失败：</p>
+<p>Use <code>defined</code> if you want to check that the variable exists (is defined), as a «normal» lookup doesn&rsquo;t fail:</p>
 
-<pre><code class="language-perl6">say ::{'$a11'};          # -&gt; Nil
+<pre><code>say ::{'$a11'};          # -&gt; Nil
 say ::{'$a11'}.defined;  # -&gt; False
 say ::{'$a10'}.defined;  # -&gt; True
 </code></pre>
 
-<p>我们也可以用它来查找其他作用域内的变量。有关此主题的更多信息，请参阅<a href="https://docs.perl6.org/language/packages#Looking_up_names">docs.perl6.org/language/packages#Looking_up_names</a>。</p>
+<p>We can use it to look up variables in other scopes as well. See<a href="https://docs.perl6.org/language/packages#Looking_up_names">docs.perl6.org/language/packages#Looking_up_names</a> for more information about this topic.</p>
 
 <h3 id="read-only-binding">::= (Read Only Binding)</h3>
 
-<p>这还没有实现。</p>
+<p>This hasn&rsquo;t been implemented yet.</p>
 
-<h3 id="商业突破">商业突破</h3>
+<h3 id="commercial-break">Commercial Break</h3>
 
-<p>本文是作为我即将开设的课程 «Beginning Perl 6» 的一部分撰写的。</p>
+<p>This article was written as part of the work on my coming course «</p>
+
+<p>Beginning Perl 6</p>
+
+<p>».</p>
 
 
         
@@ -703,6 +771,10 @@ say ::{'$a10'}.defined;  # -&gt; True
               <a href="https://ohmysummer.github.io/post/2019-02-24-special-variables/" data-toggle="tooltip" data-placement="top" title="Perl 5 to Perl 6 guide - special variables">&larr; Previous Post</a>
             </li>
           
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2019-06-01-binary-search-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 实现二分查找">Next Post &rarr;</a>
+            </li>
           
         </ul>
       
