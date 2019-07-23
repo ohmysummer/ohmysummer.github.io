@@ -5,23 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Perl 6 实现二分查找</title>
-  <meta property="og:title" content="Perl 6 实现二分查找" />
-  <meta name="twitter:title" content="Perl 6 实现二分查找" />
-  <meta name="description" content="楽土">
-  <meta property="og:description" content="楽土">
-  <meta name="twitter:description" content="楽土">
+  <title>Perl 6 中的冒泡排序</title>
+  <meta property="og:title" content="Perl 6 中的冒泡排序" />
+  <meta name="twitter:title" content="Perl 6 中的冒泡排序" />
+  <meta name="description" content="Bubble sort in Perl 6">
+  <meta property="og:description" content="Bubble sort in Perl 6">
+  <meta name="twitter:description" content="Bubble sort in Perl 6">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/post/2019-06-01-binary-search-in-perl6/" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2019-06-22-bubble-sort-in-perl6/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rakudo Perl 6" />
 
   <meta name="generator" content="Hugo 0.53" />
-  <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-01-binary-search-in-perl6/" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-22-bubble-sort-in-perl6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -198,21 +198,21 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Perl 6 实现二分查找</h1>
+              <h1>Perl 6 中的冒泡排序</h1>
                 
                   
-                    <h2 class="post-subheading">楽土</h2>
+                    <h2 class="post-subheading">Bubble sort in Perl 6</h2>
                   
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 1, 2019
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 22, 2019
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (86 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (400 words)
   
   
 </span>
@@ -231,27 +231,158 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <pre><code class="language-perl6">sub binary_search(@list, $item) {
-    my $low  = 0;                        # low 和 high 用于跟踪要在其中查找的列表部分
-    my $high = @list.elems -1;           #
+        <p>嘿大家好，让我们在 Perl 6 中实现一些算法。</p>
 
-    while $low &lt;= $high {                # 只要范围没有缩小到只包含一个元素
-        my $mid   = ($low + $high) / 2;  # 就检查中间的元素
-        my $guess = @list[$mid];
+<p>第一个将是经典的冒泡排序。实质上，您从左到右扫描数据并交换两个相邻的项（如果它们尚未正确排序）。重复这个过程，直到整个数据列表被排序。</p>
 
-        return $mid if $guess == $item;  # 找到了就返回
-        if $guess &gt; $item {              # 猜的数字大了
-            $high = $mid -1 
-        } else {                         # 才的数字小了
-            $low = $mid + 1
-        }  
+<p>这是最初的直接实现：</p>
+
+<pre><code class="language-perl6">sub bubble-sort(@data) {
+    my Bool $done = False;
+    while !$done {
+        $done = True;
+        for 1 .. @data.elems - 1 -&gt; $n {
+            if @data[$n - 1] &gt; @data[$n] {
+                (@data[$n - 1], @data[$n]) = 
+                    (@data[$n], @data[$n - 1]);
+                $done = False;
+            }
+        }
     }
 }
 
-my @list = [1, 3, 5, 7, 9];
-say binary_search(@list, 3);
-say binary_search(@list, -1);
+my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
+bubble-sort @data;
+say @data;
 </code></pre>
+
+<p>此实现执行就地排序，但您不需要将函数参数声明为 <code>is rw</code>。实际上，编译器会告诉您这是多余的，并将停止进一步编译:</p>
+
+<pre><code>For parameter '@data', '@' sigil containers don't need 'is rw' to be writable
+Can only use 'is rw' on a scalar ('$' sigil) parameter, not '@data'
+</code></pre>
+
+<p>另一个我想更精确地看一下的地方是交换两个数组元素：</p>
+
+<pre><code class="language-perl6">(@data[$n - 1], @data[$n]) = (@data[$n], @data[$n - 1]);
+</code></pre>
+
+<p>现在，随着程序准备就绪，我们可以确认它是否正常工作，让我们对其进行转换以使其更具表现力（尽管效率可能稍低）。</p>
+
+<pre><code class="language-shell">$ perl6 bubble-sort.pl6 
+[1 1 2 2 4 5 7 9 10 46 78]
+</code></pre>
+
+<p>第一步是简化交换代码。在等号的两边，我们使用相同的两个元素，索引 <code>$n</code> 和 <code>$n  -  1</code>。可以在两个元素的列表上调用 <code>reverse</code> 方法并将其赋值给它：</p>
+
+<pre><code class="language-perl6">(@data[$n - 1], @data[$n]).=reverse;
+</code></pre>
+
+<p>使用数组切片可以进一步简化：</p>
+
+<pre><code class="language-perl6">@data[$n - 1, $n].=reverse;
+</code></pre>
+
+<p>如您所见，不再需要括号。你必须自己回答的唯一问题是，是否用空格包围 <code>.=</code> 运算符。一方面，这是一个方法调用（因此，没有空格），另一方面，它是一个赋值（因此，空格）。</p>
+
+<p>好的，下一步是什么？当然，<code>if</code> 语句可以写为后缀条件，但 <code>if</code> 块中有两行代码。在这一点上，我可以决定在代码之美和效率之间进行权衡，并摆脱布尔 <code>$done</code> 标志。</p>
+
+<pre><code class="language-perl6">sub bubble-sort(@data) {
+    for 1 .. @data.elems - 1 -&gt; $n {
+        if @data[$n - 1] &gt; @data[$n] {
+            @data[$n - 1, $n].=reverse;
+        }
+    }
+    bubble-sort(@data) unless [&lt;=] @data;
+}
+</code></pre>
+
+<p>此步骤还允许删除 <code>while</code> 块。在函数结束时，完成递归调用（再次，可能效率较低，但是谁在乎），并且检查数组是否已经排序的条件现在是显式的：</p>
+
+<pre><code class="language-perl6">unless [&lt;=] @data
+</code></pre>
+
+<p>毕竟，现在可以附加 <code>if</code> 后缀：</p>
+
+<pre><code class="language-perl6">@data[$n - 1, $n].=reverse if @data[$n - 1] &gt; @data[$n]
+</code></pre>
+
+<p>甚至 <code>for</code> 后缀：</p>
+
+<pre><code class="language-perl6">@data[$_ - 1, $_].=reverse
+    if @data[$_ - 1] &gt; @data[$_]
+        for 1 .. @data.elems - 1;
+</code></pre>
+
+<p>另外，为什么不像使用函数的其他部分那样使用切片和简化运算符来创建条件：</p>
+
+<pre><code class="language-perl6">@data[$_ - 1, $_].=reverse
+    if [&gt;] @data[$_ - 1, $_]
+        for 1 .. @data.elems - 1;
+</code></pre>
+
+<p>下一步是减小范围 <code>1 .. @ data.elems  -  1</code>，这是可行的，但包含的元素太多，可以删除。 <code>-1</code> 部分可以用开口范围代替：</p>
+
+<pre><code class="language-perl6">for 1 ..^ @data.elems;
+</code></pre>
+
+<p>之后 <code>elems</code> 调用就不需要了，Perl 6 可以为我们做到这一点：</p>
+
+<pre><code class="language-perl6">for 1 ..^ @data;
+</code></pre>
+
+<p>这是代码的当前状态：</p>
+
+<pre><code class="language-perl6">sub bubble-sort(@data) {
+    @data[$_ - 1, $_] .= reverse
+        if [&gt;] @data[$_ - 1, $_]
+            for 1 ..^ @data;
+        
+    bubble-sort(@data) unless [&lt;=] @data;
+}
+
+my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
+bubble-sort @data;
+say @data;
+</code></pre>
+
+<p>在我们暂停之前，下面是另一种可能的修改。通常，Perl 6 中的递归可以通过 multi-subs 实现。让编译器根据数据完成工作，而不是在函数内部进行分支：</p>
+
+<pre><code class="language-perl6">multi sub bubble-sort(@data where [&lt;=] @data) {}
+
+multi sub bubble-sort(@data where ![&lt;=] @data) {
+    @data[$_ - 1, $_] .= reverse
+        if [&gt;] @data[$_ - 1, $_]
+            for 1 ..^ @data;
+    bubble-sort(@data);
+}
+</code></pre>
+
+<p>如果您不喜欢 <code>[&lt;=]</code> 检查（因为它应该扫描整个列表），这里是一个带有另一个循环层的暴力版本：</p>
+
+<pre><code class="language-perl6">sub bubble-sort(@data) {
+    for ^@data {
+        @data[$_ - 1, $_] .= reverse
+            if [&gt;] @data[$_ - 1, $_] for 1 ..^ @data;
+    }
+}
+</code></pre>
+
+<p>可以使用交叉运算符连接两个 <code>for</code> 循环：</p>
+
+<pre><code class="language-perl6">sub bubble-sort(@data) {
+    for ^@data X 1 ..^ @data {
+        my $n = $_[1];
+        @data[$n - 1, $n] .= reverse if [&gt;] @data[$n - 1, $n];
+    }
+}
+</code></pre>
+
+<p>我们邀请您进一步处理此代码。我真的好奇是否以及如何做得更短（例如，如何重用切片）。</p>
+
+<p><a href="https://github.com/ash/perl6-algorithms/tree/master/sort">GitHub</a> 上提供了上述程序的源代码。</p>
+
+<p>原文： <a href="https://perl6.online/2019/06/21/100-bubble-sort-in-perl-6/">https://perl6.online/2019/06/21/100-bubble-sort-in-perl-6/</a></p>
 
 
         
@@ -269,12 +400,12 @@ say binary_search(@list, -1);
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2019-03-26-perl6-colonoscopy/" data-toggle="tooltip" data-placement="top" title="Perl 6 Colonoscopy">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2019-06-21-selection-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的选择排序">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2019-06-21-selection-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的选择排序">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2019-06-23-quick-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的快速排序">Next Post &rarr;</a>
             </li>
           
         </ul>

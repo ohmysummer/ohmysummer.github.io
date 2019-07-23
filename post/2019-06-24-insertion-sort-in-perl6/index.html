@@ -5,23 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Perl 6 实现二分查找</title>
-  <meta property="og:title" content="Perl 6 实现二分查找" />
-  <meta name="twitter:title" content="Perl 6 实现二分查找" />
-  <meta name="description" content="楽土">
-  <meta property="og:description" content="楽土">
-  <meta name="twitter:description" content="楽土">
+  <title>Perl 6 中的插入排序</title>
+  <meta property="og:title" content="Perl 6 中的插入排序" />
+  <meta name="twitter:title" content="Perl 6 中的插入排序" />
+  <meta name="description" content="Insertion sort in Perl 6">
+  <meta property="og:description" content="Insertion sort in Perl 6">
+  <meta name="twitter:description" content="Insertion sort in Perl 6">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/post/2019-06-01-binary-search-in-perl6/" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2019-06-24-insertion-sort-in-perl6/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rakudo Perl 6" />
 
   <meta name="generator" content="Hugo 0.53" />
-  <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-01-binary-search-in-perl6/" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-24-insertion-sort-in-perl6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -198,21 +198,21 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Perl 6 实现二分查找</h1>
+              <h1>Perl 6 中的插入排序</h1>
                 
                   
-                    <h2 class="post-subheading">楽土</h2>
+                    <h2 class="post-subheading">Insertion sort in Perl 6</h2>
                   
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 1, 2019
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 24, 2019
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (86 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (175 words)
   
   
 </span>
@@ -231,27 +231,93 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <pre><code class="language-perl6">sub binary_search(@list, $item) {
-    my $low  = 0;                        # low 和 high 用于跟踪要在其中查找的列表部分
-    my $high = @list.elems -1;           #
+        <p>今天，我们研究插入排序算法及其在 Perl 6 中的可能实现。算法的复杂性是 O(n2)，但它是练习 Perl 6 的一个很好的选择。</p>
 
-    while $low &lt;= $high {                # 只要范围没有缩小到只包含一个元素
-        my $mid   = ($low + $high) / 2;  # 就检查中间的元素
-        my $guess = @list[$mid];
+<p>这个想法很简单。您可以在数组中找到最小值并将其放在第一个位置。然后从第二个位置开始扫描数据（因为第一个位置已经被最低元素占用）。然后你向右走，找到最小值并将它们放到当前位置直到你到达终点。</p>
 
-        return $mid if $guess == $item;  # 找到了就返回
-        if $guess &gt; $item {              # 猜的数字大了
-            $high = $mid -1 
-        } else {                         # 才的数字小了
-            $low = $mid + 1
-        }  
+<p>它类似于选择排序，但不是交换两个元素，而是插入一个（因此，移动其他元素）。让我们从简单的方法和两个嵌套循环开始：</p>
+
+<pre><code class="language-perl6">sub insertion-sort(@data) {
+    for ^@data -&gt; $i {
+        for ^$i -&gt; $j {
+            if @data[$i] &lt; @data[$j] {
+                @data.splice($j, 0, @data[$i]);
+                @data.splice($i + 1, 1);
+            }
+        }
     }
 }
 
-my @list = [1, 3, 5, 7, 9];
-say binary_search(@list, 3);
-say binary_search(@list, -1);
+my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
+insertion-sort @data;
+say @data;
 </code></pre>
+
+<p>在Perl 6中，数组的拼接方法可以完成两个任务：用另一个元素列表替换数组的一部分，或者只是删除元素或一行中的一些元素。</p>
+
+<p>在上面的代码中，使用了该方法的两个应用程序。首先，将新找到的元素插入当前位置。其次，它从之前的位置删除（数组刚刚增长，因此索引变为$ i + 1）。</p>
+
+<p>由于splice方法也返回已删除的元素，我们可以将第二个调用放到正在读取元素的位置：@data [$ i]。因此，可以使用以下嵌套调用替换这两行</p>
+
+<pre><code class="language-perl6">@data.splice($j, 0, @data.splice($i, 1))
+</code></pre>
+
+<p>请注意，索引现在只是$ i，因为数组尚未修改。</p>
+
+<p>您应该已经熟悉了第二个可能的技巧：如果出现以下情况，请使用 <code>if</code> 后缀：</p>
+
+<pre><code class="language-perl6">sub insertion-sort(@data) {
+    for ^@data -&gt; $i {
+        for ^$i -&gt; $j {
+            @data.splice($j, 0, @data.splice($i, 1)) 
+                if @data[$i] &lt; @data[$j];
+        }
+    }
+}
+</code></pre>
+
+<p>你可以在这一点上停下来，但我希望你还不满意。至少，两个嵌套的fors似乎是进一步思考的好领域。</p>
+
+<p>不幸的是，不可能直接使用交叉运算符来获得类似^ @ data X ^ @ data的东西，因为第二个列表依赖于第一个列表，但是有一种完全不同的简化代码的方法。</p>
+
+<p>最内部for循环的主要目标是找到数组中的第一个最小元素。 Perl 6为我们提供了第一种方法，它就是这样做的。</p>
+
+<p>默认情况下，它返回元素，但我们需要它的索引。您可以通过添加：k命名参数来实现</p>
+
+<pre><code class="language-perl6">@data.first(* &gt;= @data[$_], :k)
+</code></pre>
+
+<p>裸：k相当于将参数设置为True :: k（True）或k =&gt; True。</p>
+
+<pre><code class="language-perl6">sub insertion-sort(@data) {
+    for ^@data -&gt; $i {
+        @data.splice(
+            @data.first(* &gt;= @data[$i], :k), 
+            0,
+            @data.splice($i, 1)
+        )
+    }
+}
+</code></pre>
+
+<p>最后，让剩下的for循环成为一个postfix子句，并且你完成了一个很好的单行函数（这里显示在不同的行上分成较短的部分）：</p>
+
+<pre><code class="language-perl6">sub insertion-sort(@data) {
+    @data.splice(
+        @data.first(* &gt;= @data[$_], :k), 
+        0,
+        @data.splice($_, 1)
+    ) for ^@data;
+}
+
+my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
+insertion-sort @data;
+say @data;
+</code></pre>
+
+<p>这一切都是现在，但如果你发现可以改进的东西，请在下面的评论中告诉我们。<a href="https://github.com/ash/perl6-algorithms/blob/master/sort/insertion-sort-3.pl6">源代码</a>可在GitHub上获得。</p>
+
+<p>原文：<a href="https://perl6.online/2019/06/24/102-insertion-sort-in-perl-6/">https://perl6.online/2019/06/24/102-insertion-sort-in-perl-6/</a></p>
 
 
         
@@ -269,12 +335,12 @@ say binary_search(@list, -1);
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2019-03-26-perl6-colonoscopy/" data-toggle="tooltip" data-placement="top" title="Perl 6 Colonoscopy">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2019-06-23-quick-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的快速排序">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2019-06-21-selection-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的选择排序">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2019-06-25-merge-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的合并排序">Next Post &rarr;</a>
             </li>
           
         </ul>

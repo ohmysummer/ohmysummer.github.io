@@ -220,7 +220,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 52 minutes (10996 words)
+  <i class="fa fa-clock-o"></i> 30 minutes (6335 words)
   
   
 </span>
@@ -315,9 +315,7 @@ grammar     role        enum        subset
 
 <h2 id="元对象">元对象</h2>
 
-<p>So if 6model doesn&rsquo;t natively know how things like inheritance and role composition work, let alone subset types, where are these things implemented?</p>
-
-<p>所以，如果 6model 本身不知道继承和角色是如何组合起来工作的，更不用说子集类型，这些东西在哪里实现？</p>
+<p>因此，如果 6model 本身不知道继承和角色组合这样的事情是什么，更不用说子集类型了，这些东西在哪里实现？</p>
 
 <p>答案在于<strong>元对象</strong>。每个存在的对象都有一个与之关联的元对象，它描述了该对象是如何工作的。许多对象可能具有相同的元对象。例如，在 Perl 6 中，<strong>同一个类的所有对象将共享一个元对象</strong>。</p>
 
@@ -375,17 +373,14 @@ $Greeter.HOW.add_method($Greeter, 'greet',
 <pre><code>$Greeter.greet('Katerina');
 </code></pre>
 
-<p>Then our meta-object&rsquo;s <code>find_method</code> method will be called with the argument <code>greet</code>, and whatever it returns will be invoked, passing <code>$Greeter</code> and the string <code>Katerina</code> as arguments.
-那么，我们的元对象的 <code>find_method</code> 方法将被调用 <code>greet</code> 参数，它返回的任何东西都会被调用，传递 <code>$Greeter</code> 和字符串 <code>Katerina</code> 作为参数。</p>
+<p>那么，我们的元对象的 <code>find_method</code> 方法将被调用, 使用 <code>greet</code> 参数，它返回的任何东西都会被调用，传递 <code>$Greeter</code> 和字符串 <code>Katerina</code> 作为参数。</p>
 
 <h2 id="how-s-that">HOW&rsquo;s that?</h2>
 
-<p>The word <code>HOW</code> is often used in connection with meta-objects. By convention,the meta-object for the keyword <code>class</code> will have a name like <code>ClassHOW</code>. It&rsquo;s not strictly followed, even in Rakudo and NQP. But all of the meta-objects for types do end in <code>HOW</code>.</p>
-
 <p>If you take an object and use <code>.HOW</code> on it, you get the meta-object back. We can chase this up the chain as far as we wish.
-&ldquo;HOW&rdquo; 这个词通常用于元对象。按照惯例，关键字 <code>class</code> 的元对象将有一个像 <code>ClassHOW</code> 这样的名字。这不是严格遵循，即使在 Rakudo 和 NQP 中。但是所有类型的元对象都以 &ldquo;HOW&rdquo; 结尾。</p>
+<code>HOW</code> 这个词通常用于元对象。按照惯例，关键字 <code>class</code> 的元对象将有一个像 <code>ClassHOW</code> 这样的名字。这不是严格遵循的，即使在 Rakudo 和 NQP 中。但是所有类型的元对象都以 <code>HOW</code> 结尾。</p>
 
-<p>如果你拿一个对象并使用<code>.HOW</code>，你就会得到元对象。我们可以按照我们的意愿去追逐这个链条。</p>
+<p>如果你拿一个对象并使用 <code>.HOW</code>，你就会得到元对象。我们可以按照我们的意愿去追逐这个链条。</p>
 
 <pre><code>my $mo := $Greeter.HOW;
 say($mo.HOW.name($mo));             # SimpleHOW
@@ -397,11 +392,9 @@ say($momomo.HOW.name($momomo));     # KnowHOW
 
 <h2 id="knowhow-the-root-of-it-all">KnowHOW, the root of it all</h2>
 
-<p>If you chase the <code>HOW</code>-chain far enough back on any object, eventually you&rsquo;ll
-reach something that claims to be a <code>KnowHOW</code>. Keep going, and you just go in
-circles; the end of the chain is self-describing.</p>
+<p>如果你在任何对象上追逐足够多的 <code>HOW</code> 链，最终你会达到被称为 <code>KnowHOW</code> 的东西。 继续前进，你就开始兜圈子了; 链的末端是自我描述的。</p>
 
-<p><code>KnowHOW</code> is the only meta-object provided by the 6model core. It supports:</p>
+<p><code>KnowHOW</code> 是由 6model 提供的仅有的元对象。它支持:</p>
 
 <ul>
 <li>Having a name</li>
@@ -410,13 +403,11 @@ circles; the end of the chain is self-describing.</p>
 <li>In a type check, it only type checks against itself</li>
 </ul>
 
-<p>That&rsquo;s it. No role composition. No inheritance.</p>
+<p>就是这些而已。没有角色组合。没有继承。</p>
 
-<h2 id="the-knowhow-declarator">The knowhow declarator</h2>
+<h2 id="knowhow-声明符">knowhow 声明符</h2>
 
-<p>The <code>knowhow</code> package declarator exists in both Rakudo and NQP. You&rsquo;ve very
-little reason to use it yourself. However, inside of <code>src/how/</code> in NQP, you
-will find a bunch of meta-objects using it:</p>
+<p>Rakudo 和 NQP 都存在 <code>knowhow</code> 包声明符。 你没理由自己使用它。 但是，在 NQP 的 <code>src/how</code> 中，你会发现一堆使用它的元对象:</p>
 
 <pre><code>NQPModuleHOW                An NQP module
 NQPClassHOW                 An NQP class or grammar
@@ -426,29 +417,24 @@ NQPConcreteRoleHOW          An NQP role made concrete for a given class
 NQPCurriedRoleHOW           An NQP role with some arguments pre-set
 </code></pre>
 
-<p>Naturally, we can&rsquo;t use <code>class</code> until the meta-object that implements classes
-is available! Thus, <code>knowhow</code> is all we have.</p>
+<p>当然，在实现类的元对象可用之前，我们不能使用 <code>class</code>！ 因此，<code>knowhow</code> 就是我们所拥有的。</p>
 
 <h2 id="giving-rubyish-classes">Giving Rubyish classes</h2>
 
-<p>We&rsquo;ll take a look at the meta-objects for NQP and Rakudo in a little bit. But
-first, to see something a little more manageable, let&rsquo;s return to the Rubyish
-compiler we worked on yesterday and add very basic OO support:</p>
+<p>我们稍后会看一下 NQP 和 Rakudo 的元对象。 但首先，为了看到一些更易于管理的东西，让我们回到我们昨天工作的 Rubyish 编译器并添加非常基本的 OO 支持：</p>
 
 <ul>
-<li>Declaring a class</li>
-<li>Giving it methods</li>
-<li>Creating a class instance with a <code>new</code> statement</li>
-<li>Calling the methods on the class</li>
+<li>声明一个类</li>
+<li>添加方法</li>
+<li>使用 <code>new</code> 语句创建类的实例</li>
+<li>在类上调用方法</li>
 </ul>
 
-<p>We&rsquo;ll put inheritance and attributes aside for now; in fact, we&rsquo;ll use the NQP
-or Perl 6 meta-objects to study those.</p>
+<p>我们暂时将继承和属性放在一边; 事实上，我们将使用 NQP 或 Perl 6 元对象来研究它们。</p>
 
-<h2 id="parsing-a-class-definition">Parsing a class definition</h2>
+<h2 id="解析类的定义">解析类的定义</h2>
 
-<p>The parsing is relatively easy, however we set up a couple of extra dynamic
-variables related to methods. We&rsquo;ll see their usage next.</p>
+<p>解析相对容易，但是我们设置了一些与方法相关的额外动态变量。 我们接下来会看到他们的用法。</p>
 
 <pre><code>token statement:sym&lt;class&gt; {
     :my $*IN_CLASS := 1;
@@ -463,11 +449,9 @@ rule classbody {
 }
 </code></pre>
 
-<h2 id="updating-def-for-methods">Updating def for methods</h2>
+<h2 id="更新方法的-def">更新方法的 def</h2>
 
-<p>Methods are declared just like functions. Inside the scope of a class, a
-function definition should be added to the surrounding class. The action
-method for <code>def</code> can be updated as follows:</p>
+<p>方法声明就像函数一样。 在类的作用域内，应该将函数定义添加到周围的类中。 <code>def</code> 的 action 方法可以更新如下：</p>
 
 <pre><code>method statement:sym&lt;def&gt;($/) {
     my $install := $&lt;defbody&gt;.ast;
@@ -484,12 +468,11 @@ method for <code>def</code> can be updated as follows:</p>
 }
 </code></pre>
 
-<p>That is, push the <code>QAST::Block</code> onto <code>@*METHODS</code> in a class.</p>
+<p>即, 把 <code>QAST::Block</code> 推入到类的 <code>@*METHODS</code> 中。</p>
 
-<h2 id="a-simple-meta-object">A simple meta-object</h2>
+<h2 id="一个简单的元对象">一个简单的元对象</h2>
 
-<p>The meta-object we wrote before is just about good enough. Here it is with a
-couple of minor tweaks.</p>
+<p>我们之前写过的元对象就足够好了。 这是一些小调整。</p>
 
 <pre><code>class RubyishClassHOW {
     has $!name;
@@ -509,10 +492,9 @@ couple of minor tweaks.</p>
 }
 </code></pre>
 
-<h2 id="building-up-the-meta-object-1">Building up the meta-object (1)</h2>
+<h2 id="构建元对象-1">构建元对象 (1)</h2>
 
-<p>In Rubyish, we&rsquo;ll generate code that builds up the meta-object. First of all,
-let&rsquo;s take care of the <code>classbody</code> action method.</p>
+<p>在 Rubyish 中, 我们会生成构建元对象的代码。首先, 让我们关注 <code>classbody</code>  action 方法。</p>
 
 <pre><code>method classbody($/) {
     $*CUR_BLOCK.push($&lt;statementlist&gt;.ast);
@@ -521,14 +503,11 @@ let&rsquo;s take care of the <code>classbody</code> action method.</p>
 }
 </code></pre>
 
-<p>Note how the <code>blocktype</code> is set to <code>immediate</code>, since we want code in the
-class body to run as part of the program mainline.</p>
+<p>注意 <code>blocktype</code> 是如何被设置为 <code>immediate</code> 的，因为我们希望类体中的代码作为程序主线的一部分运行。</p>
 
-<h2 id="building-up-the-meta-object-2">Building up the meta-object (2)</h2>
+<h2 id="构建元对象-2">构建元对象 (2)</h2>
 
-<p>We mangle the name, then use <code>RubyishClassHOW</code> to create a new type object to
-represent it. Note that <code>QAST::WVal</code> is a way to refer to an object; we&rsquo;ll see
-much more on this later.</p>
+<p>我们损坏了名称，然后使用 <code>RubyishClassHOW</code> 创建一个新的类型对象来表示它。 请注意，<code>QAST:: WVal</code> 是一种引用对象的方法; 我们稍后会看到更多。</p>
 
 <pre><code>method statement:sym&lt;class&gt;($/) {
     my $body_block  := $&lt;classbody&gt;.ast;
@@ -550,11 +529,9 @@ much more on this later.</p>
 }
 </code></pre>
 
-<h2 id="building-up-the-meta-object-3">Building up the meta-object (3)</h2>
+<h2 id="构建元对象-3">构建元对象 (3)</h2>
 
-<p>We also emit method calls to <code>add_method</code> to build up the method table for the
-class. Recall that <code>QAST::BVal</code> lets us reference a <code>QAST::Block</code> that was
-installed elsewhere in the tree.</p>
+<p>我们还发出对 <code>add_method</code> 方法的调用来为类构建方法表。 回想一下，<code>QAST::BVal</code> 允许我们引用树中其他地方安装的 <code>QAST::Block</code>。</p>
 
 <pre><code>my $class_var := QAST::Var.new( :name($ins_name), :scope('lexical') );
 for @*METHODS {
@@ -567,19 +544,18 @@ for @*METHODS {
 }
 </code></pre>
 
-<p>And with that, we&rsquo;ve got classes and methods.</p>
+<p>有了这个，我们就有了类和方法。</p>
 
-<h2 id="the-new-keyword">The new keyword</h2>
+<h2 id="new-关键字">new 关键字</h2>
 
-<p>Parsing <code>new</code> is unsurprising (we skip constructor arguments):</p>
+<p>解析 <code>new</code> 并不令人惊讶（我们跳过构造函数参数）：</p>
 
 <pre><code>token term:sym&lt;new&gt; {
     'new' \h+ :s &lt;ident&gt; '(' ')'
 }
 </code></pre>
 
-<p>The actions mangle the class name to look it up, and then use the <code>create</code> NQP
-op to create an instance of it.</p>
+<p>这些 action 会破坏类名以查找它，然后使用 <code>create</code> NQP op 来创建它的实例。</p>
 
 <pre><code>method term:sym&lt;new&gt;($/) {
     make QAST::Op.new(
@@ -589,15 +565,14 @@ op to create an instance of it.</p>
 }
 </code></pre>
 
-<h2 id="method-calls-1">Method calls (1)</h2>
+<h2 id="方法调用-1">方法调用 (1)</h2>
 
-<p>Last but not least, we need to parse method calls. These can be handled as a
-kind of postfix, with a very tight precedence. First, we add the level:</p>
+<p>最后但并非最不重要的是，我们需要解析方法调用。 这些可以作为一种后缀处理，具有非常严格的优先级。 首先，我们添加级别：</p>
 
 <pre><code>Rubyish::Grammar.O(':prec&lt;y=&gt;, :assoc&lt;unary&gt;', '%methodop');
 </code></pre>
 
-<p>And then the parsing, which is not too unlike how a function call was parsed.</p>
+<p>然后是解析，这与解析函数调用的方式并不太相似。</p>
 
 <pre><code>token postfix:sym&lt;.&gt;  {
     '.' &lt;ident&gt; '(' :s &lt;EXPR&gt;* % [ ',' ] ')'
@@ -605,9 +580,9 @@ kind of postfix, with a very tight precedence. First, we add the level:</p>
 }
 </code></pre>
 
-<h2 id="method-calls-2">Method calls (2)</h2>
+<h2 id="方法调用-2">方法调用 (2)</h2>
 
-<p>The actions for a method call are relatively straightforward.</p>
+<p>方法调用的 action 相对简单。</p>
 
 <pre><code>method postfix:sym&lt;.&gt;($/) {
     my $meth_call := QAST::Op.new( :op('callmethod'), :name(~$&lt;ident&gt;) );
@@ -618,32 +593,27 @@ kind of postfix, with a very tight precedence. First, we add the level:</p>
 }
 </code></pre>
 
-<p>The key bit of &ldquo;magic&rdquo; that happens is that the <code>EXPR</code> action method will
-unshift the term the postfix was applied to, meaning it becomes the first
-child (and thus the invocant).</p>
+<p>发生“魔法”的关键点是 <code>EXPR</code> action 方法将取消后缀应用的术语，这意味着它成为第一个孩子（因而是调用者）。</p>
 
 <h2 id="exercise-7">Exercise 7</h2>
 
-<p>In this exercise, you&rsquo;ll add basic support for classes and methods to PHPish.
-This will involve:</p>
+<p>在本练习中，您将为 PHPish 添加对类和方法的基本支持。
+这将涉及：</p>
 
 <ul>
-<li>Writing a basic meta-object for a class with methods</li>
-<li>Checking it works stand-alone</li>
-<li>Adding parsing for classes, methods, new statements and method calls</li>
-<li>Adding the relevant action methods to make things work</li>
+<li>使用方法为类编写基本元对象</li>
+<li>检查它是否独立运行</li>
+<li>为类，方法，新语句和方法调用添加解析</li>
+<li>添加相关的 action 方法以使工作正常</li>
 </ul>
 
-<p>See the exercise sheet for more information.</p>
+<p>有关更多信息，请参阅练习册。</p>
 
 <h2 id="stables">STables</h2>
 
-<p>Each object has a meta-object and a representation. However, it does not point
-directly to them. Instead, each object points to an <strong>s-table</strong>, short for
-<strong>shared table</strong>.</p>
+<p>每个对象都有一个元对象和一个表示。 但是，它并没有直接指向他们。 相反，每个对象都指向一个 <strong>s-table</strong>，即共享表(<strong>shared table</strong>)的缩写。</p>
 
-<p>STables <strong>represent a type</strong>, and exist per <code>HOW</code>/<code>REPR</code> combination. Here is
-a cut-down version of the <code>MVMSTable</code> struct from MoarVM:</p>
+<p>STable <strong>表示一种类型</strong>，并且每个 <code>HOW</code>/<code>REPR</code> 组合都存在。 这是 MoarVM 的 <code>MVMSTable</code> 结构的简化版本:</p>
 
 <pre><code>struct MVMSTable {
     MVMREPROps *REPR;   /* The representation operation table. */
@@ -654,30 +624,23 @@ a cut-down version of the <code>MVMSTable</code> struct from MoarVM:</p>
 };
 </code></pre>
 
-<h2 id="representation-operations">Representation Operations</h2>
+<h2 id="表示操作">表示操作</h2>
 
-<p>The representation operations are broken down into:</p>
+<p>表示操作分为:</p>
 
 <ul>
-<li><strong>Common things:</strong> creating a new type based on the representation, composing
-that type (which may then compute a memory layout), allocation, cloning,
-changing type (used for mixins), serialization and deserialization</li>
-<li><strong>Boxing:</strong> for types that serve as boxes of native types (int/str/num),
-get/set the boxed value</li>
-<li><strong>Attributes:</strong> for types that can do storage of object attributes, get/bind
-attribute values as well as compute access hints</li>
-<li><strong>Positional:</strong> for types that provide array-like storage, get and bind by
-index, push/pop/shift/unshift, splice, set elements</li>
-<li><strong>Associative:</strong> for types that provide hash-like storage, get and bind by
-key, exists by key, delete by key</li>
+<li><strong>常见的的东西</strong>：基于表示创建新类型，组成该类型（然后可以计算内存布局），分配，克隆，更改类型（用于 mixins），序列化和反序列化<br /></li>
+<li><strong>装箱</strong>：对于作为原生类型（int/str/num）的装箱类型，get/set 装箱值<br /></li>
+<li><strong>属性</strong>：对于可以存储对象属性的类型，get/bind 属性值以及计算访问提示<br /></li>
+<li><strong>Positional</strong>：用于提供类似数组存储的类型，通过索引获取和绑定，push/pop/shift/unshift, splice, 设置元素<br /></li>
+<li><strong>Associative</strong>：用于提供类似哈希存储的类型，按键获取和绑定，按键判断是否存在，按键删除<br /></li>
 </ul>
 
-<p>A representation can choose which of these it supports.</p>
+<p>表示可以选择它支持上面的哪些。</p>
 
-<h2 id="common-representations">Common Representations</h2>
+<h2 id="常见表示">常见表示</h2>
 
-<p>The most common representations you&rsquo;ll encounter while working with NQP and
-rakudo are:</p>
+<p>在使用 NQP 和 rakudo 时，您将遇到的最常见的表示形式是:</p>
 
 <pre><code>P6opaque            Opaque attribute storage; default in Perl 6
 P6int               A native integer; flattens into a P6opaque
@@ -689,12 +652,9 @@ VMHash              Hash table
 Uninstantiable      Type object only; used for module, role, etc.
 </code></pre>
 
-<h2 id="type-setup">Type setup</h2>
+<h2 id="类型设置">类型设置</h2>
 
-<p>The <code>nqp::newtype</code> operation is central to type creation. For example, here is
-the <code>new_type</code> method from <code>NQPModuleHOW</code>. It creates a new meta-object, makes
-a new type based upon it and the <code>Uninstantiable</code> representation, and gives it
-an empty Hash as its stash.</p>
+<p><code>nqp::newtype</code> 操作是类型创建的核心。 例如，这是 <code>NQPModuleHOW</code> 中的 <code>new_type</code> 方法。 它创建一个新的元对象，基于它创建一个新类型和 <code>Uninstantiable</code> 表示，并给它一个空的哈希作为它的藏匿处:</p>
 
 <pre><code>method new_type(:$name = '&lt;anon&gt;') {
     my $metaobj := self.new(:name($name));
@@ -702,22 +662,15 @@ an empty Hash as its stash.</p>
 }
 </code></pre>
 
-<p><code>nqp::newtype</code> creates a new type object and STable. It points the type object
-at the STable, and the <code>WHAT</code> field of the STable back at the type object. It
-then sets the <code>HOW</code> field of the STable to the specified meta-object, and the
-<code>REPROps</code> to the operation table for <code>Uninstantiable</code>.</p>
+<p><code>nqp::newtype</code> 创建一个新的类型对象和 STable。 它将类型对象指向 STable，将 STable 的 <code>WHAT</code> 字段指向类型对象。 然后，它将 STable 的 <code>HOW</code> 字段设置为指定的元对象，并将 <code>REPROps</code> 设置为 <code>Uninstantiable</code> 的操作表。</p>
 
-<h2 id="type-composition">Type composition</h2>
+<h2 id="类型组合">类型组合</h2>
 
-<p>Various representations need types to go through a <strong>composition</strong> phase. For
-others it is optional.</p>
+<p>各种表示需要类型来完成<strong>组合</strong>阶段。 对于其他东西，它是可选的。</p>
 
-<p>Representation composition typically happens at class composition time (which
-is usually done at the point of the closing <code>}</code> of a class declaration). It is
-when a meta-object has a chance to configure an underlying representation.</p>
+<p>表示组合通常发生在类组合时（通常在类声明的闭合 <code>}</code> 处完成）。 当元对象有机会配置底层表示时。</p>
 
-<p>For example, <code>P6opaque</code> must be configured with the attributes that it should
-compute a layout for.</p>
+<p>例如，必须为 <code>P6opaque</code> 配置应为其计算布局的属性。</p>
 
 <pre><code># &lt;build attribute info array up into @repr_info&gt;
 my %info := nqp::hash();
@@ -725,14 +678,11 @@ my %info := nqp::hash();
 nqp::composetype($obj, %info)
 </code></pre>
 
-<p><code>repr-compose-protocol.markdown</code> documents this in detail.</p>
+<p><code>repr-compose-protocol.markdown</code> 详细记录了这个。</p>
 
-<h2 id="method-caches">Method caches</h2>
+<h2 id="方法缓存">方法缓存</h2>
 
-<p>If every method call really involved a call to <code>find_method</code>, method dispatch
-would be way too slow. Therefore, many types publish a <strong>method cache</strong>, which
-is a hash table mapping a method name to the thing to call. Here it is done by
-walking the method resolution order in reverse (so we get overrides correct).</p>
+<p>如果每个方法调用真的涉及调用 <code>find_method</code>，那么方法分派就太慢了。 因此，许多类型发布了<strong>方法缓存</strong> ，是一个将方法名映射到要调用的东西的哈希表。 这是通过反向遍历解析方法顺序来完成的（所以我们正确地覆盖）。</p>
 
 <pre><code>method publish_method_cache($obj) {
     my %cache;
@@ -747,52 +697,45 @@ walking the method resolution order in reverse (so we get overrides correct).</p
 }
 </code></pre>
 
-<p>Method caches hang off an <code>STable</code>.</p>
+<p>方法缓存挂起了 <code>STable</code>。</p>
 
-<h2 id="authoritative-method-caches">Authoritative method caches</h2>
+<h2 id="授权方法缓存">授权方法缓存</h2>
 
-<p>We can choose if the method cache is authoritative or not:</p>
+<p>我们可以选择方法缓存是否具有授权:</p>
 
-<pre><code>nqp::setmethcacheauth($obj, 0);     # Non-authoritative; default
-nqp::setmethcacheauth($obj, 1);     # Authoritative
+<pre><code>nqp::setmethcacheauth($obj, 0);     # 非授权模式; 默认
+nqp::setmethcacheauth($obj, 1);     # 授权模式
 </code></pre>
 
-<p>This really just controls what happens if the method in question is not found
-in the method cache. In authoritative mode, the cache is taken as having the
-complete set of methods. In non-authoritative mode, if the method is not found
-in the cache, we fall back to calling <code>find_method</code>.</p>
+<p>这实际上只是控制在方法缓存中找不到所谈论中的方法时会发生什么 。 在授权模式下，缓存被视为具有完整的方法集。 在非授权模式，如果在缓存中找不到该方法， 我们回退到调用 <code>find_method</code>。</p>
 
-<p>It&rsquo;s nice to have authoritative method caches when possible, since it can give
-a fast answer to <code>nqp::can(...)</code>. However, any type that wants to do fallback
-handling cannot have this. Rakudo decides on a type-by-type basis.</p>
+<p>在可能的情况下拥有授权方法缓存很好，因为它可以快速回应 <code>nqp::can(...)</code>。 但是，任何想要做回退处理的类型不能拥有授权模式。 Rakudo 按类型决定授权。</p>
 
-<h2 id="type-checking">Type checking</h2>
+<h2 id="类型检查">类型检查</h2>
 
-<p>Type checks show up in many places in Perl 6:</p>
+<p>类型检查出现在 Perl 6 中的许多地方：</p>
 
-<pre><code>if $obj ~~ SomeType { ... }         # Explicit check
-my SomeType $obj = ...;             # Variable assignment
-sub foo(SomeType $obj) { ... }      # Parameter binding
+<pre><code>if $obj ~~ SomeType { ... }         # 显式检查
+my SomeType $obj = ...;             # 变量赋值
+sub foo(SomeType $obj) { ... }      # 参数绑定
 </code></pre>
 
-<p>These all eventually boil down to the same operation, <code>nqp::istype</code>. However,
-there are many things that <code>SomeType</code> could be one of the many kinds of type:</p>
+<p>这些最终都归结为同样的操作， <code>nqp::istype</code>。 但是，<code>SomeType</code> 花样百出, 它可能是众多类型中的一种：</p>
 
 <pre><code>class SomeType { }              # Class type
 role SomeType { }               # Role type
 subset SomeType where { ... }   # Subset type
 </code></pre>
 
-<h2 id="left-side-knows-checks">Left-side-knows checks</h2>
+<h2 id="left-side-knows-检查">Left-side-knows 检查</h2>
 
-<p>For some kinds of type, the object being checked has the answer. This is the
-case with subtyping relationships.</p>
+<p>对于某些类型，被检查的对象有答案。 这是子类型关系的情况。</p>
 
-<pre><code>Int ~~ Mu           # Int knows it inherits from Mu
-Block ~~ Callable   # Block knows it does Callable
+<pre><code>Int ~~ Mu           # Int 知道它继承自 Mu
+Block ~~ Callable   # Block 知道它能 Callable
 </code></pre>
 
-<p>These cases are handled by a <code>type_check</code> method.</p>
+<p>这些情况由 <code>type_check</code> 方法处理。</p>
 
 <pre><code>method type_check($obj, $checkee) {
     for self.mro($obj) {
@@ -807,11 +750,9 @@ Block ~~ Callable   # Block knows it does Callable
 }
 </code></pre>
 
-<h2 id="type-check-caches">Type check caches</h2>
+<h2 id="类型检查缓存">类型检查缓存</h2>
 
-<p>Once again, really iterating the MRO and the roles composed in at each level
-would be really slow. Therefore, left-side-knows checks are typically handled
-by the meta-object publishing a type-check cache.</p>
+<p>再次，真正每个级别都迭代 MRO 和组合的角色会很慢。 因此，left-side-knows 检查通常由发布类型检查(type-check)缓存的元对象处理。</p>
 
 <pre><code>method publish_type_cache($obj) {
     my @tc;
@@ -827,25 +768,22 @@ by the meta-object publishing a type-check cache.</p>
 }
 </code></pre>
 
-<h2 id="right-side-knows-checks-1">Right-side-knows checks (1)</h2>
+<h2 id="right-side-knows-检查-1">Right-side-knows 检查 (1)</h2>
 
-<p>There are other kinds of type where it&rsquo;s the type that we&rsquo;re checking against
-that needs to drive the checking. For example, subset types are this way:</p>
+<p>还有其他种类的类型，它是我们的检查是否需要驱动检查的类型。 例如， 子集类型是这样的:</p>
 
 <pre><code>subset Even of Int where * % 2 == 0;
 </code></pre>
 
-<p>We need to invoke the code associated with the <code>Even</code> subset type as part of
-the type check:</p>
+<p>我们需要调用与 <code>Even</code> 子集类型相关联的代码作为类型检查的一部分:</p>
 
 <pre><code>say 11 ~~ Even    # False
 say 42 ~~ Even    # True
 </code></pre>
 
-<h2 id="right-side-knows-checks-2">Right-side-knows checks (2)</h2>
+<h2 id="right-side-knows-检查-2">Right-side-knows 检查 (2)</h2>
 
-<p>These kinds of type implement an <code>accepts_type</code> method. For example, here is
-the one from Perl 6&rsquo;s <code>SubsetHOW</code>:</p>
+<p>这些类型实现了 <code>accepts_type</code> 方法。 例如，这是 Perl 6 的 <code>SubsetHOW</code> 中的一个:</p>
 
 <pre><code>method accepts_type($obj, $checkee) {
     nqp::istype($checkee, $!refinee) &amp;&amp;
@@ -853,41 +791,35 @@ the one from Perl 6&rsquo;s <code>SubsetHOW</code>:</p>
 }
 </code></pre>
 
-<p>It must also set up the appropriate type check mode for this to work:</p>
+<p>它还必须为此设置适当的类型检查模式以使其能工作:</p>
 
 <pre><code>nqp::settypecheckmode($type, 2)
 </code></pre>
 
 <h2 id="boolification">Boolification</h2>
 
-<p>One relatively hot-path operation, it turns out, is deciding if an object will
-evaluate to true or false in boolean context. The <code>nqp::istrue</code> operation is
-used to test an object for truthiness. There&rsquo;s also an <code>nqp::isfalse</code>.</p>
+<p>事实证明，一个相对 hot-path 的操作是决定对象是否将在布尔上下文中计算为 true 或 false。 该 <code>nqp::istrue</code> 操作用于测试对象的真假。 还有一个 <code>nqp::isfalse</code> 操作。</p>
 
-<p>How an object boolifies is set through <code>nqp::setboolspec</code>, which takes a flag
-from the list below and an optional code object.</p>
+<p>对象如何通过 <code>nqp::setboolspec</code> 设置 boolifies, 它从下面的列表中获取一个标志和一个可选的代码对象。</p>
 
-<pre><code>0   Call the specified code object, passing the object to test
-1   Unbox as an int; non-zero is true
-2   Unbox as a float; non-zero is true
-3   Unbox as a string; non-empty is true
-4   As above, but &quot;0&quot; is considered false
-5   False if type object, true otherwise
-6   Unbox or treat as a big integer; non-zero is true
-7   For iterator objects; true if there are more items available
-8   For VMArray/VMHash based objects; true if elems is non-zero
+<pre><code>0   调用指定的代码对象，将对象传递给 test 
+1   开箱为int; 非零为真 
+2   开箱为浮点数; 非零为真 
+3   开箱为字符串; 非空为真 
+4   和上面一样，但 &quot;0&quot; 被认为是假 
+5   如果是类型对象，则返回 false，否则返回 true 
+6   开箱为或视为一个大整数; 非零为真 
+7   对于迭代器对象; 如果有更多可用项，则为 true 
+8   对于基于 VMArray/VMHash 的对象; 如果 elems 非零，则为 true
 </code></pre>
 
-<h2 id="invocation">Invocation</h2>
+<h2 id="调用">调用</h2>
 
-<p>There is also an invocation specification mechanism, which indicates what
-happens if an object is invoked (called).</p>
+<p>还有一个调用规范机制，它表示如果对象被调用（调用）会发生什么。</p>
 
-<p>In Rakudo, and often in NQP too, we have code objects. These in turn hold a VM
-level code object. When we invoke a code object, the invocation needs to be
-forwarded to the contained code object.</p>
+<p>在 Rakudo 中，通常也在 NQP 中，我们有代码对象。 这些反过来持有 VM 级代码对象。 当我们调用代码对象时需要将调用转发到包含的代码对象。</p>
 
-<p>Here&rsquo;s an example from NQP&rsquo;s setting:</p>
+<p>以下是 NQP 设置的示例:</p>
 
 <pre><code>my knowhow NQPRoutine {
     has $!do;
@@ -896,44 +828,32 @@ forwarded to the contained code object.</p>
 nqp::setinvokespec(NQPRoutine, NQPRoutine, '$!do', nqp::null);
 </code></pre>
 
-<p>In Rakudo, see <code>Perl6::Metamodel::InvocationProtocol</code>.</p>
+<p>在 Rakudo 中，请参阅 <code>Perl6::Metamodel::InvocationProtocol</code>。</p>
 
-<h2 id="nqp-s-meta-objects">NQP&rsquo;s meta-objects</h2>
+<h2 id="nqp-的元对象">NQP 的元对象</h2>
 
-<p>NQP&rsquo;s meta-objects are all implemented using the <code>knowhow</code> meta-object. They
-also cannot assume the presence of the NQP setting, meaning you&rsquo;ll find some
-slightly odd code in there.</p>
+<p>NQP 的元对象都是使用 <code>knowhow</code> 元对象实现的。 他们也不能假设存在 NQP 设置，意味着你会在那里找到一些奇怪的代码。</p>
 
 <ul>
-<li>The NQP iterator types for hashes that enable <code>.key</code> and <code>.value</code> methods
-are not yet set up, so this code uses <code>nqp::iterkey_s</code> and <code>nqp::iterval</code>.</li>
-<li>There is no <code>NQPMu</code> default for scalars to take yet, so an empty scalar will
-be null; <code>nqp::isnull</code> is therefore used for often.</li>
+<li>NQP 迭代器类型为哈希启用 <code>.key</code> 和 <code>.value</code> 方法尚未设置，因此此代码使用 <code>nqp::iterkey_s</code> 和 <code>nqp::iterval</code>。<br /></li>
+<li>标量没有 <code>NQPMu</code> 默认值，所以空标量将为 <code>null</code>; 因此 <code>nqp::isnull</code> 会被经常使用。</li>
 </ul>
 
-<p>Thankfully, your chances of needing to work on this code are fairly low. It&rsquo;s
-also relatively compact; <code>NQPClassHOW</code>, the most complex meta-object, is only
-around 800 lines of largely straightforward code.</p>
+<p>值得庆幸的是，您需要处理此代码的机会是非常低的。 它也比较紧凑; <code>NQPClassHOW</code>，最复杂的元对象，基本上只有大约 800 行直截了当的代码。</p>
 
-<h2 id="rakudo-s-meta-objects-overview">Rakudo&rsquo;s meta-objects: overview</h2>
+<h2 id="rakudo-的元对象-概览">Rakudo 的元对象: 概览</h2>
 
-<p>The story is much different in Rakudo. Rakudo&rsquo;s meta-objects are implemented
-in terms of NQP&rsquo;s classes and roles. This means that inheritance and role
-composition are available.</p>
+<p>Rakudo 的故事大不相同。 Rakudo 的元对象是根据 NQP 的类和角色实现的。 这意味着继承和角色组合是可用的。</p>
 
-<p>Therefore, while <strong>Rakudo&rsquo;s meta-objects must handle much more</strong> due to the
-richness of the Perl 6 object system, they are <strong>very neatly factored</strong>.</p>
+<p>因此，由于 Perl 6 对象系统的丰富性, 虽然 <strong>Rakudo 的元对象必须处理很多</strong>,  但是它们被<strong>非常巧妙的分解了</strong> 。</p>
 
-<p>There is <strong>a meta-object per declarator</strong> (so <code>class</code> maps to <code>ClassHOW</code>), and
-a few extra bits for roles (which are rather complex to implement due to their
-type parametricity).</p>
+<p><strong>每个声明符都有一个元对象</strong> （所以 <code>class</code> 映射到 <code>ClassHOW</code>），以及角色的一些额外位（因其类型参数而实现起来相当复杂）。</p>
 
-<p>However, much functionality is <strong>factored out into roles</strong>, which are re-used
-amongst the different meta-objects.</p>
+<p>但是，很多功能都会被<strong>分解到角色中</strong>, 它们在不同的元对象中被重用。</p>
 
-<h2 id="example-classhow">Example: ClassHOW</h2>
+<h2 id="例子-classhow">例子: ClassHOW</h2>
 
-<p>Here are the roles that are done by <code>Perl6::Metamodel::ClassHOW</code>:</p>
+<p>以下是 <code>Perl6::Metamodel::ClassHOW</code> 完成的角色：</p>
 
 <pre><code>Naming                      Documenting
 Versioning                  Stashing
@@ -948,13 +868,11 @@ BoolificationProtocol       REPRComposeProtocol
 InvocationProtocol
 </code></pre>
 
-<p>Amongst the names, you&rsquo;ll recognize many Perl 6 features, as well as some of
-the 6model concepts we&rsquo;ve covered in this section.</p>
+<p>在这些名称中，您还将识别许多 Perl 6 功能，和我们在本节中介绍的 6model 概念中的一些。</p>
 
-<h2 id="example-enumhow">Example: EnumHOW</h2>
+<h2 id="例子-enumhow">例子: EnumHOW</h2>
 
-<p>If we look at <code>Perl6::Metamodel::EnumHOW</code>, we&rsquo;ll see that it re-uses a number
-of these roles:</p>
+<p>如果我们看看 <code>Perl6::Metamodel::EnumHOW</code>，我们会看到它重用了如下几个角色:</p>
 
 <pre><code>Naming                      Stashing
 AttributeContainer          MethodContainer
@@ -964,19 +882,16 @@ BUILDPLAN                   BoolificationProtocol
 REPRComposeProtocol         InvocationProtocol
 </code></pre>
 
-<p>In fact, it has just one extra role that it composes:</p>
+<p>事实上，它只组合了一个额外的角色:</p>
 
 <pre><code>BaseType
 </code></pre>
 
-<p>The roles aside, <code>ClassHOW</code> is 250 lines of code, and <code>EnumHOW</code> about 150.
-Thus, most interesting stuff lives in the roles.</p>
+<p>除了角色，<code>ClassHOW</code> 是 250 行代码, <code>EnumHOW</code> 是 150 行代码。 因此，大多数有趣的东西都存在于角色中。</p>
 
-<h2 id="example-naming">Example: Naming</h2>
+<h2 id="例子-naming">例子: Naming</h2>
 
-<p>Some of the roles are extremely simple. For example, all of the meta-objects
-compose the <code>Naming</code> role, which simply provides two methods and a <code>$!name</code>
-attribute:</p>
+<p>有些角色非常简单。 例如，所有的元对象组成 <code>Naming</code> 角色，它只提供两个方法和 <code>$!name</code> 属性:</p>
 
 <pre><code>role Perl6::Metamodel::Naming {
     has $!name;
@@ -989,13 +904,11 @@ attribute:</p>
 }
 </code></pre>
 
-<p>The role with most code is <code>C3MRO</code>, which computes the C3 method resolution
-order. It&rsquo;s still only 150 lines of code, though. Takeaway: things are divided
-into quite manageable pieces.</p>
+<p>代码最多的角色是 <code>C3MRO</code>，它计算 C3 方法解析顺序。 不过，它仍然只有 150 行代码。 要点：事情分为可管理的部分。</p>
 
-<h2 id="example-grammarhow">Example: GrammarHOW</h2>
+<h2 id="例子-grammarhow">例子: GrammarHOW</h2>
 
-<p>This is the simplest meta-object:</p>
+<p>这是最简单的元对象：</p>
 
 <pre><code>class Perl6::Metamodel::GrammarHOW
     is Perl6::Metamodel::ClassHOW
@@ -1004,35 +917,31 @@ into quite manageable pieces.</p>
 }
 </code></pre>
 
-<p>Essentially, a <code>grammar</code> does everything that a <code>class</code> does, but composes
-the <code>DefaultParent</code> role so as to enable grammars to be configured with a
-different default parent in <code>BOOTSTRAP</code>:</p>
+<p>从本质上讲，<code>grammar</code> 可以完成 <code>class</code> 所做的一切，但是组合 <code>DefaultParent</code> 角色，以便在 <code>BOOTSTRAP</code> 中使用不同的默认父级配置启用 grammar：</p>
 
 <pre><code>Perl6::Metamodel::ClassHOW.set_default_parent_type(Any);
 Perl6::Metamodel::GrammarHOW.set_default_parent_type(Grammar);
 </code></pre>
 
-<h2 id="container-handling">Container handling</h2>
+<h2 id="容器处理">容器处理</h2>
 
-<p>So far, we&rsquo;ve seen that a type can be given a boolification spec and an
-invocation spec. There is one more of these: <strong>container spec</strong>. This is used
-in implementing the <code>Scalar</code> container type in Perl 6.</p>
+<p>到目前为止，我们已经看到一种类型可以给出一个 boolification 规范和一个调用规范。 还有一个： <strong>容器规范</strong> 。 这在 Perl 6 中用于实现 <code>Scalar</code> 容器类型。</p>
 
-<p>Several operations relate to this:</p>
+<p>有几个操作与此有关:</p>
 
-<pre><code>setcontspec         Configure a type as a scalar container type
-iscont              Check if an object is a scalar container
-decont              Get the value inside the container
-assign              Assign a value into the container
-assignunchecked     Assign, assuming no type-check needed
+<pre><code>setcontspec         将类型配置为标量容器类型
+iscont              检查对象是否是标量容器
+decont              获取容器内的值
+assign              将值赋值给容器
+assignunchecked     赋值，假设不需要进行类型检查
 </code></pre>
 
-<p>For example, Rakudo&rsquo;s <code>BOOTSTRAP</code> does:</p>
+<p>例如，Rakudo 的 <code>BOOTSTRAP</code> 会:</p>
 
 <pre><code>nqp::setcontspec(Scalar, 'rakudo_scalar', nqp::null());
 </code></pre>
 
-<h2 id="auto-decontainerization">Auto-decontainerization</h2>
+<h2 id="自动去容器化">自动去容器化</h2>
 
 <p>One may wonder why <code>nqp::decont</code> doesn&rsquo;t need to show up absolutely everywhere
 in Perl 6. The answer is that a range of <code>nqp::op</code>s will automatically do a
@@ -1042,37 +951,36 @@ in Perl 6. The answer is that a range of <code>nqp::op</code>s will automaticall
 decontainerize</strong>. This means <code>nqp::getattr</code> and friends may need an explicit
 <code>nqp::decont</code> on their first argument.</p>
 
+<p>有人可能想知道为什么 <code>nqp::decont</code> 不需要在 Perl 6 中无处不在。答案是一系列的 <code>nqp::ops</code> 将自动为您执行 <code>nqp::decont</code> 操作。</p>
+
+<p>一个常见的例外是*<strong>属性访问没有去容器化</strong> 。 这意味着 <code>nqp::getattr</code> 和它的朋友们的第一个参数可能需要一个显式的 <code>nqp::decont</code>。</p>
+
 <pre><code>nqp::getattr(nqp::decont(@list.Parcel), Parcel, '$!storage')
 </code></pre>
 
-<p>However, since <code>self</code> is defined to always be decontainerized anyway, this
-is not normally a problem.</p>
+<p>但是，因为 <code>self</code> 被定义为始终去容器化, 所以这通常不是问题。</p>
 
-<h2 id="exercise-8">Exercise 8</h2>
+<h2 id="练习-8">练习 8</h2>
 
-<p>As time allows, extend the PHPish object system to have:</p>
+<p>随着时间的推移，将 PHPish 对象系统扩展为：</p>
 
 <ul>
-<li>A method cache (you may like to time if it makes a difference)</li>
-<li>Single inheritance of classes (which will need updates to your method cache
-code)</li>
-<li>Interfaces (these will need a different meta-object, and you will need to
-add a compose-time to the class, to check all named methods in the interface
-are provided)</li>
+<li>方法缓存（如果它有用，您可能需要计时）<br /></li>
+<li>单继承类（需要更新你的方法缓存代码）<br /></li>
+<li>接口（这些将需要一个不同的元对象，而你将需要为此类添加一个 compose-time，以检查接口中的所有命名方法都提供好了）</li>
 </ul>
 
-<p>As usual, the exercise sheet has more hints.</p>
+<p>像往常一样，练习册有更多提示。</p>
 
-<h1 id="bounded-serialization-and-module-loading">Bounded Serialization and Module Loading</h1>
+<h1 id="有界序列化和模块加载">有界序列化和模块加载</h1>
 
-<p><em>Let&rsquo;s save the World!</em></p>
+<p><em>让我们拯救世界吧!</em></p>
 
-<h2 id="a-problem">A problem</h2>
+<h2 id="一个问题">一个问题</h2>
 
-<p>When we built object support into Rubyish, we did so by emitting code to make
-calls on the meta-objects. Doing this clearly has downsides for startup time.
-In Perl 6, however, there are much more serious challenges to this approach.
-Consider the following example:</p>
+<p>当我们在 Rubyish 中构建对象支持时，我们通过发射代码以在元对象上做调用。 这样做明显会有启动时间上的缺点。 然而，在 Perl 6 中，这种方法面临很多更严峻的挑战。</p>
+
+<p>考虑以下例子:</p>
 
 <pre><code>class ABoringExample {
     method yawn() { say &quot;This is at compile time!&quot;; }
@@ -1080,19 +988,15 @@ Consider the following example:</p>
 BEGIN { ABoringExample.yawn }
 </code></pre>
 
-<p>A <code>BEGIN</code> block runs while we are compiling. Therefore, the type object and
-meta-object for <code>ABoringExample</code> needs to be available at the point we run the
-<code>BEGIN</code> block.</p>
+<p>我们编译时会运行 <code>BEGIN</code> 块。 因此，<code>ABoringExample</code> 的类型对象和元对象需要在我们运行 <code>BEGIN</code> 块时可用。</p>
 
-<p>Also, this must work for user-defined meta-objects.</p>
+<p>此外，这必须适用于用户定义的元对象。</p>
 
-<h2 id="this-problem-is-everywhere">This problem is everywhere</h2>
+<h2 id="这个问题无处不在">这个问题无处不在</h2>
 
-<p>A subroutine declaration produces a <code>Sub</code> object, which in turn refers to a
-<code>Signature</code> object which in turn has <code>Parameter</code> objects inside of it.</p>
+<p>子例程声明会生成一个 <code>Sub</code> 对象，它反过来指向一个 <code>Signature</code> 对象而该对象反过来有一个 <code>Parameter</code> 对象在里面。</p>
 
-<p>All of these need constructing at compile time. Not only since we could call
-the sub, but also because traits may need to mix into it:</p>
+<p>所有这些都需要在编译时构建。 不仅仅是因为我们可以调用该 sub，但也因为 traits 可能需要混合到其中:</p>
 
 <pre><code>role StoredProcWrapper { has $.sp_name }
 multi trait_mod:&lt;is&gt;(Routine:D $r, :sp_wrapper($sp_name)!) {
@@ -1104,28 +1008,19 @@ sub LoadStuffAsObjects($id) is sp_wrapper('LoadStuff') {
 }
 </code></pre>
 
-<h2 id="compile-time-vs-runtime">Compile-time vs. runtime</h2>
+<h2 id="编译时-vs-运行时">编译时 vs. 运行时</h2>
 
-<p>The problem, in general, is that we need to be able to build up objects and
-meta-objects at compile time, then refer to them at runtime. Moreover, this is
-a very common case, so we need to do so efficiently.</p>
+<p>一般来说，问题是我们需要能够在编译时建立起对象和元对象，然后在运行时指向它们。 而且，这是一个非常常见的情况，所以需要高效。</p>
 
-<p>That in itself wouldn&rsquo;t be too bad. However, module pre-compilation makes this
-a good bit trickier: <strong>the objects created at compile time may need to cross a
-process boundary</strong>, being saved to disk, then loaded at some future point.</p>
+<p>这本身并不会太糟糕。 但是，模块预编译使这一点变得更加棘手： <strong>在编译时创建的对象可能需要跨过一个进程边界</strong>，保存到磁盘，然后在未来某个点加载。</p>
 
-<p>This is where serialization contexts, bounded serialization and <code>World</code>s come
-in to play.</p>
+<p>这是序列化上下文，有界序列化。那么 <code>World</code> 开始发挥作用。</p>
 
 <h2 id="the-world">The World</h2>
 
-<p>One concept our small <code>Rubyish</code> language lacked, but that both NQP and Rakudo
-have, is a <code>World</code> class. While the <code>Actions</code> class is focused on QAST trees,
-and thus the runtime semantics of a program, a <code>World</code> class is focused on
-<strong>managing declarations and meta-objects</strong> during the compile.</p>
+<p>我们的小型 Rubyish 语言缺少的，但是 NQP 和 Rakudo 两者都有的一个概念是 <code>World</code> 类。 而 <code>Actions</code> 类专注于 QAST 树，因而是程序的运行时语义 ，<code>World</code> 专注于<strong>管理编译期间的声明和元对象</strong>。</p>
 
-<p>A world always has a unique handle per compilation unit. This may be based on
-the original source text, such as in Rakudo.</p>
+<p>world 每个编译单元总是具有唯一句柄。 这个可以基于原始源文本，例如在 Rakudo 中:</p>
 
 <pre><code>my $file := nqp::getlexdyn('$?FILES');
 my $source_id := nqp::sha1(
@@ -1135,33 +1030,21 @@ my $source_id := nqp::sha1(
 my $*W := Perl6::World.new(:handle($source_id), :description($file));
 </code></pre>
 
-<h2 id="serialization-contexts">Serialization contexts</h2>
+<h2 id="序列化上下文">序列化上下文</h2>
 
-<p>The key data structure at the heart of compile-time/runtime object exchange is
-a <strong>serialization context</strong>. Really, a serialization context is just three
-arrays, one each for:</p>
+<p>编译时/运行时对象交换的核心关键数据结构是<strong>序列化上下文</strong> 。 真的，一个序列化上下文只是三个数组，每个上下文一个数组, 用于：</p>
 
 <ul>
-<li><strong>Objects:</strong> any 6model object can appear in this list, though it only makes
-sense to put those that are sensible to serialize in there</li>
-<li><strong>Code objects:</strong> VM-level code objects that objects in the serialization
-context may refer to (or refer to through indirectly, due to a closure
-cloning)</li>
-<li><strong>STables:</strong> the existence of this array is an implementation detail, and
-its contents are never directly manipulated outside of VM-specific code, so
-you can forget about it</li>
+<li><strong>对象</strong>： 任何 6model 对象都可以出现在此列表中，尽管只有把那些明智的序列化放在那里才有意义<br /></li>
+<li><strong>代码对象</strong>： VM 级代码对象, 此对象在序列化上下文可以指向（或间接地指向 ，由于闭包克隆）</li>
+<li><strong>STables</strong>： 这个数组的存在是一个实现细节，其内容永远不会被特定于 VM 的代码的外部直接操纵 ，因此您可以忘记它</li>
 </ul>
 
-<p>There is one <code>World</code> per compilation unit, and a <code>World</code> in turn holds a
-serialization context. In fact, the <code>handle</code> given to <code>World.new(...)</code> is
-actually used for the SC.</p>
+<p>每个编译单元有一个 <code>World</code>，反过来 <code>World</code> 拥有序列化上下文。 事实上，给 <code>World.new(...)</code> 的 <code>handle</code> 实际上用于 SC。</p>
 
-<h2 id="placing-objects-in-a-serialization-context">Placing objects in a serialization context</h2>
+<h2 id="将对象放在序列化上下文中">将对象放在序列化上下文中</h2>
 
-<p>Both <code>NQP::World</code> and <code>Perl6::World</code> inherit from <code>HLL::World</code>. It includes a
-method named <code>add_object</code>, which adds an object into the serialization context
-for the current compilation unit. Here is how it is used in <code>NQP::World</code>, for
-example:</p>
+<p><code>NQP::World</code> 和 <code>Perl6::World</code> 都继承自 <code>HLL::World</code>。 它包含一个名为 <code>add_object</code> 的方法，它为当前编译单元添加了一个对象到序列化上下文中。 这里是它如何被用于 <code>NQP::World</code> 中的，例如：</p>
 
 <pre><code>method pkg_create_mo($how, :$name, :$repr) {
     my %args;
@@ -1173,13 +1056,11 @@ example:</p>
 }
 </code></pre>
 
-<h2 id="referencing-objects-in-a-serialization-context">Referencing objects in a serialization context</h2>
+<h2 id="引用序列化上下文中的对象">引用序列化上下文中的对象</h2>
 
-<p>Any object that is in a serialization context - either the one currently being
-compiled or from one in another module or setting - can be referenced using
-the <code>QAST::WVal</code> node type.</p>
+<p>序列化上下文中的任何对象 - 目前正在编译中的或来自于另一个模块或设置 - 都可以使用 <code>QAST::WVal</code> 节点类型引用。</p>
 
-<p>For example, here is a utility method from <code>Perl6::World</code>:</p>
+<p>例如，这是 <code>Perl6::World</code> 的实用方法:</p>
 
 <pre><code>method add_constant_folded_result($r) {
     self.add_object($r);
@@ -1187,28 +1068,21 @@ the <code>QAST::WVal</code> node type.</p>
 }
 </code></pre>
 
-<p>The <code>W</code> in <code>QAST::WVal</code> means &ldquo;World&rdquo;, which should make a little more sense
-now than it did when we encountered it previously. <code>:-)</code></p>
+<p><code>QAST::WVal</code> 中的 <code>W</code> 意味着 &ldquo;World&rdquo;，这应该是一点点, 现在比我们以前遇到的更有意义。 <code>:-)</code></p>
 
-<h2 id="serialization">Serialization</h2>
+<h2 id="序列化">序列化</h2>
 
-<p>The compiler toolchain knows if the eventual target is to run code in-process
-or generate bytecode to write to disk.</p>
+<p>编译器工具链知道最终目标是要运行进程中的代码或生成字节码以写入磁盘。</p>
 
-<p>In the first case, it&rsquo;s easy: we just make sure it is possible to see the
-serialization context from the running code, and compile a <code>QAST::WVal</code> to
-index into it.</p>
+<p>在第一种情况下，这很容易：我们只是确保能从运行的代码中可以看到序列化上下文，并编译一个 <code>QAST::WVal</code> 来索引它。</p>
 
-<p>The second case requires serializing all the objects in the serialization
-context, and in turn serializing the objects that they point to, traversing
-the object graph as needed.</p>
+<p>第二种情况需要在序列化上下文中序列化所有的对象 ，然后反过来序列化它们指向的对象 ，根据需要遍历对象图。</p>
 
-<p>They are dumped to a binary serialization format, documented in the NQP
-repository.</p>
+<p>它们被转储为二进制序列化格式，记录在 NQP 仓库中。</p>
 
 <h2 id="what-s-bounded-about-it">What&rsquo;s &ldquo;bounded&rdquo; about it</h2>
 
-<p>Consider pre-compiling the following module:</p>
+<p>考虑预编译以下模块:</p>
 
 <pre><code>class Cache is Hash {
     has &amp;!computer;
@@ -1219,33 +1093,23 @@ repository.</p>
 }
 </code></pre>
 
-<p>Here, <code>Hash</code> comes from Perl 6&rsquo;s <code>CORE.setting</code>. Clearly, we will encounter
-this type in the <code>@!parents</code> of the meta-object for <code>Cache</code>. However, we do
-not want to re-serialize the <code>Hash</code> type!</p>
+<p>这里, <code>Hash</code> 来自 Perl 6 的 <code>CORE.setting</code>。 显然，我们会在 <code>Cache</code> 元对象的 <code>@!parents</code> 中遇到这种类型 。 但是，我们不想重新序列化 <code>Hash</code> 类型！</p>
 
-<p>When an object is already owned by another SC, we just write a reference to
-it. <strong>Ownership is the boundary of a compilation unit&rsquo;s serialization.</strong></p>
+<p>当一个对象已经被另一个 SC 拥有时，我们只写一个对它的引用。 <strong>所有权是编译单元的序列化的边界</strong> 。</p>
 
-<h2 id="deserialization-and-fixups">Deserialization and fixups</h2>
+<h2 id="反序列化和修正">反序列化和修正</h2>
 
-<p>The opposite of serialization is deserialization. This involves taking the
-binary blob representing objects and STables and recreating the objects from
-it.</p>
+<p>序列化的反面是反序列化。 这涉及到接收二进制 blob 表示对象和 STable 并从它那儿重新创建对象。</p>
 
-<p>In doing this, all references to objects from other serialization contexts must
-be resolved. This means that they must have been loaded first. This implies
-that a module&rsquo;s dependencies must be loaded before it can be deserialized.</p>
+<p>在这样做时，所有对其他序列化上下文的对象的引用必须被解析。 这意味着模块的依赖关系必须在它反序列化之前被加载。</p>
 
-<p>For this reason, <code>HLL::World</code> has an <code>add_load_dependency_task</code>, for adding
-code (specified as QAST) to execute before deserialization takes place.</p>
+<p>出于这个原因，<code>HLL::World</code> 有一个 <code>add_load_dependency_task</code>， 用于添加代码（指定为 QAST）以在反序列化发生之前执行 。</p>
 
-<p>There is also an <code>add_fixup_task</code>, which enables registration of code to run
-after deserialization has taken place.</p>
+<p>还有一个 <code>add_fixup_task</code>，它开启代码的注册以在反序列化发生之后运行。</p>
 
-<h2 id="another-tricky-problem">Another tricky problem</h2>
+<h2 id="另一个棘手的问题">另一个棘手的问题</h2>
 
-<p>One tricky issue is what happens if you try to pre-compile a module containing
-the following:</p>
+<p>一个棘手的问题是如果你试图预编译一个包含以下内容的模块会发生什么:</p>
 
 <pre><code># Ooh! Let's pretend we're Ruby!
 augment class Int {
@@ -1255,64 +1119,42 @@ augment class Int {
 }
 </code></pre>
 
-<p>The <code>Int</code> meta-object and STable are serialized in <code>CORE.setting</code>. But here,
-another module is modifying the meta-object, and the updated method cache is
-hung off the <code>STable</code>, meaning it too has changed.</p>
+<p><code>Int</code> 元对象和 STable 在 <code>CORE.setting</code> 中序列化。 但是在这里，另一个模块正在修改元对象，而且 更新的方法缓存挂起了 <code>STable</code>，意味着它也发生了改变。</p>
 
-<p>So what do we do?</p>
+<p>那么我们该怎么办？</p>
 
 <h2 id="repossession">Repossession</h2>
 
-<p>When an object that belongs to a serialization context, we&rsquo;re at compile time,
-and the serialization context it belongs to is not one we&rsquo;re currently in the
-process of compiling, a write barrier is triggered.</p>
+<p>当一个对象属于序列化上下文的时候，我们就在编译时，它所属的序列化上下文不是我们当前正在编译过程中的那个。写障碍被触发。</p>
 
-<p>This switches the ownership of the object to the serialization context of the
-compilation unit we&rsquo;re currently compiling. It also records that this happened.</p>
+<p>这会将对象的所有权切换为我们正在编译的编译单元的序列化上下文。 它还记录了这种情况。</p>
 
-<p>At serialization, the updated version of the object is serialized.</p>
-
-<p>At deserialization, the object to update is located and then overwritten with
-the new version of it.</p>
+<p>在序列化时，找到要更新的对象然后使用它的新版本来覆盖它。</p>
 
 <h2 id="repossession-conflicts">Repossession conflicts</h2>
 
-<p>This leaves just one more issue: what happens if you load two pre-compiled
-modules that both want to augment the same class?</p>
+<p>这留下了另外一个问题：如果加载两个预编译的模块, 这个两个模块都想要扩充同一个类会发生什么？</p>
 
-<p>Once, &ldquo;latest won&rdquo;. Thankfully, today this is detected as a repossession
-conflict, the resulting exception indicating two modules were loaded that may
-not be used together.</p>
+<p>曾经，&rdquo;latest won&rdquo;。 值得庆幸的是，今天这被检测为收回冲突，由此产生的异常表明加载了两个模块, 它们可能无法一起使用。</p>
 
-<p>This should have been the end of the story. But it&rsquo;s not. It turns out that
-<code>Stash</code> objects started to conflict in interesting ways, when modules used
-nested packages. Therefore, there is now a conflict resolution mechanism that
-looks at the objects in conflict and tries to merge them. For <code>Stash</code>, that is
-easy enough.</p>
+<p>这应该是故事的结尾。 但事实并非如此。 事实证明，当 <code>Stash</code> 对象开始以有趣的方式发生冲突时， 当模块使用嵌套包时。 因此，现在有一个冲突解析机制，它查看有冲突的对象并尝试合并他们。 对于 <code>Stash</code> 来说，这很容易。</p>
 
-<h2 id="sc-write-barrier-control">SC write barrier control</h2>
+<h2 id="sc-写障碍控制">SC 写障碍控制</h2>
 
-<p>Most of the <code>nqp::ops</code> related to serialization contexts are rarely seen,
-hidden away in <code>HLL::World</code>. However, two of them escape into regular code:</p>
+<p>与序列化上下文相关的大多数 <code>nqp::ops</code> 很少看到，隐藏在 <code>HLL::World</code> 中。 然而，其中两个逃脱了进入常规代码中：</p>
 
 <ul>
-<li><strong><code>nqp::scwbdisable</code></strong> disables the repossession detection write barrier,
-meaning that any changes done to an owned object will not cause it to be
-re-serialized. This is often done by meta-objects that want to keep caches.</li>
-<li><strong><code>nqp::scwbenable</code></strong> re-enables repossession detection.</li>
+<li><strong><code>nqp::scwbdisable</code></strong> 禁用 repossession 检测写入屏障，意味着对自有对象所做的任何更改不会导致它被重新序列化。这通常是由想要保留缓存的元对象完成的。<br /></li>
+<li><strong><code>nqp::scwbenable</code></strong> 重新启用 repossession 检测。</li>
 </ul>
 
-<p>Note that this isn&rsquo;t a binary flag, but rather a counter that is incremented
-by the first op and decremented by the second. Repossession detection happens
-only when the counter is at zero.</p>
+<p>请注意，这不是二进制标志，而是一个计数器, 它由第一个 op 递增并由第二个递减。 只有当计数器为零时才会发生收回检测。</p>
 
-<h2 id="accidental-repossession">Accidental Repossession</h2>
+<h2 id="意外收回">意外收回</h2>
 
-<p>It&rsquo;s important to keep repossession in mind when working on Rakudo and NQP, as
-it can sometimes kick in when you might not have expected it.</p>
+<p>在 Rakudo 和 NQP 上工作时记住收回是很重要的，因为有时可能会让你始料不及。</p>
 
-<p>For example, in Rakudo&rsquo;s CORE.setting, you&rsquo;ll find a <code>BEGIN</code> block that looks
-like this:</p>
+<p>例如，在 Rakudo 的 CORE.setting 中，你会找到一个 <code>BEGIN</code> 块 看起来像这样：</p>
 
 <pre><code>BEGIN {
     my Mu $methodcall     := nqp::hash('prec', 'y=');
@@ -1322,14 +1164,11 @@ like this:</p>
 }
 </code></pre>
 
-<p>If this were done in the setting mainline, it would cause a change to the
-<code>postfix:&lt;i&gt;</code> serialized in the CORE setting, which could as a result cause a
-repossession of this by whatever compilation unit triggers setting loading.</p>
+<p>如果这是在设置主线中完成的，则会导致对 <code>postfix:&lt;i&gt;</code> 的更改会在 CORE 设置中序列化，它可以通过任何编译单元触发设置加载来收回这个  。</p>
 
 <h2 id="qast-compunit-revisited">QAST::CompUnit, revisited</h2>
 
-<p>The various pieces assembled by the World are passed down to the backend using
-<code>QAST::CompUnit</code>.</p>
+<p>由 <code>World</code> 组装的各个片段都使用 <code>QAST::CompUnit</code> 传递到后端。</p>
 
 <pre><code>my $compunit := QAST::CompUnit.new(
     :hll('perl6'),
@@ -1348,15 +1187,14 @@ repossession of this by whatever compilation unit triggers setting loading.</p>
     ...);
 </code></pre>
 
-<h2 id="how-module-loading-works-1">How module loading works (1)</h2>
+<h2 id="模块加载的工作原理-1">模块加载的工作原理 (1)</h2>
 
-<p>When a <code>use</code> statement is encountered in Perl 6 code:</p>
+<p>在 Perl 6 代码中遇到 <code>use</code> 语句时：</p>
 
 <pre><code>use Term::ANSIColor;
 </code></pre>
 
-<p>The module name is parsed, any adverbs extracted (such as <code>:from</code>) and then
-control is passed on to the <code>load_module</code> method in <code>Perl6::World</code>:</p>
+<p>解析模块名，提取任何副词（例如 <code>:from</code>）然后将控制传递给 <code>Perl6::World</code> 中的 <code>load_module</code> 方法:</p>
 
 <pre><code>my $lnd    := $*W.dissect_longname($longname);
 my $name   := $lnd.name;
@@ -1364,13 +1202,9 @@ my %cp     := $lnd.colonpairs_hash('use');
 my $module := $*W.load_module($/, $name, %cp, $*GLOBALish);
 </code></pre>
 
-<h2 id="how-module-loading-works-2">How module loading works (2)</h2>
+<h2 id="模块加载的工作原理-2">模块加载的工作原理 (2)</h2>
 
-<p>This <code>load_module</code> method first delegates to <code>Perl6::ModuleLoader</code> to load the
-module right away (required as it will probably introduce types or do other
-changes that we need to continue parsing). Once the module is loaded, it also
-registers a load dependency task to make sure the module is loaded if we are
-in a pre-compiled situation before deserialization takes place.</p>
+<p>此 <code>load_module</code> 方法首先代理给 <code>Perl6::ModuleLoader</code> 以立即加载模块（必须的, 它可能会引入我们需要的类型或做其他更改以继续解析）。加载模块后，它还会注册一个加载依赖项任务以确保模块已加载, 如果我们在反序列化发生之前的预编译情况中。</p>
 
 <pre><code>method load_module($/, $module_name, %opts, $cur_GLOBALish) {
     my $line   := HLL::Compiler.lineof($/.orig, $/.from, :cache(1));
@@ -1385,16 +1219,13 @@ in a pre-compiled situation before deserialization takes place.</p>
 }
 </code></pre>
 
-<h2 id="how-module-loading-works-3">How module loading works (3)</h2>
+<h2 id="模块加载的工作原理-3">模块加载的工作原理 (3)</h2>
 
-<p>Inside <code>Perl6::ModuleLoader</code>, some work is done to locate where the module is
-on disk. If it exists in a pre-compiled form, the <code>nqp::loadbytecode</code> op is
-used to load it. Otherwise, the source is slurped from disk and compiled.</p>
+<p>在 <code>Perl6::ModuleLoader</code> 中，完成了一些工作以找到模块在磁盘中国的位置 。如果它以预编译的形式存在，那么 <code>nqp::loadbytecode</code> op 用于加载它。否则，从磁盘中 slurp 源代码并编译。</p>
 
-<p>Loading a pre-compiled module automatically triggers its deserialization.</p>
+<p>加载预编译模块会自动触发它的反序列化。</p>
 
-<p>A couple of odd lines that are executed on both code paths deserve some
-explanation, however:</p>
+<p>在两个代码路径上执行的几个奇数行值得一些解释， 然而：</p>
 
 <pre><code>my $*CTXSAVE := self;
 my $*MAIN_CTX;
@@ -1402,17 +1233,16 @@ nqp::loadbytecode(%chosen&lt;load&gt;);
 %modules_loaded{%chosen&lt;key&gt;} := $module_ctx := $*MAIN_CTX;
 </code></pre>
 
-<h2 id="how-module-loading-works-4">How module loading works (4)</h2>
+<h2 id="模块加载的工作原理-4">模块加载的工作原理 (4)</h2>
 
-<p>When the mainline of the module is run, its lexical scope is captured by some
-code equivalent to:</p>
+<p>运行模块的主线时，其词法作用域是由某些相当于这样的代码捕获的：</p>
 
 <pre><code>if $*CTXSAVE &amp;&amp; nqp::can($*CTXSAVE, 'ctxsave') {
     $*CTXSAVE.ctxsave();
 }
 </code></pre>
 
-<p>The ModuleLoader has such a method:</p>
+<p>ModuleLoader 有这样一个方法：</p>
 
 <pre><code>method ctxsave() {
     $*MAIN_CTX := nqp::ctxcaller(nqp::ctx());
@@ -1420,20 +1250,15 @@ code equivalent to:</p>
 }
 </code></pre>
 
-<p>This is how the <code>UNIT</code> (outer lexical scope) of a module being loaded is
-obtained. This is in turn used to locate <code>EXPORT</code>.</p>
+<p>这就是被加载的模块的 <code>UNIT</code>（外部词法作用域）是如何获得的。这反过来用于定位 <code>EXPORT</code>。</p>
 
-<h2 id="how-module-loading-works-5">How module loading works (5)</h2>
+<h2 id="模块加载的工作原理-5">模块加载的工作原理 (5)</h2>
 
-<p>Finally, <code>ModuleLoader</code> triggers global merging. This involves taking the
-symbols the module wishes to contribute to <code>GLOBAL</code> and incorporating them
-into the current view of <code>GLOBAL</code>.</p>
+<p>最后，<code>ModuleLoader</code> 触发全局合并。 这涉及到采用模块想要贡献到的 <code>GLOBAL</code> 和将它们合并到 <code>GLOBAL</code> 的当前视图中。</p>
 
-<p>If this sounds strange, note that Perl 6 has separate compilation, meaning all
-modules start out with a completely clean and empty view of <code>GLOBAL</code>. These
-views are reconciled (and conflicts whined about) as modules are loaded.</p>
+<p>如果这听起来很奇怪，请注意 Perl 6 有单独的编译， 意味着所有模块都以一个完全干净和空的 <code>GLOBAL</code> 视图开始。这些视图在模块加载时得到了调和（和冲突发生了争执) 。</p>
 
-<p>Finally, the <code>UNIT</code> lexpad is returned.</p>
+<p>最后，返回 <code>UNIT</code> lexpad。</p>
 
 <pre><code>my $UNIT := nqp::ctxlexpad($module_ctx);
 if +@GLOBALish {
@@ -1444,80 +1269,62 @@ if +@GLOBALish {
 return $UNIT;
 </code></pre>
 
-<h2 id="how-module-loading-works-6">How module loading works (6)</h2>
+<h2 id="模块加载的工作原理-6">模块加载的工作原理 (6)</h2>
 
-<p>What we have seen so far is what a <code>need</code> would do. A <code>use</code> then goes on to
-import. This is not implemented in the module loader, but rather lives in the
-<code>import</code> method in <code>Perl6::World</code>.</p>
+<p>到目前为止我们所看到的是 <code>need</code> 会做什么。然后使用 <code>use</code> 导入模块。这在模块加载器中还没有实现， 而是存在于 <code>Perl6::World</code> 的 <code>import</code> 方法中。</p>
 
-<p>It does the following things:</p>
+<p>它做了以下事情：</p>
 
 <ul>
-<li>Locates the symbols that need to be imported</li>
-<li>If there are multiple dispatch candidates exported and there also exist some
-in the target scope, merges the candidate lists</li>
-<li>For other symbols, installs them directly into the target scope, complaining
-if there is a conflict</li>
-<li>If any operators are imported, makes sure the current language is augmented
-so as to be able to parse them</li>
+<li>找到需要导入的符号</li>
+<li>如果有多个分派候选者导出并在目标作用域里也存在一些，则合并候选者列表</li>
+<li>对于其他符号，将它们直接安装到目标作用域中， 抱怨是否有冲突</li>
+<li>如果导入了任何运算符，请确保当前语言被扩充 ，以便能够解析它们</li>
 </ul>
 
-<h1 id="the-regex-and-grammar-engine">The regex and grammar engine</h1>
+<h1 id="正则表达式和-grammar-引擎">正则表达式和 grammar 引擎</h1>
 
-<p><em>Inside how Perl 6 is parsed</em></p>
+<p><em>内部如何解析 Perl 6</em></p>
 
-<h2 id="the-pieces-involved">The pieces involved</h2>
+<h2 id="涉及的部分">涉及的部分</h2>
 
-<p>Regex and grammar handling involves a number of components:</p>
+<p>正则表达式和 grammar 处理涉及许多组件：</p>
 
 <ul>
-<li>The <strong>Perl 6 Regex grammar/actions</strong>, from <code>src/QRegex/P6Regex</code>, which parse
-the Perl 6 regex syntax and produce a QAST tree from it. These are not used
-directly by NQP and Rakudo, but instead subclassed (so, for example, nested
-code blocks will be parsed in the correct main language)</li>
-<li>The <strong><code>QAST::Regex</code></strong> QAST node, which represents the whole range of regex
-constructs we can compile</li>
-<li><strong><code>Cursor</code> objects</strong>, which keep state as we parse</li>
-<li><strong><code>Match</code> objects</strong>, which represent the result of a parse</li>
-<li><strong>NFA construction and evaluation</strong>, used for Longest Token Matching</li>
+<li><strong>Perl 6 的正则表达式 grammar/action</strong>，从 <code>src/QRegex/P6Regex</code>，它解析 Perl 6 正则表达式语法并从中生成 QAST 树。这些不是由 NQP 和 Rakudo 直接使用的 ，而是子类化（例如， 嵌套代码块将在正确的 main 语言中解析 ）</li>
+<li><strong><code>QAST::Regex</code></strong> QAST 节点，这表示我们可以编译的正则表达式构造的整个范围</li>
+<li><strong><code>Cursor</code> 对象</strong>，在我们解析时保持状态</li>
+<li><strong><code>Match</code> 对象</strong> ，表示解析的结果</li>
+<li><strong>NFA 构造和求值</strong> ，用于最长 token 匹配</li>
 </ul>
 
-<h2 id="the-qast-regex-node">The QAST::Regex node</h2>
+<h2 id="qast-regex-节点">QAST::Regex 节点</h2>
 
-<p>This node covers all of the regex constructs. It has an <strong><code>rxtype</code></strong> property
-that is used to indicate the kind of regex operation to perform.</p>
+<p>此节点涵盖所有正则表达式构造。它有一个 <strong><code>rxtype</code></strong> 属性用于指示要执行的正​​则表达式的类型。</p>
 
-<p>It can be placed at any point in a QAST tree, though typically expects to find
-itself inside of a <code>QAST::Block</code>. Furthermore, it expects the lexical <code>$¢</code> to
-have been declared.</p>
+<p>它通常可以放置在 QAST 树中的任何位置, 尽管通常会在 <code>QAST::Block</code> 中找到自己。 而且，它期望声明词法 <code>$¢</code>。</p>
 
-<p>With a few exceptions, once you reach a <code>QAST::Regex</code> node, the QAST compiler
-will expect to find only other <code>QAST::Regex</code> nodes beneath it. There is an
-explicit <code>qastnode</code> rxtype for escaping back to the rest of QAST.</p>
+<p>除了少数例外，一旦到达 <code>QAST::Regex</code> 节点，QAST 编译器就会在它下面期望只找到其他 <code>QAST::Regex</code> 节点 。有一个显式的 <code>qastnode</code> rxtype 用于逃避到 QAST 的剩余部分。</p>
 
-<p>We&rsquo;ll now study the rxtypes available.</p>
+<p>我们现在将研究可用的 rxtypes</p>
 
 <h2 id="literal">literal</h2>
 
-<p>The <code>literal</code> rxtype indicates a literal string that should be matched in
-a regex. The string to match is passed as a child to the node.</p>
+<p><code>literal</code> rxtype 表示应该在正则表达式中匹配文字字符串 。要匹配的字符串作为子项传递给节点。</p>
 
 <pre><code>QAST::Regex.new( :rxtype&lt;literal&gt;, 'meerkat' )
 </code></pre>
 
-<p>It has one subtype, <code>ignorecase</code>, which makes matching of the literal be case
-insensitive.</p>
+<p>它有一个子类型 <code>ignorecase</code>，其匹配不区分大小写的字面值。</p>
 
 <pre><code>QAST::Regex.new( :rxtype&lt;literal&gt;, :subtype&lt;ignorecase&gt;, 'meerkat' )
 </code></pre>
 
 <h2 id="concat">concat</h2>
 
-<p>The <code>concat</code> subtype is used to match a sequence of <code>QAST::Regex</code> nodes one
-after the other. It expects these nodes as its children.</p>
+<p><code>concat</code> 子类型用于匹配一个接一个的 <code>QAST::Regex</code> 节点序列。它希望这些节点成为它的子节点。</p>
 
-<p>This will do the same as the previous slide, though will be a little less
-efficient:</p>
+<p>这将与上一张幻灯片相同，但会有点低效:</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;concat&gt;,
@@ -1526,31 +1333,23 @@ efficient:</p>
 )
 </code></pre>
 
-<h2 id="scan-and-pass">scan and pass</h2>
+<h2 id="scan-和-pass">scan 和 pass</h2>
 
-<p>Regexes tend to start with a <code>scan</code> node and end with a <code>pass</code> node.</p>
+<p>正则表达式倾向于从 <code>scan</code> 节点开始并以 <code>pass</code> 节点结束。</p>
 
 <ul>
-<li><strong><code>scan</code></strong> will generate code to work through the string, trying to match
-the pattern at each offset, until either a match is successful or it runs
-out of string to try. This is what makes <code>'slaughter' ~~ /laughter/</code> match,
-even though <code>laughter</code> is not at the start of the string. Note it will only
-do this if the match is not anchored (which it will be if called by another
-rule).</li>
-<li><strong><code>pass</code></strong> will generate a call to <code>!cursor_pass</code> on the current <code>Cursor</code>
-object, indicating that the regex has matched. For named regexes, tokens and
-rules, this node conveys the name of the action method to invoke also.</li>
+<li><strong>scan</strong> 将生成代码以通过字符串，尝试匹配每个偏移处的模式，直到匹配成功或用完尝试的字符串为止 。这就是让 <code>'slaughter' ~~ /laughter/</code> 匹配的原理，尽管 <code>laughter</code> 不在字符串的开头。请注意如果匹配没有锚定它才会这样做 （如果被另一个规则调用则会被锚定） ）。</li>
+<li><strong>pass</strong> 将在 <code>Cursor</code> 对象上生成一个对  <code>!cursor_pass</code>  的调用，表示正则表达式已匹配。 对于命名正则表达式，标记和规则，此节点也携带要调用的 action 方法的名称。</li>
 </ul>
 
-<h2 id="a-simple-example">A simple example</h2>
+<h2 id="一个简单的例子">一个简单的例子</h2>
 
-<p>If we give NQP the following regex:</p>
+<p>如果我们给 NQP 以下正则表达式：</p>
 
 <pre><code>/meerkat/
 </code></pre>
 
-<p>And use <code>--target=ast</code>, the resulting <code>QAST::Regex</code> nodes contain all of the
-things we have covered so far:</p>
+<p>并使用 <code>--target=ast</code>，生成的 <code>QAST::Regex</code> 节点包含到目前为止我们所涉及的所有东西:</p>
 
 <pre><code>- QAST::Regex(:rxtype(concat))
   - QAST::Regex(:rxtype(scan))
@@ -1562,30 +1361,27 @@ things we have covered so far:</p>
 
 <h2 id="cclass">cclass</h2>
 
-<p>Used for the various common built-in character classes, typically expressed
-through backslash sequences. For example, <code>\d</code> and <code>\W</code> respectively become:</p>
+<p>用于各种常见的内置字符类， 通常通过反斜杠序列表达。例如，<code>\d</code> 和 <code>\W</code> 分别成为:</p>
 
 <pre><code>QAST::Regex.new( :rxtype&lt;cclass&gt;, :name&lt;d&gt; )
 QAST::Regex.new( :rxtype&lt;cclass&gt;, :name&lt;w&gt;, :negate(1) )
 </code></pre>
 
-<p>The available values for <code>name</code> are as follows:</p>
+<p><code>name</code> 的可用值如下：</p>
 
-<pre><code>Code    Meaning
-.       Any character (really, any)
-d       Any numeric character (Unicode aware)
-s       Any whitespace character (Unicode aware)
-w       Any word character or the underscore (Unicode aware)
-n       A literal \n, a \r\n sequence, or a Unicode LINE_SEPARATOR
+<pre><code>Code    含义 
+.       任何字符 (真的, 任何)
+d       任何数字字符（Unicode 识别） 
+s       任何空白字符（Unicode 识别） 
+w       任何单词字符或下划线（Unicode 识别） 
+n       字面 \n, a \r\n 序列,或 Unicode LINE_SEPARATOR 
 </code></pre>
 
 <h2 id="enumcharlist">enumcharlist</h2>
 
-<p>Used for user-defiend character classes. Requires that the current character
-class be any of those specified in the child string.</p>
+<p>用于用户自定义字符类。要求当前字符类是子字符串中指定的任何一个。</p>
 
-<p>For example, <code>\v</code> (which matches any vertical whitespace character) compiles
-into:</p>
+<p>例如，<code>\v</code>（匹配任何垂直空白字符） 编译成：</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;enumcharlist&gt;,
@@ -1593,14 +1389,14 @@ into:</p>
 )
 </code></pre>
 
-<h2 id="enumcharlist-and-user-defined-character-classes">enumcharlist and user defined character classes</h2>
+<h2 id="enumcharlist-和用户定义的字符类">enumcharlist 和用户定义的字符类</h2>
 
-<p>The <code>enumcharlist</code> node is also used in things like:</p>
+<p><code>enumcharlist</code> 节点也用于以下内容:</p>
 
 <pre><code>/&lt;[A..Z]&gt;/
 </code></pre>
 
-<p>Which, as <code>--target=ast</code> shows, becomes:</p>
+<p>其中，如 <code>--target=ast</code> 显示，变为：</p>
 
 <pre><code>- QAST::Regex(:rxtype(concat))
   - QAST::Regex(:rxtype(scan))
@@ -1612,29 +1408,26 @@ into:</p>
 
 <h2 id="anchor">anchor</h2>
 
-<p>Used for various zero-width assertions. For example, <code>^</code> (start of string)
-compiles into:</p>
+<p>用于各种零宽断言。例如，<code>^</code>（字符串的开头）编译成：</p>
 
 <pre><code>QAST::Regex.new( :rxtype&lt;anchor&gt;, :subtype&lt;bos&gt; )
 </code></pre>
 
-<p>The available subtypes are:</p>
+<p>可用的子类型是：</p>
 
-<pre><code>bos     Beginning of string (^)
-eos     End of string ($)
-bol     Beginning of line (^^)
-eol     End of line ($$)
-lwb     Left word boundary (&lt;&lt;)
-rwb     Right word boundary (&gt;&gt;)
-fail    Always fails
-pass    Always passes
+<pre><code>bos     字符串的开头 (^)
+eos     字符串的结尾 ($)
+bol     行的开头 (^^)
+eol     行的结尾 ($$)
+lwb     左单词边界 (&lt;&lt;)
+rwb     右单词边界 (&gt;&gt;)
+fail    总是失败 
+pass    总是通过
 </code></pre>
 
 <h2 id="quant">quant</h2>
 
-<p>Used for quantifiers. The <code>min</code> and <code>max</code> properties are used to indicate how
-many types the child node may match. A <code>max</code> of <code>-1</code> means &ldquo;unlimited&rdquo;. Thus,
-the regex <code>\d+</code> compiles into:</p>
+<p>用于量词。<code>min</code> 和 <code>max</code> 属性用于指示子节点可以匹配的类型的数量。<code>max</code> 为 <code>-1</code> 意思是&rdquo;无限的&rdquo;。因此，正则表达式 <code>\d+</code> 编译成:</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;quant&gt;, :min(1), :max(-1),
@@ -1642,23 +1435,24 @@ the regex <code>\d+</code> compiles into:</p>
 )
 </code></pre>
 
-<p>The <code>backtrack</code> property can also be set to one of:</p>
+<p><code>backtrack</code> 属性也可以设置为以下之一:</p>
 
-<pre><code>g       Greedy matching (\d+!, the default)
-f       Frugal (minimal) matching (\d+?)
-r       Ratchet (non-backtracking) matching (\d+:)
+<pre><code>g       贪婪匹配 (\d+!, 默认)
+f       非贪婪 (minimal) 匹配 (\d+?)
+r       棘轮 (无回溯) 匹配 (\d+:)
 </code></pre>
 
 <h2 id="altseq">altseq</h2>
 
 <p>Tries to match its children in order, until it finds one that matches. This
 provides <code>||</code> semantics in Perl 6, which are the same as <code>|</code> semantics in Perl
-5. Thus:</p>
+5. Thus:
+尝试按顺序匹配其子项，直到找到匹配的子项。 这提供了 Perl 6 中的 <code>||</code> 语义，与 Perl 5 中的 <code>|</code> 语义相同。因此：</p>
 
 <pre><code>the || them
 </code></pre>
 
-<p>Compiles into:</p>
+<p>编译成:</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;altseq&gt;,
@@ -1667,16 +1461,16 @@ provides <code>||</code> semantics in Perl 6, which are the same as <code>|</cod
 )
 </code></pre>
 
-<p>There is also <code>conjseq</code> for Perl 6&rsquo;s <code>&amp;&amp;</code>.</p>
+<p>还有一个 <code>conjseq</code> 对应 Perl 6 的 <code>&amp;&amp;</code>。</p>
 
 <h2 id="alt">alt</h2>
 
-<p>Support Perl 6 LTM-based alternation. The regex:</p>
+<p>支持 Perl 6 基于 LTM 的备选分支。正则表达式:</p>
 
 <pre><code>the | them
 </code></pre>
 
-<p>Compiles into:</p>
+<p>编译成:</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;alt&gt;,
@@ -1685,17 +1479,16 @@ provides <code>||</code> semantics in Perl 6, which are the same as <code>|</cod
 )
 </code></pre>
 
-<p>This will always match <code>them</code> if it can, because it goes for the branch with
-the longest declarative prefix first.</p>
+<p>如果可以的话，这将始终匹配 <code>them</code>，因为它先适用于具有最长声明前缀的分支。</p>
 
 <h2 id="subrule-1">subrule (1)</h2>
 
-<p>Used to call another rule, optionally capturing. For example:</p>
+<p>用于调用另一个规则，捕获是可选的。 例如:</p>
 
 <pre><code>&lt;ident&gt;
 </code></pre>
 
-<p>Will compile into:</p>
+<p>会编译成:</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;subrule&gt;, :subtype&lt;capture&gt;, :name&lt;ident&gt;,
@@ -1703,19 +1496,16 @@ the longest declarative prefix first.</p>
 )
 </code></pre>
 
-<p>The <code>name</code> property is the name to capture as, while the <code>QAST::SVal</code> node is
-taken as the name of the method to call. Extra children may be given to the
-<code>QAST::Node</code>, which will be taken as arguments for the call.</p>
+<p><code>name</code> 属性是要捕获的名字，而 <code>QAST::SVal</code> 节点作为要调用的方法的名字。 额外的孩子节点可能会被提供给 <code>QAST::Node</code> 作为调用的参数。</p>
 
 <h2 id="subrule-2">subrule (2)</h2>
 
-<p>There are a few other things worth noting about subrule. First, it need not
-capture. For example:</p>
+<p>关于子规则还有一些值得注意的事情。首先，它不需要捕获。 例如：</p>
 
 <pre><code>&lt;.ws&gt;
 </code></pre>
 
-<p>Will compile into:</p>
+<p>将编译成:</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;subrule&gt;, :subtype&lt;method&gt;,
@@ -1725,13 +1515,12 @@ capture. For example:</p>
 
 <h2 id="subrule-3">subrule (3)</h2>
 
-<p>The <code>subrule</code> rxtype is also capable of handling zero-width assertions. For
-example:</p>
+<p><code>subrule</code> rxtype 也能够处理零宽断言。 例如：</p>
 
 <pre><code>&lt;?alpha&gt;
 </code></pre>
 
-<p>Will compile into:</p>
+<p>将编译成:</p>
 
 <pre><code>QAST::Regex.new(
     :rxtype&lt;subrule&gt;, :subtype&lt;zerowidth&gt;,
@@ -1741,30 +1530,23 @@ example:</p>
 
 <h2 id="subrule-4">subrule (4)</h2>
 
-<p>Finally, there are two other properties that apply to <code>subrule</code>:</p>
+<p>最后，还有两个适用于 <code>subrule</code> 的属性：</p>
 
 <ul>
-<li><strong><code>backtrack</code></strong> being set to <code>r</code> will prevent the subrule call being
-backtracked into. This is set in <code>token</code> and <code>rule</code>, and avoids keeping a
-lot of state around.</li>
-<li><strong><code>negate</code></strong> can also be set on this node. It is probably most useful in
-combination with the <code>zerowidth</code> subtype, since that is how <code>&lt;!alpha&gt;</code> is
-compiled.</li>
+<li><strong>回溯</strong> 设置为 <code>r</code> 将阻止子规则调用回溯。这是在 <code>token</code> 和 <code>rule</code> 中设置的，并且避免了保持很多状态。<br /></li>
+<li>也可以在此节点上设置 <strong><code>negate</code></strong>。这可能与 <code>zerowidth</code> 子类型结合使用最有用, 因为 <code>&lt;!alpha&gt;</code> 就是那样编译的。</li>
 </ul>
 
-<p>Last but not least, <code>subrule</code> is also used for positional captures. Instead of
-specifying a method to call, the contents of the capture is compiled inside a
-nested <code>QAST::Block</code> and that is called. This is to make sure positional
-matches get their own <code>Match</code> object.</p>
+<p>最后但并非最不重要的是，<code>subrule</code> 也用于位置捕获。 而不是指定要调用的方法，捕获的内容被编译到嵌套的 <code>QAST::Block</code> 中并被调用。 这个是确保位置匹配获得自己的 <code>Match</code> 对象。</p>
 
 <h2 id="subcapture">subcapture</h2>
 
-<p>This is used for implementing named captures that are not subrules. That is:</p>
+<p>这用于实现不是子规则的命名捕获 。 即：</p>
 
 <pre><code>$&lt;num&gt;=[\d+]
 </code></pre>
 
-<p>Will compile into:</p>
+<p>会编译成:</p>
 
 <pre><code>QAST::Regex.new(
     :rx&lt;subcapture&gt;, :name&lt;num&gt;,
@@ -1779,48 +1561,37 @@ matches get their own <code>Match</code> object.</p>
 
 <h2 id="cursor">Cursor</h2>
 
-<p>A <code>Cursor</code> is an object that <strong>holds the current state of a match</strong>. <code>Cursor</code>s
-are created at the point of entry to a <code>token</code>/<code>rule</code>/<code>regex</code>, and either pass
-or fail. From that point on, a <code>Cursor</code> is immutable.</p>
+<p><code>Cursor</code> 是一个<strong>保存匹配当前状态</strong>的对象。<code>Cursor</code> 是在进入 <code>token</code>/<code>rule</code>/<code>regex</code> 时创建的， 要么通过要么失败。从那时之后，<code>Cursor</code> 就是不可变了的。</p>
 
-<p>The state inside a <code>Cursor</code> includes:</p>
+<p><code>Cursor</code> 内的状态包括：</p>
 
 <ul>
-<li>The target string</li>
-<li>The position we&rsquo;re matching from in the current rule (-1 indicates scan)</li>
-<li>The current position reached by the match</li>
-<li>A stack of backtrack marks (more later)</li>
-<li>A stack of captured cursors (more later)</li>
-<li>Potentially, a cached <code>Match</code> object produced from the <code>Cursor</code></li>
-<li>For a passed <code>Cursor</code> that we may backtrack into later, the code object to
-invoke to restart matching</li>
+<li>目标字符串<br /></li>
+<li>我们在当前规则中匹配的位置（-1 表示扫描）</li>
+<li>匹配达到的当前位置<br /></li>
+<li>一堆回溯标记（稍后更多）<br /></li>
+<li>一堆捕获的游标（稍后更多）</li>
+<li>可能是从 <code>Cursor</code> 生成的缓存 <code>Match</code> 对象<br /></li>
+<li>对于我们可能稍后回溯的传递的 <code>Cursor</code>， 要调用以重新启动匹配的代码对象<br /></li>
 </ul>
 
 <h2 id="nqpcursorrole">NQPCursorRole</h2>
 
-<p>Both NQP and Rakudo have their own cursor objects, named <code>NQPCursor</code> and
-<code>Cursor</code> respectively. However, they both compose <code>NQPCursorRole</code>, which
-provides most of their methods.</p>
+<p>NQP 和 Rakudo 都有自己的游标对象，分别叫做 <code>NQPCursor</code> 和 <code>Cursor</code>。但是，它们都组合了 <code>NQPCursorRole</code>，提供他们的大部分方法。</p>
 
-<p>The methods can be categorized as follows:</p>
+<p>方法可分为以下几类：</p>
 
 <ul>
-<li>Common introspection methods: <code>orig</code>, <code>target</code>, <code>from</code> and <code>pos</code></li>
-<li>Built-in rules: <code>before</code>, <code>after</code>, <code>ws</code>, <code>ww</code>, <code>wb</code>, <code>ident</code>, <code>alpha</code>,
-<code>alnum</code>, <code>upper</code>, <code>lower</code>, <code>digit</code>, <code>xdigit</code>, <code>space</code>, <code>blank</code>, <code>cntrl</code>,
-<code>punct</code></li>
-<li>Infrastructure methods: all have a name starting with a <code>!</code> and are called
-mostly by code generated from compiling <code>QAST::Regex</code> nodes or as part of
-implementing the built-in rules</li>
+<li>常见的内省方法： <code>orig</code>, <code>target</code>, <code>from</code> 和 <code>pos</code></li>
+<li>内置规则：<code>before</code>, <code>after</code>, <code>ws</code>, <code>ww</code>, <code>wb</code>, <code>ident</code>, <code>alpha</code>,<code>alnum</code>, <code>upper</code>, <code>lower</code>, <code>digit</code>, <code>xdigit</code>, <code>space</code>, <code>blank</code>, <code>cntrl</code>, <code>punct</code></li>
+<li>基础设施方法：所有的名称都以一个 <code>!</code> 开头, 主要由编译 <code>QAST::Regex</code> 节点生成的代码调用, 或作为实现内置规则的一部分。</li>
 </ul>
 
 <h2 id="it-starts-with-cursor-init">It starts with !cursor_init</h2>
 
-<p>Parsing a grammar or matching a string against a regex always starts with a
-call to <code>!cursor_init</code>, which creates a <code>Cursor</code> and initializes it with the
-target string, setting up options (such as whether to scan or not).</p>
+<p>解析 grammar 或将字符串与正则表达式匹配 首先调用 <code>!cursor_init</code>，它创建一个 <code>Cursor</code> 并用目标字符串初始化它，设置选项（例如是否扫描）。</p>
 
-<p>For example, here is how <code>NQPCursor</code>&rsquo;s <code>parse</code> method is implemented:</p>
+<p>例如，以下是 <code>NQPCursor</code> 的 <code>parse</code> 方法的实现：</p>
 
 <pre><code>method parse($target, :$rule = 'TOP', :$actions, *%options) {
     my $*ACTIONS := $actions;
@@ -1833,21 +1604,18 @@ target string, setting up options (such as whether to scan or not).</p>
 
 <h2 id="inside-a-rule-1">Inside a rule (1)</h2>
 
-<p>The first thing that happens on entry to a <code>token</code>, <code>rule</code> or <code>regex</code> is the
-creation of a new <code>Cursor</code> to track its work. This is done by calling the
-<code>!cursor_start_all</code> method, which returns an array of state, including:</p>
+<p>进入 <code>token</code>, <code>rule</code> or <code>regex</code> 时发生的第一件事是创建一个新的 <code>Cursor</code> 来跟踪它的工作。这是通过调用 <code>!cursor_start_all</code> 方法来完成的，它返回一个状态数组，包括：</p>
 
 <ul>
-<li>The newly created <code>Cursor</code></li>
-<li>The target string</li>
-<li>The position to start matching from (-1 indicates scan)</li>
-<li>The current <code>Cursor</code> type (generic <code>$?CLASS</code>)</li>
-<li>The backtracking mark stack</li>
-<li>A restart flag: 1 if it is a restart, 0 otherwise</li>
+<li>新创建的 <code>Cursor</code></li>
+<li>目标字符串</li>
+<li>开始匹配的位置（-1 表示扫描）</li>
+<li>当前的 <code>Cursor</code> 类型（泛型 <code>$?CLASS</code>）</li>
+<li>回溯标记堆栈</li>
+<li>重启标志：如果是重启则为 1，否则为 0</li>
 </ul>
 
-<p>Aside: this exact factoring will likely change in the future, for performance
-reasons.</p>
+<p>除此之外：由于性能原因, 这个确切的因素将来可能会发生变化。</p>
 
 <h2 id="inside-a-rule-2">Inside a rule (2)</h2>
 
@@ -1867,6 +1635,8 @@ triggers a call to an action method</li>
 <li><strong><code>!cursor_fail</code></strong> if the match fails</li>
 </ul>
 
+<p>由 <code>!cursor_start_all</code> 返回的 <code>Cursor</code> 可能有各种各样的方法在匹配进行时调用它： ！cursor start subcapture 生成一个Cursor 代表一个子捕获 ！光标捕获 将Cursor推送到捕获堆栈 （通过调用子规则返回的一个或为一个创建的子规则返回的一个 subcapture） ！cursor pos 更新Cursor中的匹配位置（它是 仅在需要时同步） ！ 如果匹配成功则传递光标; 到达的位置 必须传递，如果它是一个命名的正则表达式，那么名称可以 通过; 这也会触发对动作方法的调用 ！ 如果匹配失败，则游标失败</p>
+
 <h2 id="inside-a-rule-3">Inside a rule (3)</h2>
 
 <p>Once a <code>token</code>, <code>rule</code> or <code>regex</code> has finished matching, either passing or
@@ -1877,16 +1647,24 @@ return a <code>Cursor</code> to its caller. Failing to do so will cause an error
 
 <p>At the point a <code>Cursor</code> is failed, any backtracking and capture state will be
 discarded. If it passes, but can not be backtracked in to, then backtracking
-state can be thrown away too.</p>
+state can be thrown away too.
+一旦 <code>token</code>, <code>rule</code> or <code>regex</code> 完成匹配，要么通过要么失败，它应该返回它工作的 <code>Cursor</code>。</p>
 
-<h2 id="the-cstack-and-capturing">The cstack and capturing</h2>
+<p>事实上，这是协议：任何被称为 <code>subrule</code> 的东西应该将 <code>Cursor</code> 返回给它的调用者。不这样做会导致错误。</p>
+
+<p>在 <code>Cursor</code> 失败的时候，任何回溯和捕获状态将被丢弃。如果它通过，但不能回溯到里面，然后回溯状态也可以被丢掉。</p>
+
+<h2 id="the-cstack-和-capturing">The cstack 和 capturing</h2>
 
 <p>The <code>cstack</code> (either <strong>Capture stack</strong> or <strong>Cursor stack</strong>) is where <code>Cursor</code>
 objects that correspond to captures (positional or named) are stored. It may
 also be used to store non-captured <code>Cursor</code>s for subrules we could backtrack
 in to.</p>
 
-<p>In something like:</p>
+<p>In something like:
+<code>cstack</code>（ 要么 <strong>Capture stack</strong> 或 <strong>Cursor stack</strong>）就在哪里与捕获相对应的 <code>Cursor</code> 对象（位置或命名） 存储。它也可以用于存储未捕获的游标我们可以回溯到的子规则。</p>
+
+<p>在这样的事情</p>
 
 <pre><code>token xblock {
     &lt;EXPR&gt; &lt;.ws&gt; &lt;pblock&gt;
@@ -1894,9 +1672,10 @@ in to.</p>
 </code></pre>
 
 <p>The <code>cstack</code> will end up with two <code>Cursor</code>s on it by the end of the match: one
-returned by the call to <code>EXPR</code> and another returned by the call to <code>pblock</code>.</p>
+returned by the call to <code>EXPR</code> and another returned by the call to <code>pblock</code>.
+<code>cstack</code> 最终会在它结束时有两个 <code>Cursor</code> 匹配：一个由 <code>EXPR</code> 调用返回，另一个返回对<code>pblock</code> 的调用</p>
 
-<h2 id="the-bstack-and-backtracking">The bstack and backtracking</h2>
+<h2 id="bstack-和-backtracking">bstack 和 backtracking</h2>
 
 <p>The <code>bstack</code> is a stack of integers. Each &ldquo;mark&rdquo; actually consists of four
 integers (so it only makes sense to talk about groups of 4 entries, not the
@@ -1912,283 +1691,205 @@ entry</li>
 throw away any captures that we backtrack over.</li>
 </ul>
 
+<p><code>bstack</code> 是一堆整数。每个“标记”实际上都包含在内 四个整数（所以只讨论4个小组才有意义 条目，而不是个别整数）： 正则表达式中的位置跳回（通常 由跳转表解释）; 如果为0，那么回溯应该 继续看下一个条目 要回到的字符串中的位置 可选地，重复计数（由量词使用） 标记点处的cstack高度。 这用于丢弃我们回溯的任何捕获 过度。</p>
+
 <h2 id="match-object-production">Match object production</h2>
 
-<p>The <code>MATCH</code> method on a <code>Cursor</code> or <code>NQPCursor</code> takes the <code>Cursor</code> and makes a
-<code>Match</code> or <code>NQPMatch</code> object. These are the things our action methods were
-passed as their <code>$/</code> argument.</p>
+<p><code>Cursor</code> 或 <code>NQPCursor</code> 上的 <code>MATCH</code> 方法接收 <code>Cursor</code> 并创建一个 <code>Match</code> 或 <code>NQPMatch</code> 对象。我们的 action 方法将这些东西作为 <code>$/</code> 的参数传递。</p>
 
-<p>They are produced by looking at the <code>cstack</code>, observing the names of each of
-the entries, and building up an array of positional captures and a hash of
-named captures. Positional captures just have an integer name.</p>
+<p>它们是通过查看 <code>cstack</code> 产生，观察每个条目的名字，并建立一个位置捕获的数组和命名捕获的哈希。位置捕获正好有一个整数名称。</p>
 
-<p>Any capture qauntified with <code>*</code>, <code>+</code> or <code>**</code> will produce an array of captured
-results.</p>
+<p>任何带有 <code>*</code>，<code>+</code> 或 <code>**</code> 的量词化捕获都会生成一个捕获结果的数组。</p>
 
-<p>Most of this work is factored out by <code>CAPHASH</code> from <code>NQPCursorRole</code>.</p>
+<p>大部分工作都是由 <code>CAPHASH</code> 从 <code>NQPCursorRole</code> 中分解出来的。</p>
 
-<h2 id="longest-token-matching">Longest Token Matching</h2>
+<h2 id="最长-token-匹配">最长 Token 匹配</h2>
 
-<p>All of this leaves one important regex related topic: Longest Token Matching.
-We&rsquo;ve already seen it in action, but now we&rsquo;ll take a few moments to consider
-how it works.</p>
+<p>还剩一个重要的正则表达式相关主题：最长 token 匹配(Longest Token Matching, 或简称 LTM)。我们已经在 action 中见过它，但现在我们将花几分钟的时间思考它是如何工作的。</p>
 
-<p>Every regex or branch alternation has a (possibly zero-length) declarative
-prefix. It covers the region from the start of a regex up to a construct that
-is deemed imperative (such as a code block, positive lookahead, etc.)</p>
+<p>每个正则表达式或备选分支都有一个（可能是零长度） 声明性前缀。它涵盖了从正则表达式开始直到被认为是命令式构造（例如代码块， 正向向前查看，等等）的区域。</p>
 
 <pre><code>token even { \d+ { +$/ % 2 == 0 } }
              DDD IIIIIIIIIIIIIIII
 </code></pre>
 
-<p>The declarative prefix always forms a <strong>regular language</strong>, and as a result
-can be translated into a <strong>finite automata</strong>.</p>
+<p>声明式前缀始终形成 <strong>regular language</strong>，并且作为结果可以转化为<strong>有限自动机</strong>。</p>
 
-<h2 id="nfa-fragments">NFA fragments</h2>
+<h2 id="nfa-片段">NFA 片段</h2>
 
-<p>Once an individual <code>token</code>, <code>rule</code> or <code>regex</code> has been compiled to QAST, the
-QAST tree is passed to <strong><code>QRegex::NFA</code></strong>.</p>
+<p>一旦单个  <code>token</code>, <code>rule</code> 或 <code>regex</code>  被编译为 QAST，QAST 树被传递给 <strong><code>QRegex::NFA</code></strong>。</p>
 
-<p>This explores the QAST, identifies the declarative prefix, and builds an
-NFA (Non-deterministic Finite Automata) out of it.</p>
+<p>这将探讨 QAST，识别声明式前缀，以及从中构建 NFA（非确定性有限自动机）。</p>
 
-<p>If the QAST tree contains any alternations, then each branch of these also
-has an NFA build and stored.</p>
+<p>如果 QAST 树包含任何备选分支，那么这些分支中的每个分支也有 NFA 构建和存储。</p>
 
-<p>At this point, the NFAs are not ready to evaluate. Whenever there is a subrule
-call, they simply name the call. In that sense, they are <strong>generic with regard
-to the grammar as a whole</strong>, and may need to be made concrete many times (due
-to grammar inheritance).</p>
+<p>此时，NFA 尚未准备好进行计算。每当有子规则调用，他们只是命名调用。从这个意义上讲，他们是关于整个 grammar 的泛型 ，可能需要多次具体化（由于 grammar 继承）。</p>
 
-<h2 id="protoregex-and-alternation-nfas">Protoregex and alternation NFAs</h2>
+<h2 id="protoregex-和-alternation-nfas">Protoregex 和 alternation NFAs</h2>
 
-<p>A protoregex decides which candidate to call by building an NFA representing
-the alternation of all the candidate NFAs.</p>
+<p><code>protoregex</code> 通过构建代表所有候选 NFA 的备选分支的 NFA 来决定调用哪个候选者 。</p>
 
-<p>This protoregex NFA is always specific to a particular type of grammar. As a
-part of producing it, any subrule calls have their NFA substituted in for the
-call.</p>
+<p>这个 <code>protoregex</code> NFA 总是特定于特定类型的 grammar。作为制作它的一部分，任何子规则调用都让它们的 NFA 替换该调用。</p>
 
-<p>Alternations go through a similar process, except this time the NFA is built
-up out of the NFAs of the branches.</p>
+<p>备选分支进行类似的过程，除了这次 NFA 是由分支的 NFA 构建的。</p>
 
-<p>The result of either of these is an NFA that can be executed against a target
-string.</p>
+<p>其中任何一个的结果都是可以针对目标字符串执行的 NFA。</p>
 
-<h2 id="nfa-execution">NFA execution</h2>
+<h2 id="nfa-执行">NFA 执行</h2>
 
-<p>There are two <code>nqp::op</code>s that relate to executing NFAs:</p>
+<p>有两个与执行 NFA 有关的 <code>nqp::ops</code>：</p>
 
 <ul>
-<li><strong><code>nfarunproto</code></strong> evaluates the NFA from a given offset in the target string.
-It returns an array indicating the order in which the candidates should be
-tried, excluding any that could never possibly match.</li>
-<li><strong><code>nfarunalt</code></strong> evaluates the NFA from a given offset in the target string.
-It then pushes marks for all the branches that could possibly match onto the
-<code>bstack</code> in reverse order, so the best possible candidate is at the top. The
-regex engine then just immediately &ldquo;backtracks&rdquo; to start trying the possible
-candidates.</li>
+<li><strong><code>nfarunproto</code></strong> 根据目标字符串中给定的偏移量来计算 NFA 。它返回一个数组，指示候选者应该被尝试的顺序，不包括任何永远不可能的匹配。</li>
+<li><strong><code>nfarunalt</code></strong> 根据目标字符串中给定的偏移量来计算 NFA 。然后它会推动所有分支的标记, 它可能会以相反的顺序匹配到 <code>bstack</code>，所以 最好的候选者在最顶端。那么正则表达式引擎只是立即“回溯”以开始尝试可能的候选者。</li>
 </ul>
 
-<p>These two really are just thin wrappers around the same underlying NFA
-evaluator.</p>
+<p>这两个真的只是围绕同一底层 NFA 计算的薄薄的包装 。</p>
 
-<h2 id="exercise-9">Exercise 9</h2>
+<h2 id="练习-9">练习 9</h2>
 
-<p>In this exercise, you&rsquo;ll explore some of the regex engine implementation. Of
-note, you&rsquo;ll encounter (time-allowing):</p>
+<p>在本练习中，您将探索一些正则表达式引擎实现。值得注意的是，你会遇到（如果允许时间）：</p>
 
 <ul>
-<li>The Perl 6 regex grammar and actions</li>
-<li>How embedded code blocks are implemented in NQP and Rakudo</li>
-<li>Where NFAs are stored and how they look</li>
+<li>Perl 6 正则表达式 grammar 和 action</li>
+<li>如何在 NQP 和 Rakudo 中实现嵌入式代码块</li>
+<li>NFA 存储的地方以及它们的外观</li>
 </ul>
 
-<p>See the exercise sheet for guidance.</p>
+<p>请参阅练习页以获取指导。</p>
 
-<h1 id="the-jvm-backend">The JVM backend</h1>
+<h1 id="jvm-后端">JVM 后端</h1>
 
-<p><em>Bringing Perl 6 to the land of Java</em></p>
+<p><em>将 Perl 6 带到 Java 的土地上</em></p>
 
 <h2 id="the-jvm">The JVM</h2>
 
-<p>Virtual machine originally built to execute the Java language, and now host to
-a large number of languages spanning many paradigms, static, dynamic, etc.</p>
+<p>虚拟机最初是为执行 Java 语言而构建的 现在拥有许多跨越多种语言的语言范式，静态，动态等。</p>
 
-<p>Instruction set of <strong>around 200 instructions</strong>, but many class library methods
-are provided natively by the VM also</p>
+<p>指令集<strong>约200条指令</strong>，但VM 本身也提供了许多类库方法。</p>
 
-<p>Instruction set and execution model are <strong>stack based</strong>; values are loaded on
-to the stack to be operated on, passed as method arguments, etc.</p>
+<p>指令集和执行模型是<strong>基于堆栈的</strong>; 值是加载到要操作的堆栈上，作为方法参数传递等</p>
 
-<p>The <strong>bytecode</strong> lives in a <strong>class file</strong>, which represents a single class
-with fields and methods.</p>
+<p><strong>字节码</strong>存在于<strong>类文件</strong>中，它代表具有字段和方法的单个类。</p>
 
-<h2 id="jvm-instruction-set-constants">JVM instruction set: constants</h2>
+<h2 id="jvm-指令集-constants">JVM 指令集: constants</h2>
 
-<p>Various instructions load constants on to the stack:</p>
+<p>将常量加载到堆栈的各种指令：</p>
 
 <ul>
-<li><strong><code>aconst_null</code></strong> loads a null reference</li>
-<li><strong><code>iconst_m1</code>, <code>iconst_0</code>, <code>iconst_1</code>, &hellip; <code>iconst_5</code></strong> load 32-bit integer
--1, 0, 1, &hellip; 5 onto the stack</li>
-<li><strong><code>lconst_0</code>, <code>lconst_1</code></strong> load 64-bit integer 0 and 1 onto the stack</li>
-<li><strong><code>fconst_0</code>, <code>fconst_1</code>, <code>fconst_2</code></strong> load 32-bit floating point 0.0, 1.0,
-2.0 onto the stack</li>
-<li><strong><code>dconst_0</code>, <code>dconst_1</code></strong> load 64-bit floating point 0.0, 1.0 onto the
-stack</li>
-<li><strong><code>bipush</code></strong> takes a 1-byte argument and loads it as a 32-bit integer</li>
-<li><strong><code>sipush</code></strong> takes a 2-byte argument and loads it as a 16-bit integer</li>
-<li><strong><code>ldc</code>, <code>ldc_w</code> and <code>ldc2_w</code></strong> load constants from the constant pool (int,
-float or String)</li>
+<li><strong><code>aconst_null</code></strong>  加载空引用</li>
+<li><strong><code>iconst_m1</code>, <code>iconst_0</code>, <code>iconst_1</code>, &hellip; <code>iconst_5</code></strong> l 加载32位整数 -1,0,1,&hellip; 5 到堆栈上</li>
+<li><strong><code>lconst_0</code>, <code>lconst_1</code></strong>  加载64位整数 0 和 1 到堆栈上</li>
+<li><strong><code>fconst_0</code>, <code>fconst_1</code>, <code>fconst_2</code></strong>  加载 32 位浮点 0.0,1.0,2.0 到堆栈上</li>
+<li><strong><code>dconst_0</code>, <code>dconst_1</code></strong>  加载 64 位浮点 0.0,1.0 到堆栈上</li>
+<li><strong><code>bipush</code></strong>  接收 1 字节的参数并将其加载为 32位 整数<br /></li>
+<li><strong><code>sipush</code></strong> 接收 2 字节的参数并将其加载为 16 位整数<br /></li>
+<li><strong><code>ldc</code>, <code>ldc_w</code> and <code>ldc2_w</code></strong>  从常量池（int,float 或 String）中加载常量<br /></li>
 </ul>
 
-<h2 id="jvm-instruction-set-locals">JVM instruction set: locals</h2>
+<h2 id="jvm-指令集-locals">JVM 指令集: locals</h2>
 
-<p>Local variables are either integers (32-bit), longs (64-bit), floats (32-bit),
-doubles (64-bit) or object reference. There are instructions to load and store
-them.</p>
+<p>局部变量可以是整数（32位），长整数（64位），浮点数 （32位），双精度（64位）或对象引用。 有加载和存储它们的指令。</p>
 
 <ul>
-<li><strong><code>iload</code>, <code>lload</code>, <code>fload</code>, <code>dload</code> and <code>aload</code></strong> take an index and load
-that local variable onto the stack</li>
-<li><strong><code>istore</code>, <code>lstore</code>, <code>fstore</code>, <code>dstore</code> and <code>astore</code></strong> take an index and
-store what is currently on the stack top to that local variable</li>
-<li>The first four local variables (indexes 0 through 3) can be accessed using
-special instructions of the form <strong><code>&lt;prefix&gt;[load|store]_[0..3]</code></strong>, for
-example <code>iload_0</code>, <code>lload_3</code>, <code>astore_2</code>, <code>dstore_0</code></li>
+<li><strong><code>iload</code>, <code>lload</code>, <code>fload</code>, <code>dload</code> 和 <code>aload</code></strong>  接收一个索引并将该局部变量加载到堆栈上
+<strong><code>istore</code>, <code>lstore</code>, <code>fstore</code>, <code>dstore</code> 和 <code>astore</code></strong>  接收一个索引并将当前堆栈顶部的内容存储到本地变量</li>
+<li>前四个局部变量（索引 0 到 3）可以是使用 <strong><code>&lt;prefix&gt;[load|store]_[0..3]</code></strong> 形式的特殊指令，例如 <code>iload_0</code>, <code>lload_3</code>, <code>astore_2</code>, <code>dstore_0</code></li>
 </ul>
 
-<p>Both longs and doubles count as two slots, so two adjacent longs might be in
-index 4 and 6; trying to access something at 5 will complain about splitting
-a value!</p>
+<p>long 和 double 都计为两个插槽，因此两个相邻的 long 可能在索引 4 和 6; 试图在索引 5 访问某些东西会导致抱怨分割值！</p>
 
-<h2 id="jvm-instruction-set-arrays">JVM instruction set: arrays</h2>
+<h2 id="jvm-指令集-arrays">JVM 指令集: arrays</h2>
 
-<p>Arrays can be created with types <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code> <code>byte</code>,
-<code>char</code>, <code>short</code> or any reference type. They are not resizable.</p>
+<p>可以使用 <code>int</code>, <code>long</code>, <code>float</code>, <code>double</code> <code>byte</code>, <code>char</code>, <code>short</code> 或任何引用类型类型创建数组。它们不可调整大小。</p>
 
 <ul>
-<li><strong><code>newarray</code></strong> creates an array of any of the native types, with a byte to
-indicate type and taking the length to allocate from the stack top</li>
-<li><strong><code>anewarray</code></strong> is for creating arrays of a reference type; the type is
-specified as a constant pool entry</li>
-<li><strong><code>arraylength</code></strong> gets the length of an array</li>
-<li>Loading an element from an array involves putting the array on the stack,
-the index on the stack, and then using one of <code>iaload</code>, <code>laload</code>, <code>faload</code>,
-<code>daload</code>, <code>aaload</code>, <code>baload</code>, <code>caload</code> or <code>saload</code></li>
-<li>Storing an element to an array involves putting the array on the stack,
-the index on the stack, the value on the stack, and then using one of
-<code>iastore</code>, <code>lastore</code>, <code>fastore</code>, <code>dastore</code>, <code>aastore</code>, <code>bastore</code>, <code>castore</code>,
-or <code>sastore</code></li>
+<li><strong><code>newarray</code></strong>  创建一个包含任何原生类型的数组 其中一个字节表示类型并从栈顶分配长度<br /></li>
+<li><strong><code>anewarray</code></strong> 用于创建引用类型的数组; 类型被指定为常量池条目</li>
+<li><strong><code>arraylength</code></strong>  获取数组的长度</li>
+<li>从数组加载元素涉及把数组放置在堆栈上，索引在堆栈上，然后使用 <code>iaload</code>, <code>laload</code>, <code>faload</code>, <code>daload</code>, <code>aaload</code>, <code>baload</code>, <code>caload</code> 或 <code>saload</code> 其中的一个</li>
+<li>将元素存储到数组涉及将数组放在堆栈上面 ，索引在堆栈上，值在堆栈上，然后使用 <code>iastore</code>, <code>lastore</code>, <code>fastore</code>, <code>dastore</code>, <code>aastore</code>, <code>bastore</code>, <code>castore</code>, 或 <code>sastore</code> 中的一个</li>
 </ul>
 
-<h2 id="jvm-instruction-set-arithmetic">JVM instruction set: arithmetic</h2>
+<h2 id="jvm-指令集-arithmetic">JVM 指令集: arithmetic</h2>
 
-<p>The usual set of arithmetic and bitwise operations are available</p>
+<p>可以使用通常的算术和按位运算集：</p>
 
 <ul>
-<li><strong>Addition:</strong> <code>iadd</code>, <code>ladd</code>, <code>fadd</code>, <code>dadd</code></li>
-<li><strong>Subtraction:</strong> <code>isub</code>, <code>lsub</code>, <code>fsub</code>, <code>dsub</code></li>
-<li><strong>Multiplication:</strong> <code>imul</code>, <code>lmul</code>, <code>fmul</code>, <code>dmul</code></li>
-<li><strong>Division:</strong> <code>idiv</code>, <code>ldiv</code>, <code>fdiv</code>, <code>ddiv</code></li>
-<li><strong>Modulo:</strong> <code>irem</code>, <code>lrem</code>, <code>frem</code>, <code>drem</code></li>
-<li><strong>Negation:</strong> <code>ineg</code>, <code>lneg</code>, <code>fneg</code>, <code>dneg</code></li>
-<li><strong>Bit shifts</strong>: <code>ishl</code>, <code>lshl</code>, <code>ishr</code>, <code>lshr</code>, <code>iushr</code>, <code>lushr</code></li>
-<li><strong>Bitwise:</strong> <code>iand</code>, <code>land</code>, <code>ior</code>, <code>lor</code>, <code>ixor</code>, <code>lxor</code></li>
+<li><strong>加:</strong> <code>iadd</code>, <code>ladd</code>, <code>fadd</code>, <code>dadd</code></li>
+<li><strong>减:</strong> <code>isub</code>, <code>lsub</code>, <code>fsub</code>, <code>dsub</code></li>
+<li><strong>乘:</strong> <code>imul</code>, <code>lmul</code>, <code>fmul</code>, <code>dmul</code></li>
+<li><strong>除:</strong> <code>idiv</code>, <code>ldiv</code>, <code>fdiv</code>, <code>ddiv</code></li>
+<li><strong>取模:</strong> <code>irem</code>, <code>lrem</code>, <code>frem</code>, <code>drem</code></li>
+<li><strong>取反:</strong> <code>ineg</code>, <code>lneg</code>, <code>fneg</code>, <code>dneg</code></li>
+<li><strong>位移</strong>: <code>ishl</code>, <code>lshl</code>, <code>ishr</code>, <code>lshr</code>, <code>iushr</code>, <code>lushr</code></li>
+<li><strong>按位:</strong> <code>iand</code>, <code>land</code>, <code>ior</code>, <code>lor</code>, <code>ixor</code>, <code>lxor</code></li>
 </ul>
 
-<h2 id="jvm-instruction-set-compare-branch">JVM instruction set: compare/branch</h2>
+<h2 id="jvm-指令集-compare-branch">JVM 指令集: compare/branch</h2>
 
-<p>Bloody irregular!</p>
+<p>血腥不规则！</p>
 
-<p>For longs, floats and doubles, you use one of <code>lcmp</code>, <code>fcmpl</code>, <code>fcmpg</code>,
-<code>dcmpl</code>, or <code>dcmpg</code>, which give -1, 0 or 1 (like a <code>cmp</code> in various
-languages). You then branch with one of <code>ifeq</code>, <code>ifne</code>, <code>iflt</code>, <code>ifge</code>,
-<code>ifgt</code>, or <code>ifle</code>.</p>
+<p>对于 long，float 和 double，你使用 <code>lcmp</code>, <code>fcmpl</code>, <code>fcmpg</code>, <code>dcmpl</code>, 或 <code>dcmpg</code> 之一,它给出 -1, 0 或 1（就像各种 <code>cmp</code> 语言一样）。然后你用  <code>ifeq</code>, <code>ifne</code>, <code>iflt</code>, <code>ifge</code>, <code>ifgt</code>, 或 <code>ifle</code> 之一进行分支。</p>
 
-<p>32-bit integer comparisons are special enough to get their own instructions
-that compare and branch all in one: <code>if_icmpeq</code>, <code>if_icmpne</code>, <code>if_icmplt</code>,
-<code>if_icmpge</code>, <code>if_icmpgt</code> and <code>if_icmple</code>.</p>
+<p>32 位整数比较非常特殊，有自己的指令集, 其比较和分支一体化: <code>if_icmpeq</code>, <code>if_icmpne</code>, <code>if_icmplt</code>, <code>if_icmpge</code>, <code>if_icmpgt</code> 和 <code>if_icmple</code>。</p>
 
-<p>References can be compared for equality or inequality and branched on with
-<code>if_acmpeq</code> and <code>if_acmpne</code>. For nullness check and branch, there are <code>ifnull</code>
-and <code>ifnonnull</code>.</p>
+<p>引用可以比较相等或不相等，并且根据 <code>if_acmpeq</code> 和 <code>if_acmpne</code> 进行分支。对于 nullness 空检查和分支，有 <code>ifnull</code> 和 <code>ifnonnull</code>。</p>
 
-<p>Finally, there&rsquo;s an unconditional <code>goto</code> and a <code>tableswitch</code> for compiling a
-switch statement into.</p>
+<p>最后，有一个无条件的 <code>goto</code> 和一个 <code>tableswitch</code> 用于编译成 switch 语句。</p>
 
-<h2 id="jvm-instruction-set-objects-and-fields">JVM instruction set: objects and fields</h2>
+<h2 id="jvm-指令集-对象和字段">JVM 指令集: 对象和字段</h2>
 
-<p>An object is instantiated with the <code>new</code> instruction. Note that the bytecode
-validator will enforce that its constructors are called with <code>invokespecial</code>
-(see next slide).</p>
+<p>使用 <code>new</code> 指令实例化对象。请注意字节码验证器将强制执行其构造函数 <code>invokespecial</code>（见下一张幻灯片）。</p>
 
-<p>There are four instructions for accessing fields (though we don&rsquo;t do this too
-often, as for 6model objects it&rsquo;s encapsulated inside the representation):</p>
+<p>访问字段有四条指令（尽管我们没有经常这样做，对于 6model 对象，它被封装在表示的内部）：</p>
 
 <ul>
-<li><strong><code>getstatic</code></strong> takes a field reference from the constant pool and loads the
-static field&rsquo;s value onto the stack</li>
-<li><strong><code>getfield</code></strong> is similar, but expects the object to access an instance field
-from to be on the stack</li>
-<li><strong><code>putstatic</code></strong> takes a field reference from the constant pool and stores the
-current stack top value to the static field</li>
-<li><strong><code>putfield</code></strong> is similar, but expects the object to store the instance field
-on to be on the stack beneath the value</li>
+<li><strong><code>getstatic</code></strong>  从常量池中获取字段引用, 将静态字段的值加载到堆栈上<br /></li>
+<li><strong><code>getfield</code></strong> 类似，但期望对象访问来自堆栈的实例字段<br /></li>
+<li><strong><code>putstatic</code></strong> 从常量池中获取字段引用, 将当前堆栈顶部值存储到静态字段</li>
+<li><strong><code>putfield</code></strong> 是类似的，但期望对象存储实例字段到位于值下方的堆栈上</li>
 </ul>
 
-<h2 id="jvm-instruction-set-method-calls">JVM instruction set: method calls</h2>
+<h2 id="jvm-指令集-method-calls">JVM 指令集: method calls</h2>
 
-<p>Instance method calls expect the stack to contain the object to call a method
-on, followed by any extra arguments. Note that these operate on <strong>Java
-objects</strong> rather than 6model objects, so we don&rsquo;t use them for Perl 6&rsquo;s
-method dispatch!</p>
+<p>实例方法调用期望堆栈包含要调用的对象，然后是任何额外的参数。请注意这些对 Java 对象进行操作而不是对 6model 对象进行操作，所以我们不要把它们用于 Perl 6 的方法分派！</p>
 
 <ul>
-<li><strong><code>invokevirtual</code></strong> does a normal virtual method call</li>
-<li><strong><code>invokespecial</code></strong> calls a method in an exact class (used for super, etc.)</li>
-<li><strong><code>invokeinterface</code></strong> calls a method through an interface</li>
+<li><strong><code>invokevirtual</code></strong> 执行正常的虚方法调用</li>
+<li><strong><code>invokespecial</code></strong> 调用精确类中的方法（用于超级等）</li>
+<li><strong><code>invokeinterface</code></strong> 通过接口调用方法</li>
 </ul>
 
-<p>There is also <strong><code>invokestatic</code></strong> which just expects the arguments to be on the
-stack. We use this very heavily, since most <code>nqp::</code> ops are static method calls.</p>
+<p>还有 <strong><code>invokedynamic</code></strong>，只是期望参数在堆栈上。由于大多数 <code>nqp::ops</code> 是静态方法调用，我们用它很频繁 。</p>
 
-<p>Finally, there&rsquo;s <strong><code>invokedynamic</code></strong>, which is how actual Perl 6-level routine
-and method calls are wired up.</p>
+<p>最后，还有 <strong><code>invokedynamic</code></strong>，这是实际的 Perl 6 级例程和方法调用被连接起来的方式。</p>
 
-<h2 id="jvm-instruction-set-exceptions">JVM instruction set: exceptions</h2>
+<h2 id="jvm-指令集-exceptions">JVM 指令集: exceptions</h2>
 
-<p>There is only one instruction related to exceptions, <strong><code>athrow</code></strong>. It throws
-the exception object that is currently on the stack top.</p>
+<p>只有一个与异常有关的指令， <strong><code>athrow</code></strong>。它抛出当前位于堆栈顶部的异常对象。</p>
 
-<p>Exception handlers are stored as a table rather than in the bytecode stream.</p>
+<p>异常处理程序存储为表而不是字节码流。</p>
 
-<h2 id="jvm-instruction-set-other-bits">JVM instruction set: other bits</h2>
+<h2 id="jvm-指令集-other-bits">JVM 指令集: other bits</h2>
 
-<p>There are various coercion instructions that convert between the primitive
-types. They are of the form <code>&lt;from&gt;2&lt;to&gt;</code>, with the same one-letter codes used
-for arrays. The available ones are <code>i2l</code>, <code>i2f</code>, <code>i2d</code>, <code>l2i</code>, <code>l2f</code>, <code>l2d</code>,
-<code>f2i</code>, <code>f2l</code>, <code>f2d</code>, <code>d2i</code>, <code>d2l</code>, <code>d2f</code>, <code>i2b</code>, <code>i2c</code>, and <code>i2s</code>.</p>
+<p>有各种强制指令可以在原始类型之间进行转换。它们的形式为 <code>&lt;from&gt;2&lt;to&gt;</code>，具有相同的用于数组的单字母代码。<code>i2l</code>, <code>i2f</code>, <code>i2d</code>, <code>l2i</code>, <code>l2f</code>, <code>l2d</code>, <code>f2i</code>, <code>f2l</code>, <code>f2d</code>, <code>d2i</code>, <code>d2l</code>, <code>d2f</code>, <code>i2b</code>, <code>i2c</code>, 和 <code>i2s</code>。</p>
 
-<p>There are also a number of instructions for manipulating the stack:</p>
+<p>还有许多用于操作堆栈的指令：</p>
 
 <ul>
-<li><strong>Popping:</strong> <code>pop</code>, <code>pop2</code> (note that a long or double counts as 2 slots)</li>
-<li><strong>Duplicating:</strong> <code>dup</code>, <code>dup2</code> (same rules)</li>
-<li><strong>Swapping:</strong> <code>swap</code> (nope, doesn&rsquo;t exist for long/double)</li>
+<li><strong>Popping:</strong> <code>pop</code>, <code>pop2</code> (注意 long 或 double 计为 2 个插槽)</li>
+<li><strong>Duplicating:</strong> <code>dup</code>, <code>dup2</code> (同一个规则)</li>
+<li><strong>Swapping:</strong> <code>swap</code> (不, 对于 long/double 不存在)</li>
 </ul>
 
-<p>Finally, a method can be returned from (taking the current stack top as the
-return value) with <code>ireturn</code>, <code>lreturn</code>, <code>freturn</code>, <code>dreturn</code>, <code>areturn</code>, or
-<code>return</code> (void).</p>
+<p>最后, 方法能使用  <code>ireturn</code>, <code>lreturn</code>, <code>freturn</code>, <code>dreturn</code>, <code>areturn</code>, 或 <code>return</code> (void) 方法返回(以当前的堆栈顶部为返回值)。</p>
 
 <h2 id="jast-1">JAST (1)</h2>
 
-<p>To generate JVM bytecode from NQP, we build a bunch of <strong>JAST</strong> nodes (short
-for JVM Abstract Syntax Tree).</p>
+<p>为了从 NQP 生成 JVM 字节码，我们构建了一堆 <strong>JAST</strong>  节点（JVM Abstract Syntax Tree 的缩写）。</p>
 
-<p>There are some nodes for pushing constants:</p>
+<p>有一些节点用于 push 常量：</p>
 
 <pre><code>JAST::PushIVal.new( :value(42) )        # 64-bit integer constant
 JAST::PushIndex.new( :value(69) )       # 32-bit integer constant
@@ -2196,31 +1897,24 @@ JAST::PushNVal.new( :value(1.5) )       # 64-bit double constant
 JAST::PushSVal.new( :value('beer') )    # String constant
 </code></pre>
 
-<p>There is also a <strong><code>JAST::PushCVal</code></strong>, used for pushing class literals.</p>
+<p>还有一个 <strong><code>JAST::PushCVal</code></strong>，用于 push 类字面值。</p>
 
 <h2 id="jast-2">JAST (2)</h2>
 
-<p>The top level structure is made up of a <strong><code>JAST::Class</code></strong> node. It exposes the
-methods <code>add_field</code>, which expects a <strong><code>JAST::Field</code></strong>, and <code>add_method</code>, which
-expects a <strong><code>JAST::Method</code></strong>.</p>
+<p>顶级结构由 <strong><code>JAST::Class</code></strong> 节点组成。它公开方法 <code>add_field</code>，它需要一个 <strong><code>JAST::Field</code></strong>，和 <code>add_method</code>，它需要一个 <strong><code>JAST::Method</code></strong>。</p>
 
-<p>A <strong><code>JAST::Field</code></strong> has methods (and named constructor parameters) to set a
-<code>name</code>, <code>type</code> and if it&rsquo;s <code>static</code>.</p>
+<p><strong><code>JAST::Field</code></strong> 有方法(和具名构造器参数)来设置 <code>name</code>, <code>type</code> 还有它是否是 <code>static</code> 的。</p>
 
-<p>A <strong><code>JAST::Method</code></strong> is rather more complex. Along with the <code>name</code> and a flag
-to indicate if it&rsquo;s <code>static</code>, it also has lists of <code>locals</code> and <code>arguments</code>,
-along with a type that it <code>returns</code>. Additional fields capture the set of
-lexicals, NQP-level exception handlers, etc.</p>
+<p><strong><code>JAST::Method</code></strong> 更复杂。还有一个 <code>name</code> 和标志以表明它是否是 <code>static</code> 的, 它还有 <code>locals</code> 和 <code>arguments</code>，以及它返回的(<code>returns</code>)类型。附加字段捕获词法集，NQP 级异常处理程序等。</p>
 
 <h2 id="jast-3">JAST (3)</h2>
 
-<p>An individual instruction is expressed as a <strong><code>JAST::Instruction</code></strong> node.</p>
+<p>单个指令表示为 <strong><code>JAST::Instruction</code></strong> 节点。</p>
 
 <pre><code>JAST::Instruction.new( :op('aconst_null') )
 </code></pre>
 
-<p>Typically, these are pushed onto a <strong><code>JAST::InstructionList</code></strong>, though they
-can also be pushed onto the instruction list inside a <code>JAST::Method</code> too.</p>
+<p>通常，这些被推到 <strong><code>JAST::InstructionList</code></strong> 中，虽然它们也可以被推到 <code>JAST::Method</code> 内部的指令列表中。</p>
 
 <pre><code>my $il := JAST::InstructionList.new();
 $il.append(JAST::PushIVal.new( :value($target) ));
@@ -2232,32 +1926,28 @@ $il.append(JAST::Instruction.new( :op('invokestatic'), $TYPE_OPS,
 
 <h2 id="jast-4">JAST (4)</h2>
 
-<p>The <strong><code>JAST::Label</code></strong> node represents a label. Within a given <code>JAST::Method</code>,
-a label needs to be unique.</p>
+<p><strong><code>JAST::Label</code></strong> 节点代表一个标签。在给定的 <code>JAST::Method</code> 内部，标签需要是唯一的。</p>
 
 <pre><code>my $if_id    := $qastcomp.unique($op_name);
 my $else_lbl := JAST::Label.new(:name($if_id ~ '_else'));
 </code></pre>
 
-<p>A <code>JAST::Label</code> can be used in a branch:</p>
+<p><code>JAST::Label</code> 可以用在分支中：</p>
 
 <pre><code>$il.append(JAST::Instruction.new($else_lbl,
     :op($op_name eq 'if' ?? 'ifeq' !! 'ifne')));
 </code></pre>
 
-<p>And its location is wherever it&rsquo;s pushed:</p>
+<p>并且它的位置就是被 push 的地方:</p>
 
 <pre><code>$il.append($else_lbl);
 </code></pre>
 
 <h2 id="jast-5">JAST (5)</h2>
 
-<p>Finally, there is <strong><code>JAST::TryCatch</code></strong>, which represents a (JVM-level)
-exception handler.</p>
+<p>最后，有 <strong><code>JAST::TryCatch</code></strong>，它代表一个（JVM 级别）异常处理程序。</p>
 
-<p>It expects two <code>JAST::InstructionList</code>s, one that makes up the <code>try</code>, and
-another that makes up the <code>catch</code>. It also needs to have an exception <code>type</code>
-specified.</p>
+<p>它需要两个 <code>JAST::InstructionLists</code>，一个组成 <code>try</code>，另一个组成 <code>catch</code>。它还需要指定的异常类型 <code>type</code>。</p>
 
 <pre><code>$il.append(JAST::TryCatch.new(
     :try($try_il),
@@ -2282,13 +1972,15 @@ it is only around a third of the size of the Perl 6 CORE.setting!</p>
 <li>It&rsquo;s doing a Continuation Passing Style transform on everything as it goes
 about doing the code generation - though this is relatively well isolated</li>
 <li>The JVM has stack-must-be-empty constraints on things that appear in the
-middle of a Perl 6 expression (like <code>try</code>)</li>
+middle of a Perl 6 expression (like <code>try</code>)
+JAST提供了一种从NQP生成JVM字节码的方法。 该 然而，前端产生了QAST树。他们之间是一个 QAST到JAST翻译器，它位于src / vm / jvm / QAST / NQP目录。 总之，包括所有QAST节点的翻译（包括 regex）和nqp::ops，它的重量约为5,400行。 那 可能听起来很多，但它只有大约三分之一的大小 Perl 6 CORE.setting！ 它的工作因以下几个因素而复杂化： 它正在进行Continuation Passing Style转换 一切都在做代码生成 - 虽然这是相对隔离的 JVM对事物的堆栈必须是空的约束 出现在Perl 6表达式的中间（如try）<br /></li>
 </ul>
 
 <h2 id="types-and-results">Types and results</h2>
 
 <p>There are 4 primitive types that everything revolves around, which you will
-see everywhere in the compiler:</p>
+see everywhere in the compiler:
+有四种原始类型，一切都围绕着，哪些 你会在编译器中到处看到</p>
 
 <pre><code>$RT_INT     a JVM long; maps to `int` in NQP
 $RT_NUM     a JVM double; maps to `num` in NQP
@@ -2300,23 +1992,27 @@ $RT_OBJ     a 6model object (org.perl6.nqp.sixmodel.SixModelObject)
 This type pairs together a <code>JAST::InstructionList</code> with one of the above
 types, indicating what it leaves behind on the stack.</p>
 
-<p><code>$RT_VOID</code> indicates the absence of a result.</p>
+<p><code>$RT_VOID</code> indicates the absence of a result.
+编译QAST节点或nqp::op的代码总是返回一个 结果。此类型将JAST::InstructionList组合在一起 使用上述类型之一，表明它留下的内容 堆栈。 $ RT VOID表示没有结果</p>
 
 <h2 id="mapping-nqp-ops">Mapping nqp::ops</h2>
 
-<p>A handful of <code>nqp::ops</code> map directly to JVM ops:</p>
+<p>A handful of <code>nqp::ops</code> map directly to JVM ops:
+少数nqp::ops直接映射到JVM操作</p>
 
 <pre><code>QAST::OperationsJAST.map_jvm_core_op('neg_i', 'lneg', [$RT_INT], $RT_INT);
 </code></pre>
 
-<p>Some others get mapped to functions in the Java class library:</p>
+<p>Some others get mapped to functions in the Java class library:
+其他一些映射到Java类库中的函数：</p>
 
 <pre><code>QAST::OperationsJAST.map_classlib_core_op('abs_i', $TYPE_MATH, 'abs',
     [$RT_INT], $RT_INT);
 </code></pre>
 
 <p>Most, however, are mapped to a a call on the <code>Ops</code> class in the NQP runtime,
-often passing the current <code>ThreadContext</code> object:</p>
+often passing the current <code>ThreadContext</code> object:
+但是，大多数映射到对Ops类的调用 NQP运行时，经常传递当前的ThreadContext对象</p>
 
 <pre><code>QAST::OperationsJAST.map_classlib_core_op('create', $TYPE_OPS, 'create',
     [$RT_OBJ], $RT_OBJ, :tc);
@@ -2333,7 +2029,8 @@ effects, rather than re-building all of NQP. Copy it to its install location,
 and it can be updated for Rakudo too.</p>
 
 <p>Rakudo also has a (much smaller) runtime support library, which is built to
-<code>rakudo-runtime.jar</code>.</p>
+<code>rakudo-runtime.jar</code>.
+许多nqp::ops，6model的JVM实现，以及 各种其他支持代码存在于src / vm / jvm / runtime / NQP中的目录。它内置于nqp-runtime.jar库中。 如果修改此代码，通常只需重新构建JAR即可 看到效果，而不是重建所有的NQP。将其复制到它 安装位置，也可以为Rakudo更新。 Rakudo还有一个（小得多）运行时支持库，它是 构建到rakudo-runtime.jar。</p>
 
 <p><em><exploration as time allows></em></p>
 
@@ -2347,11 +2044,13 @@ such as the continuation support needed by gather/take, 6model, exception
 handlers that run on the stack top before unwinding, and so forth.</p>
 
 <p>From here, work is needed on optimization, better code generation, and better
-use of <code>invokedynamic</code>.</p>
+use of <code>invokedynamic</code>.
+JVM支持包括将QAST树转换为JVM 字节码，通过称为JAST的中间形式，和 运行时支持库。 大多数工作都用于提供JVM所不具备的功能 本地提供，例如所需的持续支持 收集/获取，6模型，在堆栈顶部运行的异常处理程序 在展开之前，等等。 从这里开始，需要进行优化，更好的代码生成， 并更好地使用invokedynamic</p>
 
 <h1 id="the-moarvm-backend">The MoarVM backend</h1>
 
-<p><em>A VM built just for NQP and Rakudo</em></p>
+<p><em>A VM built just for NQP and Rakudo</em>
+MoarVM后端 专为NQP和Rakudo构建的VM</p>
 
 <h2 id="moarvm-in-a-nutshell">MoarVM in a nutshell</h2>
 
@@ -2364,7 +2063,8 @@ semi-space copying) and gen2 (sized pools, except for large objects)</p>
 
 <p>Includes <strong>Unicode database</strong> support, and working towards <strong>NFG</strong> strings</p>
 
-<p>Support for <strong>threads</strong>, use of <strong>lock-free</strong> data structures where possible</p>
+<p>Support for <strong>threads</strong>, use of <strong>lock-free</strong> data structures where possible
+使用 6model作为其本机对象系统指令集与 nqp::ops 对齐 提供 两代的代际GC：托儿所（由半空间复制处理）和gen2（大小的池，除了 大物件） 包括 Unicode数据库支持，并致力于NFG 字符串 支持 线程，使用无锁数据结构 可能</p>
 
 <h2 id="mast">MAST</h2>
 
@@ -2378,12 +2078,14 @@ home quite quickly with MAST. After all, MAST and JAST were designed by the
 same person, and said person also contributed to the QAST design. <code>:-)</code></p>
 
 <p>In fact, 5 MAST nodes share exactly the same name and role as the equivalent
-QAST nodes.</p>
+QAST nodes.
+MoarVM没有汇编语言或中间语言; 相反，组装了MAST（MoarVM程序集语法树） 直接进入字节码。 MAST低于QAST，与JAST相当不同 （由于VM的设计相当不同以及这一事实 MoarVM不是基于堆栈的）。但是，如果你熟悉的话 无论是（或两者）这些，你都会很快感到宾至如归 MAST。毕竟，MAST和JAST的设计也是如此 人，并且说人也为QAST设计做出了贡献。:-) 实际上，5个MAST节点共享的名称和角色完全相同 等效的QAST节点。</p>
 
 <h2 id="mast-nodes-literals">MAST nodes: literals</h2>
 
 <p>Literal integers, floating point numbers, and strings are unsurprising in
-their representation.</p>
+their representation.
+文字整数，浮点数和字符串 他们的代表并不令人惊讶</p>
 
 <pre><code>MAST::IVal.new( :value(42) )
 MAST::NVal.new( :value(1.2) )
@@ -2394,7 +2096,8 @@ MAST::SVal.new( :value('cwrw') )
 MAST nodes can only be used as arguments to instructions that expect literals
 (for example, <code>const_i64</code>, <code>const_n64</code>, <code>const_s</code>, <code>argconst_[ins]</code>, parameter
 names in the named parameter binding instructions, etc.) Most instructions
-instead expect the argument to be in a local.</p>
+instead expect the argument to be in a local.
+然而，虽然它们的QAST等价物基本上可以出现 在任何地方，这些MAST节点只能用作参数 期望文字的指令（例如，const i64， const n64，const s，argconst [ins]，参数名称 命名参数绑定指令等）大多数指令 相反，期望论证在本地</p>
 
 <h2 id="mast-frames">MAST: frames</h2>
 
@@ -2414,10 +2117,13 @@ interchangeably). These just have integer indexes, not names.</li>
 
 <p>Typically, a <code>QAST::Block</code> maps to a <code>MAST::Frame</code>.</p>
 
+<p>MoarVM中的词法范围和最小的可调用单元是一个 帧。 这由MAST::Frame节点表示。 一个框架有： （高级别）名称和（低级别）编译单元唯一 ID 本地/寄存器列表（没有区别，条款 可互换使用）。这些只有整数索引， 不是名字。 词汇列表。这些都有名称和类型。 对其静态外框的引用（用于词法查找） 指令列表 通常，QAST::Block映射到MAST::Frame</p>
+
 <h2 id="mast-nodes-locals">MAST nodes: locals</h2>
 
 <p>There is a <code>MAST::Local</code> to represent locals (storage slots available as the
-frame executes):</p>
+frame executes):
+有一个MAST::Local代表本地人（可用的存储空间 当帧执行时）：</p>
 
 <pre><code>MAST::Local.new( :index($!frame.add_local($type)) )
 </code></pre>
@@ -2431,15 +2137,19 @@ fresh_n     Make a new num64 local
 fresh_s     Make a new string local
 </code></pre>
 
+<p>实际上，很难看到这是直接构建在 QAST到MAST编译器。这一切都隐藏在一些帮助者背后： fresh_o 在本地创建一个新对象 fresh_i 在本地创建一个新的int64 fresh_n 在本地创建一个新的num64 fresh_s 在本地创建一个新字符串</p>
+
 <p>After use, a local is typically released so it can be re-used elsewhere in the
-frame.</p>
+frame.
+使用后，通常会释放本地，以便可以重复使用 框架中的其他地方</p>
 
 <h2 id="mast-nodes-lexicals">MAST nodes: lexicals</h2>
 
 <p>MoarVM also natively supports lexical variables, which (unlike locals) are
 visible from nested frames. Again, these nodes are rarely generated directly
 in the QAST compiler, but by a helper that resolves the lexical (calculating
-how many frames out to look for it):</p>
+how many frames out to look for it):
+MoarVM本身也支持词汇变量，这与（不同于） 从嵌套框架中可以看到locals）。同样，这些节点是 很少直接在QAST编译器中生成，而是由帮助程序生成 这解决了词汇（计算要看多少帧） 为了它）</p>
 
 <pre><code>method resolve_lexical($name) {
     my $block := self;
@@ -2460,7 +2170,8 @@ how many frames out to look for it):</p>
 
 <p>A <code>MAST::Op</code> node represents an operation from the MoarVM instruction set.
 These are often created and pushed onto an instruction list by the <code>push_op</code>
-helper sub:</p>
+helper sub:
+MAST::Op节点表示MoarVM的操作 指令系统。这些通常被创建并推送到 push op helper sub的指令列表</p>
 
 <pre><code>sub push_op(@dest, $op, *@args) {
     nqp::push(@dest, MAST::Op.new(
@@ -2471,7 +2182,8 @@ helper sub:</p>
 </code></pre>
 
 <p>The kinds of nodes expected as arguments varies with instruction. For example,
-the <code>push_o</code> instruction expects two <code>MAST::Local</code> nodes:</p>
+the <code>push_o</code> instruction expects two <code>MAST::Local</code> nodes:
+期望作为参数的节点类型随指令而变化。 例如，push o指令需要两个MAST::Local 节点</p>
 
 <pre><code>push_op($arr.instructions, 'push_o', $arr_reg, $item_reg);
 </code></pre>
@@ -2485,14 +2197,15 @@ wants a local, you cannot use a literal at that point!</p>
 and used as an argument to certain <code>MAST::Op</code>s that branch.</p>
 
 <p>A label must be unique within a given <code>MAST::Frame</code>, which is why you&rsquo;ll often
-see code like:</p>
+see code like:
+可以将MAST::Label放在指令列表中作为目标 一个分支，并用作某些MAST::Ops的参数 科。 标签在给定的MAST::Frame中必须是唯一的，这就是原因 你经常会看到如下代码：</p>
 
 <pre><code>my $if_id    := $qastcomp.unique($op_name);
 my $else_lbl := MAST::Label.new(:name($if_id ~ '_else'));
 my $end_lbl  := MAST::Label.new(:name($if_id ~ '_end'));
 </code></pre>
 
-<p>Here&rsquo;s some examples of using the labels:</p>
+<p>Here&rsquo;s some examples of using the labels:以下是使用标签的一些示例</p>
 
 <pre><code>push_op(@ins, 'goto', $end_lbl);
 nqp::push(@ins, $else_lbl);
@@ -2502,7 +2215,8 @@ nqp::push(@ins, $else_lbl);
 
 <p>Making a call boils down to a number of steps: getting the arguments to pass
 into an arguments buffer, setting the callsite descriptor, indicating the
-result register, and making the call itself.</p>
+result register, and making the call itself.
+拨打电话归结为以下几个步骤：获取电话 传入参数缓冲区的参数，设置调用点 描述符，指示结果寄存器，并自己进行调用。 这是在MAST::Call节点后面抽象的：</p>
 
 <p>This is abstracted behind the <code>MAST::Call</code> node:</p>
 
@@ -2514,7 +2228,8 @@ result register, and making the call itself.</p>
 ));
 </code></pre>
 
-<p>The flags indicate register type, as well as named and flattening arguments.</p>
+<p>The flags indicate register type, as well as named and flattening arguments.
+标志表示寄存器类型，以及命名和展平 参数</p>
 
 <h2 id="mast-nodes-exception-handlers">MAST nodes: exception handlers</h2>
 
@@ -2522,7 +2237,8 @@ result register, and making the call itself.</p>
 loops) or true exceptions (caught by <code>CATCH</code> blocks in NQP/Perl 6). Both of
 these are set up with a <code>MAST::HandlerScope</code>, which indicates the instructions
 covered by the handler, what kind of exception it&rsquo;s interested in and what to
-do if the handler is triggered.</p>
+do if the handler is triggered.
+异常处理程序用于控制流程（例如 next / redo / last in loops）或真正的异常（由CATCH捕获 NQP / Perl中的块6）。这两个都设置为 MAST::HandlerScope，表示所涵盖的指令 处理程序，它感兴趣的是什么样的异常以及什么 如果处理程序被触发，请执行</p>
 
 <pre><code>MAST::HandlerScope.new(
     :instructions(@loop_il),
@@ -2534,7 +2250,8 @@ do if the handler is triggered.</p>
 
 <p>Here, the action is to simply unwind the call stack and go to the specified
 label. By contrast, a <code>CATCH</code> block&rsquo;s action is to run a handler block on the
-stack top and unwind afterwards.</p>
+stack top and unwind afterwards.
+在这里，操作是简单地展开调用堆栈并转到 指定标签。相比之下，CATCH块的动作是运行a 处理程序块在堆栈顶部并随后展开。</p>
 
 <h2 id="mast-nodes-compilation-units">MAST nodes: compilation units</h2>
 
@@ -2555,6 +2272,8 @@ the initial entry point</li>
 <p>It also keeps track of the HLL that produced the compilation unit and the
 set of serialization contexts that it depends on.</p>
 
+<p>最后，MAST汇编树的顶部始终是a MAST::CompUnit。这有一个框架列表（每个框架都添加了 添加帧方法）。 某些帧可以被称为特殊帧： 反序列化框架 包含驱动反序列化的代码， 并且将始终在创建编译单元时运行或 装 load frame 保存编译时应运行的代码 unit作为模块加载 主框架 包含编译时应运行的代码 unit是最初的切入点 它还跟踪生成编译单元的HLL 以及它依赖的序列化上下文集。</p>
+
 <h2 id="the-qast-to-mast-translator">The QAST to MAST translator</h2>
 
 <p>Spread over three files:</p>
@@ -2572,6 +2291,8 @@ set of serialization contexts that it depends on.</p>
 <li>Meta-data about all of the ops available and the kinds of registers they
 work on</li>
 </ul>
+
+<p>传播三个文件： QASTOperationsMAST.nqp 处理nqp::ops的编译 QASTRegexCompilerMAST.nqp 处理。的编译 QAST::Regex节点 QASTCompilerMAST.nqp 处理其余部分 这些参考： MAST节点 关于所有可用操作的元数据和各种操作 注册他们的工作</p>
 
 <h2 id="mast-instructionlist">MAST::InstructionList</h2>
 
@@ -2593,6 +2314,8 @@ QAST node: <code>MAST::InstructionList</code>. It holds three pieces of informat
 <li><code>$MVM_reg_str</code> (str, though it&rsquo;s actually a 6model object too)</li>
 </ul>
 
+<p>再次，有一个数据结构用于传达结果 编译QAST节点：MAST::InstructionList。它有三个 信息： 指令列表（$ il.instructions） 保存结果的寄存器（本地）（$ il.result reg） 它的结果类型是（&rsquo;$ il.result kind） 有四种主要类型的常量： $ MVM reg obj（6模型对象） $ MVM reg int64（int） $ MVM reg num64（num） $ MVM reg str（str，虽然它实际上也是一个6模型对象）</p>
+
 <h2 id="register-local-allocation">Register/local allocation</h2>
 
 <p>There is a per-block <code>$*REGALLOC</code> that keeps track of register use. Despite
@@ -2600,12 +2323,14 @@ the name, it&rsquo;s not doing register allocation in the traditional sense (suc
 by graph coloring). Rather, it keeps track of available temporaries, enabling
 them to be re-used.</p>
 
-<p>Obtaining a new register to work with is typically done as:</p>
+<p>Obtaining a new register to work with is typically done as:
+每个块$ * REGALLOC跟踪寄存器的使用情况。 尽管有这个名字，它还没有进行注册分配 传统意义（如图着色）。相反，它保持 跟踪可用的临时值，使它们可以重复使用。 获取要使用的新寄存器通常如下：</p>
 
 <pre><code>my $callee_reg := $*REGALLOC.fresh_o(); # also _i, _n, _s
 </code></pre>
 
-<p>It can then be released when it&rsquo;s no longer needed:</p>
+<p>It can then be released when it&rsquo;s no longer needed:
+然后可以在不再需要时释放它</p>
 
 <pre><code>$*REGALLOC.release_register($callee_reg, $MVM_reg_obj);
 </code></pre>
@@ -2614,7 +2339,8 @@ them to be re-used.</p>
 
 <p>Many <code>nqp::ops</code> have similar or identical names in the MoarVM instruction set.
 The operand type data is also readily available, so does not need to be
-specified in the mappings:</p>
+specified in the mappings:
+许多nqp::ops在MoarVM中具有相似或相同的名称 指令系统。操作数类型数据也很容易获得，因此 不需要在映射中指定</p>
 
 <pre><code>QAST::MASTOperations.add_core_moarop_mapping('atpos', 'atpos_o');
 QAST::MASTOperations.add_core_moarop_mapping('atpos_i', 'atpos_i');
@@ -2622,7 +2348,8 @@ QAST::MASTOperations.add_core_moarop_mapping('atpos_i', 'atpos_i');
 
 <p>Some instructions in MoarVM are void, but are allowed in an r-value context as
 <code>nqp::ops</code>. Therefore, we pick one of the input operands as the result, if one
-is needed.</p>
+is needed.
+MoarVM中的某些指令无效，但允许使用 r值上下文为nqp::ops。因此，我们选择其中一个输入 结果是操作数，如果需要的话</p>
 
 <pre><code>QAST::MASTOperations.add_core_moarop_mapping('bindpos', 'bindpos_o', 2);
 QAST::MASTOperations.add_core_moarop_mapping('bindpos_i', 'bindpos_i', 2);
@@ -2648,6 +2375,8 @@ do things differently)</li>
 etc.</li>
 </ul>
 
+<p>顶级src目录不直接包含多少; 该 代码分为子目录： 6模型 包含6个模型，REPR的实现， 序列化。 。 。 核心 是VM的核心，包含解释器， 参数处理，字节码解码，线程处理， 调用，例外。 。 。 gc 是内存分配和垃圾收集的生命 io 包含与IO相关的功能，通常委托 真正的工作到libuv mast 包含MAST到字节码编译器 math 包含用于大整数支持的libtommath绑定 平台 是特定于平台的代码（不同的代码） 平台以不同的方式做事 strings 包含字符串操作，编码/解码 ASCII，UTF-8等</p>
+
 <h2 id="in-summary-1">In summary&hellip;</h2>
 
 <p>MoarVM <strong>uses 6model</strong> as its object model and has an instruction set that is
@@ -2658,13 +2387,15 @@ down to it is comparatively straightforward.</p>
 get good Perl 5 interop.</p>
 
 <p>Future developments will include 6model-aware JIT compilation, which should
-give a notable performance boost.</p>
+give a notable performance boost.
+MoarVM 使用6model作为其对象模型并具有指令设置 与nqp::op集良好对齐。结果， 从QAST到它的映射相对简单。 它也将是我们支持NFG字符串的第一个地方 也应该得到良好的Perl 5互操作。 未来的发展将包括6模型感知的JIT编译， 这应该会带来显着的性能提升。</p>
 
 <h1 id="the-road-ahead">The Road Ahead</h1>
 
-<p><em>This isn&rsquo;t the end??!!!</em></p>
+<p><em>This isn&rsquo;t the end??!!!</em>
+这不是结束?? !!!</p>
 
-<h2 id="this-isn-t-all">This isn&rsquo;t all&hellip;</h2>
+<h2 id="这还不是全部">这还不是全部&hellip;</h2>
 
 <p>We&rsquo;ve covered a lot of ground in these two days.</p>
 
@@ -2678,6 +2409,8 @@ implement the bits of the Perl 6 spec that need them.</p>
 With careful reading of code and a little digging, it should be possible to
 work out what most of NQP and Rakudo do, and where most things are found.</p>
 
+<p>这两天我们已经涵盖了很多方面。 当然，有些东西已被搁置。我们没有 看着每个文件的每一行代码！ 而且，当然，我们没有涵盖尚未发明的东西，因为 我们没有实现需要它们的Perl 6规范。 但是， 我们已经涵盖了所有组成的关键部分 NQP和Rakudo 。仔细阅读代码和一点点 挖掘，应该有可能弄清楚大多数NQP和 Rakudo做，并且发现了大多数事情</p>
+
 <h2 id="the-toolchain-will-evolve">The toolchain will evolve</h2>
 
 <p>The NQP toolchain has <strong>evolved in response to understanding Perl 6&rsquo;s needs</strong>.
@@ -2690,6 +2423,8 @@ likely over, though there are surely more lessons that can be turned into
 <p>For example, the concurrency/parallelism work is currently done in terms of
 classes from the Java Class Library directly. However, in time, the key
 abstractions may well be captured into <code>nqp::</code> ops and so forth.</p>
+
+<p>NQP工具链 是为了响应理解而发展起来的 Perl 6的需求 。随着我们不断学习，这种知识将会如此 捏成工具。 在过去，有一些相当戏剧性的改革。 这些 很可能已经结束了，尽管肯定会有更多的教训 变成 更好的抽象和API。例如，并发/并行工作目前正在进行中 直接来自Java类库的类的术语。 但是，在 时间，关键的抽象可能会被捕获到nqp::ops中 等等。</p>
 
 <h2 id="remember">Remember&hellip;</h2>
 
@@ -2706,26 +2441,32 @@ you think of will rarely be the best one. Things that feel wrong, usually are.</
 <p>Take pride in solving implementation problems elegantly, ask questions, treat
 no code as sacred, and be sure to <strong><code>-Ofun</code></strong>.</p>
 
-<h2 id="thank-you">Thank you!</h2>
+<p><strong>编译器并不神奇。他们只是软件</strong>。</p>
 
-<p>Thanks for atttending the course!</p>
+<p>Perl 6 是一种大型语言，实现它是非常重要的。 然而，NQP 和 Rakudo 已经做出了合理的尝试 通过将问题分解为来管理复杂性脱钩的碎片。</p>
 
-<p><em>Any final questions?</em></p>
+<p>事实上，这是唯一可以让它易于管理的东西。 保持 这就是你的黑客攻击。 良好的建筑需要纪律。 您认为的第一个解决方案很少是最好的解决方案。事情 那种感觉不对，通常是。</p>
 
-<p>By the way, at Edument AB we&rsquo;ve also built and deliver courses on&hellip;</p>
+<p>请以优雅地解决实现问题为自豪，提问, 不要将代码视为神圣，并确保 <strong><code>--Ofun</code></strong>。</p>
+
+<h2 id="谢谢你">谢谢你!</h2>
+
+<p>感谢您参加课程！</p>
+
+<p><em>还有问题吗?</em></p>
+
+<p>顺便说一句，在 Edument AB，我们也建立并提供如下课程。。。</p>
 
 <ul>
 <li>Perl 5</li>
 <li>Git</li>
-<li>Software architecture and Domain Driven Design</li>
-<li>JavaScript and other web technologies</li>
-<li>C# and .Net</li>
-<li>Test Driven Development</li>
+<li>软件架构和领域驱动设计</li>
+<li>JavaScript 和其它 Web 技术</li>
+<li>C# 和 .Net</li>
+<li>测试驱动开发</li>
 </ul>
 
-<p>For more, see <a href="http://edument.se/courses/">http://edument.se/courses/</a>.</p>
-
-<p>(FIXUP)</p>
+<p>有关更多信息，请参阅 <a href="http://edument.se/courses/。">http://edument.se/courses/。</a></p>
 
 
         

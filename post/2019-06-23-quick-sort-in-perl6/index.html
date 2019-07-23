@@ -5,23 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Perl 6 实现二分查找</title>
-  <meta property="og:title" content="Perl 6 实现二分查找" />
-  <meta name="twitter:title" content="Perl 6 实现二分查找" />
-  <meta name="description" content="楽土">
-  <meta property="og:description" content="楽土">
-  <meta name="twitter:description" content="楽土">
+  <title>Perl 6 中的快速排序</title>
+  <meta property="og:title" content="Perl 6 中的快速排序" />
+  <meta name="twitter:title" content="Perl 6 中的快速排序" />
+  <meta name="description" content="Quick sort in Perl 6">
+  <meta property="og:description" content="Quick sort in Perl 6">
+  <meta name="twitter:description" content="Quick sort in Perl 6">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/post/2019-06-01-binary-search-in-perl6/" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2019-06-23-quick-sort-in-perl6/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Rakudo Perl 6" />
 
   <meta name="generator" content="Hugo 0.53" />
-  <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-01-binary-search-in-perl6/" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-23-quick-sort-in-perl6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -198,21 +198,21 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Perl 6 实现二分查找</h1>
+              <h1>Perl 6 中的快速排序</h1>
                 
                   
-                    <h2 class="post-subheading">楽土</h2>
+                    <h2 class="post-subheading">Quick sort in Perl 6</h2>
                   
                 
                 
                   <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 1, 2019
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 23, 2019
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (86 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (318 words)
   
   
 </span>
@@ -231,27 +231,156 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <pre><code class="language-perl6">sub binary_search(@list, $item) {
-    my $low  = 0;                        # low 和 high 用于跟踪要在其中查找的列表部分
-    my $high = @list.elems -1;           #
+        <p>今天，我们来看看另一个，也许是最着名的数据排序方法，快速排序。</p>
 
-    while $low &lt;= $high {                # 只要范围没有缩小到只包含一个元素
-        my $mid   = ($low + $high) / 2;  # 就检查中间的元素
-        my $guess = @list[$mid];
+<p>该算法要求您选择所谓的枢轴，其中一个元素来自数据，并将其余部分分成两部分：小于枢轴的元素，以及大于或等于枢轴的元素。然后再次递归地对每个部分进行排序。在每次迭代中，部件变得越来越小，直到子列表是一个或甚至零个元素的平凡数据集。</p>
 
-        return $mid if $guess == $item;  # 找到了就返回
-        if $guess &gt; $item {              # 猜的数字大了
-            $high = $mid -1 
-        } else {                         # 才的数字小了
-            $low = $mid + 1
-        }  
+<p>一个单独的理论是如何选择正确的枢轴。有几种方法，例如，从列表中间取值，或取第一项，或最后一项，或随机项。还有更复杂的方法，您可以调整它以在您的数据集类型上实现最佳性能。</p>
+
+<p>为简单起见，让我们选择第一个元素作为轴点，这是代码</p>
+
+<pre><code class="language-perl6">sub quick-sort(@data) {    
+    return @data if @data.elems &lt;= 1;
+
+    my $pivot = @data[0];
+
+    my @left;
+    my @right;
+
+    for @data[1..*] -&gt; $x {
+        if $x &lt; $pivot {
+            push @left, $x;
+        }
+        else {
+            push @right, $x;
+        }
     }
+
+    return flat(quick-sort(@left), $pivot, quick-sort(@right));
 }
 
-my @list = [1, 3, 5, 7, 9];
-say binary_search(@list, 3);
-say binary_search(@list, -1);
+my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
+@data = quick-sort @data;
+say @data;
 </code></pre>
+
+<p>与之前的<a href="https://perl6.online/2019/06/21/100-bubble-sort-in-perl-6/">冒泡排序示例</a>不同，此程序不会就地排序，而是返回新列表。</p>
+
+<p>现在是时候将代码转换为更具 Perl 6 风格代码的时候了。</p>
+
+<p>Multi-subs 再次来救援，在增加代码行数的同时，使整个算法在第一眼更容易捕捉到:</p>
+
+<pre><code class="language-perl6">multi sub quick-sort(@data where @data.elems &lt;= 1) {
+    return @data;
+}
+
+multi sub quick-sort(@data where @data.elems &gt; 1) {
+    my $pivot = @data[0];
+
+    . . .
+}
+</code></pre>
+
+<p>现在，看看这两部分：</p>
+
+<pre><code class="language-perl6">my $pivot = @data[0];
+
+. . .
+
+for @data[1..*] -&gt; $x {
+</code></pre>
+
+<p>需要采用第一个元素，算法的其余部分仅处理列表的其余部分。目前，这是通过获取元素和切片来实现的，但是有一种切换方法可以完全满足我们的需要，并从数据中删除元素。所以，让我们使用它</p>
+
+<pre><code class="language-perl6">my $pivot = @data.shift;
+
+. . .
+
+for @data -&gt; $x {
+</code></pre>
+
+<p>接下来是 <code>if-else</code> 选择，可以有效地（尽管可能效率稍差）用两个 <code>grep</code> 替换：一个选择枢轴之前的部分，另一个选择其余部分。</p>
+
+<pre><code class="language-perl6">my @left = @data.grep(* &lt; $pivot);
+my @right = @data.grep(* &gt;= $pivot);
+</code></pre>
+
+<p>基本上就是这样。你还可以做的是摆脱临时变量并将过滤器放到 <code>return</code> 语句中</p>
+
+<pre><code class="language-perl6">return flat(
+    quick-sort(@data.grep(* &lt; $pivot)),
+    $pivot,
+    quick-sort(@data.grep(* &gt;= $pivot))
+);
+</code></pre>
+
+<p>这一切都在最后一次改变之前发挥作用，但现在已经 broken 了：</p>
+
+<pre><code class="language-shell">$ perl6 quick-sort.pl 
+Cannot call 'pop' on an immutable 'List'
+   in sub quick-sort at 3.pl line 6
+   in sub quick-sort at 3.pl line 8
+   in block &lt;unit&gt; at 3.pl line 12
+</code></pre>
+
+<p>问题是你需要返回一个数字列表，但每个快速排序子类都返回它自己的列表。</p>
+
+<p>您可以通过在函数参数之前放置*来啜饮元素来轻松解决问题</p>
+
+<pre><code class="language-perl6">multi sub quick-sort(*@data where @data.elems &gt; 1) {
+    . . .
+</code></pre>
+
+<p>最终代码如下所示：</p>
+
+<pre><code class="language-perl6">multi sub quick-sort(*@data where @data.elems &lt;= 1) {
+    return @data;
+}
+
+multi sub quick-sort(*@data where @data.elems &gt; 1) {
+    my $pivot = @data.shift;
+
+    return flat(
+        quick-sort(@data.grep(* &lt; $pivot)),
+        $pivot,
+        quick-sort(@data.grep(* &gt;= $pivot))
+    );
+}
+</code></pre>
+
+<p>您也可以使用 <code>|</code> 来独立平展每个列表，而不是使用 <code>flat</code> 例程：</p>
+
+<pre><code class="language-perl6">return
+    |quick-sort(@data.grep(* &lt; $pivot)),
+    $pivot,
+    |quick-sort(@data.grep(* &gt;= $pivot));
+</code></pre>
+
+<p>但我认为有两个可理解的中间变量以避免标点符号噪音仍然更好：</p>
+
+<pre><code class="language-perl6">multi sub quick-sort(@data where @data.elems &lt;= 1) {
+    return @data;
+}
+
+multi sub quick-sort(@data where @data.elems &gt; 1) {
+    my $pivot = @data.shift;
+
+    my @left = @data.grep(* &lt; $pivot);
+    my @right = @data.grep(* &gt;= $pivot);
+
+    return flat(quick-sort(@left), $pivot, quick-sort(@right));
+}
+
+my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
+@data = quick-sort @data;
+say @data;
+</code></pre>
+
+<p>作为家庭作业，创建快速排序算法的实现，该算法可就地对数据进行排序。</p>
+
+<p>该代码可在 <a href="https://github.com/ash/perl6-algorithms/tree/master/sort">GitHub 上获得</a>，欢迎您加入此旅程！</p>
+
+<p>原文：<a href="https://perl6.online/2019/06/23/101-quick-sort-in-perl-6/">https://perl6.online/2019/06/23/101-quick-sort-in-perl-6/</a></p>
 
 
         
@@ -269,12 +398,12 @@ say binary_search(@list, -1);
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2019-03-26-perl6-colonoscopy/" data-toggle="tooltip" data-placement="top" title="Perl 6 Colonoscopy">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2019-06-22-bubble-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的冒泡排序">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2019-06-21-selection-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的选择排序">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2019-06-24-insertion-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的插入排序">Next Post &rarr;</a>
             </li>
           
         </ul>
