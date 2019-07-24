@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (942 words)
+  <i class="fa fa-clock-o"></i> 5 minutes (891 words)
   
   
 </span>
@@ -231,7 +231,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>第<a href="https://perlweeklychallenge.org/blog/perl-weekly-challenge-015/">15 届 Perl 每周挑战赛</a>的第二项任务是为 <em>Vigenère Cipher</em> 实现编码器和解码器。但这比看起来要复杂得多，因为以 Blaisede Vigenère 命名的密码实际上并不是由他发明的，而 Vigenère 实际发明的密码并不是以他的名字命名的。</p>
+        <p><a href="http://blogs.perl.org/users/damian_conway/2019/07/vigenere-vs-vigenere.html">http://blogs.perl.org/users/damian_conway/2019/07/vigenere-vs-vigenere.html</a></p>
+
+<p>第<a href="https://perlweeklychallenge.org/blog/perl-weekly-challenge-015/">15 届 Perl 每周挑战赛</a>的第二项任务是为 <em>Vigenère Cipher</em> 实现编码器和解码器。但这比看起来要复杂得多，因为以 Blaisede Vigenère 命名的密码实际上并不是由他发明的，而 Vigenère 实际发明的密码并不是以他的名字命名的。</p>
 
 <p>那么我们应该实现 <em>Vigenère Cipher</em> 加密&hellip;还是 Vigenère 加密？为什么不两个都要呢！</p>
 
@@ -253,7 +255,7 @@ if (!doNotTrack) {
 
 <p>为了实现 *VigenèreCipher*，我们首先需要构建一个 *tabularēcta*。在 Perl 6 中，这只是：</p>
 
-<pre><code class="language-perl6">    constant @alphabet = ['A'...'Z'];
+<pre><code class="language-perl6">constant @alphabet = ['A'...'Z'];
 
     constant @𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎
         = @alphabet, *.rotate ... *.head eq @alphabet.tail;
@@ -263,8 +265,8 @@ if (!doNotTrack) {
 
 <p>请注意，我们可以通过替换 <code>@alphabet</code> 的内容来更改我们正在使用的字母表。例如，如果我们想用密钥 <code>&quot;I❤️Bellaso&quot;</code> 编码 <code>&quot;Vigenère did NOT invent this!&quot;</code> 那样的消息一样 ，那么我们就像这样重新配置字母：</p>
 
-<pre><code class="language-perl6">​    *# Valid message characters are all printable Latin-1 + lurve...*
-     constant @alphabet = [' '...'ÿ', '❤️'];
+<pre><code class="language-perl6">    # Valid message characters are all printable Latin-1 + lurve...
+    constant @alphabet = [' '...'ÿ', '❤️'];
 </code></pre>
 
 <p>Perl 6 是一种现代语言，在数据和源代码中内置支持完整的 Unicode 字符集，所以完全可以使用带表情符号的字符串 <code>&quot;I❤️Bellaso&quot;</code>，或者声明像 <code>@𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎</code> 这样的变量，其名称包含那些奇怪的 <a href="https://unicode-search.net/unicode-namesearch.pl?term=MATHEMATICAL%20ITALIC">Unicode 数学斜体</a> 字符甚至是组合的标记(ēvēn ā cōmbīnīng mārk)。</p>
@@ -294,226 +296,193 @@ if (!doNotTrack) {
 
 <p><code>Z=&gt;</code> 操作者拉链一起相应的它的两个列表元素 参数，每两个传递到一对的构造，所以 操作产生像散列条目：</p>
 
-<pre><code class="language-perl6"># Key     Text-&gt;Cipher, etc.
+<pre><code class="language-perl6">  # Key     Text-&gt;Cipher, etc.
 
     'M' =&gt; %('A'=&gt;'M', 'B'=&gt;'N', 'C'=&gt;'O' ... 'Y'=&gt;'K', 'Z'=&gt;'L')
 </code></pre>
 
 <p>所以现在当我们想要查找适当的密码字符时，顶级哈希索引选择键列，而第二级哈希索引选择明文字符的行。像这样：</p>
 
-<pre><code>    my ``$ ciphertext-char ``$ key-char ``$ plaintext-char`` = %encoder{````}{````};
+<pre><code class="language-perl6">my $ciphertext-char = %encoder{$key-char}{$plaintext-char};
 </code></pre>
 
 <p>更好的是，使用这种基于散列的方法来构建2D *解码*字典同样简单，只需将嵌套映射从字母字符反转为密码字符即可：</p>
 
-<pre><code>    constant %decoder`
-`        = ``@𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎`` @ ^ cipher `**@ ^ cipher**`.map: `
-`            { ````.head =&gt; hash ` **Z=&gt; @alphabet**` }
+<pre><code class="language-perl6">constant %decoder
+        = @𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎.map: 
+            { @^cipher.head =&gt; hash @^cipher Z=&gt; @alphabet }
 </code></pre>
 
 <p>之后我们可以像这样解码一个加密的字符：</p>
 
-<pre><code>    my ``$ plaintext-char ``$ key-char ``$ ciphertext-char`` = %encoder{````}{````};
+<pre><code class="language-perl6">my $plaintext-char = %encoder{$key-char}{$ciphertext-char};
 </code></pre>
 
 <p>一旦我们有了这两个2D词典，*VigenèreCipher*就很容易实现：</p>
 
-<pre><code>    sub ``Vigenère ``// 0.chr`` (Str :$text!, Str :$key!, Bool :$decode --&gt; Str) {`
-``
-        *# Extract lists of table indices from the two strings...*
-`        my @textchars =  $text.comb;`
-`        my @keychars  = |$key.comb xx ∞;`
-``
-        *# Chose our trancoder...*
-`        my %recoder = $decode ?? %decoder !! %encoder;`
-``
-        *# Pair up indices, transcode, and concatenate the results...*
-`        (@keychars Z=&gt; @textchars)`
-`            .map({ %recoder{.key}{.value} ```` })`
-`            .join;`
-`    }
+<pre><code>sub Vigenère (Str :$text!, Str :$key!, Bool :$decode --&gt; Str) {
+
+        # Extract lists of table indices from the two strings...
+        my @textchars =  $text.comb;
+        my @keychars  = |$key.comb xx ∞;
+
+        # Chose our trancoder...
+        my %recoder = $decode ?? %decoder !! %encoder;
+
+        # Pair up indices, transcode, and concatenate the results...
+        (@keychars Z=&gt; @textchars)
+            .map({ %recoder{.key}{.value} // 0.chr })
+            .join;
+    }
 </code></pre>
 
 <p>子例程采用两个命名字符串参数：文本（明文或加密）和加密/解密密钥。该感叹号两个参数名称后告诉Perl 6的编译器所需要的两个参数。还有一个可选的命名 boolean参数（没有尾随感叹号），指示我们是否要解码。signature （）末尾的长箭头指定子例程返回一个字符串。<code>--&gt; Str</code></p>
 
 <p>在子例程中，我们首先将文本字符串和键分成单个字符（和）的列表。我们还 需要重复键字符序列，以便键至少 与文本字符串一样长。我们可以准确地计算出 需要多少次重复，但是只需要 经常无限地重复键（）就更容易了。 需要在开头的垂直条来展平关键字符列表。否则， 我们最终会得到一个重复的键列表列表，而不是重复的键字符列表 。<code>$text.comb</code><code>$key.comb</code></p>
 
-<pre><code>|$key.comb **xx ∞**
+<pre><code>|$key.comb xx ∞
 </code></pre>
 
 <p>然后我们根据我们是否正在解码来选择我们需要的两个编码字典中的哪一个。在Perl 6中，三元选择运算符是<code>*真值*</code><code>*假值*</code>， 而不是<code>*真值*</code><code>*假值*</code>。<code>*test* ??</code>``` !!</p>
 
-<pre><code>`*test* ? ```` :```
+<p>一旦我们完成了所有设置，实际的编码或解码是微不足道的：</p>
 
-一旦我们完成了所有设置，实际的编码或解码是微不足道的：
-
+<pre><code>    (@keychars Z=&gt; @textchars)
+        .map({ %recoder{.key}{.value} // 0.chr })
+        .join;
 </code></pre>
 
-<pre><code>(@keychars Z=&gt; @textchars)`
-</code></pre>
+<p>我们首先从下一个文本的每个字符匹配的连续字符从重复键，再次使用的*拉链成-A-列表中，对*运营商（间） 两个列表：<code>Z=&gt;</code><code>(@keychars Z=&gt; @textchars)</code></p>
 
-<p><code>.map({ %recoder{.key}{.value}</code><code>// 0.chr</code><code>})</code>
-`        .join;</p>
+<p>然后，我们通过查找查找表中的每个关键字符（）和每个 对应的文本字符（），将该对列表映射到加密/解密字符列表。如果 字符组合没有可用的转换，我们只 使用空字符（）作为占位符。这可确保 指定字母表外的任何字符都清晰地映射 到加密字符串之外，而不会影响其将来的解密。<code>.key</code><code>.value</code></p>
 
-<pre><code>
-我们首先从下一个文本的每个字符匹配的连续字符从重复键，再次使用的*拉链成-A-列表中，对*运营商（间） 两个列表：`Z=&gt;``(@keychars Z=&gt; @textchars)`
+<p>转换完所有字符后，只需连接列表（）即可生成最终字符串。<code>.join</code></p>
 
-然后，我们通过查找查找表中的每个关键字符（）和每个 对应的文本字符（），将该对列表映射到加密/解密字符列表。如果 字符组合没有可用的转换，我们只 使用空字符（）作为占位符。这可确保 指定字母表外的任何字符都清晰地映射 到加密字符串之外，而不会影响其将来的解密。`.key``.value`
+<p>这就是*VigenèreCipher*。</p>
 
-</code></pre>
+<p>那么Vigenère的密码呢？</p>
 
-<p>0.chr</p>
+<p>上面讨论的加密技术作为密码具有一些严重的缺点。1863年，Friedrich Kasiski观察到重复密钥字符串以生成足够长的密钥意味着单个加密消息有时可以重复使用*表格rēcta*的相同列来编码稍后在原始消息中重现的相同序列的明文字符。</p>
 
-<pre><code>
-
-
-转换完所有字符后，只需连接列表（）即可生成最终字符串。`.join`
-
-这就是*VigenèreCipher*。
-
-那么Vigenère的密码呢？
-
-上面讨论的加密技术作为密码具有一些严重的缺点。1863年，Friedrich Kasiski观察到重复密钥字符串以生成足够长的密钥意味着单个加密消息有时可以重复使用*表格rēcta*的相同列来编码稍后在原始消息中重现的相同序列的明文字符。
-
-所以，如果我们拦截一个加密的字符串，如：
-
-</code></pre>
+<p>所以，如果我们拦截一个加密的字符串，如：</p>
 
 <pre><code>LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV
 </code></pre>
 
-<pre><code>
-...然后，相对容易发现两个地方，明文消息中的重复单词显然是使用相同关键字符的两个单独副本加密的：
+<p>&hellip;然后，相对容易发现两个地方，明文消息中的重复单词显然是使用相同关键字符的两个单独副本加密的：</p>
 
+<pre><code>LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV
+
+LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV
 </code></pre>
 
-<pre><code>LLG***MMZWRGII***VATJVVBKRV***MMZWRGII***LLEDCIVATJVV`
+<p>第一个明显的单词重复发生在18个字符之间，所以如果这两个单词使用相同的关键字符编码，则密钥必须在18个字符后重复。这意味着密钥长度必须是18或某个18的整数因子（<em>即</em> 9,6,3,2或1）。第二次重复发生间隔24个字符，因此密钥长度必须同时为24的某个因子（<em>即</em> 12,8,6,4,3,2或1）。由于在两种情况下它都是相同的密钥，因此密钥长度必须是18和24 的*共同*因子：6,3,2或1。</p>
+
+<p>考虑到这些可能性，关键字很可能是6个字符长，因为从心理上讲，其他长度太短。在这种情况下，我们可以简单地通过使用所有17706英语六字母单词尝试字典攻击来解码消息。</p>
+
+<p>要做到这一点，我们首先需要知道最可能的密钥长度是什么：</p>
+
+<pre><code>sub large-factors ($n) { set (4..$n).grep($n %% *) }
+
+    my $gap
+        = any keys [∩] map {large-factors(.&lt;gap&gt;.chars)},
+          $encoded ~~ m:ex/$&lt;gap&gt;=[ $&lt;seq&gt;=[. ** 3..*] .+] $&lt;seq&gt;/;
 </code></pre>
 
-<p>`<code>
-</code>    LLGMMZWRGII<strong><em>VATJVV</em></strong>BKRVMMZWRGIILLEDCI<strong><em>VATJVV</em></strong></p>
+<p>在这里，我们穷尽地匹配（）编码文本与正则表达式匹配，该正则表达式 定位三个或更多连续字符 （）的任何序列，然后是空格（），然后是前一个字符 序列（）。然后我们确定每个间隙的长度 （），建立一个集合每个长度 （）的重要因子，并采取这些 集合的交集（）来找到共同的因素。最后，我们 使用结点将得到的公共因子集转换为单个值。 随后，我们将能够将字长与该结相匹配， 以选择适当长度的潜在关键字。<code>m:ex</code></p>
 
-<pre><code>
-第一个明显的单词重复发生在18个字符之间，所以如果这两个单词使用相同的关键字符编码，则密钥必须在18个字符后重复。这意味着密钥长度必须是18或某个18的整数因子（*即* 9,6,3,2或1）。第二次重复发生间隔24个字符，因此密钥长度必须同时为24的某个因子（*即* 12,8,6,4,3,2或1）。由于在两种情况下它都是相同的密钥，因此密钥长度必须是18和24 的*共同*因子：6,3,2或1。
+<p>一旦我们知道解密密钥有多长，我们就可以加载一个合适的字典并过滤它以获得合适的候选密钥：</p>
 
-考虑到这些可能性，关键字很可能是6个字符长，因为从心理上讲，其他长度太短。在这种情况下，我们可以简单地通过使用所有17706英语六字母单词尝试字典攻击来解码消息。
+<pre><code>my @candidate-keys
+        = '/usr/share/dict/words'.IO.lines.grep(*.chars==$gap)».uc;
 
-要做到这一点，我们首先需要知道最可能的密钥长度是什么：
-
+    my @common-words
+        = '/usr/share/dict/common'.IO.lines.grep(*.chars &gt; 2)».uc;
 </code></pre>
-
-<pre><code>sub large-factors ($n) { set (4..$n).grep($n %% *) }`
-</code></pre>
-
-<p>`<code>
-</code>    my $gap<code>
-</code>        = any keys [∩] map {large-factors(.<gap>.chars)},<code>
-</code>          $encoded ~~ m:ex/$<gap>=[ $<seq>=[. ** 3..*] .+] $<seq>/;</p>
-
-<pre><code>
-在这里，我们穷尽地匹配（）编码文本与正则表达式匹配，该正则表达式 定位三个或更多连续字符 （）的任何序列，然后是空格（），然后是前一个字符 序列（）。然后我们确定每个间隙的长度 （），建立一个集合每个长度 （）的重要因子，并采取这些 集合的交集（）来找到共同的因素。最后，我们 使用结点将得到的公共因子集转换为单个值。 随后，我们将能够将字长与该结相匹配， 以选择适当长度的潜在关键字。`m:ex`
-
-</code></pre>
-
-<p>$<seq>=[. ** 3..* ]<code>.+`
-`$&lt;seq&gt;`
-`.&lt;gap&gt;.chars`
-`map {large-factors(...)}</code>[∩]
-any</p>
-
-<pre><code>
-
-
-一旦我们知道解密密钥有多长，我们就可以加载一个合适的字典并过滤它以获得合适的候选密钥：
-
-</code></pre>
-
-<pre><code>my ``@ candidate-keys ``@ common-words`
-</code></pre>
-
-<p><code>= '/usr/share/dict/words'.IO.lines.grep(*.chars==$gap)».uc;</code>
-<code>
-`    my</code><code>
-</code>        = &lsquo;/usr/share/dict/common&rsquo;.IO.lines.grep(*.chars &gt; 2)».uc;
-```</p>
 
 <p>我们只保留适当长度的单词： 我们还加载了第二个较小的常用单词词典，我们将用它 来检测合理的解密。<code>.grep(*.chars==$gap)</code></p>
 
 <p>然后我们用适当长度的每个可能的密钥解密密文，并打印出任何似乎包含可信数量的英文单词的解密：</p>
 
-<p>    # Request text to be deciphered&hellip;
-    my $encoded = prompt &rdquo;Ciphertext: &ldquo;;</p>
+<pre><code class="language-perl6"># Request text to be deciphered...
+    my $encoded = prompt &quot;Ciphertext: &quot;;
 
-<p>    # Try each potential key&hellip;
-    for @ candidate- keysVigenère @ common-words -&gt; $key {</p>
+    # Try each potential key...
+    for @candidate-keys -&gt; $key {
 
-<p>        # Decrypt with that key&hellip;
-        my $candidate = ( :text($encoded), :$key, :decode);</p>
+        # Decrypt with that key...
+        my $candidate = Vigenère( :text($encoded), :$key, :decode);
 
-<p>        # Count any real words found in the decryption&hellip;
-        my $found = 0;
-        for  -&gt; $word {</p>
+        # Count any real words found in the decryption...
+        my $found = 0;
+        for @common-words -&gt; $word {
 
-<p>            # Report any plausible decryptions found&hellip;
-            if $candidate.contains($word) &amp;&amp; ++$found &gt; 3 {
-                say &rdquo;$key &ndash;&gt; $candidate&rdquo;;
-                last;
-            }
-        }
-    }</p>
+            # Report any plausible decryptions found...
+            if $candidate.contains($word) &amp;&amp; ++$found &gt; 3 {
+                say &quot;$key --&gt; $candidate&quot;;
+                last;
+            }
+        }
+    }
+</code></pre>
 
 <p>在不到20秒的时间内产生：</p>
 
-<p><code>Ciphertext: LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV</code>
-`<code>
-</code>    HYDROA &ndash;&gt; ENDVYZPTDRUVTVGEHBDTSVYZPTDRULEGALUVTVGEH<code>
-</code>    HYDROA &ndash;&gt; ENDVYZPTDRUVTVGEHBDTSVYZPTDRULEGALUVTVGEH<code>
-</code>    HOGGIE &ndash;&gt; EXAGEVPDACARTFDPNXDDPGEVPDACAHEQXWARTFDPN<code>
-</code>    <strong>SECRET &ndash;&gt; THEVIGENERECIPHERISNTVIGENERESTABLECIPHER</strong><code>
-</code>    STRICH &ndash;&gt; TSPEKSEYPAGOIASNTUSYEEKSEYPAGETLMUGOIASNT<code>
-</code>    WAGGIE &ndash;&gt; PLAGEVARACARETDPNXORPGEVARACAHPEXWARETDPN<code>
-</code>    WEDGIE &ndash;&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN`</p>
+<pre><code>Ciphertext: LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV
+
+HYDROA --&gt; ENDVYZPTDRUVTVGEHBDTSVYZPTDRULEGALUVTVGEH
+HYDROA --&gt; ENDVYZPTDRUVTVGEHBDTSVYZPTDRULEGALUVTVGEH
+HOGGIE --&gt; EXAGEVPDACARTFDPNXDDPGEVPDACAHEQXWARTFDPN
+SECRET --&gt; THEVIGENERECIPHERISNTVIGENERESTABLECIPHER
+STRICH --&gt; TSPEKSEYPAGOIASNTUSYEEKSEYPAGETLMUGOIASNT
+WAGGIE --&gt; PLAGEVARACARETDPNXORPGEVARACAHPEXWARETDPN
+WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
+</code></pre>
 
 <p>这里的根本问题（与许多密码技术一样）是密钥*太短*。我们可以坚持要求用户提供至少与实际消息一样长的密钥：</p>
 
-<p><code>sub</code><code>的V @ genere</code><code>(</code>
-<code>Str  :$text!,</code>
-<code>Str  :$key! **where { $key.chars &gt;= $text.chars }**,</code>
-<code>Bool :$decode</code>
-<code>--&gt; Str)</code>
-<code>{...}</code></p>
+<pre><code class="language-perl6">sub Vigenère (
+        Str  :$text!,
+        Str  :$key! where { $key.chars &gt;= $text.chars },
+        Bool :$decode
+        --&gt; Str)
+        {...}
+</code></pre>
 
 <p>然而，在1586年，BlaisedeVigenère找到了一个更容易的解决方案：拿出他们提供的任何密钥，而不是用自己的额外副本扩展它，用消息的“随机”字符扩展密钥。</p>
 
 <p>也就是说，而不是：</p>
 
-<p><code>Key: SECRETSECRETSECRETSECRETSECRETSECRETSECRET...</code>
-<code>Text: THEVIGENERECIPHERISNTVIGENERESTABLECIPHER</code>
-<code>Table:↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓</code>
-<code>Cipher: LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV</code></p>
+<pre><code>       Key: SECRETSECRETSECRETSECRETSECRETSECRETSECRET...
+      Text: THEVIGENERECIPHERISNTVIGENERESTABLECIPHER
+     Table: ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    Cipher: LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV
+</code></pre>
 
 <p>&hellip;我们用：</p>
 
-<p><code>Key: SECRET**THEVIGENERECIPHERISNTVIGENERESTABLECIPHER**</code>
-<code>Text: THEVIGENERECIPHERISNTVIGENERESTABLECIPHER</code>
-<code>Table:↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓</code>
-<code>Cipher: LLGMMZXUIMMIMCLVVKACAZZOWAXMMYXNFCIUBPIPV</code></p>
+<pre><code>       Key: SECRETTHEVIGENERECIPHERISNTVIGENERESTABLECIPHER
+      Text: THEVIGENERECIPHERISNTVIGENERESTABLECIPHER
+     Table: ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    Cipher: LLGMMZXUIMMIMCLVVKACAZZOWAXMMYXNFCIUBPIPV
+</code></pre>
 
 <p>这在密文中不会产生明显的重复，因为明文中的重复单词不再被重复单个短键加密。这种方法被称为一个<a href="https://en.wikipedia.org/wiki/Autokey_cipher"><em>自动密钥密码</em></a>，因为完整的关键是对我们产生从消息本身自动。</p>
 
 <p>假设我们想扩展我们之前的<code>Vigenère</code>子程序以提供自动密钥加密。我们可能只是在签名中添加另一个参数，然后根据实际提供的参数选择适当的行为：</p>
 
-<p><code>sub</code><code>的V @ genere</code><code>(</code>
-<code>Str :$text!,</code>
-<code>Str :$key,</code>
-<code>**Str :$autokey,**</code>
-<code>Bool :$decode</code>
-<code>--&gt; Str</code>
-<code>) {</code>
-<code>if    $autokey {...}</code>
-<code>elsif $key     {...}</code>
-<code>else           { fail 'Must specify :key or :autokey' }</code>
-<code>}</code></p>
+<pre><code class="language-perl6">sub Vigenère (
+        Str :$text!,
+        Str :$key,
+        Str :$autokey,
+        Bool :$decode
+        --&gt; Str
+    ) {
+        if    $autokey {...}
+        elsif $key     {...}
+        else           { fail 'Must specify :key or :autokey' }
+    }
+</code></pre>
 
 <p>但是Perl 6支持多个调度，因此有一种更清晰的方法可以向<code>Vigenère</code>子例程添加另一个互斥行为。我们简单地将现有代码从a <code>sub</code>更改为<code>multi</code>：</p>
 
@@ -524,14 +493,18 @@ any</p>
 
 <p>然后我们添加第二个multiply dispatched *变体*，带有一组不同的参数和一个不同的主体：</p>
 
-<p><code>multi</code><code>的V @ genere</code><code>的V @ genere</code><code>(Str :$text!, Str :$autokey! --&gt;Str) {</code>
-``<code>( :$text, :key($autokey ~ $text) );</code>
-<code>}</code></p>
+<pre><code class="language-perl6">multi Vigenère (Str :$text!, Str :$key!, Bool :$decode --&gt; Str)
+    {
+        # Body exactly as before
+    }
+</code></pre>
 
 <p>此版本需要参数，而不是参数。 然后立即重新分配到原始（Bellaso）变体，将文本 直接传递给未更改的（），但 通过将提供的自动键与文本连接来构造新的（非自动）键：<code>:autokey</code><code>:key</code></p>
 
-<p><code>:$text</code>
-<code>:key($autokey ~ $text)</code></p>
+<pre><code class="language-perl6">multi Vigenère (Str :$text!, Str :$autokey! --&gt; Str) {
+    Vigenère( :$text, :key($autokey ~ $text) );
+}
+</code></pre>
 
 <p>解释器总是知道<code>Vigenère的</code>哪个变体在任何时候调用，因为它检查传递给每个调用的实际参数，并且不考虑任何其参数列表不接受那些特定参数的变体。这意味着，如果我们传递一个参数，解释器 将始终调用原始（Bellaso）变体，而如果我们传递一个 参数，则解释器将始终调用我们的新（Vigenère）变体。<code>:key</code><code>:autokey</code></p>
 
@@ -545,82 +518,76 @@ any</p>
 
 <p>在Perl 6中，看起来像这样：</p>
 
-<p>    multi 的V @ genere 的V @ genere // 0.chr; (Str :$text!, Str:$autokey!, :$decode! &ndash;&gt; Str)
-    {
-        # Break out text that was enciphered by the original key&hellip;
-        my ($cipherkey, $ciphertext)
-            = $text.split: /&lt;?at: $autokey.chars&gt;/;</p>
+<pre><code class="language-perl6">    multi Vigenère (Str :$text!, Str :$autokey!, :$decode! --&gt; Str)
+    {
+        # Break out text that was enciphered by the original key...
+        my ($cipherkey, $ciphertext)
+            = $text.split: /&lt;?at: $autokey.chars&gt;/;
 
-<p>        # Decipher that key-enciphered initial text&hellip;
-        my @autokey
-            = ( :text($cipherkey), :key($autokey), :decode )
-                 .comb;</p>
+        # Decipher that key-enciphered initial text...
+        my @autokey
+            = Vigenère( :text($cipherkey), :key($autokey), :decode )
+                 .comb;
 
-<p>        # Progressively decipher the rest&hellip;
-        [~] flat gather for $ciphertext.comb {
-            FIRST take @autokey;
-            @autokey.push:
-               take %decoder{@autokey.shift}{$^cipherchar} 
-        }
-    }</p>
+        # Progressively decipher the rest...
+        [~] flat gather for $ciphertext.comb {
+            FIRST take @autokey;
+            @autokey.push:
+               take %decoder{@autokey.shift}{$^cipherchar} // 0.chr;
+        }
+    }
+</code></pre>
 
 <p><code>Vigenèremultiisub的</code>第三个变体需要三个必需的参数：文本，原始自动键和标志。所以这个变体 将*仅*解码自动密钥加密时被调用。<code>:decode</code></p>
 
 <p>我们首先需要将文本分成两个字符串： 使用原始密钥（）加密的初始*N个*字符，以及 使用未加密的 消息本身（）加密的文本的其余部分。为此，我们调用文本字符串的方法，并将其传递给正则表达式。 在正则表达式匹配的地方，文本将被拆分，因此我们在正则表达式中使用断言，强制它仅匹配原始键的长度：</p>
 
-<p><code>$cipherkey</code></p>
+<pre><code class="language-perl6">/&lt;?at: $autokey.chars&gt;/
+</code></pre>
 
-<p><code>$ciphertext</code>
-<code>.split</code>
-<code>&lt;?at: *position*&gt;</code></p>
+<p>一旦我们有了前*N个*字符<code>$cipherkey</code>，我们可以通过调用原始 （Bellaso）解码变体简单地用原始密钥（in <code>$autokey</code>）解密它们，我们通过将原始密钥作为参数传递而不是作为参数来调用。像这样：</p>
 
-<p><code>/&lt;?at: $autokey.chars&gt;/</code></p>
-
-<p>一旦我们有了前*N个*字符<code>$cipherkey</code>，我们可以通过调用原始 （Bellaso）解码变体简单地用原始密钥（in <code>$autokey</code>）解密它们，我们通过将原始密钥作为参数传递而不是作为参数来调用。像这样：<code>:key</code><code>:autokey</code></p>
-
-<p><code>的V @ genere</code><code>( :text($cipherkey), **:key**($autokey), :decode )</code></p>
+<pre><code class="language-perl6">Vigenère( :text($cipherkey), :key($autokey), :decode )
+</code></pre>
 
 <p>然后我们使用该方法将解密的明文 转换为我们存储的字符列表。<code>.comb</code><code>@autokey</code></p>
 
-<p>现在我们已经解密了明文的前*N个*字符，我们可以开始遍历剩余加密文本（）中的字符列表，使用下一个 已知的自动键字符（）来解密下一个 消息字符（）。 然后保存新解码的字符以用作后续的 自动键字符（）。<code>for $ciphertext.comb{...}</code></p>
-
-<p><code>@autokey.shift</code>
-<code>%decoder{@autokey.shift}{**$^cipherchar**}</code></p>
-
-<p><code>@autokey.push:</code></p>
+<p>现在我们已经解密了明文的前*N个*字符，我们可以开始遍历剩余加密文本（）中的字符列表，使用下一个 已知的自动键字符（）来解密下一个 消息字符（）。 然后保存新解码的字符以用作后续的 自动键字符（）。</p>
 
 <p>当我们解密时，我们还需要捕获每个解码的字符，因此我们最终可以连接并将它们作为解密文本返回。最简单的方法是使用一个<code>gather</code>块，它可以自动记住我们<code>take</code>在其中的任何内容。</p>
 
 <p>在这种情况下，我们首先必须收集用原始密钥解密然后存储的所有初始字符<code>@autokey</code>。所以我们讲的<code>for</code>环路<code>take</code>他们，但仅在其第一个迭代：</p>
 
-<p><code>FIRST take @autokey;</code></p>
-
 <p>然后每次我们解密循环中的另一个字符时，我们也必须<code>take</code>这样做，就在我们将它推入<code>@autokey</code>数组之前：</p>
 
-<p><code>@autokey.push:</code>
-<code>**take** %decoder{@autokey.shift}{$^cipherchar}</code><code>// 0.chr;</code></p>
+<pre><code class="language-perl6">@autokey.push:
+        take %decoder{@autokey.shift}{$^cipherchar} // 0.chr;
+</code></pre>
 
 <p>一旦解密<code>for</code>循环终止，<code>gather</code>它将返回我们传递给的所有内容的列表<code>take</code>。我们将这些字符（）连接成一个字符串&hellip;&hellip;我们就完成了。<code>[~] flat</code></p>
 
 <p>所以现在，当我们想要*VigenèreCipher时*，我们写道：</p>
 
-<p><code>$ciphertext</code>
-<code>=</code><code>Vigenère</code><code>$秘密</code><code>Vigenère</code><code>$ secret</code><code>( :text($plaintext), **:key**(</code><code>));`
-``
-    *# and later...*
-``
-`    $plaintext`
-`      =</code><code>( :text($ciphertext), **:key**(</code>``<code>), :decode );</code></p>
+<pre><code class="language-perl6">   $ciphertext
+      = Vigenère( :text($plaintext), :key($secret) );
+
+    # and later...
+
+    $plaintext
+      = Vigenère( :text($ciphertext), :key($secret), :decode );
+
+And when we want Vigenère’s actual cipher, we write:
+
+    $ciphertext
+      = Vigenère( :text($plaintext), :autokey($secret) );
+
+    # and later...
+
+    $plaintext
+      = Vigenère( :text($ciphertext), :autokey($secret), :decode );
+</code></pre>
 
 <p>当我们想要Vigenère的*实际*密码时，我们写道：</p>
-
-<p><code>$ciphertext</code>
-<code>=</code><code>Vigenère</code><code>$秘密</code><code>Vigenère</code><code>$ secret</code><code>( :text($plaintext),**:autokey**(</code><code>) );`
-``
-    *# and later...*
-``
-`    $plaintext`
-`      =</code><code>( :text($ciphertext), **:autokey**(</code>``<code>), :decode );</code></p>
 
 <p>如果你接受现代<a href="https://en.wikipedia.org/wiki/Linguistic_relativity#Renewed_examination">语言相对论</a>，那么我们认为的语言可以塑造我们思考的方式。也许甚至限制在我们的方式*可以*考虑。</p>
 
