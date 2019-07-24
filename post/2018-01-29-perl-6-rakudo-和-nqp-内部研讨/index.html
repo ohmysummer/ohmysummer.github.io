@@ -220,7 +220,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 30 minutes (6335 words)
+  <i class="fa fa-clock-o"></i> 20 minutes (4233 words)
   
   
 </span>
@@ -1619,79 +1619,47 @@ provides <code>||</code> semantics in Perl 6, which are the same as <code>|</cod
 
 <h2 id="inside-a-rule-2">Inside a rule (2)</h2>
 
-<p>The <code>Cursor</code> returned by <code>!cursor_start_all</code> may have various methods call on
-it as a match proceeds:</p>
+<p>由 <code>!cursor_start_all</code> 返回的 <code>Cursor</code> 可能有各种各样的方法在匹配进行时调用它：</p>
 
 <ul>
-<li><strong><code>!cursor_start_subcapture</code></strong> to produce a <code>Cursor</code> that will represent a
-sub-capture</li>
-<li><strong><code>!cursor_capture</code></strong> pushes a <code>Cursor</code> onto the capture stack (either one
-returned by calling a subrule or one created for a subcapture)</li>
-<li><strong><code>!cursor_pos</code></strong> updates the match position in the <code>Cursor</code> (it&rsquo;s only
-synchronized when needed)</li>
-<li><strong><code>!cursor_pass</code></strong> if the match is successful; the position reached must be
-passed, and if it is a named regex then the name can be passed; this also
-triggers a call to an action method</li>
-<li><strong><code>!cursor_fail</code></strong> if the match fails</li>
+<li><strong><code>!cursor_start_subcapture</code></strong> 生成一个代表子捕获的 <code>Cursor</code><br /></li>
+<li><strong><code>!cursor_capture</code></strong> 将 <code>Cursor</code> 推到捕获堆栈 （通过调用子规则返回的一个或为一个创建的子规则返回的一个 subcapture）</li>
+<li><strong><code>!cursor_pos</code></strong> 更新 <code>Cursor</code> 中的匹配位置（它仅在需要时同步） ！</li>
+<li><strong><code>!cursor_pass</code></strong> 如果匹配成功; 到达的位置必须通过，如果它是一个命名的正则表达式，那么名称可以通过; 这也会触发对 action 方法的调用!</li>
+<li><strong><code>!cursor_fail</code></strong> 如果匹配失败，则游标失败</li>
 </ul>
-
-<p>由 <code>!cursor_start_all</code> 返回的 <code>Cursor</code> 可能有各种各样的方法在匹配进行时调用它： ！cursor start subcapture 生成一个Cursor 代表一个子捕获 ！光标捕获 将Cursor推送到捕获堆栈 （通过调用子规则返回的一个或为一个创建的子规则返回的一个 subcapture） ！cursor pos 更新Cursor中的匹配位置（它是 仅在需要时同步） ！ 如果匹配成功则传递光标; 到达的位置 必须传递，如果它是一个命名的正则表达式，那么名称可以 通过; 这也会触发对动作方法的调用 ！ 如果匹配失败，则游标失败</p>
 
 <h2 id="inside-a-rule-3">Inside a rule (3)</h2>
 
-<p>Once a <code>token</code>, <code>rule</code> or <code>regex</code> has finished matching, either passing or
-failing, it should return the <code>Cursor</code> that it worked against.</p>
-
-<p>In fact, this is the protocol: anything that is called as a <code>subrule</code> should
-return a <code>Cursor</code> to its caller. Failing to do so will cause an error.</p>
-
-<p>At the point a <code>Cursor</code> is failed, any backtracking and capture state will be
-discarded. If it passes, but can not be backtracked in to, then backtracking
-state can be thrown away too.
-一旦 <code>token</code>, <code>rule</code> or <code>regex</code> 完成匹配，要么通过要么失败，它应该返回它工作的 <code>Cursor</code>。</p>
+<p>一旦 <code>token</code>, <code>rule</code> or <code>regex</code> 完成匹配，要么通过要么失败，它应该返回它工作的 <code>Cursor</code>。</p>
 
 <p>事实上，这是协议：任何被称为 <code>subrule</code> 的东西应该将 <code>Cursor</code> 返回给它的调用者。不这样做会导致错误。</p>
 
 <p>在 <code>Cursor</code> 失败的时候，任何回溯和捕获状态将被丢弃。如果它通过，但不能回溯到里面，然后回溯状态也可以被丢掉。</p>
 
-<h2 id="the-cstack-和-capturing">The cstack 和 capturing</h2>
+<h2 id="cstack-和-capturing">cstack 和 capturing</h2>
 
-<p>The <code>cstack</code> (either <strong>Capture stack</strong> or <strong>Cursor stack</strong>) is where <code>Cursor</code>
-objects that correspond to captures (positional or named) are stored. It may
-also be used to store non-captured <code>Cursor</code>s for subrules we could backtrack
-in to.</p>
+<p><code>cstack</code>（ 要么 <strong>Capture stack</strong> 或 <strong>Cursor stack</strong>）就在哪里与捕获相对应的 <code>Cursor</code> 对象（位置或命名） 存储。它也可以用于存储我们可以回溯到的子规则的非捕获的 <code>Cursor</code> 。</p>
 
-<p>In something like:
-<code>cstack</code>（ 要么 <strong>Capture stack</strong> 或 <strong>Cursor stack</strong>）就在哪里与捕获相对应的 <code>Cursor</code> 对象（位置或命名） 存储。它也可以用于存储未捕获的游标我们可以回溯到的子规则。</p>
-
-<p>在这样的事情</p>
+<p>在这样的东西里面:</p>
 
 <pre><code>token xblock {
     &lt;EXPR&gt; &lt;.ws&gt; &lt;pblock&gt;
 }
 </code></pre>
 
-<p>The <code>cstack</code> will end up with two <code>Cursor</code>s on it by the end of the match: one
-returned by the call to <code>EXPR</code> and another returned by the call to <code>pblock</code>.
-<code>cstack</code> 最终会在它结束时有两个 <code>Cursor</code> 匹配：一个由 <code>EXPR</code> 调用返回，另一个返回对<code>pblock</code> 的调用</p>
+<p><code>cstack</code> 最终会在它结束时有两个 <code>Cursor</code> 匹配：一个由 <code>EXPR</code> 调用返回，另一个由对<code>pblock</code> 的调用返回。</p>
 
 <h2 id="bstack-和-backtracking">bstack 和 backtracking</h2>
 
-<p>The <code>bstack</code> is a stack of integers. Each &ldquo;mark&rdquo; actually consists of four
-integers (so it only makes sense to talk about groups of 4 entries, not the
-individual integers):</p>
+<p><code>bstack</code> 是一堆整数。每个“标记”实际上都包含四个整数（所以只讨论4个项组才有意义，而不是个别整数）：</p>
 
 <ul>
-<li>The location in the regex to jump back to (typically interpreted by a jump
-table); if 0, then the backtracker should just go on looking at the next
-entry</li>
-<li>The position in the string to go back to</li>
-<li>Optionally, a repetition count (used by quantifiers)</li>
-<li>The height of the <code>cstack</code> at the point the mark was made. This is used to
-throw away any captures that we backtrack over.</li>
+<li>正则表达式中的位置跳回（通常由跳转表解释）; 如果为0，那么回溯应该继续看下一项</li>
+<li>要回到的字符串中的位置</li>
+<li>可选地，重复计数（由量词使用）</li>
+<li>标记点处的 <code>cstack</code> 高度。 这用于丢弃我们回溯的任何捕获。</li>
 </ul>
-
-<p><code>bstack</code> 是一堆整数。每个“标记”实际上都包含在内 四个整数（所以只讨论4个小组才有意义 条目，而不是个别整数）： 正则表达式中的位置跳回（通常 由跳转表解释）; 如果为0，那么回溯应该 继续看下一个条目 要回到的字符串中的位置 可选地，重复计数（由量词使用） 标记点处的cstack高度。 这用于丢弃我们回溯的任何捕获 过度。</p>
 
 <h2 id="match-object-production">Match object production</h2>
 
@@ -1956,180 +1924,126 @@ my $else_lbl := JAST::Label.new(:name($if_id ~ '_else'));
 ));
 </code></pre>
 
-<h2 id="the-qast-to-jast-translator">The QAST to JAST translator</h2>
+<h2 id="qast-到-jast-翻译器">QAST 到 JAST 翻译器</h2>
 
-<p>JAST provides a way to produce JVM bytecode from NQP. The frontend produces a
-QAST tree, however. Between them is a QAST to JAST translator, which lives in
-the <code>src/vm/jvm/QAST/</code> directory of NQP.</p>
+<p>JAST 提供了一种从 NQP 生成 JVM 字节码的方法。 然而，前端生成 QAST 树。他们之间是一个 QAST 到 JAST 的翻译器，它位于 NQP 的 <code>src/vm/jvm/QAST/</code> 目录。</p>
 
-<p>In all, including translation of all the QAST nodes (including regexes) and
-<code>nqp::ops</code>, it weighs in at about 5,400 lines. That may sound like a lot, yet
-it is only around a third of the size of the Perl 6 CORE.setting!</p>
+<p>总之，包括所有 QAST 节点（包括 regex）的翻译和 <code>nqp::ops</code>，它们大约为 5400 行。 这可能听起来很多，但它大约只有 Perl 6 CORE.setting 的三分之一大小!</p>
 
-<p>Its job is complicated by a couple of factors:</p>
+<p>它的工作因以下几个因素而复杂化：</p>
 
 <ul>
-<li>It&rsquo;s doing a Continuation Passing Style transform on everything as it goes
-about doing the code generation - though this is relatively well isolated</li>
-<li>The JVM has stack-must-be-empty constraints on things that appear in the
-middle of a Perl 6 expression (like <code>try</code>)
-JAST提供了一种从NQP生成JVM字节码的方法。 该 然而，前端产生了QAST树。他们之间是一个 QAST到JAST翻译器，它位于src / vm / jvm / QAST / NQP目录。 总之，包括所有QAST节点的翻译（包括 regex）和nqp::ops，它的重量约为5,400行。 那 可能听起来很多，但它只有大约三分之一的大小 Perl 6 CORE.setting！ 它的工作因以下几个因素而复杂化： 它正在进行Continuation Passing Style转换 一切都在做代码生成 - 虽然这是相对隔离的 JVM对事物的堆栈必须是空的约束 出现在Perl 6表达式的中间（如try）<br /></li>
+<li>它正在进行 Continuation Passing Style 转换， 因为它着手处理代码生成 - 虽然这是相对隔离的。</li>
+<li>对于出现在 Perl 6 表达式（如 <code>try</code>）中间的东西,  JVM 拥有堆栈必须是空的约束。</li>
 </ul>
 
-<h2 id="types-and-results">Types and results</h2>
+<h2 id="类型和结果">类型和结果</h2>
 
-<p>There are 4 primitive types that everything revolves around, which you will
-see everywhere in the compiler:
-有四种原始类型，一切都围绕着，哪些 你会在编译器中到处看到</p>
+<p>一切都围绕着四种原始类型，你会在编译器中看到到处都有原始类型:</p>
 
-<pre><code>$RT_INT     a JVM long; maps to `int` in NQP
-$RT_NUM     a JVM double; maps to `num` in NQP
-$RT_STR     the Java String class; maps to `str` in NQP
-$RT_OBJ     a 6model object (org.perl6.nqp.sixmodel.SixModelObject)
+<pre><code>$RT_INT     a JVM long; 在 NQP 中映射到 `int`
+$RT_NUM     a JVM double; 在 NQP 中映射到 `num`
+$RT_STR     Java String 类; 在 NQP 中映射到 `str`
+$RT_OBJ     6model 对象 (org.perl6.nqp.sixmodel.SixModelObject)
 </code></pre>
 
-<p>The code to compile a QAST node or an <code>nqp::op</code> always returns a <code>Result</code>.
-This type pairs together a <code>JAST::InstructionList</code> with one of the above
-types, indicating what it leaves behind on the stack.</p>
+<p>编译 QAST 节点或 <code>nqp::op</code> 的代码总是返回一个 <code>Result</code>。此类型将 <code>JAST::InstructionList</code> 与上述类型之一组合在一起，表明它在堆栈上留下的内容 。</p>
 
-<p><code>$RT_VOID</code> indicates the absence of a result.
-编译QAST节点或nqp::op的代码总是返回一个 结果。此类型将JAST::InstructionList组合在一起 使用上述类型之一，表明它留下的内容 堆栈。 $ RT VOID表示没有结果</p>
+<p><code>$RT_VOID</code> 表示没有结果。</p>
 
 <h2 id="mapping-nqp-ops">Mapping nqp::ops</h2>
 
-<p>A handful of <code>nqp::ops</code> map directly to JVM ops:
-少数nqp::ops直接映射到JVM操作</p>
+<p>为数不多的 <code>nqp::ops</code> 直接映射到 JVM ops:</p>
 
 <pre><code>QAST::OperationsJAST.map_jvm_core_op('neg_i', 'lneg', [$RT_INT], $RT_INT);
 </code></pre>
 
-<p>Some others get mapped to functions in the Java class library:
-其他一些映射到Java类库中的函数：</p>
+<p>其他一些映射到 Java 类库中的函数：</p>
 
 <pre><code>QAST::OperationsJAST.map_classlib_core_op('abs_i', $TYPE_MATH, 'abs',
     [$RT_INT], $RT_INT);
 </code></pre>
 
-<p>Most, however, are mapped to a a call on the <code>Ops</code> class in the NQP runtime,
-often passing the current <code>ThreadContext</code> object:
-但是，大多数映射到对Ops类的调用 NQP运行时，经常传递当前的ThreadContext对象</p>
+<p>但是，在 NQP 运行时, 大多数映射到对 <code>Ops</code> 类的调用 ，经常传递当前的 <code>ThreadContext</code> 对象:</p>
 
 <pre><code>QAST::OperationsJAST.map_classlib_core_op('create', $TYPE_OPS, 'create',
     [$RT_OBJ], $RT_OBJ, :tc);
 </code></pre>
 
-<h2 id="the-runtime-support-library">The runtime support library</h2>
+<h2 id="运行时支持库">运行时支持库</h2>
 
-<p>Many of the <code>nqp::ops</code>, the JVM implementation of 6model, and various other
-support code lives in the <code>src/vm/jvm/runtime/</code> directory in NQP. It is built
-into the <code>nqp-runtime.jar</code> library.</p>
+<p>许多 <code>nqp::ops</code>，6model 的 JVM 实现，以及各种其他支持代码存在于 NQP 的 <code>src/vm/jvm/runtime/</code> 目录中。它内置于 <code>nqp-runtime.jar</code> 库中。</p>
 
-<p>If you modify this code, you typically need only re-build the JAR to see the
-effects, rather than re-building all of NQP. Copy it to its install location,
-and it can be updated for Rakudo too.</p>
+<p>如果修改此代码，通常只需重新构建该 JAR 即可看到效果，而不是重建所有的 NQP。将其复制到它的安装位置，也可以为 Rakudo 更新。</p>
 
-<p>Rakudo also has a (much smaller) runtime support library, which is built to
-<code>rakudo-runtime.jar</code>.
-许多nqp::ops，6model的JVM实现，以及 各种其他支持代码存在于src / vm / jvm / runtime / NQP中的目录。它内置于nqp-runtime.jar库中。 如果修改此代码，通常只需重新构建JAR即可 看到效果，而不是重建所有的NQP。将其复制到它 安装位置，也可以为Rakudo更新。 Rakudo还有一个（小得多）运行时支持库，它是 构建到rakudo-runtime.jar。</p>
+<p>Rakudo 还有一个（小得多）运行时支持库，它被构建到 <code>rakudo-runtime.jar</code> 中。</p>
 
-<p><em><exploration as time allows></em></p>
+<p><em>&lt;随着时间的推移探索&gt;</em></p>
 
-<h2 id="in-summary">In summary&hellip;</h2>
+<h2 id="总结">总结 &hellip;</h2>
 
-<p>The JVM support consists of translating a QAST tree into JVM bytecode, through
-an intermediate form known as JAST, and a runtime support library.</p>
+<p>JVM 支持包括将 QAST 树转换为 JVM 字节码，通过称为 JAST 的中间形式，和运行时支持库。</p>
 
-<p>Most effort goes into providing things that the JVM does not provide natively,
-such as the continuation support needed by gather/take, 6model, exception
-handlers that run on the stack top before unwinding, and so forth.</p>
+<p>大多数工作都用于提供 JVM 所不原生提供的功能，例如 gather/take 所需的持续支持，6model，在堆栈展开之前, 在堆栈顶部运行的异常处理程序，等等。</p>
 
-<p>From here, work is needed on optimization, better code generation, and better
-use of <code>invokedynamic</code>.
-JVM支持包括将QAST树转换为JVM 字节码，通过称为JAST的中间形式，和 运行时支持库。 大多数工作都用于提供JVM所不具备的功能 本地提供，例如所需的持续支持 收集/获取，6模型，在堆栈顶部运行的异常处理程序 在展开之前，等等。 从这里开始，需要进行优化，更好的代码生成， 并更好地使用invokedynamic</p>
+<p>从这里开始，需要进行优化，更好的代码生成， 和更好的 <code>invokedynamic</code> 使用。</p>
 
-<h1 id="the-moarvm-backend">The MoarVM backend</h1>
+<h1 id="moarvm-后端">MoarVM 后端</h1>
 
-<p><em>A VM built just for NQP and Rakudo</em>
-MoarVM后端 专为NQP和Rakudo构建的VM</p>
+<p><em>专为 NQP 和 Rakudo 构建的 VM</em></p>
 
-<h2 id="moarvm-in-a-nutshell">MoarVM in a nutshell</h2>
+<h2 id="moarvm-概览">MoarVM 概览</h2>
 
-<p>Uses <strong>6model</strong> as its native object system</p>
+<p>使用 <strong>6model</strong> 作为其原生对象系统。</p>
 
-<p>Instruction set aligned with <strong>nqp::ops</strong></p>
+<p>指令集与 <strong>nqp::ops</strong> 对齐。</p>
 
-<p>Provides <strong>generational GC</strong> with two generations: a nursery (handled by
-semi-space copying) and gen2 (sized pools, except for large objects)</p>
+<p>提供两代 <strong>generational GC</strong>（由半空间复制处理）和 gen2（固定大小的池，除了大对象）</p>
 
-<p>Includes <strong>Unicode database</strong> support, and working towards <strong>NFG</strong> strings</p>
+<p>包括 <strong>Unicode database</strong> 支持，并致力于 <strong>NFG</strong> 字符串。</p>
 
-<p>Support for <strong>threads</strong>, use of <strong>lock-free</strong> data structures where possible
-使用 6model作为其本机对象系统指令集与 nqp::ops 对齐 提供 两代的代际GC：托儿所（由半空间复制处理）和gen2（大小的池，除了 大物件） 包括 Unicode数据库支持，并致力于NFG 字符串 支持 线程，使用无锁数据结构 可能</p>
+<p>支持<strong>线程</strong>，可能的时候使用无锁数据结构。</p>
 
 <h2 id="mast">MAST</h2>
 
-<p>MoarVM doesn&rsquo;t have an assembly or intermediate language; instead, MAST (the
-MoarVM Assembly Syntax Tree) is assembled directly into bytecode.</p>
+<p>MoarVM 没有汇编语言或中间语言; 相反， MAST（MoarVM 汇编语法树）直接汇编为字节码。</p>
 
-<p>MAST is lower level than QAST, and rather different to JAST (due to the rather
-different design of the VMs and the fact that MoarVM isn&rsquo;t stack based).
-However, if you are familiar with either (or both) of these, you&rsquo;ll feel at
-home quite quickly with MAST. After all, MAST and JAST were designed by the
-same person, and said person also contributed to the QAST design. <code>:-)</code></p>
+<p>MAST 低于 QAST，与 JAST 相当不同 （由于 VM 的设计相当不同以及 MoarVM 不是基于堆栈的这一事实）。但是，如果你熟悉的两者之一（或两者），你会很快对 MAST 感到宾至如归。毕竟，MAST 和 JAST 是同一个人设计的，并且上述的人也为 QAST 设计做出了贡献。<code>:-)</code></p>
 
-<p>In fact, 5 MAST nodes share exactly the same name and role as the equivalent
-QAST nodes.
-MoarVM没有汇编语言或中间语言; 相反，组装了MAST（MoarVM程序集语法树） 直接进入字节码。 MAST低于QAST，与JAST相当不同 （由于VM的设计相当不同以及这一事实 MoarVM不是基于堆栈的）。但是，如果你熟悉的话 无论是（或两者）这些，你都会很快感到宾至如归 MAST。毕竟，MAST和JAST的设计也是如此 人，并且说人也为QAST设计做出了贡献。:-) 实际上，5个MAST节点共享的名称和角色完全相同 等效的QAST节点。</p>
+<p>实际上，作为等效的 QAST 节点, 5 个 MAST 节点共享相同的名字和角色 。</p>
 
 <h2 id="mast-nodes-literals">MAST nodes: literals</h2>
 
-<p>Literal integers, floating point numbers, and strings are unsurprising in
-their representation.
-文字整数，浮点数和字符串 他们的代表并不令人惊讶</p>
+<p>文字整数，浮点数和字符串, 他们的表示并不令人惊讶:</p>
 
 <pre><code>MAST::IVal.new( :value(42) )
 MAST::NVal.new( :value(1.2) )
 MAST::SVal.new( :value('cwrw') )
 </code></pre>
 
-<p>However, while their QAST equivalents can appear essentially anywhere, these
-MAST nodes can only be used as arguments to instructions that expect literals
-(for example, <code>const_i64</code>, <code>const_n64</code>, <code>const_s</code>, <code>argconst_[ins]</code>, parameter
-names in the named parameter binding instructions, etc.) Most instructions
-instead expect the argument to be in a local.
-然而，虽然它们的QAST等价物基本上可以出现 在任何地方，这些MAST节点只能用作参数 期望文字的指令（例如，const i64， const n64，const s，argconst [ins]，参数名称 命名参数绑定指令等）大多数指令 相反，期望论证在本地</p>
+<p>然而，虽然它们的 QAST 等价物基本上可以出现在任何地方，这些 MAST 节点只能用作期望文字的指令的参数 （例如，<code>const_i64</code>, <code>const_n64</code>, <code>const_s</code>, <code>argconst_[ins]</code>，命名参数中的参数名称绑定指令等）相反大多数指令期望一个本地参数。</p>
 
-<h2 id="mast-frames">MAST: frames</h2>
+<h2 id="mast-帧">MAST: 帧</h2>
 
-<p>A lexical scope, and the smallest invokable unit, in MoarVM is a frame. This
-is represented by a <code>MAST::Frame</code> node.</p>
+<p>MoarVM 中的词法作用域最小的可调用单元是帧。 这由 <code>MAST::Frame</code> 节点表示。</p>
 
-<p>A frame has:</p>
+<p>一个帧有：
+* 一个（高级别）名称和（低级别）一个编译单元唯一 ID
+* locals/寄存器列表（没有区别，术语可互换使用）。这些只有整数索引， 不是名字。
+* 词法列表。这些都有名称和类型。
+* 对其静态外部帧的引用（用于词法查找）
+* 指令列表</p>
 
-<ul>
-<li>A (high level) name and a (low level) compilation unit unique ID</li>
-<li>A list of locals/registers (there&rsquo;s no distinction, and the terms are used
-interchangeably). These just have integer indexes, not names.</li>
-<li>A list of lexicals. These have names and types.</li>
-<li>A reference to its static outer frame (used in lexical lookup)</li>
-<li>A list of instructions</li>
-</ul>
-
-<p>Typically, a <code>QAST::Block</code> maps to a <code>MAST::Frame</code>.</p>
-
-<p>MoarVM中的词法范围和最小的可调用单元是一个 帧。 这由MAST::Frame节点表示。 一个框架有： （高级别）名称和（低级别）编译单元唯一 ID 本地/寄存器列表（没有区别，条款 可互换使用）。这些只有整数索引， 不是名字。 词汇列表。这些都有名称和类型。 对其静态外框的引用（用于词法查找） 指令列表 通常，QAST::Block映射到MAST::Frame</p>
+<p>通常，<code>QAST::Block</code> 映射到 <code>MAST::Frame</code>。</p>
 
 <h2 id="mast-nodes-locals">MAST nodes: locals</h2>
 
-<p>There is a <code>MAST::Local</code> to represent locals (storage slots available as the
-frame executes):
-有一个MAST::Local代表本地人（可用的存储空间 当帧执行时）：</p>
+<p>有一个 <code>MAST::Local</code> 代表 locals（当帧执行时可用的存储空间）：</p>
 
 <pre><code>MAST::Local.new( :index($!frame.add_local($type)) )
 </code></pre>
 
-<p>In reality, it&rsquo;s very rare to see this being directly constructed in the QAST
-to MAST compiler. It&rsquo;s all hidden behind some helpers:</p>
+<p>实际上，很难看到这是直接构建在 QAST 到 MAST 编译器。这一切都隐藏在一些帮助函数背后：</p>
 
 <pre><code>fresh_o     Make a new object local
 fresh_i     Make a new int64 local
@@ -2137,19 +2051,11 @@ fresh_n     Make a new num64 local
 fresh_s     Make a new string local
 </code></pre>
 
-<p>实际上，很难看到这是直接构建在 QAST到MAST编译器。这一切都隐藏在一些帮助者背后： fresh_o 在本地创建一个新对象 fresh_i 在本地创建一个新的int64 fresh_n 在本地创建一个新的num64 fresh_s 在本地创建一个新字符串</p>
-
-<p>After use, a local is typically released so it can be re-used elsewhere in the
-frame.
-使用后，通常会释放本地，以便可以重复使用 框架中的其他地方</p>
+<p>使用后，通常会释放 local，以便可以在帧中的其他地方重复使用。</p>
 
 <h2 id="mast-nodes-lexicals">MAST nodes: lexicals</h2>
 
-<p>MoarVM also natively supports lexical variables, which (unlike locals) are
-visible from nested frames. Again, these nodes are rarely generated directly
-in the QAST compiler, but by a helper that resolves the lexical (calculating
-how many frames out to look for it):
-MoarVM本身也支持词汇变量，这与（不同于） 从嵌套框架中可以看到locals）。同样，这些节点是 很少直接在QAST编译器中生成，而是由帮助程序生成 这解决了词汇（计算要看多少帧） 为了它）</p>
+<p>MoarVM 本身也支持词法变量，这（不同于 locals）从嵌套帧中可以看到。同样，这些节点很少直接在 QAST 编译器中生成，而是由解析词法（计算要看多少帧）的帮助程序生成。</p>
 
 <pre><code>method resolve_lexical($name) {
     my $block := self;
@@ -2168,10 +2074,7 @@ MoarVM本身也支持词汇变量，这与（不同于） 从嵌套框架中可�
 
 <h2 id="mast-nodes-ops">MAST nodes: ops</h2>
 
-<p>A <code>MAST::Op</code> node represents an operation from the MoarVM instruction set.
-These are often created and pushed onto an instruction list by the <code>push_op</code>
-helper sub:
-MAST::Op节点表示MoarVM的操作 指令系统。这些通常被创建并推送到 push op helper sub的指令列表</p>
+<p><code>MAST::Op</code> 节点表示 MoarVM 的操作指令集。这些通常被  <code>push_op</code> 帮助程序创建并推到指令列表中:</p>
 
 <pre><code>sub push_op(@dest, $op, *@args) {
     nqp::push(@dest, MAST::Op.new(
@@ -2181,31 +2084,25 @@ MAST::Op节点表示MoarVM的操作 指令系统。这些通常被创建并推�
 }
 </code></pre>
 
-<p>The kinds of nodes expected as arguments varies with instruction. For example,
-the <code>push_o</code> instruction expects two <code>MAST::Local</code> nodes:
-期望作为参数的节点类型随指令而变化。 例如，push o指令需要两个MAST::Local 节点</p>
+<p>期望作为参数的节点类型随指令而变化。 例如， <code>push_o</code> 指令需要两个 <code>MAST::Local</code> 节点:</p>
 
 <pre><code>push_op($arr.instructions, 'push_o', $arr_reg, $item_reg);
 </code></pre>
 
-<p>Note that there is no coercion/polymorphism at this level. If the instruction
-wants a local, you cannot use a literal at that point!</p>
+<p>请注意，此级别没有强制/多态。 如果指令想要 local，那么你就不能使用文字了！</p>
 
 <h2 id="mast-nodes-labels">MAST nodes: labels</h2>
 
-<p>A <code>MAST::Label</code> can be placed in an instruction list as the target of a branch
-and used as an argument to certain <code>MAST::Op</code>s that branch.</p>
+<p>可以将 <code>MAST::Label</code> 放在指令列表中作为目标的一个分支，并用作某些分叉的 <code>MAST::Ops</code> 的参数。</p>
 
-<p>A label must be unique within a given <code>MAST::Frame</code>, which is why you&rsquo;ll often
-see code like:
-可以将MAST::Label放在指令列表中作为目标 一个分支，并用作某些MAST::Ops的参数 科。 标签在给定的MAST::Frame中必须是唯一的，这就是原因 你经常会看到如下代码：</p>
+<p>标签在给定的 <code>MAST::Frame</code> 中必须是唯一的，这就是你经常会看到如下代码的原因：</p>
 
 <pre><code>my $if_id    := $qastcomp.unique($op_name);
 my $else_lbl := MAST::Label.new(:name($if_id ~ '_else'));
 my $end_lbl  := MAST::Label.new(:name($if_id ~ '_end'));
 </code></pre>
 
-<p>Here&rsquo;s some examples of using the labels:以下是使用标签的一些示例</p>
+<p>以下是使用标签的一些示例:</p>
 
 <pre><code>push_op(@ins, 'goto', $end_lbl);
 nqp::push(@ins, $else_lbl);
@@ -2213,12 +2110,9 @@ nqp::push(@ins, $else_lbl);
 
 <h2 id="mast-nodes-calls">MAST nodes: calls</h2>
 
-<p>Making a call boils down to a number of steps: getting the arguments to pass
-into an arguments buffer, setting the callsite descriptor, indicating the
-result register, and making the call itself.
-拨打电话归结为以下几个步骤：获取电话 传入参数缓冲区的参数，设置调用点 描述符，指示结果寄存器，并自己进行调用。 这是在MAST::Call节点后面抽象的：</p>
+<p>调用归结为以下几个步骤：获取传入参数缓冲区的参数，设置调用点描述符，指示结果寄存器，并自己进行调用。</p>
 
-<p>This is abstracted behind the <code>MAST::Call</code> node:</p>
+<p>这是在 <code>MAST::Call</code> 节点后面抽象的：</p>
 
 <pre><code>nqp::push(@ins, MAST::Call.new(
     :target($callee.result_reg),
@@ -2228,17 +2122,11 @@ result register, and making the call itself.
 ));
 </code></pre>
 
-<p>The flags indicate register type, as well as named and flattening arguments.
-标志表示寄存器类型，以及命名和展平 参数</p>
+<p>标志表示寄存器类型，以及命名和展平参数。</p>
 
-<h2 id="mast-nodes-exception-handlers">MAST nodes: exception handlers</h2>
+<h2 id="mast-nodes-异常处理程序">MAST nodes: 异常处理程序</h2>
 
-<p>Exception handlers are used both for control flow (such as next/redo/last in
-loops) or true exceptions (caught by <code>CATCH</code> blocks in NQP/Perl 6). Both of
-these are set up with a <code>MAST::HandlerScope</code>, which indicates the instructions
-covered by the handler, what kind of exception it&rsquo;s interested in and what to
-do if the handler is triggered.
-异常处理程序用于控制流程（例如 next / redo / last in loops）或真正的异常（由CATCH捕获 NQP / Perl中的块6）。这两个都设置为 MAST::HandlerScope，表示所涵盖的指令 处理程序，它感兴趣的是什么样的异常以及什么 如果处理程序被触发，请执行</p>
+<p>异常处理程序用于控制流（例如循环中的 next/redo/last）或真正的异常（在 NQP/Perl 6 中由 <code>CATCH</code> 捕获）。这两个都设置为 <code>MAST::HandlerScope</code>，表示所涵盖的指令处理程序，它感兴趣的是什么样的异常以及如果处理程序被触发会做什么。</p>
 
 <pre><code>MAST::HandlerScope.new(
     :instructions(@loop_il),
@@ -2248,206 +2136,140 @@ do if the handler is triggered.
 )
 </code></pre>
 
-<p>Here, the action is to simply unwind the call stack and go to the specified
-label. By contrast, a <code>CATCH</code> block&rsquo;s action is to run a handler block on the
-stack top and unwind afterwards.
-在这里，操作是简单地展开调用堆栈并转到 指定标签。相比之下，CATCH块的动作是运行a 处理程序块在堆栈顶部并随后展开。</p>
+<p>在这里，action 是简单地展开调用堆栈并转到指定标签。相比之下， <code>CATCH</code> 块的 action 是在堆栈顶部运行一个处理程序块并随后展开。</p>
 
-<h2 id="mast-nodes-compilation-units">MAST nodes: compilation units</h2>
+<h2 id="mast-nodes-编译单元">MAST nodes: 编译单元</h2>
 
-<p>Finally, the top of a MAST assembly tree is always a <code>MAST::CompUnit</code>. This
-has a list of frames (each one added with the <code>add_frame</code> method).</p>
+<p>最后，MAST 汇编树的顶部始终是 <code>MAST::CompUnit</code>。这有一个帧列表（每一帧都使用 <code>add_frame</code> 方法添加）。</p>
 
-<p>Certain frames can be called out as special:</p>
+<p>某些帧可以被称为特殊帧：</p>
 
 <ul>
-<li><strong><code>deserialize_frame</code></strong> holds code that drives deserialization, and will
-always be run when the compilation unit is created or loaded</li>
-<li><strong><code>load_frame</code></strong> holds code that should run when the compilation unit is
-loaded as a module</li>
-<li><strong><code>main_frame</code></strong> holds code that should run when the compilation unit is
-the initial entry point</li>
+<li><strong><code>deserialize_frame</code></strong> 包含驱动反序列化的代码， 并且将始终在编译单元创建或加载时运行<br /></li>
+<li><strong><code>load_frame</code></strong> 当编译单元被加载为模块时, 保存应运行的代码</li>
+<li><strong><code>main_frame</code></strong> 当编译单元是初始入口点时, 保存应运行的代码</li>
 </ul>
 
-<p>It also keeps track of the HLL that produced the compilation unit and the
-set of serialization contexts that it depends on.</p>
+<p>它还跟踪生成编译单元的 HLL 以及它依赖的序列化上下文集。</p>
 
-<p>最后，MAST汇编树的顶部始终是a MAST::CompUnit。这有一个框架列表（每个框架都添加了 添加帧方法）。 某些帧可以被称为特殊帧： 反序列化框架 包含驱动反序列化的代码， 并且将始终在创建编译单元时运行或 装 load frame 保存编译时应运行的代码 unit作为模块加载 主框架 包含编译时应运行的代码 unit是最初的切入点 它还跟踪生成编译单元的HLL 以及它依赖的序列化上下文集。</p>
+<h2 id="qast-到-mast-的翻译器">QAST 到 MAST 的翻译器</h2>
 
-<h2 id="the-qast-to-mast-translator">The QAST to MAST translator</h2>
-
-<p>Spread over three files:</p>
+<p>分布到三个文件中：</p>
 
 <ul>
-<li><strong><code>QASTOperationsMAST.nqp</code></strong> handles compilation of <code>nqp::op</code>s</li>
-<li><strong><code>QASTRegexCompilerMAST.nqp</code></strong> handles compilation of <code>QAST::Regex</code> nodes</li>
-<li><strong><code>QASTCompilerMAST.nqp</code></strong> handles the rest</li>
+<li><strong><code>QASTOperationsMAST.nqp</code></strong> 处理 <code>nqp::op</code> 的编译</li>
+<li><strong><code>QASTRegexCompilerMAST.nqp</code></strong> 处理 <code>QAST::Regex</code> 节点的编译</li>
+<li><strong><code>QASTCompilerMAST.nqp</code></strong> 处理其余部分以及他们工作的各种寄存器</li>
 </ul>
 
-<p>These reference:</p>
+<p>这些参考：</p>
 
 <ul>
-<li>The MAST nodes</li>
-<li>Meta-data about all of the ops available and the kinds of registers they
-work on</li>
+<li>MAST 节点</li>
+<li>关于所有可用 op 的元数据和各种操作</li>
 </ul>
-
-<p>传播三个文件： QASTOperationsMAST.nqp 处理nqp::ops的编译 QASTRegexCompilerMAST.nqp 处理。的编译 QAST::Regex节点 QASTCompilerMAST.nqp 处理其余部分 这些参考： MAST节点 关于所有可用操作的元数据和各种操作 注册他们的工作</p>
 
 <h2 id="mast-instructionlist">MAST::InstructionList</h2>
 
-<p>Once again, there is a data structure used to convey the result of compiling a
-QAST node: <code>MAST::InstructionList</code>. It holds three pieces of information:</p>
+<p>再次，有一个数据结构用于携带编译 QAST 节点的结果：<code>MAST::InstructionList</code>。它有三块儿信息：</p>
 
 <ul>
-<li>A list of instructions (<code>$il.instructions</code>)</li>
-<li>The register (local) holding the result (<code>$il.result_reg</code>)</li>
-<li>The kind of result register it is (<code>$il.result_kind</code>)</li>
+<li>指令列表（<code>$il.instructions</code>）</li>
+<li>保存结果（<code>$il.result_reg</code>)的寄存器（local）</li>
+<li>结果寄存器类型（<code>$il.result_kind</code>）</li>
 </ul>
 
-<p>There are constants for the four main kinds:</p>
+<p>有四种主要类型的常量：</p>
 
 <ul>
-<li><code>$MVM_reg_obj</code> (6model object)</li>
-<li><code>$MVM_reg_int64</code> (int)</li>
-<li><code>$MVM_reg_num64</code> (num)</li>
-<li><code>$MVM_reg_str</code> (str, though it&rsquo;s actually a 6model object too)</li>
+<li><code>$MVM_reg_obj</code>（6model 对象）</li>
+<li><code>$MVM_reg_int64</code>（int）</li>
+<li><code>$MVM_reg_num64</code>（num）</li>
+<li><code>$MVM_reg_str</code>（str，虽然它实际上也是一个 6model 对象）</li>
 </ul>
-
-<p>再次，有一个数据结构用于传达结果 编译QAST节点：MAST::InstructionList。它有三个 信息： 指令列表（$ il.instructions） 保存结果的寄存器（本地）（$ il.result reg） 它的结果类型是（&rsquo;$ il.result kind） 有四种主要类型的常量： $ MVM reg obj（6模型对象） $ MVM reg int64（int） $ MVM reg num64（num） $ MVM reg str（str，虽然它实际上也是一个6模型对象）</p>
 
 <h2 id="register-local-allocation">Register/local allocation</h2>
 
-<p>There is a per-block <code>$*REGALLOC</code> that keeps track of register use. Despite
-the name, it&rsquo;s not doing register allocation in the traditional sense (such as
-by graph coloring). Rather, it keeps track of available temporaries, enabling
-them to be re-used.</p>
+<p>每个块 <code>$*REGALLOC</code> 跟踪寄存器的使用情况。 尽管有这个名字，它不是以传统方式进行寄存器分配（如图着色）。相反，它保持跟踪可用的临时值，使它们可以重复使用。</p>
 
-<p>Obtaining a new register to work with is typically done as:
-每个块$ * REGALLOC跟踪寄存器的使用情况。 尽管有这个名字，它还没有进行注册分配 传统意义（如图着色）。相反，它保持 跟踪可用的临时值，使它们可以重复使用。 获取要使用的新寄存器通常如下：</p>
+<p>获取要使用的新寄存器通常如下：</p>
 
 <pre><code>my $callee_reg := $*REGALLOC.fresh_o(); # also _i, _n, _s
 </code></pre>
 
-<p>It can then be released when it&rsquo;s no longer needed:
-然后可以在不再需要时释放它</p>
+<p>然后可以在不再需要时释放它:</p>
 
 <pre><code>$*REGALLOC.release_register($callee_reg, $MVM_reg_obj);
 </code></pre>
 
 <h2 id="nqp-op-mapping">nqp::op mapping</h2>
 
-<p>Many <code>nqp::ops</code> have similar or identical names in the MoarVM instruction set.
-The operand type data is also readily available, so does not need to be
-specified in the mappings:
-许多nqp::ops在MoarVM中具有相似或相同的名称 指令系统。操作数类型数据也很容易获得，因此 不需要在映射中指定</p>
+<p>许多 <code>nqp::ops</code> 在 MoarVM 指令集中具有相似或相同的名称。操作数类型数据也很容易获得，因此不需要在映射中指定:</p>
 
 <pre><code>QAST::MASTOperations.add_core_moarop_mapping('atpos', 'atpos_o');
 QAST::MASTOperations.add_core_moarop_mapping('atpos_i', 'atpos_i');
 </code></pre>
 
-<p>Some instructions in MoarVM are void, but are allowed in an r-value context as
-<code>nqp::ops</code>. Therefore, we pick one of the input operands as the result, if one
-is needed.
-MoarVM中的某些指令无效，但允许使用 r值上下文为nqp::ops。因此，我们选择其中一个输入 结果是操作数，如果需要的话</p>
+<p>MoarVM 中的某些指令无效，但允许使用 r 值上下文作为 <code>nqp::ops</code>。因此，我们选择其中一个输入操作数作为结果，如果需要的话。</p>
 
 <pre><code>QAST::MASTOperations.add_core_moarop_mapping('bindpos', 'bindpos_o', 2);
 QAST::MASTOperations.add_core_moarop_mapping('bindpos_i', 'bindpos_i', 2);
 </code></pre>
 
-<h2 id="inside-moarvm">Inside MoarVM</h2>
+<h2 id="在-moarvm-内部">在 MoarVM 内部</h2>
 
-<p>The top-level <code>src</code> directory doesn&rsquo;t contain much directly; the code is
-categorized into sub-directories:</p>
+<p>顶级 <code>src</code> 目录不直接包含太多东西; 代码被归类到子目录里：</p>
 
 <ul>
-<li><strong><code>6model</code></strong> contains 6model, implementations of the REPRs, serialization&hellip;</li>
-<li><strong><code>core</code></strong> is the heart of the VM, containing the interpreter, argument
-handling, bytecode decoding, thread handling, invocation, exceptions&hellip;</li>
-<li><strong><code>gc</code></strong> is where memory allocation and garbage collection lives</li>
-<li><strong><code>io</code></strong> contains IO-related functionality, typically delegating the real
-work to <code>libuv</code></li>
-<li><strong><code>mast</code></strong> contains the MAST to bytecode compiler</li>
-<li><strong><code>math</code></strong> contains the libtommath binding for big integer support</li>
-<li><strong><code>platform</code></strong> is where platform-specific code goes (as different platforms
-do things differently)</li>
-<li><strong><code>strings</code></strong> contains string operations, encoding/decoding of ASCII, UTF-8,
-etc.</li>
+<li><strong><code>6model</code></strong> 包含 6model，REPR 的实现， 序列化&hellip;</li>
+<li><strong><code>core</code></strong>  是 VM 的核心，包含解释器， 参数处理，字节码解码，线程处理， 调用，异常&hellip;</li>
+<li><strong><code>gc</code></strong> 是内存分配和垃圾回收存在的地方</li>
+<li><strong><code>io</code></strong> 包含与 IO 相关的功能，通常委托真正的工作到 <code>libuv</code></li>
+<li><strong><code>mast</code></strong> 包含 MAST 到字节码编译器</li>
+<li><strong><code>math</code></strong>  包含用于大整数支持的 libtommath 绑定</li>
+<li><strong><code>platform</code></strong>  是平台特定的代码(因为不同的平台以不同的方式做事)</li>
+<li><strong><code>strings</code></strong> 包含字符串操作，编码/解码 ASCII，UTF-8 等</li>
 </ul>
 
-<p>顶级src目录不直接包含多少; 该 代码分为子目录： 6模型 包含6个模型，REPR的实现， 序列化。 。 。 核心 是VM的核心，包含解释器， 参数处理，字节码解码，线程处理， 调用，例外。 。 。 gc 是内存分配和垃圾收集的生命 io 包含与IO相关的功能，通常委托 真正的工作到libuv mast 包含MAST到字节码编译器 math 包含用于大整数支持的libtommath绑定 平台 是特定于平台的代码（不同的代码） 平台以不同的方式做事 strings 包含字符串操作，编码/解码 ASCII，UTF-8等</p>
+<h2 id="总结-1">总结 &hellip;</h2>
 
-<h2 id="in-summary-1">In summary&hellip;</h2>
+<p>MoarVM <strong>使用 6model</strong> 作为其对象模型并具有与 <code>nqp::op</code> 集良好对齐的指令集。作为结果， 从 QAST 到它的映射相对简单。</p>
 
-<p>MoarVM <strong>uses 6model</strong> as its object model and has an instruction set that is
-<strong>well aligned</strong> with the <code>nqp::op</code> set. As a result, the mapping from QAST
-down to it is comparatively straightforward.</p>
+<p>它也将是我们支持 NFG 字符串的第一个地方 也应该得到良好的 Perl 5 互操作。</p>
 
-<p>It will also be the first place that we support NFG strings, and should also
-get good Perl 5 interop.</p>
+<p>未来的发展将包括 6model 感知的 JIT 编译， 这应该会带来显着的性能提升。</p>
 
-<p>Future developments will include 6model-aware JIT compilation, which should
-give a notable performance boost.
-MoarVM 使用6model作为其对象模型并具有指令设置 与nqp::op集良好对齐。结果， 从QAST到它的映射相对简单。 它也将是我们支持NFG字符串的第一个地方 也应该得到良好的Perl 5互操作。 未来的发展将包括6模型感知的JIT编译， 这应该会带来显着的性能提升。</p>
+<h1 id="前方的路">前方的路</h1>
 
-<h1 id="the-road-ahead">The Road Ahead</h1>
-
-<p><em>This isn&rsquo;t the end??!!!</em>
-这不是结束?? !!!</p>
+<p><em>这还不是结束??!!!</em></p>
 
 <h2 id="这还不是全部">这还不是全部&hellip;</h2>
 
-<p>We&rsquo;ve covered a lot of ground in these two days.</p>
+<p>这两天我们已经涵盖了很多方面。</p>
 
-<p>Naturally, there are things that have been put aside. We haven&rsquo;t looked at
-every line of code of every file!</p>
+<p>当然，有些东西已被搁置。我们还没有查看每个文件的每一行代码！</p>
 
-<p>And, of course, we didn&rsquo;t cover the things not invented yet because we didn&rsquo;t
-implement the bits of the Perl 6 spec that need them.</p>
+<p>而且，当然，我们没有涵盖尚未发明的东西，因为我们没有实现需要它们的 Perl 6规范。</p>
 
-<p>However, <strong>we have covered all of the key parts that make up NQP and Rakudo</strong>.
-With careful reading of code and a little digging, it should be possible to
-work out what most of NQP and Rakudo do, and where most things are found.</p>
+<p>但是， <strong>我们已经涵盖了所有组成 NQP 和 Rakudo 的关键部分</strong>。仔细阅读代码和一点点挖掘，应该有可能弄清楚 NQP 和 Rakudo 做的大部分东西，其中大多数东西已经被发现了。</p>
 
-<p>这两天我们已经涵盖了很多方面。 当然，有些东西已被搁置。我们没有 看着每个文件的每一行代码！ 而且，当然，我们没有涵盖尚未发明的东西，因为 我们没有实现需要它们的Perl 6规范。 但是， 我们已经涵盖了所有组成的关键部分 NQP和Rakudo 。仔细阅读代码和一点点 挖掘，应该有可能弄清楚大多数NQP和 Rakudo做，并且发现了大多数事情</p>
+<h2 id="工具链将会发展">工具链将会发展</h2>
 
-<h2 id="the-toolchain-will-evolve">The toolchain will evolve</h2>
+<p>NQP 工具链是为了响应理解 Perl 6 的需求而发展起来的。随着我们不断学习，这种知识将会处理成工具。</p>
 
-<p>The NQP toolchain has <strong>evolved in response to understanding Perl 6&rsquo;s needs</strong>.
-As we continue to learn, this knowledge will be crunched into the tools.</p>
+<p>在过去，有一些相当戏剧性的改革。 这些很可能已经结束了，尽管肯定会有更多的教训转化成<strong>更好的抽象和 API</strong>。</p>
 
-<p>In the past, there have been some fairly dramatic overhauls. These are very
-likely over, though there are surely more lessons that can be turned into
-<strong>better abstractions and APIs</strong>.</p>
+<p>例如，并发/并行工作目前正在进行中, 直接来自 Java 类库的类的术语。 但是，最后，关键的抽象可能会被捕获到 <code>nqp::</code> ops 中, 等等。</p>
 
-<p>For example, the concurrency/parallelism work is currently done in terms of
-classes from the Java Class Library directly. However, in time, the key
-abstractions may well be captured into <code>nqp::</code> ops and so forth.</p>
-
-<p>NQP工具链 是为了响应理解而发展起来的 Perl 6的需求 。随着我们不断学习，这种知识将会如此 捏成工具。 在过去，有一些相当戏剧性的改革。 这些 很可能已经结束了，尽管肯定会有更多的教训 变成 更好的抽象和API。例如，并发/并行工作目前正在进行中 直接来自Java类库的类的术语。 但是，在 时间，关键的抽象可能会被捕获到nqp::ops中 等等。</p>
-
-<h2 id="remember">Remember&hellip;</h2>
-
-<p><strong>Compilers aren&rsquo;t magical. They&rsquo;re just software.</strong></p>
-
-<p>Perl 6 is a large language, and implementing it is non-trivial. However, NQP
-and Rakudo have made a reasonable job of trying to <strong>manage the complexity</strong>
-by breaking the problem into decoupled pieces.</p>
-
-<p>In fact, that&rsquo;s the only thing that keeps it manageable at all. Keep this in
-mind as you hack. <strong>Good architecture takes discipline.</strong> The first solution
-you think of will rarely be the best one. Things that feel wrong, usually are.</p>
-
-<p>Take pride in solving implementation problems elegantly, ask questions, treat
-no code as sacred, and be sure to <strong><code>-Ofun</code></strong>.</p>
+<h2 id="记住">记住 &hellip;</h2>
 
 <p><strong>编译器并不神奇。他们只是软件</strong>。</p>
 
-<p>Perl 6 是一种大型语言，实现它是非常重要的。 然而，NQP 和 Rakudo 已经做出了合理的尝试 通过将问题分解为来管理复杂性脱钩的碎片。</p>
+<p>Perl 6 是一种大型语言，实现它是非常重要的。 然而，NQP 和 Rakudo 已经通过将问题分解为解耦的碎片来管理复杂性做出了合理的尝试。</p>
 
-<p>事实上，这是唯一可以让它易于管理的东西。 保持 这就是你的黑客攻击。 良好的建筑需要纪律。 您认为的第一个解决方案很少是最好的解决方案。事情 那种感觉不对，通常是。</p>
+<p>事实上，这是唯一可以让它易于管理的东西。 在你 hack 的时候记住这一点。 <strong>好的架构需要训练</strong>。 您想到的第一个解决方案很少是最好的解决方案。而你感觉不对的东西，通常是最后的解决方案。</p>
 
-<p>请以优雅地解决实现问题为自豪，提问, 不要将代码视为神圣，并确保 <strong><code>--Ofun</code></strong>。</p>
+<p>请以优雅地解决实现问题而自豪，提问, 不要将代码视为神圣，并确保 <strong><code>--Ofun</code></strong>。</p>
 
 <h2 id="谢谢你">谢谢你!</h2>
 
