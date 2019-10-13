@@ -216,7 +216,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (658 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (656 words)
   
   
 </span>
@@ -246,23 +246,23 @@ if (!doNotTrack) {
 <p><code>*</code> 字面量在 「term」 位置上创建 「Whatever」 对象。
 <code>*</code> 的大部分魔法来自于 「Whatever 柯里化」. 当 <code>*</code> 作为 item 与很多操作符组合使用时, 编译器会把表达式转换为 「WhateverCode」 类型的闭包.</p>
 
-<pre><code class="language-perl6">my $c = * + 2;          # same as   -&gt; $x { $x + 2 };
+<pre><code class="language-raku">my $c = * + 2;          # same as   -&gt; $x { $x + 2 };
 say $c(4);              # 6
 </code></pre>
 
 <p>如果一个表达式中有 N 个 <code>*</code>, 则会产生一个含有 <code>N</code> 个参数的闭包:</p>
 
-<pre><code class="language-perl6">my $c = * + *;          # same as   -&gt; $x, $y { $x + $y }
+<pre><code class="language-raku">my $c = * + *;          # same as   -&gt; $x, $y { $x + $y }
 </code></pre>
 
 <p>在复杂的表达式中使用 <code>*</code> 也会产生闭包:</p>
 
-<pre><code class="language-perl6">my $c = 4 * * + 5;      # same as   -&gt; $x { 4 * $x + 5 }
+<pre><code class="language-raku">my $c = 4 * * + 5;      # same as   -&gt; $x { 4 * $x + 5 }
 </code></pre>
 
 <p>在 <code>*</code> 号身上调用方法也会产生闭包:</p>
 
-<pre><code class="language-perl6">&lt;a b c&gt;.map: *.uc;      # same as &lt;a b c&gt;.map: -&gt; $char { $char.uc }
+<pre><code class="language-raku">&lt;a b c&gt;.map: *.uc;      # same as &lt;a b c&gt;.map: -&gt; $char { $char.uc }
 </code></pre>
 
 <p>前面提到, 不是所有的操作符和语法都会把 <code>*</code> 柯里化为 「WhateverCode」。
@@ -281,7 +281,7 @@ say $c(4);              # 6
 
 <p>范围操作符被特殊处理. 它们不使用 Whatever-Stars 柯里化, 但是它们使用 「WhateverCode」 进行柯里化.</p>
 
-<pre><code class="language-perl6">say (1..*).WHAT;        # Range
+<pre><code class="language-raku">say (1..*).WHAT;        # Range
 say (1..*-1).WHAT;      # WhateverCode
 </code></pre>
 
@@ -289,7 +289,7 @@ say (1..*-1).WHAT;      # WhateverCode
 
 <p>下面这些也能使用:</p>
 
-<pre><code class="language-perl6">.say for 1..*;          # infinite loop
+<pre><code class="language-raku">.say for 1..*;          # infinite loop
 my @a = 1..4;
 say @a[0..*];           # 1 2 3 4
 say @a[0..*-2];         # 1 2 3
@@ -297,26 +297,26 @@ say @a[0..*-2];         # 1 2 3
 
 <p>因为 Whatever-currying 是纯粹的语法编译器转换, 这不会在运行时把存储的 Whatever-stars 柯里化为 WhateverCodes.</p>
 
-<pre><code class="language-perl6">my $x = *;
+<pre><code class="language-raku">my $x = *;
 $x + 2;                 # not a closure, dies because
                         # it can't coerce $x to Numeric
 </code></pre>
 
 <p>存储 Whatever-stars 的使用案例像上面提到的那样, 但要把柯里化异常的情况也包含进去. 例如, 如果你想要一个默认的无限序列:</p>
 
-<pre><code class="language-perl6">my $max    = potential-upper-limit() // *;
+<pre><code class="language-raku">my $max    = potential-upper-limit() // *;
 my $series = known-lower-limit() ... $max;
 </code></pre>
 
 <p>一个存储后的 <code>*</code> 会在智能匹配的特殊情况下生成 WhateverCode. 注意, 正被柯里化的并非真正储存的 <code>*</code>, 而是在 LHS 上的 <code>*</code>。</p>
 
-<pre><code class="language-perl6">my $constraint = find-constraint() // *;
+<pre><code class="language-raku">my $constraint = find-constraint() // *;
 my $maybe-always-matcher = * ~~ $constraint;
 </code></pre>
 
 <p>如果这个假定的 find-constraint 没有找到约束, 则 maybe-always-matcher 会对任何东西都返回 True.</p>
 
-<pre><code class="language-perl6">$maybe-always-matcher(555);      # True
+<pre><code class="language-raku">$maybe-always-matcher(555);      # True
 $maybe-always-matcher(Any);      # True
 </code></pre>
 
@@ -330,13 +330,13 @@ $maybe-always-matcher(Any);      # True
 
 <p>对于 Whatever 没有特殊意义的普通操作符：把 Whatever 当作参数传递时就创建了一个闭包！ 所以，举个例子：</p>
 
-<pre><code class="language-perl6">* + 1 # 等价于 -&gt; $a { $a + 1 }
+<pre><code class="language-raku">* + 1 # 等价于 -&gt; $a { $a + 1 }
 * + * # 等价于 -&gt; $a, $b { $a + $b }
 </code></pre>
 
 <p>一个星号占一个坑儿。</p>
 
-<pre><code class="language-perl6">@list.grep(* &gt; 10)                  # 返回 @list 数组中所有大于 10 的元素
+<pre><code class="language-raku">@list.grep(* &gt; 10)                  # 返回 @list 数组中所有大于 10 的元素
 @list.grep( -&gt; $ele { $ele &gt; 10 } ) # 同上, 使用显式的闭包
 @list.grep: -&gt; $ele { $ele &gt; 10 }   # 同上, 使用冒号调用方式
 @list.grep: * &gt; 10                  # 同上
@@ -351,14 +351,14 @@ $maybe-always-matcher(Any);      # True
 
 <p>数组的最后一个元素</p>
 
-<pre><code class="language-perl6">my @a =  1,22,33,11;
+<pre><code class="language-raku">my @a =  1,22,33,11;
 say @a[*-1];
 say @a[-&gt;$a {$a-1}]; # $a  即为数组@a 的元素个数
 </code></pre>
 
 <p>数组的倒数第二个元素</p>
 
-<pre><code class="language-perl6">say @a[*-2];
+<pre><code class="language-raku">say @a[*-2];
 say @a[-&gt;$a {$a-2}];
 </code></pre>
 
@@ -367,18 +367,18 @@ say @a[-&gt;$a {$a-2}];
 
 <p>把闭包存储在标量中</p>
 
-<pre><code class="language-perl6">my $a = -&gt; $b { $b + 1 }
+<pre><code class="language-raku">my $a = -&gt; $b { $b + 1 }
 $a(3) # 4
 
 my @add_by_one = @list.map($a); # 对 @list 中的每个元素加 1
 </code></pre>
 
-<p>Perl 6 的列表求值是惰性的,只要你不要求最后一个元素, 无限列表是没问题的。使用绑定 <code>(:=)</code> 操作符把列表赋值给变量：</p>
+<p>Raku 的列表求值是惰性的,只要你不要求最后一个元素, 无限列表是没问题的。使用绑定 <code>(:=)</code> 操作符把列表赋值给变量：</p>
 
-<pre><code class="language-perl6">my @fib := 1, 1, * + * ... *
+<pre><code class="language-raku">my @fib := 1, 1, * + * ... *
 </code></pre>
 
-<p>如果我稍后要 <code>@fib[40]</code> 的值, 会生成足够多的元素以获取数组的第 41 个元素,那些生成的元素会被记忆。尽管未来, 如果列表未绑定给变量, 之前的值会被忘记, 大部分 Perl 6 列表函数能作用并生成惰性列表。</p>
+<p>如果我稍后要 <code>@fib[40]</code> 的值, 会生成足够多的元素以获取数组的第 41 个元素,那些生成的元素会被记忆。尽管未来, 如果列表未绑定给变量, 之前的值会被忘记, 大部分 Raku 列表函数能作用并生成惰性列表。</p>
 
 <p><code>@a.map</code> 和 <code>@a.grep</code> 都生成「惰性列表」， 即使 <code>@a</code> 不是惰性的。
 <code>@fib.grep(* %% 2)</code> 是一个偶数惰性列表，例如 <code>@fib Z @a</code> 生成一个惰性列表： <code>@fib[0], @a[0], @fib[1], @a[1] ...</code>。
@@ -386,7 +386,7 @@ my @add_by_one = @list.map($a); # 对 @list 中的每个元素加 1
 
 <p>但是要注意不能使用嵌套的闭包:</p>
 
-<pre><code class="language-perl6">my @a = 1 .. 10;
+<pre><code class="language-raku">my @a = 1 .. 10;
 my @b = @a.map: { * ** 2 }
 ===SORRY!=== Error while compiling:
 Malformed double closure; WhateverCode is already a closure without curlies,
@@ -430,7 +430,7 @@ at line 2 ------&gt; &lt;BOL&gt;&lt;HERE&gt;&lt;EOL&gt;
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2016-09-24-perl6%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的冒号">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2016-09-24-raku%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/" data-toggle="tooltip" data-placement="top" title="Raku 中的冒号">&larr; Previous Post</a>
             </li>
           
           

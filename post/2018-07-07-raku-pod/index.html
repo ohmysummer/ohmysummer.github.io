@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku Pod</title>
+  <meta property="og:title" content="Raku Pod" />
+  <meta name="twitter:title" content="Raku Pod" />
+  <meta name="description" content="An easy-to-use markup language">
+  <meta property="og:description" content="An easy-to-use markup language">
+  <meta name="twitter:description" content="An easy-to-use markup language">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-07-07-raku-pod/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-07-raku-pod/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku Pod</h1>
+                
+                  
+                    <h2 class="post-subheading">An easy-to-use markup language</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 7, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1119 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>Raku Pod 是一种易于使用的标记语言。 Pod 可用于编写语言文档，用于文档化程序和模块，以及其他类型的文档组合。</p>
+
+<p>每个 Pod 文档必须以 <code>=begin pod</code> 开头，以 <code>=end pod</code> 结束。这两个分隔符之间的所有内容都将被处理并用于生成文档。</p>
+
+<pre><code>=begin pod
+ 
+A very simple Raku Pod document
+ 
+=end pod
+</code></pre>
+
+<h2 id="块结构">块结构</h2>
+
+<p>Pod 文档可能包含多个 Pod 块。有四种方法可以定义块（分隔符，段落，缩写和声明符）; 前三个产生相同的结果，但第四个不同。你可以使用最方便你的特定文档任务的任何形式。</p>
+
+<h3 id="分割符块">分割符块</h3>
+
+<p>分隔块由 <code>=begin</code> 和 <code>=end</code> 标记限定，两者都后跟有效的 Raku 标识符，后者是块的 <code>typename</code>。完全小写的类型名称（例如 <code>=begin head1</code>）或完全大写（例如：<code>=begin SYNOPSIS</code>）保留。</p>
+
+<pre><code>=begin head1
+Top Level Heading
+=end head1
+</code></pre>
+
+<h2 id="配置信息">配置信息</h2>
+
+<p>在 typename 之后， <code>=begin</code> 标记行的其余部分被视为块的配置信息。此信息由不同类型的块以不同方式使用，但始终使用 Raku-ish 选项对指定。也就是说，任何：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">alue is&hellip;</th>
+<th align="center">Specify with&hellip;</th>
+<th align="center">Or with&hellip;</th>
+<th align="center">Or with&hellip;</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">List</td>
+<td align="center">:key[$e1, $e2, &hellip;]</td>
+<td align="center">:key($e1, $e2, &hellip;)</td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">Hash</td>
+<td align="center">:key{$k1=&gt;$v1, $k2=&gt;$v2}</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">Boolean (true)</td>
+<td align="center">:key</td>
+<td align="center">:key(True)</td>
+<td align="center">:key[True]</td>
+</tr>
+
+<tr>
+<td align="center">Boolean (false)</td>
+<td align="center">:!key</td>
+<td align="center">:key(False)</td>
+<td align="center">:key[False]</td>
+</tr>
+
+<tr>
+<td align="center">String</td>
+<td align="center">:key<str></td>
+<td align="center">:key(&lsquo;str&rsquo;)</td>
+<td align="center">:key(&ldquo;str&rdquo;)</td>
+</tr>
+
+<tr>
+<td align="center">Int</td>
+<td align="center">:key(42)</td>
+<td align="center">:key[42]</td>
+<td align="center"></td>
+</tr>
+
+<tr>
+<td align="center">Number</td>
+<td align="center">:key(2.3)</td>
+<td align="center">:key[2.3]</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+
+<p>其中&rsquo;$e1，$e2，&hellip;&lsquo;是 String，Int，Number 或 Boolean 类型的列表元素。列表可能具有混合元素类型。请注意，单元素列表将转换为其元素的类型（String，Int，Number 或 Boolean）。另请注意，如果需要，可以使用“bigints”。</p>
+
+<p>对于散列，&rsquo;$k1，$k2，&hellip;&lsquo;是 Str 类型的键，&rsquo;$v1，$2，&hellip;&lsquo;是 String，Int，Number 或 Boolean 类型的值。</p>
+
+<p>字符串由单引号或双引号分隔。空格在字符串之外是微不足道的。散列键不需要引用分隔，除非它们包含重要的空格。</p>
+
+<p>当然，所有选项键和值必须是常量，因为Pod是一种规范语言，而不是编程语言。具体来说，选项值不能是闭包。有关各种Raku对符号的详细信息，请参见概要2。</p>
+
+<p>配置部分可以通过在第一（虚拟）列中带有=后跟空白字符的那些行开始在后续行上扩展。 （注意：此功能尚未实现。当前所有配置信息必须与= begin标记行在同一行提供，或=为段落块的名称提供。）</p>
+
+<h3 id="段落块">段落块</h3>
+
+<p>段落块以 <code>=for</code> 标记开始，以下一个 Pod 指令或第一个空行结束。 <code>=for</code> 标记后面跟着块的类型名加上，可选地，跟上面描述的分隔块中的任何配置数据。</p>
+
+<pre><code>=for head1
+Top Level Heading
+</code></pre>
+
+<h2 id="缩写块">缩写块</h2>
+
+<p>缩写块以 <code>=</code> 符号开头，紧接着是块的类型名称。以下所有数据都是块内容的一部分，因此无法为缩写块指定配置数据。该块在下一个Pod指令或第一个空行结束。</p>
+
+<pre><code>=head1 Top Level Heading 
+</code></pre>
+
+<h2 id="声明器块">声明器块</h2>
+
+<p>声明器块与其他声明块不同，没有特定类型，而是附加到某些源代码。</p>
+
+<p>声明器块由特殊注释引入：<code>#=</code> 或 <code>#|</code>，必须紧跟空格或左括号。如果后跟一个空格，则该块在行尾终止;如果后跟一个或多个左括号，则该块由关闭括号的匹配序列终止。</p>
+
+<p>以＃开头的块附加到它们之后的代码，以 <code>#=</code> 开头的块附加到它们之前的代码。</p>
+
+<p>由于声明器块附加到源代码，因此它们可用于记录类，角色，子例程等。</p>
+
+<p>WHY方法可用于这些类，角色，子例程等，以返回附加的 Pod 值。</p>
+
+<pre><code class="language-raku">#| Base class for magicians 
+class Magician {
+  has Int $.level;
+  has Str @.spells;
+}
+ 
+#| Fight mechanics 
+sub duel(Magician $a, Magician $b) {
+}
+#= Magicians only, no mortals. 
+ 
+say Magician.WHY; # OUTPUT: «Base class for magicians␤» 
+say &amp;duel.WHY.leading; # OUTPUT: «Fight mechanics␤» 
+say &amp;duel.WHY.trailing; # OUTPUT: «Magicians only, no mortals.␤» 
+</code></pre>
+
+<p>这些声明可以扩展多个块：</p>
+
+<pre><code class="language-raku">#|( This is an example of stringification: 
+    * Numbers turn into strings
+    * Regexes operate on said strings
+    * C&lt;with&gt; topicalizes and places result into $_
+)
+sub search-in-seq( Int $end, Int $number ) {
+    with (^$end).grep( /^$number/ ) {
+        .say for $_&lt;&gt;;
+    }
+}
+#=« Uses 
+    * topic
+    * decont operator
+»
+</code></pre>
+
+<p>通过使用匹配的括号构造对，例如 <code>()</code> 或 <code>«»</code>，注释可以扩展多行。但是，这种格式不会转换为 <code>raku -doc</code> 的多行显示。</p>
+
+<h2 id="块类型">块类型</h2>
+
+<p>Pod提供多种标准块类型。</p>
+
+<h3 id="标题">标题</h3>
+
+<p>可以使用= headN来定义标题，其中N大于零（例如，= head1，= head2，&hellip;）。</p>
+
+<pre><code>=head1 A Top Level Heading 
+ 
+=head2 A Second Level Heading 
+ 
+=head3 A Third Level Heading 
+</code></pre>
+
+<h3 id="普通段落">普通段落</h3>
+
+<p>普通段落由在当前嵌套级别格式化为文档的文本组成，其中空格被挤压，线条填充，并且应用了任何特殊的内联标记。</p>
+
+<p>普通段落由一个或多个连续的文本行组成，每行文本以非空白字符开头。段落由第一个空行或块指令终止。</p>
+
+<p>例如：</p>
+
+<pre><code>=head1 This is a heading block 
+ 
+This is an ordinary paragraph.
+Its text  will   be     squeezed     and
+short lines filled. It is terminated by
+the first blank line.
+ 
+This is another ordinary paragraph.
+Its     text    will  also be squeezed and
+short lines filled. It is terminated by
+the trailing directive on the next line.
+ 
+=head2 This is another heading block 
+ 
+This is yet another ordinary paragraph,
+at the first virtual column set by the
+previous directive
+</code></pre>
+
+<p>普通段落不需要明确的标记或分隔符。</p>
+
+<p>或者，还有一个显式的 <code>=para</code> 标记，可用于明确标记段落。</p>
+
+<pre><code>=para
+This is an ordinary paragraph.
+Its text  will   be     squeezed     and
+short lines filled.
+</code></pre>
+
+<p>另外，可以使用较长 <code>= begin para</code> 和 <code>=end para</code> 形式。</p>
+
+<p>例如：</p>
+
+<pre><code>=begin para
+This is an ordinary paragraph.
+Its text  will   be     squeezed     and
+short lines filled.
+ 
+This is still part of the same paragraph,
+which continues until an...
+=end para
+</code></pre>
+
+<p>如前面的示例所示，在分隔 <code>=begin para</code> 和 <code>=end para</code> 块中，保留任何空行。</p>
+
+<h2 id="代码块">代码块</h2>
+
+<p>代码块用于指定源代码，应该在没有重新调整的情况下进行渲染，不需要空格压缩，也不需要识别任何内联格式代码。通常，这些块用于显示代码，标记或其他文本规范的示例，并使用固定宽度字体进行渲染。</p>
+
+<p>代码块可以隐式地指定为一行或多行文本，每行文本以空白字符开头。然后通过空行终止隐式代码块。</p>
+
+<p>例如：</p>
+
+<pre><code>This ordinary paragraph introduces a code block:
+ 
+    my $name = 'John Doe';
+    say $name;
+</code></pre>
+
+<p>代码块也可以通过将它们包含在= begin code和= end code中来显式定义</p>
+
+<pre><code>   =begin code
+    my $name = 'John Doe';
+    say $name;
+   =end code
+</code></pre>
+
+<h2 id="i-o-块">I/O 块</h2>
+
+<p>Pod 提供用于指定程序输入和输出的块。</p>
+
+<p><code>=input</code> 块用于指定预先格式化的键盘输入，应该在不重新对齐或挤压空格的情况下进行渲染。</p>
+
+<p><code>=output</code> 块用于指定预先格式化的终端或文件输出，也应该在没有重新调整或空白压缩的情况下进行渲染。</p>
+
+<h2 id="列表">列表</h2>
+
+<h3 id="无序列表">无序列表</h3>
+
+<p>Pod 中的列表被指定为一系列 <code>=item</code> 块。</p>
+
+<p>例如：</p>
+
+<pre><code>The three suspects are:
+ 
+=item  Happy 
+=item  Sleepy 
+=item  Grumpy 
+</code></pre>
+
+<p>三名嫌犯是：</p>
+
+<ul>
+<li>Happy</li>
+<li>Sleepy</li>
+<li>Grumpy</li>
+</ul>
+
+<h3 id="定义列表">定义列表</h3>
+
+<p>定义术语或命令的列表使用 <code>=defn</code>，等同于 HTML 中的 DL 列表</p>
+
+<pre><code>=defn Happy 
+When you're not blue.
+ 
+=defn blue 
+When you're not happy.
+</code></pre>
+
+<p>将以这种方式呈现：</p>
+
+<p>Happy When you&rsquo;re not blue.</p>
+
+<p>Blue When you&rsquo;re not happy.</p>
+
+<p>目前，它可能是一个简单的HTML段落，但将来可能会发生变化。</p>
+
+<h3 id="多层级列表">多层级列表</h3>
+
+<p>列表可以是多级的，使用 <code>=item1</code>，<code>=item2</code>，<code>=item3</code> 等块指定每个级别的项目。</p>
+
+<p>请注意，<code>=item</code> 只是 <code>=item1</code> 的缩写。</p>
+
+<p>例如：</p>
+
+<pre><code>=item1  Animal 
+=item2     Vertebrate 
+=item2     Invertebrate 
+ 
+=item1  Phase 
+=item2     Solid 
+=item2     Liquid 
+=item2     Gas 
+</code></pre>
+
+<ul>
+<li><p>Animal</p>
+
+<ul>
+<li>Vertebrate</li>
+<li>Invertebrate</li>
+</ul></li>
+
+<li><p>Phase</p>
+
+<ul>
+<li>Solid</li>
+<li>Liquid</li>
+<li>Gas</li>
+</ul></li>
+</ul>
+
+<h3 id="多段落列表">多段落列表</h3>
+
+<p>使用 <code>=item</code> 块（ <code>=begin item</code> 和 <code>=end item</code> ）的分隔形式，我们可以指定包含多个段落的项目。</p>
+
+<p>例如：</p>
+
+<pre><code>Let's consider two common proverbs:
+ 
+=begin item
+I&lt;The rain in Spain falls mainly on the plain.&gt;
+ 
+This is a common myth and an unconscionable slur on the Spanish
+people, the majority of whom are extremely attractive.
+=end item
+ 
+=begin item
+I&lt;The early bird gets the worm.&gt;
+ 
+In deciding whether to become an early riser, it is worth
+considering whether you would actually enjoy annelids
+for breakfast.
+=end item
+ 
+As you can see, folk wisdom is often of dubious value.
+</code></pre>
+
+<p>让我们考虑两个常见的谚语：</p>
+
+<ul>
+<li>The rain in Spain falls mainly on the plain.</li>
+</ul>
+
+<p>This is a common myth and an unconscionable slur on the Spanish people, the majority of whom are extremely attractive.</p>
+
+<ul>
+<li>The early bird gets the worm.</li>
+</ul>
+
+<p>In deciding whether to become an early riser, it is worth considering whether you would actually enjoy annelids for breakfast.</p>
+
+<p>正如你所看到的，民间智慧往往具有可疑的价值。</p>
+
+<h2 id="表">表</h2>
+
+<p>查看此页面以获取与<a href="https://docs.raku.org/language/tables">表</a>相关的文档</p>
+
+<h2 id="pod-注释">Pod 注释</h2>
+
+<p>Pod评论是Pod渲染器忽略的评论。</p>
+
+<p>注释对于元文档（记录文档）很有用。单行注释使用comment关键字：</p>
+
+<pre><code>=comment Add more here about the algorithm 
+</code></pre>
+
+<p>对于多行注释，请使用带分隔符的注释块：</p>
+
+<pre><code>=begin comment
+This comment is
+multi-line.
+=end comment
+</code></pre>
+
+<h2 id="语义块">语义块</h2>
+
+<p>所有大写块类型名称都保留用于指定标准文档，发布，源组件或元信息。</p>
+
+<pre><code>=NAME
+=AUTHOR
+=VERSION
+=TITLE
+=SUBTITLE
+</code></pre>
+
+<h2 id="格式化代码">格式化代码</h2>
+
+<p>格式代码提供了一种向一段文本添加内联标记的方法。
+所有Pod格式代码都包含一个大写字母，紧接着是一组尖括号。
+格式代码可以嵌套其他格式代码。</p>
+
+<h3 id="粗体">粗体</h3>
+
+<p>要以粗体格式化文本，请将其括在 <code>B&lt; &gt;</code> 中</p>
+
+<pre><code>Raku is B&lt;awesome&gt;
+</code></pre>
+
+<p>Raku is <strong>awesome</strong></p>
+
+<h3 id="斜体">斜体</h3>
+
+<p>要用斜体格式化文本，请将其括在 <code>I&lt; &gt;</code>中</p>
+
+<pre><code>Raku is I&lt;awesome&gt;
+</code></pre>
+
+<p>Raku is <em>awesome</em></p>
+
+<h3 id="下划线">下划线</h3>
+
+<p>要在文本下划线将其括在 <code>U&lt;&gt;</code> 中</p>
+
+<pre><code>Raku is U&lt;awesome&gt;
+</code></pre>
+
+<h3 id="代码">代码</h3>
+
+<p>要将文本标记为代码并将其逐字处理，请将其括在 <code>C&lt; &gt;</code> 中</p>
+
+<pre><code>C&lt;my $var = 1; say $var;&gt;
+</code></pre>
+
+<p><code>my $var = 1; say $var;</code></p>
+
+<h3 id="链接">链接</h3>
+
+<p>要创建链接，请将其括在 <code>L&lt; &gt;</code> 中</p>
+
+<pre><code>Raku homepage L&lt;https://raku.org&gt;
+L&lt;Raku homepage|https://raku.org&gt;
+</code></pre>
+
+<p>Raku homepage <a href="https://raku.org/">https://raku.org</a></p>
+
+<p><a href="https://raku.org/">Raku homepage</a></p>
+
+<p>要创建指向同一文档中某个部分的链接：</p>
+
+<pre><code>Comments L&lt;#Comments&gt;
+</code></pre>
+
+<p>Comments <a href="https://docs.raku.org/language/pod#Comments">Comments</a></p>
+
+<h3 id="注释">注释</h3>
+
+<p>注释是从不呈现的文本。</p>
+
+<p>要创建注释，请将其括在 <code>Z&lt; &gt;</code> 中</p>
+
+<pre><code>Raku is awesome Z&lt;Of course it is!&gt;
+</code></pre>
+
+<p>Raku is awesome</p>
+
+<h3 id="笔记">笔记</h3>
+
+<p>注释呈现为脚注。</p>
+
+<p>要创建一个注释，请将其括在 <code>N&lt; &gt;</code> 中</p>
+
+<pre><code>Raku is multi-paradigmatic N&lt;Supporting Procedural, Object Oriented, and Functional programming&gt;
+</code></pre>
+
+<h3 id="键盘输入">键盘输入</h3>
+
+<p>要将文本标记为键盘输入，请将其括在 <code>K&lt; &gt;</code> 中</p>
+
+<pre><code>Enter your name K&lt;John Doe&gt;
+</code></pre>
+
+<h3 id="终端输出">终端输出</h3>
+
+<p>要将文本标记为终端输出，请将其括在 <code>T&lt; &gt;</code> 中</p>
+
+<pre><code>Hello T&lt;John Doe&gt;
+</code></pre>
+
+<h3 id="unicode">Unicode</h3>
+
+<p>要在 Pod 文档中包含 Unicode 代码点或 HTML5 字符引用，请将它们包含在 <code>E&lt; &gt;</code>中</p>
+
+<p><code>E&lt; &gt;</code>可以包含一个数字，该数字被视为所需代码点的十进制 Unicode 值。它还可以使用 Raku 表示法为显式数字括起显式二进制，八进制，十进制或十六进制数字。</p>
+
+<pre><code>Raku makes considerable use of the E&lt;171&gt; and E&lt;187&gt; characters.
+ 
+Raku makes considerable use of the E&lt;laquo&gt; and E&lt;raquo&gt; characters.
+ 
+Raku makes considerable use of the E&lt;0b10101011&gt; and E&lt;0b10111011&gt; characters.
+ 
+Raku makes considerable use of the E&lt;0o253&gt; and E&lt;0o273&gt; characters.
+ 
+Raku makes considerable use of the E&lt;0d171&gt; and E&lt;0d187&gt; characters.
+ 
+Raku makes considerable use of the E&lt;0xAB&gt; and E&lt;0xBB&gt; characters.
+</code></pre>
+
+<p>Raku makes considerable use of the « and » characters.</p>
+
+<h2 id="渲染-pod">渲染 Pod</h2>
+
+<h3 id="html">HTML</h3>
+
+<p>要从 Pod 生成 HTML，你需要 <code>Pod::To::HTML</code> 模块。</p>
+
+<p>如果尚未安装，请通过运行以下命令进行安装：<code>zef install Pod::To::HTML</code></p>
+
+<p>使用终端运行以下命令：</p>
+
+<pre><code>raku --doc=HTML input.pod6 &gt; output.html
+</code></pre>
+
+<h3 id="markdown">Markdown</h3>
+
+<p>要从 Pod 生 Markdown，你需要 <code>Pod::To::Markdown</code> 模块。</p>
+
+<p>如果尚未安装，请通过运行以下命令进行安装：<code>zef install Pod::To::Markdown</code></p>
+
+<p>使用终端运行以下命令：</p>
+
+<pre><code>raku --doc=Markdown input.pod6 &gt; output.md
+</code></pre>
+
+<h3 id="text">Text</h3>
+
+<p>为了从 Pod 生成 Text，你可以使用默认的 <code>Pod::To::Text</code> 模块。</p>
+
+<p>使用终端，运行以下命令：</p>
+
+<pre><code>raku --doc=Text input.pod6 &gt; output.txt
+</code></pre>
+
+<p>你可以省略 <code>=Text</code> 部分：</p>
+
+<pre><code>raku --doc input.pod6 &gt; output.txt
+</code></pre>
+
+<p>你甚至可以将 Pod 直接嵌入到你的程序中，并使用 multi MAIN 子例程将传统的 Unix 命令行 &ldquo;&ndash;man&rdquo; 选项添加到你的程序中，如下所示：</p>
+
+<pre><code class="language-raku">multi MAIN(Bool :$man)
+{
+    run $*EXECUTABLE, '--doc', $*PROGRAM;
+}
+</code></pre>
+
+<p>现在 <code>myprogram --man</code> 将输出你的 Pod 渲染为手册页。</p>
+
+<h2 id="访问-pod">访问 Pod</h2>
+
+<p>为了从 Raku 程序中访问 Pod 文档，需要使用特殊的 = twigil，如<a href="https://docs.raku.org/language/variables#The_%3D_Twigil">变量部分</a>所述。</p>
+
+<p>= twigil 提供了对 Pod 结构的内省，提供了一个 <a href="https://docs.raku.org/type/Pod::Block">Pod::Block</a> 树根，从中可以访问 Pod 文档的整个结构。</p>
+
+<p>例如，以下代码内省了自己的Pod文档：</p>
+
+<pre><code>=begin pod
+ 
+=head1 This is an head1 title 
+ 
+This is a paragraph.
+ 
+=head2 Subsection 
+ 
+Here some text for the subsection.
+ 
+=end pod
+ 
+for $=pod -&gt; $pod-item {
+    for $pod-item.contents -&gt; $pod-block {
+      $pod-block.perl.say;
+    }
+}
+</code></pre>
+
+<p>产生以下输出：</p>
+
+<pre><code>Pod::Heading.new(level =&gt; 1, config =&gt; {}, contents =&gt; [Pod::Block::Para.new(config =&gt; {}, contents =&gt; [&quot;This is an head1 title&quot;])]);
+Pod::Block::Para.new(config =&gt; {}, contents =&gt; [&quot;This is a paragraph.&quot;]);
+Pod::Heading.new(level =&gt; 2, config =&gt; {}, contents =&gt; [Pod::Block::Para.new(config =&gt; {}, contents =&gt; [&quot;Subsection&quot;])]);
+Pod::Block::Para.new(config =&gt; {}, contents =&gt; [&quot;Here some text for the subsection.&quot;]);
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/pod/">Pod</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-doing-math-with-perl6/" data-toggle="tooltip" data-placement="top" title="Doing Math With Raku">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-class-supply/" data-toggle="tooltip" data-placement="top" title="class Supply">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

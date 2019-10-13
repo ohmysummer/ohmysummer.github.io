@@ -248,23 +248,23 @@ if (!doNotTrack) {
 
 <p>生成 <code>1x1, 2x2, 3x3, ..., 10x10</code> 的列表：</p>
 
-<pre><code class="language-perl6">($_**2 for 1..10);
+<pre><code class="language-raku">($_**2 for 1..10);
 </code></pre>
 
 <p><code>for</code> 语句前面还可以添加 if 修饰符，这样我们就可以仅筛选出偶数的平方：</p>
 
-<pre><code class="language-perl6">($_**2 if !($_ % 2) for 1..10)
+<pre><code class="language-raku">($_**2 if !($_ % 2) for 1..10)
 ($_**2 if $_ % 2 == 1 for 1..10) # 同上
 </code></pre>
 
 <p>组合多个 if 条件:</p>
 
-<pre><code class="language-perl6">my @list = ($_ if $_ %2 == 1 &amp;&amp; $_ &gt; 2 for 1..6 )     # [3 5]   
+<pre><code class="language-raku">my @list = ($_ if $_ %2 == 1 &amp;&amp; $_ &gt; 2 for 1..6 )     # [3 5]   
 </code></pre>
 
 <p>还可以生成全排列：</p>
 
-<pre><code class="language-perl6">($_ for &quot;ABC&quot;.comb X~ &quot;XYZ&quot;.comb) # (&quot;AX&quot;, &quot;AY&quot;, &quot;AZ&quot;, &quot;BX&quot;, &quot;BY&quot;, &quot;BZ&quot;, &quot;CX&quot;, &quot;CY&quot;, &quot;CZ&quot;)
+<pre><code class="language-raku">($_ for &quot;ABC&quot;.comb X~ &quot;XYZ&quot;.comb) # (&quot;AX&quot;, &quot;AY&quot;, &quot;AZ&quot;, &quot;BX&quot;, &quot;BY&quot;, &quot;BZ&quot;, &quot;CX&quot;, &quot;CY&quot;, &quot;CZ&quot;)
 
 my @a = (1,3,4)                                                                       
 my @b = (2,4,6)                                                                     
@@ -272,25 +272,25 @@ my @list = (@a X @b)    # 这儿也可以用圆括号, 也可以不用
 # [(1 2) (1 4) (1 6) (3 2) (3 4) (3 6) (4 2) (4 4) (4 6)]
 </code></pre>
 
-<pre><code class="language-perl6">&gt; ($_ when /7$/ for 1..99)
+<pre><code class="language-raku">&gt; ($_ when /7$/ for 1..99)
 (7 17 27 37 47 57 67 77 87 97)
 </code></pre>
 
 <p>大小写转换：</p>
 
-<pre><code class="language-perl6">my @a = &lt;Hello World IBM Apple&gt;;
+<pre><code class="language-raku">my @a = &lt;Hello World IBM Apple&gt;;
 (.lc for @a)                # hello world ibm apple
 </code></pre>
 
 <p>删除字符串末尾的空白：</p>
 
-<pre><code class="language-perl6">my @freshfruit = ' banana', ' loganberry ', 'passion fruit ';
+<pre><code class="language-raku">my @freshfruit = ' banana', ' loganberry ', 'passion fruit ';
 (.trim for @freshfruit)     # &quot;banana&quot; &quot;loganberry&quot; &quot;passion fruit&quot;
 </code></pre>
 
 <p>向量运算：</p>
 
-<pre><code class="language-perl6">my @vec = 2,4,6;
+<pre><code class="language-raku">my @vec = 2,4,6;
 (3*$_ for @vec)                     # 6 12 18
 (3*$_ if $_ &gt; 3 for @vec)   # 12 18
 (3*$_ if $_ &lt; 2 for @vec)   # ()
@@ -298,20 +298,20 @@ my @list = (@a X @b)    # 这儿也可以用圆括号, 也可以不用
 
 <p>嵌套数组：</p>
 
-<pre><code class="language-perl6">my @vec = 2,4,6;
+<pre><code class="language-raku">my @vec = 2,4,6;
 ([$_, $_**2].perl for @vec)       # [2, 4] [4, 16] [6, 36]
 ([$_, $_**2].WHAT for @vec) # (Array) (Array) (Array)
 </code></pre>
 
 <p>Parcel:</p>
 
-<pre><code class="language-perl6">(($_, $_**2).perl for @vec)       # (2, 4) (4, 16) (6, 36)
+<pre><code class="language-raku">(($_, $_**2).perl for @vec)       # (2, 4) (4, 16) (6, 36)
 (($_, $_**2).WHAT for @vec) # (Parcel) (Parcel) (Parcel)
 </code></pre>
 
 <p>多个列表之间的列表解析</p>
 
-<pre><code class="language-perl6">my @vec1 = 2,4,6;
+<pre><code class="language-raku">my @vec1 = 2,4,6;
 my @vec2 = 4,3,-9;
 ($_ for @vec1 X* @vec2)           # 8 6 -18 16 12 -36 24 18 -54
 ($_ for @vec1 X+ @vec2)          # 5 -7 8 7 -5 10 9 -3
@@ -321,7 +321,7 @@ my @vec2 = 4,3,-9;
 
 <p>使用列表解析处理矩阵:</p>
 
-<pre><code class="language-perl6">&gt; my @a = ([1,2,3], [4,5,6], [7,8,9]);
+<pre><code class="language-raku">&gt; my @a = ([1,2,3], [4,5,6], [7,8,9]);
 &gt; @a[0]                                    # 1 2 3
 &gt; @a[0][1]                              # 2
 &gt; @a[0][2]                             # 3
@@ -333,7 +333,7 @@ my @vec2 = 4,3,-9;
 
 <p>矩阵转置</p>
 
-<pre><code class="language-perl6">sub transpose (@m) {
+<pre><code class="language-raku">sub transpose (@m) {
     @m[0].keys.map: {[ @m»[$_] ]};
 }
 
@@ -356,10 +356,10 @@ e j o t
 
 <p>使用 gather 进行列表解析：</p>
 
-<pre><code class="language-perl6">my @s = gather { for ^100 { take 2 * $_ if $_ ** 2 &gt; 3 } };
+<pre><code class="language-raku">my @s = gather { for ^100 { take 2 * $_ if $_ ** 2 &gt; 3 } };
 </code></pre>
 
-<pre><code class="language-perl6"># 1到20之间哪些数字组成直角？
+<pre><code class="language-raku"># 1到20之间哪些数字组成直角？
 my $n = 20;
 my @a = gather for 1..$n -&gt; $x {
          for $x..$n -&gt; $y {

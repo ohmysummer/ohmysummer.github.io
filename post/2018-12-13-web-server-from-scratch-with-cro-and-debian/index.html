@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (310 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (309 words)
   
   
 </span>
@@ -235,21 +235,21 @@ if (!doNotTrack) {
 
 <p>我和圣诞老人​​谈过，他说他不知道如何在 <strong>Debian</strong> 上安装 <strong>Cro</strong>，所以我对自己说：我要帮助他。</p>
 
-<p>如果您对 <strong>Apache</strong> 等 Web 服务器有一些经验，并且您已经听说过 <strong>Perl6</strong> 强大的并发/响应方面，那么您肯定有兴趣了解 <a href="https://cro.services/">Cro 服务</a>。这篇文章的受众是<strong>具有 Debian 基本经验的人</strong>，或者在 <strong>Perl6</strong> 新手&hellip;就像圣诞老人一样。</p>
+<p>如果您对 <strong>Apache</strong> 等 Web 服务器有一些经验，并且您已经听说过 <strong>Raku</strong> 强大的并发/响应方面，那么您肯定有兴趣了解 <a href="https://cro.services/">Cro 服务</a>。这篇文章的受众是<strong>具有 Debian 基本经验的人</strong>，或者在 <strong>Raku</strong> 新手&hellip;就像圣诞老人一样。</p>
 
-<p><strong>Cro</strong> 是一个 <strong>Perl6 模块</strong>，它提供了轻松构建反应式和并发服务所需的一切，例如：Web 服务器。</p>
+<p><strong>Cro</strong> 是一个 <strong>Raku 模块</strong>，它提供了轻松构建反应式和并发服务所需的一切，例如：Web 服务器。</p>
 
 <p>在这篇文章中，我们将看到如何在 <strong>Debian</strong> 中安装 <strong>Cro</strong>，这是最受欢迎的 Linux 发行版之一。然后，我将解释 <strong>Cro</strong> 的演示示例。</p>
 
 <p>我们将使用 <strong>Debian 9,64 位</strong>（Stretch），我们将在安装后启动它。</p>
 
-<h2 id="安装-rakudo-perl6-编译器">安装 Rakudo Perl6 编译器</h2>
+<h2 id="安装-rakudo-raku-编译器">安装 Rakudo Raku 编译器</h2>
 
-<p><a href="https://rakudo.org/">Rakudo</a> 是 <strong>Cro</strong> 模块运行的当前 <strong>Perl6</strong> 编译器。安装 <strong>Rakudo</strong> 的常规方法是安装 <a href="https://rakudo.org/files">Rakudo Star</a>，但我更喜欢快速的方式：<a href="https://github.com/nxadm/rakudo-pkg">rakudo-pkg</a> &hellip;&hellip;怎么样？只需从此 <a href="https://github.com/nxadm/rakudo-pkg#direct-downloads">repo</a> 下载并安装相应的 <strong>Debian 软件包</strong>。在我们的例子中，是来自 <strong>Debian 9, 64位</strong>的 <strong>.deb</strong> 文件。</p>
+<p><a href="https://rakudo.org/">Rakudo</a> 是 <strong>Cro</strong> 模块运行的当前 <strong>Raku</strong> 编译器。安装 <strong>Rakudo</strong> 的常规方法是安装 <a href="https://rakudo.org/files">Rakudo Star</a>，但我更喜欢快速的方式：<a href="https://github.com/nxadm/rakudo-pkg">rakudo-pkg</a> &hellip;&hellip;怎么样？只需从此 <a href="https://github.com/nxadm/rakudo-pkg#direct-downloads">repo</a> 下载并安装相应的 <strong>Debian 软件包</strong>。在我们的例子中，是来自 <strong>Debian 9, 64位</strong>的 <strong>.deb</strong> 文件。</p>
 
 <p>使用 <strong>Debian</strong> 中的 root 用户，我们可以在 root home 中为 <strong>Rakudo</strong> 创建一个包文件夹，进入这个目录，下载 <strong>Debian 9, 64 位</strong>的当前 <strong>Rakudo</strong> 包，并安装它。就我而言：</p>
 
-<pre><code class="language-perl6">mkdir ~/rakudo-packages &amp;&amp; cd $_
+<pre><code class="language-raku">mkdir ~/rakudo-packages &amp;&amp; cd $_
 wget https://github.com/nxadm/rakudo-pkg/releases/download/v2018.10-02/rakudo-pkg-Debian9_2018.10-02_amd64.deb
 dpkg -i rakudo-pkg-Debian9_2018.10-02_amd64.deb
 </code></pre>
@@ -266,18 +266,18 @@ dpkg -i rakudo-pkg-Debian9_2018.10-02_amd64.deb
 
 <p>为所有用户重新加载 <strong>Debian</strong> 配置文件。</p>
 
-<p>输入 <strong>perl6 -v</strong>:</p>
+<p>输入 <strong>raku -v</strong>:</p>
 
-<pre><code class="language-shell">perl6 -v
+<pre><code class="language-shell">raku -v
 This is Rakudo version 2018.10 built on MoarVM version 2018.10
-implementing Perl 6.c.
+implementing Raku.c.
 </code></pre>
 
-<p>欢迎来到 <strong>Rakudo Perl6!</strong></p>
+<p>欢迎来到 <strong>Rakudo Raku!</strong></p>
 
 <h2 id="安装-cro-服务">安装 Cro 服务</h2>
 
-<p><strong>Cro</strong> 是 Perl6 模块，<strong>Zef</strong> 是已经安装的当前 <strong>Perl6</strong> 模块管理器。我们来安装 <strong>Cro</strong> 吧！</p>
+<p><strong>Cro</strong> 是 Raku 模块，<strong>Zef</strong> 是已经安装的当前 <strong>Raku</strong> 模块管理器。我们来安装 <strong>Cro</strong> 吧！</p>
 
 <p>首先，我们将安装一些 <strong>Cro 包依赖项</strong>，例如 <strong>git</strong> 来连接和下载来自 Cro 相关存储库的文件，<strong>libssl-dev</strong> 以提供对安全套接字层的支持，<strong>build-essential</strong> 用于构建在安装期间 <strong>Cro</strong> 所使用的一些依赖项：</p>
 
@@ -307,7 +307,7 @@ implementing Perl 6.c.
 
 <p>让我们继续演示脚本。创建一个工作区文件夹，输入它并将下面的代码粘贴到名为 <strong>server.p6</strong> 的新文件中：</p>
 
-<pre><code class="language-perl6">use Cro::HTTP::Router;
+<pre><code class="language-raku">use Cro::HTTP::Router;
 use Cro::HTTP::Server;
 
 my $application = route {
@@ -335,7 +335,7 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
 
 <p>现在是从 shell 运行 Web 服务的时刻：</p>
 
-<pre><code class="language-shell">perl6 server.p6
+<pre><code class="language-shell">raku server.p6
 </code></pre>
 
 <p>现在您需要知道服务器主机的当前 IP 地址，尝试使用 <strong>ip addr</strong>。我的 Ip 地址是: <strong>192.168.1.48</strong>。</p>
@@ -349,7 +349,7 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
 
 <h2 id="总结">总结</h2>
 
-<p>从 <strong>Debian</strong> 的新安装开始，我们已经了解了如何安装 <strong>Cro</strong> 并运行演示脚本。现在，您已准备好继续使用 Cro 文档，并发现 <strong>Perl6</strong> 可提供的最有前途的并发/异步服务平台。</p>
+<p>从 <strong>Debian</strong> 的新安装开始，我们已经了解了如何安装 <strong>Cro</strong> 并运行演示脚本。现在，您已准备好继续使用 Cro 文档，并发现 <strong>Raku</strong> 可提供的最有前途的并发/异步服务平台。</p>
 
 <p>我希望在阅读这篇文章并查看 <a href="https://cro.services/docs">Cro 文档</a>后，圣诞老人可以将他的网站迁移到 Cro Services。</p>
 
@@ -357,7 +357,7 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -374,7 +374,7 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-14-%E4%BD%BF%E7%94%A8perl6%E8%AE%BE%E8%AE%A1%E5%B0%8F%E8%88%AA%E5%A4%A9%E5%99%A8/" data-toggle="tooltip" data-placement="top" title="第十四天 - 使用 Perl 6 设计(小)航天器">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-14-%E4%BD%BF%E7%94%A8raku%E8%AE%BE%E8%AE%A1%E5%B0%8F%E8%88%AA%E5%A4%A9%E5%99%A8/" data-toggle="tooltip" data-placement="top" title="第十四天 - 使用 Raku 设计(小)航天器">Next Post &rarr;</a>
             </li>
           
         </ul>

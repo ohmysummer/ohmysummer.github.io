@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Perl 6 Dispatch 解密</title>
-  <meta property="og:title" content="Perl 6 Dispatch 解密" />
-  <meta name="twitter:title" content="Perl 6 Dispatch 解密" />
+  <title>Raku Dispatch 解密</title>
+  <meta property="og:title" content="Raku Dispatch 解密" />
+  <meta name="twitter:title" content="Raku Dispatch 解密" />
   <meta name="description" content="But Here&#39;s My Dispatch, So callwith Maybe">
   <meta property="og:description" content="But Here&#39;s My Dispatch, So callwith Maybe">
   <meta name="twitter:description" content="But Here&#39;s My Dispatch, So callwith Maybe">
@@ -198,7 +198,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Perl 6 Dispatch 解密</h1>
+              <h1>Raku Dispatch 解密</h1>
                 
                   
                     <h2 class="post-subheading">But Here&#39;s My Dispatch, So callwith Maybe</h2>
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 8 minutes (1564 words)
+  <i class="fa fa-clock-o"></i> 8 minutes (1562 words)
   
   
 </span>
@@ -233,9 +233,9 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p>Perl 6 的一个很好的特性是 <em>multi-dispatch</em>, 即多重分派。它允许你在函数, 方法或 <a href="https://docs.perl6.org/language/grammars">Grammar</a> token 中使用相同的名字并让它们所处理的数据的类型来决定执行哪一个。下面是一个 <a href="https://en.wikipedia.org/wiki/Factorial">factorial</a> postfix 操作符, 用两个 multies 来实现:</p>
+<p>Raku 的一个很好的特性是 <em>multi-dispatch</em>, 即多重分派。它允许你在函数, 方法或 <a href="https://docs.raku.org/language/grammars">Grammar</a> token 中使用相同的名字并让它们所处理的数据的类型来决定执行哪一个。下面是一个 <a href="https://en.wikipedia.org/wiki/Factorial">factorial</a> postfix 操作符, 用两个 multies 来实现:</p>
 
-<pre><code class="language-perl6">multi postfix:&lt;!&gt; (0) { 1 }
+<pre><code class="language-raku">multi postfix:&lt;!&gt; (0) { 1 }
 multi postfix:&lt;!&gt; (UInt \n) { n × samewith n − 1 }
 
 say 5!
@@ -243,13 +243,13 @@ say 5!
 # OUTPUT: 120
 </code></pre>
 
-<p>虽然 multi-dispatch 的主题很明显并且它还有一些说明<a href="https://docs.perl6.org/language/functions#Multi-dispatch">文档</a>, 我今天想讲的是 7 个特殊的子例程, 让你能够行走在 dispatch 迷宫中。它们是 <code>nextwith</code>, <code>nextsame</code>, <code>samewith</code>, <code>callwith</code>, <code>callsame</code>, <code>nextcallee</code> 和 <code>lastcall</code>.</p>
+<p>虽然 multi-dispatch 的主题很明显并且它还有一些说明<a href="https://docs.raku.org/language/functions#Multi-dispatch">文档</a>, 我今天想讲的是 7 个特殊的子例程, 让你能够行走在 dispatch 迷宫中。它们是 <code>nextwith</code>, <code>nextsame</code>, <code>samewith</code>, <code>callwith</code>, <code>callsame</code>, <code>nextcallee</code> 和 <code>lastcall</code>.</p>
 
 <h2 id="设立实验室">设立实验室</h2>
 
 <p>Multies 从最窄到最广的候选者进行排序，并且当一个 multi 被调用时，绑定器尝试找到一个匹配并调用第一个匹配的候选者。 有时，您可能希望调用或简单地移动到链中的下一个匹配候选者，可选地使用不同的参数。 为了观察这些操作的效果，我们将使用以下设置：</p>
 
-<pre><code class="language-perl6">class Wide             { }
+<pre><code class="language-raku">class Wide             { }
 class Middle is Wide   { }
 class Narrow is Middle { }
 
@@ -262,9 +262,9 @@ foo Middle; # OUTPUT: Middle (Middle)
 foo Wide;   # OUTPUT: Wide   (Wide)
 </code></pre>
 
-<p>我们有三个类，每个类都继承自前一个类，所以我们的 <code>Narrow</code> 类 可以适应 <code>Middle</code> 和 <code>Wide</code>  multi 候选者; <code>Middle</code> 也可以适应 <code>Wide</code>，但不能适应 <code>Narrow</code>; 而 <code>Narrow</code> 既不适用于 <code>Middle</code>，也不适用于 <code>Narrow</code>。请记住，Perl 6 中的所有类也都是 <a href="https://docs.perl6.org/type/Any">Any</a> 类型，因此也适用于任何接受 <a href="https://docs.perl6.org/type/Any">Any</a> 的候选者。</p>
+<p>我们有三个类，每个类都继承自前一个类，所以我们的 <code>Narrow</code> 类 可以适应 <code>Middle</code> 和 <code>Wide</code>  multi 候选者; <code>Middle</code> 也可以适应 <code>Wide</code>，但不能适应 <code>Narrow</code>; 而 <code>Narrow</code> 既不适用于 <code>Middle</code>，也不适用于 <code>Narrow</code>。请记住，Raku 中的所有类也都是 <a href="https://docs.raku.org/type/Any">Any</a> 类型，因此也适用于任何接受 <a href="https://docs.raku.org/type/Any">Any</a> 的候选者。</p>
 
-<p>对于我们的 <a href="https://docs.perl6.org/type/Callable.html">Callables</a>，我们在 foo 子例程上使用三个 multi 候选者：每个类一个。在类的主体中，我们打印什么我们所调用的 multi 的类型，以及作为参数传递的值。对于它们的返回值，我们只使用一个字符串来告诉我们返回值来自哪个 multi;我们稍后会使用这些。</p>
+<p>对于我们的 <a href="https://docs.raku.org/type/Callable.html">Callables</a>，我们在 foo 子例程上使用三个 multi 候选者：每个类一个。在类的主体中，我们打印什么我们所调用的 multi 的类型，以及作为参数传递的值。对于它们的返回值，我们只使用一个字符串来告诉我们返回值来自哪个 multi;我们稍后会使用这些。</p>
 
 <p>最后，我们使用三个类型的对象与我们的自定义类进行三次调用。从输出来看，我们可以看到三个候选者中的每一个候选者都按预期被调用了。</p>
 
@@ -292,7 +292,7 @@ foo Wide;   # OUTPUT: Wide   (Wide)
 
 <p>让我们来修改下我们的 <code>Middle</code> 候选者以调用 <code>callsame</code> 然后打印出它的返回值:</p>
 
-<pre><code class="language-perl6">calss Wide             {}
+<pre><code class="language-raku">calss Wide             {}
 calss Middle is Wide   {}
 class Narrow is Middle {}
 
@@ -324,7 +324,7 @@ foo Middle;
 
 <p>正如我们所知, <code>__with</code> 变体允许我们使用不同的参数。我会使用和之前的例子相同的代码, 区别就是现在我会执行 <code>callwith</code>, 并使用 <code>Narrow</code> 类型对象作为新的参数:</p>
 
-<pre><code class="language-perl6">class Wide             {}
+<pre><code class="language-raku">class Wide             {}
 class Middle is Wide   {}
 class Narrow is Middle {}
 multi foo(Narrow $v) { say 'Narrow', $v; 'from Narrow' }
@@ -356,7 +356,7 @@ foo Middle;
 
 <p>我们会使用更多的 multies 和类型来扩展我们原来的例子:</p>
 
-<pre><code class="language-perl6">class Wide             {}
+<pre><code class="language-raku">class Wide             {}
 class Middle is Wide   {}
 class Narrow is Middle {}
 
@@ -380,7 +380,7 @@ foo 31337;  # OUTPUT: Prime     31337
 
 <p>如果我们使用这种新格局重建之前的例子, 我们会得到和之前同样的结果:</p>
 
-<pre><code class="language-perl6">class Wide             { }
+<pre><code class="language-raku">class Wide             { }
 class Middle is Wide   { }
 class Narrow is Middle { }
 
@@ -412,7 +412,7 @@ foo Middle;
 
 <p>现在，我们来混合一下, 用 <code>42</code> 而不是 <code>Narrow</code> 来调用。我们确实有一个 <code>NotPrime</code> 候选者。 <code>42</code> 和原来的 <code>Middle</code> 都可以适应这个候选者。而且比原来的 <code>Middle</code> 候选者更宽, 并且它还处在调度链的上游。这可能会出错!</p>
 
-<pre><code class="language-perl6">class Wide             { }
+<pre><code class="language-raku">class Wide             { }
 class Middle is Wide   { }
 class Narrow is Middle { }
 
@@ -448,7 +448,7 @@ foo Middle;
 
 <p>这个能让我们在调度链上抓住下一个匹配的候选者的趁手的小子例程是 <code>nextcallee</code>。它不仅返回该候选者的 <code>Callable</code>，而且它将其从链上移出，以便下一个 <code>next____</code> 和 <code>call____</code> 会进入下一个候选者，下一个 <code>nextcallee</code> 将会移出并返回 next-next 候选者。所以, 让我们回到我们之前的例子, 作点弊！</p>
 
-<pre><code class="language-perl6">class Wide             { }
+<pre><code class="language-raku">class Wide             { }
 class Middle is Wide   { }
 class Narrow is Middle { }
 
@@ -481,7 +481,7 @@ foo Middle;
 
 <p><code>nexcallee</code> 是精湛的，所以循环是一个挑战，因为它会使用循环或thunk的调度程序来查找被调用者。所以它最常见和最简单的用法是获得&hellip;下一个被调用者。如果你需要传递下一个被调用者, 你得先这样做:</p>
 
-<pre><code class="language-perl6">multi pick-winner (Int \s) {
+<pre><code class="language-raku">multi pick-winner (Int \s) {
     my &amp;nextone = nextcallee;
     Promise.in(π²).then: { nextone s }
 }
@@ -497,7 +497,7 @@ with pick-winner ^5 .pick -&gt; \result {
 # Woot! 3 won
 </code></pre>
 
-<p><code>Int</code> 候选者接收 <code>nextcallee</code> 然后启动一个会被并行执行的 <strong>Promise</strong>, 在超时后返回。我们不能在这儿使用 <code>nextsame</code>, 因为它会尝试 <code>nextsame</code> <a href="https://docs.perl6.org/language/concurrency">Promise</a> 的代码块而非我们原来的子例程, 因此, <code>nextcallee</code> 节省了我们一整天时间。</p>
+<p><code>Int</code> 候选者接收 <code>nextcallee</code> 然后启动一个会被并行执行的 <strong>Promise</strong>, 在超时后返回。我们不能在这儿使用 <code>nextsame</code>, 因为它会尝试 <code>nextsame</code> <a href="https://docs.raku.org/language/concurrency">Promise</a> 的代码块而非我们原来的子例程, 因此, <code>nextcallee</code> 节省了我们一整天时间。</p>
 
 <p>我想我们已经到达了令人眼花缭乱的例子的巅峰，我可以听到观众的呼喊。 “这种东西有什么用呢，反正？只是制造了更多的 subs, 而不是混乱的 multis!“ 所以，让我们来看看更多的真实世界的例子，以及接下来遇见的 <code>nextsame</code> 和 <code>nextwith</code>！</p>
 
@@ -505,7 +505,7 @@ with pick-winner ^5 .pick -&gt; \result {
 
 <p>我们来写一个类！一个能做事的类！</p>
 
-<pre><code class="language-perl6">role Things {
+<pre><code class="language-raku">role Things {
     multi method do-it($place) {
         say &quot;I am {&lt;eating sleeping coding weeping&gt;.pick} at $place&quot;
     }
@@ -516,9 +516,9 @@ class Doer does Things {}
 Doer.do-it: 'home' # 输出: I am coding at home
 </code></pre>
 
-<p>我们碰不到<a href="https://docs.perl6.org/language/objects#Roles">role</a>，因为它是别人为我们而做的，保持它们本来的面目吧。但是，我们希望我们的 class 能做更多的事情！对于某些<code>$place</code>，我们希望它告诉我们一些更具体的东西。另外，如果这个地方是 <code>my new place</code>，我们想知道哪些地方是新的。以下是代码：</p>
+<p>我们碰不到<a href="https://docs.raku.org/language/objects#Roles">role</a>，因为它是别人为我们而做的，保持它们本来的面目吧。但是，我们希望我们的 class 能做更多的事情！对于某些<code>$place</code>，我们希望它告诉我们一些更具体的东西。另外，如果这个地方是 <code>my new place</code>，我们想知道哪些地方是新的。以下是代码：</p>
 
-<pre><code class="language-perl6">role Things {
+<pre><code class="language-raku">role Things {
     multi method do-it($place) {
         say &quot;I am {&lt;eating sleeping coding weeping&gt;.pick} at $place&quot;
     }
@@ -560,7 +560,7 @@ Doer.do-it: 'my new place';  # OUTPUT: I am coding at red home
 
 <p>包中的最后一个方法是 <code>lastcall</code>。调用它截断当前的调度链，以便 <code>next____</code> 和 <code>call____</code> 例程不会有其它任何地方可去。以下是一个例子：</p>
 
-<pre><code class="language-perl6">multi foo (Int $_) {
+<pre><code class="language-raku">multi foo (Int $_) {
     say &quot;Int: $_&quot;;
     lastcall   when *.is-prime;
     nextsame   when *  %% 2;
@@ -585,7 +585,7 @@ foo 1;
 
 <p>我们所有的对 <code>foo</code> 的调用都会首先进入 <code>Int</code> 候选者。当数字为 .is-prime，我们调用 <code>lastcall</code>; 当它是一个偶数，我们调用 <code>nextsame</code>; 而当这是一个奇数时，我们使用 <code>6</code> 作为参数来调用<code>samewith</code>。</p>
 
-<p>我们调用 <code>foo</code> 的第一个数字是6，这不是素数，所以 <code>lastcall</code> 从不被调用。这是一个偶数，所以我们调用 <code>nextsame</code>，从输出我们看到，我们已经达到<a href="https://docs.perl6.org/type/Any">Any</a>候选者。</p>
+<p>我们调用 <code>foo</code> 的第一个数字是6，这不是素数，所以 <code>lastcall</code> 从不被调用。这是一个偶数，所以我们调用 <code>nextsame</code>，从输出我们看到，我们已经达到<a href="https://docs.raku.org/type/Any">Any</a>候选者。</p>
 
 <p>接下来，当我们使用 <code>2</code> 调用 <code>foo</code> 时，这是一个素数和偶数，我们调用 <code>lastcall</code> 和 <code>nextcall</code>。然而，因为 <code>lastcall</code> 被调用并截断了调度链，所以 <code>nextcall</code> 从不会看到 Any 候选者，所以我们只有在输出中调用 <code>Int</code> 候选者。</p>
 
@@ -595,7 +595,7 @@ foo 1;
 
 <p>为了整理这篇文章，我们将考察另一个领域，我们学到的例程可以派上用场：包装东西！以下是代码：</p>
 
-<pre><code class="language-perl6">use soft;
+<pre><code class="language-raku">use soft;
 
 sub meower (\ッ, |c) {
     nextwith &quot;🐱 says {ッ}&quot;, |c when ッ.gist.contains: 'meow';
@@ -613,13 +613,13 @@ say 'meows!';
 # 🐱 says meows!
 </code></pre>
 
-<p>我们使用 <code>soft</code> pragma 来禁止内联，所以我们的包装是理智的。我们有一个 <code>meower</code> sub 来修改第一个参数，如果它 .contains 单词 <code>meow</code>，传递其余的参数，如果有的话，通过一个 <a href="https://docs.perl6.org/type/Capture">Capture</a>（就是 <code>|c</code> 这个东西）未修改。所有剩下的调用都是使用 <code>nextsame</code> 原样传递的，我们 <strong>.wrap</strong> <code>meower</code> 到 <code>say</code> 程序上，从输出可以看出，一切都按照我们的意愿工作。</p>
+<p>我们使用 <code>soft</code> pragma 来禁止内联，所以我们的包装是理智的。我们有一个 <code>meower</code> sub 来修改第一个参数，如果它 .contains 单词 <code>meow</code>，传递其余的参数，如果有的话，通过一个 <a href="https://docs.raku.org/type/Capture">Capture</a>（就是 <code>|c</code> 这个东西）未修改。所有剩下的调用都是使用 <code>nextsame</code> 原样传递的，我们 <strong>.wrap</strong> <code>meower</code> 到 <code>say</code> 程序上，从输出可以看出，一切都按照我们的意愿工作。</p>
 
 <p>这是代码的主要功能：<code>meower</code> <strong>不知道什么 sub 被包装了！</strong> 然而，它仍然可以在不发生问题的情况下设法调用它。</p>
 
-<p>在这里，我们把它放在 <a href="https://docs.perl6.org/routine/put">put</a> 例程上，而且它没有任何修改就可以正常工作：</p>
+<p>在这里，我们把它放在 <a href="https://docs.raku.org/routine/put">put</a> 例程上，而且它没有任何修改就可以正常工作：</p>
 
-<pre><code class="language-perl6">use soft;
+<pre><code class="language-raku">use soft;
 
 sub meower (\ッ, |c) {
     nextwith &quot;🐱 says {ッ}&quot;, |c when ッ.gist.contains: 'meow';
@@ -649,7 +649,7 @@ put 'meows!';
 
 <p>原文：</p>
 
-<p><a href="https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe">Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe</a></p>
+<p><a href="https://rakudo.party/post/Raku-But-Heres-My-Dispatch-So-Callwith-Maybe">Raku-But-Heres-My-Dispatch-So-Callwith-Maybe</a></p>
 
 
         
@@ -684,7 +684,7 @@ put 'meows!';
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/" data-toggle="tooltip" data-placement="top" title="Perl 6 Sheet">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2017-05-19-sheet/" data-toggle="tooltip" data-placement="top" title="Raku Sheet">Next Post &rarr;</a>
             </li>
           
         </ul>

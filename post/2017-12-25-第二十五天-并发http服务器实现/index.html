@@ -233,17 +233,17 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="bonus-xmas-concurrent-http-server-implementation-and-the-scripter-s-approach-https-perl6advent-wordpress-com-2017-12-25-bonus-xmas-concurrent-http-server-implementation-and-the-scripters-approach"><a href="https://perl6advent.wordpress.com/2017/12/25/bonus-xmas-concurrent-http-server-implementation-and-the-scripters-approach/">Bonus Xmas – Concurrent HTTP Server implementation and the scripter’s approach</a></h1>
+<h1 id="bonus-xmas-concurrent-http-server-implementation-and-the-scripter-s-approach-https-rakuadvent-wordpress-com-2017-12-25-bonus-xmas-concurrent-http-server-implementation-and-the-scripters-approach"><a href="https://rakuadvent.wordpress.com/2017/12/25/bonus-xmas-concurrent-http-server-implementation-and-the-scripters-approach/">Bonus Xmas – Concurrent HTTP Server implementation and the scripter’s approach</a></h1>
 
-<p>首先，我想强调 <a href="http://www.jnthn.net/">Jonathan Worthington</a> 在 <a href="http://rakudo.org/">Rakudo Perl6</a> 和 <a href="https://docs.perl6.org/type/IO::Socket::Async">IO::Socket::Async</a> 中的工作。谢谢 Jon！</p>
+<p>首先，我想强调 <a href="http://www.jnthn.net/">Jonathan Worthington</a> 在 <a href="http://rakudo.org/">Rakudo Raku</a> 和 <a href="https://docs.raku.org/type/IO::Socket::Async">IO::Socket::Async</a> 中的工作。谢谢 Jon！</p>
 
 <p>我喜欢制作脚本;编写组织良好的动作序列，<strong>获得结果</strong>并对它们进行<strong>处理</strong>。</p>
 
-<p>当我从 Perl6 开始时，我发现了一个壮观的生态系统，我可以<strong>按照自己喜欢的方式</strong>实践我的想法：<strong>脚本方式</strong>。其中一个想法是实现一个小型的 HTTP 服务器来玩玩。查看与 <strong>Perl6</strong>，HTTP 和套接字相关的其他项目和模块，我发现背后的作者是具有<strong>面向对象</strong>编程经验的程序员。</p>
+<p>当我从 Raku 开始时，我发现了一个壮观的生态系统，我可以<strong>按照自己喜欢的方式</strong>实践我的想法：<strong>脚本方式</strong>。其中一个想法是实现一个小型的 HTTP 服务器来玩玩。查看与 <strong>Raku</strong>，HTTP 和套接字相关的其他项目和模块，我发现背后的作者是具有<strong>面向对象</strong>编程经验的程序员。</p>
 
-<h2 id="perl6-范式">Perl6 范式</h2>
+<h2 id="raku-范式">Raku 范式</h2>
 
-<p>Perl6 支持三种最流行的编程范式:</p>
+<p>Raku 支持三种最流行的编程范式:</p>
 
 <ul>
 <li>面向对象</li>
@@ -255,17 +255,17 @@ if (!doNotTrack) {
 
 <p><strong>函数式</strong>范式在我看来非常棒;你可以使用一个函数，并像 var 一样使用它，以及其他令人惊讶的事情。</p>
 
-<h2 id="perl6-supplies-就像一个-v12-引擎">Perl6 Supplies 就像一个 V12 引擎</h2>
+<h2 id="raku-supplies-就像一个-v12-引擎">Raku Supplies 就像一个 V12 引擎</h2>
 
-<p>在我开始将 <a href="http://perl6intro.com/">perl6intro.com</a> 翻译成<a href="http://es.perl6intro.com/">西班牙语</a>后不久，我开始使用 Perl6。看看 <strong>Perl6</strong> 的文档，我发现了 <strong>Perl6</strong> 巨大的<strong>并发</strong>潜力。 Perl6在<a href="https://docs.perl6.org/language/concurrency">并发方面</a>比我想象的更加强大。</p>
+<p>在我开始将 <a href="http://rakuintro.com/">rakuintro.com</a> 翻译成<a href="http://es.rakuintro.com/">西班牙语</a>后不久，我开始使用 Raku。看看 <strong>Raku</strong> 的文档，我发现了 <strong>Raku</strong> 巨大的<strong>并发</strong>潜力。 Raku在<a href="https://docs.raku.org/language/concurrency">并发方面</a>比我想象的更加强大。</p>
 
-<p>我使用 <strong>Perl6</strong> 的 HTTP 服务器的思想始于 <a href="https://docs.perl6.org/type/Supply">Perl6 Supplies</a>（具有多个订阅者的异步数据流），具体来说就是 <a href="https://docs.perl6.org/type/IO::Socket::Async">IO::Socket::Async</a>类。所有的套接字管理，数据传输和并发性实际上都是<strong>自动</strong>且易于理解的。制作并玩一玩小并发但强大的服务是极好的。</p>
+<p>我使用 <strong>Raku</strong> 的 HTTP 服务器的思想始于 <a href="https://docs.raku.org/type/Supply">Raku Supplies</a>（具有多个订阅者的异步数据流），具体来说就是 <a href="https://docs.raku.org/type/IO::Socket::Async">IO::Socket::Async</a>类。所有的套接字管理，数据传输和并发性实际上都是<strong>自动</strong>且易于理解的。制作并玩一玩小并发但强大的服务是极好的。</p>
 
-<p>基于 <a href="https://docs.perl6.org/type/IO::Socket::Async">IO::Socket::Async</a> 文档的示例，我开始在 <a href="https://github.com/ramiroencinas/mini-http-cgi-server">mini-http-cgi-server</a> 项目中实现一个支持 pseudoCGI 的小型 HTTP 服务器，并且按照我的预期工作。当我得到我想要的东西时，我很满意，我离开了这个项目一段时间。我不喜欢事情发展太多。</p>
+<p>基于 <a href="https://docs.raku.org/type/IO::Socket::Async">IO::Socket::Async</a> 文档的示例，我开始在 <a href="https://github.com/ramiroencinas/mini-http-cgi-server">mini-http-cgi-server</a> 项目中实现一个支持 pseudoCGI 的小型 HTTP 服务器，并且按照我的预期工作。当我得到我想要的东西时，我很满意，我离开了这个项目一段时间。我不喜欢事情发展太多。</p>
 
-<p>但之后，为马德里 <a href="http://madrid.pm.org/workshop">Perl Workshop 2017</a> 做了一次演讲（感谢<a href="http://madrid.pm.org/">马德里 Perl Mongers</a> 和 <a href="http://barcelona.pm/">巴塞罗那 Perl Mongers</a> 团队为这次活动提供的支持），我有足够的动力去做<strong>更实际的</strong>事情，让网络<strong>前端</strong>编码人员可以完成他们的工作并且与 <strong>Perl6正在等待的后端</strong>进行交流。一方面是典型的<strong>公共 html 静态结构</strong>，另一方面是一个包含多个 web 服务的 <strong>Perl6</strong> 模块，用于等待来自前端人员的 web 请求。</p>
+<p>但之后，为马德里 <a href="http://madrid.pm.org/workshop">Perl Workshop 2017</a> 做了一次演讲（感谢<a href="http://madrid.pm.org/">马德里 Perl Mongers</a> 和 <a href="http://barcelona.pm/">巴塞罗那 Perl Mongers</a> 团队为这次活动提供的支持），我有足够的动力去做<strong>更实际的</strong>事情，让网络<strong>前端</strong>编码人员可以完成他们的工作并且与 <strong>Raku正在等待的后端</strong>进行交流。一方面是典型的<strong>公共 html 静态结构</strong>，另一方面是一个包含多个 web 服务的 <strong>Raku</strong> 模块，用于等待来自前端人员的 web 请求。</p>
 
-<p>然后 <a href="https://github.com/ramiroencinas/wap6">Wap6</a> 诞生了（Web App Perl6）。</p>
+<p>然后 <a href="https://github.com/ramiroencinas/wap6">Wap6</a> 诞生了（Web App Raku）。</p>
 
 <h2 id="wap6-的结构">Wap6 的结构</h2>
 
@@ -276,11 +276,11 @@ if (!doNotTrack) {
 <li>webservices</li>
 </ul>
 
-<p><strong>公共</strong>文件夹包含友好的前端东西，比如静态 html，javascript，css 等，也就是<strong>前端</strong>开发者空间。 <strong>webservices</strong> 文件夹包含<strong>后端</strong>的东西：一个 <strong>Perl6</strong> 模块，包括每个 webservice 的一个函数。</p>
+<p><strong>公共</strong>文件夹包含友好的前端东西，比如静态 html，javascript，css 等，也就是<strong>前端</strong>开发者空间。 <strong>webservices</strong> 文件夹包含<strong>后端</strong>的东西：一个 <strong>Raku</strong> 模块，包括每个 webservice 的一个函数。</p>
 
-<p>相同的文件夹级别包含解决方案入口点，一个 <strong>Perl6</strong> 脚本，其中包括初始化服务器参数，其中包含路由和 webservices 之间的映射：</p>
+<p>相同的文件夹级别包含解决方案入口点，一个 <strong>Raku</strong> 脚本，其中包括初始化服务器参数，其中包含路由和 webservices 之间的映射：</p>
 
-<pre><code class="language-perl6">my %webservices =
+<pre><code class="language-raku">my %webservices =
   '/ws1' =&gt; ( &amp;ws1, 'html' ),
   '/ws2' =&gt; ( &amp;ws2, 'json' )
 ;
@@ -290,14 +290,14 @@ if (!doNotTrack) {
 
 <p>所有到 webservices 的路由都在 <strong>％webservices</strong> 散列中，并通过其他有用的命名参数传递给主函数 <strong>wap</strong>：</p>
 
-<pre><code class="language-perl6">wap(:$server-ip, :$server-port, :$default-html, :%webservices);
+<pre><code class="language-raku">wap(:$server-ip, :$server-port, :$default-html, :%webservices);
 </code></pre>
 
 <h2 id="wap6-的核心">Wap6 的核心</h2>
 
 <p><strong>wap</strong> 函数位于 Wap6 使用的核心 lib 模块的外面，并包含并发和优雅的 V12 引擎：</p>
 
-<pre><code class="language-perl6">react {   
+<pre><code class="language-raku">react {   
   whenever IO::Socket::Async.listen($server-ip,$server-port) -&gt; $conn {
     whenever $conn.Supply(:bin) -&gt; $buf {
       my $response = response(:$buf, :$current-dir, :$default-html, :%webservices);
@@ -316,9 +316,9 @@ if (!doNotTrack) {
 
 <p>响应函数验证 <strong>$buf</strong> 并从请求头中提取 HTTP 方法，可以是 <strong>GET</strong> 或 <strong>POST</strong>（我认为将来它不会支持更多的 HTTP 方法）。使用 <strong>GET</strong> 方法时，它将 URL 参数（如果有的话）放入 <strong>$get-params</strong>。 <strong>POST</strong> 方法的情况下，它将主体请求放入 <strong>$body</strong>。</p>
 
-<p>然后是时候检查 Web 客户端是否请求了 webservice。 <strong>$get-params</strong> 包含了 <strong>URI</strong> 并用 <a href="https://github.com/perl6-community-modules/uri">URI 模块</a>提取，最终结果放在 <strong>$path</strong>：</p>
+<p>然后是时候检查 Web 客户端是否请求了 webservice。 <strong>$get-params</strong> 包含了 <strong>URI</strong> 并用 <a href="https://github.com/raku-community-modules/uri">URI 模块</a>提取，最终结果放在 <strong>$path</strong>：</p>
 
-<pre><code class="language-perl6">given $path {
+<pre><code class="language-raku">given $path {
   when %webservices{&quot;$_&quot;}:exists {
     my ( &amp;ws, $direct-type ) = %webservices{&quot;$_&quot;};
     my $type = content-type(:$direct-type);
@@ -335,9 +335,9 @@ if (!doNotTrack) {
 <li>webservice 输出。</li>
 </ul>
 
-<p>可调用 webservice <strong>＆ws</strong> 可以是 <strong>ws1</strong>，位于 webservices 文件夹的 Perl6 模块中：</p>
+<p>可调用 webservice <strong>＆ws</strong> 可以是 <strong>ws1</strong>，位于 webservices 文件夹的 Raku 模块中：</p>
 
-<pre><code class="language-perl6">sub ws1 ( :$get-params, :$body ) is export {
+<pre><code class="language-raku">sub ws1 ( :$get-params, :$body ) is export {
   if $get-params { return 'From ws1: ' ~ $get-params; }
   if $body { return 'From ws1: ' ~ $body; }
 }
@@ -349,7 +349,7 @@ if (!doNotTrack) {
 
 <p>放弃所有其他可能性后，如果客户端请求公用文件夹中托管的静态文件（如html，js，css等），则：</p>
 
-<pre><code class="language-perl6">given $path {
+<pre><code class="language-raku">given $path {
 ..
   default {
     my $filepath = &quot;$current-dir/public/$path&quot;;
@@ -367,17 +367,17 @@ if (!doNotTrack) {
 
 <p>我很满意 <strong>Wap6</strong> 的结果。我并不假装它增长很多，但我总是想继续添加<strong>更多功能</strong>：SSL支持（完成！），会话管理（进行中），Cookie，文件上传等。</p>
 
-<p>Perl6 为表执行并发网络操作提供了非常强大的方法：<a href="https://docs.perl6.org/type/IO::Socket::Async">IO::Socket::Async</a>，一个杰作。另外，使用 <strong>Perl6</strong>，您可以根据需要混合使用面向对象，过程式和函数式范式。借助这些功能，您可以设计一个并发异步服务并快速实现。</p>
+<p>Raku 为表执行并发网络操作提供了非常强大的方法：<a href="https://docs.raku.org/type/IO::Socket::Async">IO::Socket::Async</a>，一个杰作。另外，使用 <strong>Raku</strong>，您可以根据需要混合使用面向对象，过程式和函数式范式。借助这些功能，您可以设计一个并发异步服务并快速实现。</p>
 
-<p>如果您希望在 <strong>Perl6</strong> 生态系统中使用 HTTP 服务和并发性更严肃的方法，请看看 <a href="http://cro.services/">Cro</a>，它代表了一个很好的机会，可以将 <strong>Perl6</strong> 作为 HTTP 服务空间中的强大实体。Jonathan Worthington 在同样的 Advent Calendar 的第九天写的就是<a href="https://perl6advent.wordpress.com/2017/12/09/http-and-web-sockets-with-cro">关于 Cro</a>。</p>
+<p>如果您希望在 <strong>Raku</strong> 生态系统中使用 HTTP 服务和并发性更严肃的方法，请看看 <a href="http://cro.services/">Cro</a>，它代表了一个很好的机会，可以将 <strong>Raku</strong> 作为 HTTP 服务空间中的强大实体。Jonathan Worthington 在同样的 Advent Calendar 的第九天写的就是<a href="https://rakuadvent.wordpress.com/2017/12/09/http-and-web-sockets-with-cro">关于 Cro</a>。</p>
 
-<p>同时，我将继续使用 <strong>Wap6</strong>，以脚本的方式，贡献 <strong>Perl6</strong> 生态系统，并从世界上最好的编程人员那里学习，我的意思是：<strong>Perl</strong> 和 <strong>Perl6</strong> 程序员，当然:-)</p>
+<p>同时，我将继续使用 <strong>Wap6</strong>，以脚本的方式，贡献 <strong>Raku</strong> 生态系统，并从世界上最好的编程人员那里学习，我的意思是：<strong>Perl</strong> 和 <strong>Raku</strong> 程序员，当然:-)</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
             
           </div>
         
@@ -394,7 +394,7 @@ if (!doNotTrack) {
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-logo/" data-toggle="tooltip" data-placement="top" title="Perl 6 logo">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-01-28-perl-6-logo/" data-toggle="tooltip" data-placement="top" title="Raku logo">Next Post &rarr;</a>
             </li>
           
         </ul>

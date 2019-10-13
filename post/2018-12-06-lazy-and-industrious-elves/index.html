@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (236 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (235 words)
   
   
 </span>
@@ -235,26 +235,26 @@ if (!doNotTrack) {
 
 <p>对圣诞老人来说，圣诞节总是一年中最忙碌的时刻。 幸运的是，圣诞老人有很多帮手。 他们总是做一些小工作和家务，只是为了创造最好的假日季节体验！</p>
 
-<p><a href="https://modules.perl6.org/dist/Object::Delayed">Object::Delayed</a> 模块为圣诞老人的快乐精灵添加了两个非常有趣的精灵！ 他们的名字是 <code>slack</code> 和 <code>catchup</code>!</p>
+<p><a href="https://modules.raku.org/dist/Object::Delayed">Object::Delayed</a> 模块为圣诞老人的快乐精灵添加了两个非常有趣的精灵！ 他们的名字是 <code>slack</code> 和 <code>catchup</code>!</p>
 
 <h2 id="lazy-slack">Lazy slack</h2>
 
 <p>那个懒散的(<code>slack</code>)精灵确实非常懒惰。 懒散(<code>slack</code>)精灵不会做任何事情，直到你真的需要他去做。 虽然人们可以认为这是精灵中非常糟糕的性格特征，但它也是一种非常生态的特征。 人们可以认为这个懒散的(<code>slack</code>)精灵是他们所有人中最环保的精灵！ 你有多少次要求精灵为你做点事情，然后却没用过那个精灵辛苦工作的结果？ 即使它只是到处移动的被回收的电子，但仍然需要能量来移动它们！ 特别是, 如果那些电子被用来告诉其他精灵做一些遥远的事情，就像在外部数据库中一样！</p>
 
-<pre><code class="language-perl6">use Object::Delayed;
+<pre><code class="language-raku">use Object::Delayed;
 my $dbh = slack { DBIish.connect(...) }
 </code></pre>
 
 <p>这就是你需要的 <code>$dbh</code> 变量，它只在实际需要时才与数据库建立连接。 当然，如果你想对该数据库进行查询，那么也可以使其懒惰！</p>
 
-<pre><code class="language-perl6">use Object::Delayed;
+<pre><code class="language-raku">use Object::Delayed;
 my $dbh = slack { DBIish.connect(...) }
 my $sth = slack { $dbh.prepare(...) }
 </code></pre>
 
 <p>由于语句句柄也是懒惰的，因此在实际需要之前它实际上不会进行查询准备。</p>
 
-<pre><code class="language-perl6">use Object::Delayed;
+<pre><code class="language-raku">use Object::Delayed;
 my $dbh = slack { DBIish.connect(...) }
 my $sth = slack { $dbh.prepare(...) }
 # lotsa program
@@ -265,7 +265,7 @@ if $needed {
 
 <p>因此，如果 <code>$needed</code> 为 true，调用 <code>.execute</code> 函数将使 <code>$sth</code> 成为一个真正的 statemement 句柄，因为它使 <code>$dbh</code> 成为真正的数据库句柄。 那不是很好吗？ 因为如果你不需要它，所有进行查询准备的精灵都可以做其他的事情，而建立数据库连接的精灵也可以做其他事情。 更不用说数据库中的精灵们根本不知道你最初计划建立一个数据库连接！</p>
 
-<p>当然，如果您确实需要数据库连接，那么告诉数据库的精灵们您已经完成了这一点总是一个好主意。 在 Perl 6 中，这不会自动发生，因为圣诞老人不会跟踪每个精灵的行为。 圣诞老人喜欢委派责任！ 当您离开需要数据库句柄的代码部分时，通常会告诉数据库精灵您已完成的工作。</p>
+<p>当然，如果您确实需要数据库连接，那么告诉数据库的精灵们您已经完成了这一点总是一个好主意。 在 Raku 中，这不会自动发生，因为圣诞老人不会跟踪每个精灵的行为。 圣诞老人喜欢委派责任！ 当您离开需要数据库句柄的代码部分时，通常会告诉数据库精灵您已完成的工作。</p>
 
 <pre><code>LEAVE .disconnect with $dbh;
 </code></pre>
@@ -280,7 +280,7 @@ if $needed {
 
 <p>当你告诉 <code>catchup</code> 精灵做某事时，<code>catchup</code> 精灵会立即找到另一个精灵去做实际的工作并告诉你它完成了。 最有可能的不是。 当你真正想要使用你要求 <code>catchup</code> 精灵做的结果时，有两种可能性：如果另一个精灵完成并且结果可用，你将立即从<code>catchup</code> 精灵那里得到它。 如果其他精灵尚未完成，它将让你等到另一个精灵完成：它会迫使你赶上！ 那看起来怎么样？</p>
 
-<pre><code class="language-perl6">use Object::Delayed;
+<pre><code class="language-raku">use Object::Delayed;
 my $foo = catchup { sleep 5; &quot;Merry&quot; }      # sleep is just
 my $bar = catchup { sleep 9; &quot;Christmas&quot; }  # another word
 my $baz = catchup { sleep 8; &quot;everyone&quot; }   # for baking
@@ -304,7 +304,7 @@ say “Took { now - INIT now } seconds”;
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         

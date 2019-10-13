@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Awesome Async Interfaces with Raku</title>
+  <meta property="og:title" content="Awesome Async Interfaces with Raku" />
+  <meta name="twitter:title" content="Awesome Async Interfaces with Raku" />
+  <meta name="description" content="A tutorial for writing IRC bots with Raku">
+  <meta property="og:description" content="A tutorial for writing IRC bots with Raku">
+  <meta name="twitter:description" content="A tutorial for writing IRC bots with Raku">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-04-27-raku%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-27-raku%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Awesome Async Interfaces with Raku</h1>
+                
+                  
+                    <h2 class="post-subheading">A tutorial for writing IRC bots with Raku</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on April 26, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1251 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="irc-client-raku-multi-server-irc-or-awesome-async-interfaces-with-raku-https-rakudo-party-post-irc-client-perl-6-multi-server-irc-module"><a href="https://rakudo.party/post/IRC-Client-Perl-6-Multi-Server-IRC-Module">IRC::Client: Raku Multi-Server IRC (or Awesome Async Interfaces with Raku)</a></h1>
+
+<p>我在 2015 年圣诞节编写了我的第一个 Raku 程序 - 一个新年 IRC 派对机器人工具。这项工作包括发布 <a href="https://github.com/zoffixznet/raku-IRC-Client/">IRC::Client</a> 模块. 我从这个语言中找到了童年的乐趣并且在假期喝了不少酒, 结果就是这个模块差强人意。</p>
+
+<p>最近，我需要一个用于某些 Raku bug 队列工作的工具，因此我决定花费一个周末，从头开始重新设计并重写这个模块。在过去的几个月中，有好几个人请求我这么做，所以我想我还会写一篇关于如何使用该模块的教程 - 作为一名主拖延者的道歉。如果你对 IRC 不感兴趣，我希望本教程将作为 Raku 中异步，非阻塞接口的一个通用示例。</p>
+
+<h2 id="基础">基础</h2>
+
+<p>要创建一个 IRC 机器人，实例化一个 <code>IRC::Client</code> 对象，给它一些基本信息，并调用 <code>.run</code> 方法。实现所需的所有功能，并将它们作为方法名称匹配要收听的事件的类，并通过 <code>.plugins</code> 属性传递。当发生 IRC 事件时，它会按照您指定的顺序传递给所有插件，如果某个插件要求它处理事件，则停止。</p>
+
+<p>这里有一个简单的 IRC 机器人，它可以响应在频道中发送的消息，通知和发送给它的私人消息。响应是 bot 收到的大写原始消息：</p>
+
+<pre><code class="language-raku">use IRC::Client;
+.run with IRC::Client.new:
+    :nick&lt;MahBot&gt;
+    :host&lt;irc.freenode.net&gt;
+    :channels&lt;#raku&gt;
+    :debug
+    :plugins(class { method irc-to-me ($_) { .text.uc } })
+</code></pre>
+
+<p>以下是运行时机器人的表现：</p>
+
+<pre><code>&lt;Zoffix&gt; MahBot, I ♥ you!
+&lt;MahBot&gt; Zoffix, I ♥ YOU!
+</code></pre>
+
+<p><code>:nick</code>, <code>:host</code> 和 <code>:channels</code> 是机器人的昵称、它应该连接的服务器以及它应该加入的频道。<code>:debug</code> 控制输出显示多少调试。我们在这儿将它的值设置为 <code>1</code>，以获得稀疏的调试输出，只是为了看看发生了什么。提示：安装可选的 <a href="https://modules.raku.org/repo/Terminal::ANSIColor">Terminal::ANSIColor</a> 模块以使调试输出更好看：</p>
+
+<p><img src="https://rakudo.party/assets/pics/irc-bot/debug-output.png" alt="img" /></p>
+
+<p>对于.plugins属性，我们提交了一个匿名类。如果您有多个插件，只需按照您希望他们在以下位置接收事件的顺序将其全部插入即可：</p>
+
+<pre><code class="language-raku">:plugins(PlugFirst.new, PlugSecond.new(:conf), class { ... })
+</code></pre>
+
+<p>我们 uppercasing 机器人的插件类有一个方法，用于监听 <code>irc-to-me</code> 事件，每当机器人在频道中寻址或发送私人消息或通知时触发。它接收一个参数：<code>IRC::Client::Message</code> 角色的对象之一。我们将它粘贴到 <code>$_</code> topical 变量中以节省一些输入。</p>
+
+<p>我们通过返回该方法的值来回复该事件。原始文本包含在消息对象的 <code>.text</code> 属性内，因此我们将调用 <code>.uc</code> 方法来使内容成为大写，这就是我们的答复。</p>
+
+<p>就像我们的 uppercasing 机器人一样棒，它和极地考察中的空调一样有用。让我们教一些技巧。</p>
+
+<h2 id="变得更聪明">变得更聪明</h2>
+
+<p>我们将调用我们的新插件 <code>Trickster</code>，它会响应命令 <code>time</code> - 这会给出当地时间和日期 - 以及 <code>temp</code> - 将温度在华氏温度和摄氏温度之间转换。代码如下：</p>
+
+<pre><code class="language-raku">use IRC::Client;
+
+class Trickster {
+    method irc-to-me ($_) {
+        given .text {
+            when /time/ { DateTime.now }
+            when /temp \s+ $&lt;temp&gt;=\d+ $&lt;unit&gt;=[F|C]/ {
+                when $&lt;unit&gt; eq 'F' { &quot;That's {($&lt;temp&gt; - 32) × .5556}°C&quot; }
+                default             { &quot;That's { $&lt;temp&gt; × 1.8 + 32   }°F&quot; }
+            }
+            'huh?'
+        }
+    }
+}
+
+.run with IRC::Client.new:
+    :nick&lt;MahBot&gt;
+    :host&lt;irc.freenode.net&gt;
+    :channels&lt;#raku&gt;
+    :debug
+    :plugins(Trickster)
+</code></pre>
+
+<pre><code>&lt;Zoffix&gt; MahBot, time
+&lt;MahBot&gt; Zoffix, 2016-07-23T19:00:15.795551-04:00
+&lt;Zoffix&gt; MahBot, temp 42F
+&lt;MahBot&gt; Zoffix, That's 5.556°C
+&lt;Zoffix&gt; MahBot, temp 42C
+&lt;MahBot&gt; Zoffix, That's 107.6°F
+&lt;Zoffix&gt; MahBot, I ♥ you!
+&lt;MahBot&gt; Zoffix, huh?
+</code></pre>
+
+<p>代码很简单：我们将给定的文本传递给几个正则表达式。如果它包含单词 <code>time</code>，我们会返回当前时间。如果它包含 <code>temp</code>，我们会根据给定的数字是由 F 还是 C 后缀来做适当的数学运算。如果没有匹配发生，我们最终会返回好奇的 <code>huh?</code>。</p>
+
+<p>这个新的和改进的插件存在一个明显的问题：机器人不再喜欢我！虽然我会幸免于难，但我怀疑任何其他插件都会教导机器人再次爱上它，因为尽管 <code>Trickster</code> 识别不了它能处理的任何命令，但它会消耗所有的 <code>irc-to-me</code> 事件。让我们解决这个问题！</p>
+
+<h2 id="passing-the-buck">Passing The Buck</h2>
+
+<p>有一个特殊的值可以被事件处理程序返回来表示它没有处理事件，并且它应该被传播到更多的插件和事件处理程序。该值由 <code>IRC::Client::Plugin</code> 角色提供的 <code>.NEXT</code> 属性提供，插件可以 <code>does</code> 获取该属性。当您使用 <code>IRC::Client</code> 时，该角色会自动导出。</p>
+
+<p>让我们看看利用这个特殊值的一些代码。请注意，由于 <code>.NEXT</code> 是一个属性，我们无法在类型对象上查找属性，因此您需要执行额外的步骤并在将插件类提供给插件时进行实例化。</p>
+
+<pre><code class="language-raku">use IRC::Client;
+
+class Trickster does IRC::Client::Plugin {
+    method irc-to-me ($_) {
+        given .text {
+            when /time/ { DateTime.now }
+            when /temp \s+ $&lt;temp&gt;=\d+ $&lt;unit&gt;=[F|C]/ {
+                when $&lt;unit&gt; eq 'F' { &quot;That's {($&lt;temp&gt; - 32) × .5556}°C&quot; }
+                default             { &quot;That's { $&lt;temp&gt; × 1.8 + 32   }°F&quot; }
+            }
+            $.NEXT;
+        }
+    }
+}
+
+class BFF does IRC::Client::Plugin {
+    method irc-to-me ($_) {
+        when .text ~~ /'♥'/ { 'I ♥ YOU!' };
+        $.NEXT;
+    }
+}
+
+.run with IRC::Client.new:
+    :nick&lt;MahBot&gt;
+    :host&lt;irc.freenode.net&gt;
+    :channels&lt;#raku&gt;
+    :debug
+    :plugins(Trickster.new, BFF.new)
+</code></pre>
+
+<pre><code>&lt;Zoffix&gt; MahBot, time
+&lt;MahBot&gt; Zoffix, 2016-07-23T19:37:45.788272-04:00
+&lt;Zoffix&gt; MahBot, temp 42F
+&lt;MahBot&gt; Zoffix, That's 5.556°C
+&lt;Zoffix&gt; MahBot, temp 42C
+&lt;MahBot&gt; Zoffix, That's 107.6°F
+&lt;Zoffix&gt; MahBot, I ♥ you!
+&lt;MahBot&gt; Zoffix, I ♥ YOU!
+</code></pre>
+
+<p>我们现在有两个插件都订阅 <code>irc-to-me</code> 事件。 <code>:plugins</code> 属性首先接收 <code>Trickster</code> 插件，因此它的事件处理程序将首先运行。如果收到的文本与 <code>Trickster</code> 的正则表达式中的任何一个都不匹配，它将从该方法返回 <code>$.NEXT</code>。</p>
+
+<p>这标志着客户端对象去寻找其他处理程序，所以它得到 <code>BFF</code> 的 <code>irc-to-me</code> 处理程序。在那里，我们回复输入是否包含爱心，如果不是，我们也会在这里先发制人地返回 <code>$.NEXT</code>。</p>
+
+<p>当机器人恢复了晴朗的表情时，它的代价是相当多的额外打字。我们能做些什么呢？</p>
+
+<h2 id="多种所有的东西">多种所有的东西！</h2>
+
+<p>Raku 支持多重分派以及签名中的类型约束。最重要的是，针对具有 <code>.text</code> 属性的 <code>IRC::Client</code> 消息对象的 smartmatch 使用该属性的值。结合所有这三项功能，您最终得出的代码非常简洁：</p>
+
+<pre><code class="language-raku">use IRC::Client;
+class Trickster {
+    multi method irc-to-me ($ where /time/) { DateTime.now }
+    multi method irc-to-me ($ where /temp \s+ $&lt;temp&gt;=\d+ $&lt;unit&gt;=[F|C]/) {
+        $&lt;unit&gt; eq 'F' ?? &quot;That's {($&lt;temp&gt; - 32) × .5556}°C&quot;
+                       !! &quot;That's { $&lt;temp&gt; × 1.8 + 32   }°F&quot;
+    }
+}
+
+class BFF { method irc-to-me ($ where /'♥'/) { 'I ♥ YOU!' } }
+
+.run with IRC::Client.new:
+    :nick&lt;MahBot&gt;
+    :host&lt;irc.freenode.net&gt;
+    :channels&lt;#raku&gt;
+    :debug
+    :plugins(Trickster, BFF)
+</code></pre>
+
+<pre><code>&lt;Zoffix&gt; MahBot, time
+&lt;MahBot&gt; Zoffix, 2016-07-23T19:59:44.481553-04:00
+&lt;Zoffix&gt; MahBot, temp 42F
+&lt;MahBot&gt; Zoffix, That's 5.556°C
+&lt;Zoffix&gt; MahBot, temp 42C
+&lt;MahBot&gt; Zoffix, That's 107.6°F
+&lt;Zoffix&gt; MahBot, I ♥ you!
+&lt;MahBot&gt; Zoffix, I ♥ YOU!
+</code></pre>
+
+<p>在签名之外，我们不再需要消息对象，所以我们在其位置使用匿名 <code>$</code> 参数。然后，我们使用正则表达式匹配来<a href="https://raku.party/post/Perl-6-Types--Made-for-Humans#subsets:tailor-madetypes">约束</a>该参数，因此只有在消息文本与该正则表达式匹配时才会调用该方法。由于在失败的匹配中不会调用任何方法，因此我们不再需要混淆整个 <code>$.NEXT</code> 业务或将任何角色组合到我们的插件中。</p>
+
+<p>我们方法的主体每个都有一个生成事件响应值的语句。在温度转换器中，我们使用三元运算符根据要求的单位选择要用于转换的公式，是的，签名类型约束匹配中创建的 <code>$&lt;unit&gt;</code> 和 <code>$&lt;temp&gt;</code> 捕获可用于该方法的主体。</p>
+
+<h2 id="一个充满活力的一天">一个充满活力的一天</h2>
+
+<p>除了标准的命名和数字 IRC 协议事件外，<code>IRC::Client</code> 还提供便利事件。其中之一我们已经看到：<code>irc-to-me</code> 事件。这样的事件是分层的，所以一个 IRC 事件可以触发几个 <code>IRC::Client</code> 的事件。例如，如果有人在我们的频道中访问我们的机器人，则会触发以下事件链：</p>
+
+<pre><code>irc-addressed  ▶  irc-to-me  ▶  irc-privmsg-channel  ▶  irc-privmsg  ▶  irc-all
+</code></pre>
+
+<p>事件从“最窄”到“最宽”排列：只有在我们的机器人被访问时，才可以触发 <code>irc-addressed</code>。 <code>irc-to-me</code> 也可以通过通知和私信触发，所以它更宽; <code>irc-privmsg-channel</code> 包含所有频道消息，所以它仍然更宽;而 <code>irc-privmsg</code> 也包含私人信息给我们的机器人。这条链最终以它们最广泛的事件结束：<code>irc-all</code>。</p>
+
+<p>如果插件的事件处理程序返回除 <code>$.NEXT</code> 以外的任何值，则事件链中的后续事件将不会被触发，就像后面的插件链中的插件不会因为相同的原因而被尝试一样。在尝试处理更广泛的事件之前，所有插件都会尝试每个事件。</p>
+
+<p>通过将 <code>:debug</code> 属性设置为 3 级或更高级别，您将在调试输出中获得发射事件。这是我们的机器人试图处理未知的命令 <code>blarg</code>，然后处理我们定义的 <code>irc-to-me</code> 事件处理程序处理的命令 <code>time</code>：</p>
+
+<p><img src="https://rakudo.party/assets/pics/irc-bot/debug-output2.png" alt="img" /></p>
+
+<p>所有的 <code>IRC::Client</code> 事件都有 <code>irc-</code> 前缀，所以你可以在你的插件中自由定义辅助方法，而不必担心与事件处理程序发生冲突。说到发射体&hellip;&hellip;</p>
+
+<h2 id="keep-em-commin">Keep &lsquo;Em Commin&rsquo;</h2>
+
+<p>响应命令是甜蜜的，所有的，但许多机器人可能会想自己的意志产生一些输出。作为一个例子，让我们编写一个僵尸程序，当我们有未读的 GitHub 通知时，它会来烦我们！</p>
+
+<pre><code class="language-raku">use IRC::Client;
+use HTTP::Tinyish;
+use JSON::Fast;
+
+class GitHub::Notifications does IRC::Client::Plugin {
+    has Str  $.token  = %*ENV&lt;GITHUB_TOKEN&gt;;
+    has      $!ua     = HTTP::Tinyish.new;
+    constant $API_URL = 'https://api.github.com/notifications';
+
+    method irc-connected ($) {
+        start react {
+            whenever self!notification.grep(* &gt; 0) -&gt; $num {
+                $.irc.send: :where&lt;Zoffix&gt;
+                            :text(&quot;You have $num unread notifications!&quot;)
+                            :notice;
+            }
+        }
+    }
+
+    method !notification {
+        supply {
+            loop {
+                my $res = $!ua.get: $API_URL, :headers{ :Authorization(&quot;token $!token&quot;) };
+                $res&lt;success&gt; and emit +grep *.&lt;unread&gt;, |from-json $res&lt;content&gt;;
+                sleep $res&lt;headers&gt;&lt;X-Poll-Interval&gt; || 60;
+            }
+        }
+    }
+}
+
+.run with IRC::Client.new:
+    :nick&lt;MahBot&gt;
+    :host&lt;irc.freenode.net&gt;
+    :channels&lt;#raku&gt;
+    :debug
+    :plugins(GitHub::Notifications.new)
+</code></pre>
+
+<pre><code>[00:25:41] -MahBot- Zoffix, You have 20 unread notifications!
+[00:26:41] -MahBot- Zoffix, You have 19 unread notifications!
+</code></pre>
+
+<p>我们创建了 <code>does</code> <code>IRC::Client::Plugin</code> 角色的 <code>GitHub::Notifications</code> 类。该角色为我们提供了 <code>$.irc</code> 属性，这是我们将用于在 IRC 上向我们发送消息的 <code>IRC::Client</code> 对象。</p>
+
+<p>除了 <code>irc-connected</code> 方法外，该类与其他类相似：用于我们的 GitHub API token 的公共 <code>$.token</code> 属性，用于保留 HTTP User Agent 对象的私有 <code>$!ua</code> 属性以及私有 <code>notification</code> 方法，那儿是所有行动发生的地方。</p>
+
+<p>在 <code>notification</code> 内部，我们创建一个 <a href="https://docs.raku.org/type/Supply">Supply</a>，它将发出我们拥有的未读通知的数量。它通过使用 <a href="https://modules.raku.org/repo/HTTP::Tinyish">HTTP::Tinyish</a> 对象来访问 GitHub API 端点。在第 24 行，它解析成功请求返回的 JSON，并且将任何 <code>unread</code> 属性设置为 <code>true</code> 的项目的消息列表作为grep。前缀 <code>+</code> 运算符将列表转换为一个 <code>Int</code>，它是找到的总项目，这是我们从 supply 中 <code>emit</code> 的内容。</p>
+
+<p>当我们成功连接到 IRC 服务器时，会触发 <code>irc-connected</code> 的事件处理程序。其中，我们开始(<code>start</code>)一个事件循环，当我们收到通知方法给出的当前未读消息数时，就会作出反应。由于我们只关注那些我们确实有未读信息的情况，我们也会在供应方面发出警告，在没有任何信息的情况下过滤掉这些情况（是的，我们可以避免首先发布这些信息，但我会在这里炫耀 Raku 😸）。一旦我们确实有未读消息，我们只需调用 <code>IRC::Client</code> 的 <code>.send</code> 方法，要求它向我们发送一条 IRC 通知，其中包含未读消息的总数。真的太棒了！</p>
+
+<h2 id="不要等待">不要等待</h2>
+
+<p>我们介绍了我们发送给 IRC 的异步数据提供或者我们立即回复命令的情况。机器人命令花费一些时间来执行并不罕见。在这些情况下，我们不希望机器人在命令执行时锁定。</p>
+
+<p>感谢 Raku 的优秀并发原语，它不必！如果事件处理程序返回 <a href="https://docs.raku.org/type/Promise">Promise</a>，则客户端对象将在保留(kept)时使用其 <code>.result</code> 作为答复。这意味着为了使我们的阻塞事件处理程序非阻塞，我们所要做的就是将它的主体封装在一个 <code>start {...}</code> 块中。什么可能更简单？</p>
+
+<p>作为一个例子，我们来编写一个能够响应 <code>bash</code> 命令的机器人。该机器人将获取 <a href="http://bash.org/?random1">bash.org/?random1</a>，从 HTML 中解析出引号，并将它们保存在缓存中。当命令被触发时，机器人会发出其中一个引号，当缓存用完时重复提取。特别是，我们不希望机器人在检索和解析网页时阻塞。以下是完整的代码：</p>
+
+<pre><code class="language-raku">use IRC::Client;
+use Mojo::UserAgent:from&lt;Perl5&gt;;
+
+class Bash {
+    constant $BASH_URL = 'http://bash.org/?random1';
+    constant $cache    = Channel.new;
+    has        $!ua    = Mojo::UserAgent.new;
+
+    multi method irc-to-me ($ where /bash/) {
+        start $cache.poll or do { self!fetch-quotes; $cache.poll };
+    }
+
+    method !fetch-quotes {
+        $cache.send: $_
+            for $!ua.get($BASH_URL).res.dom.find('.qt').each».all_text.lines.join: '  ';
+    }
+}
+
+.run with IRC::Client.new:
+    :nick&lt;MahBot&gt;
+    :host&lt;irc.freenode.net&gt;
+    :channels&lt;#raku&gt;
+    :debug
+    :plugins(Bash.new)
+</code></pre>
+
+<pre><code>&lt;Zoffix&gt; MahBot, bash
+&lt;MahBot&gt; Zoffix, &lt;Time&gt; that reminds me of when Manning and I installed OS/2 Warp4 on a box and during the install routine it said something to the likes of 'join the hundreds of people on the internet'
+</code></pre>
+
+<p>对于页面抓取的需求，我选择了 Perl 5 的 <a href="https://metacpan.org/pod/Mojo::UserAgent">Mojo::UserAgent</a>，因为它有一个内置的 HTML 解析器。 <code>:from&lt;Perl5&gt;</code> 副词向编译器指示我们要加载一个 Perl 5 模块，而不是 Raku 模块。</p>
+
+<p>由于我们是多线程的，因此我们将使用一个 <a href="https://docs.raku.org/type/Channel">Channel</a> 作为线程安全队列用于缓存目的。我们订阅了文字包含单词 <code>bash</code> 的 <code>irc-to-me</code> 事件。当触发事件处理程序时，我们使用 <code>start</code> 关键字跳出一个新线程。然后，我们轮训(<code>.poll</code>)缓存并使用缓存的值（如果有的话），否则，逻辑将移动到调用读取引用私有方法的 <code>do</code> 块，并在完成时再次轮询缓存，获得新鲜引用。所有的说法和做法，引用将是我们从事件处理程序返回的 <code>Promise</code> 的结果。</p>
+
+<p><code>fetch-quotes</code> 方法触发我们的 <code>Mojo::UserAgent</code> 对象，它从网站获取随机引用页面，找到所有 <code>class=&quot;qt&quot;</code> 的 HTML 元素 - 这些元素是带引号的段落。然后，我们使用 hyper 方法调用将这些段落转换为文本，并通过 <code>for</code> 循环将最终列表提供给我们的 <code>$cache Channel</code>。在那里，我们将我们的机器人无阻塞地连接到 IRC 世界的宿主。并谈到你可能想要过滤的东西&hellip;</p>
+
+<h2 id="注意你的言行">注意你的言行！</h2>
+
+<p>我们的机器人将很快被禁止，如果它向频道投入大量的信息。一个明显的解决方案是在我们的插件中包含逻辑，如果输出太大，会使用 pastebin。然而，将这样的东西添加到我们编写的每个插件是非常不切实际的。幸运的是，<code>IRC::Client</code> 支持过滤器！</p>
+
+<p>对于任何发出 <code>NOTICE</code> 或 <code>PRIVMSG</code> IRC命令的方法，<code>IRC::Client</code> 都会通过给出的类传递输出 <code>:filters</code> 属性。这意味着我们可以设置一个过滤器，无论它来自哪个插件，它都会自动粘贴大容量的输出。</p>
+
+<p>我们将重新使用我们的 bash.org 引用机器人，除了这次它会将大量引用粘贴到 <a href="pastebin::Shadowcat">Shadowcat pastebin</a> 中。让我们看看一些代码！</p>
+
+<pre><code class="language-raku">use IRC::Client;
+use Pastebin::Shadowcat;
+use Mojo::UserAgent:from&lt;Perl5&gt;;
+
+class Bash {
+    constant $BASH_URL = 'http://bash.org/?random1';
+    constant $cache    = Channel.new;
+    has        $!ua    = Mojo::UserAgent.new;
+
+    multi method irc-to-me ($ where /bash/) {
+        start $cache.poll or do { self!fetch-quotes; $cache.poll };
+    }
+
+    method !fetch-quotes {
+        $cache.send: $_
+            for $!ua.get($BASH_URL).res.dom.find('.qt').each».all_text;
+    }
+}
+
+.run with IRC::Client.new:
+    :nick&lt;MahBot&gt;
+    :host&lt;irc.freenode.net&gt;
+    :channels&lt;#zofbot&gt;
+    :debug
+    :plugins(Bash.new)
+    :filters(
+        -&gt; $text where .lines &gt; 1 || .chars &gt; 300 {
+            Pastebin::Shadowcat.new.paste: $text.lines.join: &quot;\n&quot;;
+        }
+    )
+</code></pre>
+
+<pre><code>&lt;Zoffix&gt; MahBot, bash
+&lt;MahBot&gt; Zoffix, &lt;intuit&gt; hmm maybe sumtime next week i will go outside'
+&lt;Zoffix&gt; MahBot, bash
+&lt;MahBot&gt; Zoffix, http://fpaste.scsys.co.uk/528741
+</code></pre>
+
+<p>完成所有过滤工作的代码很小，很容易错过 - 这是上述程序中的最后5行。 <code>:filters</code> 属性接收一个 <a href="https://docs.raku.org/type/Callable">Callables</a> 列表，在这里我们传递一个尖号块。在其签名中，我们将文本限制为超过 1 行或超过 300 个字符，因此只有满足这些条件时，我们的过滤器才会运行。在块内部，我们只需使用 <a href="https://modules.raku.org/repo/Pastebin::Shadowcat">Pastebin::Shadowcat</a> 模块将输出放到 pastebin 中。其 <code>.paste</code> 方法返回新创建的粘贴的 URL，这是我们的过滤器将用其替换原始内容的东西。太棒了！</p>
+
+<h2 id="它像黄油一样传播">它像黄油一样传播</h2>
+
+<p>在过去，当我使用其他 IRC 客户端工具时，每当有人要求我将机器人放置在其他服务器上时，该过程很简单：将代码复制到另一个目录，更改配置并完成。几乎有道理的是，新服务器意味着一个“新” bot：不同的频道，不同的昵称等等。</p>
+
+<p>在 Raku 的 IRC::Client 中，我尝试重新想象一下：服务器仅仅是消息的另一个标识符，还有一个频道或昵称。这意味着将您的机器人连接到多个服务器就如同通过以下方式添加新的服务器配置一样简单：</p>
+
+<pre><code class="language-raku">use IRC::Client;
+
+class BFF {
+    method irc-to-me ($ where /'♥'/) { 'I ♥ YOU!' }
+}
+
+.run with IRC::Client.new:
+    :debug
+    :plugins(BFF)
+    :nick&lt;MahBot&gt;
+    :channels&lt;#zofbot&gt;
+    :servers(
+        freenode =&gt; %(
+            :host&lt;irc.freenode.net&gt;,
+        ),
+        local =&gt; %(
+            :nick&lt;P6Bot&gt;,
+            :channels&lt;#zofbot #raku&gt;,
+            :host&lt;localhost&gt;,
+        )
+    )
+</code></pre>
+
+<pre><code>[on Freenode server]
+&lt;ZoffixW&gt; MahBot, I ♥ you
+&lt;MahBot&gt; ZoffixW, I ♥ YOU!
+
+[on local server]
+&lt;ZoffixW&gt; P6Bot, I ♥ you
+&lt;P6Bot&gt; ZoffixW, I ♥ YOU!
+</code></pre>
+
+<p>首先，我们的插件浑然不知它正运行在多台服务器上。它的回复被重定向到正确的服务器，<code>IRC::Client</code> 仍然以线程安全的方式执行它的方法处理程序。</p>
+
+<p>在 <code>IRC::Client</code> 的构造函数中，我们添加了接收 <code>Hash</code> 的 <code>:servers</code> 属性。此 <code>Hash</code> 的键是服务器的标签，值是服务器特定的配置，可覆盖全局设置。因此，<code>freenode</code> 服务器从我们提供给 <code>IRC::Client</code> 的 <code>:nick</code> 和 <code>:channels</code> 属性获取它的 <code>:nick</code> 和 <code>:channels</code>，而 <code>local</code> 服务器使用它自己的值覆盖那些。</p>
+
+<p>调试输出现在已经打印了服务器标签，以指示该事件应用于于哪个服务器：</p>
+
+<p><img src="https://rakudo.party/assets/pics/irc-bot/debug-output3.png" alt="img" /></p>
+
+<p>所以，只是告诉机器人连接到另一台服务器，我们使它成为多服务器，而不对我们的插件做任何改变。但是当我们想要与特定的服务器交谈时，我们会做什么？</p>
+
+<h2 id="发送它的方式">发送它的方式</h2>
+
+<p>当 bot 是 <code>.run</code> 时，客户端对象将 <code>:servers</code> 属性的值更改为 <code>IRC::Client::Server</code> 对象。那些将它们串联到它们所代表的服务器的标签，我们可以从 Message Object 的 <code>.server</code> 属性或 Client Object 的 <code>.servers</code> hash 属性中获取它们。客户端对象方法（如 <code>.send</code> 或 <code>.join</code>）采用可选的服务器属性来控制消息将被发送到哪个服务器，并且缺省值为 <code>*</code>，这意味着发送到每个服务器。</p>
+
+<p>这是一个连接到两台服务器并加入多个频道的 bot。每当它看到一条频道消息时，它就会将它转发到所有其他频道，并在由 <code>local</code> 标签指定的服务器上向用户 <code>Zoffix</code> 发送私信。</p>
+
+<pre><code class="language-raku">use IRC::Client;
+
+class Messenger does IRC::Client::Plugin {
+    method irc-privmsg-channel ($e) {
+        for $.irc.servers.values -&gt; $server {
+            for $server.channels -&gt; $channel {
+                next if $server eq $e.server and $channel eq $e.channel;
+
+                $.irc.send: :$server, :where($channel), :text(
+                    &quot;$e.nick() over at $e.server.host()/$e.channel() says $e.text()&quot;
+                );
+            }
+        }
+
+        $.irc.send: :where&lt;Zoffix&gt;
+                    :text('I spread the messages!')
+                    :server&lt;local&gt;;
+    }
+}
+
+.run with IRC::Client.new:
+    :debug
+    :plugins[Messenger.new]
+    :nick&lt;MahBot&gt;
+    :channels&lt;#zofbot&gt;
+    :servers{
+        freenode =&gt; %(
+            :host&lt;irc.freenode.net&gt;,
+        ),
+        local =&gt; %(
+            :nick&lt;P6Bot&gt;,
+            :channels&lt;#zofbot #raku&gt;,
+            :host&lt;localhost&gt;,
+        )
+    }
+</code></pre>
+
+<pre><code>[on Freenode server/#zofbot]
+&lt;ZoffixW&gt; Yey!
+[on local server/#zofbot]
+&lt;P6Bot&gt; ZoffixW over at irc.freenode.net/#zofbot says Yey!
+[on local server/#raku]
+&lt;P6Bot&gt; ZoffixW over at irc.freenode.net/#zofbot says Yey!
+[on local server/ZoffixW private message queue]
+&lt;P6Bot&gt; I spread the messages!
+</code></pre>
+
+<p>我们订阅 <code>irc-privmsg</code> 频道事件，当它被触发时，我们遍历所有的服务器。对于每个服务器，我们遍历所有连接的频道，并使用 <code>$.irc.send</code> 方法向该特定频道和服务器发送消息，除非服务器和频道与消息来源相同。</p>
+
+<p>消息本身在消息对象上调用 <code>.nick</code>，<code>.channel</code>和 <code>.server.host</code> 方法来标识消息的发送者和来源。</p>
+
+<h2 id="结论">结论</h2>
+
+<p>Raku 提供了强大的并发原语，调度方法和自省功能，使您可以构建出令人惊叹的非阻塞，基于事件的接口。其中之一是 <code>IRC::Client</code>，可让您使用 IRC 网络。它在这里。准备好了。用它吧！</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/irc/">IRC</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-04-16-cro-http-client/" data-toggle="tooltip" data-placement="top" title="Cro::HTTP::Client">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-05-05-datetime/" data-toggle="tooltip" data-placement="top" title="DateTime">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

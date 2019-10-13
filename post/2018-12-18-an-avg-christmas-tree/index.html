@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1076 words)
+  <i class="fa fa-clock-o"></i> 6 minutes (1075 words)
   
   
 </span>
@@ -258,9 +258,9 @@ if (!doNotTrack) {
 
 <p>这描述了侧面90的绿色填充正方形（单元基本上是抽象的并且相对于显示器的尺寸，因为图像的可缩放特性意味着它们可能不等同于例如像素。）</p>
 
-<p>现在我们可以在程序中使用一些变量插值打印出XML，但是对于比上面的例子更复杂的事情，这可能会非常繁琐且容易出错。幸运的是Perl 6有一个方便的<a href="https://github.com/moritz/svg">SVG</a>模块，它负责从描述它的数据结构中实际创建格式良好的XML文档。因此，我们的示例矩形可以使用以下内容创建：</p>
+<p>现在我们可以在程序中使用一些变量插值打印出XML，但是对于比上面的例子更复杂的事情，这可能会非常繁琐且容易出错。幸运的是Raku有一个方便的<a href="https://github.com/moritz/svg">SVG</a>模块，它负责从描述它的数据结构中实际创建格式良好的XML文档。因此，我们的示例矩形可以使用以下内容创建：</p>
 
-<pre><code class="language-perl6">use SVG;
+<pre><code class="language-raku">use SVG;
 
 say SVG.serialize(
     svg =&gt; [
@@ -270,7 +270,7 @@ say SVG.serialize(
 );
 </code></pre>
 
-<p>本质上，参数<code>serialize</code>是一组嵌套的<a href="https://docs.perl6.org/type/Pair">Pairs</a>：其中value是标量类型，键和值用于形成XML属性，其中值是List of Pairs，这将创建一个以键命名的XML元素，列表中的每个对都被解释为如上所述，从而允许以简单的声明方式构建复杂文档。</p>
+<p>本质上，参数<code>serialize</code>是一组嵌套的<a href="https://docs.raku.org/type/Pair">Pairs</a>：其中value是标量类型，键和值用于形成XML属性，其中值是List of Pairs，这将创建一个以键命名的XML元素，列表中的每个对都被解释为如上所述，从而允许以简单的声明方式构建复杂文档。</p>
 
 <p>所以我们可以通过构造适当的数据结构来生成我们的示例圣诞树，但是因为我们的图像中可能至少有四个对象（三个三角形和一个用于树干的矩形）及其相关属性，这可能会非常不合适如果我们想改变某些东西，很难改变。</p>
 
@@ -347,7 +347,7 @@ say $drawing.serialize;
 
 <p>我们将使用一个新的Polygon类来描述<code>polygon</code>原语：</p>
 
-<pre><code class="language-perl6">use SVG;
+<pre><code class="language-raku">use SVG;
 
 class SVG::Drawing {
     role Element {
@@ -412,7 +412,7 @@ class SVG::Drawing {
 
 <p>所以现在我们可以生成类似外观的图像，但是以不同的方式构造，例如：</p>
 
-<pre><code class="language-perl6">use SVG::Drawing;
+<pre><code class="language-raku">use SVG::Drawing;
 
 my SVG::Drawing $drawing = SVG::Drawing.new(elements =&gt; [ 
     SVG::Drawing::Group.new(elements =&gt; [
@@ -447,7 +447,7 @@ say $drawing.serialize;
 
 <p>最明显的方法是创建一个包含属性的新角色，并提供一个方法，该方法返回表示序列化中属性的对列表：</p>
 
-<pre><code class="language-perl6">use SVG;
+<pre><code class="language-raku">use SVG;
 
 class SVG::Drawing {
     role Element {
@@ -522,7 +522,7 @@ class SVG::Drawing {
 
 <p>现在我们处于一个很好的位置来创建我们的圣诞树，因为我们需要的三角形只是一个多边形的三面形状，但我们想要不止一个并且顶点的计算将是相当重复，加上，因为我为了简单而任意选择使用等边三角形，其他两个角的坐标可以从顶点和边长度的坐标计算，所以如果我们有一个三角类它可以自我计算，我们只需关注自己的大小和位置：</p>
 
-<pre><code class="language-perl6">use SVG;
+<pre><code class="language-raku">use SVG;
 
 class SVG::Drawing {
     role Element {
@@ -622,7 +622,7 @@ class SVG::Drawing {
 
 <p>无论如何，现在我们可以用最少的代码绘制一个三角形：</p>
 
-<pre><code class="language-perl6">use SVG::Drawing;
+<pre><code class="language-raku">use SVG::Drawing;
 
 my SVG::Drawing $drawing = SVG::Drawing.new(
     elements =&gt; [ 
@@ -646,7 +646,7 @@ say $drawing.serialize;
 
 <p>现在我们有了创建简单树的组成部分的方法，因此我们可以将它们与一个相对简单的脚本放在一起：</p>
 
-<pre><code class="language-perl6">use SVG::Drawing;
+<pre><code class="language-raku">use SVG::Drawing;
 
 my SVG::Drawing $drawing = SVG::Drawing.new(
     elements =&gt; [ 
@@ -702,13 +702,13 @@ say $drawing.serialize;
 
 <p>SVG是一个非常丰富的规范，具有大量基元，可满足大多数绘图需求，我们只实现了绘制树所需的最小值，但这可以扩展为支持您想要的任何类型的绘图。</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/tree.png?w=788" alt="树" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/tree.png?w=788" alt="树" /></p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         

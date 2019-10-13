@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Ping Pang in Raku</title>
+  <meta property="og:title" content="Ping Pang in Raku" />
+  <meta name="twitter:title" content="Ping Pang in Raku" />
+  <meta name="description" content="Message passing between threads using channels">
+  <meta property="og:description" content="Message passing between threads using channels">
+  <meta name="twitter:description" content="Message passing between threads using channels">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-raku/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-raku/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Ping Pang in Raku</h1>
+                
+                  
+                    <h2 class="post-subheading">Message passing between threads using channels</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 3, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 4 minutes (676 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="ping-pang-in-raku">Ping Pang in Raku</h1>
+
+<p>使用 channels 在线程之间传递消息是一种管理并发的简单方法。</p>
+
+<p>一位朋友最近向我展示了一个很酷的程序，用 elixir 来演示消息传递 - 两个线程通过来回传递递增的数字来计数。快速搜索出现了一些<a href="https://github.com/oelizondo/pingpong/blob/master/pingpong.exs">例子</a>。</p>
+
+<p>我决定在 Raku 中实现这个。这就是我想出来的→</p>
+
+<pre><code class="language-raku">my ($ping, $pong) = Channel.new xx 2;
+ 
+sub ping {
+   while $ping.receive -&gt; $n {
+       say &quot;ping $n (thread #{$*THREAD.id})&quot;;
+       $pong.send: $n + 1;
+   }
+}
+ 
+sub pong {
+   while $pong.receive -&gt; $n {
+       last if $n &gt;= 5;
+       say &quot;pong $n (thread #{$*THREAD.id})&quot;;
+       $ping.send: $n + 1;
+   }
+}
+ 
+$ping.send: 1;
+await Promise.anyof(
+ (start ping),
+ (start pong)
+);
+</code></pre>
+
+<p><code>$ping</code> 和 <code>$pong</code> 都是 channel。子程序 ping 和 pong 从它们相应的 channel 接收并发送到另一个。</p>
+
+<p>如果你运行它，你会看到从 1 到 5 的数字。</p>
+
+<pre><code>ping 1 (thread #3)
+pong 2 (thread #4)
+ping 3 (thread #3)
+pong 4 (thread #4)
+ping 5 (thread #3)
+</code></pre>
+
+<p>接下来我想封装一些常见的行为。这是一个发送和接收的乒乓球“玩家” - 所以让我们创建一个 <strong>Player</strong> 类。</p>
+
+<p>我想 “ping” 和 “pong” 是每个玩家的球拍发出的声音，因为他们击球，所以我添加了一个 <code>$.sound</code> 属性。并且 <code>$.opponent</code> 属性代表每个玩家的对手。</p>
+
+<p><code>$.channel</code> 是处理（即方法委派）发送和接收方法的另一个属性。</p>
+
+<pre><code class="language-raku">class Player {
+    has $.sound;
+    has $.opponent is rw;
+    has $.channel handles &lt;send receive&gt; = Channel.new;
+    has $.promise;
+    method play {
+        $!promise =
+         start {
+            while self.receive -&gt; $n {
+                last if $n == 6;
+                say &quot;$.sound $n (thread #{$*THREAD.id})&quot;;
+                $.opponent.send: $n + 1;
+            }
+        }
+    }
+}
+ 
+my ($ping,$pong) = &lt;ping pong&gt;.map: { Player.new(:$^sound) }
+($ping, $pong)&gt;&gt;.opponent = ($pong, $ping);
+($ping, $pong)&gt;&gt;.play;
+$ping.send: 1;
+await $pong.promise;
+</code></pre>
+
+<p>运行这个给我们类似于最后一个：</p>
+
+<pre><code>ping 1 (thread #3)
+pong 2 (thread #4)
+ping 3 (thread #3)
+pong 4 (thread #4)
+ping 5 (thread #3)
+</code></pre>
+
+<p>现在让我们更像乒乓球：</p>
+
+<ul>
+<li>有四分之一的机会错过球。</li>
+<li>第一个到第一个胜利，你必须赢两个。</li>
+<li>每五点，切换谁服务。</li>
+</ul>
+
+<pre><code class="language-raku">class Player {
+    has $.sound handles 'Str';
+    has $.opponent is rw;
+    has $.channel handles &lt;send receive&gt; = Channel.new;
+    has $.promise;
+ 
+    method missed {
+        $.promise.status == Kept;
+    }
+    method play {
+        $!promise = start {
+            while self.receive -&gt; $n {
+                last if (^4).pick==1;
+                print &quot;{$.sound} $n &quot;;
+                self.opponent.send: $n + 1;
+            }
+        }
+    }
+}
+ 
+my @sounds = &lt;ping pong&gt;;
+my @players = @sounds.map: { Player.new(:$^sound) }
+@players».opponent «=» @players.rotate;
+my $serving = @players[0];
+my %score = @players Z=&gt; 0 xx *;
+ 
+@players».play;
+repeat {
+  $serving.send(1);
+  await Promise.anyof(@players».promise);
+  with @players.first({ .missed }) -&gt; $missed {
+      print &quot;Miss by $missed.&quot;;
+      %score{$missed.opponent}++;
+      $missed.play;
+  }
+  say &quot; Score: &quot; ~ %score{@sounds}.join(' to ');
+  if %score.values.sum %% 5 {
+      $serving .= opponent;
+      say &quot;--Now serving: $serving--&quot;;
+  }
+} until %score.values.any &gt;= 11 and (abs [-] %score.values) &gt;= 2;
+ 
+say &quot;\nWinner: &quot; ~ %score.invert.Hash{ %score.values.max };
+say &quot;Final Score: &quot; ~ %score{@sounds}.join(' to ');
+</code></pre>
+
+<pre><code>ping 1 pong 2 ping 3 pong 4 Miss by ping. Score: 0 to 1
+ping 1 pong 2 ping 3 pong 4 ping 5 Miss by pong. Score: 1 to 1
+ping 1 Miss by pong. Score: 2 to 1
+ping 1 pong 2 Miss by ping. Score: 2 to 2
+ping 1 pong 2 ping 3 pong 4 ping 5 pong 6 ping 7 pong 8 ping 9 Miss by pong. Score: 3 to 2
+--Now serving: pong--
+pong 1 ping 2 pong 3 ping 4 Miss by pong. Score: 4 to 2
+pong 1 ping 2 pong 3 ping 4 pong 5 Miss by ping. Score: 4 to 3
+pong 1 Miss by ping. Score: 4 to 4
+pong 1 Miss by ping. Score: 4 to 5
+pong 1 ping 2 pong 3 ping 4 pong 5 Miss by ping. Score: 4 to 6
+--Now serving: ping--
+ping 1 pong 2 Miss by ping. Score: 4 to 7
+ping 1 pong 2 Miss by ping. Score: 4 to 8
+ping 1 pong 2 ping 3 pong 4 ping 5 Miss by pong. Score: 5 to 8
+ping 1 Miss by pong. Score: 6 to 8
+ping 1 pong 2 ping 3 Miss by pong. Score: 7 to 8
+--Now serving: pong--
+Miss by pong. Score: 8 to 8
+Miss by pong. Score: 9 to 8
+pong 1 ping 2 pong 3 Miss by ping. Score: 9 to 9
+pong 1 ping 2 pong 3 ping 4 pong 5 ping 6 pong 7 ping 8 Miss by pong. Score: 10 to 9
+pong 1 ping 2 Miss by pong. Score: 11 to 9
+--Now serving: ping--
+
+Winner: ping
+Final Score: 11 to 9
+</code></pre>
+
+<p>一些评论和注意事项：</p>
+
+<ul>
+<li><strong>$.sound</strong> 处理字符串化。</li>
+<li>如果 <em>promise</em> 是 <strong>Kept</strong> 的，循环退出，所以玩家错过了。</li>
+<li><strong>&gt;&gt;</strong> 与 » 相同 - 这就像 <strong>map</strong>。</li>
+<li><strong>在@sounds</strong> 中添加另一个条目会设置一个消息传递循环。</li>
+</ul>
+
+<h2 id="结论和进一步的想法">结论和进一步的想法</h2>
+
+<ul>
+<li>Channel 是在线程之间传递消息的好方法。</li>
+<li>Channels 和 Promises 可以是对象的属性。</li>
+<li>这对于消息传递的封装很方便。</li>
+</ul>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/channel/">Channel</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-08-02-%E4%BD%BF%E7%94%A8cro%E5%88%9B%E5%BB%BA%E5%8D%95%E9%A1%B5%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="使用 Cro 创建单页应用程序">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-08-04-intro-into-raku-regexes-and-grammars/" data-toggle="tooltip" data-placement="top" title="Intro Into Raku Regexes and Grammars">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

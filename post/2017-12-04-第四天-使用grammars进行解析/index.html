@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 9 minutes (1862 words)
+  <i class="fa fa-clock-o"></i> 9 minutes (1850 words)
   
   
 </span>
@@ -235,11 +235,11 @@ if (!doNotTrack) {
 
 <h1 id="第四天-使用-grammars-进行解析">第四天-使用 Grammars 进行解析</h1>
 
-<p>下面是从 <a href="https://www.apress.com/us/book/9781484232279">Parsing with Perl 6 Regexes and Grammars: A Recursive Descent into Parsing</a> 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。</p>
+<p>下面是从 <a href="https://www.apress.com/us/book/9781484232279">Parsing with Raku Regexes and Grammars: A Recursive Descent into Parsing</a> 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。</p>
 
 <p>这本书马上就要出版了。至少该书的电子版这个月应该可以购买, 纸质版的可以在 <a href="https://smile.amazon.com/dp/1484232275/">亚马逊</a> 预定了。原本最迟会在 2018 年元月发出, 但是幸运的是, 圣诞节你就可以看到了。</p>
 
-<p>下面你会看到第九章, 使用 Grammars 进行解析。前面的章节详细探讨了创建正则表达式块儿、正则表达式怎么和 Perl 6 代码进行交互、匹配对象、正则力学、常用正则技术，还有重用和组合正则。你可以通过阅读<a href="https://docs.perl6.org/language/regexes">正则表达式官方文档</a>来获取更多关于正则的背景。</p>
+<p>下面你会看到第九章, 使用 Grammars 进行解析。前面的章节详细探讨了创建正则表达式块儿、正则表达式怎么和 Raku 代码进行交互、匹配对象、正则力学、常用正则技术，还有重用和组合正则。你可以通过阅读<a href="https://docs.raku.org/language/regexes">正则表达式官方文档</a>来获取更多关于正则的背景。</p>
 
 <p>后面的章节涵盖了 action 类和对象, 怎么报告高质量的解析错误, Unicode 支持, 最后还有三个案例研究。</p>
 
@@ -347,7 +347,7 @@ token operator   {  '*' | '+' }
 
 <p>为了避免无限递归，你必须注意，每个可能的递归循环至少将游标位置推进了一个字符。在 <code>MathExpression</code> grammar 中，唯一可能的递归循环是 <code>sum</code>→<code>product</code>→<code>term</code>→<code>group</code>→<code>sum</code>，并且 <code>group</code> 只有在消耗了一个初始开口圆括号 <code>(</code> 时才匹配。</p>
 
-<p>如果递归不消耗字符，则它被称为*左递归*，并且需要特殊的语言支持, 这个 Perl 6 并不支持。一个例子是：</p>
+<p>如果递归不消耗字符，则它被称为*左递归*，并且需要特殊的语言支持, 这个 Raku 并不支持。一个例子是：</p>
 
 <pre><code class="language-perl">token a { &lt;a&gt;? 'a' }
 </code></pre>
@@ -440,14 +440,14 @@ multi sub MAIN(Bool :$test!) {
 
 <p>请注意，这只是开发人员的诊断工具; 如果你想给终端用户更好的错误信息，请阅读第 11 章的改进建议。</p>
 
-<p>您需要安装 Perl 6 的 <code>Grammar::Debugger</code> 模块，其中还包含 <code>Grammar::Tracer</code>。如果您使用 <code>moritzlenz/perl6-regex-alpine</code> 的 docker 镜像，这已经为您完成了。如果您通过其他方法安装了Perl 6，则需要在命令行上运行：</p>
+<p>您需要安装 Raku 的 <code>Grammar::Debugger</code> 模块，其中还包含 <code>Grammar::Tracer</code>。如果您使用 <code>moritzlenz/raku-regex-alpine</code> 的 docker 镜像，这已经为您完成了。如果您通过其他方法安装了Raku，则需要在命令行上运行：</p>
 
 <pre><code class="language-perl">zef install Grammar::Debugger
 </code></pre>
 
 <p>如果尚未安装 <code>zef</code>，请按照 <a href="https://github.com/ugexe/zef#installation">zef GitHub页面</a> 上的安装说明进行操作。</p>
 
-<p>让我们来看一下 TadeuszSośnierz 写的 Perl 6 模块 <a href="https://github.com/tadzik/perl6-Config-INI">Config::INI</a>。 它包含以下 <a href="https://github.com/tadzik/perl6-Config-INI/blob/master/lib/Config/INI.pm">grammar</a>（这儿稍微重新格式化了）：</p>
+<p>让我们来看一下 TadeuszSośnierz 写的 Raku 模块 <a href="https://github.com/tadzik/raku-Config-INI">Config::INI</a>。 它包含以下 <a href="https://github.com/tadzik/raku-Config-INI/blob/master/lib/Config/INI.pm">grammar</a>（这儿稍微重新格式化了）：</p>
 
 <pre><code class="language-perl">grammar INI {
     token TOP {
@@ -673,7 +673,7 @@ b = 2
 }
 </code></pre>
 
-<p>在令牌TOP中，：my％* SYMBOLS声明一个变量。 正则表达式中的声明以冒号（:)开始，以分号（;）结尾。 在它们之间，它们看起来像Perl 6中的正常声明。％sigil表示该变量是一个散列 - 一个字符串键到值的映射。 *使它成为一个动态变量 - 一个变量，不仅限于当前范围，而且对于从当前范围调用的代码（或正则表达式，也是代码）也是可见的。 由于这是一个非常大的范围，所以在大写字母中选择一个变量是自定义的。</p>
+<p>在令牌TOP中，：my％* SYMBOLS声明一个变量。 正则表达式中的声明以冒号（:)开始，以分号（;）结尾。 在它们之间，它们看起来像Raku中的正常声明。％sigil表示该变量是一个散列 - 一个字符串键到值的映射。 *使它成为一个动态变量 - 一个变量，不仅限于当前范围，而且对于从当前范围调用的代码（或正则表达式，也是代码）也是可见的。 由于这是一个非常大的范围，所以在大写字母中选择一个变量是自定义的。</p>
 
 <p>第二部分，在符号表中添加一个符号，发生在规则声明中：</p>
 
@@ -685,7 +685,7 @@ b = 2
     }
 </code></pre>
 
-<p>大括号内是常规的（非正则表达式）Perl 6代码，所以我们可以使用它来操作哈希％* SYMBOLS。 表达式$ <identifier>访问变量name2的捕获。 因此，如果此规则解析变量a，则此语句将设置％* SYMBOLS {&lsquo;a&rsquo;} = True。</p>
+<p>大括号内是常规的（非正则表达式）Raku代码，所以我们可以使用它来操作哈希％* SYMBOLS。 表达式$ <identifier>访问变量name2的捕获。 因此，如果此规则解析变量a，则此语句将设置％* SYMBOLS {&lsquo;a&rsquo;} = True。</p>
 
 <p>代码块的位置是相关的。 把它放在调用termlist之前意味着当术语列表被解析时变量已经是已知的，所以它接受像a = 2，a这样的输入。 如果我们首先调用termlist，这种输入被拒绝。</p>
 
@@ -698,7 +698,7 @@ b = 2
     }
 </code></pre>
 
-<p>你可能还记得在前面的例子中，&lt;？{&hellip;}&gt;执行一段Perl 6代码，如果它返回一个假值，则解析失败。 如果$ <identifier>不在％SYMBOLS中，这正是发生的情况。 在这个时候，令牌的非回溯性是很重要的。 如果被解析的变量是abc，并且变量a在％* SYMBOLS中，则回溯将尝试<identifier>的较短匹配，直到它碰到a，然后成功3。</p>
+<p>你可能还记得在前面的例子中，&lt;？{&hellip;}&gt;执行一段Raku代码，如果它返回一个假值，则解析失败。 如果$ <identifier>不在％SYMBOLS中，这正是发生的情况。 在这个时候，令牌的非回溯性是很重要的。 如果被解析的变量是abc，并且变量a在％* SYMBOLS中，则回溯将尝试<identifier>的较短匹配，直到它碰到a，然后成功3。</p>
 
 <p>由于在标记TOP中声明了％* SYMBOLS，所以当您尝试从语法外调用除TOP之外的其他规则时，必须复制此声明。 没有像我的％* SYMBOLS ;,一个像这样的调用声明</p>
 
@@ -851,7 +851,7 @@ grammar VariableLists {
 
 <p>令牌TOP创建类SymbolTable的新对象，声明调用声明方法，令牌变量调用方法检查声明。规则块在解析语句列表之前调用进入范围，之后保留范围。这个工作，但只有当语句列表可以被成功解析;如果不是，规则块在管理调用离开范围之前失败。</p>
 
-<p>对于这种情况，Perl 6有一个安全特性：如果在LEAVE语句前添加一个语句，那么在例程退出时，Perl 6可以在所有可能的情况下调用它（即使抛出异常）。由于LEAVE相位器只能在正则代码中使用，而不能在正则表达式中使用，所以我们需要将正则表达式包装在一个方法中：</p>
+<p>对于这种情况，Raku有一个安全特性：如果在LEAVE语句前添加一个语句，那么在例程退出时，Raku可以在所有可能的情况下调用它（即使抛出异常）。由于LEAVE相位器只能在正则代码中使用，而不能在正则表达式中使用，所以我们需要将正则表达式包装在一个方法中：</p>
 
 <pre><code class="language-perl">    method block {
         $*ST.enter-scope();
@@ -869,7 +869,7 @@ grammar VariableLists {
 
 <h2 id="总结">总结</h2>
 
-<p>Perl 6 的 Grammar 是编写递归下降解析器的一种声明方式。 如果没有回溯，他们就是可预测的; 在每一个时刻，我们都知道我们想要的 token 列表。</p>
+<p>Raku 的 Grammar 是编写递归下降解析器的一种声明方式。 如果没有回溯，他们就是可预测的; 在每一个时刻，我们都知道我们想要的 token 列表。</p>
 
 <p>Grammar 的递归性带来了左递归的风险，即递归路径不消耗任何字符的情况，从而导致无限循环。</p>
 
@@ -881,7 +881,7 @@ grammar VariableLists {
 2、在这一点上，<code>identifier</code> 不会解析其周围的空白是至关重要的。 因此，token 不关心空白的原则和调用这些 token 的 rules 解析空白。
 3、在这种情况下，这将是无害的，因为没有其他 rule 可以匹配变量的其余部分，导致解析错误。 但是在更复杂的情况下，这种无意的回溯会导致语法维护人员非常困惑的错误。</p>
 
-<p><a href="https://perl6advent.wordpress.com/2017/12/04/day-08-parsing-with-grammars-book-extract/">Day 4 – Parsing with Grammars</a></p>
+<p><a href="https://rakuadvent.wordpress.com/2017/12/04/day-08-parsing-with-grammars-book-extract/">Day 4 – Parsing with Grammars</a></p>
 
 
         
@@ -899,12 +899,12 @@ grammar VariableLists {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-perl6/" data-toggle="tooltip" data-placement="top" title="第三天 – LetterOps with Perl6">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2017-12-03-%E7%AC%AC%E4%B8%89%E5%A4%A9letterops-with-raku/" data-toggle="tooltip" data-placement="top" title="第三天 – LetterOps with Raku">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8perl6%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/" data-toggle="tooltip" data-placement="top" title="第五天 - 使用 Perl 6 签名解构参数">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2017-12-05-%E7%AC%AC%E4%BA%94%E5%A4%A9-%E4%BD%BF%E7%94%A8raku%E7%AD%BE%E5%90%8D%E8%A7%A3%E6%9E%84%E5%8F%82%E6%95%B0/" data-toggle="tooltip" data-placement="top" title="第五天 - 使用 Raku 签名解构参数">Next Post &rarr;</a>
             </li>
           
         </ul>

@@ -233,7 +233,7 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p><a href="https://perl6advent.wordpress.com/2016/12/23/">两年前</a>我已经在出现一篇 advent 文章里提到过 Bisectable，但自那时以来发生了很多变化，所以我觉得是时候简要介绍一下 <code>bisectable</code> 机器人和它的朋友们了。</p>
+<p><a href="https://rakuadvent.wordpress.com/2016/12/23/">两年前</a>我已经在出现一篇 advent 文章里提到过 Bisectable，但自那时以来发生了很多变化，所以我觉得是时候简要介绍一下 <code>bisectable</code> 机器人和它的朋友们了。</p>
 
 <p>首先，让我们来定义正在解决的问题。有时会<a href="https://github.com/rakudo/rakudo/issues?q=is%3Aopen+is%3Aissue+label%3Aregression">发生</a>提交引入意外更改行为（错误）。通常我们称之为回归，在某些情况下，找出错误并修复它的最简单方法是首先找到引入回归的提交。</p>
 
@@ -279,7 +279,7 @@ Merry Christmas!
 
 <h3 id="bisectable">Bisectable</h3>
 
-<p>在2016年，在看到那些必须手动运行 <code>git bisect</code> 的人（实际上，大部分是<a href="https://colabti.org/irclogger/irclogger_log/perl6?date=2016-05-17#l1353">我自己</a>）的痛苦之后，<a href="https://colabti.org/irclogger/irclogger_log/perl6?date=2016-05-17#l1335">我想知道</a>：</p>
+<p>在2016年，在看到那些必须手动运行 <code>git bisect</code> 的人（实际上，大部分是<a href="https://colabti.org/irclogger/irclogger_log/raku?date=2016-05-17#l1353">我自己</a>）的痛苦之后，<a href="https://colabti.org/irclogger/irclogger_log/raku?date=2016-05-17#l1335">我想知道</a>：</p>
 
 <blockquote>
 <p>有没有人想过为每一次提交构建rakudo，以便你可以快速运行git bisect？</p>
@@ -297,7 +297,7 @@ Merry Christmas!
 <p>perlpilot：是的</p>
 </blockquote>
 
-<p>三天后，机器人加入了频道。<a href="https://colabti.org/irclogger/irclogger_log/perl6?date=2016-05-20#l345">这些反应</a>非常有趣：</p>
+<p>三天后，机器人加入了频道。<a href="https://colabti.org/irclogger/irclogger_log/raku?date=2016-05-20#l345">这些反应</a>非常有趣：</p>
 
 <blockquote>
 <p>哇
@@ -306,7 +306,7 @@ OooOOOoooh
 Cooooool</p>
 </blockquote>
 
-<p>当时我们很少知道结果会怎样。即使我不知道它会变得多么有用。<a href="https://colabti.org/irclogger/irclogger_log/perl6?date=2018-11-13#l678">快进2年</a>：</p>
+<p>当时我们很少知道结果会怎样。即使我不知道它会变得多么有用。<a href="https://colabti.org/irclogger/irclogger_log/raku?date=2018-11-13#l678">快进2年</a>：</p>
 
 <blockquote>
 <p>关于提交的大小：我尽量保持它们尽可能小，并且尽可能地包含它们，以便
@@ -324,11 +324,11 @@ Cooooool</p>
 moritz：（2016-05-02）<a href="https://github.com/rakudo/rakudo/commit/949a7c7">https://github.com/rakudo/rakudo/commit/949a7c7</a></p>
 </blockquote>
 
-<p>但是，由于一个<a href="https://github.com/perl6/whateverable/commit/68ba961854b17298225dd9b886b2af874e567556">off-by-one</a>，它返回了错误的提交。实际提交是<a href="https://github.com/rakudo/rakudo/commit/e2f1fa7">e2f1fa7</a>，而<a href="https://github.com/rakudo/rakudo/commit/949a7c7">949a7c7</a>是其父级。</p>
+<p>但是，由于一个<a href="https://github.com/raku/whateverable/commit/68ba961854b17298225dd9b886b2af874e567556">off-by-one</a>，它返回了错误的提交。实际提交是<a href="https://github.com/rakudo/rakudo/commit/e2f1fa7">e2f1fa7</a>，而<a href="https://github.com/rakudo/rakudo/commit/949a7c7">949a7c7</a>是其父级。</p>
 
 <p>老实说，那时机器人非常糟糕。例如，它完全依赖于退出代码，所以你不能只是把 <code>2 + 2</code>抛给它并期望它检查输出。最终，实施了不同的模式，现在机器人首先检查起点上的行为（例如2015.12和HEAD），并确定执行二分法的最佳策略。例如，如果信号不同（例如SEGV），则它基于信号一分为二。如果信号相同，但退出代码不同，则使用退出代码。如果无法使用其他所有内容，则使用输出进行一分为二。</p>
 
-<p>请记住，如果<code>perl6</code>无法构建二进制文件，则可以检查二分法。这意味着在大多数情况下，您不需要添加自己的逻辑来跳过。它不仅将二分法时间从几十分钟缩短到几秒钟，而且还提供更可靠/正确的结果。</p>
+<p>请记住，如果<code>raku</code>无法构建二进制文件，则可以检查二分法。这意味着在大多数情况下，您不需要添加自己的逻辑来跳过。它不仅将二分法时间从几十分钟缩短到几秒钟，而且还提供更可靠/正确的结果。</p>
 
 <h3 id="存储">存储</h3>
 
@@ -336,13 +336,13 @@ moritz：（2016-05-02）<a href="https://github.com/rakudo/rakudo/commit/949a7c
 
 <p>话虽如此，我的服务器上没有那么奢侈。它有一个120 GB SSD的RAID，因此整个事情不仅要适应这么小的空间，而且还应该为系统的其余部分留出足够的空间。</p>
 
-<p>有很多实验（<a href="https://github.com/perl6/whateverable/issues/23">一</a>，<a href="https://github.com/perl6/whateverable/issues/117">二</a>）涉及找出节省空间的最佳策略，但*长话短说*，我们可以低至每个版本大约半兆字节！当然，它总是在压缩比和解压缩速度之间进行权衡，但使用现代压缩算法（<a href="https://github.com/facebook/zstd">zstd</a>，<a href="https://github.com/ckolivas/lrzip">lrzip</a>）一切都相对容易。</p>
+<p>有很多实验（<a href="https://github.com/raku/whateverable/issues/23">一</a>，<a href="https://github.com/raku/whateverable/issues/117">二</a>）涉及找出节省空间的最佳策略，但*长话短说*，我们可以低至每个版本大约半兆字节！当然，它总是在压缩比和解压缩速度之间进行权衡，但使用现代压缩算法（<a href="https://github.com/facebook/zstd">zstd</a>，<a href="https://github.com/ckolivas/lrzip">lrzip</a>）一切都相对容易。</p>
 
 <h3 id="更多机器人-更好">更多机器人，更好</h3>
 
-<p>在Bisectable发布后不久，人们看到了其他工具的机会。想要在特定提交上运行一些代码吗？当然，这有<a href="https://github.com/perl6/whateverable/wiki/Committable">一个机器人</a>。想下载预构建的rakudo存档而不是浪费你自己的cpu时间吗？是的，<a href="https://github.com/perl6/whateverable/wiki/Shareable">还有另一个机器人</a>。想要绘制一些关于rakudo的信息吗？<a href="https://github.com/perl6/whateverable/wiki/Statisfiable">当然有一个机器人！</a></p>
+<p>在Bisectable发布后不久，人们看到了其他工具的机会。想要在特定提交上运行一些代码吗？当然，这有<a href="https://github.com/raku/whateverable/wiki/Committable">一个机器人</a>。想下载预构建的rakudo存档而不是浪费你自己的cpu时间吗？是的，<a href="https://github.com/raku/whateverable/wiki/Shareable">还有另一个机器人</a>。想要绘制一些关于rakudo的信息吗？<a href="https://github.com/raku/whateverable/wiki/Statisfiable">当然有一个机器人！</a></p>
 
-<p>机器人一直持续增加直到我们有了共计<a href="https://github.com/perl6/whateverable/wiki"><strong>17个机器人！</strong></a>有些人认为这些机器人应该停止这样的倍增，也许人们是正确的。但我想重点是，现在很容易在Whateverable上为开发人员创建更多工具，这当然很棒。</p>
+<p>机器人一直持续增加直到我们有了共计<a href="https://github.com/raku/whateverable/wiki"><strong>17个机器人！</strong></a>有些人认为这些机器人应该停止这样的倍增，也许人们是正确的。但我想重点是，现在很容易在Whateverable上为开发人员创建更多工具，这当然很棒。</p>
 
 <h3 id="好的-现在怎么样">好的，现在怎么样？</h3>
 
@@ -350,7 +350,7 @@ moritz：（2016-05-02）<a href="https://github.com/rakudo/rakudo/commit/949a7c
 
 <h3 id="是的-blin">是的，Blin！</h3>
 
-<p>你可能听说过<a href="https://perl6.party/post/Perl-6-Release-Quality-Assurance-Full-Ecosystem-Toaster">Toaster</a>。Toaster是一种尝试在两个或多个修订版中安装生态系统中的每个模块的工具。例如，假设最后一个版本是2018.12，发布经理即将从主HEAD中删除rakudo版本。然后，您可以在 <code>2018.12</code>和<code>master</code> 上运行 toaster，它会显示哪些模块用于干净安装，但不再做。</p>
+<p>你可能听说过<a href="https://raku.party/post/Perl-6-Release-Quality-Assurance-Full-Ecosystem-Toaster">Toaster</a>。Toaster是一种尝试在两个或多个修订版中安装生态系统中的每个模块的工具。例如，假设最后一个版本是2018.12，发布经理即将从主HEAD中删除rakudo版本。然后，您可以在 <code>2018.12</code>和<code>master</code> 上运行 toaster，它会显示哪些模块用于干净安装，但不再做。</p>
 
 <p>这给了我们Rakudo可能出错的信息，但并没有告诉我究竟是什么。鉴于此帖主要是关于Bisectable，你可能会猜到这是怎么回事。</p>
 
@@ -358,9 +358,9 @@ moritz：（2016-05-02）<a href="https://github.com/rakudo/rakudo/commit/949a7c
 
 <p>Blin是Rakudo版本的质量保证工具。它用于在rakudo中查找回归，但与Toaster不同，它不仅告诉哪些模块不再可安装，还将rakudo一分为二，以找出导致问题的提交。当然，它是围绕Whateverable构建的，因此额外的功能不会花费太多（甚至不需要很多代码）。作为奖励，它生成了<a href="https://gist.github.com/AlexDaniel/d7b789eefb34db31ee14f16dadd9a3ad">很好的图形</a>来可视化问题如何从模块依赖性传播（虽然这不是很常见）。</p>
 
-<p>Blin的一个重要特性是它只尝试安装每个模块一次。因此，如果模块B依赖于模块A，A将被测试并安装一次，然后重新用于B的测试。因为这个过程是并行化的，您可能想知道它是如何实现的。<a href="https://github.com/perl6/Blin/blob/b535dc0d727a61047199dd6ee67d07d626941965/bin/blin.p6#L285">基本上</a>，它使用被低估的<code>react/whenever</code>功能：</p>
+<p>Blin的一个重要特性是它只尝试安装每个模块一次。因此，如果模块B依赖于模块A，A将被测试并安装一次，然后重新用于B的测试。因为这个过程是并行化的，您可能想知道它是如何实现的。<a href="https://github.com/raku/Blin/blob/b535dc0d727a61047199dd6ee67d07d626941965/bin/blin.p6#L285">基本上</a>，它使用被低估的<code>react/whenever</code>功能：</p>
 
-<pre><code class="language-perl6"># slightly simplified
+<pre><code class="language-raku"># slightly simplified
 react {
     for @modules -&gt; $module {
         whenever Promise.allof($module.depends.keys».done) {
@@ -376,7 +376,7 @@ react {
 
 <h3 id="未来">未来</h3>
 
-<p><a href="https://github.com/perl6/whateverable/issues">Whateverable</a>和<a href="https://github.com/perl6/Blin/issues">Blin</a>一起有243个未解决的问题。这两个项目都非常有用，而且非常有用，但正如我们所说，它们不是很棒。大多数问题相对容易和有趣，但它们需要时间。如果您有任何帮助，或者您想维护这些项目，请随时这样做。如果你想基于Whateverable构建自己的工具（我们可能需要很多！），请参阅这个<a href="https://gist.github.com/AlexDaniel/88b38af5db9adcf0b711ac3df31dd431">hello world gist</a>。</p>
+<p><a href="https://github.com/raku/whateverable/issues">Whateverable</a>和<a href="https://github.com/raku/Blin/issues">Blin</a>一起有243个未解决的问题。这两个项目都非常有用，而且非常有用，但正如我们所说，它们不是很棒。大多数问题相对容易和有趣，但它们需要时间。如果您有任何帮助，或者您想维护这些项目，请随时这样做。如果你想基于Whateverable构建自己的工具（我们可能需要很多！），请参阅这个<a href="https://gist.github.com/AlexDaniel/88b38af5db9adcf0b711ac3df31dd431">hello world gist</a>。</p>
 
 <p>🎅🎄， 🥞</p>
 
@@ -384,7 +384,7 @@ react {
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -401,7 +401,7 @@ react {
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/what-is-advent/" data-toggle="tooltip" data-placement="top" title="第二十四天 - 使用 Perl 6 进行主题建模">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/what-is-advent/" data-toggle="tooltip" data-placement="top" title="第二十四天 - 使用 Raku 进行主题建模">Next Post &rarr;</a>
             </li>
           
         </ul>

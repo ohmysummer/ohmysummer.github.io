@@ -215,7 +215,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (536 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (534 words)
   
   
 </span>
@@ -240,7 +240,7 @@ if (!doNotTrack) {
 
 <p>当调试代码的时候, 我经常添加一个计数变量以用于循环, 所以我能跟踪发生了什么, 或我能在代码片段中处理正迭代的部分数据集:</p>
 
-<pre><code class="language-perl6">my $event-no = 0;
+<pre><code class="language-raku">my $event-no = 0;
 for get_events() -&gt; $event {
     $event-no++;
     process-event($event);
@@ -250,7 +250,7 @@ for get_events() -&gt; $event {
 
 <p>如果你正在调试, 或者你正尝试在单行中节省空间, Perl  6 实际上有一个匿名状态变量(<em>anonymous state variables</em>)标记, 用不含名字的 <code>$</code>符号来标示(你还可以在很多可迭代对象身上使用 kv 方法来完成类似的东西, 但是匿名的 <code>$</code> 更普遍。)</p>
 
-<pre><code class="language-perl6">for get_events() -&gt; $event {
+<pre><code class="language-raku">for get_events() -&gt; $event {
     process-event($event);
     last if ++$ &gt;= 5;
 }
@@ -258,7 +258,7 @@ for get_events() -&gt; $event {
 
 <p>然而, 注意; 下面这样的用法是没有效果的:</p>
 
-<pre><code class="language-perl6">for get_events() -&gt; $event {
+<pre><code class="language-raku">for get_events() -&gt; $event {
     process-event($event);
     $++;
     last if $ &gt;= 5;
@@ -271,14 +271,14 @@ for get_events() -&gt; $event {
 
 <p>好吧, 让我们来看看 Rakudo 源代码, 可以吗?</p>
 
-<p>如你所想, 在 Perl 6 Grammar 中查找 <code>$</code> 是怎样被解析的将会是一个很困难的任务。所以我们让编译器自己来帮助我们! 我们会使用一个小例子:</p>
+<p>如你所想, 在 Raku Grammar 中查找 <code>$</code> 是怎样被解析的将会是一个很困难的任务。所以我们让编译器自己来帮助我们! 我们会使用一个小例子:</p>
 
-<pre><code class="language-perl6">for ^10 { $++ }
+<pre><code class="language-raku">for ^10 { $++ }
 </code></pre>
 
 <p>并让 Rakudo 吐出它生成的 <strong>AST</strong>, 专门用于查找变量:</p>
 
-<pre><code class="language-perl">  $ perl6 --target=ast -e 'for ^10 { $++ }' | grep Var
+<pre><code class="language-perl">  $ raku --target=ast -e 'for ^10 { $++ }' | grep Var
       - QAST::Var(attribute $!do)
       - QAST::Var(attribute $!do)
     - QAST::Var(local __args__ :decl(param))
@@ -304,7 +304,7 @@ for get_events() -&gt; $event {
                 - QAST::Var(local ctxsave)
 </code></pre>
 
-<p>你可能不会立即看到它, 但是那儿有一个可疑的声明: <code>$ANON_VAR__1</code>。现在我们有了一个搜索字符串并想得到更多相关的结果, 用 <a href="http://beyondgrep.com/">ack</a> 这样的工具搜索源代码, 我们会找到 <code>src/Perl6/Actions.nqp</code>这个文件。让我们深入进去!</p>
+<p>你可能不会立即看到它, 但是那儿有一个可疑的声明: <code>$ANON_VAR__1</code>。现在我们有了一个搜索字符串并想得到更多相关的结果, 用 <a href="http://beyondgrep.com/">ack</a> 这样的工具搜索源代码, 我们会找到 <code>src/Raku/Actions.nqp</code>这个文件。让我们深入进去!</p>
 
 <pre><code class="language-perl"># taken from rakudo@85d20f3
 sub declare_variable($/, $past, $sigil, $twigil, $desigilname, $trait_list, $shape?, :@post) {
@@ -344,7 +344,7 @@ sub declare_variable($/, $past, $sigil, $twigil, $desigilname, $trait_list, $sha
 
 <p>重新编译之后, 打开 <code>ROB_DEBUG</code> 环境变量并运行,  并使用 <code>--ll-exception</code>, 来确保内部构件被包含进了堆栈跟踪中:</p>
 
-<pre><code class="language-perl6">$ ROB_DEBUG=1 perl6 --ll-exception -e 'for ^10 { $++ }'
+<pre><code class="language-raku">$ ROB_DEBUG=1 raku --ll-exception -e 'for ^10 { $++ }'
 </code></pre>
 
 <p>我不会临时包含这个堆栈跟踪, 但是你可以自己生成它如果你愿意追随的话。通过查看出现在提到 <code>Actions.nqp:3160</code>（我插入异常的地方） 后面提到 <code>Grammar.nqp</code> 的第一个堆栈跟踪项, 我们来到 <code>Grammar.nqp</code>中的 <code>token variable</code>:</p>
@@ -371,14 +371,14 @@ token variable {
 }
 </code></pre>
 
-<p>这段代码对你没有什么意义如果你初学 Perl 6的话, 更不用说 Rakudo 源代码了。我认为这一句是最重要的:</p>
+<p>这段代码对你没有什么意义如果你初学 Raku的话, 更不用说 Rakudo 源代码了。我认为这一句是最重要的:</p>
 
-<pre><code class="language-perl6">| {} &lt;sigil&gt; &lt;!{ $*QSIGIL }&gt; &lt;?MARKER('baresigil')&gt; # try last, to allow sublanguages to redefine sigils (like &amp; in regex)
+<pre><code class="language-raku">| {} &lt;sigil&gt; &lt;!{ $*QSIGIL }&gt; &lt;?MARKER('baresigil')&gt; # try last, to allow sublanguages to redefine sigils (like &amp; in regex)
 </code></pre>
 
 <p>这个分支接受由符号唯一组成的变量。所以 <code>token variable</code> 匹配源代码中的每个裸的 <code>$</code> 实例, 并且每次发生都会调用 <code>Actions::declare_variable</code>, 生成不同的变量, 我用这个片段来说没明:</p>
 
-<pre><code class="language-perl6">for ^3 {
+<pre><code class="language-raku">for ^3 {
     say ++$;
     say ++$;
 }
@@ -418,12 +418,12 @@ token variable {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2016-03-11-perl-6-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2009/" data-toggle="tooltip" data-placement="top" title="Perl 6 圣诞月历-(2009)">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2016-03-11-raku-%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2009/" data-toggle="tooltip" data-placement="top" title="Raku 圣诞月历-(2009)">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2016-03-14-using-perl-6%E4%BA%8C/" data-toggle="tooltip" data-placement="top" title="Using Perl 6(二)">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2016-03-14-using-raku%E4%BA%8C/" data-toggle="tooltip" data-placement="top" title="Using Raku(二)">Next Post &rarr;</a>
             </li>
           
         </ul>

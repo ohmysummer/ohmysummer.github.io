@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Python Vs Raku</title>
+  <meta property="og:title" content="Python Vs Raku" />
+  <meta name="twitter:title" content="Python Vs Raku" />
+  <meta name="description" content="Python Vs Raku, 比较哪个写法更优雅简洁。
+zip() # OUTPUT What is your name? It is lancelot. What is your quest? It is the holy grail. What is your favorite color? It is blue.  Python
+questions = [&#39;name&#39;, &#39;quest&#39;, &#39;favorite color&#39;] answers = [&#39;lancelot&#39;, &#39;the holy grail&#39;, &#39;blue&#39;] for q, a in zip(questions, answers): print &#39;What is your {0}? It is {1}.&#39;.format(q, a)  Raku
+my @questions = (&#39;name&#39;, &#39; quest&#39;, &#39;favorite color&#39;); my @answers = (&quot;lancelot&quot;, &quot;the holy grail&quot;, &quot;blue&quot;); for zip(@questions, @answers) -&gt; ($question, $answer) { say &quot;What is you $question?">
+  <meta property="og:description" content="Python Vs Raku, 比较哪个写法更优雅简洁。
+zip() # OUTPUT What is your name? It is lancelot. What is your quest? It is the holy grail. What is your favorite color? It is blue.  Python
+questions = [&#39;name&#39;, &#39;quest&#39;, &#39;favorite color&#39;] answers = [&#39;lancelot&#39;, &#39;the holy grail&#39;, &#39;blue&#39;] for q, a in zip(questions, answers): print &#39;What is your {0}? It is {1}.&#39;.format(q, a)  Raku
+my @questions = (&#39;name&#39;, &#39; quest&#39;, &#39;favorite color&#39;); my @answers = (&quot;lancelot&quot;, &quot;the holy grail&quot;, &quot;blue&quot;); for zip(@questions, @answers) -&gt; ($question, $answer) { say &quot;What is you $question?">
+  <meta name="twitter:description" content="Python Vs Raku, 比较哪个写法更优雅简洁。
+zip() # OUTPUT What is your name? It is lancelot. What is your quest? It is the holy grail. What is your favorite color? It is blue.  Python
+questions = [&#39;name&#39;, &#39;quest&#39;, …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-09-19-python-vs-raku/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-19-python-vs-raku/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Python Vs Raku</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 19, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (1050 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>Python Vs Raku, 比较哪个写法更优雅简洁。</p>
+
+<h2 id="zip">zip()</h2>
+
+<pre><code># OUTPUT
+What is your name?  It is lancelot.
+What is your quest?  It is the holy grail.
+What is your favorite color?  It is blue.
+</code></pre>
+
+<p><strong>Python</strong></p>
+
+<pre><code class="language-python">questions = ['name', 'quest', 'favorite color']
+answers = ['lancelot', 'the holy grail', 'blue']
+for q, a in zip(questions, answers):
+     print 'What is your {0}?  It is {1}.'.format(q, a)
+</code></pre>
+
+<p><strong>Raku</strong></p>
+
+<pre><code class="language-raku">my @questions = ('name', ' quest',  'favorite color');
+my @answers = (&quot;lancelot&quot;, &quot;the holy grail&quot;, &quot;blue&quot;);
+for zip(@questions, @answers) -&gt; ($question, $answer) {
+    say &quot;What is you $question?  It is $answer&quot;;
+}
+</code></pre>
+
+<h2 id="按照日期字符串排序">按照日期字符串排序</h2>
+
+<p>给定一个列表，按照日期字符串进行排序:</p>
+
+<pre><code>list = [ {'date': '2010-04-01','people': 1047, 'hits': 4522},  
+         {'date': '2010-04-03', 'people': 617, 'hits': 2582},  
+         {'date': '2010-04-02', 'people': 736, 'hits': 3277}
+       ]
+</code></pre>
+
+<p><strong>Python</strong></p>
+
+<pre><code class="language-python">import operator
+list = [ {'date': '2010-04-01','people': 1047, 'hits': 4522},  
+         {'date': '2010-04-03', 'people': 617, 'hits': 2582},  
+         {'date': '2010-04-02', 'people': 736, 'hits': 3277}
+       ]
+sorted( list, key = operator.itemgetter('date') )
+</code></pre>
+
+<p>输出(默认是升序):</p>
+
+<pre><code>{'date': '2010-04-01', 'hits': 4522, 'people': 1047},\
+{'date': '2010-04-02', 'hits': 3277, 'people': 736}, \
+{'date': '2010-04-03', 'hits': 2582, 'people': 617}
+</code></pre>
+
+<p><strong>Raku</strong></p>
+
+<pre><code class="language-raku">my @days = Date.new('2005-02-28') .. Date.new('2016-09-22');
+my @list = &quot;/raku/&quot; &lt;&lt;~&lt;&lt; @days;
+
+# 根据日期进行排序
+
+# 降序
+my @sorted_des = @list.sort: { $^b.split('/')[2] leg $^a.split('/')[2] }
+say .key, &quot;\n&quot;, .values for @sorted_des.classy(*.substr(7,7)).sort( { .key } )
+
+# 如果对想对生成的散列再做一下加工（计算每个月有多少天）
+# 就对生成的散列使用 map, 利用散列的键和值重新做一个映射
+say .key, &quot; &quot;, ~.values for @sorted_des.classy(*.substr(7,7)).map( {   .key =&gt; .value.elems  } ).sort( { .key } )
+say .key, &quot; &quot;, ~.values for @sorted_des.classy(*.substr(7,7)).map( { ; .key =&gt; .value.elems  } ).sort( { .key } )
+say .key, &quot; &quot;, ~.values for @sorted_des.classy(*.substr(7,7)).map( {   .key =&gt; .value.elems; } ).sort( { .key } )
+
+
+# 升序
+# @list.sort: { .split('/')[2] };
+# @list.sort: { $^a.split('/')[2] leg $^b.split('/')[2] }
+
+</code></pre>
+
+<h2 id="统计字符串各字符出现的次数">统计字符串各字符出现的次数</h2>
+
+<p>abcdefghijklmnopqrstuvwxyz&hellip;abcdefghijklmnopqrstuvwxyz（1千万个a-z，不可直接a=1千万&hellip;&hellip;）中每个字母的个数。要求除了更好的方式（如更加Pythonic的方式），还要计算越快越好，并打印出代码执行时间。</p>
+
+<p><strong>Python</strong></p>
+
+<pre><code class="language-python"># -*- coding: utf-8 -*-
+&quot;&quot;&quot;
+下面这个例子就是使用 Counter 模块统计一段句子里面所有字符出现次数
+&quot;&quot;&quot;
+from collections import Counter
+
+s = &quot;sssdfdfwewqewfgfhghghgfhgfh10000000&quot;
+c = Counter(s)
+
+# 获取出现频率最高的5个字符
+print(c.most_common(5))
+
+# Result:
+[(' ', 54), ('e', 32), ('s', 25), ('a', 24), ('t', 24)]
+</code></pre>
+
+<p><strong>Raku</strong></p>
+
+<pre><code class="language-raku">my $a = ('a' .. 'z').roll(10000000);
+say .key, ' =&gt; ', .value for $a.cache.classify(*.Str).map({.key =&gt; .value.elems}).sort({-.value});
+</code></pre>
+
+<p>输出:（当然现在速度不能忍受 180s左右）</p>
+
+<pre><code>q =&gt; 385797
+a =&gt; 385584
+o =&gt; 385573
+e =&gt; 385391
+c =&gt; 385286
+p =&gt; 385222
+...
+</code></pre>
+
+<h2 id="dir-vs-methods">dir Vs ^methods</h2>
+
+<p>获取类中的所有方法:</p>
+
+<p><strong>Python</strong></p>
+
+<pre><code class="language-python">for item in dir(&quot;hello good people&quot;): print(item)
+</code></pre>
+
+<p><strong>Raku</strong></p>
+
+<pre><code class="language-raku">for &quot;hello good people&quot;.^methods -&gt; $method { say $method }
+</code></pre>
+
+<p>调用类中的每个方法:</p>
+
+<pre><code class="language-python">import copy
+
+def all_the_methods(thing):
+    for meth in dir(thing):
+        if meth.startswith('_'):
+            print(&quot;Skipping &quot; + meth)
+            continue
+
+        try:
+            print(meth, ' =&gt; ', getattr(copy.copy(thing), meth)())
+        except Exception as e:
+            print(Exception, &quot;:&quot;, e)
+
+
+all_the_methods(&quot;hello good people&quot;)
+</code></pre>
+
+<p>在 Python 中要将字符串当作<strong>函数名</strong> 使用时, 请使用 <code>getattr(调用者, 字符串方法)</code>。 具体请参考 <a href="https://taizilongxu.gitbooks.io/stackoverflow-about-python/content/59/README.html">通过函数名的字符串来调用这个函数</a>。来看看这一段方法的输出:</p>
+
+<pre><code>Skipping __add__
+...
+capitalize  =&gt;  Hello good people
+islower  =&gt;  True
+...
+lower  =&gt;  hello good people
+split  =&gt;  ['hello', 'good', 'people']
+&lt;class 'Exception'&gt; : translate() takes exactly one argument (0 given)
+...
+</code></pre>
+
+<p><strong>Raku</strong></p>
+
+<pre><code class="language-raku">sub all-the-methods($thing) {
+  for $thing.^methods -&gt; $method {
+    say &quot;{$method.name} =&gt; {$thing.clone.$method.gist}&quot;;
+    CATCH { default { say &quot;{$method.name} =&gt; ERROR&quot; } }
+  }
+}
+
+all-the-methods &lt;this is words&gt;;
+all-the-methods &quot;hello little fishies!&quot;;
+</code></pre>
+
+<p>接收一系列方法, 遍历这些方法并一次性调用它们。在这里我们做了一次克隆(<code>.clone</code>), 以使如果它是可变函数的话我们将在它的一个副本上工作。注意, <code>.clone</code> <strong>不是</strong> 深度复制, 所以它虽然能在我这个简单的字符串例子中工作但是它可能在其它东西上没有作用。<code>.gist</code> 调用给了我们结果一个很好的可打印版本。</p>
+
+<p>我们不用参数调用那些方法, 很多方法对不带参数不感冒。所以这儿我们提供了一个 CATCH 块以打印出通用信息 &ndash; 它在一个循环里面所以在捕获一个错误之后它会跳转到下一个方法上。</p>
+
+<p>这儿是输出:</p>
+
+<pre><code># &lt;this is words&gt;
+permutations =&gt; ((this is words) (this words is) (is this words) (is words this) (words this is) (words is this))
+join =&gt; thisiswords
+pick =&gt; is
+roll =&gt; words
+reverse =&gt; (words is this)
+rotate =&gt; (is words this)
+append =&gt; ERROR
+
+# &quot;hello little fishies!&quot;
+ords =&gt; (104 101 108 108 111 32 108 105 116 116 108 101 32 102 105 115 104 105 101 115 33)
+wordcase =&gt; Hello Little Fishies!
+uc =&gt; HELLO LITTLE FISHIES!
+flip =&gt; !seihsif elttil olleh
+chop =&gt; hello little fishies
+contains =&gt; ERROR
+</code></pre>
+
+<p>很多函数的结果是 <code>ERROR</code>, 特别是那些讨厌的接收某种参数的方法。然而, 这些不带参数的很多方法能正常工作并返回某些值。原文<a href="https://thelackthereof.org/TLT/2016.09.23/All_The_Methods">All_The_Methods</a></p>
+
+<h2 id="lambda-vs-whatever-star">lambda Vs Whatever-Star</h2>
+
+<p><strong>Python</strong></p>
+
+<pre><code class="language-python">for f in filter(lambda f: f(-1)&gt;=f(1),
+                [lambda x:x, lambda x:x**2, lambda x:x**3]):
+    for x in range(-10, 11):
+        print x, f(x)
+</code></pre>
+
+<p><strong>Raku</strong></p>
+
+<pre><code class="language-raku">for (* ** 1, * ** 2, * ** 3).grep({ $_.(-1) &gt;= $_.(1) }) -&gt; $f {
+  for -10 .. 10 -&gt; $x {
+    say &quot;$x: { $f.($x) }&quot;
+  }
+}
+</code></pre>
+
+<p>Whatever-Star 等价于:</p>
+
+<pre><code># Whatever-Star notation
+* ** 3
+
+# Pointy-block notation
+-&gt; $x { $x ** 3 }
+
+# Subref notation
+sub ($x) { $x ** 3 }
+</code></pre>
+
+<p>上面的例子打印:</p>
+
+<pre><code>-10: 100
+-9: 81
+-8: 64
+-7: 49
+-6: 36
+-5: 25
+-4: 16
+-3: 9
+-2: 4
+-1: 1
+0: 0
+1: 1
+2: 4
+3: 9
+4: 16
+5: 25
+6: 36
+7: 49
+8: 64
+9: 81
+10: 100
+</code></pre>
+
+<h2 id="str-vs-gist"><strong>str</strong> Vs gist</h2>
+
+<p>在 Python 中, 如果要把一个类的实例变成 str，就需要实现特殊方法 <code>__str__()</code>:</p>
+
+<pre><code class="language-python">class Person(object):
+    def __init__(self, name, gender):
+        self.name = name
+        self.gender = gender
+    def __str__(self):
+        return '(Person: %s, %s)' % (self.name, self.gender)
+
+</code></pre>
+
+<p>在终端里敲:</p>
+
+<pre><code>&gt;&gt;&gt; p = Person('Bob', 'male')
+&gt;&gt;&gt; print(p) # (Person: Bob, male)
+&gt;&gt;&gt; p        # &lt;main.Person object at 0x10c941890&gt;
+</code></pre>
+
+<p>直接敲 p 似乎没有调用 <code>__str__()</code>。 因为 Python 定义了 <code>__str__()</code> 和 <code>__repr__()</code> 两种方法，<code>__str__()</code> 用于显示给用户，而 <code>__repr__()</code> 用于显示给开发人员。一个偷懒的重写 <code>__repr__</code> 的办法是:</p>
+
+<pre><code class="language-python">class Person(object):
+    def __init__(self, name, gender):
+        self.name = name
+        self.gender = gender
+    def __str__(self):
+        return '(Person: %s, %s)' % (self.name, self.gender)
+    __repr__ = __str__
+</code></pre>
+
+<p>在 Raku 中要重写 <code>gist</code> 方法:</p>
+
+<pre><code class="language-raku">use v6;
+
+class Person {
+    has $.name;
+    has $.gender;
+    method gist() {
+        return &quot;Person: $.name, $.gender&quot;
+    }
+
+    # .perl 相当于给开发人员调试看的
+    method perl() {
+        return &quot;Person: $.name, $.gender&quot;
+    }    
+}
+
+my $p = Person.new(name =&gt; 'Bob', gender =&gt; 'male');
+say $p.gist;
+</code></pre>
+
+<h2 id="给对象排序">给对象排序</h2>
+
+<p>按照分数从高到底排序，分数相同的按名字排序。</p>
+
+<pre><code class="language-python">class Student(object):
+
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+    def __str__(self):
+        return '(%s: %s)' % (self.name, self.score)
+
+    __repr__ = __str__
+
+    def __cmp__(self, s):
+        if self.score &gt; s.score:
+            return -1
+        elif self.score &lt; s.score:
+            return 1
+        else:
+            if self.name &lt; s.name:
+                return -1
+            elif self.name &gt; s.name:
+                return 1
+            else:
+                return 0
+
+L = [Student('Tim', 99), Student('Bob', 88), Student('Alice', 99)]
+print sorted(L) # [(Alice: 99), (Tim: 99), (Bob: 88)]
+</code></pre>
+
+<p>Raku 中直接把对象对应的属性传递给 sort 函数就可以按照你想要的进行排序:</p>
+
+<pre><code class="language-raku">use v6;
+
+class Student {
+    has $.name;
+    has $.score;
+    method gist() {
+        return &quot;Student: $.name, $.score&quot;
+    }
+
+    # .perl 相当于给开发人员调试看的
+    method perl() {
+        return &quot;Student: $.name, $.score&quot;
+    }   
+}
+
+my $p1 = Student.new(name =&gt; 'Bob', score =&gt; 79);
+my $p2 = Student.new(name =&gt; 'Ale', score =&gt; 99);
+my $p3 = Student.new(name =&gt; 'Pin', score =&gt; 69);
+my $p4 = Student.new(name =&gt; 'Kin', score =&gt; 69);
+my @p  = ($p1, $p2, $p3,$p4);
+say @p.sort(*.score).sort(*.name);
+# (Student: Ale, 99 Student: Bob, 79 Student: Kin, 69 Student: Pin, 69)
+</code></pre>
+
+<p><code>sort(*.something)</code> 中的星号实际上是一个闭包, 上面的例子等价于:</p>
+
+<pre><code class="language-raku">my @sort_by_score = @p.sort: -&gt; $a,$b { $a.score &lt;=&gt; $b.score };
+my @sort_by_name  = @sort_by_score.sort: -&gt; $a, $b { $a.name cmp $b.name };
+.say for @sort_by_name;
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/python/">Python</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/" data-toggle="tooltip" data-placement="top" title="feed 操作符">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-09-19-learning-raku-sets/" data-toggle="tooltip" data-placement="top" title="Learning Raku - sets">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

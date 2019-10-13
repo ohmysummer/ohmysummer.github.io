@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Perl 6 CookBook</title>
-  <meta property="og:title" content="Perl 6 CookBook" />
-  <meta name="twitter:title" content="Perl 6 CookBook" />
+  <title>Raku CookBook</title>
+  <meta property="og:title" content="Raku CookBook" />
+  <meta name="twitter:title" content="Raku CookBook" />
   <meta name="description" content="inspired by Python cookbook">
   <meta property="og:description" content="inspired by Python cookbook">
   <meta name="twitter:description" content="inspired by Python cookbook">
@@ -198,7 +198,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Perl 6 CookBook</h1>
+              <h1>Raku CookBook</h1>
                 
                   
                     <h2 class="post-subheading">inspired by Python cookbook</h2>
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1214 words)
+  <i class="fa fa-clock-o"></i> 6 minutes (1211 words)
   
   
 </span>
@@ -233,7 +233,7 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p>Perl 6 CookBook(inspired by Python cookbook)</p>
+<p>Raku CookBook(inspired by Python cookbook)</p>
 
 <h1 id="数据结构和算法">数据结构和算法</h1>
 
@@ -249,7 +249,7 @@ if (!doNotTrack) {
 
 <p>代码示例：</p>
 
-<pre><code class="language-perl6">&gt; my @p = (4,5);
+<pre><code class="language-raku">&gt; my @p = (4,5);
 [4 5]
 &gt; my ($x, $y) = @p;
 (4 5)
@@ -277,7 +277,7 @@ ACME
 
 <p>代码示例：</p>
 
-<pre><code class="language-perl6">&gt; my ($x,$y,$z) = @p;
+<pre><code class="language-raku">&gt; my ($x,$y,$z) = @p;
 (4 5 (Any))
 </code></pre>
 
@@ -293,11 +293,11 @@ e
 o
 </code></pre>
 
-<p>有时候，你可能只想解压一部分，丢弃其他的值。对于这种情况 Perl 6 并没有提 供特殊的语法。但是你可以使用任意变量名去占位，到时候丢掉这些变量就行了。</p>
+<p>有时候，你可能只想解压一部分，丢弃其他的值。对于这种情况 Raku 并没有提 供特殊的语法。但是你可以使用任意变量名去占位，到时候丢掉这些变量就行了。</p>
 
 <p>代码示例：</p>
 
-<pre><code class="language-perl6">my @data = ('ACME', 50, 91.1, |(2012, 12, 21));
+<pre><code class="language-raku">my @data = ('ACME', 50, 91.1, |(2012, 12, 21));
 my ($, $shares, $price, $) = @data;
 &gt; $shares
 50
@@ -311,9 +311,9 @@ my ($, $shares, $price, $) = @data;
 
 <h3 id="解决方案-1">解决方案</h3>
 
-<p>Perl 6 使用星号来解决这个问题。比如，你在学习一门课程，在学期 末的时候，你想统计下家庭作业的平均成绩，但是排除掉第一个和最后一个分数。如 果只有四个分数，你可能就直接去简单的手动赋值，但如果有 24 个呢？这时候星号表 达式就派上用场了：</p>
+<p>Raku 使用星号来解决这个问题。比如，你在学习一门课程，在学期 末的时候，你想统计下家庭作业的平均成绩，但是排除掉第一个和最后一个分数。如 果只有四个分数，你可能就直接去简单的手动赋值，但如果有 24 个呢？这时候星号表 达式就派上用场了：</p>
 
-<pre><code class="language-perl6">sub drop_first_last(@grades) {
+<pre><code class="language-raku">sub drop_first_last(@grades) {
     my ($first, *middle, $last) = @grades;
     return avg(@middle);
 }
@@ -321,7 +321,7 @@ my ($, $shares, $price, $) = @data;
 
 <p>另外一种情况， 假设你现在有一些用户的记录列表， 每条记录包含一个名字、邮 件，接着就是不确定数量的电话号码。你可以像下面这样分解这些记录：</p>
 
-<pre><code class="language-perl6">&gt; my @record = ('Dave', 'dave@example.com', '773-555-1212', '847-555-1212')
+<pre><code class="language-raku">&gt; my @record = ('Dave', 'dave@example.com', '773-555-1212', '847-555-1212')
 [Dave dave@example.com 773-555-1212 847-555-1212]
 &gt; my ($name, $email, @phone_numbers ) = @record
 (Dave dave@example.com [773-555-1212 847-555-1212])
@@ -343,14 +343,14 @@ my ($, $shares, $price, $) = @data;
 
 <h3 id="解决方案-2">解决方案</h3>
 
-<pre><code class="language-perl6">my @nums = [1, 8, 2, 23, 7, -4, 18, 23, 42, 37, 2];
+<pre><code class="language-raku">my @nums = [1, 8, 2, 23, 7, -4, 18, 23, 42, 37, 2];
 say @nums.sort.head(3); # 最小的前三个元素
 say @nums.sort.tail(3); # 最大的前三个元素
 </code></pre>
 
 <p>sort 还可以对更复杂的数据结构进行排序：</p>
 
-<pre><code class="language-perl6">my @portfolio = [ 
+<pre><code class="language-raku">my @portfolio = [ 
     {'name'=&gt; 'IBM', 'shares'=&gt; 100, 'price'=&gt; 91.1}, 
     {'name'=&gt; 'AAPL', 'shares'=&gt; 50, 'price'=&gt; 543.22}, 
     {'name'=&gt; 'FB', 'shares'=&gt; 200, 'price'=&gt; 21.09}, 
@@ -376,7 +376,7 @@ say @portfolio.sort(-*.{'price'}).head(3);
 
 <p>使用 Bag:</p>
 
-<pre><code class="language-perl6">my @words = [ 
+<pre><code class="language-raku">my @words = [ 
     'look', 'into', 'my', 'eyes', 'look', 'into', 'my', 'eyes', 
     'the', 'eyes', 'the', 'eyes', 'the', 'eyes', 'not', 'around', 'the', 
     'eyes', &quot;don't&quot;, 'look', 'around', 'the', 'eyes', 'look', 'into', 
@@ -388,7 +388,7 @@ say @words.Bag.sort(-*.value).head(3);
 
 <p>Bag 还可以进行集合操作：</p>
 
-<pre><code class="language-perl6">my @more_words = [ 
+<pre><code class="language-raku">my @more_words = [ 
     'look', 'into', 'my', 'eyes', 
     'the', 'eyes', 'not', 'around', 'the', 
     'eyes', &quot;don't&quot;, 'look', 'around', 'the', 'eyes', 'look', 'into', 
@@ -410,7 +410,7 @@ say @words.Bag (-)  @more_words.Bag;
 
 <h3 id="解决方案-4">解决方案</h3>
 
-<pre><code class="language-perl6">my @rows = [ 
+<pre><code class="language-raku">my @rows = [ 
     {'fname' =&gt; 'Brian', 'lname' =&gt; 'Jones',   'uid' =&gt; 1003}, 
     {'fname' =&gt; 'David', 'lname' =&gt; 'Beazley', 'uid' =&gt; 1002}, 
     {'fname' =&gt; 'John',  'lname' =&gt; 'Cleese',  'uid' =&gt; 1001}, 
@@ -445,7 +445,7 @@ say @words.Bag (-)  @more_words.Bag;
 
 <h3 id="解决方案-5">解决方案</h3>
 
-<pre><code class="language-perl6">my @rows = [
+<pre><code class="language-raku">my @rows = [
 {'address' =&gt; '5412 N CLARK', 'date' =&gt; '07/01/2012'}, 
 {'address' =&gt; '5148 N CLARK', 'date' =&gt; '07/04/2012'}, 
 {'address' =&gt; '5800 E 58TH', 'date' =&gt; '07/02/2012'}, 
@@ -473,7 +473,7 @@ say @words.Bag (-)  @more_words.Bag;
 
 <p>你想通过某种对齐方式来格式化字符串</p>
 
-<pre><code class="language-perl6">my $text = 'Hello World'
+<pre><code class="language-raku">my $text = 'Hello World'
 Hello World
 &gt; $text.indent(4)
     Hello World
@@ -490,7 +490,7 @@ indented by 2 spaces
 
 <h3 id="解决方案-7">解决方案</h3>
 
-<pre><code class="language-perl6">my @parts = ['Is', 'Chicago', 'Not', 'Chicago?'];
+<pre><code class="language-raku">my @parts = ['Is', 'Chicago', 'Not', 'Chicago?'];
 [Is Chicago Not Chicago?]
 &gt; @parts.join(' ');
 Is Chicago Not Chicago?
@@ -498,7 +498,7 @@ Is Chicago Not Chicago?
 
 <h2 id="基本的日期与时间转换">基本的日期与时间转换</h2>
 
-<pre><code class="language-perl6">&gt; my $today = Date.today
+<pre><code class="language-raku">&gt; my $today = Date.today
 2018-05-04
 
 # 10 天后
@@ -527,7 +527,7 @@ Is Chicago Not Chicago?
 
 <h3 id="解决方案-8">解决方案</h3>
 
-<pre><code class="language-perl6"># error
+<pre><code class="language-raku"># error
 (Date.today.later(days =&gt; -7) ... Date.today).grep: *.day-of-week==5
 
 # error, last friday
@@ -551,7 +551,7 @@ Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date
 
 <p>同理, 可以计算出下个周五:</p>
 
-<pre><code class="language-perl6">(Date.today, *.later(:1day) ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
+<pre><code class="language-raku">(Date.today, *.later(:1day) ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
 
 # or
 (Date.today+1, *.succ ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
@@ -559,7 +559,7 @@ Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date
 
 <h2 id="反转散列">反转散列</h2>
 
-<pre><code class="language-perl6">my @weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+<pre><code class="language-raku">my @weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 @weekdays.kv.reverse.hash.{'Thursday'} # 3
 
 # antipairs 翻转键值对儿
@@ -571,7 +571,7 @@ Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date
 
 <h2 id="格式化日期">格式化日期</h2>
 
-<pre><code class="language-perl6">Date.new('2018-05-04', formatter =&gt; sub ($self) {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day given $self})
+<pre><code class="language-raku">Date.new('2018-05-04', formatter =&gt; sub ($self) {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day given $self})
 2018/05/04
 
 &gt; Date.new('2018-05-04', formatter =&gt; {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day })
@@ -580,13 +580,13 @@ Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date
 
 <h2 id="如何避免语法重复和样板">如何避免语法重复和样板</h2>
 
-<pre><code class="language-perl6">%tweets&lt;statuses&gt;[0]&lt;metadata&gt;&lt;iso_language_code&gt;.say;
+<pre><code class="language-raku">%tweets&lt;statuses&gt;[0]&lt;metadata&gt;&lt;iso_language_code&gt;.say;
 %tweets&lt;statuses&gt;[0]&lt;created_at&gt;.say;
 </code></pre>
 
 <p>可以被写为：</p>
 
-<pre><code class="language-perl6">given %tweets&lt;statuses&gt;[0] {
+<pre><code class="language-raku">given %tweets&lt;statuses&gt;[0] {
     .&lt;metadata&gt;&lt;iso_language_code&gt;.say;
     .&lt;created_at&gt;.say;
 }
@@ -594,14 +594,14 @@ Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date
 
 <p>这使用了主题变量 <code>$_</code>。简而言之，对于简短的循环也可以使用主题变量，如下所示：</p>
 
-<pre><code class="language-perl6">for @(%tweets&lt;statuses&gt;) {
+<pre><code class="language-raku">for @(%tweets&lt;statuses&gt;) {
     .&lt;created_at&gt;.say;
 }
 </code></pre>
 
 <h2 id="解构">解构</h2>
 
-<pre><code class="language-perl6">subset Seconds of Numeric;
+<pre><code class="language-raku">subset Seconds of Numeric;
 my regex number { \d+ [ '.' \d+ ]? } # float 
 my regex suffix { &lt;:alpha&gt; } # 只匹配字母
 
@@ -616,7 +616,7 @@ sub MAIN(*@timicles where .all ~~ /&lt;number&gt; &lt;[dhms]&gt;/) {
     say $to-wait ~ &quot;s&quot;;
 }
 
-# Usage： perl6 program_file.pl6 1d 2h 3m 5s
+# Usage： raku program_file.pl6 1d 2h 3m 5s
 </code></pre>
 
 <p>map 里面使用了 Pointy-block <code>-&gt; {}</code>,</p>
@@ -628,7 +628,7 @@ sub MAIN(*@timicles where .all ~~ /&lt;number&gt; &lt;[dhms]&gt;/) {
 
 <h2 id="在正则表达式中使用数组">在正则表达式中使用数组</h2>
 
-<pre><code class="language-perl6">subset Seconds of Numeric;
+<pre><code class="language-raku">subset Seconds of Numeric;
 
 # Junction 作为散列的键, 可以让多个键对应同一个值, Also, any @keys =&gt; value is possible
 my %unit-multipliers = 'd'|'day' =&gt; 60*60*24, 'h'|'hour' =&gt; 60*60, 'm'|'min' =&gt; 60, 's'|'sec' =&gt; 1; 
@@ -651,7 +651,7 @@ sub MAIN(*@timicles where .all ~~ /&lt;number&gt; @units $/) {
 
 <p>有一个字符串 banana, 要查看字符 a 和 字符 b 在 banana 中的索引：</p>
 
-<pre><code class="language-perl6">&gt; &quot;banana&quot;.comb.grep: 'a' | 'b',:k
+<pre><code class="language-raku">&gt; &quot;banana&quot;.comb.grep: 'a' | 'b',:k
 (0 1 3 5)
 
 # or

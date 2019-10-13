@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku 中的冒号</title>
+  <meta property="og:title" content="Raku 中的冒号" />
+  <meta name="twitter:title" content="Raku 中的冒号" />
+  <meta name="description" content="Raku Colons 在 Raku 中到处都是冒号, 我搜集了你在 Raku 中使用冒号的所有方式。
+Larry 语言再设计第一定律: 每个人都想要冒号 Larry 语言再设计第二定律: Larry 成为冒号
+这些都是主题的变体，尤其是“冒号对”语法主题。如果冒号的两种用法看起来不同，或者在不同的用法上下文中不同，即使它们在技术上是相同的，我更愿意说明这两种用法。
+命名空间 # namespace package A::B { ... } class A::B { ... } # Namespace separator my $x = A::B.new; # Dynamic namespace my $x = ::(&quot;A::B&quot;).new; # Pseudopackage representing null namespace say ::; # Anonymous class class :: is Int {...} # Current class in a compile-tiem var class Who { method myname { say ::?">
+  <meta property="og:description" content="Raku Colons 在 Raku 中到处都是冒号, 我搜集了你在 Raku 中使用冒号的所有方式。
+Larry 语言再设计第一定律: 每个人都想要冒号 Larry 语言再设计第二定律: Larry 成为冒号
+这些都是主题的变体，尤其是“冒号对”语法主题。如果冒号的两种用法看起来不同，或者在不同的用法上下文中不同，即使它们在技术上是相同的，我更愿意说明这两种用法。
+命名空间 # namespace package A::B { ... } class A::B { ... } # Namespace separator my $x = A::B.new; # Dynamic namespace my $x = ::(&quot;A::B&quot;).new; # Pseudopackage representing null namespace say ::; # Anonymous class class :: is Int {...} # Current class in a compile-tiem var class Who { method myname { say ::?">
+  <meta name="twitter:description" content="Raku Colons 在 Raku 中到处都是冒号, 我搜集了你在 Raku 中使用冒号的所有方式。
+Larry 语言再设计第一定律: 每个人都想要冒号 Larry 语言再设计第二定律: Larry 成为冒号
+这些都是主题的变体，尤其是“冒号对”语法主题。如果冒号的两种用法看起来不同，或者在不同的用法上下文中不同，即使它们在技术上是相同的，我更愿意说明这两种用法。
+命名空间 # …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-09-24-raku%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-24-raku%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku 中的冒号</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on September 24, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (639 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="raku-colons">Raku Colons</h2>
+
+<p>在 Raku 中到处都是冒号, 我搜集了你在 Raku 中使用<a href="https://thelackthereof.org/Raku_Colons">冒号</a>的所有方式。</p>
+
+<p>Larry 语言再设计第一定律: 每个人都想要冒号
+Larry 语言再设计第二定律: Larry 成为冒号</p>
+
+<p>这些都是主题的变体，尤其是“冒号对”语法主题。如果冒号的两种用法看起来不同，或者在不同的用法上下文中不同，即使它们在技术上是相同的，我更愿意说明这两种用法。</p>
+
+<h3 id="命名空间">命名空间</h3>
+
+<pre><code class="language-raku"># namespace
+package A::B { ... }
+class   A::B { ... }
+
+# Namespace separator
+my $x = A::B.new;
+
+# Dynamic namespace
+my $x = ::(&quot;A::B&quot;).new;
+
+# Pseudopackage representing null namespace
+say ::;
+
+# Anonymous class
+class :: is Int {...}
+
+# Current class in a compile-tiem var
+class Who { method myname { say ::?CLASS } }
+
+# Call Int method of Int class
+42.Int::Int; # =&gt; 42
+
+# Treat package X as a hash
+say X::.keys;
+</code></pre>
+
+<h3 id="绑定">绑定</h3>
+
+<pre><code class="language-raku"># Binding
+my $y := $a;
+
+# Read-only binding
+my $z ::= $y;
+
+# Container identify
+$y =:= $a; # True
+</code></pre>
+
+<h3 id="colon-pair-语法">Colon-Pair 语法</h3>
+
+<pre><code class="language-raku"># Colon-Pair syntax (often seen as adverbs)
+my $x = 'cat';
+:foo(5)        # 'foo' =&gt; 5
+:foo('dog')    # 'foo' =&gt; 'dog'
+:foo($x)       # 'foo' =&gt; 'cat'
+
+# Value word quoting, no interpolation
+:foo&lt;bar&gt;      # 'foo' =&gt; 'bar'
+:foo&lt;bar baz&gt;  # 'foo' =&gt; ('bar', 'baz')
+:foo&lt;$x&gt;       # 'foo' =&gt; '$x'
+
+# Value word quoting with interpolation
+:foo&lt;&lt;$x&gt;&gt;     # 'foo' =&gt; 'cat'
+:foo&lt;&lt;$x dog&gt;&gt; # 'foo' =&gt; ('cat', 'dog')
+
+# Numeric-prefix extraction
+say (:73day) # day =&gt; 73
+
+# Default to true value
+say (:foo)     # 'foo' =&gt; True
+:foo(True)     # 'foo' =&gt; True
+
+# False instead of true
+say (:!foo) # foo =&gt; False
+
+# Var name as key, content as value
+my @foo=1,2;
+:@foo # foo =&gt; [1,2]
+:@foo # foo =&gt; [1,2]
+:$x   # x   =&gt; 'cat'
+
+# Base conversion via colon-pair
+say :16(&quot;dead&quot;) # 57005
+
+# binding pair in sig:
+my $a;
+sub b (:foo($a)! is rw) { $a = 42};
+b(:foo($a));
+say $a # 42
+</code></pre>
+
+<h3 id="类型">类型</h3>
+
+<pre><code class="language-raku"># T takes value's type
+-&gt; Numeric ::T \x { say T }(42); # =&gt; (Int)
+
+# Type Smileys
+Int:D; # Defined Int
+Int:U; # Undefined Int
+</code></pre>
+
+<h3 id="signature">Signature</h3>
+
+<pre><code class="language-raku"># signature literal
+my $sig = :(Int $foo);
+
+# signature on Callable &amp;var, not yet implemented
+my &amp;f:(Str) = -&gt; Str {};
+</code></pre>
+
+<h3 id="operators-as-methods">Operators as Methods</h3>
+
+<pre><code class="language-raku">my $a = 1;
+$a.infix:[&quot;+&quot;](3); # $a + 3
+$a.infix:&lt;+&gt;(3);   # $a + 3, but shorter with quote brackets
+$a.prefix:&lt;++&gt;;    # ++$a
+$a.postfix:&lt;++&gt;;   # ++$a
+$a.:&lt;++&gt;;          # Shorthand for prefix (no param)
+$a.:&lt;+&gt;(3);        # Shorthand for infix (param provided)
+</code></pre>
+
+<h3 id="regex">Regex</h3>
+
+<pre><code class="language-raku"># Regex adverb
+:i/a/  # Case insensitive, outside
+/:i a/ # Case insensitive, inside
+
+# Declare vars in regex scope
+my regex foo { :my $var; }
+
+# Backtracking control
+# similar ones not yet implemented are :: ::&gt; :::
+/ a: b?: c*: /
+
+# One especially interesting example you often (don't) see is :?
+/ .*:? / # explicit minimal match
+/ .*? /  # short version that is usually used has no colon
+
+# Unicode character classes
+say so &quot;a&quot; ~~ /&lt;[:Alpha]&gt;/
+</code></pre>
+
+<h3 id="misc">Misc</h3>
+
+<pre><code class="language-raku"># Quote adverb
+Q:w(word of the day); # :w adverb
+
+# Precedence dropper
+@stuff.map({ $_ + 1 }); # Explicit parameter
+@stuff.map: { $_ + 1 }; # Parameters come after ':'
+
+# Invocant marker method invocation
+$x.say-hi(names =&gt; [&lt;me you&gt;]);  # Normal way
+say-hi($x: names =&gt; [&lt;me you&gt;]); # Invocant marker way
+
+# Declare alternative to 'self' for current-instance in method
+method wuzzup($this: $name) { say &quot;WUZZUP $name?!&quot; }
+
+# object hashes, ones with complex keys
+my $x = :{ (now) =&gt; &quot;when?&quot; };
+
+# longname
+sub infix:&lt;ya&gt; { ... }
+
+# Specific uses of longnames
+use Foo:from&lt;Perl5&gt;;
+
+# Loop labels
+MYLABEL: for ^100 {
+  for ^200 {
+    last MYLABEL;
+  }
+}
+
+# Twigil for formal named param for a block (like $^x)
+say { $:add ?? $^a + $^b !! $^a - $^b }( 4, 5 ) :!add
+
+# This one is a stretch...
+# Colons instead of dashes when you invoke cli commands that use MAIN
+sub MAIN ( :$filename ) { ... }
+
+# cmd --filename=file.txt
+# cmd :filename=file.txt
+# cmd :filename \# filename =&gt; true
+</code></pre>
+
+<blockquote>
+<p>冒号真是令人惊叹! Awesome.</p>
+</blockquote>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/colons/">Colons</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-09-19-learning-raku-sets/" data-toggle="tooltip" data-placement="top" title="Learning Raku - sets">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-09-25-whatever-star/" data-toggle="tooltip" data-placement="top" title="Whatever Star">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

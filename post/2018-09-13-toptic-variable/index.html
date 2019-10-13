@@ -239,19 +239,19 @@ if (!doNotTrack) {
 
 <h2 id="for">for</h2>
 
-<pre><code class="language-perl6">for &lt;a b c&gt; { say $_ }  # sets $_ to 'a', 'b' and 'c' in turn
+<pre><code class="language-raku">for &lt;a b c&gt; { say $_ }  # sets $_ to 'a', 'b' and 'c' in turn
 say $_ for &lt;a b c&gt;;     # same, even though it's not a block
 </code></pre>
 
 <h2 id="given">given</h2>
 
-<pre><code class="language-perl6">given 'a'   { say $_ }  # sets $_ to 'a'
+<pre><code class="language-raku">given 'a'   { say $_ }  # sets $_ to 'a'
 say $_ given 'a';       # same, even though it's not a block
 </code></pre>
 
 <p>设置默认的主题变量可以省去很多打字：</p>
 
-<pre><code class="language-perl6">for Date.new('2018-01-01') .. Date.new('2018-01-07') {
+<pre><code class="language-raku">for Date.new('2018-01-01') .. Date.new('2018-01-07') {
   printf(&quot;%04d%02d%02d%02d%02d%02d\n&quot;, .year, .month, .day, .hour, .minute, .second) given .DateTime
 }
 
@@ -266,7 +266,7 @@ say $_ given 'a';       # same, even though it's not a block
 
 <p>对象初始化：</p>
 
-<pre><code class="language-perl6">class Employee {
+<pre><code class="language-raku">class Employee {
     subset Salary         of Real where * &gt; 0;
     subset NonEmptyString of Str  where * ~~ /\S/; 
 
@@ -297,12 +297,12 @@ say $employee;
 
 <p>在方法上调用 <code>$_</code> 可以通过省略变量名来缩的更短：</p>
 
-<pre><code class="language-perl6">.say;                   # same as $_.say
+<pre><code class="language-raku">.say;                   # same as $_.say
 </code></pre>
 
 <p><code>m/regex/</code> 和 <code>/regex/</code> 正则匹配 <code>$_</code> 而 <code>s/regex/subst/</code> 替换作用于 <code>$_</code>：</p>
 
-<pre><code class="language-perl6">say &quot;Looking for strings with non-alphabetic characters...&quot;;
+<pre><code class="language-raku">say &quot;Looking for strings with non-alphabetic characters...&quot;;
 for &lt;ab:c d$e fgh ij*&gt; {
     .say if m/&lt;-alpha&gt;/;
 }
@@ -317,13 +317,13 @@ for &lt;ab:c d$e fgh ij*&gt; {
 
 <p>with 不引入块时也能设置 <code>$_</code> 主题变量：</p>
 
-<pre><code class="language-perl6">say $_ with 42; # 42
+<pre><code class="language-raku">say $_ with 42; # 42
 .say with 42;   # 42
 </code></pre>
 
 <p>with/without 会把条件设置为 <code>$_</code>：</p>
 
-<pre><code class="language-perl6"># The below code says &quot;Found a at 0&quot;
+<pre><code class="language-raku"># The below code says &quot;Found a at 0&quot;
 my $s = &quot;abc&quot;;
 with   $s.index(&quot;a&quot;) { say &quot;Found a at $_&quot; }
 orwith $s.index(&quot;b&quot;) { say &quot;Found b at $_&quot; }
@@ -335,7 +335,7 @@ else                 { say &quot;Didn't find a, b or c&quot; }
 
 <p><code>when</code> 语句使主题变量 <code>$_</code> 和所提供的表达式进行智能匹配，以使在指定匹配的时候能检查值、正则表达式和类型：</p>
 
-<pre><code class="language-perl6">for 42, 43, &quot;foo&quot;, 44, &quot;bar&quot; {
+<pre><code class="language-raku">for 42, 43, &quot;foo&quot;, 44, &quot;bar&quot; {
     when Int { .say }
     when /:i ^Bar/ { .say }
     default  { say &quot;Not an Int or a Bar&quot; }
@@ -360,14 +360,14 @@ Perl
 
 <p>列表解析：</p>
 
-<pre><code class="language-perl6">(.ord when /7$/ for 1..99)
+<pre><code class="language-raku">(.ord when /7$/ for 1..99)
 </code></pre>
 
 <h2 id="when-和-if">when 和 if</h2>
 
 <p><code>when</code> 块类似于 <code>if</code> 块，并且其中一个或两个都可以在外部块中使用，它们也都具有“语句修饰符”形式。但是如何处理相同的外部块中的代码是有区别的：当执行 <code>when</code> 块时，控制被传递到封闭块并忽略后面的语句; 但是当执行 <code>if</code> 块时，执行以下语句。 （注意，还有其他方法可以修改其他部分中讨论的每个的默认行为。）以下示例应说明 <code>if</code> 或 <code>when</code> 块的默认行为，假设 <code>if</code> 或 <code>when</code> 块中不包含特殊退出或其他副作用语句：</p>
 
-<pre><code class="language-perl6">{
+<pre><code class="language-raku">{
     if X {...} # if X is true in boolean context, block is executed
     # following statements are executed regardless
 }
@@ -383,7 +383,7 @@ Perl
 <p>有一个 <code>when</code> 有而 <code>if</code> 没有的功能：<code>when</code> 的布尔上下文测试默认为 <code>$_ ~~</code> 而 <code>if</code> 不是。这影响人们怎么在不带 <code>$_</code> 值的 <code>when</code> 块中使用 <code>X</code>
 （在那种情况下， 它是 <code>Any</code>，并且 <code>Any</code> 和 <code>True</code> 智能匹配：<code>Any ~~ True</code> 产生 <code>True</code> ）。请看下面的例子：</p>
 
-<pre><code class="language-perl6">{
+<pre><code class="language-raku">{
     my $a = 1;
     my $b = True;
     when $a    { say 'a' }; # no output
@@ -395,7 +395,7 @@ Perl
 
 <p>最后，<code>when</code> 的语句修饰符形式不影响如下语句在另一个块内部或外部的执行：</p>
 
-<pre><code class="language-perl6">say &quot;foo&quot; when X; # if X is true statement is executed
+<pre><code class="language-raku">say &quot;foo&quot; when X; # if X is true statement is executed
                   # following statements are not affected
 </code></pre>
 
@@ -403,11 +403,11 @@ Perl
 
 <p>块的<strong>默认签名</strong>是一个名为 <code>$_</code> 的位置参数：</p>
 
-<pre><code class="language-perl6">my &amp;block =  { 'oi' };
+<pre><code class="language-raku">my &amp;block =  { 'oi' };
 &amp;block.signature.say; # (;; $_? is raw)
 </code></pre>
 
-<pre><code class="language-perl6">my class Employee {
+<pre><code class="language-raku">my class Employee {
    has Str $.name;
    has Rat $.wage;
 }
@@ -425,7 +425,7 @@ say @team.sort({.wage} )».name;
 
 <p>块里面会默认有一个 <code>$_</code>：</p>
 
-<pre><code class="language-perl6">my $tiles := (&lt; T S R E A N D &gt;).Bag;
+<pre><code class="language-raku">my $tiles := (&lt; T S R E A N D &gt;).Bag;
 my $total := $tiles.total;
 
 my @results = lazy '/usr/share/dict/SOWPODS'.IO.lines.grep: {

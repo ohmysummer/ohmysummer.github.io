@@ -249,7 +249,7 @@ if (!doNotTrack) {
 
 <p>在今天的降临日历中，我们将探索您可能称之为最简单的自动机。我们将字段串起来像字符串上的珠子，我们将尝试一个或两个和一些不同的状态集。</p>
 
-<p>为了让家里的人感兴趣，我将为您提供链接，让您在浏览器中运行示例代码，或在家中使用您的本地perl6编译器！</p>
+<p>为了让家里的人感兴趣，我将为您提供链接，让您在浏览器中运行示例代码，或在家中使用您的本地raku编译器！</p>
 
 <h2 id="为学习而做">为学习而做</h2>
 
@@ -259,7 +259,7 @@ if (!doNotTrack) {
 
 <p>在确定每个单元可以具有哪些状态之后，我们将知道什么存储适合于我们的世界。使用8位整数数组将允许我们从任何不超过255个单独状态的状态集中进行选择。不过，让我们现在共计3个州。我们可以随心所欲地初始化世界，但是将每个字段设置为随机有效状态是一个很好的起点。另一个是将一个状态的单个单元放在中间，并使每个其他单元具有不同的状态。</p>
 
-<pre><code class="language-perl6">constant number-of-states = 3;
+<pre><code class="language-raku">constant number-of-states = 3;
 constant field-width = 60;
 
 my int8 @field;
@@ -271,7 +271,7 @@ sub init-field {
 
 <p>显示字段非常简单，具体取决于我们使用的输出。 这是一段可以在任何控制台中运行的代码，下面是一个6pad的链接，它在pad的HTML部分输出很少的彩色方块。</p>
 
-<pre><code class="language-perl6">sub output-a-row {
+<pre><code class="language-raku">sub output-a-row {
 
     for @field {
         # Using the unicode characters &quot;Light shade&quot;, &quot;Medium shade&quot;, and &quot;Dark shade&quot;
@@ -286,7 +286,7 @@ init-field;
 output-a-row;
 </code></pre>
 
-<p>在<a href="https://perl6.github.io/6pad/#baa305eff795ed1f7a1957b83a9d4b26">浏览器</a>中运行此代码。 你将不得不等待几秒钟来获得当前相当大的perl6编译器在javascript中。</p>
+<p>在<a href="https://raku.github.io/6pad/#baa305eff795ed1f7a1957b83a9d4b26">浏览器</a>中运行此代码。 你将不得不等待几秒钟来获得当前相当大的raku编译器在javascript中。</p>
 
 <h2 id="走在前面">走在前面</h2>
 
@@ -296,7 +296,7 @@ output-a-row;
 
 <p>对此的直接方法是在每个步骤之后有一个额外的字段来放置计算结果并将结果复制到“真实”字段数组中。 让我们尝试一下。</p>
 
-<pre><code class="language-perl6">sub simulate-step {
+<pre><code class="language-raku">sub simulate-step {
     my int8 @output;
 
     for ^field-width -&gt; $x {
@@ -309,7 +309,7 @@ output-a-row;
 
 <p>让我们看看我们需要什么来进行计算：新状态将取决于邻域和单元本身。 我们可能会选择最明显的社区：一个小区，它是该领域的前身和继承者。 但等等，第一个和最后一个细胞会发生什么？ 让我们假装他们有一个额外的邻居，它总是处于0状态。这样</p>
 
-<pre><code class="language-perl6">sub simulate-step {
+<pre><code class="language-raku">sub simulate-step {
     my int8 @output;
   
     for ^field-width -&gt; $x {
@@ -350,12 +350,12 @@ output-a-row;
 
 <p>这样做真的很愉快！</p>
 
-<pre><code class="language-perl6">my int8 @lookup-table = (^number-of-states).roll(3³);
+<pre><code class="language-raku">my int8 @lookup-table = (^number-of-states).roll(3³);
 </code></pre>
 
 <p>并且给定 <code>$left</code>，<code>$middle</code> 和 <code>$right</code> 变量，我们可以将第一个与9相乘，第二个与3相乘，并将三者相加以获得查询表中的索引：</p>
 
-<pre><code class="language-perl6">sub simulate-step {
+<pre><code class="language-raku">sub simulate-step {
     my int8 @output;
   
     for ^field-width -&gt; $x {
@@ -374,7 +374,7 @@ output-a-row;
 
 <p>运行这个已经让我们看起来很闪亮。 我们需要做的就是连接潜艇：</p>
 
-<pre><code class="language-perl6">constant number-of-states = 3;
+<pre><code class="language-raku">constant number-of-states = 3;
 constant field-width = 60;
 
 my int8 @field;
@@ -421,14 +421,14 @@ for ^100 {
 
 <p>结果在某些时候看起来非常有趣！ 当然，我们需要通过随机查找表获得幸运。 如果你有很多无趣的东西，我喜欢这里的一个：</p>
 
-<pre><code class="language-perl6">my int8 @lookup-table = &lt;0 0 2 0 0 0 1 2 0 0 1 1 2 1 1 2 1 1 1 0 1 2 2 0 2 1 1&gt;;
+<pre><code class="language-raku">my int8 @lookup-table = &lt;0 0 2 0 0 0 1 2 0 0 1 1 2 1 1 2 1 1 1 0 1 2 2 0 2 1 1&gt;;
 </code></pre>
 
-<p>这里是<a href="https://perl6.github.io/6pad/#cb1856d301959e3d3dca95925eab2bee">6pad</a>的链接，您可以在浏览器中试用它。</p>
+<p>这里是<a href="https://raku.github.io/6pad/#cb1856d301959e3d3dca95925eab2bee">6pad</a>的链接，您可以在浏览器中试用它。</p>
 
-<p>第三，这是我的机器的截图，以防您在移动设备上阅读或其他无法运行perl6的内容。</p>
+<p>第三，这是我的机器的截图，以防您在移动设备上阅读或其他无法运行raku的内容。</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/fish-tmp_112.png" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/fish-tmp_112.png" alt="img" /></p>
 
 <h2 id="改变">改变</h2>
 
@@ -436,7 +436,7 @@ for ^100 {
 
 <p>首先，让我们看看增加不同状态数量需要做些什么：</p>
 
-<pre><code class="language-perl6">constant number-of-states = 4;
+<pre><code class="language-raku">constant number-of-states = 4;
 
 # the size of the lookup table should be based on the number of states
 my int8 @lookup-table = (^number-of-states).roll(number-of-states³);
@@ -454,7 +454,7 @@ sub output-a-row {
 
 <p>并且计算也需要基于状态数进行计算：</p>
 
-<pre><code class="language-perl6">my $index = $left * number-of-states * number-of-states
+<pre><code class="language-raku">my $index = $left * number-of-states * number-of-states
             + $middle * number-of-states
             + $right;
 </code></pre>
@@ -467,7 +467,7 @@ sub output-a-row {
 
 <p>让我们回到3个状态而不是4个状态，用一个只有一个单元格的单元替换邻域：我们将采用单元格的前任及其后继者，但忽略单元格本身。 然后我们添加了前任的前任和后继者的继任者：</p>
 
-<pre><code class="language-perl6"># three states, but four neighbors
+<pre><code class="language-raku"># three states, but four neighbors
 constant number-of-states = 3;
 constant number-of-neighbors = 4;
 
@@ -500,9 +500,9 @@ sub simulate-step {
 }
 </code></pre>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/fish-tmp_113.png" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/fish-tmp_113.png" alt="img" /></p>
 
-<p>这是试用它的 <a href="https://perl6.github.io/6pad/#98c06c9c9aafaf36c9c4fbf320d9c9cc">6pad</a></p>
+<p>这是试用它的 <a href="https://raku.github.io/6pad/#98c06c9c9aafaf36c9c4fbf320d9c9cc">6pad</a></p>
 
 <p>可悲的是，它似乎只是让输出变得更加混乱。</p>
 
@@ -510,7 +510,7 @@ sub simulate-step {
 
 <p>目前，代码是高性能和可读性之间的折衷。 它也可能看起来像这样：</p>
 
-<pre><code class="language-perl6">for (0, |@field, 0).rotor(3 =&gt; -2) -&gt; ($left, $middle, $right) {
+<pre><code class="language-raku">for (0, |@field, 0).rotor(3 =&gt; -2) -&gt; ($left, $middle, $right) {
     my $index = :3[$right, $middle, $left];
 }
 </code></pre>
@@ -523,7 +523,7 @@ sub simulate-step {
 
 <p>那么我们怎样才能做得更好呢？ 我想到的第一件事是让变量 <code>$left</code>，<code>$middle</code> 和 <code>$right</code> 在迭代之间保持不变并通过以下方式移动单元格值：</p>
 
-<pre><code class="language-perl6">my $left   = 0;
+<pre><code class="language-raku">my $left   = 0;
 my $middle = @field[0];
 my $right  = @field[1];
 
@@ -541,7 +541,7 @@ for ^field-width -&gt; $x {
 
 <p>很酷，我们甚至已经摆脱了 <code>$x</code> vs field-width的检查！ 但是还有另一件事情一遍又一遍地发生，我们可以做一点点简单。 我们可以让 <code>$left</code>，<code>$middle</code> 和 <code>$right</code> 变量已经保存了添加所需的确切值：</p>
 
-<pre><code class="language-perl6">my $left   = 0;
+<pre><code class="language-raku">my $left   = 0;
 my $middle = @field[0] * 3;
 my $right  = @field[1];
 
@@ -561,7 +561,7 @@ for ^field-width -&gt; $x {
 
 <p>我遇到的一种细胞自动机是每个细胞都有机会在每一步上进行计算的细胞自动机，否则只需保持其状态一步。 让我们看看它是如何实现的：</p>
 
-<pre><code class="language-perl6">constant probability = 0.75e0;
+<pre><code class="language-raku">constant probability = 0.75e0;
 
 my $left   = 0;
 my $middle = @field[0] * 3;
@@ -586,7 +586,7 @@ for ^field-width -&gt; $x {
 
 <p>这是给你的截图！</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/fish-tmp_114.png" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/fish-tmp_114.png" alt="img" /></p>
 
 <h2 id="这有用吗">这有用吗？</h2>
 
@@ -608,7 +608,7 @@ for ^field-width -&gt; $x {
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -625,7 +625,7 @@ for ^field-width -&gt; $x {
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-08-make-your-perl6-grammar-compact/" data-toggle="tooltip" data-placement="top" title="第八天 — 让你的 Perl 6 grammar 紧凑一点">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-08-make-your-perl6-grammar-compact/" data-toggle="tooltip" data-placement="top" title="第八天 — 让你的 Raku grammar 紧凑一点">Next Post &rarr;</a>
             </li>
           
         </ul>

@@ -249,7 +249,7 @@ if (!doNotTrack) {
 
 <p>给定模块 <code>MyService::Routes</code>, 如下所示：</p>
 
-<pre><code class="language-perl6">sub routes() is export {
+<pre><code class="language-raku">sub routes() is export {
     route {
         get -&gt; {
             content 'text/plain', 'Nothing to see here';
@@ -265,7 +265,7 @@ if (!doNotTrack) {
 
 <p>我们可以像这样编写测试：</p>
 
-<pre><code class="language-perl6">use Cro::HTTP::Test;
+<pre><code class="language-raku">use Cro::HTTP::Test;
 use MyService::Routes;
 
 test-service routes(), {
@@ -322,7 +322,7 @@ done-testing;
 
 <p>将哈希映射头名称转换为头值，或者执行相同的Pair列表。如果标题存在且标题的值与值相匹配，则测试通过。仅在关注标题存在时使用*，但不希望检查其值。响应中的所有其他标头都将被忽略（即，额外的标头被认为是正常的）。</p>
 
-<pre><code class="language-perl6">headers =&gt; {
+<pre><code class="language-raku">headers =&gt; {
         Strict-Transport-Security =&gt; *,
         Cache-Control =&gt; /public/
     }
@@ -334,7 +334,7 @@ done-testing;
 
 <p>获得响应的正文 - 并将其与提供的值进行智能匹配。字符串，正则表达式或代码对象都可能有用。</p>
 
-<pre><code class="language-perl6">body-text =&gt; /:i success/
+<pre><code class="language-raku">body-text =&gt; /:i success/
 </code></pre>
 
 <p>如果测试的内容类型且测试失败，则将跳过正文测试。</p>
@@ -343,7 +343,7 @@ done-testing;
 
 <p>获得响应的body-blob并将其与提供的值进行智能匹配</p>
 
-<pre><code class="language-perl6">body-blob =&gt; *.bytes &gt; 128
+<pre><code class="language-raku">body-blob =&gt; *.bytes &gt; 128
 </code></pre>
 
 <p>如果测试的内容类型且测试失败，则将跳过正文测试。</p>
@@ -362,7 +362,7 @@ done-testing;
 
 <p>重复测试的相同细节可能会很繁琐。例如，通常希望针对相同的URI编写许多测试，每次都将其传递给不同的主体或使用不同的请求方法。测试给定的功能有多种形式。它可以与URI和块一起使用：</p>
 
-<pre><code class="language-perl6">test-given '/add', {
+<pre><code class="language-raku">test-given '/add', {
     test post(json =&gt; { :x(37), :y(5) }),
         status =&gt; 200,
         json =&gt; { :result(42) };
@@ -375,14 +375,14 @@ done-testing;
 
 <p>也可以将命名参数传递给test-given，这些参数将用作请求参数，传递给Cro :: HTTP :: Client。请注意，为get或request指定的任何命名参数都将覆盖在给定测试中指定的参数。</p>
 
-<pre><code class="language-perl6">test-given '/add', header =&gt; { X-Precision =&gt; '15' } {
+<pre><code class="language-raku">test-given '/add', header =&gt; { X-Precision =&gt; '15' } {
     ...
 }
 </code></pre>
 
 <p>第二种形式不需要相对URI，而只需要选项：</p>
 
-<pre><code class="language-perl6">test-given header =&gt; { X-Precision =&gt; '15' } {
+<pre><code class="language-raku">test-given header =&gt; { X-Precision =&gt; '15' } {
     ...
 }
 </code></pre>

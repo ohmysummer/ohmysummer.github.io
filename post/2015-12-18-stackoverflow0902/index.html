@@ -8,13 +8,13 @@
   <title>stackoverflow0902</title>
   <meta property="og:title" content="stackoverflow0902" />
   <meta name="twitter:title" content="stackoverflow0902" />
-  <meta name="description" content="How do I chain to an inline block in Perl 6?
+  <meta name="description" content="How do I chain to an inline block in Raku?
 我想修改一个数组(我在这个例子中使用了 splice, 但是它也可能是修改数组的任何操作)并返回修改后的数组 - 和 slice 不一样, slice 返回的是从数组中抠出的项。我可以很容易地通过在数组中存储一个 block 来做到, 就像下面这样:
 my $1 = -&gt; $a { splice($a,1,3,[1,2,3]); $a }; say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array; # [0 0 0 0 4 5] say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.$1; # [0 1 2 3 4 5]  我怎么把由 $1 代表的 block 内联到单个表达式中呢？ 下面的解决方法不正确:">
-  <meta property="og:description" content="How do I chain to an inline block in Perl 6?
+  <meta property="og:description" content="How do I chain to an inline block in Raku?
 我想修改一个数组(我在这个例子中使用了 splice, 但是它也可能是修改数组的任何操作)并返回修改后的数组 - 和 slice 不一样, slice 返回的是从数组中抠出的项。我可以很容易地通过在数组中存储一个 block 来做到, 就像下面这样:
 my $1 = -&gt; $a { splice($a,1,3,[1,2,3]); $a }; say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array; # [0 0 0 0 4 5] say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.$1; # [0 1 2 3 4 5]  我怎么把由 $1 代表的 block 内联到单个表达式中呢？ 下面的解决方法不正确:">
-  <meta name="twitter:description" content="How do I chain to an inline block in Perl 6?
+  <meta name="twitter:description" content="How do I chain to an inline block in Raku?
 我想修改一个数组(我在这个例子中使用了 splice, 但是它也可能是修改数组的任何操作)并返回修改后的数组 - 和 slice 不一样, slice 返回的是从数组中抠出的项。我可以很容易地通过在数组中存储一个 block 来做到, 就像下面这样:
 my $1 = -&gt; $a { …">
   <meta name="author" content="焉知非鱼"/>
@@ -214,7 +214,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (526 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (525 words)
   
   
 </span>
@@ -235,11 +235,11 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p><a href="http://stackoverflow.com/questions/37979519/how-do-i-chain-to-an-inline-block-in-perl-6">How do I chain to an inline block in Perl 6?</a></p>
+<p><a href="http://stackoverflow.com/questions/37979519/how-do-i-chain-to-an-inline-block-in-perl-6">How do I chain to an inline block in Raku?</a></p>
 
 <p>我想修改一个数组(我在这个例子中使用了 <code>splice</code>, 但是它也可能是修改数组的任何操作)并返回修改后的数组 - 和 <code>slice</code> 不一样, slice 返回的是从数组中抠出的项。我可以很容易地通过在数组中存储一个 block 来做到, 就像下面这样:</p>
 
-<pre><code class="language-perl6">my $1 = -&gt; $a { splice($a,1,3,[1,2,3]); $a };
+<pre><code class="language-raku">my $1 = -&gt; $a { splice($a,1,3,[1,2,3]); $a };
 say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array;
 # [0 0 0 0 4 5]
 say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.$1;
@@ -248,19 +248,19 @@ say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.$1;
 
 <p>我怎么把由 <code>$1</code> 代表的 block 内联到单个表达式中呢？ 下面的解决方法不正确:</p>
 
-<pre><code class="language-perl6">say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.(-&gt; $a { splice($a,1,3,[1,2,3]); $a })
+<pre><code class="language-raku">say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.(-&gt; $a { splice($a,1,3,[1,2,3]); $a })
 Invocant requires a type object of type Array, but an object instance was passed.  Did you forget a 'multi'?
 </code></pre>
 
 <p>解决方法是添加一个 <code>&amp;</code> 符号:</p>
 
-<pre><code class="language-perl6">say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.&amp;(-&gt; $a { splice($a,1,3,[1,2,3]); $a })
+<pre><code class="language-raku">say (^6).map( { $_ &lt; 4 ?? 0 !! $_ } ).Array.&amp;(-&gt; $a { splice($a,1,3,[1,2,3]); $a })
 # 输出 [0 1 2 3 4 5]
 </code></pre>
 
 <h2 id="getting-a-positional-slice-using-a-range-variable-as-a-subscript-http-stackoverflow-com-questions-38535690-getting-a-positional-slice-using-a-range-variable-as-a-subscript"><a href="http://stackoverflow.com/questions/38535690/getting-a-positional-slice-using-a-range-variable-as-a-subscript">Getting a positional slice using a Range variable as a subscript</a></h2>
 
-<pre><code class="language-perl6">my @numbers = &lt;4 8 16 16 23 42&gt;;
+<pre><code class="language-raku">my @numbers = &lt;4 8 16 16 23 42&gt;;
 .say for @numbers[0..2]; # this works
 # 4
 # 8
@@ -278,7 +278,7 @@ my $range = 0..2;
 
 <p>使用 <code>@numbers[|$range]</code> 把 range 对象展平到列表中。或者在 <strong>Range</strong> 对象上使用绑定来传递它们。</p>
 
-<pre><code class="language-perl6"># On Fri Jul 2016, gfldex wrote:
+<pre><code class="language-raku"># On Fri Jul 2016, gfldex wrote:
 my @numbers =  &lt;4 8 15 16 23 42&gt;; my $range = 0..2; .say for @numbers[$range];
 
 # OUTPUT«16»
@@ -308,7 +308,7 @@ my @numbers =  &lt;4 8 15 16 23 42&gt;; my $range := 0..2; .say for @numbers[$ra
 
 <p>或者：</p>
 
-<pre><code class="language-perl6">.say for @numbers[@($range)]
+<pre><code class="language-raku">.say for @numbers[@($range)]
 # 4
 # 8
 # 15
@@ -320,7 +320,7 @@ my @numbers =  &lt;4 8 15 16 23 42&gt;; my $range := 0..2; .say for @numbers[$ra
 <p>前置一个 @ 符号来得到单个东西的复数形式：numbers[@$range]; 或者以不同的形式来声明 ragne 变量, 以使它直接工作。
 对于后者, 考虑下面的形式:</p>
 
-<pre><code class="language-perl6"># Bind the symbol `numbers` to the value 1..10:
+<pre><code class="language-raku"># Bind the symbol `numbers` to the value 1..10:
 my \numbers = [0,1,2,3,4,5,6,7,8,9,10];
 
 # Bind the symbol `rangeA` to the value 1..10:
@@ -378,7 +378,7 @@ say numbers[@rangeF]; # (1 2 3 4 5 6 7 8 9 10)
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2015-12-21-perl6intro-%E7%BF%BB%E8%AF%91/" data-toggle="tooltip" data-placement="top" title="perl6intro 翻译">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2015-12-21-raku-intro-%E7%BF%BB%E8%AF%91/" data-toggle="tooltip" data-placement="top" title="rakuintro 翻译">Next Post &rarr;</a>
             </li>
           
         </ul>

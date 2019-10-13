@@ -211,7 +211,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1276 words)
+  <i class="fa fa-clock-o"></i> 6 minutes (1269 words)
   
   
 </span>
@@ -276,19 +276,19 @@ for @d -&gt; $item {
 # [1, 2, 3, 4, 5, 6, 7, 8, 9]
 </code></pre>
 
-<p>这跟<a href="https://design.perl6.org/S07.html#The_single_argument_rule">The single argument rule</a>有关。</p>
+<p>这跟<a href="https://design.raku.org/S07.html#The_single_argument_rule">The single argument rule</a>有关。</p>
 
 <h2 id="设计大纲">设计大纲</h2>
 
 <hr />
 
-<p>Perl 6 提供了很多跟列表相关的特性, 包括 <code>eager</code>, <code>lazy</code>, <code>并行计算</code>, 还有紧凑型阵列和多维数组存储。</p>
+<p>Raku 提供了很多跟列表相关的特性, 包括 <code>eager</code>, <code>lazy</code>, <code>并行计算</code>, 还有紧凑型阵列和多维数组存储。</p>
 
 <h3 id="sequences-vs-lists">Sequences vs. Lists</h3>
 
 <hr />
 
-<p>在 Perl 6 中, 我们使用项 <code>sequence</code> 来来指某个东西, 当需要的时候产生一个值的序列。即序列是惰性的。注意, 只能要求生成一次。我们使用项<code>list</code>来指能保存值的东西。</p>
+<p>在 Raku 中, 我们使用项 <code>sequence</code> 来来指某个东西, 当需要的时候产生一个值的序列。即序列是惰性的。注意, 只能要求生成一次。我们使用项<code>list</code>来指能保存值的东西。</p>
 
 <pre><code class="language-perl">(1, 2, 3)    # 列表, 最简单的 list
 [1, 2, 3]    # 数组, Scalar 容器的列表
@@ -297,11 +297,11 @@ $*IN.lines   # a Seq, 一个可以被连续处理的序列
 (^1000).race # a HyperSeq, 一个可以并行处理的序列
 </code></pre>
 
-<h3 id="the-single-argument-rule-https-design-perl6-org-s07-html-the-single-argument-rule"><a href="https://design.perl6.org/S07.html#The_single_argument_rule">The single argument rule</a></h3>
+<h3 id="the-single-argument-rule-https-design-raku-org-s07-html-the-single-argument-rule"><a href="https://design.raku.org/S07.html#The_single_argument_rule">The single argument rule</a></h3>
 
 <hr />
 
-<p>在 Perl 中 <strong>@</strong> 符号标示着 &ldquo;这些&rdquo;(<strong>these</strong>), 而 <strong>$</strong>符号标示着 &ldquo;这个&rdquo;(<strong>the</strong>)。这种<strong>复数</strong>/<strong>单数</strong>的明显差别出现在语言中的各种地方, Perl  中的很多便捷就是来源于这个特点。展平(Flattening)就是 @-like 的东西会在特定上下文中自动把它的值并入周围的列表中。之前这在 Perl 中既功能强大又很有迷惑性。在直截了当的发起知名的&rdquo;单个参数规则&rdquo;之前, Perl 6 在发展中通过了几次跟 flattening 有关的模仿。</p>
+<p>在 Perl 中 <strong>@</strong> 符号标示着 &ldquo;这些&rdquo;(<strong>these</strong>), 而 <strong>$</strong>符号标示着 &ldquo;这个&rdquo;(<strong>the</strong>)。这种<strong>复数</strong>/<strong>单数</strong>的明显差别出现在语言中的各种地方, Perl  中的很多便捷就是来源于这个特点。展平(Flattening)就是 @-like 的东西会在特定上下文中自动把它的值并入周围的列表中。之前这在 Perl 中既功能强大又很有迷惑性。在直截了当的发起知名的&rdquo;单个参数规则&rdquo;之前, Raku 在发展中通过了几次跟 flattening 有关的模仿。</p>
 
 <p>对单个参数规则最好的理解是通过 <strong>for</strong>循环迭代的次数。对于 <strong>for</strong>循环, 要迭代的东西总是被当作单个参数。因此有了单个参数规则这个名字。</p>
 
@@ -314,7 +314,7 @@ for (@a)      { }   # 含有 @a.elems 个元素的列表, @a.elems 次迭代
 for @a        { }   # 含有 @a.elems 个元素的列表, @a.elems 次迭代
 </code></pre>
 
-<p>前两个是相同的, 因为圆括号事实上不构建列表, 而只是分组。是中缀操作符 <code>infix:&lt;,&gt;</code>组成的列表。第三个也执行了 3 次迭代, 因为在 Perl 6 中 <code>[...]</code> 构建了一个数组但是没有把它包裹进 <code>Scalar</code> 容器中。第四个会执行 2 次迭代, 因为参数是一个含有两个元素的列表, 而那两个元素恰好是数组, 它俩都有 @ 符号, 但是都没有导致展开。第 五 个同样, <code>infix:&lt;,&gt;</code> 很高兴地组成了只含一个元素的列表。</p>
+<p>前两个是相同的, 因为圆括号事实上不构建列表, 而只是分组。是中缀操作符 <code>infix:&lt;,&gt;</code>组成的列表。第三个也执行了 3 次迭代, 因为在 Raku 中 <code>[...]</code> 构建了一个数组但是没有把它包裹进 <code>Scalar</code> 容器中。第四个会执行 2 次迭代, 因为参数是一个含有两个元素的列表, 而那两个元素恰好是数组, 它俩都有 @ 符号, 但是都没有导致展开。第 五 个同样, <code>infix:&lt;,&gt;</code> 很高兴地组成了只含一个元素的列表。</p>
 
 <p>单个参数规则也考虑了 Scalar 容器。因此:</p>
 
@@ -347,7 +347,7 @@ $[1, 2, 3]
 $[1, 2, 3]
 </code></pre>
 
-<p>贯穿 Perl 6 语言, 单个参数规则(<strong>Single argument rule</strong>) 始终如一地被实现了。例如, 我们看 <strong>push</strong> 方法:</p>
+<p>贯穿 Raku 语言, 单个参数规则(<strong>Single argument rule</strong>) 始终如一地被实现了。例如, 我们看 <strong>push</strong> 方法:</p>
 
 <pre><code class="language-perl">@a.push: 1, 2, 3;       # pushes 3 values to @a
 @a.push: [1, 2, 3];     # pushes 1 Array to @a
@@ -581,7 +581,7 @@ process($*IN.lines);
 
 <hr />
 
-<p><strong>Seq</strong> 和 <strong>List</strong> 这俩, 还有 Perl 6 中的各种其它类型, 遵守 <strong>Iterable</strong> role。这个 role 的主要意图是获得一个 <code>iterator</code>方法。中级 Perl 6 用户很少会关心 <code>iterator</code>方法和它返回什么。</p>
+<p><strong>Seq</strong> 和 <strong>List</strong> 这俩, 还有 Raku 中的各种其它类型, 遵守 <strong>Iterable</strong> role。这个 role 的主要意图是获得一个 <code>iterator</code>方法。中级 Raku 用户很少会关心 <code>iterator</code>方法和它返回什么。</p>
 
 <p><strong>Iterable</strong> 的第二个目的是为了标记出会被按需展开的东西, 使用 <code>flat</code>方法或用在它们身上的函数。</p>
 
@@ -636,7 +636,7 @@ say [flat @a, @b].elems;     # 5 次迭代
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2016-02-14-perl-6-examples/" data-toggle="tooltip" data-placement="top" title="Perl 6 Examples">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2016-02-14-raku-examples/" data-toggle="tooltip" data-placement="top" title="Raku Examples">Next Post &rarr;</a>
             </li>
           
         </ul>

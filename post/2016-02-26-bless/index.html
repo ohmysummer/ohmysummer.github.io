@@ -219,7 +219,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (419 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (418 words)
   
   
 </span>
@@ -242,7 +242,7 @@ if (!doNotTrack) {
 
 <h2 id="bless-方法">bless 方法</h2>
 
-<pre><code class="language-perl6">method bless(*%attrinit) returns Mu:D
+<pre><code class="language-raku">method bless(*%attrinit) returns Mu:D
 </code></pre>
 
 <p>相比 <code>new</code>方法来说更低层级别的对象构造方法。</p>
@@ -251,7 +251,7 @@ if (!doNotTrack) {
 
 <p>在自定义构造函数时可以使用该方法:</p>
 
-<pre><code class="language-perl6">class Point {
+<pre><code class="language-raku">class Point {
     has $.x;
     has $.y;
 
@@ -270,7 +270,7 @@ say $p.x; # -1
 <p>虽然你可以自定义构造函数, 记得它会让子类继承变得更困难。</p>
 </blockquote>
 
-<pre><code class="language-perl6">use v6;
+<pre><code class="language-raku">use v6;
 
 # bless 的原理
 class Dog {
@@ -292,7 +292,7 @@ say Dog.counter; # 1
 
 <hr />
 
-<p>在 Perl 6 中创建一个对象相当容易。 作为类的作者你真的不必关心(至少在最简单的情况下), 你从 <code>Mu</code> 类继承了一个默认的构造函数。作为类的使用者, 你仅仅写出 <code>MyClass.new(attrib1 =&gt; $value1)</code> 就能创建一个 <code>MyClass</code>类的对象, 同时初始化了一个公开的属性 <strong>attrib1</strong>。</p>
+<p>在 Raku 中创建一个对象相当容易。 作为类的作者你真的不必关心(至少在最简单的情况下), 你从 <code>Mu</code> 类继承了一个默认的构造函数。作为类的使用者, 你仅仅写出 <code>MyClass.new(attrib1 =&gt; $value1)</code> 就能创建一个 <code>MyClass</code>类的对象, 同时初始化了一个公开的属性 <strong>attrib1</strong>。</p>
 
 <h2 id="运行初始化代码">运行初始化代码</h2>
 
@@ -300,7 +300,7 @@ say Dog.counter; # 1
 
 <p>如果你想在对象创建中运行某些初始化代码, 那么你一点儿也没有必要动用 <code>new</code>方法。使用 <strong>BUILD</strong> 子方法:</p>
 
-<pre><code class="language-perl6">class C {
+<pre><code class="language-raku">class C {
     submethod BUILD {
         say &quot;创建一个 C 的实例&quot;;
     }
@@ -315,14 +315,14 @@ C.new();  # 创建一个 C 的实例
 
 <p>因为 <strong>BUILD</strong> 运行在尚未完全构建好的对象上,  属性只有在被声明为具名参数的时候才可以被访问:</p>
 
-<pre><code class="language-perl6">submethod BUILD(:$!attr1, :$!attr2) {
+<pre><code class="language-raku">submethod BUILD(:$!attr1, :$!attr2) {
     # 这儿可以使用 $!attr1 和 $!attr2
 }
 </code></pre>
 
 <p>该语法也自动的使用和 <code>new</code>方法同名的具名参数的值初始化属性 。</p>
 
-<pre><code class="language-perl6">use v6;
+<pre><code class="language-raku">use v6;
 
 class Cat {
     has $.fullname;
@@ -339,7 +339,7 @@ Cat.new(fullname =&gt; 'Camelia', nickname =&gt; 'Rakudo Star');
 
 <p>所以下面的两个类声明, 表现一样:</p>
 
-<pre><code class="language-perl6">class D {
+<pre><code class="language-raku">class D {
     has $.x;
 }
 # and
@@ -358,7 +358,7 @@ class D {
 
 <p>假如你对具名参数不感冒, 而你想自定义一个接收<strong>一个</strong>强制位置参数的构造函数。那样你就需要自定义 <code>new</code>方法。要创建一个对象, 被重写的 new 方法中<strong>必须</strong>调用 <code>self.bless</code>：</p>
 
-<pre><code class="language-perl6">class C {
+<pre><code class="language-raku">class C {
     has $.size;
     method new($x) {
         self.bless(*, size =&gt; 2 * $x);
@@ -372,7 +372,7 @@ say C.new(3).size; # 接收一个位置参数, 打印出 6
 
 <p>如果你想开启额外的具名参数, 那很容易:</p>
 
-<pre><code class="language-perl6">class C {
+<pre><code class="language-raku">class C {
     has $.size;
     method new($x, *%remaining) {
         self.bless(*, size =&gt; 2 * $x, |%remaining);
@@ -388,7 +388,7 @@ say C.new(3).size; # 接收一个位置参数, 打印出 6
 
 <p>为属性提供默认值的最方便的方式是在声明属性的时候为属性提供默认值:</p>
 
-<pre><code class="language-perl6">class Window {
+<pre><code class="language-raku">class Window {
     has $.height = 600;
     has $.width  = $.height * 1.618;
     ...
@@ -411,7 +411,7 @@ say C.new(3).size; # 接收一个位置参数, 打印出 6
 
 <p>这样的设计允许你花费最少的力气来替换初始化的一部分, 尤其是自定义 <strong>new</strong> 和 <strong>BUILD</strong> 方法会很容易写。</p>
 
-<pre><code class="language-perl6">use v6;
+<pre><code class="language-raku">use v6;
 
 class B {
     has $.name;
@@ -437,7 +437,7 @@ my $c = C.new(nickname =&gt; 'HANMEIMEI');
 
 <p>打印：</p>
 
-<pre><code class="language-perl6">调用了 B 的 BUILD, 我叫 Lucy
+<pre><code class="language-raku">调用了 B 的 BUILD, 我叫 Lucy
 调用了 C 的 BUILD, 我叫 Camelia, 我爸爸是 Lucy
 </code></pre>
 
@@ -462,7 +462,7 @@ my $c = C.new(nickname =&gt; 'HANMEIMEI');
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2016-02-29-perl6%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E5%8F%98%E9%87%8F/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的动态变量">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2016-02-29-raku%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E5%8F%98%E9%87%8F/" data-toggle="tooltip" data-placement="top" title="Raku 中的动态变量">Next Post &rarr;</a>
             </li>
           
         </ul>

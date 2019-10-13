@@ -201,8 +201,8 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-perl6/">
-                <h2 class="post-title">Ping Pang in Perl6</h2>
+              <a href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-raku/">
+                <h2 class="post-title">Ping Pang in Raku</h2>
 
                 
                   <h3 class="post-subtitle">
@@ -219,7 +219,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (678 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (676 words)
   
   
 </span>
@@ -227,11 +227,11 @@ if (!doNotTrack) {
               </p>
               <div class="post-entry">
                 
-                  Ping Pang in Perl 6 使用 channels 在线程之间传递消息是一种管理并发的简单方法。
+                  Ping Pang in Raku 使用 channels 在线程之间传递消息是一种管理并发的简单方法。
 一位朋友最近向我展示了一个很酷的程序，用 elixir 来演示消息传递 - 两个线程通过来回传递递增的数字来计数。快速搜索出现了一些例子。
-我决定在 Perl 6 中实现这个。这就是我想出来的→
-my ($ping, $pong) = Channel.new xx 2; sub ping { while $ping.receive -&gt; $n { say &quot;ping $n (thread #{$*THREAD.id})&quot;; $pong.send: $n + 1; } } sub pong { while $pong.receive -&gt; $n { last if $n &gt;= 5; say &quot;pong $n (thread #{$*THREAD.id})&quot;; $ping.send: $n + 1; } } $ping.send: 1; await Promise.
-                  <a href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-perl6/" class="post-read-more">[Read More]</a>
+我决定在 Raku 中实现这个。这就是我想出来的→
+my ($ping, $pong) = Channel.new xx 2; sub ping { while $ping.receive -&gt; $n { say &quot;ping $n (thread #{$*THREAD.id})&quot;; $pong.send: $n + 1; } } sub pong { while $pong.receive -&gt; $n { last if $n &gt;= 5; say &quot;pong $n (thread #{$*THREAD.id})&quot;; $ping.send: $n + 1; } } $ping.send: 1; await Promise.anyof( (start ping), (start pong) );  $ping 和 $pong 都是 channel。子程序 ping 和 pong 从它们相应的 channel 接收并发送到另一个。
+                  <a href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-raku/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -307,7 +307,7 @@ method receive(Channel:D:)  从频道接收和删除项目。如果没有项目�
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (269 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (266 words)
   
   
 </span>
@@ -315,9 +315,9 @@ method receive(Channel:D:)  从频道接收和删除项目。如果没有项目�
               </p>
               <div class="post-entry">
                 
-                  到目前为止(2016.10.26), Perl 6 的速度相比 Perl 5/Python 的差距还是很大的。以打印从 1 开始计数的第 10000 个素数为例, 使用如下版本的 Rakudo:
- This is Rakudo version 2016.07.1 built on MoarVM version 2016.07 implementing Perl 6.c.
- 从程序执行耗费的时间来看, Perl 6 实在慢的如蜗牛。
+                  到目前为止(2016.10.26), Raku 的速度相比 Perl 5/Python 的差距还是很大的。以打印从 1 开始计数的第 10000 个素数为例, 使用如下版本的 Rakudo:
+ This is Rakudo version 2016.07.1 built on MoarVM version 2016.07 implementing Raku.c.
+ 从程序执行耗费的时间来看, Raku 实在慢的如蜗牛。
 并发打印第10000个素数 sub find-prime($count) { my $channel = Channel.new; my $promise = start { for ^$count { $channel.send($_) if .is-prime; } LEAVE $channel.close unless $channel.closed; } return $channel.list but role :: { method channel { $channel } };; } my @primes = find-prime(110000); #for @primes { # @primes.
                   <a href="https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/" class="post-read-more">[Read More]</a>
                 
@@ -356,7 +356,7 @@ method receive(Channel:D:)  从频道接收和删除项目。如果没有项目�
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (243 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (242 words)
   
   
 </span>
@@ -384,8 +384,8 @@ sub find-simple ( IO(Str) $dir, :$keep-going = True, :$no-thread = False ) is ex
             </article>
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2016-10-03-perl6%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/">
-                <h2 class="post-title">Perl 6 中的并发</h2>
+              <a href="https://ohmysummer.github.io/post/2016-10-03-raku%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/">
+                <h2 class="post-title">Raku 中的并发</h2>
 
                 
                   <h3 class="post-subtitle">
@@ -402,7 +402,7 @@ sub find-simple ( IO(Str) $dir, :$keep-going = True, :$no-thread = False ) is ex
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 9 minutes (1743 words)
+  <i class="fa fa-clock-o"></i> 9 minutes (1742 words)
   
   
 </span>
@@ -411,12 +411,12 @@ sub find-simple ( IO(Str) $dir, :$keep-going = True, :$no-thread = False ) is ex
               <div class="post-entry">
                 
                   Concurrency
-与大多数现代编程语言一样，Perl 6 被设计为支持并发（允许多个事件同时发生）和异步编程（有时称为事件驱动或反应式编程 - 即程序某些部分的事件或变化可能会导致程序流异步地改变程序的其它部分）。
+与大多数现代编程语言一样，Raku 被设计为支持并发（允许多个事件同时发生）和异步编程（有时称为事件驱动或反应式编程 - 即程序某些部分的事件或变化可能会导致程序流异步地改变程序的其它部分）。
 Perl 的并发设计的目的是提供一个高层级的，可组合的，一致的接口，而不管如下所述的虚拟机通过工具层怎样为特定操作的系统来实现它。
 此外，某些 Perl 的特性可以隐式地以异步的方式操作，所以为了确保这些特性可预测的互通，用户代码应在可能情况下，避免较低层级的并发的 API（即线程和调度器），并使用高层级接口。
 High-level APIs Promises Promise（在其他编程环境中也被称为 *future*）封装了在获得 promise 时可能尚未完成或甚至未开始的计算结果。Promise 从 Planned 状态开始, 结果要么是 Kept 状态, 这意味着该 promise 已成功完成, 要么是 Broken 状态, 意味着该 promise 已失败。 通常这就是用户代码需要以并行或异步方式操作的使用最多的功能。
-my $p1 = Promise.new; say $p1.status; # OUTPUT: «Planned␤» $p1.keep('Result'); say $p1.status; # OUTPUT: «Kept␤» say $p1.result; # OUTPUT: «Result␤» # (since it has been kept, a result is available!) my $p2 = Promise.new; $p2.
-                  <a href="https://ohmysummer.github.io/post/2016-10-03-perl6%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/" class="post-read-more">[Read More]</a>
+my $p1 = Promise.new; say $p1.status; # OUTPUT: «Planned␤» $p1.keep('Result'); say $p1.status; # OUTPUT: «Kept␤» say $p1.result; # OUTPUT: «Result␤» # (since it has been kept, a result is available!) my $p2 = Promise.new; $p2.break('oh no'); say $p2.
+                  <a href="https://ohmysummer.github.io/post/2016-10-03-raku%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/" class="post-read-more">[Read More]</a>
                 
               </div>
 

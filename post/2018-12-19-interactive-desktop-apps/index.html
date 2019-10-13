@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (674 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (672 words)
   
   
 </span>
@@ -237,15 +237,15 @@ if (!doNotTrack) {
 
 <p>我的游戏收藏很广泛而且我宁愿使用我的笔记本电脑不仅隐藏在后面并跟踪信息，而且我还可以自动化骰子和图表使用。虽然我可以用文本编辑器和命令行魔法拼凑一些东西，但我宁愿拥有一些时髦的桌面应用程序，我可以向人们展示。</p>
 
-<p>输入<a href="https://github.com/perl6/gtk-simple">GTK::Simple</a>是Linux Gnome桌面使用的gtk3 UI库的包装器，但也可以在Windows和Mac上使用。该库通过Native Call 的强大功能为你提供了一个简单易用的界面，让你可以创建简单的桌面应用程序。</p>
+<p>输入<a href="https://github.com/raku/gtk-simple">GTK::Simple</a>是Linux Gnome桌面使用的gtk3 UI库的包装器，但也可以在Windows和Mac上使用。该库通过Native Call 的强大功能为你提供了一个简单易用的界面，让你可以创建简单的桌面应用程序。</p>
 
 <h2 id="骰子滚动">骰子滚动</h2>
 
 <p>由于历史原因，角色扮演游戏大多数倾向于选择使用基于柏拉图固体的骰子。骰子的标准组合是4,6,8,10,12,20，并且通过组合2个10面骰子100的骰子。骰子可以多次滚动，用于写入的标准符号是“ x<strong>d</strong>y ”，其中 “*x*“ 是掷骰子的数量，”*y*“ 是掷骰子的大小。单个骰子在开始时跳过1，例如“roll a d6”意味着掷出六面骰子。</p>
 
-<p>有趣的是，在 Perl 6 中制作 “<strong>d</strong>” 运算符非常简单：</p>
+<p>有趣的是，在 Raku 中制作 “<strong>d</strong>” 运算符非常简单：</p>
 
-<pre><code class="language-perl6">sub infix: ( UInt $count, UInt $size ) { (1..$size).roll($count) }
+<pre><code class="language-raku">sub infix: ( UInt $count, UInt $size ) { (1..$size).roll($count) }
 sub prefix: ( UInt $size ) { 1 d $size }
 </code></pre>
 
@@ -259,7 +259,7 @@ sub prefix: ( UInt $size ) { 1 d $size }
 
 <p>首先，我们创建我们的应用程序，如下所示：</p>
 
-<pre><code class="language-perl">#!/usr/bin/env perl6
+<pre><code class="language-perl">#!/usr/bin/env raku
 
 # Get the GTK::Simple libraries
 use GTK::Simple;
@@ -274,7 +274,7 @@ $app.run;
 
 <p>但…。这不是很有趣：</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/empty.png?w=788" alt="空" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/empty.png?w=788" alt="空" /></p>
 
 <h2 id="网格布局">网格布局</h2>
 
@@ -282,7 +282,7 @@ $app.run;
 
 <p>正是在这一点上，我尝试构建一个应用程序，我打了一个墙。网格选项很好，我在下面的最后一个例子中使用它但是当我尝试的时候它没有按照我的预期工作。我仍然可以得到一个简单的网格，所以显示它的工作，但似乎需要更多的学习。无论如何这里是一个基本网格：</p>
 
-<pre><code class="language-perl6">#!/usr/bin/env perl6
+<pre><code class="language-raku">#!/usr/bin/env raku
 # Get the GTK::Simple libraries
 use GTK::Simple;
 use GTK::Simple::App;
@@ -308,15 +308,15 @@ $app.run;
 
 <p>这个产生：</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/grid-1.png?w=788" alt="格" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/grid-1.png?w=788" alt="格" /></p>
 
 <h2 id="交互">交互</h2>
 
-<p>这很整洁，但按钮还没有做任何事情。为此，我们需要事件处理程序。GUI应用程序需要事件驱动才能对用户操作做出反应，幸运的是 Perl 6 具有处理 Supplies 形式的事件的功能。每个按钮都有一个名为 clicked 的 supply，它可以附加一个 tap 处理程序。</p>
+<p>这很整洁，但按钮还没有做任何事情。为此，我们需要事件处理程序。GUI应用程序需要事件驱动才能对用户操作做出反应，幸运的是 Raku 具有处理 Supplies 形式的事件的功能。每个按钮都有一个名为 clicked 的 supply，它可以附加一个 tap 处理程序。</p>
 
 <p>事件处理程序可以执行各种操作，包括操作其他UI对象。例如 ：</p>
 
-<pre><code class="language-perl6">#!/usr/bin/env perl6
+<pre><code class="language-raku">#!/usr/bin/env raku
 
 # Get the GTK::Simple libraries
 use GTK::Simple;
@@ -364,13 +364,13 @@ $app.run;
 
 <p>这使得：</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/buttons.png?w=788" alt="纽扣" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/buttons.png?w=788" alt="纽扣" /></p>
 
 <h2 id="把它们放在一起">把它们放在一起</h2>
 
 <p>有了这个和另一个小部件，Label 给了我们一些文本，我们可以把骰子滚动应用程序放在一起：</p>
 
-<pre><code class="language-perl6">#!/usr/bin/env perl6
+<pre><code class="language-raku">#!/usr/bin/env raku
 
 # Get the GTK::Simple libraries
 use GTK::Simple;
@@ -441,19 +441,19 @@ $app.run;
 
 <p>看起来像（这里滚动3d6）：</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/dice-roller.png?w=788" alt="骰子辊" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/dice-roller.png?w=788" alt="骰子辊" /></p>
 
 <h2 id="最后的想法">最后的想法</h2>
 
 <p>考虑到我今天早上没有触及 GTK::Simple，我对我的最终结果非常满意。我认为我可以构建许多其他游戏工具。此外，我可能会参与模块本身的工作，尝试将更多的GTK功能添加到其中，并添加一些文档。</p>
 
-<p>尽管如此，使用 GTK::Simple 还是很容易使桌面应用程序在Perl6中遇到特殊的问题，而且代码并不多。</p>
+<p>尽管如此，使用 GTK::Simple 还是很容易使桌面应用程序在Raku中遇到特殊的问题，而且代码并不多。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -470,7 +470,7 @@ $app.run;
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-20-perl6%E4%B8%AD%E7%9A%84%E5%91%BD%E9%A2%98%E7%BB%84%E5%90%88/" data-toggle="tooltip" data-placement="top" title="第二十天 - Perl 6 中的命题组合">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-20-raku%E4%B8%AD%E7%9A%84%E5%91%BD%E9%A2%98%E7%BB%84%E5%90%88/" data-toggle="tooltip" data-placement="top" title="第二十天 - Raku 中的命题组合">Next Post &rarr;</a>
             </li>
           
         </ul>

@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (669 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (668 words)
   
   
 </span>
@@ -237,7 +237,7 @@ if (!doNotTrack) {
 
 <p>这一次在博客上，我将告诉你如何编写自己的模板引擎 - 根据需要为你量身定制语法和行为。 我们将以四种不同的方式来分析每种方法的优缺点，以及代码速度和复杂性。 我们今天的示例任务是为用户撰写密码提醒文本，然后可以通过电子邮件发送。</p>
 
-<pre><code class="language-perl6">use v6;
+<pre><code class="language-raku">use v6;
 
 my $template = q{
     Hi [VARIABLE person]!
@@ -258,7 +258,7 @@ my %fields = (
 
 <h2 id="substitutions">Substitutions</h2>
 
-<pre><code class="language-perl6">sub substitutions ( $template is copy, %fields ) {
+<pre><code class="language-raku">sub substitutions ( $template is copy, %fields ) {
     for %fields.kv -&gt; $key, $value {
         $template ~~ s:g/'[VARIABLE ' $key ']'/$value/;
     }
@@ -279,7 +279,7 @@ Best regards.
 
 <p>现在是时候进行基准测试了，以获得不同方法的基准：</p>
 
-<pre><code class="language-perl6">use Bench;
+<pre><code class="language-raku">use Bench;
 
 my $template_short = $template;
 my %fields_short = %fields;
@@ -314,7 +314,7 @@ substitutions_short: 0.1962 wallclock secs @ 5097.3042/s (n=1000)
 
 <h2 id="substitution">Substitution</h2>
 
-<pre><code class="language-perl6">sub substitution ( $template is copy, %fields ) {
+<pre><code class="language-raku">sub substitution ( $template is copy, %fields ) {
     $template ~~ s:g/'[VARIABLE ' (\w+) ']'/{ %fields{$0} }/;
     return $template;
 }
@@ -333,9 +333,9 @@ substitution_short: 0.1359 wallclock secs @ 7356.3411/s (n=1000)
 
 <h2 id="grammars-和-actions">Grammars 和 Actions</h2>
 
-<p>如果你不熟悉 Perl 6 的 Grammar 和抽象语法树概念，你应该首先学习<a href="https://docs.perl6.org/language/grammars.html">官方文档</a>。</p>
+<p>如果你不熟悉 Raku 的 Grammar 和抽象语法树概念，你应该首先学习<a href="https://docs.raku.org/language/grammars.html">官方文档</a>。</p>
 
-<pre><code class="language-perl6">grammar Grammar {
+<pre><code class="language-raku">grammar Grammar {
   regex TOP      {^ [ | ]* $ }
   regex text     { &lt;-[[]]&gt;+ }
   regex variable { '[VARIABLE ' $=(\w+) ']' }
@@ -379,7 +379,7 @@ grammar_actions_direct_short: 0.2405 wallclock secs @ 4158.1981/s (n=1000)
 <p>最后，我们达到&rdquo;boss级&rdquo;，我们必须消灭最后和最大的缺陷 - 重新解析。
 我的想法是使用之前方法中的 grammars 和 actions，但这一次，我们想生成可执行和可重用的代码，而不是得到直接输出，工作原理如下：</p>
 
-<pre><code class="language-perl6">sub ( %fields ) {
+<pre><code class="language-raku">sub ( %fields ) {
     return join '',
         sub ( %fields ) { return &quot;Hi &quot;}.( %fields ),
         sub ( %fields ) { return %fields{'person'} }.( %fields ),
@@ -391,7 +391,7 @@ grammar_actions_direct_short: 0.2405 wallclock secs @ 4158.1981/s (n=1000)
 每次调用这个级联时，它将获取并把%fields传播到更深的子程序中。
 并且每个子例程负责处理由 grammar 中的单个正则表达式匹配的模板片段。 我们可以重用之前方法中的 grammar，只修改 actions：</p>
 
-<pre><code class="language-perl6">class Actions {
+<pre><code class="language-raku">class Actions {
     
     method TOP ( $/ ) {
         my @chunks = $/{'chunk'};
@@ -423,7 +423,7 @@ sub grammar_actions_closures ( $template, %fields ) {
 }
 </code></pre>
 
-<p>现在每个 action 方法使子程序获得 %fields 并在稍后执行最终输出而不是直接最终输出。 要生成这个子程序级联,模板必须只解析一次。 一旦我们得到它，我们可以用不同的 %fields 组来填充我们的模板变量。 注意如何使用 <a href="https://docs.perl6.org/type/Hash#index-entry-object_hash">Object Hash</a> %cache来确定对于给定的 $ template 我们是否已经有子程序树。 再罗嗦一句，我们来做下基准测试：</p>
+<p>现在每个 action 方法使子程序获得 %fields 并在稍后执行最终输出而不是直接最终输出。 要生成这个子程序级联,模板必须只解析一次。 一旦我们得到它，我们可以用不同的 %fields 组来填充我们的模板变量。 注意如何使用 <a href="https://docs.raku.org/type/Hash#index-entry-object_hash">Object Hash</a> %cache来确定对于给定的 $ template 我们是否已经有子程序树。 再罗嗦一句，我们来做下基准测试：</p>
 
 <pre><code>Timing 1000 iterations of grammar_actions_closures_long, grammar_actions_closures_short...
 grammar_actions_closures_long: 22.0476 wallclock secs @ 45.3563/s (n=1000)
@@ -436,7 +436,7 @@ grammar_actions_closures_short: 0.0439 wallclock secs @ 22778.8885/s (n=1000)
 
 <p>最后一种方法开辟了一种新的优化可能性。 如果我们有了生成模板的子程序那么为什么不并行运行它们呢？ 因此，让我们修改我们的 action &ldquo;TOP&rdquo; 方法来同时处理文本和变量块：</p>
 
-<pre><code class="language-perl6">method TOP ( $/ ) {
+<pre><code class="language-raku">method TOP ( $/ ) {
     my @chunks = $/{'chunk'};
     make sub ( %fields ) {
        return [~]( @chunks.hyper.map( {.made.( %fields ) } ).list );
@@ -454,13 +454,13 @@ grammar_actions_closures_short: 0.0439 wallclock secs @ 22778.8885/s (n=1000)
 
 <h3 id="未完待续">未完待续？</h3>
 
-<p>如果你喜欢这个简单的模板引擎介绍，并希望看到更复杂的功能，如条件循环的实现, 请在 blogs.perl.org 的这篇文章下留言或发送私人消息到 irc.freenode.net#perl6 通道(昵称：bbkr）。</p>
+<p>如果你喜欢这个简单的模板引擎介绍，并希望看到更复杂的功能，如条件循环的实现, 请在 blogs.perl.org 的这篇文章下留言或发送私人消息到 irc.freenode.net#raku 通道(昵称：bbkr）。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
             
           </div>
         
@@ -472,7 +472,7 @@ grammar_actions_closures_short: 0.0439 wallclock secs @ 22778.8885/s (n=1000)
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-02-04-whatever-star-vs.-_-vs-/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的 *, $_ 和 $">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2017-02-04-whatever-star-vs.-_-vs-/" data-toggle="tooltip" data-placement="top" title="Raku 中的 *, $_ 和 $">&larr; Previous Post</a>
             </li>
           
           

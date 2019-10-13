@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (790 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (780 words)
   
   
 </span>
@@ -233,7 +233,7 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="第17天-通往幸福的编译道路-https-perl6advent-wordpress-com-2018-12-17-day-17-compiling-our-way-to-happiness"><a href="https://perl6advent.wordpress.com/2018/12/17/day-17-compiling-our-way-to-happiness/">第17天 - 通往幸福的编译道路</a></h1>
+<h1 id="第17天-通往幸福的编译道路-https-rakuadvent-wordpress-com-2018-12-17-day-17-compiling-our-way-to-happiness"><a href="https://rakuadvent.wordpress.com/2018/12/17/day-17-compiling-our-way-to-happiness/">第17天 - 通往幸福的编译道路</a></h1>
 
 <p>如果我们选择接受它，我们的任务就是解决<code>SEND + MORE = MONEY</code>代码中的问题。不，请等一下，让我这样说吧：</p>
 
@@ -255,15 +255,15 @@ if (!doNotTrack) {
 
 <p>鉴于这些限制因素，上述难题有一个独特的解决方案。</p>
 
-<p>我鼓励你找到解决方案。写一点代码，坚持一下！在这篇文章中，我们会这样做，但后来（关键）*不满足*于此，并最终陷入嵌套玩偶的情况，其中代码编写代码直到出现真正整洁的东西。结论将拼出最终目标-坚持不住了，我被实时地通过多个委员会获悉，正确的说法是“ *一个*终极愿景” -为了 Perl 6。</p>
+<p>我鼓励你找到解决方案。写一点代码，坚持一下！在这篇文章中，我们会这样做，但后来（关键）*不满足*于此，并最终陷入嵌套玩偶的情况，其中代码编写代码直到出现真正整洁的东西。结论将拼出最终目标-坚持不住了，我被实时地通过多个委员会获悉，正确的说法是“ *一个*终极愿景” -为了 Raku。</p>
 
 <p>我们开工吧。</p>
 
 <h2 id="marcus-junius-brute-force-the-younger">Marcus Junius Brute Force（The Younger）</h2>
 
-<p>我们当天的第一语言及其相应的解决方案是 Perl 6 本身。这里没有技巧; 我们只是像愤怒的公牛一样向问题域冲去，尝试一切。事实上，我们确保不要在这个问题上耍小聪明，只是尝试尽可能直接地表达解决方案。</p>
+<p>我们当天的第一语言及其相应的解决方案是 Raku 本身。这里没有技巧; 我们只是像愤怒的公牛一样向问题域冲去，尝试一切。事实上，我们确保不要在这个问题上耍小聪明，只是尝试尽可能直接地表达解决方案。</p>
 
-<pre><code class="language-perl6">for 0..9 -&gt; int $d {
+<pre><code class="language-raku">for 0..9 -&gt; int $d {
     for 0..9 -&gt; int $e {
         next if $e == $d;
 
@@ -328,13 +328,13 @@ if (!doNotTrack) {
 
 <p>你又看到了，它不*漂亮*，但它起作用了。这是你母亲警告你的那种缩进程度。不过，如果你问我，我更讨厌缩进。对于我们需要扫描其搜索空间的每个变量，我们都有一个。（只有有<code>Y</code>我们才能走捷径。）</p>
 
-<p>虽然这是今天猛烈冲击的迂回而已，但MJD曾<a href="https://blog.plover.com/prog/haskell/monad-search.html">在博客上发表过关于此事的博客</a>，然后我<a href="http://strangelyconsistent.org/blog/send-more-money-in-perl6">也在</a><a href="https://blog.plover.com/prog/haskell/monad-search.html">博客上写了这篇文章</a>。从某种意义上说，这些博客文章非常关注“删除缩进”。今天的帖子是我三年后的想法。</p>
+<p>虽然这是今天猛烈冲击的迂回而已，但MJD曾<a href="https://blog.plover.com/prog/haskell/monad-search.html">在博客上发表过关于此事的博客</a>，然后我<a href="http://strangelyconsistent.org/blog/send-more-money-in-raku">也在</a><a href="https://blog.plover.com/prog/haskell/monad-search.html">博客上写了这篇文章</a>。从某种意义上说，这些博客文章非常关注“删除缩进”。今天的帖子是我三年后的想法。</p>
 
 <h2 id="我让路径遍历少了-以及所有其他路径">我让路径遍历少了（以及所有其他路径）</h2>
 
-<p>我们的第二语言仍然主要是 Perl 6，但有一个简洁的假象扩展名<code>amb</code>，但是拼写为（令人回味）<code>&lt;-</code>。它摆脱了所有显式<code>for</code>循环和缩进层级。</p>
+<p>我们的第二语言仍然主要是 Raku，但有一个简洁的假象扩展名<code>amb</code>，但是拼写为（令人回味）<code>&lt;-</code>。它摆脱了所有显式<code>for</code>循环和缩进层级。</p>
 
-<pre><code class="language-perl6">my $d &lt;- 0..9;
+<pre><code class="language-raku">my $d &lt;- 0..9;
 my $e &lt;- 0..9;
 guard $e != any($d);
 my $y = ($d + $e) % 10;
@@ -366,9 +366,9 @@ say &quot;$s$e$n$d + $m$o$r$e == $m$o$n$e$y&quot;;
 
 <p>这种解决方案更短，更紧凑，并且感觉不那么“聒噪”，并且只是通过摆脱<code>for</code>循环来加重。（我怀疑这与人们有时提到的那些命令性的声明谱有关。我们对循环不是那么感兴趣，只看到它完成了。）</p>
 
-<p>我知道它不会完全弥补Perl 6没有<code>amb</code>运算符并且 <code>guard</code>在核心中（甚至在模块空间中）实现的事实，但是这里有一个简短的脚本将上述程序转换为今天的第一个版本：</p>
+<p>我知道它不会完全弥补Raku没有<code>amb</code>运算符并且 <code>guard</code>在核心中（甚至在模块空间中）实现的事实，但是这里有一个简短的脚本将上述程序转换为今天的第一个版本：</p>
 
-<pre><code class="language-perl6">my $indent = 0;
+<pre><code class="language-raku">my $indent = 0;
 constant SPACE = chr(0x20);
 sub indent { SPACE x 4 * $indent }
 
@@ -441,7 +441,7 @@ $_c4 = ($_c3 + $s + $m) div 10
 $_c4 % 10 == $m
 </code></pre>
 
-<p>我们现在完全处于<a href="https://en.wikipedia.org/wiki/Constraint_programming">约束编程</a>领域，如果不提这一点，是不诚实的。我们已经抛弃了Perl 6的必要方面，我们只关注描述我们正在解决的问题的约束。</p>
+<p>我们现在完全处于<a href="https://en.wikipedia.org/wiki/Constraint_programming">约束编程</a>领域，如果不提这一点，是不诚实的。我们已经抛弃了Raku的必要方面，我们只关注描述我们正在解决的问题的约束。</p>
 
 <p>上述程序最重要的方面是我们赋值时。即使这主要是一种优化，在我们知道我们可以直接计算变量的值而不是搜索变量的情况下。</p>
 
@@ -469,27 +469,27 @@ $_c4 % 10 == $m
 
 <h2 id="结论">结论</h2>
 
-<p>我对007的探索使我思考了上述事情：翻译程序。Perl 6 已经很好地公开了编译过程的一部分：解析。我们可以在用户空间和Perl 6工具链中使用 grammars。</p>
+<p>我对007的探索使我思考了上述事情：翻译程序。Raku 已经很好地公开了编译过程的一部分：解析。我们可以在用户空间和Raku工具链中使用 grammars。</p>
 
 <p>我开始相信我们需要对编译管道的所有方面都这样做。在这里，让我把它作为口号或声明：</p>
 
 <blockquote>
-<p>当我们带来操作文本/数据的所有功能也可以向内转到编译过程本身时，Perl 6将充分发挥其潜力。</p>
+<p>当我们带来操作文本/数据的所有功能也可以向内转到编译过程本身时，Raku将充分发挥其潜力。</p>
 </blockquote>
 
 <p>我在不同语言之间编写（或想象）的那些翻译器，他们在压力下工作，但他们也很脆弱，有点浪费。问题在很大程度上是我们一直下降到文本。我们应该在AST级别执行此操作，其中所有结构都可用。</p>
 
-<p>这种思想转变所带来的收益不容小觑。这是我们在Perl 6中找到Lispy启蒙的地方。</p>
+<p>这种思想转变所带来的收益不容小觑。这是我们在Raku中找到Lispy启蒙的地方。</p>
 
 <p>例如，带方程的第三种语言不必盲目地翻译成代码。它可以被*优化*，方程式篡改成更窄和更精确的方程式。从<a href="https://en.wikipedia.org/wiki/Verbal_arithmetic#Solving_cryptarithms">维基百科</a>可以看出，有可能做到如此优秀，以至于一旦程序运行就没有剩下的搜索。</p>
 
-<p>我的梦想：能够进行上述转换，而不是在文本文件之间，而是在Perl 6中的*俚语*之间。并且能够进行优化步骤。一切都没有离开语言的舒适。</p>
+<p>我的梦想：能够进行上述转换，而不是在文本文件之间，而是在Raku中的*俚语*之间。并且能够进行优化步骤。一切都没有离开语言的舒适。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         

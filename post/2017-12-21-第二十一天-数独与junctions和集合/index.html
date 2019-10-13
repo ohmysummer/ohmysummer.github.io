@@ -233,16 +233,16 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="day-21-sudoku-with-junctions-and-sets-https-perl6advent-wordpress-com-2017-12-21-day-21-sudoku-with-junctions-and-sets"><a href="https://perl6advent.wordpress.com/2017/12/21/day-21-sudoku-with-junctions-and-sets/">Day 21 – Sudoku with Junctions and Sets</a></h1>
+<h1 id="day-21-sudoku-with-junctions-and-sets-https-rakuadvent-wordpress-com-2017-12-21-day-21-sudoku-with-junctions-and-sets"><a href="https://rakuadvent.wordpress.com/2017/12/21/day-21-sudoku-with-junctions-and-sets/">Day 21 – Sudoku with Junctions and Sets</a></h1>
 
-<p>Perl6 中有许多核心元素为您提供强大的工具，以简洁而强大的方式完成任务。其中两个是具有许多特征的联结和集合，但也是截然不同的。为了演示这些功能，我将介绍如何将它们用于一个简单的问题，Sudoku拼图。</p>
+<p>Raku 中有许多核心元素为您提供强大的工具，以简洁而强大的方式完成任务。其中两个是具有许多特征的联结和集合，但也是截然不同的。为了演示这些功能，我将介绍如何将它们用于一个简单的问题，Sudoku拼图。</p>
 
 <p>数独：进修
 所以对于那些不知道数独谜题的人来说，它是一个9乘9的网格，它提供了一些填充了数字1-9的单元格。目标是填充数字在1和9之间的所有单元格，所以没有任何行，列或子广场具有多于一个的数字。</p>
 
 <p>有几种方法来表示一个数独谜题，我个人最喜欢的是 9×9 嵌套数组，例如：</p>
 
-<pre><code class="language-perl6">my @game = [
+<pre><code class="language-raku">my @game = [
     [4,0,0,0,0,0,0,0,0],
     [0,9,0,3,4,6,0,5,0],
     [5,8,0,0,9,0,0,0,6],
@@ -259,9 +259,9 @@ if (!doNotTrack) {
 
 <h2 id="junctions-量子逻辑测试">Junctions：量子逻辑测试</h2>
 
-<p>在 Perl6 中使用 Junction 的最简单方法之一是逻辑测试。 Junction可以表示您想要测试的值的选择。例如 ：</p>
+<p>在 Raku 中使用 Junction 的最简单方法之一是逻辑测试。 Junction可以表示您想要测试的值的选择。例如 ：</p>
 
-<pre><code class="language-perl6">if ( 5 &lt; 1|10 &lt; 2 ) { say &quot;Spooky&quot; } else { say &quot;Boo&quot; }
+<pre><code class="language-raku">if ( 5 &lt; 1|10 &lt; 2 ) { say &quot;Spooky&quot; } else { say &quot;Boo&quot; }
 Spooky
 </code></pre>
 
@@ -269,7 +269,7 @@ Spooky
 
 <p>我们希望能够在我们的数独游戏中做出的一个测试就是看它是否已满。我的意思是每个单元格的赋值都大于0.完整的拼图可能无法正确完成，但每个单元格都有一个猜测。另一种方法是，没有任何单元格的值为0.因此，我们可以定义一个Junction并将其存储在一个标量变量中，我们可以在任何时候测试它以查看拼图是否已满。</p>
 
-<pre><code class="language-perl6">my $full-test = none( (^9 X ^9).map(-&gt; ($x,$y) { 
+<pre><code class="language-raku">my $full-test = none( (^9 X ^9).map(-&gt; ($x,$y) { 
     @game[$y][$x];
 } ) );
 say so $full-test == 0;
@@ -278,7 +278,7 @@ False
 
 <p>在这种情况下，游戏中仍然有0个数字，因此看看$ full-test是否等于0，结果为False。请注意，如果没有将结果强制转换为布尔值，只有当所有这些值都为False时，才会得到等于0的单元格的细分。</p>
 
-<p>还要注意使用^ 9和X运算符来生成0到8的两个范围，然后使用这两个9个字符的列表的叉积来列出所有可能的X，Y坐标的列表。这就是这种强大的简单性，这是我喜欢Perl6的原因之一。但我离题了。</p>
+<p>还要注意使用^ 9和X运算符来生成0到8的两个范围，然后使用这两个9个字符的列表的叉积来列出所有可能的X，Y坐标的列表。这就是这种强大的简单性，这是我喜欢Raku的原因之一。但我离题了。</p>
 
 <p>这种方法的优点是，一旦你定义了Junction，你就不需要修改它。如果您更改存储在数组中的值，那么连接将会查看新的值（注意，这仅适用于更新单个单元格，如果用新的数组替换整个子数组，您将打破连接点）。</p>
 
@@ -286,7 +286,7 @@ False
 
 <p>让我们看看更复杂的测试，如果拼图中的每一行，每列和每个数字中只有一个，则拼图就完成了。为了做这个测试，我们需要三个帮助函数。</p>
 
-<pre><code class="language-perl6">subset Index of Int where 0 &lt;= * &lt;= 8; 
+<pre><code class="language-raku">subset Index of Int where 0 &lt;= * &lt;= 8; 
 sub row( Index $y ) {
     return (^9).map( { ( $_, $y ) } ); 
 } 
@@ -311,7 +311,7 @@ multi sub square( Index $x, Index $y ) {
 
 <p>所以在这些地方我们可以为每一行，列和方块定义我们的一个（）列表。一旦我们拥有了它们，我们就可以将它们放入一个全部（）连接点。</p>
 
-<pre><code class="language-perl6">my $complete-all = all(
+<pre><code class="language-raku">my $complete-all = all(
      (^9).map(
         {
             |(
@@ -332,7 +332,7 @@ multi sub square( Index $x, Index $y ) {
 
 <p>一旦我们进行了测试，看看这个难题是否完整，那就很简单了。</p>
 
-<pre><code class="language-perl6">say [&amp;&amp;] (1..9).map( so $complete-all == * );
+<pre><code class="language-raku">say [&amp;&amp;] (1..9).map( so $complete-all == * );
 False
 </code></pre>
 
@@ -342,7 +342,7 @@ False
 
 <p>这种嵌套联结测试可以达到很多级别，最后一个例子是如果我们想测试当前的难题是否有效。我的意思是它没有完成，但它没有任何重复的数字和行，列或方块。我们可以再次为此创建一个Junction，对于每一行，每列或每个方块，如果其中一个或没有一个单元格设置为每个可能的值，则它是有效的。因此，我们创建的Junction类似于$ complete-全部。</p>
 
-<pre><code class="language-perl6">$valid-all = all(
+<pre><code class="language-raku">$valid-all = all(
     (^9).map(
         {
             |(
@@ -378,7 +378,7 @@ False
 
 <p>有效性测试与完整性测试基本相同。</p>
 
-<pre><code class="language-perl6">say [&amp;&amp;] (1..9).map( so $valid-all == * );
+<pre><code class="language-raku">say [&amp;&amp;] (1..9).map( so $valid-all == * );
 True
 </code></pre>
 
@@ -386,11 +386,11 @@ True
 
 <h2 id="集合-对象的集合">集合：对象的集合</h2>
 
-<p>虽然结点对测试值很有用，但如果我们想尝试解决这个难题，它们就不那么有用。但是Perl6有另一种类型的集合，可以派上用场。套装（及其相关类型的手袋和混合物）可让您收集物品，然后对其进行数学设定操作，以找出不同套装之间的互动方式。</p>
+<p>虽然结点对测试值很有用，但如果我们想尝试解决这个难题，它们就不那么有用。但是Raku有另一种类型的集合，可以派上用场。套装（及其相关类型的手袋和混合物）可让您收集物品，然后对其进行数学设定操作，以找出不同套装之间的互动方式。</p>
 
 <p>作为一个例子，我们将定义一个可能的函数，它返回给定单元格可能的值。如果单元格具有设置的值，我们将返回空列表。</p>
 
-<pre><code class="language-perl6">sub possible( Index $x, Index $y, @game ) {
+<pre><code class="language-raku">sub possible( Index $x, Index $y, @game ) {
     return () if @game[$y][$x] &gt; 0;
 
     ( 
@@ -417,7 +417,7 @@ True
 
 <p>应该指出的是，这是可能值最简单的定义，没有附加的逻辑进行，但即使这个简单的结果，我们也可以做最简单的求解算法。如果是这种情况，我们会在网格中的每个单元格中循环，如果它有1个可能的值，我们可以将该值设置为该值。在这种情况下，我们将循环，获取要设置的单元列表，然后遍历列表并设置值。如果要设置的列表为空或拼图完成，则停止。</p>
 
-<pre><code class="language-perl6">my @updates;
+<pre><code class="language-raku">my @updates;
 repeat {
     @updates = (^9 X ^9).map( -&gt; ($x,$y) { 
         ($x,$y) =&gt; possible($x,$y,@game) 
@@ -434,24 +434,24 @@ repeat {
 
 <p>找到解决方案的另一种方法是获得只出现在给定，行，列或方块的一组可能性中的值。例如，如果我们有以下可能性：</p>
 
-<pre><code class="language-perl6">(1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
+<pre><code class="language-raku">(1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
 </code></pre>
 
 <p>1和5只在每行出现一次。我们可以利用对称集合差分算子和算子链来得到它。</p>
 
-<pre><code class="language-perl6">say (1,2,3) (^) (2,3,4) (^) () (^) () (^) (4,5) (^) () (^) () (^) (2,3,4) (^) ()
+<pre><code class="language-raku">say (1,2,3) (^) (2,3,4) (^) () (^) () (^) (4,5) (^) () (^) () (^) (2,3,4) (^) ()
 set(1 5)
 </code></pre>
 
 <p>当然，在这种情况下，我们可以在列表中使用简化元运算符</p>
 
-<pre><code class="language-perl6">say [(^)] (1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
+<pre><code class="language-raku">say [(^)] (1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
 set(1 5)
 </code></pre>
 
 <p>所以在这种情况下，算法很简单（在这种情况下，我只是覆盖行，列和方形代码基本相同）。</p>
 
-<pre><code class="language-perl6">my @updates;
+<pre><code class="language-raku">my @updates;
 for ^9 -&gt; $idx {
     my $only = [(^)] row($idx).map( -&gt; ( $x,$y ) { 
         possible($x,$y,@game) 
@@ -470,7 +470,7 @@ for ^9 -&gt; $idx {
 
 <p>请注意，我们必须进行两次传球，首先我们得到我们正在查找的数字，然后我们必须查看每一行并找出数字出现的位置。为此，我们使用（elem）运算符。集合也可以使用关联引用来引用，例如：</p>
 
-<pre><code class="language-perl6">say set(1,5){1}
+<pre><code class="language-raku">say set(1,5){1}
 True
 </code></pre>
 
@@ -480,9 +480,9 @@ True
 
 <p>对于数独谜题，您可能需要创建一个CellValue类，用于存储该数字是否为谜题中的初始值之一。如果你这样做，尽管你需要覆盖WHICH并使其返回Cell的Integer值。只要你在这种情况下身体检查技术无效（两个不同的CellValues可能具有相同的值，但不会是同一个对象），那么你可以将它们放入集合中。</p>
 
-<p>我希望你已经发现了这个有趣的东西，Junctions和Sets是Perl6的许多不同部分中的两个，它们可以帮助你轻松完成复杂的任务。如果您对代码感兴趣，可以使用以下基于对象的版本进行安装：</p>
+<p>我希望你已经发现了这个有趣的东西，Junctions和Sets是Raku的许多不同部分中的两个，它们可以帮助你轻松完成复杂的任务。如果您对代码感兴趣，可以使用以下基于对象的版本进行安装：</p>
 
-<pre><code class="language-perl6">zef install Game::Sudoku
+<pre><code class="language-raku">zef install Game::Sudoku
 </code></pre>
 
 
@@ -508,7 +508,7 @@ True
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-12-21-perl-6-%E4%B8%AD%E7%9A%84-proto-%E5%85%B3%E9%94%AE%E5%AD%97/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的 proto 关键字">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2017-12-21-raku-%E4%B8%AD%E7%9A%84-proto-%E5%85%B3%E9%94%AE%E5%AD%97/" data-toggle="tooltip" data-placement="top" title="Raku 中的 proto 关键字">Next Post &rarr;</a>
             </li>
           
         </ul>

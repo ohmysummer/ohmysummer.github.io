@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>第三天 – Perl 6 – 跳转到那儿</title>
-  <meta property="og:title" content="第三天 – Perl 6 – 跳转到那儿" />
-  <meta name="twitter:title" content="第三天 – Perl 6 – 跳转到那儿" />
+  <title>第三天 – Raku – 跳转到那儿</title>
+  <meta property="og:title" content="第三天 – Raku – 跳转到那儿" />
+  <meta name="twitter:title" content="第三天 – Raku – 跳转到那儿" />
   <meta name="description" content="jmp 2 it">
   <meta property="og:description" content="jmp 2 it">
   <meta name="twitter:description" content="jmp 2 it">
@@ -198,7 +198,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>第三天 – Perl 6 – 跳转到那儿</h1>
+              <h1>第三天 – Raku – 跳转到那儿</h1>
                 
                   
                     <h2 class="post-subheading">jmp 2 it</h2>
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (165 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (160 words)
   
   
 </span>
@@ -231,19 +231,19 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p><a href="https://github.com/nige123/jmp.nigelhamilton.com">jmp</a>是一个Perl 6驱动的命令行程序，我每天都使用它来浏览成堆的Perl并快速跳转到我的$EDITOR。 我尝试在编码时保持<a href="https://perl6advent.wordpress.com/2015/12/20/perl-6-christmas-have-an-appropriate-amount-of-fun/">流状态</a>，并且能够快速搜索文件然后直接跳转到编辑器中。</p>
+        <p><a href="https://github.com/nige123/jmp.nigelhamilton.com">jmp</a>是一个Raku驱动的命令行程序，我每天都使用它来浏览成堆的Perl并快速跳转到我的$EDITOR。 我尝试在编码时保持<a href="https://rakuadvent.wordpress.com/2015/12/20/perl-6-christmas-have-an-appropriate-amount-of-fun/">流状态</a>，并且能够快速搜索文件然后直接跳转到编辑器中。</p>
 
 <p><strong>jmp</strong> 是一个简单的基于终端的前端到您最喜欢的代码搜索工具（例如，rgrep，ag，ack，git grep等）。 它会显示一个搜索结果列表，您可以在跳转到编辑文件之前快速浏览（例如，vim，nano，<a href="https://commaide.com/">comma</a>等）。</p>
 
 <p>它的工作原理如下：</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/11/jmp2-final.gif?w=600&amp;zoom=2" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/11/jmp2-final.gif?w=600&amp;zoom=2" alt="img" /></p>
 
 <p>最近我重构了 <strong>jmp</strong>，以便在 <a href="https://github.com/ab5tract/Terminal-Print">Terminal::Print</a> 模块的帮助下改进用户界面。 Terminal::Print 提供了一个方便的二维网格，用于在终端屏幕上绘图。 还有一个用于异步处理用户输入的模块。</p>
 
 <p>这是 <strong>jmp</strong> 代码，只要用户按下某个键，它就会响应：</p>
 
-<pre><code class="language-perl6">my $in-supply = decoded-input-supply;
+<pre><code class="language-raku">my $in-supply = decoded-input-supply;
 my $timer     = Supply.interval(1).map: { Tick };
 my $supplies  = Supply.merge($in-supply, $timer);
 
@@ -270,13 +270,13 @@ react {
 
 <p>由于 Jonathan Worthington的 <a href="https://github.com/jnthn/oo-monitors">OO::Monitors</a> 模块和 <strong>monitor</strong> 关键字，解决方案在 <a href="https://github.com/ab5tract/Terminal-Print/blob/master/lib/Terminal/Print/Grid.pm6">Terminal::Print::Grid</a> 中找到。 这确保了一次只有一个线程可以在 grid 对象的方法中：</p>
 
-<pre><code class="language-perl6">use OO::Monitors;
+<pre><code class="language-raku">use OO::Monitors;
 unit monitor Terminal::Print::Grid;
 </code></pre>
 
-<p>制作自己的 Perl 6 驱动的命令行工具是学习该语言的好方法。 如果您需要终端接口，请查看 <a href="https://github.com/ab5tract/Terminal-Print">Terminal::Print</a>。 为了加速命令行工具，将代码放在模块中是一个很好的技巧，因此Perl 6可以预编译它以加快启动时间（例如，<a href="https://github.com/nige123/jmp.nigelhamilton.com/blob/master/lib/JMP/CLI.pm">CLI.pm</a>）。</p>
+<p>制作自己的 Raku 驱动的命令行工具是学习该语言的好方法。 如果您需要终端接口，请查看 <a href="https://github.com/ab5tract/Terminal-Print">Terminal::Print</a>。 为了加速命令行工具，将代码放在模块中是一个很好的技巧，因此Raku可以预编译它以加快启动时间（例如，<a href="https://github.com/nige123/jmp.nigelhamilton.com/blob/master/lib/JMP/CLI.pm">CLI.pm</a>）。</p>
 
-<p>要安装jmp的第2版，首先安装<a href="https://perl6.org/downloads/">Perl 6</a>，然后使用<a href="https://github.com/ugexe/zef">zef</a> Perl 6模块管理器来安装它：</p>
+<p>要安装jmp的第2版，首先安装<a href="https://raku.org/downloads/">Raku</a>，然后使用<a href="https://github.com/ugexe/zef">zef</a> Raku模块管理器来安装它：</p>
 
 <pre><code class="language-shell">shell&gt; zef install jmp   # or zef upgrade jmp
 shell&gt; jmp config        # set up jmp to use your tools
@@ -289,7 +289,7 @@ shell&gt; jmp find sub MAIN # find files containing &quot;sub MAIN&quot;
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -306,7 +306,7 @@ shell&gt; jmp find sub MAIN # find files containing &quot;sub MAIN&quot;
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-04-new-perl6-pod-features-for-the-new-year/" data-toggle="tooltip" data-placement="top" title="第四天 - 献给新年的 Perl 6 Pod 新功能">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-04-new-raku-pod-features-for-the-new-year/" data-toggle="tooltip" data-placement="top" title="第四天 - 献给新年的 Raku Pod 新功能">Next Post &rarr;</a>
             </li>
           
         </ul>

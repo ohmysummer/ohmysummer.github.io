@@ -8,23 +8,23 @@
   <title>大列表重构</title>
   <meta property="og:title" content="大列表重构" />
   <meta name="twitter:title" content="大列表重构" />
-  <meta name="description" content="Perl 6 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
+  <meta name="description" content="Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
 它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西, Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。
 GLE 意图强调性能和列表和相关类型操作的一致性问题。改变这样的基本数据类型将会很痛苦。
 通常 Perl 5 这样展开列表:
-% perl -dE 1 -MData::Dumper [...snip...] DB&lt;1&gt; @foos=((1,2),3) DB&lt;2&gt; say Dumper \@foos $VAR1 = [ 1, 2, 3 ];  开始, 很多的 Perl 6 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
+% perl -dE 1 -MData::Dumper [...snip...] DB&lt;1&gt; @foos=((1,2),3) DB&lt;2&gt; say Dumper \@foos $VAR1 = [ 1, 2, 3 ];  开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
 这样做和很多边界情况不一致并且 Rakudo 内部大量使用了一种叫做 Parcel 的数据类型, 之后 Parcel 被认为是一个 Bad Idea(糟糕的设计) — 主要是因为性能问题。
 2015 年 7 月, Patrick 导入了一个涵盖 &ldquo;Synopsis 7&rdquo; 的孪生设计草案, 随后的月份中它变成官方的 S07。">
-  <meta property="og:description" content="Perl 6 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
+  <meta property="og:description" content="Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
 它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西, Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。
 GLE 意图强调性能和列表和相关类型操作的一致性问题。改变这样的基本数据类型将会很痛苦。
 通常 Perl 5 这样展开列表:
-% perl -dE 1 -MData::Dumper [...snip...] DB&lt;1&gt; @foos=((1,2),3) DB&lt;2&gt; say Dumper \@foos $VAR1 = [ 1, 2, 3 ];  开始, 很多的 Perl 6 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
+% perl -dE 1 -MData::Dumper [...snip...] DB&lt;1&gt; @foos=((1,2),3) DB&lt;2&gt; say Dumper \@foos $VAR1 = [ 1, 2, 3 ];  开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
 这样做和很多边界情况不一致并且 Rakudo 内部大量使用了一种叫做 Parcel 的数据类型, 之后 Parcel 被认为是一个 Bad Idea(糟糕的设计) — 主要是因为性能问题。
 2015 年 7 月, Patrick 导入了一个涵盖 &ldquo;Synopsis 7&rdquo; 的孪生设计草案, 随后的月份中它变成官方的 S07。">
-  <meta name="twitter:description" content="Perl 6 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
+  <meta name="twitter:description" content="Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
 它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西, Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。
-GLE 意图强调性能和列表和相关类型操作的一致性问题。改变 …">
+GLE 意图强调性能和列表和相关类型操作的一致性问题。改变这样 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -222,7 +222,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (228 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (226 words)
   
   
 </span>
@@ -243,7 +243,7 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p>Perl 6 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。</p>
+<p>Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。</p>
 
 <p>它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西,  Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。</p>
 
@@ -264,7 +264,7 @@ $VAR1 = [
 ];
 </code></pre>
 
-<p>开始, 很多的 Perl 6 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。</p>
+<p>开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。</p>
 
 <p>这样做和很多边界情况不一致并且 Rakudo 内部大量使用了一种叫做 <code>Parcel</code> 的数据类型, 之后 Parcel 被认为是一个 Bad Idea(糟糕的设计) —  主要是因为性能问题。</p>
 
@@ -278,7 +278,7 @@ $VAR1 = [
 
 <hr />
 
-<pre><code class="language-perl6">my @array = 1,(2,3),4;       # 1 2 3 4
+<pre><code class="language-raku">my @array = 1,(2,3),4;       # 1 2 3 4
 @array.elems.say;            # 4   
 </code></pre>
 
@@ -286,7 +286,7 @@ $VAR1 = [
 
 <hr />
 
-<pre><code class="language-perl6">my @array = 1,(2,3),4;        # [1 (2 3) 4]
+<pre><code class="language-raku">my @array = 1,(2,3),4;        # [1 (2 3) 4]
 @array.elems.say;             # 3
 
 my @array = (1,(2,3),4).flat; # [1 2 3 4]
@@ -294,17 +294,17 @@ my @array = (1,(2,3),4).flat; # [1 2 3 4]
 
 <p>把列表滑进(Slip)数组中也是可行的:</p>
 
-<pre><code class="language-perl6">my @a = 1, (2, 3).Slip, 4;    # [1 2 3 4]
+<pre><code class="language-raku">my @a = 1, (2, 3).Slip, 4;    # [1 2 3 4]
 </code></pre>
 
 <p>还有:</p>
 
-<pre><code class="language-perl6">my @a = 1, |(2,3), 4;         # [1 2 3 4]
+<pre><code class="language-raku">my @a = 1, |(2,3), 4;         # [1 2 3 4]
 </code></pre>
 
 <p>序列(只能够被耗费<strong>一次</strong>)被引入:</p>
 
-<pre><code class="language-perl6">my $grep = (1..4).grep(*&gt;2);  # (3 4)
+<pre><code class="language-raku">my $grep = (1..4).grep(*&gt;2);  # (3 4)
 $grep.^name.say;              # Seq
 </code></pre>
 
@@ -316,7 +316,7 @@ $grep.^name.say;              # Seq
 
 <p>传递给诸如 *for*循环迭代器的参数遵守&rdquo;the single arg rule&rdquo;, 意思是即使第一眼看上去是以多个参数出现的, 也会被当作单个参数。通常这会让 <em>for</em> 表现得如程序员所期望的那样除了带有尾随逗号的例子。</p>
 
-<pre><code class="language-perl6">my @a = 1,2,3;
+<pre><code class="language-raku">my @a = 1,2,3;
 my ($i, $j);
 for (@a) {
     $i++;
@@ -355,7 +355,7 @@ say :$j.gist;  # =&gt; 1
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2016-08-14-%E5%93%87perl6/" data-toggle="tooltip" data-placement="top" title="哇, Perl 6!">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2016-08-14-%E5%93%87raku/" data-toggle="tooltip" data-placement="top" title="哇, Raku!">Next Post &rarr;</a>
             </li>
           
         </ul>

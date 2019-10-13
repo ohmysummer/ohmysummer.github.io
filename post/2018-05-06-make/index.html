@@ -248,28 +248,28 @@ if (!doNotTrack) {
 
 <h2 id="match-类">Match 类</h2>
 
-<p>来自于 <a href="https://docs.perl6.org/type/Match#method_make">Match</a></p>
+<p>来自于 <a href="https://docs.raku.org/type/Match#method_make">Match</a></p>
 
 <h3 id="make-方法">make 方法</h3>
 
-<pre><code class="language-perl6">method make(Match:D: Mu $payload)
+<pre><code class="language-raku">method make(Match:D: Mu $payload)
 sub make(Mu $payload)
 </code></pre>
 
-<p>将任意有效载荷(payload)存储到 <a href="https://docs.perl6.org/type/Match">Match</a> 对象中，稍后可通过 <a href="https://docs.perl6.org/routine/made">.made</a> / <a href="https://docs.perl6.org/routine/ast">.ast</a> 方法重新取回它。</p>
+<p>将任意有效载荷(payload)存储到 <a href="https://docs.raku.org/type/Match">Match</a> 对象中，稍后可通过 <a href="https://docs.raku.org/routine/made">.made</a> / <a href="https://docs.raku.org/routine/ast">.ast</a> 方法重新取回它。</p>
 
-<p>这通常用于 <a href="https://docs.perl6.org/language/grammars">grammar</a> 的 action 类方法中，其中一个方法存储一段数据，然后由另一个方法取回。这取决于你存储什么数据。它可以是树节点，<a href="https://docs.perl6.org/language/grammars#Protoregexes">计算结果</a>或值的列表。</p>
+<p>这通常用于 <a href="https://docs.raku.org/language/grammars">grammar</a> 的 action 类方法中，其中一个方法存储一段数据，然后由另一个方法取回。这取决于你存储什么数据。它可以是树节点，<a href="https://docs.raku.org/language/grammars#Protoregexes">计算结果</a>或值的列表。</p>
 
 <p>sub 形式的 make 操作当前的 <code>$/</code>，这可能是一个简写：</p>
 
-<pre><code class="language-perl6">method my-action ($/) {
+<pre><code class="language-raku">method my-action ($/) {
     make &quot;foo: $/&quot;;
 }
 </code></pre>
 
 <p><code>make</code> 会把数据结构附加到各自的 Match 对象上, 随后通过 <code>.made</code> 方法取回。使用 <code>Match.perl</code> 方法可以看到, <code>Match</code> 里面有一个 <strong>made</strong> 属性：</p>
 
-<pre><code class="language-perl6">&gt; if 'abc' ~~ /\w+/ { $/.make: {'a' =&gt; 'bc', 'd' =&gt; 'wsl'}; say $/.made }
+<pre><code class="language-raku">&gt; if 'abc' ~~ /\w+/ { $/.make: {'a' =&gt; 'bc', 'd' =&gt; 'wsl'}; say $/.made }
 {a =&gt; bc, d =&gt; wsl}
 &gt; $/.WHAT
 (Match)
@@ -283,7 +283,7 @@ Match.new(list =&gt; (), made =&gt; {:a(&quot;bc&quot;), :d(&quot;wsl&quot;)}, p
 
 <p>除了可以在 regex 中 make/made 数据外，还可以在 Action 类中做同样的事情：</p>
 
-<pre><code class="language-perl6">grammar MathExpression {
+<pre><code class="language-raku">grammar MathExpression {
     token TOP    { &lt;sum&gt;              } 
     rule sum     { &lt;product&gt;+ % '+'   } 
     rule product { &lt;term&gt;+    % '*'   } 

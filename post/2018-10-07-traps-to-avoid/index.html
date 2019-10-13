@@ -8,9 +8,9 @@
   <title>Traps to Avoid</title>
   <meta property="og:title" content="Traps to Avoid" />
   <meta name="twitter:title" content="Traps to Avoid" />
-  <meta name="description" content="Traps to avoid when getting started with Perl 6">
-  <meta property="og:description" content="Traps to avoid when getting started with Perl 6">
-  <meta name="twitter:description" content="Traps to avoid when getting started with Perl 6">
+  <meta name="description" content="Traps to avoid when getting started with Raku">
+  <meta property="og:description" content="Traps to avoid when getting started with Raku">
+  <meta name="twitter:description" content="Traps to avoid when getting started with Raku">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -201,7 +201,7 @@ if (!doNotTrack) {
               <h1>Traps to Avoid</h1>
                 
                   
-                    <h2 class="post-subheading">Traps to avoid when getting started with Perl 6</h2>
+                    <h2 class="post-subheading">Traps to avoid when getting started with Raku</h2>
                   
                 
                 
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (635 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (629 words)
   
   
 </span>
@@ -237,7 +237,7 @@ if (!doNotTrack) {
 
 <p>本文件旨在展示常见的误解，以避免它们。</p>
 
-<p>在编写 Perl 6 的过程中，我们付出了巨大的努力来消除语法中的瑕疵。然而，当你消灭一个瑕疵的时候，有时另一个会突然冒出来。所以我们花了很多时间去寻找最小数量的瑕疵或者试图把它们放在它们很少被看到的地方。正因为如此，Perl 6 的瑕疵出现在了不同的地方，而不是来自另一种语言时所期望的那样。</p>
+<p>在编写 Raku 的过程中，我们付出了巨大的努力来消除语法中的瑕疵。然而，当你消灭一个瑕疵的时候，有时另一个会突然冒出来。所以我们花了很多时间去寻找最小数量的瑕疵或者试图把它们放在它们很少被看到的地方。正因为如此，Raku 的瑕疵出现在了不同的地方，而不是来自另一种语言时所期望的那样。</p>
 
 <h1 id="变量和常量">变量和常量</h1>
 
@@ -245,25 +245,25 @@ if (!doNotTrack) {
 
 <p>常量是在编译时计算的，所以如果在模块中使用它们，请记住，由于模块本身的预编译，它们的值将被冻结:</p>
 
-<pre><code class="language-perl6"># WRONG (most likely): 
+<pre><code class="language-raku"># WRONG (most likely): 
 unit module Something::Or::Other;
 constant $config-file = &quot;config.txt&quot;.IO.slurp;
 </code></pre>
 
 <p><code>$config-file</code> 将在预编译时一次性被读入。<code>config.txt</code> 文件的更改不会在你再次启动脚本时重新加载;只有当模块被重新编译时才会重新加载。</p>
 
-<p>避免使用<a href="https://docs.perl6.org/language/containers">容器</a>，而倾向于将值<a href="https://docs.perl6.org/language/containers#Binding">绑定</a>到提供类似于常量行为的变量上，但允许更新值:</p>
+<p>避免使用<a href="https://docs.raku.org/language/containers">容器</a>，而倾向于将值<a href="https://docs.raku.org/language/containers#Binding">绑定</a>到提供类似于常量行为的变量上，但允许更新值:</p>
 
-<pre><code class="language-perl6"># Good; file gets updated from 'config.txt' file on each script run: 
+<pre><code class="language-raku"># Good; file gets updated from 'config.txt' file on each script run: 
 unit module Something::Or::Other;
 my $config-file := &quot;config.txt&quot;.IO.slurp;
 </code></pre>
 
 <h2 id="赋值为-nil-产生不同的值-通常是-any">赋值为 Nil 产生不同的值, 通常是 Any</h2>
 
-<p>实际上，赋给 <code>Nil</code> 会<a href="https://docs.perl6.org/type/Nil">将变量还原为其默认值</a>。所以:</p>
+<p>实际上，赋给 <code>Nil</code> 会<a href="https://docs.raku.org/type/Nil">将变量还原为其默认值</a>。所以:</p>
 
-<pre><code class="language-perl6">my @a = 4, 8, 15, 16;
+<pre><code class="language-raku">my @a = 4, 8, 15, 16;
 @a[2] = Nil;
 say @a; # OUTPUT: «[4 8 (Any) 16]␤» 
 </code></pre>
@@ -272,29 +272,29 @@ say @a; # OUTPUT: «[4 8 (Any) 16]␤»
 
 <p>你可以故意指定 <code>Nil</code> 作为默认值:</p>
 
-<pre><code class="language-perl6">my %h is default(Nil) = a =&gt; Nil;
+<pre><code class="language-raku">my %h is default(Nil) = a =&gt; Nil;
 say %h; # OUTPUT: «Hash %h = {:a(Nil)}␤» 
 </code></pre>
 
 <p>或者将值绑定到 <code>Nil</code>，如果结果是你想要的:</p>
 
-<pre><code class="language-perl6">@a[3] := Nil;
+<pre><code class="language-raku">@a[3] := Nil;
 say @a; # OUTPUT: «[4 8 (Any) Nil]␤» 
 </code></pre>
 
 <p>这个陷阱可能隐藏在函数的结果中，比如匹配:</p>
 
-<pre><code class="language-perl6">my $result2 = 'abcdef' ~~ / dex /;
+<pre><code class="language-raku">my $result2 = 'abcdef' ~~ / dex /;
 say &quot;Result2 is { $result2.^name }&quot;; # OUTPUT: «Result2 is Any␤» 
 </code></pre>
 
-<p><a href="https://docs.perl6.org/language/regexes#Literals">Match 将会是 Nil</a>如果什么也没有找到。但是，如果将 <code>Nil</code> 赋给上面的 <code>$result2</code>，则会得到其默认值，如所示为 <code>Any</code>。</p>
+<p><a href="https://docs.raku.org/language/regexes#Literals">Match 将会是 Nil</a>如果什么也没有找到。但是，如果将 <code>Nil</code> 赋给上面的 <code>$result2</code>，则会得到其默认值，如所示为 <code>Any</code>。</p>
 
 <h2 id="使用块来插入匿名状态变量">使用块来插入匿名状态变量</h2>
 
 <p>程序员打算让代码计数程序被调用的次数，但是计数器没有增加:</p>
 
-<pre><code class="language-perl6">sub count-it { say &quot;Count is {$++}&quot; }
+<pre><code class="language-raku">sub count-it { say &quot;Count is {$++}&quot; }
 count-it;
 count-it;
  
@@ -305,7 +305,7 @@ count-it;
 
 <p>当涉及到状态变量时，每当该块的块被重新进入时，声明 vars 的块就会被克隆，vars 也会被重新初始化。这让像下面这样的结构表现得恰当;每次调用子程序时，循环内部的状态变量都会被重新初始化:</p>
 
-<pre><code class="language-perl6">sub count-it {
+<pre><code class="language-raku">sub count-it {
     for ^3 {
         state $count = 0;
         say &quot;Count is $count&quot;;
@@ -330,7 +330,7 @@ count-it;
 
 <p>同样的布局存在于我们的 bug 程序中。双引号字符串中的 <code>{}</code> 不仅仅是执行一段代码的插值。它实际上是它自己的块，就像在上面的例子中，每次进入子例程时都会被克隆，重新初始化状态变量。为了得到正确的计数，我们需要去掉内部块，使用标量上下文分析器来插入我们的代码:</p>
 
-<pre><code class="language-perl6">sub count-it { say &quot;Count is $($++)&quot; }
+<pre><code class="language-raku">sub count-it { say &quot;Count is $($++)&quot; }
 count-it;
 count-it;
  
@@ -339,9 +339,9 @@ count-it;
 # Count is 1 
 </code></pre>
 
-<p>或者，也可以使用<a href="https://docs.perl6.org/routine/~">连接运算符</a>:</p>
+<p>或者，也可以使用<a href="https://docs.raku.org/routine/~">连接运算符</a>:</p>
 
-<pre><code class="language-perl6">sub count-it { say &quot;Count is &quot; ~ $++ }
+<pre><code class="language-raku">sub count-it { say &quot;Count is &quot; ~ $++ }
 </code></pre>
 
 <h1 id="blocks">Blocks</h1>
@@ -350,7 +350,7 @@ count-it;
 
 <p>花括号用于声明块。然而，空花括号会声明一个哈希。</p>
 
-<pre><code class="language-perl6">$ = {say 42;} # Block 
+<pre><code class="language-raku">$ = {say 42;} # Block 
 $ = {;}       # Block 
 $ = {…}       # Block 
 $ = { }       # Hash 
@@ -358,7 +358,7 @@ $ = { }       # Hash
 
 <p>如果你想有效地声明一个空的块，你可以使用第二种形式:</p>
 
-<pre><code class="language-perl6">my &amp;does-nothing = {;};
+<pre><code class="language-raku">my &amp;does-nothing = {;};
 say does-nothing(33); # OUTPUT: «Nil␤» 
 </code></pre>
 
@@ -370,7 +370,7 @@ say does-nothing(33); # OUTPUT: «Nil␤»
 
 <p>例如</p>
 
-<pre><code class="language-perl6">use v6.c;
+<pre><code class="language-raku">use v6.c;
 class Point {
     has $.x;
     has $.y;
@@ -391,7 +391,7 @@ say Point.new(x =&gt; 1, y =&gt; -2).double.x
 
 <p>因此，编写方法 <code>double</code> 的正确方法是：</p>
 
-<pre><code class="language-perl6">method double {
+<pre><code class="language-raku">method double {
     $!x *= 2;
     $!y *= 2;
     self;
@@ -404,7 +404,7 @@ say Point.new(x =&gt; 1, y =&gt; -2).double.x
 
 <p>在定义自己的 <code>BUILD</code> 子方法时，必须自己初始化所有属性。例如</p>
 
-<pre><code class="language-perl6">use v6.c;
+<pre><code class="language-raku">use v6.c;
 class A {
     has $.x;
     has $.y;
@@ -418,11 +418,11 @@ say A.new(x =&gt; 42).x;       # OUTPUT: «Any␤»
 
 <p>留下 <code>$!x</code> 未初始化，因为自定义的 <code>BUILD</code> 没有初始化它。</p>
 
-<p><strong>注意</strong>:考虑使用 <a href="https://docs.perl6.org/language/objects#index-entry-TWEAK">TWEAK</a>。<a href="https://docs.perl6.org/language/glossary#Rakudo">Rakudo</a> 自发布 2016.11 以来支持 <a href="https://docs.perl6.org/language/objects#index-entry-TWEAK">TWEAK</a> 方法。</p>
+<p><strong>注意</strong>:考虑使用 <a href="https://docs.raku.org/language/objects#index-entry-TWEAK">TWEAK</a>。<a href="https://docs.raku.org/language/glossary#Rakudo">Rakudo</a> 自发布 2016.11 以来支持 <a href="https://docs.raku.org/language/objects#index-entry-TWEAK">TWEAK</a> 方法。</p>
 
 <p>一种可能的补救方法是显式地初始化 <code>BUILD</code> 中的属性:</p>
 
-<pre><code class="language-perl6">submethod BUILD(:$x) {
+<pre><code class="language-raku">submethod BUILD(:$x) {
     $!y = 18;
     $!x := $x;
 }
@@ -430,14 +430,14 @@ say A.new(x =&gt; 42).x;       # OUTPUT: «Any␤»
 
 <p>这可以简化为：</p>
 
-<pre><code class="language-perl6">submethod BUILD(:$!x) {
+<pre><code class="language-raku">submethod BUILD(:$!x) {
     $!y = 18;
 }
 </code></pre>
 
 <p>另一种更普遍的方法是不去管 <code>BUILD</code>，而是与 <code>BUILDALL</code> 机制挂钩:</p>
 
-<pre><code class="language-perl6">use v6.c;
+<pre><code class="language-raku">use v6.c;
 class A {
     has $.x;
     has $.y;
@@ -451,16 +451,16 @@ class A {
 say A.new(x =&gt; 42).x;       # OUTPUT: «42␤» 
 </code></pre>
 
-<p>记住 <code>BUILDALL</code> 是一个方法，而不是子方法。这是因为在默认情况下，每个类层次结构只有一个这样的方法，而 <code>BUILD</code> 是每个类显式调用的。这就是为什么为了正确地初始化父对象，需要在 <code>BUILDALL</code> 中使用 <code>callsame</code>，而不是在 <code>BUILD</code> 中(关于该主题的更多信息请参阅<a href="https://docs.perl6.org/language/objects#Object_construction">对象创建</a>)。</p>
+<p>记住 <code>BUILDALL</code> 是一个方法，而不是子方法。这是因为在默认情况下，每个类层次结构只有一个这样的方法，而 <code>BUILD</code> 是每个类显式调用的。这就是为什么为了正确地初始化父对象，需要在 <code>BUILDALL</code> 中使用 <code>callsame</code>，而不是在 <code>BUILD</code> 中(关于该主题的更多信息请参阅<a href="https://docs.raku.org/language/objects#Object_construction">对象创建</a>)。</p>
 
 <h1 id="空白">空白</h1>
 
 <h2 id="regex-中的空白不按字面匹配">regex 中的空白不按字面匹配</h2>
 
-<pre><code class="language-perl6">say 'a b' ~~ /a b/; # OUTPUT: «False␤» 
+<pre><code class="language-raku">say 'a b' ~~ /a b/; # OUTPUT: «False␤» 
 </code></pre>
 
-<p>默认情况下，regexe 中的空白被认为是一种可选的没有语义的填充，就像 Perl 6 语言的其他部分一样。</p>
+<p>默认情况下，regexe 中的空白被认为是一种可选的没有语义的填充，就像 Raku 语言的其他部分一样。</p>
 
 <p>匹配空白的方法:</p>
 
@@ -480,30 +480,30 @@ say A.new(x =&gt; 42).x;       # OUTPUT: «42␤»
 
 <h2 id="模棱两可的解析">模棱两可的解析</h2>
 
-<p>虽然有些语言允许您删除记号之间尽可能多的空白，但是 Perl 6 就不那么宽容了。最重要的准则是我们不鼓励使用代码高尔夫，所以不要在空格上浪费时间(这些限制背后更严重的潜在原因是单遍解析和解析 Perl 6 程序的能力，而实际上不需要<a href="https://en.wikipedia.org/wiki/Backtracking">回溯</a>)。</p>
+<p>虽然有些语言允许您删除记号之间尽可能多的空白，但是 Raku 就不那么宽容了。最重要的准则是我们不鼓励使用代码高尔夫，所以不要在空格上浪费时间(这些限制背后更严重的潜在原因是单遍解析和解析 Raku 程序的能力，而实际上不需要<a href="https://en.wikipedia.org/wiki/Backtracking">回溯</a>)。</p>
 
 <p>你应留意的常见区域是:</p>
 
 <h3 id="块与散列切片的歧义性">块与散列切片的歧义性</h3>
 
-<pre><code class="language-perl6"># WRONG; trying to hash-slice a Bool: 
+<pre><code class="language-raku"># WRONG; trying to hash-slice a Bool: 
 while ($++ &gt; 5){ .say }
 </code></pre>
 
-<pre><code class="language-perl6"># RIGHT: 
+<pre><code class="language-raku"># RIGHT: 
 while ($++ &gt; 5) { .say }
  
-# EVEN BETTER; Perl 6 does not require parentheses there: 
+# EVEN BETTER; Raku does not require parentheses there: 
 while $++ &gt; 5 { .say }
 </code></pre>
 
 <h3 id="化简与数组构造函数的歧义性">化简与数组构造函数的歧义性</h3>
 
-<pre><code class="language-perl6"># WRONG; ambiguity with `[&lt;]` meta op: 
+<pre><code class="language-raku"># WRONG; ambiguity with `[&lt;]` meta op: 
 my @a = [[&lt;foo&gt;],];
 </code></pre>
 
-<pre><code class="language-perl6"># RIGHT; reductions cannot have spaces in them, so put one in: 
+<pre><code class="language-raku"># RIGHT; reductions cannot have spaces in them, so put one in: 
 my @a = [[ &lt;foo&gt;],];
  
 # No ambiguity here, natural spaces between items suffice to resolve it: 
@@ -512,11 +512,11 @@ my @a = [[&lt;foo bar ber&gt;],];
 
 <h3 id="小于与单词引用-关联索引">小于与单词引用/关联索引</h3>
 
-<pre><code class="language-perl6"># WRONG; trying to index 3 associatively: 
+<pre><code class="language-raku"># WRONG; trying to index 3 associatively: 
 say 3&lt;5&gt;4
 </code></pre>
 
-<pre><code class="language-perl6"># RIGHT; prefer some extra whitespace around infix operators: 
+<pre><code class="language-raku"># RIGHT; prefer some extra whitespace around infix operators: 
 say 3 &lt; 5 &gt; 4
 </code></pre>
 
@@ -526,7 +526,7 @@ say 3 &lt; 5 &gt; 4
 
 <h1 id="原文">原文</h1>
 
-<p><a href="https://docs.perl6.org/language/traps">https://docs.perl6.org/language/traps</a></p>
+<p><a href="https://docs.raku.org/language/traps">https://docs.raku.org/language/traps</a></p>
 
 
         
@@ -546,7 +546,7 @@ say 3 &lt; 5 &gt; 4
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-10-05-command-line-arguments-in-perl-6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的命令行参数">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-10-05-command-line-arguments-in-raku/" data-toggle="tooltip" data-placement="top" title="Raku 中的命令行参数">&larr; Previous Post</a>
             </li>
           
           

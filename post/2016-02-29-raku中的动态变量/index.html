@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku 中的动态变量</title>
+  <meta property="og:title" content="Raku 中的动态变量" />
+  <meta name="twitter:title" content="Raku 中的动态变量" />
+  <meta name="description" content="Raku 中的动态变量
+$*ARGFILES  $*ARGFILES Magic command-line input handle.
+ argfiles.pl6
+use v6; $*ARGFILES.perl.say; #=&gt; IO::Handle.new(:path(Any),:chomp) # 按行读取 for $*ARGFILES.lines -&gt; $line { say &quot;$line&quot;; } # 一次性读取 # say $*ARGFILES.slurp;  USAGE
+$ raku argfiles.pl6 file1 file2 file3 ...   class IO::Handle - Raku Documentation Input/Output - Raku Documentation Raku文件操作 - Qiita  @*ARGS  @*ARGS - Arguments from the command line. 命令行中的参数。
+ agrs.pl6
+use v6; say @*ARGS.">
+  <meta property="og:description" content="Raku 中的动态变量
+$*ARGFILES  $*ARGFILES Magic command-line input handle.
+ argfiles.pl6
+use v6; $*ARGFILES.perl.say; #=&gt; IO::Handle.new(:path(Any),:chomp) # 按行读取 for $*ARGFILES.lines -&gt; $line { say &quot;$line&quot;; } # 一次性读取 # say $*ARGFILES.slurp;  USAGE
+$ raku argfiles.pl6 file1 file2 file3 ...   class IO::Handle - Raku Documentation Input/Output - Raku Documentation Raku文件操作 - Qiita  @*ARGS  @*ARGS - Arguments from the command line. 命令行中的参数。
+ agrs.pl6
+use v6; say @*ARGS.">
+  <meta name="twitter:description" content="Raku 中的动态变量
+$*ARGFILES  $*ARGFILES Magic command-line input handle.
+ argfiles.pl6
+use v6; $*ARGFILES.perl.say; #=&gt; IO::Handle.new(:path(Any),:chomp) # 按行读取 for $*ARGFILES.lines -&gt; $line { say …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-02-29-raku%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E5%8F%98%E9%87%8F/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-02-29-raku%E4%B8%AD%E7%9A%84%E5%8A%A8%E6%80%81%E5%8F%98%E9%87%8F/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku 中的动态变量</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on February 29, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 5 minutes (1016 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>Raku 中的<a href="http://qiita.com/B73W56H84/items/18053bf37de8bb2bb808#err">动态变量</a></p>
+
+<h2 id="argfiles">$*ARGFILES</h2>
+
+<hr />
+
+<blockquote>
+<p>$*ARGFILES Magic command-line input handle.</p>
+</blockquote>
+
+<p><strong><code>argfiles.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+$*ARGFILES.perl.say; #=&gt; IO::Handle.new(:path(Any),:chomp)
+
+# 按行读取
+for $*ARGFILES.lines -&gt; $line {
+    say &quot;$line&quot;;
+}
+
+# 一次性读取
+# say $*ARGFILES.slurp;
+</code></pre>
+
+<p><strong><code>USAGE</code></strong></p>
+
+<pre><code class="language-raku">$ raku argfiles.pl6 file1 file2 file3 ...
+</code></pre>
+
+<ul>
+<li><a href="http://doc.raku.org/type/IO::Handle">class IO::Handle - Raku Documentation</a></li>
+<li><a href="http://doc.raku.org/language/io">Input/Output - Raku Documentation</a></li>
+<li><a href="http://qiita.com/syohex/items/0a7782920968ab105ba0">Raku文件操作 - Qiita</a></li>
+</ul>
+
+<h2 id="args">@*ARGS</h2>
+
+<hr />
+
+<blockquote>
+<p>@*ARGS - Arguments from the command line. 命令行中的参数。</p>
+</blockquote>
+
+<p><strong><code>agrs.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say @*ARGS.WAHT;    #=&gt; (Array)
+say @*ARGS;         #=&gt; [a b c d e]
+
+say @*ARGS.perl;    #=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;]
+</code></pre>
+
+<p><strong><code>USAGE</code></strong></p>
+
+<pre><code class="language-raku">$ raku args.pl6 a b c d e
+</code></pre>
+
+<ul>
+<li><a href="http://doc.raku.org/type/Array">class Array - Raku Documentation</a></li>
+</ul>
+
+<h2 id="in">$*IN</h2>
+
+<hr />
+
+<blockquote>
+<p>$*IN - 标准输入文件句柄, 等同于 stdin</p>
+</blockquote>
+
+<p><strong><code>in.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*IN.perl;   #=&gt; IO::Handle.new(:path(IO::Special.new(what =&gt; &quot;&lt;STDIN&gt;&quot;)),:chomp)
+say $*IN.path;   #=&gt; IO::Special.new(what =&gt; &quot;&lt;STDIN&gt;&quot;)
+say $*IN.chomp;  #=&gt; True
+
+for $*IN.lines -&gt; $line {
+ say &quot;$line&quot;;
+}
+</code></pre>
+
+<p><strong><code>USAGE</code></strong></p>
+
+<pre><code class="language-raku">$ raku in.pl6
+人力
+...
+
+$ cat somefile.txt | raku in.pl6
+</code></pre>
+
+<h2 id="out">$*OUT</h2>
+
+<hr />
+
+<blockquote>
+<p>$*OUT - 标准输出文件句柄, 等同于 stdout</p>
+</blockquote>
+
+<p><strong><code>out.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*OUT.perl;   #=&gt; IO::Handle.new(:path(IO::Special.new(what =&gt; &quot;&lt;STDOUT&gt;&quot;)),:chomp)
+say $*OUT.path;   #=&gt; IO::Special.new(what =&gt; &quot;&lt;STDOUT&gt;&quot;)
+say $*OUT.chomp;  #=&gt; True
+
+$*OUT.say( q:to/新年快乐/ );
+    祝你新年快乐
+    2016.01.23
+    让我再说一次
+新年快乐
+
+# 通常我们会在打印时省略 $*OUT
+# say &quot;哈利路亚&quot;;
+</code></pre>
+
+<p>最后一段代码中 <code>//</code> 中间的字符是分割符。这打印出:</p>
+
+<pre><code class="language-txt">祝你新年快乐
+2016.01.23
+让我再说一次
+</code></pre>
+
+<p><strong><code>USAGE</code></strong></p>
+
+<pre><code class="language-raku">$ raku out.pl6
+$ raku out.pl6 &gt; result.txt
+</code></pre>
+
+<ul>
+<li><a href="http://doc.raku.org/type/IO">role IO - Raku Documentation</a></li>
+</ul>
+
+<h2 id="err">$*ERR</h2>
+
+<hr />
+
+<blockquote>
+<p>$*ERR - 标准错误文件句柄, 等同于 stderr</p>
+</blockquote>
+
+<p><strong><code>err.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*ERR.perl;   #=&gt; IO::Handle.new(:path(IO::Special.new(what =&gt; &quot;&lt;STDERR&gt;&quot;)),:chomp)
+say $*ERR.path;   #=&gt; IO::Special.new(what =&gt; &quot;&lt;STDERR&gt;&quot;)
+say $*ERR.chomp;  #=&gt; True
+
+$*ERR.say(&quot;我错了&quot;);
+
+# 平时可以使用 note
+# note &quot;前方高能预警&quot;;
+</code></pre>
+
+<p><strong><code>USAGE</code></strong></p>
+
+<pre><code class="language-shell">$ raku err.pl6 &gt; /dev/null
+我错了
+</code></pre>
+
+<h2 id="repo">$*REPO</h2>
+
+<hr />
+
+<blockquote>
+<p>$*REPO A variable holding information about modules installed/loaded</p>
+</blockquote>
+
+<p><strong><code>repo.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*REPO;
+say $*REPO.perl;
+say $*REPO.id;
+say $*REPO.path-spec;
+say $*REPO.loaded;
+say $*REPO.repo-chain;
+
+</code></pre>
+
+<h2 id="tz">$*TZ</h2>
+
+<hr />
+
+<blockquote>
+<p>$*TZ The system&rsquo;s local timezone.</p>
+</blockquote>
+
+<p><strong><code>tz.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*TZ;      #=&gt; 32400
+say $*TZ.perl; #=&gt; 32400
+
+say $*TZ.WHAT; #=&gt; (Int)
+
+</code></pre>
+
+<h2 id="cwd">$*CWD</h2>
+
+<hr />
+
+<blockquote>
+<p>$*CWD The Current Working Directory.</p>
+</blockquote>
+
+<p><strong><code>cwd.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*CWD;       #=&gt; &quot;/Users/kujira&quot;.IO
+say $*CWD.path;  #=&gt; /Users/kujira
+say $*CWD.perl;  #=&gt; &quot;/Users/kujira&quot;.IO(:SPEC(IO::Spec::Unix),:CWD(&quot;/Users/kujira&quot;))
+
+</code></pre>
+
+<h2 id="kernel">$*KERNEL</h2>
+
+<hr />
+
+<blockquote>
+<p>$*KERNEL Which kernel am I compiled for?</p>
+</blockquote>
+
+<p><strong><code>kernel.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*KERNEL;            #=&gt; darwin (15.2.0)
+say $*KERNEL.release;    #=&gt; Darwin Kernel Version 15.2.0: Fri Nov 13 19:56:56 PST 2015; root:xnu-3248.20.55~2/RELEASE_X86_64
+say $*KERNEL.name;       #=&gt; darwin
+say $*KERNEL.auth;       #=&gt; unknown
+say $*KERNEL.version;    #=&gt; v15.2.0
+say $*KERNEL.signature;  #=&gt; (Blob)
+say $*KERNEL.desc;       #=&gt; (Str)
+
+say $*KERNEL.perl;        #=&gt; Kernel.new(release =&gt; Str, name =&gt; &quot;darwin&quot;, auth =&gt; &quot;unknown&quot;, version =&gt; Version.new('15.2.0'), signature =&gt; Blob, desc =&gt; Str)
+say $*KERNEL.WHAT;        #=&gt; (Kernel)
+
+</code></pre>
+
+<h2 id="distro">$*DISTRO</h2>
+
+<hr />
+
+<blockquote>
+<p>$*DISTRO Which OS distribution am I compiling under?</p>
+</blockquote>
+
+<p><strong><code>distro.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*DISTRO;           #=&gt; macosx (10.11.2)
+
+say $*DISTRO.name;      #=&gt; macosx
+say $*DISTRO.is-win;    #=&gt; False
+say $*DISTRO.version;   #=&gt; v10.11.2
+
+say $*DISTRO.path-sep;  #=&gt; :
+say $*DISTRO.auth;      #=&gt; Apple Computer, Inc.
+say $*DISTRO.desc;      #=&gt; 2016-01-17T01:48:03.261407+09:00
+say $*DISTRO.release;   #=&gt; 15C50
+say $*DISTRO.signature; #=&gt; (Blob)
+
+say $*DISTRO.gist;      #=&gt; macosx (10.11.2)
+say $*DISTRO.Str;       #=&gt; macosx
+say $*DISTRO.perl;      #=&gt; Distro.new(release =&gt; &quot;15C50&quot;, is-win =&gt; Bool::False, path-sep =&gt; &quot;:&quot;, name =&gt; &quot;macosx&quot;, auth =&gt; &quot;Apple Computer, Inc.&quot;, version =&gt; Version.new('10.11.2'), signature =&gt; Blob, desc =&gt; &quot;2016-01-17T01:48:47.273804+09:00&quot;)
+
+</code></pre>
+
+<ul>
+<li><a href="http://blog.64p.org/entry/2015/09/05/225701">Raku で windows かどうか判定したい - tokuhirom&rsquo;s blog</a></li>
+<li><a href="https://github.com/raku/roast/blob/master/S02-magicals/DISTRO.t">DISTRO.t</a></li>
+</ul>
+
+<h2 id="vm">$*VM</h2>
+
+<hr />
+
+<blockquote>
+<p>$*VM Which virtual machine am I compiling under?</p>
+</blockquote>
+
+<p><strong><code>vm.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*VM;         #=&gt; moar (2015.12)
+
+say $*VM.config;
+say $*VM.perl;
+
+</code></pre>
+
+<h2 id="perl">$*PERL</h2>
+
+<hr />
+
+<blockquote>
+<p>$*PERL Which Perl am I compiled for?</p>
+</blockquote>
+
+<p><strong><code>perl.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*PERL;          #=&gt; Raku (6.c)
+say $*PERL.compiler; #=&gt; rakudo (2015.12)
+
+say $*PERL.perl;     #=&gt; Perl.new(compiler =&gt; Compiler.new(id =&gt; &quot;AEB5E66886F036F5AF7448E587F49EB233F6F7F5.1451295526.86961&quot;, release =&gt; &quot;&quot;, codename =&gt; &quot;&quot;, name =&gt; &quot;rakudo&quot;, auth =&gt; &quot;The Perl Foundation&quot;, version =&gt; Version.new('2015.12'), signature =&gt; Blob, desc =&gt; Str), name =&gt; &quot;Raku&quot;, auth =&gt; &quot;The Perl Foundation&quot;, version =&gt; Version.new('6.c'), signature =&gt; Blob, desc =&gt; Str)
+
+</code></pre>
+
+<h2 id="pid">$*PID</h2>
+
+<hr />
+
+<blockquote>
+<p>$*PID Process ID of the current process.</p>
+</blockquote>
+
+<p><strong><code>pid.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*PID;      #=&gt; 35480
+say $*PID.perl; #=&gt; 35480
+say $*PID.WHAT; #=&gt; (Int)
+
+</code></pre>
+
+<h2 id="program-name">$*PROGRAM-NAME</h2>
+
+<hr />
+
+<blockquote>
+<p>$*PROGRAM-NAME Path to the current executable as it was entered on the command line, or C&lt;-e&gt; if perl was invoked with the -e flag.</p>
+</blockquote>
+
+<p><strong><code>program-name.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*PROGRAM-NAME;
+say $*PROGRAM-NAME.perl;
+say $*PROGRAM-NAME.IO.basename;
+
+</code></pre>
+
+<h2 id="program">$*PROGRAM</h2>
+
+<hr />
+
+<blockquote>
+<p>$*PROGRAM Location (in the form of an C<a href="undefined">IO::Path</a> object) of the Perl program being executed.</p>
+</blockquote>
+
+<p><strong><code>program.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*PROGRAM;        #=&gt; &quot;/Users/kujira/program.pl6&quot;.IO
+say $*PROGRAM.Str;    #=&gt; program.pl6
+
+say $*PROGRAM.perl;   #=&gt; &quot;program.pl6&quot;.IO(:SPEC(IO::Spec::Unix),:CWD(&quot;/Users/kujira&quot;))
+
+say $*PROGRAM.SPEC;   #=&gt; (Unix)
+say $*PROGRAM.CWD;    #=&gt; /Users/kujira
+
+say $*PROGRAM.WHAT;   #=&gt; (Path)
+
+</code></pre>
+
+<h2 id="executable">$*EXECUTABLE</h2>
+
+<hr />
+
+<blockquote>
+<p>$*EXECUTABLE Absolute path of the perl executable that is currently running.</p>
+</blockquote>
+
+<p><strong><code>executable.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*EXECUTABLE;           #=&gt; &quot;/usr/local/bin/raku&quot;.IO
+say $*EXECUTABLE.Str;       #=&gt; /usr/local/bin/raku
+say $*EXECUTABLE.basename;  #=&gt; raku
+
+say $*EXECUTABLE.WHAT;      #=&gt; (Path)
+
+say $*EXECUTABLE.perl;      #=&gt; &quot;/usr/local/bin/raku&quot;.IO(:SPEC(IO::Spec::Unix))
+say $*EXECUTABLE.SPEC;      #=&gt; (Unix)
+
+</code></pre>
+
+<h2 id="executable-name">$*EXECUTABLE-NAME</h2>
+
+<hr />
+
+<blockquote>
+<p>$*EXECUTABLE-NAME The name of the perl executable that is currently running. (e.g. raku-p, raku-m, Niecza.exe) Favor $*EXECUTABLE because it is not guaranteed that the perl executable is in PATH.</p>
+</blockquote>
+
+<p><strong><code>executable-name.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*EXECUTABLE-NAME;       #=&gt; raku
+say $*EXECUTABLE-NAME.WHAT;  #=&gt; (Str)
+
+</code></pre>
+
+<h2 id="user">$*USER</h2>
+
+<hr />
+
+<blockquote>
+<p>$*USER The user that is running the program. It is an object that evaluates to &ldquo;username (uid)&rdquo;. It will evaluate to the username only if treated as a string and the numeric user id if treated as a number.</p>
+</blockquote>
+
+<p><strong><code>user.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*USER;      #=&gt; kujira (801)
+
+say +$*USER;     #=&gt; 801
+say ~$*USER;     #=&gt; kujira
+
+say $*USER.perl; #=&gt; IdName.new
+
+</code></pre>
+
+<h2 id="group">$*GROUP</h2>
+
+<hr />
+
+<blockquote>
+<p>$*GROUP The primary group of the user who is running the program. It is an object that evaluates to &ldquo;groupname (gid)&rdquo;. It will evaluate to the groupname only if treated as a string and the numeric group id if treated as a number.</p>
+</blockquote>
+
+<p><strong><code>group.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*GROUP;       #=&gt; whale (0)
+
+say ~$*GROUP;      #=&gt; whale
+say +$*GROUP;      #=&gt; 0
+
+say $*GROUP.perl;  #=&gt; IdName.new
+
+</code></pre>
+
+<h2 id="home">$*HOME</h2>
+
+<hr />
+
+<blockquote>
+<p>$*HOME An L<a href="undefined">IO::Path</a> object representing the &ldquo;home directory&rdquo; of the user that is running the program. If the &ldquo;home directory&rdquo; cannot be determined it will be L</p>
+</blockquote>
+
+<p><strong><code>home.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*HOME;       #=&gt; &quot;/Users/kujira&quot;.IO
+
+say $*HOME.CWD;   #=&gt; /Users/kujira
+say $*HOME.SPEC;  #=&gt; (Unix)
+say $*HOME.WHAT;  #=&gt; (Path)
+
+say $*HOME.perl;  #=&gt; &quot;/Users/kujira&quot;.IO(:SPEC(IO::Spec::Unix),:CWD(&quot;/Users/kujira&quot;))
+
+</code></pre>
+
+<ul>
+<li><a href="http://doc.raku.org/type/IO::Path">class IO::Path - Raku Documentation</a></li>
+</ul>
+
+<h2 id="spec">$*SPEC</h2>
+
+<hr />
+
+<blockquote>
+<p>$*SPEC The appropriate L<a href="undefined">IO::Spec</a> sub-class for the platform that the program is running on.</p>
+</blockquote>
+
+<p><strong><code>spec.pl6</code></strong></p>
+
+<pre><code class="language-raku">use v6;
+
+say $*SPEC;          #=&gt; (Unix)
+say $*SPEC.perl;     #=&gt; IO::Spec::Unix
+say $*SPEC.path;     #=&gt; (/usr/local/Cellar/rakudo-star/2015.12/share/raku/site/bin /usr/local/sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin)
+say $*SPEC.tmpdir;   #=&gt; &quot;/var/folders/9v/wr31l2zj78x1nw58jgljq_9w0000gn/T&quot;.IO
+say $*SPEC.dir-sep;  #=&gt; /
+say $*SPEC.curdir;   #=&gt; .
+say $*SPEC.updir;    #=&gt; ..
+say $*SPEC.curupdir; #=&gt; none(., ..)
+say $*SPEC.rootdir;  #=&gt; /
+say $*SPEC.devnull;  #=&gt; /dev/null
+
+</code></pre>
+
+<ul>
+<li><a href="http://doc.raku.org/type/IO::Spec">class IO::Spec - Raku Documentation</a></li>
+<li><a href="http://doc.raku.org/type/IO::Spec::QNX">class IO::Spec::QNX - Raku Documentation</a></li>
+<li><a href="http://doc.raku.org/type/IO::Spec::Unix">class IO::Spec::Unix - Raku Documentation</a></li>
+<li><a href="http://doc.raku.org/type/IO::Spec::Win32">class IO::Spec::Win32 - Raku Documentation</a></li>
+<li><a href="http://doc.raku.org/type/IO::Spec::Cygwin">class IO::Spec::Cygwin - Raku Documentation</a></li>
+</ul>
+
+<h2 id="http-qiita-com-b73w56h84-items-18053bf37de8bb2bb808-e5-8f-82-e8-80-83-e3-81-a8-e6-b3-a8-e9-87-88">[](<a href="http://qiita.com/B73W56H84/items/18053bf37de8bb2bb808#%E5%8F%82%E8%80%83%E3%81%A8%E6%B3%A8%E9%87%88">http://qiita.com/B73W56H84/items/18053bf37de8bb2bb808#%E5%8F%82%E8%80%83%E3%81%A8%E6%B3%A8%E9%87%88</a>)</h2>
+
+<hr />
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/%E5%8A%A8%E6%80%81%E5%8F%98%E9%87%8F/">动态变量</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/dynamic-variables/">Dynamic Variables</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-02-26-bless/" data-toggle="tooltip" data-placement="top" title="bless">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-03-08-raku%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80/" data-toggle="tooltip" data-placement="top" title="Raku 中的正则表达式(一)">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

@@ -201,12 +201,12 @@ if (!doNotTrack) {
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-perl-6/">
-                <h2 class="post-title">在 Perl 6 中设置超时</h2>
+              <a href="https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-raku/">
+                <h2 class="post-title">在 Raku 中设置超时</h2>
 
                 
                   <h3 class="post-subtitle">
-                    Setting timeouts in Perl 6
+                    Setting timeouts in Raku
                   </h3>
                 
               </a>
@@ -219,7 +219,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (100 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (98 words)
   
   
 </span>
@@ -227,13 +227,13 @@ if (!doNotTrack) {
               </p>
               <div class="post-entry">
                 
-                  在 Perl 6 中设置超时 在 Perl 5 中，我曾经使用信号设置超时（至少，这是一种简单且可预测的方式）。在 Perl 6 中，您可以使用 promise。让我们看看如何做到这一点。
+                  在 Raku 中设置超时 在 Perl 5 中，我曾经使用信号设置超时（至少，这是一种简单且可预测的方式）。在 Raku 中，您可以使用 promise。让我们看看如何做到这一点。
 要模仿长时间运行的任务，请创建一个无限循环，然后打印其状态。开始吧:
 for 1 .. * { .say if $_ %% 100_000; }  只要循环得到控制，它将永远不会退出。我们的任务是在几秒钟内停止程序，因此计时器应在循环之前设置:
 Promise.in(2).then({ exit; }); for 1 .. * { .say if $_ %% 100_000; }  在这里，Promise.in 方法创建一个 promise，在给定秒数后自动 kept。在 promise 的基础上，使用 then，我们添加了另一个 promise，其代码将在超时后运行。这里唯一的语句就是退出，停止主程序。
 运行该程序以查看它的工作原理：
-$ time perl6 timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 0m2.196s user 0m2.120s sys 0m0.068s  该程序在我的计算机上计数达四百万，并在两秒内退出。这正是我们需要的行为。
-                  <a href="https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-perl-6/" class="post-read-more">[Read More]</a>
+$ time raku timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 0m2.196s user 0m2.120s sys 0m0.068s  该程序在我的计算机上计数达四百万，并在两秒内退出。这正是我们需要的行为。
+                  <a href="https://ohmysummer.github.io/post/2018-04-12-setting-timeouts-in-raku/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -248,12 +248,12 @@ $ time perl6 timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 
             </article>
           
             <article class="post-preview">
-              <a href="https://ohmysummer.github.io/post/2018-04-09-perl-6-%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/">
-                <h2 class="post-title">Perl 6 中的 Superscripts</h2>
+              <a href="https://ohmysummer.github.io/post/2018-04-09-raku%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/">
+                <h2 class="post-title">Raku 中的 Superscripts</h2>
 
                 
                   <h3 class="post-subtitle">
-                    Superscripts in Perl 6
+                    Superscripts in Raku
                   </h3>
                 
               </a>
@@ -266,7 +266,7 @@ $ time perl6 timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (204 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (202 words)
   
   
 </span>
@@ -274,7 +274,7 @@ $ time perl6 timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 
               </p>
               <div class="post-entry">
                 
-                  Perl 6 中的 Superscripts 在 Perl 6 中，可以使用上标索引来计算数字的幂数，例如:
+                  Raku 中的 Superscripts 在 Raku 中，可以使用上标索引来计算数字的幂数，例如:
 &gt; 2⁵ 32 &gt; 7³ 343  也可以在上标中使用多个数字：
 &gt; 10¹² 1000000000000  你可以猜到，上面的代码等同于这样：
 &gt; 2**5 32 &gt; 7**3 343 &gt; 10**12 1000000000000  但问题是：上标到底是如何工作的？让我们找出答案。
@@ -282,7 +282,7 @@ $ time perl6 timeout.pl 100000 200000 300000 . . . 3700000 3800000 3900000 real 
 proto sub postfix:&lt;ⁿ&gt;(Mu $, Mu $) is pure {*} multi sub postfix:&lt;ⁿ&gt;(\a, \b) { a ** b }  啊哈，这就是我们需要的，上标符号在这里转换为简单的 ** 运算符。
 您可以通过打印操作数来可视化传递给操作的确切内容：
 multi sub postfix:&lt;ⁿ&gt;(\a, \b) { nqp::say('# a = ' ~ a); nqp::say('# b = ' ~ b); a ** b }  这个时候，你会看到上面的测试示例输出如下：
-                  <a href="https://ohmysummer.github.io/post/2018-04-09-perl-6-%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/" class="post-read-more">[Read More]</a>
+                  <a href="https://ohmysummer.github.io/post/2018-04-09-raku%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/" class="post-read-more">[Read More]</a>
                 
               </div>
 

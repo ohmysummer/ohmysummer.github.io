@@ -218,7 +218,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (243 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (242 words)
   
   
 </span>
@@ -239,13 +239,13 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         <p><a href="https://gfldex.wordpress.com/2016/10/02/things-i-found-out-while-finding/">Things I found out while finding</a></p>
 
-<p><a href="https://github.com/gfldex/perl6-concurrent-file-find">Concurrent::File::Find</a> 现在已经在<a href="https://github.com/perl6/ecosystem">生态系统</a>中了。我在这里分享几点我学到的东西。</p>
+<p><a href="https://github.com/gfldex/raku-concurrent-file-find">Concurrent::File::Find</a> 现在已经在<a href="https://github.com/raku/ecosystem">生态系统</a>中了。我在这里分享几点我学到的东西。</p>
 
-<p>在子签名(sub-signature)上使用 where 从句将不会在子签名中提供变量。 如果 where 从句必须对所有参数进行操作，为了检查排他性或其他相互依赖性，那么它必须应用于最后一个参数上。 这个限制设计时就是这样的，所以我告诉了<a href="https://github.com/perl6/doc/commit/1f30c682a8486dde594bef6dc05af9ab97f78fa6">文档</a>。 where 从句对捕获没有效果，但原意<a href="https://rt.perl.org/Public/Bug/Display.html?id=129430">不是</a>那样设计的并且第二天 <a href="http://jnthn.net/">jnthn</a> 就修复了它。 我知道抱怨会得到你的关注，但我没想到它是这么快。</p>
+<p>在子签名(sub-signature)上使用 where 从句将不会在子签名中提供变量。 如果 where 从句必须对所有参数进行操作，为了检查排他性或其他相互依赖性，那么它必须应用于最后一个参数上。 这个限制设计时就是这样的，所以我告诉了<a href="https://github.com/raku/doc/commit/1f30c682a8486dde594bef6dc05af9ab97f78fa6">文档</a>。 where 从句对捕获没有效果，但原意<a href="https://rt.perl.org/Public/Bug/Display.html?id=129430">不是</a>那样设计的并且第二天 <a href="http://jnthn.net/">jnthn</a> 就修复了它。 我知道抱怨会得到你的关注，但我没想到它是这么快。</p>
 
 <p>我还发现一个叫 <code>.close</code> 的方法, 它几乎总是需要一个 <code>LEAVE</code>。 让我们看一些代码。</p>
 
-<pre><code class="language-perl6">sub find-simple ( IO(Str) $dir,
+<pre><code class="language-raku">sub find-simple ( IO(Str) $dir,
     :$keep-going = True,
     :$no-thread = False
 ) is export {
@@ -274,16 +274,16 @@ if (!doNotTrack) {
 }
 </code></pre>
 
-<p>这实际上接收由 <code>dir</code> 返回的列表(List)，并通过<a href="https://docs.perl6.org/type/Channel">Channel</a>通道返回文件和目录的 <code>IO::Path</code>。 对于任何目录，它会递归到 for-block 中（这就是 <code>».&amp;?BLOCK</code> 的意思）。 因为那些<a href="https://docs.perl6.org/type/IO$COLON$COLONPath#File_test_operators">文件测试</a>中的任何一个都可能触发异常，所以我们可能会离开那个 <code>start-block</code>。 如果有一个 Promise，那将在 return 语句背后给我们发回，那里什么也没有。 返回语句实际上在主线程中，并且一些消费者(consumer)将阻塞返回的 <code>.list</code>。</p>
+<p>这实际上接收由 <code>dir</code> 返回的列表(List)，并通过<a href="https://docs.raku.org/type/Channel">Channel</a>通道返回文件和目录的 <code>IO::Path</code>。 对于任何目录，它会递归到 for-block 中（这就是 <code>».&amp;?BLOCK</code> 的意思）。 因为那些<a href="https://docs.raku.org/type/IO$COLON$COLONPath#File_test_operators">文件测试</a>中的任何一个都可能触发异常，所以我们可能会离开那个 <code>start-block</code>。 如果有一个 Promise，那将在 return 语句背后给我们发回，那里什么也没有。 返回语句实际上在主线程中，并且一些消费者(consumer)将阻塞返回的 <code>.list</code>。</p>
 
-<pre><code class="language-perl6">.say for find-simple('/home/you');
+<pre><code class="language-raku">.say for find-simple('/home/you');
 </code></pre>
 
 <p>对于那个通道(Channel)的消费者(consumer)来说，他并不能清楚地知道他可能会被永远地阻塞。 因此如果出现错误, <code>LEAVE</code> 语句能确保通道(Channel)被关闭。</p>
 
 <p>将角色混合到 <code>.listified</code> 的通道(Channel)中提供了一个侧通道(side channel)，以把通道(Channel)交给消费者(consumer)，因此可以在该端关闭。</p>
 
-<pre><code class="language-perl6">my @l := find-simple(%*ENV&lt;HOME&gt;, :keep-going); # binding to avoid eagerness
+<pre><code class="language-raku">my @l := find-simple(%*ENV&lt;HOME&gt;, :keep-going); # binding to avoid eagerness
 
 for @l {
     @l.channel.close if $++ &gt; 5000; # hard-close the channel after 5000 found files
@@ -291,7 +291,7 @@ for @l {
 }
 </code></pre>
 
-<p>绑定是必需的，否则那个数组会吃掉整个通道(Channel)，而如果在数组那个位置放一个标量, 我们必须展平它。 请注意匿名状态变量以最不可能的方式计数是多么好。 这是能一起玩的大量 Perl 6 特性的情况之一。 Sigils 允许指示一个变量，即使它没有名字。   通过 <code>postfix:&lt;++&gt;</code> 在 Any 上进行 Autovivication  会得到一个0，它会增加到1. 因为我们没有一个溢出到本地作用域（第二个 <code>$++</code> 引入一个单独的变量）的名字， 所以我们不需要声明符。 我从来不喜欢短变量，因为他们在移动代码很容易被漏掉。 然后编译器会抱怨缺少声明，或者更糟的是，变量的初始化值是错误的。</p>
+<p>绑定是必需的，否则那个数组会吃掉整个通道(Channel)，而如果在数组那个位置放一个标量, 我们必须展平它。 请注意匿名状态变量以最不可能的方式计数是多么好。 这是能一起玩的大量 Raku 特性的情况之一。 Sigils 允许指示一个变量，即使它没有名字。   通过 <code>postfix:&lt;++&gt;</code> 在 Any 上进行 Autovivication  会得到一个0，它会增加到1. 因为我们没有一个溢出到本地作用域（第二个 <code>$++</code> 引入一个单独的变量）的名字， 所以我们不需要声明符。 我从来不喜欢短变量，因为他们在移动代码很容易被漏掉。 然后编译器会抱怨缺少声明，或者更糟的是，变量的初始化值是错误的。</p>
 
 <p>但有问题。 在测试一个干净的虚拟机（Debian Jessie）的时候，我发现 symlink-loops（/sys / 有很多这种东西）会导致 Promised 的线程消耗 100% 的 CPU，而主线程什么都不做。 看起来好像是线程有毛病。 也许结合大量的异常。 我不知道是否会有一个错误。 没有人在合成测试中测试异常垃圾邮件。</p>
 
@@ -317,12 +317,12 @@ for @l {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2016-10-19-perl6%E4%B8%AD%E7%9A%84with/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的 with">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2016-10-19-raku%E4%B8%AD%E7%9A%84with/" data-toggle="tooltip" data-placement="top" title="Raku 中的 with">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2016-10-22-%E5%85%B3%E4%BA%8Eperl6%E4%BD%A0%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%8410%E4%BB%B6%E4%BA%8B/" data-toggle="tooltip" data-placement="top" title="关于 Perl 6 你要知道的 10 件事">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2016-10-22-%E5%85%B3%E4%BA%8Eraku%E4%BD%A0%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%8410%E4%BB%B6%E4%BA%8B/" data-toggle="tooltip" data-placement="top" title="关于 Raku 你要知道的 10 件事">Next Post &rarr;</a>
             </li>
           
         </ul>

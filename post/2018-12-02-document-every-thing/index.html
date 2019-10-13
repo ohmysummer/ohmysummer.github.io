@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (739 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (729 words)
   
   
 </span>
@@ -243,9 +243,9 @@ if (!doNotTrack) {
 
 <p>没有。</p>
 
-<p>Perl 6 以下面的方式来救援：</p>
+<p>Raku 以下面的方式来救援：</p>
 
-<p><a href="https://docs.perl6.org/syntax/Creating%20grammars">grammar</a></p>
+<p><a href="https://docs.raku.org/syntax/Creating%20grammars">grammar</a></p>
 
 <pre><code class="language-perl">unit grammar Santa-Letter;
 
@@ -302,9 +302,9 @@ sub MAIN ( Str $file = &quot;letter.txt&quot; ) {
 
 <p>圣诞老人嘟嚷着，但最终检查了他的 Santa-Letter grammar 的主分支并开始着手研究它。 当然，使用 Pod 6</p>
 
-<h1 id="pod-6-stands-for-plain-old-documentation-for-perl-6">Pod 6 stands for “Plain Old documentation for Perl 6”</h1>
+<h1 id="pod-6-stands-for-plain-old-documentation-for-raku">Pod 6 stands for “Plain Old documentation for Raku”</h1>
 
-<p>它（显然）不是首字母缩略词。 Pod6 是一个帮助 Perl 6 编码人员编写文档的 DSL。 它是一种标记语言，它使用 <code>=</code> 来启动命令和段落级标记。 我们会做到这一点，但目前，Santa 意识到最好的事情之一是它如何与 Perl 6 本身集成。 因此，他对检查程序进行了第二次迭代：</p>
+<p>它（显然）不是首字母缩略词。 Pod6 是一个帮助 Raku 编码人员编写文档的 DSL。 它是一种标记语言，它使用 <code>=</code> 来启动命令和段落级标记。 我们会做到这一点，但目前，Santa 意识到最好的事情之一是它如何与 Raku 本身集成。 因此，他对检查程序进行了第二次迭代：</p>
 
 <pre><code class="language-perl">#| This reads a letter file
 sub MAIN ( Str $file = &quot;letter.txt&quot; ) {
@@ -342,7 +342,7 @@ sub MAIN ( Str $file = &quot;letter.txt&quot; ) {
 
 <p>当使用 <code>--help</code> 调用时，这会打印相同的消息。 这是文档。 运行时:</p>
 
-<pre><code class="language-perl">perl6 --doc get-signed.p6
+<pre><code class="language-perl">raku --doc get-signed.p6
 </code></pre>
 
 <p>它打印了:</p>
@@ -353,14 +353,14 @@ sub MAIN ( Str $file = &quot;letter.txt&quot; ) {
 This reads a letter file in text format. With no arguments, it will read the C file.
 </code></pre>
 
-<p>所以Perl 6理解注释和附加到它的代码，并自动打印两者。 记录例程就像这样简单。</p>
+<p>所以Raku理解注释和附加到它的代码，并自动打印两者。 记录例程就像这样简单。</p>
 
 <p>此外，当在实际文件上运行时，最后一句被踢了，它打印出来：</p>
 
 <pre><code>Pod::Block::Declarator.new(WHEREFORE =&gt; sub MAIN (Str $file = &quot;letter.txt&quot;) { #`(Sub|81308800) ... }, config =&gt; {}, contents =&gt; [])
 </code></pre>
 
-<p>与其他语言中用于注释的其他DSL不同，例如Perl 5中的Markdown或Pod本身，Pod 6不仅是用于注释的DSL，它还是Perl 6本身的一部分，因此，它由Perl 6解析器解释，其内部结构可用于 <code>$=pod</code> 变量中的内省。 在这种情况下，注释是一个 <code>Pod::Block::Declarator</code>，该数据结构包含<code>WHEREFORE</code>键，其中包含声明的函数和注释。 但是，<code>contents</code>和<code>config</code>为空。 他们不应该这样做。</p>
+<p>与其他语言中用于注释的其他DSL不同，例如Perl 5中的Markdown或Pod本身，Pod 6不仅是用于注释的DSL，它还是Raku本身的一部分，因此，它由Raku解析器解释，其内部结构可用于 <code>$=pod</code> 变量中的内省。 在这种情况下，注释是一个 <code>Pod::Block::Declarator</code>，该数据结构包含<code>WHEREFORE</code>键，其中包含声明的函数和注释。 但是，<code>contents</code>和<code>config</code>为空。 他们不应该这样做。</p>
 
 <p>更重要的是，注释中使用的一点点实际格式不起作用。 更不用说实际模块没有真正文档化。 现在是圣诞老人不高兴了。</p>
 
@@ -372,7 +372,7 @@ This reads a letter file in text format. With no arguments, it will read the C f
 
 =head1 NAME
 
-Santa-Letter - A grammar for letters to Santa for the L&lt;Perl 6 Advent Calendar|https://perl6advent.wordpress.com&gt;
+Santa-Letter - A grammar for letters to Santa for the L&lt;Raku Advent Calendar|https://rakuadvent.wordpress.com&gt;
 
 =head1 SYNOPSIS
 
@@ -381,13 +381,13 @@ Parses letters formatted nicely and written by all good kids in the world.
 =end pod
 </code></pre>
 
-<p>方便地放在文件的末尾，当用<code>perl6 -doc Santa-Letter.pm6</code>调用时，或简单地<code>perl6 --doc Santa-Letter</code>如果它
-已安装，甚至<code>p6doc Santa-Letter</code>如果是<code>perl6/doc</code>的
+<p>方便地放在文件的末尾，当用<code>raku -doc Santa-Letter.pm6</code>调用时，或简单地<code>raku --doc Santa-Letter</code>如果它
+已安装，甚至<code>p6doc Santa-Letter</code>如果是<code>raku/doc</code>的
 在场，会写出类似的东西：</p>
 
 <pre><code class="language-pod">NAME
 
-Santa-Letter - A grammar for letters to Santa for the Perl 6 Advent
+Santa-Letter - A grammar for letters to Santa for the Raku Advent
 Calendar
 
 SYNOPSIS
@@ -398,25 +398,25 @@ world.
 
 <p>但是你会注意到这种类型的输出已经消除了一段标记。 <code>L</code>创建链接，但显然只有在输出格式支持时才这样做。 那么让我们试试其中一个：</p>
 
-<pre><code class="language-shell">perl6 --doc=HTML Santa-Letter.pm6
+<pre><code class="language-shell">raku --doc=HTML Santa-Letter.pm6
 </code></pre>
 
 <p>将输出大量代码，其中包括以下行：</p>
 
 <blockquote>
-<p>Santa-Letter - A grammar for letters to Santa for the <a href="https://perl6advent.wordpress.com/">Perl 6 Advent Calendar</a></p>
+<p>Santa-Letter - A grammar for letters to Santa for the <a href="https://rakuadvent.wordpress.com/">Raku Advent Calendar</a></p>
 </blockquote>
 
 <p>清楚地显示链接的输出。</p>
 
-<p>事实上，此命令将使用 <code>Pod::To::HTML</code> 模块将 Pod 数据结构转换为 HTML。 使用任何其他东西将调用相应的模块，并且生态系统上有许多可用的<a href="https://modules.perl6.org/search/?q=pod%3A%3Ato">模块</a>。 例如，<code>Pod::To::Pager</code> 将使用系统的分页使东西更美观。</p>
+<p>事实上，此命令将使用 <code>Pod::To::HTML</code> 模块将 Pod 数据结构转换为 HTML。 使用任何其他东西将调用相应的模块，并且生态系统上有许多可用的<a href="https://modules.raku.org/search/?q=pod%3A%3Ato">模块</a>。 例如，<code>Pod::To::Pager</code> 将使用系统的分页使东西更美观。</p>
 
-<pre><code class="language-shell">perl6 --doc=Pager Santa-Letter.pm6 
+<pre><code class="language-shell">raku --doc=Pager Santa-Letter.pm6 
 </code></pre>
 
 <p>会输出这个</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/pager.png" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/pager.png" alt="img" /></p>
 
 <p>此外，该文档遵循所有模块中使用的约定。 <code>NAME</code> 应描述名称和简短的 oneliner，告诉模块的内容，而 <code>SYNOPSIS</code> 包含更长的描述。 虽然这很好，但真正的文档应包含示例。</p>
 
@@ -446,7 +446,7 @@ say Santa-Letter.parse(&quot;Dear Santa\nAll I want for Christmas\nIs you\n Mari
 
 <p>它使用我们声明的 <code>pod</code> 类变量, 并且它是这样打印的:</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/structure.png" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/structure.png" alt="img" /></p>
 
 <p>这个树可以称为POM（Pod对象模型），除了与每个块一起使用的已知的 <code>name</code> 和 <code>config</code> 元数据外，还包括同一级别的Pod6块数组。 每个人都有通用属性和特定属性，例如标题中的级别。 无论如何，有趣的是我们作为示例使用的代码本身可以作为 <code>Pod::Block::Code</code> 对象的内容。</p>
 
@@ -517,13 +517,13 @@ say Santa-Letter.parse($letter)
 
 <h1 id="回到生产">回到生产</h1>
 
-<p>提供了这个<a href="https://github.com/JJ/my-perl6-examples/blob/master/grammars/Santa-Letter.pm6">文档模块</a>，IT精灵非常高兴，他的耳朵停止颤抖和发红。 他也可以给每个 token 编写文档，但足够了，至少他有一些例子可以让应用程序运行。 鲁道夫睡得很熟，现在他必须在信件接收微服务和客户关系宏服务之间建立桥梁。 他可能会使用 <a href="https://cro.services/">Cro</a>，但这是另一天的主题。</p>
+<p>提供了这个<a href="https://github.com/JJ/my-raku-examples/blob/master/grammars/Santa-Letter.pm6">文档模块</a>，IT精灵非常高兴，他的耳朵停止颤抖和发红。 他也可以给每个 token 编写文档，但足够了，至少他有一些例子可以让应用程序运行。 鲁道夫睡得很熟，现在他必须在信件接收微服务和客户关系宏服务之间建立桥梁。 他可能会使用 <a href="https://cro.services/">Cro</a>，但这是另一天的主题。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -535,12 +535,12 @@ say Santa-Letter.parse($letter)
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/" data-toggle="tooltip" data-placement="top" title="第一天 - 移植 Vigilance, 将 Perl 6 与标准工具集成在一起">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/" data-toggle="tooltip" data-placement="top" title="第一天 - 移植 Vigilance, 将 Raku 与标准工具集成在一起">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-03-jmp2it/" data-toggle="tooltip" data-placement="top" title="第三天 – Perl 6 – 跳转到那儿">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-03-jmp2it/" data-toggle="tooltip" data-placement="top" title="第三天 – Raku – 跳转到那儿">Next Post &rarr;</a>
             </li>
           
         </ul>

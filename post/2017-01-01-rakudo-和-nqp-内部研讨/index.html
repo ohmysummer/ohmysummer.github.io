@@ -1,0 +1,3141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku Rakudo 和 NQP 内部研讨(一)</title>
+  <meta property="og:title" content="Raku Rakudo 和 NQP 内部研讨(一)" />
+  <meta name="twitter:title" content="Raku Rakudo 和 NQP 内部研讨(一)" />
+  <meta name="description" content="标题: Rakudo and NQP Internals 子标题: The guts tormented implementers made 作者: Jonathan Worthington
+关于这个课程 Raku 是一种大型语言, 包含许多要求正确实现的功能。
+这样的软件项目很容易被难以控制的复杂性淹没。 Rakudo 和 NQP 项目的早期阶段已经遭受了这样的困难, 因为我们学到了 - 艰难的方式 - 关于复杂性, 出现并可能在实现过程中不受限制地扩散。
+本课程将教您如何使用 Rakudo 和 NQP 内部。 在他们的设计中编码是一个大量学习的过程, 关于如何(以及如何不)写一个 Raku 实现, 这个过程持续了多年。 因此, 本课程还将教你事情的来龙去脉。
+关于讲师  计算机科学背景 选择旅行世界,并帮助实现 Raku, 而不是做博士 有不止一种方法来获得&rdquo;永久头部损伤&rdquo; :-) 不知何故在 Edument AB 被聘用, 作为讲师/顾问 从 2008 年开始成为 Rakudo Raku 核心开发者 6model, MoarVM, NQP 和 Rakudo 各个方面的缔造者  课程大纲 - 第一天  鹰的视角: 编译器和 NQP/Rakudo 架构 NQP 语言 编译管道 QAST 探索 nqp::ops  课程大纲 - 第二天  6model 有界序列化和模块加载 正则表达式和 grammar 引擎 JVM 后端 MoarVM 后端  鹰的视角 编译器和 NQP/Rakudo 架构">
+  <meta property="og:description" content="标题: Rakudo and NQP Internals 子标题: The guts tormented implementers made 作者: Jonathan Worthington
+关于这个课程 Raku 是一种大型语言, 包含许多要求正确实现的功能。
+这样的软件项目很容易被难以控制的复杂性淹没。 Rakudo 和 NQP 项目的早期阶段已经遭受了这样的困难, 因为我们学到了 - 艰难的方式 - 关于复杂性, 出现并可能在实现过程中不受限制地扩散。
+本课程将教您如何使用 Rakudo 和 NQP 内部。 在他们的设计中编码是一个大量学习的过程, 关于如何(以及如何不)写一个 Raku 实现, 这个过程持续了多年。 因此, 本课程还将教你事情的来龙去脉。
+关于讲师  计算机科学背景 选择旅行世界,并帮助实现 Raku, 而不是做博士 有不止一种方法来获得&rdquo;永久头部损伤&rdquo; :-) 不知何故在 Edument AB 被聘用, 作为讲师/顾问 从 2008 年开始成为 Rakudo Raku 核心开发者 6model, MoarVM, NQP 和 Rakudo 各个方面的缔造者  课程大纲 - 第一天  鹰的视角: 编译器和 NQP/Rakudo 架构 NQP 语言 编译管道 QAST 探索 nqp::ops  课程大纲 - 第二天  6model 有界序列化和模块加载 正则表达式和 grammar 引擎 JVM 后端 MoarVM 后端  鹰的视角 编译器和 NQP/Rakudo 架构">
+  <meta name="twitter:description" content="标题: Rakudo and NQP Internals 子标题: The guts tormented implementers made 作者: Jonathan Worthington
+关于这个课程 Raku 是一种大型语言, 包含许多要求正确实现的功能。
+这样的软件项目很容易被难以控制的复杂性淹没。 Rakudo 和 NQP 项目的早期阶段已经遭受了这样的困难, 因为我们学到了 - 艰难的 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-01-01-rakudo-%E5%92%8C-nqp-%E5%86%85%E9%83%A8%E7%A0%94%E8%AE%A8/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-01-01-rakudo-%E5%92%8C-nqp-%E5%86%85%E9%83%A8%E7%A0%94%E8%AE%A8/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku Rakudo 和 NQP 内部研讨(一)</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on January 1, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 28 minutes (5857 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>标题: Rakudo and NQP Internals
+子标题: The guts tormented implementers made
+作者: Jonathan Worthington</p>
+
+<h2 id="关于这个课程">关于这个课程</h2>
+
+<p>Raku 是一种大型语言, 包含许多要求正确实现的功能。</p>
+
+<p>这样的软件项目很容易被难以控制的复杂性淹没。
+Rakudo 和 NQP 项目的早期阶段已经遭受了这样的困难, 因为我们学到了 - 艰难的方式 - 关于复杂性, 出现并可能在实现过程中不受限制地扩散。</p>
+
+<p>本课程将教您如何使用 Rakudo 和 NQP 内部。 在他们的设计中编码是一个大量学习的过程, 关于如何(以及如何不)写一个 Raku 实现, 这个过程持续了多年。 因此, 本课程还将教你事情的来龙去脉。</p>
+
+<h2 id="关于讲师">关于讲师</h2>
+
+<ul>
+<li>计算机科学背景</li>
+<li>选择旅行世界,并帮助实现 Raku, 而不是做博士</li>
+<li>有不止一种方法来获得&rdquo;永久头部损伤&rdquo; <code>:-)</code></li>
+<li>不知何故在 Edument AB 被聘用, 作为讲师/顾问</li>
+<li>从 2008 年开始成为 Rakudo Raku 核心开发者</li>
+<li>6model, MoarVM, NQP 和 Rakudo 各个方面的缔造者</li>
+</ul>
+
+<h2 id="课程大纲-第一天">课程大纲 - 第一天</h2>
+
+<ul>
+<li>鹰的视角: 编译器和 NQP/Rakudo 架构</li>
+<li>NQP 语言</li>
+<li>编译管道</li>
+<li>QAST</li>
+<li>探索 nqp::ops</li>
+</ul>
+
+<h2 id="课程大纲-第二天">课程大纲 - 第二天</h2>
+
+<ul>
+<li>6model</li>
+<li>有界序列化和模块加载</li>
+<li>正则表达式和 grammar 引擎</li>
+<li>JVM 后端</li>
+<li>MoarVM 后端</li>
+</ul>
+
+<h1 id="鹰的视角">鹰的视角</h1>
+
+<p><em>编译器和 NQP/Rakudo 架构</em></p>
+
+<h2 id="编译器做什么">编译器做什么</h2>
+
+<p>编译器真的是&rdquo;只是&rdquo;翻译。</p>
+
+<p>编译器把高级语言 (例如 Raku) 翻译成低级语言 (例如 JVM 字节码)。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-889a4b9a82af6616.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="input-compiler-output.png" /></p>
+
+<p>接收直截了当的输入(文本)并产生直截了当的输出(文本或二进制), 但<strong>内部的数据结构很丰富</strong>。</p>
+
+<p>像字符串那样处理东西, 通常是最后的手段。</p>
+
+<h2 id="运行时做什么">运行时做什么</h2>
+
+<p>运行像 Raku 这样的语言不仅仅是将它转换为低级代码。 此外, 它需要<strong>运行时支持</strong>来提供:</p>
+
+<ul>
+<li>内存管理</li>
+<li>I/O, IPC, OS 交互</li>
+<li>并发</li>
+<li>动态优化</li>
+</ul>
+
+<h2 id="构建我们需要的东西来构建东西">构建我们需要的东西来构建东西</h2>
+
+<p>我们已经以现有的编译器构造技术进行了各种尝试来构建 Raku。 编译器的早期设计至少有一部分是基于常规假设的。</p>
+
+<p>这样的尝试是信息性的, 但从长远来看还不够好。</p>
+
+<p>Raku 提出了一些有趣的挑战&hellip;</p>
+
+<h2 id="raku-是使用-raku-解析的">Raku 是使用 Raku 解析的</h2>
+
+<p>Raku 的标准文法(grammar)是用 Raku 写的。它依赖于&hellip;</p>
+
+<ul>
+<li>可传递的 <strong>最长 token 匹配</strong> (我们会在之后看到更多关于它的东西)</li>
+<li>能够在不同语言之间来回切换 (主语言, 正则表达式语言, 引用(quoting)语言)</li>
+<li>能够<strong>动态地派生出新语言</strong> (新运算符, 自定义引用构造)</li>
+<li>在自下而上的表达式解析和自顶向下的更大的结构解析之间无缝集成</li>
+<li>保持<strong>令人惊叹的错误报告</strong>的各种状态</li>
+</ul>
+
+<p>所有这些本质上代表了解析中的新范例。</p>
+
+<h2 id="非静态类型或动态类型">非静态类型或动态类型</h2>
+
+<p>Raku 是一种 <strong>渐进类型化</strong>的语言。</p>
+
+<pre><code>my int $distance = distance-between('Lund', 'Kiev');
+my int $time = prompt('Travel time: ').Int;
+say &quot;Average speed: { $distance / $time }&quot;;
+</code></pre>
+
+<p>我们想利用 <code>$distance</code> 和 <code>$time</code> 原生整数来产生更好的代码, 如果我们不知道类型(应该只是输出代码中的原生除法指令)。</p>
+
+<h2 id="模糊编译时和运行时">模糊编译时和运行时</h2>
+
+<p>运行时可以做一些编译时:</p>
+
+<pre><code>EVAL slurp @demos[$n];
+</code></pre>
+
+<p>编译时可以做一些运行时:</p>
+
+<pre><code>my $comp-time = BEGIN now;
+</code></pre>
+
+<p><strong>注意编译时计算的结果必须持久化直到运行时, 这它们之间可能有一个处理(process)边界!</strong></p>
+
+<h2 id="nqp-作为语言">NQP 作为语言</h2>
+
+<p>Raku 文法显然需要用 Raku 表示。这反过来将需要集成到编译器的其余部分。用 Raku 编写整个编译器是很自然的。</p>
+
+<p>然而, 一个完整的 Raku 太大, 给它写一个好的优化器花费太多时间。
+因此,  <strong>NQP (Not Quite Raku)</strong> 语言诞生了:它是 Raku 的一个子集, 用于实现编译器。NQP 和 Rakudo 大部分都是用 NQP 写的。</p>
+
+<h2 id="nqp-作为编译器构造工具链">NQP 作为编译器构造工具链</h2>
+
+<p>NQP <code>src</code> 目录中不仅仅是 NQP 本身。</p>
+
+<ul>
+<li><strong>NQP, how, core</strong>: 这些包含 NQP 编译器, 元对象(它指定了 NQP 的类和 roles 的工作方式)和内置函数。</li>
+<li><strong>HLL</strong>: 构造高级语言编译器的通用结构, 在 Rakudo 和 NQP 之间共享。</li>
+<li><strong>QAST</strong>: Q 抽象语法树的节点。代表着程序语法的树节点。(即, 当它执行时会做什么)。</li>
+<li><strong>QRegex</strong>: 解析和执行 regexes 和 grammars 时所提到的对象。</li>
+<li><strong>vm</strong>: 虚拟机抽象层。因为 NQP 和 Rakudo 可以运行在 Parrot, JVM 和 MoarVM 上。</li>
+</ul>
+
+<h2 id="qast">QAST</h2>
+
+<p>QAST 树是 NQP 和 Rakudo 内部最重要的数据结构之一。</p>
+
+<p><strong>抽象语法树</strong>表示程序在执行时执行的操作。它是抽象的意思是从一个程序被写入的特定语言中抽象出来。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-2e43d8b9ddfdb8df.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="example-qast.png" /></p>
+
+<h2 id="qast-1">QAST</h2>
+
+<p>不同的 QAST 节点代表着像下面这样的东西:</p>
+
+<ul>
+<li>变量</li>
+<li>运算 (算术, 字符串, 调用, 等等.)</li>
+<li>字面值</li>
+<li>Blocks</li>
+</ul>
+
+<p>注意像类那样的东西没有 QAST 节点, 因为那些是编译时声明而非运行时执行。</p>
+
+<h2 id="nqp-op-集合">nqp::op 集合</h2>
+
+<p>编译器工具链的另一个重要部分是 <code>nqp::op</code> 指令集。你会有两种方式遇到它, 并且了解它们之间的差异很重要！</p>
+
+<p>您可以在 <strong>NQP 代码</strong> 中使用它们, 在这种情况下, 您说您希望在程序中的那个点上执行该操作:</p>
+
+<pre><code>say(nqp::time_n())
+</code></pre>
+
+<p>在代表着正在编译的程序的 <strong>QAST树</strong> 中也使用完全相同的指令集:</p>
+
+<pre><code>QAST::Op.new(
+    :op('call'), :name('&amp;say'),
+    QAST::Op.new( :op('time_n') )
+)
+</code></pre>
+
+<h2 id="bootstrapping-in-a-nutshell">Bootstrapping in a nutshell</h2>
+
+<p>人们可能会想知道 NQP 几乎完全用 NQP 编写时是如何编译的。</p>
+
+<p>在每个 <code>vm</code> 子目录中都有一个 <code>stage0</code> 目录。它包含一个编译的 NQP(Parrot上是PIR文件, JVM上是JAR文件等)然后:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-76a244600f13e04b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="nqp-bootstrapping-stages.png" /></p>
+
+<p>因此, 你 <code>make test</code> 的 NQP 是可以重新创建自身的 NQP。</p>
+
+<p>通常, 我们使用最新版本来更新 <code>stage0</code></p>
+
+<h2 id="how-rakudo-uses-nqp">How Rakudo uses NQP</h2>
+
+<p>Rakudo 本身不是一个自举编译器, 这使得它的开发容易一点。大部分 Rakudo 是用 NQP 编写的。这包括:</p>
+
+<ul>
+<li><strong>编译器本身的核心</strong>, 它解析 Raku 源代码, 构建 QAST, 管理声明并进行各种优化</li>
+<li><strong>元对象</strong>, 它指定了不同类型(类, roles, 枚举, subsets)是如何工作的</li>
+<li><strong>bootstrap</strong>, 它将足够的 Raku 核心类型组合在一起, 以便能够在 Raku 中编写内置的类, 角色和例程</li>
+</ul>
+
+<p>因此, 虽然一些 Rakudo 是可访问的, 如果你知道 Raku, 知道 NQP  - 既作为一种语言又作为一种编译器工具链 - 是和大部分 Rakudo 的其他部分工作的入口。</p>
+
+<h1 id="nqp-语言">NQP 语言</h1>
+
+<p><em>它不完全是 Raku(Not Quite Raku), 但是能很好地构建 Raku</em></p>
+
+<h2 id="设计目标">设计目标</h2>
+
+<p>NQP 被设计为……</p>
+
+<ul>
+<li>理想的编写编译器相关的东西</li>
+<li>几乎是 Raku 的一个子集</li>
+<li>比 Raku 更容易编译和优化</li>
+</ul>
+
+<p>注意, 它避免了</p>
+
+<ul>
+<li>赋值</li>
+<li>Flattening and laziness</li>
+<li>操作符的多重分派(因此没有重载)</li>
+<li>有很多 built-ins</li>
+</ul>
+
+<h2 id="字面量">字面量</h2>
+
+<p>整数字面量</p>
+
+<pre><code>0       42      -100
+</code></pre>
+
+<p>浮点字面量 (NQP 中没有 rat!)</p>
+
+<pre><code>0.25    1e10    -9.9e-9
+</code></pre>
+
+<p>字符串字面量</p>
+
+<pre><code>'non-interpolating'         &quot;and $interpolating&quot;
+q{non-interpolating}        qq{and $interpolating}
+Q{not even backslashes}
+</code></pre>
+
+<h2 id="sub-调用">Sub 调用</h2>
+
+<p>在 NQP 中这些总是需要圆括号:</p>
+
+<pre><code>say('Mushroom, mushroom');
+</code></pre>
+
+<p>像 Raku 中一样, 这为子例程的名字添加 &amp; 符号并对该例程做词法查询。</p>
+
+<p>然而, 没有列表操作调用语法:</p>
+
+<pre><code>plan 42;    # &quot;Confused&quot; parse error
+foo;        # Does not call foo; always a term
+</code></pre>
+
+<p>这可能是 NQP 初学者最常见的错误。</p>
+
+<h2 id="变量">变量</h2>
+
+<p>可以是 <code>my</code> (lexical) 或 <code>our</code> (package) 作用域的:</p>
+
+<pre><code>my $pony;
+our $stable;
+</code></pre>
+
+<p>常用的符号集也是可用的:</p>
+
+<pre><code>my $ark;                # Starts as NQPMu
+my @animals;            # Starts as []
+my %animal_counts;      # Starts as {}
+my &amp;lasso;              # Starts as NQPMu
+</code></pre>
+
+<p>也支持动态变量:</p>
+
+<pre><code>my @*blocks;
+</code></pre>
+
+<h2 id="绑定">绑定</h2>
+
+<p>NQP 没有提供 <code>=</code> 赋值操作符。只提供了 <code>:=</code> 绑定操作符。这使 NQP 免于 Raku 容器语义的复杂性。</p>
+
+<p>下面是一个简单的标量示例:</p>
+
+<pre><code>my $ast := QAST::Op.new( :op('time_n') );
+</code></pre>
+
+<h2 id="绑定与数组">绑定与数组</h2>
+
+<p>注意绑定拥有 <strong>item 赋值优先级</strong>, 所以你不可以这样写:</p>
+
+<pre><code>my @states := 'start', 'running', 'done';    # Wrong!
+</code></pre>
+
+<p>相反, 这应该被表示为下面的其中之一:</p>
+
+<pre><code>my @states := ['start', 'running', 'done'];  # Fine
+my @states := ('start', 'running', 'done');  # Same thing
+my @states := &lt;start running done&gt;;          # Cutest
+</code></pre>
+
+<h2 id="原生类型变量">原生类型变量</h2>
+
+<p>目前, NQP 并不真正支持对变量的类型约束。唯一的例外是<strong>原生类型</strong>。</p>
+
+<pre><code>my int $idx := 0;
+my num $vel := 42.5;
+my str $mug := 'coffee';
+</code></pre>
+
+<p><strong>注意:</strong> 在 NQP 中, 绑定用于原生类型！这在 Raku 中是非法的, Raku 中原生类型只能被赋值。尽管这是非常武断的, 目前 Raku 中原生类型的赋值实际上被编译到 <code>nqp::bind(...)</code> op 中！</p>
+
+<h2 id="控制流">控制流</h2>
+
+<p>大部分 Raku 条件结构和循环结构也存在于 NQP 中。就像在真实的 Raku 中一样, 条件的周围不需要圆括号, 并且还能使用 pointy 块。循环结构支持 <code>next</code>/<code>last</code>/<code>redo</code>.</p>
+
+<pre><code>if $optimize {
+    $ast := optimize($ast);
+}
+elsif $trace {
+    $ast := insert_tracing($ast);
+}
+</code></pre>
+
+<p><strong>可用的:</strong> if, unless, while, until, repeat, for</p>
+
+<p><strong>还没有的:</strong> loop, given/when, FIRST/NEXT/LAST phasers</p>
+
+<h2 id="子例程">子例程</h2>
+
+<p>与 Raku 中子例程的声明很像, 但是 NQP 中即使子例程不接收参数, 参数列表也是必须的。你要么直接 <code>return</code> 返回值, 要么使用最后一个语句作为隐式返回值。</p>
+
+<pre><code>sub mean(@numbers) {
+    my $sum;
+    for @numbers { $sum := $sum + $_ }
+    return $sum / +@numbers;
+}
+</code></pre>
+
+<p>Slurpy 参数也是可用的, 就像 <code>|</code> 用来展开参数列表那样。</p>
+
+<p><strong>注意:</strong> 参数可以获得类型约束, 但是与变量一样, 当前只有原生类型。(例外:多重分派; 稍后会有更多。)</p>
+
+<h2 id="named-arguments-and-parameters">Named arguments and parameters</h2>
+
+<p>支持命名参数:</p>
+
+<pre><code>sub make_op(:$name) {
+    QAST::Op.new( :op($name) )
+}
+
+make_op(name =&gt; 'time_n');  # Fat-arrow syntax
+make_op(:name&lt;time_n&gt;);     # Colon-pair syntax
+make_op(:name('time_n'));   # The same
+</code></pre>
+
+<p><strong>注意:</strong> NQP 中没有 <code>Pair</code> 对象！Pairs - colonpairs 或 fat-arrow 对儿 - 仅在参数列表上下文中有意义。</p>
+
+<h2 id="blocks-和-pointy-blocks">Blocks 和 pointy blocks</h2>
+
+<p>尖尖块提供了熟悉的 Raku 语法:</p>
+
+<pre><code>sub op_maker_for($op) {
+    return -&gt; *@children, *%adverbs {
+        QAST::Op.new( :$op, |@children, |%adverbs )
+    }
+}
+</code></pre>
+
+<p>从这个例子可以看出, 它们有闭包语义。</p>
+
+<p><strong>注意:</strong> 普通块也可用作闭包, 但不像 Raku 那样使用隐式的 <code>$_</code> 参数。</p>
+
+<h2 id="built-ins-和-nqp-ops">Built-ins 和 nqp::ops</h2>
+
+<p>NQP 具有相对较少的内置函数。但是, 它提供了对 NQP 指令集的完全访问。这里有几个常用的指令, 知道它们会很有用。</p>
+
+<pre><code># On arrays
+nqp::elems, nqp::push, nqp::pop, nqp::shift, nqp::unshift
+
+# On hashes
+nqp::elems, nqp::existskey, nqp::deletekey
+
+# On strings
+nqp::substr, nqp::index, nqp::uc, nqp::lc
+</code></pre>
+
+<p>我们将在课程中发现更多内置函数。</p>
+
+<h2 id="异常处理">异常处理</h2>
+
+<p>可以使用 <code>nqp::die</code> 指令抛出一个异常:</p>
+
+<pre><code>nqp::die('Oh gosh, something terrible happened');
+</code></pre>
+
+<p><code>try</code> 和 <code>CATCH</code> 指令也是可用的, 尽管不像完全的 Raku, 你没有期望去智能匹配 <code>CATCH</code> 的内部。一旦你到了那儿, 就认为异常被捕获到了(弹出一个显式的 <code>nqp::rethrow</code>)。</p>
+
+<pre><code>try {
+    something();
+    CATCH { say(&quot;Oops&quot;) }
+}
+</code></pre>
+
+<h2 id="类-属性和方法">类, 属性和方法</h2>
+
+<p>就像在 Raku 中一样, 使用 <code>class</code>, <code>has</code> 和 <code>method</code> 关键字来声明。类可以是词法(<code>my</code>)作用域的或包(<code>our</code>)作用域的(默认)。</p>
+
+<pre><code>class VariableInfo {
+    has @!usages;
+
+    method remember_usage($node) {
+        nqp::push(@!usages, $node)
+    }
+
+    method get_usages() {
+        @!usages
+    }
+}
+</code></pre>
+
+<p><code>self</code> 关键字也是可用的, 方法可以具有像 subs 那样的参数。</p>
+
+<h2 id="more-on-attributes">More on attributes</h2>
+
+<p>NQP 没有自动的存取器生成, 所以你不能这样做:</p>
+
+<pre><code>has @.usages; # 不支持
+</code></pre>
+
+<p>支持原生类型的属性, 并且将直接有效地存储在对象体中。任何其他类型都被忽略。</p>
+
+<pre><code>has int $!flags;
+</code></pre>
+
+<p>与 Raku 不同, 默认构造函数可用于设置私有属性, 因为这是我们所拥有的。</p>
+
+<pre><code>my $vi := VariableInfo.new(usages =&gt; @use_so_far);
+</code></pre>
+
+<h2 id="roles-1">Roles (1)</h2>
+
+<p>NQP 支持 roles. 像类那样, roles 可以拥有属性和方法。</p>
+
+<pre><code>role QAST::CompileTimeValue {
+    has $!compile_time_value;
+
+    method has_compile_time_value() {
+        1
+    }
+
+    method compile_time_value() {
+        $!compile_time_value
+    }
+
+    method set_compile_time_value($value) {
+        $!compile_time_value := $value
+    }
+}
+</code></pre>
+
+<h2 id="roles-2">Roles (2)</h2>
+
+<p>role 可以使用 <code>does</code> trait 组合到类中:</p>
+
+<pre><code>class QAST::WVal is QAST::Node does QAST::CompileTimeValue {
+    # ...
+}
+</code></pre>
+
+<p>或者, MOP 可用于将 role 混合到单个对象中:</p>
+
+<pre><code>method set_compile_time_value($value) {
+    self.HOW.mixin(self, QAST::CompileTimeValue);
+    self.set_compile_time_value($value);
+}
+</code></pre>
+
+<h2 id="多重分派">多重分派</h2>
+
+<p>支持基本多重分派。它是 Raku 语义的一个子集, 使用更简单(但兼容)的候选排序算法版本。</p>
+
+<p>与完全的 Raku 不同, 你**必须手写一个 <code>proto</code> ** sub 或方法; 没有自动生成。</p>
+
+<pre><code>proto method as_jast($node) {*}
+
+multi method as_jast(QAST::CompUnit $cu) {
+    # compile a QAST::CompUnit
+}
+
+multi method as_jast(QAST::Block $block) {
+    # compile a QAST::Block
+}
+</code></pre>
+
+<h2 id="练习-1">练习 1</h2>
+
+<p>有机会熟悉基本的 NQP 语法, 如果你还没有这样做。</p>
+
+<p>还有机会学习常见的错误看起来是什么样的, 所以如果你在实际工作中遇到他们, 你可以认出它们。 :-)</p>
+
+<h2 id="grammars">Grammars</h2>
+
+<p>虽然在许多领域 NQP 相比完全的 Raku 还相当受限, 但是对 grammar 的支持几乎是相同的水平。这是因为 NQP 语法必须足够好以处理解析 Raku 本身。</p>
+
+<p>Grammars 是一种类, 并且使用 <code>grammar</code> 关键字引入。</p>
+
+<pre><code>grammar INIFile {
+}
+</code></pre>
+
+<p>事实上, grammars 太像类了, 以至于在 NQP 中, 它们是由相同的元对象实现的。区别是它们默认继承于什么, 和你把什么放在它们里面。</p>
+
+<h2 id="ini-文件">INI 文件</h2>
+
+<p>作为一个简单的例子, 我们将考虑解析 INI 文件。</p>
+
+<p>带有值的键, 可能按章节排列。</p>
+
+<pre><code>name = Animal Facts
+author = jnthn
+
+[cat]
+desc = The smartest and cutest
+cuteness = 100000
+
+[dugong]
+desc = The cow of the sea
+cuteness = -10
+</code></pre>
+
+<h2 id="整体方法">整体方法</h2>
+
+<p>grammar 包含一组用关键字 <code>token</code>, <code>rule</code> 或 <code>regex</code> 声明的规则。真的, 他们就像方法一样, 但是用规则语法写成。</p>
+
+<pre><code>token integer { \d+ }       # one or more digits
+token sign    { &lt;[+-]&gt; }    # + or - (character class)
+</code></pre>
+
+<p>更复杂的规则由调用现有规则组成:</p>
+
+<pre><code>token signed_integer { &lt;sign&gt;? &lt;integer&gt; }
+</code></pre>
+
+<p>这些对其他规则的调用可以被量词化, 放在备选分支中, 等等。</p>
+
+<h2 id="旁白-grammar-和正则表达式">旁白: grammar 和正则表达式</h2>
+
+<p>这个时候, 你可能想知道 grammar 和正则表达式是如何关联的。毕竟, grammar 似乎是由正则表达式那样的东西组成的。</p>
+
+<p>还有一个 <code>regex</code> 声明符, 可以在 grammar 中使用。</p>
+
+<pre><code>regex email { &lt;[\w.-]&gt;+ '@' &lt;[\w.-]&gt;+ '.' \w+ }
+</code></pre>
+
+<p>关键的区别是 <strong><code>regex</code> 会回溯</strong>, 而 <code>rule</code> 或 <code>token</code> 不会。支持回溯涉及保持大量状态, 并且对于复杂的 grammar 解析大量输入, 这将快速消耗大量内存！大语言往往在解析器中避免回溯。</p>
+
+<h2 id="旁白-nqp-中的正则表达式">旁白: NQP 中的正则表达式</h2>
+
+<p>对于较小规模的东西, NQP 确实也在普通场景中为正则表达式提供支持。</p>
+
+<pre><code>if $addr ~~ /&lt;[\w.-]&gt;+ '@' &lt;[\w.-]&gt;+ '.' \w+/ {
+    say(&quot;I'll mail you maybe&quot;);
+}
+else {
+    say(&quot;That's no email address!&quot;);
+}
+</code></pre>
+
+<p>这被求值为匹配对象。</p>
+
+<h2 id="解析条目">解析条目</h2>
+
+<p>一个条目有一个键(一些单词字符)和一个值(直到行尾的所有内容):</p>
+
+<pre><code>token key   { \w+ }
+token value { \N+ }
+</code></pre>
+
+<p>合在一起, 它们组成了一个条目:</p>
+
+<pre><code>token entry { &lt;key&gt; \h* '=' \h* &lt;value&gt; }
+</code></pre>
+
+<p><code>\h</code> 匹配任何水平空白(空格, 制表符等)。 <code>=</code> 号必须加引号, 因为任何非字母数字都被视为 Raku 中的正则表达式语法。</p>
+
+<h2 id="从-top-开始">从 <code>TOP</code> 开始</h2>
+
+<p>grammar 的入口点是一个特殊的规则, <code>TOP</code>。现在, 我们查找整个文件是否含有包含条目的行, 或者只是没有。</p>
+
+<pre><code>token TOP {
+    ^
+    [
+    | &lt;entry&gt; \n
+    | \n
+    ]+
+    $
+}
+</code></pre>
+
+<p>注意在 Raku 中, 方括号是非捕获组(Perl 5 的 <code>(?:...)</code>), 而非字符类.</p>
+
+<h2 id="尝试我们的-grammar">尝试我们的 grammar</h2>
+
+<p>我们可以通过在 grammar 上调用 <code>parse</code> 方法来尝试我们的 grammar。这将返回一个<strong>匹配对象</strong>。</p>
+
+<pre><code>my $m := INIFile.parse(Q{
+name = Animal Facts
+author = jnthn
+});
+</code></pre>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-637c16edaa455123.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="example-match-object.png" /></p>
+
+<h2 id="迭代结果">迭代结果</h2>
+
+<p>每个 rule 调用都产生一个 match 对象, <code>&lt;entry&gt;</code> 调用语法会把它捕获到 match 对象中。</p>
+
+<p>因为我们匹配了很多 <strong>entrie</strong>s, 所以我们在 match 对象中的 <code>entry</code> 键下面得到一个数组。</p>
+
+<p>因此, 我们能够遍历它以得到每一个 entry:</p>
+
+<pre><code>for $m&lt;entry&gt; -&gt; $entry {
+    say(&quot;Key: {$entry&lt;key&gt;}, Value: {$entry&lt;value&gt;}&quot;);
+}
+</code></pre>
+
+<h2 id="追踪我们的-grammar">追踪我们的 grammar</h2>
+
+<p>NQP 自带一些内置支持, 用于跟踪 grammars 的去向。它不是一个完整的调试器, 但用它来查看 grammar 在失败之前走的有多远是有用的。它使用 trace-on 函数开启:</p>
+
+<pre><code>INIFile.HOW.trace-on(INIFile);
+</code></pre>
+
+<p>并且产生的结果像下面这样:</p>
+
+<pre><code>Calling parse
+  Calling TOP
+    Calling entry
+      Calling key
+      Calling value
+    Calling entry
+      Calling key
+      Calling value
+</code></pre>
+
+<h2 id="token-vs-rule">token vs. rule</h2>
+
+<p>当我们使用 <code>rule</code> 代替 <code>token</code> 时, 原子后面的任何空白被转换为对 <code>ws</code> 的<strong>非捕获</strong>调用。即:</p>
+
+<pre><code>rule entry { &lt;key&gt; '=' &lt;value&gt; }
+</code></pre>
+
+<p>等价于:</p>
+
+<pre><code>token entry { &lt;key&gt; &lt;.ws&gt; '=' &lt;.ws&gt; &lt;value&gt; &lt;.ws&gt; } # . = non-capturing
+</code></pre>
+
+<p>我们继承了一个默认的 <code>ws</code>, 但是我们也能提供我们自己的:</p>
+
+<pre><code>token ws { \h* }
+</code></pre>
+
+<h2 id="解析-sections-1">解析 sections (1)</h2>
+
+<p>一个 section 有一个标题和许多条目。但是, 顶层也可以有条目。因此, 把这个分解是有意义的。</p>
+
+<pre><code>token entries {
+    [
+    | &lt;entry&gt; \n
+    | \n
+    ]+
+}
+</code></pre>
+
+<p>然后 TOP 规则可以变为:</p>
+
+<pre><code>token TOP {
+    ^
+    &lt;entries&gt;
+    &lt;section&gt;+
+    $
+}
+</code></pre>
+
+<h2 id="解析-sections-2">解析 sections (2)</h2>
+
+<p>最后但并非最不重要的是 section token:</p>
+
+<pre><code>token section {
+    '[' ~ ']' &lt;key&gt; \n
+    &lt;entries&gt;
+}
+</code></pre>
+
+<p>这个 <code>~</code> 语法很漂亮. 第一行就像这样:</p>
+
+<pre><code>'[' &lt;key&gt; ']' \n
+</code></pre>
+
+<p>然而, 如果找不到闭合 <code>]</code> 就会产生一个描述性的错误消息, 而不只是失败匹配。</p>
+
+<h2 id="actions">Actions</h2>
+
+<p>解析 grammar 可以使用 <strong>actions 类</strong>; 它的方法与所匹配 grammar 中的某些或所有规则同名。</p>
+
+<p>在<strong>相应规则成功匹配之后</strong>, actions 方法被调用。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-982f50db5d4723ef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="top-down-bottom-up.png" /></p>
+
+<p>在 Rakudo 和 NQP 编译器中, <strong>actions 构造 QAST 树</strong>。对于这个例子, 我们将做一些更简单的事情。</p>
+
+<h2 id="actions-示例-aim">Actions 示例: aim</h2>
+
+<p>给定像下面这样的 INI 文件:</p>
+
+<pre><code>name = Animal Facts
+author = jnthn
+
+[cat]
+desc = The smartest and cutest
+cuteness = 100000
+</code></pre>
+
+<p>我们想使用 actions 类来建立一个<strong>散列的散列</strong>。顶级哈希将包含键 <code>cat</code> 和 <code>_</code>(下划线收集不在 section 中的任何键)。其值是该 section 中键/值对的哈希。</p>
+
+<h2 id="actions-示例-entries">Actions 示例: entries</h2>
+
+<p>Action 方法将刚刚匹配过的 rule 的 Match 对象作为参数。
+把这个 Match 对象放到 <code>$/</code> 里很方便, 所以我们能够使用 <code>$&lt;entry&gt;</code> 语法糖 (它映射到 <code>$/&lt;entry&gt;</code> 上)。这个语法糖看起来像普通的标量, 第一眼看上去的时候有点懵, 再看一眼发现它有一对 <code>&lt;&gt;</code> 后环缀, 而这正是散列中才有的, <code>&lt;entry&gt;</code> 相当于 <code>{'entry'}</code>, 不过前者更漂亮。</p>
+
+<pre><code>class INIFileActions {
+    method entries($/) { # Match Object 放在参数 $/ 中
+        my %entries;
+        for $&lt;entry&gt; -&gt; $e {
+            %entries{$e&lt;key&gt;} := ~$e&lt;value&gt;;
+        }
+        make %entries;
+    }
+}
+</code></pre>
+
+<p>最后, <strong><code>make</code></strong> 将生成的散列<strong>附加</strong>到 <code>$/</code> 上。这就是为什么 <code>TOP</code> action 方法能够在构建顶级哈希时检索它的原因。</p>
+
+<h2 id="actions-example-top">Actions example: TOP</h2>
+
+<p><code>TOP</code> action 方法在由 <code>entries</code> action 方法创建的散列中构建顶级散列。当 <code>make</code> 将某个东西附加到 <code>$/</code> 上时, <strong><code>.ast</code></strong> 方法检索附加到其他匹配对象上的东西。</p>
+
+<pre><code>method TOP($/) {
+    my %result;
+    %result&lt;_&gt; := $&lt;entries&gt;.ast;
+    for $&lt;section&gt; -&gt; $sec {
+        %result{$sec&lt;key&gt;} := $sec&lt;entries&gt;.ast;
+    }
+    make %result;
+}
+</code></pre>
+
+<p>因此, 顶层散列通过 section 名获取到由安装到其中的 <code>entries</code> action 方法产生的散列。</p>
+
+<h2 id="actions-示例-用-actions-解析">Actions 示例: 用 actions 解析</h2>
+
+<p>actions 作为具名参数传递给 <code>parse</code>:</p>
+
+<pre><code>my $m := INIFile.parse($to_parse, :actions(INIFileActions.new));
+</code></pre>
+
+<p>结果散列可以使用 <code>.ast</code> 从结果匹配对象中获得, 正如我们已经看到的那样。</p>
+
+<pre><code>my %sections := $m.ast;
+for %ini -&gt; $sec {
+    say(&quot;Section {$sec.key}&quot;);
+    for $sec.value -&gt; $entry {
+        say(&quot;    {$entry.key}: {$entry.value}&quot;);
+    }
+}
+</code></pre>
+
+<h2 id="actions-示例-输出">Actions 示例: 输出</h2>
+
+<p>上一张幻灯片上的转储代码产生如下输出:</p>
+
+<pre><code>Section _
+    name: Animal Facts
+    author: jnthn
+Section cat
+    desc: The smartest and cutest
+    cuteness: 100000
+Section dugong
+    desc: The cow of the sea
+    cuteness: -10
+</code></pre>
+
+<h2 id="练习-2">练习 2</h2>
+
+<p>使用 gramamrs 和 actions 进行小练习的一次机会。</p>
+
+<p>目标是解析 Raku IRC 日志的文本格式; 例如, 参见 <a href="http://irclog.perlgeek.de/raku/2013-07-19/text">http://irclog.perlgeek.de/raku/2013-07-19/text</a></p>
+
+<h2 id="另外一个例子-slowdb">另外一个例子: SlowDB</h2>
+
+<p>解析 INI 文件这个例子是一个很好的开端, 但是离编译器还差的远。作为那个方向的进一步深入, 我们会使用查询解释器创建一个小的, 无聊的, 在内存中的数据库。</p>
+
+<p>它应该像下面这样工作:</p>
+
+<pre><code>INSERT name = 'jnthn', age = 28
+[
+    result: Inserted 1 row
+]
+SELECT name WHERE age = 28
+[
+    name: jnthn
+]
+SELECT name WHERE age = 50
+Nothing found
+</code></pre>
+
+<h2 id="查询解释器-1">查询解释器 (1)</h2>
+
+<p>我们解析 <code>INSERT</code> 或 <code>SELECT</code> 查询的任意之一.</p>
+
+<pre><code>token TOP {
+    ^ [ &lt;insert&gt; | &lt;select&gt; ] $
+}
+
+token insert {
+    'INSERT' :s &lt;pairlist&gt;
+}
+
+token select {
+    'SELECT' :s &lt;keylist&gt;
+    [ 'WHERE' &lt;pairlist&gt; ]?
+}
+</code></pre>
+
+<p>注意 <code>:s</code> 开启了自动 <code>&lt;.ws&gt;</code> 插入.</p>
+
+<h2 id="查询解释器-2">查询解释器 (2)</h2>
+
+<p><code>pairlist</code> 和 <code>keylist</code> rules 的定义如下:</p>
+
+<pre><code>rule pairlist { &lt;pair&gt;+ % [ ',' ] }
+rule pair     { &lt;key&gt; '=' &lt;value&gt;  }
+rule keylist  { &lt;key&gt;+ % [ ',' ] }
+token key     { \w+ }
+</code></pre>
+
+<p>这儿有一个有意思的新的语法是 <strong><code>%</code></strong>. 它附件到末尾的量词上, 表明某些东西(这里是逗号)应该出现在每个量词化的元素<strong>之间</strong>。</p>
+
+<p>逗号字面值周围的方括号是为了确保 <code>&lt;.ws&gt;</code> 调用被生成为分割符的一部分。</p>
+
+<h2 id="查询解析器-3">查询解析器 (3)</h2>
+
+<p>最后, 这儿是关于值是这样被解析的。</p>
+
+<pre><code>token value { &lt;integer&gt; | &lt;string&gt; }
+token integer { \d+ }
+token string  { \' &lt;( &lt;-[']&gt;+ )&gt; \' }
+</code></pre>
+
+<p>注意 <strong><code>&lt;(</code></strong> 和 <strong><code>)&gt;</code></strong> 语法的使用。这些表明通过 <code>string</code> token 整体应该捕获什么的限制。意味着引号字符不会被捕获。</p>
+
+<h2 id="备选分支和-ltm-1">备选分支和 LTM (1)</h2>
+
+<p>回忆一下 top rule:</p>
+
+<pre><code>token TOP {
+    ^ [ &lt;insert&gt; | &lt;select&gt; ] $
+}
+</code></pre>
+
+<p>如果我们追踪 <code>SELECT</code> 查询的解析, 我们会看到像下面这样的东西:</p>
+
+<pre><code>Calling parse
+  Calling TOP
+    Calling select
+      Calling ws
+      Calling keylist
+</code></pre>
+
+<p>所以它怎么知道不去麻烦尝试 <code>&lt;insert&gt;</code> 呢?</p>
+
+<h2 id="备选分支和-ltm-2">备选分支和 LTM (2)</h2>
+
+<p>答案是<strong>可传递的最长Token匹配</strong>(Transitive Longest Token Matching). grammar 引擎创建了一个 NFA (状态机), 一旦遇到一个备选分支(alternation), 就按照这个<strong>备选分支能够匹配到的字符数</strong>对分支进行排序。然后 Grammar 引擎在这些分支中首先尝试匹配最多字符的那个, 而不麻烦那些它认为不可能的分支。</p>
+
+<h2 id="备选分支和-ltm-3">备选分支和 LTM (3)</h2>
+
+<p>Gramamr 引擎不会仅仅孤立地看一个 rule。相反, 它 <strong>可传递性地考虑 subrule 调用</strong> (considers subrule calls transitively). 这意味着导致某种不可能的整个调用链可以被忽略。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-f13b46be03b72c84.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ltm-transformation.png" /></p>
+
+<p>它由非声明性构造(如向前查看, 代码块或对默认<code>ws</code>规则的调用)或递归 subrule 调用界定。</p>
+
+<h2 id="轻微的痛点">轻微的痛点</h2>
+
+<p>令我们讨厌的一件事情就是我们的 <code>TOP</code> action 方法最后看起来像这样:</p>
+
+<pre><code>method TOP($/) {
+    make $&lt;select&gt; ?? $&lt;select&gt;.ast !! $&lt;insert&gt;.ast;
+}
+</code></pre>
+
+<p>显而易见, 一旦我们添加 <code>UPDATE</code> 和 <code>DELETE</code> 查询,  维护起来将会多么痛苦</p>
+
+<p>我们的 <code>value</code> action 方法类似:</p>
+
+<pre><code>method value($/) {
+    make $&lt;integer&gt; ?? $&lt;integer&gt;.ast !! $&lt;string&gt;.ast;
+}
+</code></pre>
+
+<h2 id="protoregexes">Protoregexes</h2>
+
+<p>令我们痛苦的答案是 <strong>protoregexes</strong>。 它们提供了<strong>一个更可扩展的方式来表达备选分支</strong></p>
+
+<pre><code>proto token value {*}
+token value:sym&lt;integer&gt; { \d+ }
+token value:sym&lt;string&gt;  { \' &lt;( &lt;-[']&gt;+ )&gt; \' }
+</code></pre>
+
+<p>本质上, 我们引入了一个新的语法类别, <code>value</code>, 然后定义这个类别下不同的案例(cases)。像 <code>value</code> 这样的调用会使用 LTM 来对候选者进行排序和尝试 - 就像备选分支所做的那样。</p>
+
+<h2 id="protoregexes-和-action-方法-1">Protoregexes 和 action 方法 (1)</h2>
+
+<p>回到 actions 类, 我们需要更新我们的 action 方法来匹配 rules 的名字:</p>
+
+<pre><code>method value:sym&lt;integer&gt;($/) { make ~$/ }
+method value:sym&lt;string&gt;($/)  { make ~$/ }
+</code></pre>
+
+<p>然而, 我们<strong>不需要 <code>value</code> 自身这个 action 方法</strong>。任何查看 <code>$&lt;value&gt;</code> 的东西会被提供一个来自成功候选者的匹配对象 - 并且 <code>$&lt;value&gt;.ast</code> 因此会获得正确的东西。</p>
+
+<h2 id="protoregexes-and-action-methods-2">Protoregexes and action methods (2)</h2>
+
+<p>例如, 在我们重构查询之后:</p>
+
+<pre><code>token TOP { ^ &lt;query&gt; $ }
+
+proto token query {*}
+token query:sym&lt;insert&gt; {
+    'INSERT' :s &lt;pairlist&gt;
+}
+token query:sym&lt;select&gt; {
+    'SELECT' :s &lt;keylist&gt;
+    [ 'WHERE' &lt;pairlist&gt; ]?
+}
+</code></pre>
+
+<p><code>TOP</code> action 方法可以简化为:</p>
+
+<pre><code>method TOP($/) {
+    make $&lt;query&gt;.ast;
+}
+</code></pre>
+
+<h2 id="keylist-和-pairlist">keylist 和 pairlist</h2>
+
+<p>这两个是无聊的 action 方法, 包含完整性。</p>
+
+<pre><code>method pairlist($/) {
+    my %pairs;
+    for $&lt;pair&gt; -&gt; $p {
+        %pairs{$p&lt;key&gt;} := $p&lt;value&gt;.ast;
+    }
+    make %pairs;
+}
+
+method keylist($/) {
+    my @keys;
+    for $&lt;key&gt; -&gt; $k {
+        nqp::push(@keys, ~$k)
+    }
+    make @keys;
+}
+</code></pre>
+
+<h2 id="解释查询">解释查询</h2>
+
+<p>那么我们如何运行查询呢?好吧, 下面是  <code>INSERT</code> 查询的 action 方法:</p>
+
+<pre><code>method query:sym&lt;insert&gt;($/) {
+    my %to_insert := $&lt;pairlist&gt;.ast;
+    make -&gt; @db {
+        nqp::push(@db, %to_insert);
+        [nqp::hash('result', 'Inserted 1 row' )]
+    };
+}
+</code></pre>
+
+<p>在这里, 我们不使用数据结构。我们 <code>make</code> 了一个闭包来接收当前数据库状态(一个散列的数组, 其中每一个散列是一行)并把由 <code>pairlist</code> action 方法产生的散列推到那个数组中。</p>
+
+<h2 id="slowdb-类自身">SlowDB 类自身</h2>
+
+<pre><code>class SlowDB {
+    has @!data;
+
+    method execute($query) {
+        if QueryParser.parse($query, :actions(QueryActions.new)) -&gt; $parsed {
+            my $evaluator := $parsed.ast;
+            if $evaluator(@!data) -&gt; @results {
+                for @results -&gt; %data {
+                    say(&quot;[&quot;);
+                    say(&quot;    {$_.key}: {$_.value}&quot;) for %data;
+                    say(&quot;]&quot;);
+                }
+            } else {
+                say(&quot;Nothing found&quot;);
+            }
+        } else {
+            say('Syntax error in query');
+        }
+    }
+}
+</code></pre>
+
+<h2 id="练习-3">练习 3</h2>
+
+<p>一次练习 protoregexes 的机会并自己学习我们已经复习过的。</p>
+
+<p>拿 SlowDB 这个我们已经思考过的例子来说。给这个例子添加 <code>UPDATE</code> 和 <code>DELETE</code> 查询支持。</p>
+
+<h2 id="限制和与完整-raku-的其它区别">限制和与完整 Raku 的其它区别</h2>
+
+<p>这儿有一个值得了解的其它事情的杂烩。</p>
+
+<ul>
+<li>有一个 <code>use</code> 语句, 但它期望它使用已经预编译的任何东西。</li>
+<li>没有数组展平; <code>[@a, @b]</code> 总是两个元素的数组</li>
+<li>散列构造 <code>{}</code> 符只对空散列有效; 除了它之外的任何一个 <code>{}</code> 都会被当作一个 block</li>
+<li><code>BEGIN</code> 块存在, 但在我们能看见的外部作用域中是高度受限的(只有类型, 而不是变量)</li>
+</ul>
+
+<h2 id="后端的区别">后端的区别</h2>
+
+<p>JVM 和 MoarVM 上的 NQP 相对比较一致。Parrot 上的 NQP 有点古怪: 不是所有的东西都是 6model 对象。即虽然在 JVM 和 MoarVM 上, NQP  中的 <code>.WHAT</code> 或 <code>.HOW</code> 会工作良好, 但是在 Parrot 上它会失败。这发生在整数, 数字和字符串字面值, 数组和散列, 异常和某些种类的代码对象身上。</p>
+
+<p>异常处理程序也有所不同。那些在 JVM 和 MoarVM 上运行的堆栈顶部的异常抛出点, 就像 Raku 语义那样。那些在 Parrot 上的 NQP 将解开然后运行, 恢复由continuation提供。注意, Rakudo 在所有后端都是一致的。</p>
+
+<h2 id="总而言之">总而言之&hellip;</h2>
+
+<p>NQP 尽管是 Raku 的一个相对较小的子集, 但仍然包含相当多强大的语言特性。</p>
+
+<p>一般来说, 对他们的需求是由在 Rakudo 中工作的人的需求所驱动的。因此, NQP 功能集是由编译器编写需求定义的。</p>
+
+<p>我们所覆盖的 grammar 和 action 方法资料可能是最重要的, 因为这是理解 NQP 和 Raku 是如何编译的起点。</p>
+
+<h1 id="编译管道">编译管道</h1>
+
+<p><em>一步一步我们编译完了那个程序&hellip;</em></p>
+
+<h2 id="从开始到完成">从开始到完成</h2>
+
+<p>现在我们了解了一点作为语言的 NQP, 是时候潜入到下面, 看看当我们喂给 NQP 一个程序运行时会发生什么。</p>
+
+<p>首先, 我们将考虑这个简单的例子&hellip;</p>
+
+<pre><code>nqp -e &quot;say('Hello, world')&quot;
+</code></pre>
+
+<p>&hellip;一路从 NQP 的 sub <code>MAIN</code> 到出现输出。</p>
+
+<p>我们将选择 JVM 后端来检查这个。</p>
+
+<h2 id="stagestats-选项">&ldquo;stagestats&rdquo; 选项</h2>
+
+<p>我们可以通过使用 <code>--stagestats</code> 选项来了解 NQP 内部发生的情况, 该选项显示了编译器每个阶段经历的时间。</p>
+
+<p>nqp &ndash;stagestats -e &ldquo;say(&lsquo;Hello, world&rsquo;)&rdquo;</p>
+
+<pre><code>Stage start      :   0.000      # 启动
+Stage classname  :   0.010      # 计算类名
+Stage parse      :   0.067      # 解析源文件, 构造 AST
+Stage ast        :   0.000      # 获取 AST
+Stage jast       :   0.106      # 转换成 JVM AST
+Stage classfile  :   0.032      # 转换成 JVM 字节码
+Stage jar        :   0.000      # 可能创建一个 JAR
+Stage jvm        :   0.002      # 真正地运行该代码
+</code></pre>
+
+<h2 id="倾倒解析树">倾倒解析树</h2>
+
+<p>我们可以得到一些转储的阶段。例如, <code>--target = parse</code> 将产生一个解析树的转储。</p>
+
+<pre><code>- statementlist: say('Hello world')
+  - statement: 1 matches
+    - EXPR: say('Hello world')
+      - deflongname: say
+        - identifier: say
+      - args: ('Hello world')
+        - arglist: 'Hello world'
+          - EXPR: 'Hello world'
+            - value: 'Hello world'
+              - quote: 'Hello world'
+                - quote_EXPR: 'Hello world'
+                  - quote_delimited: 'Hello world'
+                    - quote_atom: 1 matches
+                    - stopper: '
+                    - starter: '
+</code></pre>
+
+<h2 id="倾倒-ast">倾倒 AST</h2>
+
+<p>有时有用的是 <code>--target = ast</code>, 它转储了 QAST(下面的输出已经被简化)。</p>
+
+<pre><code>- QAST::CompUnit
+  - QAST::Block
+    - QAST::Var(lexical @ARGS :decl(param))
+    - QAST::Stmts
+      - QAST::Var(lexical GLOBALish :decl(static))
+      - QAST::Var(lexical $?PACKAGE :decl(static))
+      - QAST::Var(lexical EXPORT :decl(static))
+    - QAST::Stmts say('Hello world')
+      - QAST::Stmts
+        - QAST::Op(call &amp;say) 'Hello world'
+          - QAST::SVal(Hello world)
+</code></pre>
+
+<h2 id="倾倒-jvm-ast">倾倒 JVM AST</h2>
+
+<p>你甚至可以得到一些代表性的低级 AST, 它使用 <code>--target = jast</code> 变成 Java 字节码, 但它完全令人脑抽(下面的一小部分用以说明)。 :-)</p>
+
+<pre><code>.push_sc Hello world
+58 __TMP_S_0
+.push_sc &amp;say
+.push_idx 1
+43
+25 __TMP_S_0
+.try
+186 subcall_noa org/raku/nqp/runtime/IndyBootstrap subcall_noa 0
+:reenter_1
+.catch Lorg/raku/nqp/runtime/SaveStackException;
+.push_idx 1
+167 SAVER
+.endtry
+</code></pre>
+
+<h2 id="一窥究竟">一窥究竟</h2>
+
+<p>我们的旅程从 NQP 的 <code>MAIN</code> sub 开始, 它位于 <code>src/NQP/Compiler.nqp</code>。
+这里是一个略微简化的版本(剥离设置命令行选项和其它细节)。</p>
+
+<pre><code>class NQP::Compiler is HLL::Compiler {
+}
+
+# 创建并配置编译器对象
+my $nqpcomp := NQP::Compiler.new();
+$nqpcomp.language('nqp');
+$nqpcomp.parsegrammar(NQP::Grammar);
+$nqpcomp.parseactions(NQP::Actions);
+
+sub MAIN(*@ARGS) {
+    $nqpcomp.command_line(@ARGS, :encoding('utf8'));
+}
+</code></pre>
+
+<h2 id="hll-compiler-类">HLL::Compiler 类</h2>
+
+<p><code>command_line</code> 方法继承自位于 <code>src/HLL/Compiler.nqp</code> 中的 <code>HLL::Compiler</code>。此类包含协调编译过程的逻辑。</p>
+
+<p>其功能包括:</p>
+
+<ul>
+<li>参数处理(委托给 HLL::CommandLine)</li>
+<li>从磁盘读取源文件</li>
+<li>调用每个阶段, 如果指定, 停在<code>--target</code></li>
+<li>提供 REPL</li>
+<li>提供可插拔的方式来处理未捕获的异常</li>
+</ul>
+
+<h2 id="通过-hll-compiler-的路径">通过 HLL::Compiler 的路径</h2>
+
+<p><strong><code>command_line</code></strong> 解析参数, 然后调用 <code>command_eval</code></p>
+
+<p><strong><code>command_eval</code></strong> 工作, 基于参数, 如果我们应该从磁盘加载源文件, 从 <code>-e</code> 获取源或进入 REPL。路径调用了一系列方法, 但是所有方法都在 <code>eval</code> 中收敛。</p>
+
+<p><strong><code>eval</code></strong> 调用 <code>compile</code> 来编译代码, 然后调用它</p>
+
+<p><strong><code>compile</code></strong> 循环遍历这些阶段, 将前一个的结果作为下一个的输入</p>
+
+<h2 id="简化版的编译">简化版的编译</h2>
+
+<p>Big takeaway:阶段是编译器对象或后端对象的方法。</p>
+
+<pre><code>method compile($source, :$from, *%adverbs) {
+    my $target := nqp::lc(%adverbs&lt;target&gt;);
+    my $result := $source;
+    for self.stages() {
+        if nqp::can(self, $_) {
+            $result := self.&quot;$_&quot;($result, |%adverbs);
+        }
+        elsif nqp::can($!backend, $_) {
+            $result := $!backend.&quot;$_&quot;($result, |%adverbs);
+        }
+        else {
+            nqp::die(&quot;Unknown compilation stage '$_'&quot;);
+        }
+        last if $_ eq $target;
+    }
+    return $result;
+}
+</code></pre>
+
+<h2 id="阶段管理">阶段管理</h2>
+
+<p>编译器可以在管道中插入额外的阶段。例如, Rakudo 插入其优化器。</p>
+
+<pre><code>$comp.addstage('optimize', :after&lt;ast&gt;);
+</code></pre>
+
+<p>之后, 在 <code>Raku::Compiler</code> 中, 它提供了一个 <code>optimize</code> 方法:</p>
+
+<pre><code>method optimize($ast, *%adverbs) {
+    %adverbs&lt;optimize&gt; eq 'off' ??
+        $ast !!
+        Raku::Optimizer.new.optimize($ast, |%adverbs)
+}
+</code></pre>
+
+<h2 id="前端和后端">前端和后端</h2>
+
+<p>早些时候, 我们看到`compile&rsquo;在当前编译器对象上, 然后在后端对象上寻找阶段方法。</p>
+
+<p><strong>编译器对象</strong>是关于我们正在编译的语言<strong>(NQP, Raku等)的</strong>。我们共同称这些阶段为<strong>前端</strong>。</p>
+
+<p><strong>后端对象</strong>是关于目标VM的<strong>, 我们想为(Parrot, JVM, MoarVM等)生成代码。它不与任何特定语言绑定。我们将这些阶段统称为</strong>后端**。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-b5bf3d1639a1e2af.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="frontend-backend.png" /></p>
+
+<h2 id="前端-后端和它们之间的-qast">前端, 后端和它们之间的 QAST</h2>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-d21d0af0256fce79.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="frontend-backend-qast-between.png" /></p>
+
+<p>前端的最后一个阶段总是给出一个 <strong>QAST树</strong>, 后端的第一个阶段总是期望一个QAST树。</p>
+
+<p>一个<strong>交叉编译器设置</strong>只是有一个不同于我们正在运行的当前 VM 的后端。</p>
+
+<h2 id="在-nqp-中解析">在 NQP 中解析</h2>
+
+<p>解析阶段在语言的 grammar(对于我们的例子, NQP::Grammar)上调用 <code>parse</code>, 传递源代码和 <code>NQP::Actions</code>。它也可以打开跟踪。</p>
+
+<pre><code>method parse($source, *%adverbs) {
+    my $grammar := self.parsegrammar;
+    my $actions;
+    $actions    := self.parseactions unless %adverbs&lt;target&gt; eq 'parse';
+    $grammar.HOW.trace-on($grammar) if %adverbs&lt;rxtrace&gt;;
+    my $match   := $grammar.parse($source, p =&gt; 0, actions =&gt; $actions);
+    $grammar.HOW.trace-off($grammar) if %adverbs&lt;rxtrace&gt;;
+    self.panic('Unable to parse source') unless $match;
+    return $match;
+}
+</code></pre>
+
+<h2 id="nqp-grammar-top-1">NQP::Grammar.TOP (1)</h2>
+
+<p>正如在我们已经看到的 grammar 中, 执行从 <code>TOP</code> 开始。在 NQP 中, 我们发现它实际上是一个 <code>方法</code>, 而不是 <code>token</code> 或 <code>rule</code>！</p>
+
+<pre><code>method TOP() {
+    # Various things we'll consider in a moment.
+    ...
+
+    # Then delegate to comp_unit
+    self.comp_unit;
+}
+</code></pre>
+
+<p>这实际上是 OK 的, 只要它最终返回一个 <code>Cursor</code> 对象。因为 <code>comp_unit</code> 会返回一个, 所有的都会工作的很好。</p>
+
+<p>这是一个方法, 因为它不做任何解析, 只是做设置工作。</p>
+
+<h2 id="nqp-grammar-top-2">NQP::Grammar.TOP (2)</h2>
+
+<p><code>TOP</code> 做的第一件事是建立一个<strong>语言编织</strong>。</p>
+
+<pre><code>my %*LANG;
+%*LANG&lt;Regex&gt;         := NQP::Regex;
+%*LANG&lt;Regex-actions&gt; := NQP::RegexActions;
+%*LANG&lt;MAIN&gt;          := NQP::Grammar;
+%*LANG&lt;MAIN-actions&gt;  := NQP::Actions;
+</code></pre>
+
+<p>虽然我们没有太早地区分, 当我们开始解析一个 <code>token</code>, <code>rule</code> 或 <code>regex</code> 时, 我们实际上是<strong>切换语言</strong>。嵌套在正则表达式内部的块将轮流切换回主语言。</p>
+
+<p>因此, <code>%*LANG</code> 会跟踪我们在解析中使用的当前语言集, 纠缠在一起编织美丽的头发。 Rakudo 在其穗带中有第三种语言:<code>Q</code>, 即引用语言。</p>
+
+<h2 id="nqp-grammar-top-3">NQP::Grammar.TOP (3)</h2>
+
+<p>接下来, 设置当前<strong>元对象</strong>的集合。每个包声明器(<code>class</code>, <code>role</code>, <code>grammar</code>, <code>module</code>, <code>knowhow</code>)被映射到一个实现这种包的对象。</p>
+
+<pre><code>my %*HOW;
+%*HOW&lt;knowhow&gt;      := nqp::knowhow();
+%*HOW&lt;knowhow-attr&gt; := nqp::knowhowattr();
+</code></pre>
+
+<p>我们只有一个内置函数 - <code>knowhow</code>。它支持拥有方法和属性, 但不支持角色组合或继承。</p>
+
+<p>所有更有趣的元对象都是用 KnowHOW 编写的, 并且是在启动时加载的模块中。我们将在第2天更详细地回到这个主题。</p>
+
+<h2 id="nqp-grammar-top-4">NQP::Grammar.TOP (4)</h2>
+
+<p>接下来, 创建一个 <code>NQP::World</code> 对象。这表示一个程序的<strong>声明方面</strong>(如类声明)。</p>
+
+<pre><code>my $file := nqp::getlexdyn('$?FILES');
+my $source_id := nqp::sha1(self.target()) ~
+    (%*COMPILING&lt;%?OPTIONS&gt;&lt;stable-sc&gt; ?? '' !! '-' ~ ~nqp::time_n());
+my $*W := nqp::isnull($file) ??
+    NQP::World.new(:handle($source_id)) !!
+    NQP::World.new(:handle($source_id), :description($file));
+</code></pre>
+
+<p>每个编译单元需要有一个<strong>全局唯一句柄</strong>。由于 NQP 引导, 我们通常必须使用比源更多的东西, 否则运行的编译器和正被编译的编译器将有重叠的句柄！</p>
+
+<p>(当移植到新的 VM 时需要交叉编译 NQP 本身时, <code>--stable-sc</code> 选项禁止这种情况, )</p>
+
+<h2 id="nqp-grammar-comp-unit">NQP::Grammar.comp_unit</h2>
+
+<p>接下来, 我们到达 <code>comp_unit</code>。在这里, 剥离出本质。</p>
+
+<pre><code>token comp_unit {
+    :my $*UNIT := $*W.push_lexpad($/);
+
+    # Create GLOBALish - the current GLOBAL view.
+    :my $*GLOBALish := $*W.pkg_create_mo(%*HOW&lt;knowhow&gt;,
+                                         :name('GLOBALish'));
+    {
+        $*GLOBALish.HOW.compose($*GLOBALish);
+        $*W.install_lexical_symbol($*UNIT, 'GLOBALish', $*GLOBALish);
+    }
+
+    # This is also the starting package.
+    :my $*PACKAGE := $*GLOBALish;
+    { $*W.install_lexical_symbol($*UNIT, '$?PACKAGE', $*PACKAGE); }
+
+    &lt;.outerctx&gt;
+    &lt;statementlist&gt;
+    [ $ || &lt;.panic: 'Confused'&gt; ]
+}
+</code></pre>
+
+<h2 id="剖析-comp-unit-作用域">剖析 comp_unit: 作用域</h2>
+
+<p><code>$*W</code> 上有与作用域相关的各种方法。</p>
+
+<p><strong><code>$*W.push_lexpad($/)</code></strong> 用于输入一个新的词法作用域, 嵌套在当前词法作用域的里面。它返回一个新的 <code>QAST::Block</code> 对象来表示它。</p>
+
+<p><strong><code>$*W.pop_lexpad()</code></strong> 用于退出当前词法作用域, 返回它。</p>
+
+<p><strong><code>$*W.cur_lexpad()</code></strong> 用于获取当前作用域。</p>
+
+<p>正如名字所暗示的, 它只是一个堆栈。</p>
+
+<h2 id="剖析-comp-unit-pkg-create-mo">剖析 comp_unit: pkg_create_mo</h2>
+
+<p><code>NQP::World</code> 上的各种方法都是关于包的。 <code>pkg_create_mo</code> 方法用于创建表示新包的类型对象和元对象。</p>
+
+<pre><code>:my $*GLOBALish := $*W.pkg_create_mo(%*HOW&lt;knowhow&gt;, :name('GLOBALish'));
+</code></pre>
+
+<p>由于<strong>单独编译</strong>, NQP 中的所有内容都以 <code>GLOBAL</code> 的干净的, 空白视图开始, 我们称之为 <code>GLOBALish</code>。这些在模块加载时是统一的。</p>
+
+<p><code>pkg_create_mo</code> 方法也用于处理像 <code>class</code> 这样的关键字; 在这种情况下, 它使用 <code>%*HOW&lt;class&gt;</code>。</p>
+
+<h2 id="剖析-comp-unit-install-lexical-symbol">剖析 comp_unit: install_lexical_symbol</h2>
+
+<p>请考虑以下 NQP 代码段。</p>
+
+<pre><code>for @acts {
+    my class Act { ... }
+    my $a := Act.new(:name($_));
+}
+</code></pre>
+
+<p>这个词法作用域将清楚地拥有符号 <code>Act</code> 和 <code>$a</code>。然而, 它们在一个重要的方面有所不同。 <code>Act</code> 在<strong>编译时是固定的</strong>, 而 <code>$a</code> 在每次循环时都是新的。编译时词法作用域中固定的符号安装有:</p>
+
+<pre><code>$*W.install_lexical_symbol($*UNIT, 'GLOBALish', $*GLOBALish);
+</code></pre>
+
+<h2 id="剖析-comp-unit-outer-ctx">剖析 comp_unit: outer_ctx</h2>
+
+<p><code>outer_ctx</code> token 看起来像这样:</p>
+
+<pre><code>token outerctx { &lt;?&gt; }
+</code></pre>
+
+<p>嗯?这是一个&rdquo;永远成功&rdquo;的断言！然而, 成功会触发 <code>NQP::Actions</code> 中的 <code>outer_ctx</code> 动作方法。其最重要的行是:</p>
+
+<pre><code>my $SETTING := $*W.load_setting(
+    %*COMPILING&lt;%?OPTIONS&gt;&lt;setting&gt; // 'NQPCORE');
+</code></pre>
+
+<p>它加载 NQP 设置(默认为<code>NQPCORE</code>), 这反过来会引入元对象(<code>class</code>, <code>role</code>等), 以及类似于 <code>NQPMu</code> 和 <code>NQPArray</code> 的类型。</p>
+
+<h2 id="statementlist">statementlist</h2>
+
+<p><code>comp_unit</code> token 的最后一件事是调用 <code>statementlist</code>, 它做了它名字所暗示的:解析语句列表。</p>
+
+<pre><code>rule statementlist {
+    | $
+    | [&lt;statement&gt;&lt;.eat_terminator&gt; ]*
+}
+</code></pre>
+
+<p><code>eat_terminator</code> 规则将匹配分号, 但也处理闭合花括号的使用来终止语句。注意它之后是一个空格所以一个 <code>&lt;.ws&gt;</code> 将被插入。</p>
+
+<h2 id="语句">语句</h2>
+
+<p><code>statement</code> 规则期望找到一个 <code>statement_control</code>(像 <code>if</code>, <code>while</code> 和 <code>CATCH</code> 这样的东西 - 这是一个 protoregex！)或一个表达式, 其后跟着一个语句修饰条件和/或循环。</p>
+
+<pre><code># **0..1 is like Perl 5 {0,1}; forces an array, which ? does not.
+token statement {
+    &lt;!before &lt;[\])}]&gt; | $ &gt;
+    [
+    | &lt;statement_control&gt;
+    | &lt;EXPR&gt; &lt;.ws&gt;
+        [
+        || &lt;?MARKED('endstmt')&gt;
+        || &lt;statement_mod_cond&gt; &lt;statement_mod_loop&gt;**0..1
+        || &lt;statement_mod_loop&gt;
+        ]**0..1
+    ]
+}
+</code></pre>
+
+<h2 id="旁白-表达式解析">旁白: 表达式解析</h2>
+
+<p>当我们需要解析类似下面这样的东西时&hellip;</p>
+
+<pre><code>$x * -$grad + $c
+</code></pre>
+
+<p>&hellip;我们需要注意优先级。尝试将优先级编码为一堆互相调用的规则将是非常低效的(表中每个级别一个调用！)并且很难维护。</p>
+
+<p>因此, <code>EXPR</code> 实际上调用了一个<strong>运算符优先级解析器</strong>。它的实现存在于 <code>HLL::Grammar</code> 中, 虽然我们不会在这个课程中研究它; 它稍微有点可怕, 不是你可能需要改变的东西。</p>
+
+<p>然而, 我们会在之后看到如何配置它。</p>
+
+<h2 id="terms">Terms</h2>
+
+<p><code>EXPR</code> 中的运算符优先级解析器不仅对运算符感兴趣,
+而且对运算符所应用的<strong>项</strong>也感兴趣。当它想要一个术语,
+它调用 <code>termish</code>, 它反过来调用 <code>term</code>, 另一个是 proto-regex。</p>
+
+<p>对于我们的 <code>say('Hello, world')</code> 例子, 有趣的术语是解析一个函数调用:</p>
+
+<pre><code>token term:sym&lt;identifier&gt; {
+    &lt;deflongname&gt; &lt;?[(]&gt; &lt;args&gt;  # &lt;?[(]&gt; is a lookahead
+}
+</code></pre>
+
+<p>现在我们到那里了！我们只需要解析一个名字和一个参数列表。</p>
+
+<h2 id="deflongname">deflongname</h2>
+
+<p>解析标识符(这里没有什么小聪明), 后面跟一个可选的 colonpair(因为像 <code>infix&lt;+&gt;</code> 这样的东西是有效的函数名)。</p>
+
+<pre><code>token deflongname {
+    &lt;identifier&gt; &lt;colonpair&gt;**0..1
+}
+</code></pre>
+
+<p>我们解析这个之后, 我们(终于！)以调用我们的第一个动作方法结束:</p>
+
+<pre><code>method deflongname($/) {
+    make $&lt;colonpair&gt;
+         ?? ~$&lt;identifier&gt; ~ ':' ~ $&lt;colonpair&gt;[0].ast.named
+                ~ '&lt;' ~ colonpair_str($&lt;colonpair&gt;[0].ast) ~ '&gt;'
+         !! ~$/;
+}
+</code></pre>
+
+<p>它的目的是规范化 colonpair, 如果有的话。无论如何, 它 <code>make</code> 出了一个简单的字符串结果。</p>
+
+<h2 id="解析参数">解析参数</h2>
+
+<p>解析圆括号, 然后再次委派给运算符优先解析器来解析单个参数或逗号分隔的参数列表。</p>
+
+<pre><code>token args {
+    '(' &lt;arglist&gt; ')'
+}
+
+token arglist {
+    &lt;.ws&gt;
+    [
+    | &lt;EXPR('f=')&gt;
+    | &lt;?&gt;
+    ]
+}
+</code></pre>
+
+<p><code>f=</code> 表示允许的最松散的优先级。</p>
+
+<h2 id="解析值">解析值</h2>
+
+<p>再一次, 运算符优先级解析器调用 <code>term</code>, 这次我们来到了 <code>term:sym&lt;value&gt;</code>。</p>
+
+<pre><code>token term:sym&lt;value&gt; { &lt;value&gt; }
+token value {
+    | &lt;quote&gt;
+    | &lt;number&gt;
+}
+</code></pre>
+
+<p>我们有一个带引号的字符串, 因此结束在 <code>quote</code> protoregex 中, 这反过来使我们成为解析单个引号字符串的候选人。</p>
+
+<pre><code>token quote:sym&lt;apos&gt; { &lt;?[']&gt; &lt;quote_EXPR: ':q'&gt;  }
+</code></pre>
+
+<h2 id="动作一路向上">动作一路向上!</h2>
+
+<p>我们现在已经到达了解析这个语句的底部。 然而, 我们还没有构建任何 QAST 节点, 这些节点将指示程序应该实际<strong>做</strong>什么, 当我们运行它时。</p>
+
+<p>从 <code>HELL::Actions</code> 继承的 <code>quote_EXPR</code> 动作对我们引用的字符串做了很多工作:</p>
+
+<pre><code>method quote:sym&lt;apos&gt;($/) { make $&lt;quote_EXPR&gt;.ast; }
+</code></pre>
+
+<p>它产生一个 <code>QAST::SVal</code> 节点, 其代表一个字符串字面值:</p>
+
+<pre><code>QAST::SVal.new( :value('Hello, world!') )
+</code></pre>
+
+<h2 id="value-actions">value actions</h2>
+
+<p><code>value</code> 动作方法只是检查我们是否解析了一个引号或一个数字, 然后用我们解析的 AST 调用 <code>make</code>。</p>
+
+<pre><code>method value($/) {
+    make $&lt;quote&gt; ?? $&lt;quote&gt;.ast !! $&lt;number&gt;.ast;
+}
+</code></pre>
+
+<p>而一个 <code>term</code> 的 value case 只是向上传递值 QAST:</p>
+
+<pre><code>method term:sym&lt;value&gt;($/) { make $&lt;value&gt;.ast; }
+</code></pre>
+
+<h2 id="arglist-actions">arglist actions</h2>
+
+<p><code>arglist</code> 动作方法创建一个代表 <code>call</code> 的 <code>QAST::Op</code> 节点。
+名称将在以后附加。 它必须处理 3 种情况: 零参数(因此 <code>$&lt;EXPR&gt;</code> 不匹配), 单个参数或逗号分隔的参数列表
+参数。</p>
+
+<pre><code>method args($/) { make $&lt;arglist&gt;.ast; }
+method arglist($/) {
+    my $ast := QAST::Op.new( :op('call'), :node($/) );
+    if $&lt;EXPR&gt; {
+        my $expr := $&lt;EXPR&gt;.ast;
+        if nqp::istype($expr, QAST::Op) &amp;&amp; $expr.name eq '&amp;infix:&lt;,&gt;' {
+            for $expr.list { $ast.push($_); }
+        }
+        else { $ast.push($expr); }
+    }
+    make $ast;
+}
+</code></pre>
+
+<h2 id="函数调用-actions">函数调用 actions</h2>
+
+<p>现在我们已经规范化了名称并构建了代表调用的 QAST 节点。 因此, 作为函数调用的术语的action方法使用 call QAST 节点, 设置其名称(在前面加上<code>&amp;</code>)并将其传递。</p>
+
+<pre><code>method term:sym&lt;identifier&gt;($/) {
+    my $ast := $&lt;args&gt;.ast;
+    $ast.name('&amp;' ~ $&lt;deflongname&gt;.ast);
+    make $ast;
+}
+</code></pre>
+
+<p>更高的 action 方法倾向于将由解析中较低的 action 方法产生的 AST 组合成更大的 AST。</p>
+
+<h2 id="statement-actions">statement actions</h2>
+
+<p>这是一个简化版本。 在这里看不到什么真正新的东西。 真正的事情只是更复杂, 因为它处理语句修改条件和循环。</p>
+
+<pre><code>method statement($/, $key?) {
+    my $ast;
+    if $&lt;EXPR&gt; { $ast := $&lt;EXPR&gt;.ast; }
+    elsif $&lt;statement_control&gt; { $ast := $&lt;statement_control&gt;.ast; }
+    else { $ast := 0; }
+    make $ast;
+}
+</code></pre>
+
+<p><code>0</code> 只是意味着“我们在这里没有找到任何东西来解析” - 可能是由于到达了源的末端。</p>
+
+<h2 id="statementlist-actions">statementlist actions</h2>
+
+<p>稍微简化下, 但不是很多。 <code>QAST::Stmts</code> 节点表示一组顺序执行的操作。 我们将每个语句(在我们的例子中, 一个)的 QAST 节点推送到它上面。</p>
+
+<pre><code>method statementlist($/) {
+    my $ast := QAST::Stmts.new( :node($/) );
+    if $&lt;statement&gt; {
+        for $&lt;statement&gt; {
+            $ast.push($_.ast);
+        }
+    }
+    else {
+        $ast.push(default_for('$'));
+    }
+    make $ast;
+}
+</code></pre>
+
+<p><code>else</code> 确保我们永远不会生成一个求值为“null”的空的 <code>QAST::Stmts</code>, 而是被计算为“NQPMu”。</p>
+
+<h2 id="comp-unit-actions">comp_unit actions</h2>
+
+<p>最后, 我们到达顶部！ <code>comp_unit</code> 动作方法 - 再次略微简化 - 将 <code>QAST::Stmts</code> 推送到 <code>QAST::Block</code> 节点上, 使这些语句由该块执行。 然后, 所有一切都被包装在一个 <code>QAST::CompUnit</code> 中, 它还指定了代码所来自的语言。</p>
+
+<pre><code>method comp_unit($/) {
+    # Push mainline statements into UNIT.
+    my $mainline := $&lt;statementlist&gt;.ast;
+    my $unit     := $*W.pop_lexpad();
+    $unit.push($mainline);
+
+    # Wrap everything in a QAST::CompUnit.
+    make QAST::CompUnit.new(
+        :hll('nqp'),
+        # 这里省略很多, 稍后详细介绍。
+        $unit
+    );
+}
+</code></pre>
+
+<h2 id="前端的结束">前端的结束</h2>
+
+<p>在这个时候, 阶段 <code>parse</code> 完成了！ 我们已经成功地执行了这个 grammar, 它产生了一个 <code>Match</code> 对象。 而附加到这个匹配对象上的是一个表示程序语义的 QAST 树。</p>
+
+<p>因此, 阶段 <code>ast</code> 是相当简单的。</p>
+
+<pre><code>method ast($source, *%adverbs) {
+    my $ast := $source.ast();
+    self.panic(&quot;Unable to obtain AST&quot;
+        unless $ast ~~ QAST::Node;
+    $ast;
+}
+</code></pre>
+
+<p>从这儿开始, 我们现在进入后端。</p>
+
+<h2 id="旁白-为什么交错解析和ast创建呢">旁白:为什么交错解析和AST创建呢?</h2>
+
+<p>你可能想知道为什么解析没有完全完成, 然后就构建了AST。
+答案是在许多情况下, 当我们着手解析时我们需要计算AST片段。 例如, 在:</p>
+
+<pre><code>BEGIN { say(&quot;OMG I'm alive!&quot;) }
+1 2
+</code></pre>
+
+<p>那个 BEGIN 块应该实际运行并产生它的输出, 即使它之后有一个语法错误。</p>
+
+<p>BEGIN-time 的东西可能有副作用, 实际上影响从他们的那儿的解析。</p>
+
+<h2 id="代码生成-快速概览">代码生成:快速概览</h2>
+
+<p>后端的工作是接收一个 QAST  树并为目标运行时(target runtime)生成代码。这, 再一次, 是由一组阶段(stages)组织的。它们的名字会根据你是在 Parrot, JVM, MoarVM, etc 上而不同。</p>
+
+<p>我们会推迟查看那些阶段中的任何一个的详情, 直到之后, 我们甚至还不能太深入它们。它们中包含的大部分代码在将来都不会改变, 为了掌握它们的大部分东西, 我们需要详细了解一些后端的知识。</p>
+
+<p>现在, 我们会把这些阶段当作神奇的黑盒子。 :-)</p>
+
+<h2 id="从头开始创建一个小语言">从头开始创建一个小语言</h2>
+
+<p>所以, 这是深入到 NQP。 它有点汹涌, 所以它适合练习一些更小的东西。</p>
+
+<p>因此, 我们将自己建立几个小的编译器。 我会在这里做一个, 你会在练习中做一个。</p>
+
+<p>有趣的是, 我的将是一个 Ruby 子集。</p>
+
+<p>更有趣的是, 你的将是一个 PHP 子集。</p>
+
+<p>我们将从实现 “Hello, world” 开始, 然后在下一部分 - 当我们更多地了解 QAST 后 - 开始添加语言功能。</p>
+
+<h2 id="stubbing-a-compiler">Stubbing a compiler</h2>
+
+<p>只需从 NQPHLL 库中继承的三个东西。</p>
+
+<pre><code>use NQPHLL;
+
+grammar Rubyish::Grammar is HLL::Grammar {
+}
+
+class Rubyish::Actions is HLL::Actions {
+}
+
+class Rubyish::Compiler is HLL::Compiler {
+}
+
+sub MAIN(*@ARGS) {
+    my $comp := Rubyish::Compiler.new();
+    $comp.language('rubyish');
+    $comp.parsegrammar(Rubyish::Grammar);
+    $comp.parseactions(Rubyish::Actions);
+    $comp.command_line(@ARGS, :encoding('utf8'));
+}
+</code></pre>
+
+<h2 id="我们已经拥有了-repl">我们已经拥有了 REPL</h2>
+
+<p>如果我们运行前一张幻灯片中的代码, 我们发现我们已经有了一个简单的 REPL(Read Eval Print Loop)。</p>
+
+<p>不出所料, 试图运行的东西不能工作:</p>
+
+<pre><code>&gt; puts &quot;Hello world&quot;
+Method 'TOP' not found for invocant of class 'Rubyish::Grammar'
+</code></pre>
+
+<p>当然, 它也准确地告诉了我们下一步该做什么 。。。</p>
+
+<h2 id="一个基本的-grammar">一个基本的 grammar</h2>
+
+<p>Rubyish 是面向行的, 所以每个语句由换行符分隔, 并且在 tokens 之间只允许水平空格。</p>
+
+<pre><code>grammar Rubyish::Grammar is HLL::Grammar {
+    token TOP          { &lt;statementlist&gt; }
+
+    rule statementlist { [ &lt;statement&gt; \n+ ]* }
+
+    proto token statement {*}
+    token statement:sym&lt;puts&gt; {
+        &lt;sym&gt; &lt;.ws&gt; &lt;?[&quot;]&gt; &lt;quote_EXPR: ':q'&gt;
+    }
+
+    # Whitespace required between alphanumeric tokens
+    token ws { &lt;!ww&gt; \h* || \h+ }
+}
+</code></pre>
+
+<h2 id="我们现在有什么">我们现在有什么?</h2>
+
+<p>有了这个, 我们现在可以解析我们的简单程序, 但是当尝试获取 AST 时却失败了:</p>
+
+<pre><code>&gt; puts &quot;Hello world&quot;
+Unable to obtain AST from NQPMatch
+</code></pre>
+
+<p>这再一次告诉我们下一步需要做什么:actions！</p>
+
+<h2 id="基本的-actions">基本的 actions</h2>
+
+<pre><code>class Rubyish::Actions is HLL::Actions {
+    method TOP($/) {
+        make QAST::Block.new( $&lt;statementlist&gt;.ast );
+    }
+
+    method statementlist($/) {
+        my $stmts := QAST::Stmts.new( :node($/) );
+        for $&lt;statement&gt; {
+            $stmts.push($_.ast)
+        }
+        make $stmts;
+    }
+
+    method statement:sym&lt;puts&gt;($/) {
+        make QAST::Op.new(
+            :op('say'),
+            $&lt;quote_EXPR&gt;.ast
+        );
+    }
+}
+</code></pre>
+
+<h2 id="有效果了">有效果了!</h2>
+
+<p>回想一下, 后端是独立于语言的; 他们只需要一个 QAST 树作为输入。 我们的 actions 产生一个。 因此, 我们现在有一个非常非常简单的能工作的语言编译器。</p>
+
+<pre><code>&gt; puts &quot;Hello world&quot;
+Hello World
+</code></pre>
+
+<p>我们还可以输出这个 AST:</p>
+
+<pre><code>- QAST::Block
+  - QAST::Stmts puts \&quot;Hello, world\&quot;\n
+    - QAST::Op(say)
+      - QAST::SVal(Hello, world)
+</code></pre>
+
+<h2 id="总之">总之&hellip;</h2>
+
+<p>我们在命令行中调用 NQP 的控制流程, 看到它解析我们的程序, 构建一个 QAST 树, 并将其传递给后端进行编译。</p>
+
+<p>然后我们使用这种技术从头开始构建一个小编译器。</p>
+
+<p>因为它建立在与 NQP 和 Rakudo 相同的技术之上, 它获得相同的好处。 例如, 已经工作在 Parrot 和 JVM 上开箱即用的编译器。</p>
+
+<h2 id="练习-4">练习 4</h2>
+
+<p>在本练习中, 您将构建相当于我的Rubyish 编译器的 PHPish 编译器 。</p>
+
+<p>主要的区别是, 你想要的关键字是 “echo”, 并且行是用分号而不是换行符分隔语句。</p>
+
+<h1 id="qast-2">QAST</h1>
+
+<p><em>在前端和后端之间: Q Abstract Syntax Tree</em></p>
+
+<h2 id="进一步深入-qast">进一步深入 QAST</h2>
+
+<p>到目前为止, 我们已经构建了一些非常简单的 QAST 树。 然而, 他们几乎都只留于 QAST 的表面。</p>
+
+<p>在本课程的这一部分中, 我们将讨论更广泛的节点类型及它们支持的选项。</p>
+
+<p>为了提供具体的例子, Rubyish 将被扩展以支持更广泛的语言功能。</p>
+
+<h2 id="qast-node-children">QAST::Node: children</h2>
+
+<p>所有的 QAST 节点类型都继承自基类 <code>QAST::Node</code>。</p>
+
+<p>所有 QAST 节点都支持拥有<strong>孩子节点</strong>。 初始孩子节点集可以作为位置参数传递给 “new”。 在任何节点上, 可以:</p>
+
+<pre><code>my $first := $ast[0];       # get first child
+$ast[0] := $child;          # set first child
+$ast.push($child);          # push a child
+$child := $ast.pop();       # pop a child
+$ast.unshift($child);       # unshift a child
+$child := $ast.shift();     # shift a child
+@children := $ast.list();   # get underlying children list
+</code></pre>
+
+<h2 id="qast-node-annotations">QAST::Node: annotations</h2>
+
+<p>通过在节点上使用散列索引, 可以给所有 QAST 节点提供任意的<strong>注解</strong>。</p>
+
+<pre><code>$var&lt;used&gt; := 1;
+</code></pre>
+
+<p>这可能非常有用, 但它很容易过度使用, 并造成混乱。
+是的, 我费了一番功夫才学会它。</p>
+
+<p>所有注解都可以使用 <code>hash</code> 方法获取:</p>
+
+<pre><code>my %anno := $var.hash();
+</code></pre>
+
+<h2 id="qast-node-返回类型">QAST::Node: 返回类型</h2>
+
+<p>使用 QAST 节点你还可以做其他两件重要的事情。 所有节点都可以使用他们将被求值的类型进行注解。</p>
+
+<pre><code>$ast.returns($some_type);
+</code></pre>
+
+<p>注意, 你<strong>指定一个类型对象</strong>来表示类型, *不是*类型的字符串名字！ 在某些情况下, 这里设置的类型用于代码生成(例如, 原生类型的变量通过这个来分配它们的原生存储)。</p>
+
+<p>这也可以在创建节点时首先设置:</p>
+
+<pre><code>QAST::Var.new( ..., :returns(int) )
+</code></pre>
+
+<h2 id="qast-node-node">QAST::Node: node</h2>
+
+<p>我们可能希望做的另一个重要的事情是将 QAST 节点与源位置相关联。 该信息由后端代码生成来持久化, 使得当发生运行时错误时, 它可以用于产生有意义的回溯。</p>
+
+<p><code>node</code> 方法需要接收一个匹配对象:</p>
+
+<pre><code>$ast.node($/);
+</code></pre>
+
+<p>再次, 它可以被指定(通常在QAST::Stmts节点上)为节点构造函数的参数。</p>
+
+<pre><code>my $ast := QAST::Stmts.new( :node($/) );
+</code></pre>
+
+<h2 id="树的顶部">树的顶部</h2>
+
+<p>在顶层, QAST 树必须要么具有 <code>QAST::CompUnit</code>, 要么具有 <code>QAST::Block</code>。</p>
+
+<p><strong><code>QAST::CompUnit</code></strong> 代表一个编译单元。 它应该有一个单独的 <code>QAST::Block</code> 孩子。 然而, 它也可以指定许多其他位的配置; 我们将在后面看到。</p>
+
+<p><strong><code>QAST::Block</code></strong> 代表词法作用域。 每当一个 <code>QAST::Block</code> 嵌套在另一个中时, 它代表一个嵌套的词法作用域, 它可以看到外部的变量。 结合克隆, 这也有利于闭包语义。</p>
+
+<h2 id="字面值-qast-ival-qast-nval-和-qast-sval">字面值: QAST::IVal, QAST::NVal 和 QAST::SVal</h2>
+
+<p>这三个节点类型表示整数, 浮点和字符串字面值。
+如果我们更新我们的 grammar 来解析不同类型的值:</p>
+
+<pre><code>proto token value {*}
+token value:sym&lt;string&gt;  { &lt;?[&quot;]&gt; &lt;quote_EXPR: ':q'&gt; }
+token value:sym&lt;integer&gt; { '-'? \d+ }
+token value:sym&lt;float&gt;   { '-'? \d+ '.' \d+ }
+</code></pre>
+
+<p>然后我们可以把 actions 写为:</p>
+
+<pre><code>method value:sym&lt;string&gt;($/) {
+    make $&lt;quote_EXPR&gt;.ast;
+}
+method value:sym&lt;integer&gt;($/) {
+    make QAST::IVal.new( :value(+$/.Str) )
+}
+method value:sym&lt;float&gt;($/) {
+    make QAST::NVal.new( :value(+$/.Str) )
+}
+</code></pre>
+
+<h2 id="尝试我们的字面值">尝试我们的字面值</h2>
+
+<p>经过一个小小的调整, 使<code>puts</code> 能够解析&hellip;</p>
+
+<pre><code>token statement:sym&lt;puts&gt; {
+    &lt;sym&gt; &lt;.ws&gt; &lt;value&gt;
+}
+</code></pre>
+
+<p>&hellip;加上 actions 中的匹配调整, 我们现在可以做:</p>
+
+<pre><code>&gt; puts 42
+42
+&gt; puts 0.999
+0.999
+&gt; puts &quot;It's not a bacon tree, it's a hambush!&quot;
+It's not a bacon tree, it's a hambush!
+</code></pre>
+
+<h2 id="operations-qast-op">Operations: QAST::Op</h2>
+
+<p><code>QAST::Op</code> 节点是到达令人难以置信数量的运算符的网关。 它们同样是通过 <code>nqp::op(...)</code> 语法可用的。</p>
+
+<p>通常, QAST::Op 节点看起来像这样:</p>
+
+<pre><code>QAST::Op.new(
+    :op('add_n'),
+    $left_child_ast,
+    $right_child_ast
+)
+</code></pre>
+
+<p>该运算符由 <code>:op(...)</code> 命名参数指定, 操作数是节点的孩子。</p>
+
+<h2 id="解析一些数学运算符-1">解析一些数学运算符 (1)</h2>
+
+<p>让我们添加加法, 减法, 乘法和除法运算符。 对于这些, 我们需要设置运算符优先级解析器, 配置两个优先级别。</p>
+
+<pre><code>INIT {
+    # 从 Raku Grammar 窃取优先级别的名称
+    Rubyish::Grammar.O(':prec&lt;u=&gt;, :assoc&lt;left&gt;', '%multiplicative');
+    Rubyish::Grammar.O(':prec&lt;t=&gt;, :assoc&lt;left&gt;', '%additive');
+}
+</code></pre>
+
+<p>注意, 我们在这里调用的 <code>O</code> 方法继承自 <code>HLL::Grammar</code>。 第一个参数指定优先级别和结合性。 然后第二个按照名称保存这个特定的配置, 所以我们可以在声明操作符时引用它。</p>
+
+<h2 id="解析一些数学运算符-2">解析一些数学运算符 (2)</h2>
+
+<p>就地使用优先级别, 我们可以向 grammar 中添加一些运算符。 这是通过将它们添加到 <code>infix</code> protoregex 中来完成的, 它是我们继承自 <code>HLL::Grammar</code> 的。</p>
+
+<pre><code>token infix:sym&lt;*&gt; { &lt;sym&gt; &lt;O('%multiplicative, :op&lt;mul_n&gt;')&gt; }
+token infix:sym&lt;/&gt; { &lt;sym&gt; &lt;O('%multiplicative, :op&lt;div_n&gt;')&gt; }
+token infix:sym&lt;+&gt; { &lt;sym&gt; &lt;O('%additive, :op&lt;add_n&gt;')&gt; }
+token infix:sym&lt;-&gt; { &lt;sym&gt; &lt;O('%additive, :op&lt;sub_n&gt;')&gt; }
+</code></pre>
+
+<p><strong><code>:op&lt;...&gt;</code></strong> 语法指示我们从 <code>HLL::Actions</code> 继承的 <code>EXPR</code> action 方法来为我们构造该运算符的 <code>QAST::Op</code> 节点!</p>
+
+<h2 id="terms-1">Terms</h2>
+
+<p>我们几乎准备好使用运算符优先级解析器了, 但还不完全是。 我们还必须指导它如何<strong>获得一个 term</strong>。 我们从 <code>HLL::Grammar</code> 继承了一个 <code>term</code> protoregex, 因此只需要为它添加候选者。</p>
+
+<p>对我们来说, 这意味着一个term的候选者是一个值:</p>
+
+<pre><code>token term:sym&lt;value&gt; { &lt;value&gt; }
+</code></pre>
+
+<p>和匹配的 action 方法:</p>
+
+<pre><code>method term:sym&lt;value&gt;($/) { make $&lt;value&gt;.ast; }
+</code></pre>
+
+<h2 id="把所有的东西连接到一块">把所有的东西连接到一块</h2>
+
+<p>最后我们需要做的是更新 <code>puts</code> 的 grammar 规则:</p>
+
+<pre><code>token statement:sym&lt;puts&gt; {
+    &lt;sym&gt; &lt;.ws&gt; &lt;EXPR&gt;
+}
+</code></pre>
+
+<p>还有 action 方法:</p>
+
+<pre><code>method statement:sym&lt;puts&gt;($/) {
+    make QAST::Op.new(
+        :op('say'),
+        $&lt;EXPR&gt;.ast
+    );
+}
+</code></pre>
+
+<h2 id="试验我们的运算符">试验我们的运算符</h2>
+
+<p>基本的算术运算现在工作了,并且运算符的优先级也被正确地处理了。</p>
+
+<pre><code>&gt; puts 10 * 9 + 1
+91
+</code></pre>
+
+<p>我们还可以检查 AST 以查看 <code>QAST::Op</code> 节点:</p>
+
+<pre><code>- QAST::Block
+  - QAST::Stmts puts 10 * 9 + 1\n
+    - QAST::Op(say)
+      - QAST::Op(add_n &amp;infix:&lt;+&gt;) +
+        - QAST::Op(mul_n &amp;infix:&lt;*&gt;) *
+          - QAST::IVal(10)
+          - QAST::IVal(9)
+        - QAST::IVal(1)
+</code></pre>
+
+<h2 id="sequencing-qast-stmts-和-qast-stmt">Sequencing: QAST::Stmts 和 QAST::Stmt</h2>
+
+<p>有两种按顺序运行每个子节点的节点类型。</p>
+
+<p><strong><code>QAST::Stmts</code></strong>, 确实, 没有什么比这更多的了。</p>
+
+<p><strong><code>QAST::Stmt</code></strong> 具有附加的效果, 它规定在代码生成期间创建的任何临时值在该节点执行结束之后都不再需要了。</p>
+
+<p>一般来说, 在语言使用者认为的那样, 具有一组语句和单个语句的地方使用它们是有意义的。</p>
+
+<h2 id="block-结构">Block 结构</h2>
+
+<p>一个常见的用法, 虽然没有强制性, 是一个 <code>QAST::Block</code> 拥有两个 <code>QAST::Stmts</code> 节点。</p>
+
+<p>第一个用于保存<strong>声明</strong>, 例如变量或嵌套例程。</p>
+
+<p>第二个用于保存<strong>由该块的 statementlist 解析的语句</strong>。</p>
+
+<p>这个惯用法在 NQP 和 Rakudo 中都可用; 例如:</p>
+
+<pre><code>$block[0].push(QAST::Var.new(:name&lt;$/&gt;, :scope&lt;lexical&gt;, :decl&lt;var&gt;));
+</code></pre>
+
+<h2 id="变量-1">变量</h2>
+
+<p>现在是时候添加变量到 Rubyish 中了！ 在 Rubyish 中, 变量不是显式地声明的。 相反, 它们在首次赋值时在当前作用域中被声明。</p>
+
+<p>首先, 让我们为赋值添加一个优先级:</p>
+
+<pre><code>Rubyish::Grammar.O(':prec&lt;j=&gt;, :assoc&lt;right&gt;',  '%assignment');
+</code></pre>
+
+<p>并解析赋值运算符, 使用 <code>bind</code> NQP 运算符, 它将右侧的表达式绑定给左侧的变量:</p>
+
+<pre><code>token infix:sym&lt;=&gt; { &lt;sym&gt; &lt;O('%assignment, :op&lt;bind&gt;')&gt; }
+</code></pre>
+
+<h2 id="表达式作为语句">表达式作为语句</h2>
+
+<p>你可能还记得在 NQP grammar 中, 表达式也是一个有效的语句。 我们需要在 Rubyish 也这样做。</p>
+
+<p>这意味着将表达式添加到 grammar:</p>
+
+<pre><code>token statement:sym&lt;EXPR&gt; { &lt;EXPR&gt; }
+</code></pre>
+
+<p>还有相应的 actions:</p>
+
+<pre><code>method statement:sym&lt;EXPR&gt;($/) { make $&lt;EXPR&gt;.ast; }
+</code></pre>
+
+<h2 id="标识符解析">标识符解析</h2>
+
+<p>现在, 我们将所有标识符视为变量一样。 我们这样解析标识符:</p>
+
+<pre><code>token term:sym&lt;ident&gt; {
+    :my $*MAYBE_DECL := 0;
+    &lt;ident&gt;
+    [ &lt;?before \h* '=' [\w | \h+] { $*MAYBE_DECL := 1 }&gt; || &lt;?&gt; ]
+}
+</code></pre>
+
+<p>注意这里使用了向前查看以查看我们是否可以找到一个赋值运算符, 在其周围有空格或标识符紧跟其后(不能将<code>==</code>视为赋值！)</p>
+
+<p>动态变量用于传达是否发生了赋值, 这可能意味着我们有一个声明。</p>
+
+<h2 id="标识符-actions">标识符 actions</h2>
+
+<p>Here is a first, cheating attempt at the actions for an identifier.
+这是第一个, 欺骗尝试的标识符的 action。</p>
+
+<pre><code>method term:sym&lt;ident&gt;($/) {
+    if $*MAYBE_DECL {
+        make QAST::Var.new( :name(~$&lt;ident&gt;), :scope('lexical'),
+                            :decl('var') );
+    }
+    else {
+        make QAST::Var.new( :name(~$&lt;ident&gt;), :scope('lexical') );
+    }
+}
+</code></pre>
+
+<p>这允许我们运行:</p>
+
+<pre><code>a = 7
+b = 6
+puts a * b
+</code></pre>
+
+<h2 id="问题">问题</h2>
+
+<p>不幸的是, 事情变化得相当快。 每个赋值现在都被视为声明。 因此:</p>
+
+<pre><code>a = 1
+puts a
+a = 2
+puts a
+</code></pre>
+
+<p>失败了:</p>
+
+<pre><code>Error while compiling block: Error while compiling op bind:
+Lexical 'a' already declared
+</code></pre>
+
+<h2 id="符号表">符号表</h2>
+
+<p>每个 <code>QAST::Block</code> 都有一个符号表, 可以用来存储其中声明的符号的额外信息。</p>
+
+<p>真的, 它只是一个散列哈希, 第一个散列键在符号和内部散列存储任何我们希望的信息。</p>
+
+<p>我们可以通过执行以下操作来添加或更新符号的条目(entries):</p>
+
+<pre><code>$block.symbol($ident, :declared(1));
+</code></pre>
+
+<p>我们可以通过做以下事情来获取符号上保存的当前信息:</p>
+
+<pre><code>my %sym := $block.symbol($ident);
+</code></pre>
+
+<p>我们可以用这个来跟踪声明！</p>
+
+<h2 id="下一个挑战-跟踪块">下一个挑战:跟踪块</h2>
+
+<p>我们需要访问我们正在声明的当前块, 然后才能使用符号。 将它放在一个动态变量中是最容易处理的, 在 <code>TOP</code> grammar 规则中创建它:</p>
+
+<pre><code>token TOP {
+    :my $*CUR_BLOCK := QAST::Block.new(QAST::Stmts.new());
+    &lt;statementlist&gt;
+    [ $ || &lt;.panic('Syntax error')&gt; ]
+}
+</code></pre>
+
+<p>相应的 <code>TOP</code> action 方法变为:</p>
+
+<pre><code>method TOP($/) {
+    $*CUR_BLOCK.push($&lt;statementlist&gt;.ast);
+    make $*CUR_BLOCK;
+}
+</code></pre>
+
+<h2 id="使用符号">使用符号</h2>
+
+<p>现在, 我们可以使用 <code>symbol</code> 跟踪已经声明过的内容, 而不是重新声明它。</p>
+
+<pre><code>method term:sym&lt;ident&gt;($/) {
+    my $name := ~$&lt;ident&gt;;
+    my %sym  := $*CUR_BLOCK.symbol($name);
+    if $*MAYBE_DECL &amp;&amp; !%sym&lt;declared&gt; {
+        $*CUR_BLOCK.symbol($name, :declared(1));
+        make QAST::Var.new( :name($name), :scope('lexical'),
+                            :decl('var') );
+    }
+    else {
+        make QAST::Var.new( :name($name), :scope('lexical') );
+    }
+}
+</code></pre>
+
+<h2 id="其它作用域">其它作用域</h2>
+
+<p><code>QAST::Var</code> 节点不只是用于词法作用域。 其可用作用域如下:</p>
+
+<pre><code>lexical         对嵌套块可见
+local           像 lexical, 但对嵌套块不可见
+contextual      动态作用域词法的查找
+attribute       对象属性 (children: invocant, package)
+positional      数组索引 (children: array, index)
+associative     散列索引 (children: hash, key)
+</code></pre>
+
+<p>注意只有前 3 个作为声明是有意义的。 还要注意, Rakudo 不使用最后 2 个(它的数组和散列处理因素不同), 虽然 NQP 使用。</p>
+
+<h2 id="例程">例程</h2>
+
+<p>为了更多的说明词法作用域, 让我们添加例程。 声明和调用例程的语法如下:</p>
+
+<pre><code>def greet
+    puts &quot;hello&quot;
+end
+greet()
+</code></pre>
+
+<p>我们将通过不处理其他形式的调用来保持简单。</p>
+
+<h2 id="解析例程声明">解析例程声明</h2>
+
+<p>这里没有什么特别新的东西。 我们注意启动一个新的词法作用域, 所以任何声明都不会污染周围的作用域。 split 因此是第一个 token 的 action 方法可以看到 <code>$* CUR_BLOCK</code> 安装进去。</p>
+
+<pre><code>token statement:sym&lt;def&gt; {
+    'def' \h+ &lt;defbody&gt;
+}
+rule defbody {
+    :my $*CUR_BLOCK := QAST::Block.new(QAST::Stmts.new());
+    &lt;ident&gt; \n
+    &lt;statementlist&gt;
+    'end'
+}
+</code></pre>
+
+<p>NQP 和 Rakudo 做的几乎相同, 唯一的区别是, 他们抽象了块的推入/弹出并保持追踪。</p>
+
+<h2 id="解析调用">解析调用</h2>
+
+<p>调用是一个标识符, 后跟一些圆括号。 我们也会小心以避免使用关键字。</p>
+
+<pre><code>token term:sym&lt;call&gt; {
+    &lt;!keyword&gt;
+    &lt;ident&gt; '(' ')'
+}
+</code></pre>
+
+<p><code>&lt;!keyword&gt;</code> 也适用于 <code>term:sym&lt;ident&gt;</code>.</p>
+
+<h2 id="例程声明的-actions">例程声明的 Actions</h2>
+
+<p><code>defbody</code> 完成了 <code>QAST::Block</code>, 它通过 <code>statement:sym&lt;def&gt;</code> 被安装为词法。</p>
+
+<pre><code>method statement:sym&lt;def&gt;($/) {
+    my $install := $&lt;defbody&gt;.ast;
+    $*CUR_BLOCK[0].push(QAST::Op.new(
+        :op('bind'),
+        QAST::Var.new( :name($install.name), :scope('lexical'),
+                       :decl('var') ),
+        $install
+    ));
+    make QAST::Op.new( :op('null') );
+}
+method defbody($/) {
+    $*CUR_BLOCK.name(~$&lt;ident&gt;);
+    $*CUR_BLOCK.push($&lt;statementlist&gt;.ast);
+    make $*CUR_BLOCK;
+}
+</code></pre>
+
+<h2 id="调用">调用</h2>
+
+<p>调用是一个操作, 因此使用 <code>QAST::Op</code> 来完成。 默认情况下, 要调用的东西的名称(将在词法中解析)在 <code>name</code> 命名参数中指定。</p>
+
+<pre><code>method term:sym&lt;call&gt;($/) {
+    make QAST::Op.new( :op('call'), :name(~$&lt;ident&gt;) );
+}
+</code></pre>
+
+<p>任何没有指定 <code>name</code> 的情况都会把节点的第一个子节点作为要调用的东西。 因此, 我们本可以这样写:</p>
+
+<pre><code>method term:sym&lt;call&gt;($/) {
+    make QAST::Op.new(
+        :op('call'),
+        QAST::Var.new( :name(~$&lt;ident&gt;), :scope('lexical')
+    );
+}
+</code></pre>
+
+<p>但是(至少在JVM上)这阻碍了优化, 所以不要这样做。</p>
+
+<h2 id="形参和实参">形参和实参</h2>
+
+<p>实参和形参处理涉及到我们以前没有见过的节点类型。 形参只是 <code>QAST::Op</code> 调用节点的子节点, 参数只是 <code>decl</code> 设置为 <code>param</code> 的 <code>QAST::Var</code> 节点。</p>
+
+<p>首先, 让我们为参数添加解析。</p>
+
+<pre><code>rule defbody {
+    :my $*CUR_BLOCK := QAST::Block.new(QAST::Stmts.new());
+    &lt;ident&gt; &lt;signature&gt;? \n
+    &lt;statementlist&gt;
+    'end'
+}
+rule signature {
+    '(' &lt;param&gt;* % [ ',' ] ')'
+}
+token param { &lt;ident&gt; }
+</code></pre>
+
+<h2 id="parameter-actions">Parameter actions</h2>
+
+<p><code>param</code> action  方法看起来像这样:</p>
+
+<pre><code>method param($/) {
+    $*CUR_BLOCK[0].push(QAST::Var.new(
+        :name(~$&lt;ident&gt;), :scope('lexical'), :decl('param')
+    ));
+    $*CUR_BLOCK.symbol(~$&lt;ident&gt;, :declared(1));
+}
+</code></pre>
+
+<p>有趣的是, 它从来不做 <code>make</code>。 这可能看起来奇怪, 因为其他地方的 action 方法已经这样做。 但它没有理由那样做; 我们真正想做的是将已声明的参数安装到当前块中。 它更容易在上下文中获取。</p>
+
+<h2 id="参数传递">参数传递</h2>
+
+<p>这里有一个快速和简单的方法来解析参数:</p>
+
+<pre><code>token term:sym&lt;call&gt; {
+    &lt;!keyword&gt;
+    &lt;ident&gt; '(' :s &lt;EXPR&gt;* % [ ',' ] ')'
+}
+</code></pre>
+
+<p>之后我们更新相应的 actions:</p>
+
+<pre><code>method term:sym&lt;call&gt;($/) {
+    my $call := QAST::Op.new( :op('call'), :name(~$&lt;ident&gt;) );
+    for $&lt;EXPR&gt; {
+        $call.push($_.ast);
+    }
+    make $call;
+}
+</code></pre>
+
+<h2 id="目前为止">目前为止&hellip;</h2>
+
+<p>到目前为止, 我们使用了以下的 QAST 节点类型:</p>
+
+<pre><code>QAST::Block     一个词法作用域
+QAST::Stmts     要执行的一系列东西
+QAST::Stmt      同上, 还是临时边界
+QAST::Op        某种操作
+QAST::Var       变量或参数使用/声明
+QAST::IVal      整数字面值
+QAST::NVal      浮点数字面值
+QAST::SVal      字符串字面值
+</code></pre>
+
+<p>我们现在将考虑更多的节点类型; 我们将推迟一些(<code>QAST::WVal</code> 和 <code>QAST::Regex</code>), 直到明天。</p>
+
+<h2 id="用-qast-bval-引用-block">用 QAST::BVal 引用 Block</h2>
+
+<p>QAST::Block 应该只在一个 QAST 树中出现一次。 它放在哪里就在哪里定义它的词汇作用域。</p>
+
+<p>那么, 如果你想<strong>在树中的其他地方引用 <code>QAST::Block</code></strong> 呢?
+这就是 <code>QAST::BVal</code>, Block Value的缩写, 的作用所在。 例如, 它在发出代码时使用, 使CORE设置成为程序的外部词法作用域。</p>
+
+<pre><code>my $set_outer := QAST::Op.new(
+    :op('forceouterctx'),
+    QAST::BVal.new( :value($*UNIT) ),
+    QAST::Op.new(
+        :op('callmethod'), :name('load_setting'),
+        # stuff left out here
+    ));
+</code></pre>
+
+<h2 id="boxed-vs-unboxed-void-vs-non-void-上下文">Boxed vs. unboxed, void vs. non-void 上下文</h2>
+
+<p>当后端代码生成发生时, 它可能需要装载和/或解包东西, 或者它可以确定某个东西是否会在空(sink)上下文中。</p>
+
+<p>虽然它可以可靠地生成工作代码, 但它可能不高效。 在这里考虑整数常量的处理:</p>
+
+<pre><code>my int $x = 42;     # Needs an unboxed native int
+my $x = 42;         # Needs a boxed Int object
+</code></pre>
+
+<p>当我们写整数字面值的 action 方法时, 我们有一个困境。 我们应该发出一个 <code>QAST::IVal</code> 吗, 这将在第二种情况下被装箱。 或者我们应该将一个Int常量42放入常量池, 并使用 <code>QAST::WVal</code>(明天更多的讨论这个节点类型)来引用它吗?</p>
+
+<h2 id="qast-want-来救场">QAST::Want 来救场</h2>
+
+<p>与其选择, 我们倒不如把这两个选项都呈现出来, 让代码生成器选择最有效率的那个。 这是通过 <code>QAST::Want</code> 节点来完成的。</p>
+
+<pre><code>QAST::Want.new(
+    QAST::WVal.new( :value($boxed_constant) ),
+    'Ii', QAST::IVal.new( :value($the_value) )
+)
+</code></pre>
+
+<p>第一个孩子是默认的东西。 它后面是一组选择器, 用于我们可能所处的不同上下文中。</p>
+
+<pre><code>Ii      原生整数
+Nn      原生浮点数
+Ss      原生字符串
+v       void
+</code></pre>
+
+<h2 id="后端逃生舱口-qast-vm-1">后端逃生舱口: QAST::VM (1)</h2>
+
+<p>有时, 有必要<strong>通过后端有条件地做事情</strong>, 或做一些<strong>特定于虚拟机的</strong>操作。 QAST::VM 节点处理这一需求。</p>
+
+<p>例如, 下面是来自 NQP 的一些代码, 用于加载 NQP 模块加载器。 它需要知道后端要查找的文件名。</p>
+
+<pre><code>QAST::Op.new(
+    :op('loadbytecode'),
+    QAST::VM.new(
+        :parrot(QAST::SVal.new( :value('ModuleLoader.pbc') )),
+        :jvm(QAST::SVal.new( :value('ModuleLoader.class') ))
+    ))
+</code></pre>
+
+<p>如果当前后端没有适用的选项, 代码生成器将抛出异常。</p>
+
+<h2 id="后端逃生舱口-qast-vm-2">后端逃生舱口: QAST::VM (2)</h2>
+
+<p><code>QAST::VM</code> 节点类型也在 <code>pir::op_SIG(...)</code> 语法的后面, 它在 NQP 和 Rakudo 中可用。 这里是 <code>pir::op</code> 在 NQP 中是如何解析和实现的。</p>
+
+<pre><code>token term:sym&lt;pir::op&gt; {
+    'pir::' $&lt;op&gt;=[\w+] &lt;args&gt;**0..1
+}
+
+method term:sym&lt;pir::op&gt;($/) {
+    my @args := $&lt;args&gt; ?? $&lt;args&gt;[0].ast.list !! [];
+    my $pirop := ~$&lt;op&gt;;
+    $pirop := join(' ', nqp::split('__', $pirop));
+    make QAST::VM.new( :pirop($pirop), :node($/), |@args );
+}
+</code></pre>
+
+<h2 id="at-the-top-qast-compunit">At the top: QAST::CompUnit</h2>
+
+<p>Rakudo 和 NQP 生成的 QAST 树在顶部有一个 <code>QAST::CompUnit</code>。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-c7086a9173ab47ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="qast-compunit-and-blocks.png" /></p>
+
+<h2 id="我们可以用-qast-compunit-做什么">我们可以用 QAST::CompUnit 做什么</h2>
+
+<p>这里看看 <code>QAST::CompUnit</code> 能做些什么(我们明天会再看一下)。</p>
+
+<pre><code>my $compunit := QAST::CompUnit.new(
+    # Set the language this contains.
+    :hll('nqp'),
+
+    # What to do if the compilation unit is loaded as a module.
+    :load(QAST::Op.new(
+        :op('call'),
+        QAST::BVal.new( :value($unit) )
+    )),
+
+    # What to do if the compilation unit is invoked as the main,
+    # top-level program.
+    :main(...),
+
+    # 1 child, which is the top-level QAST::Block
+    $unit
+);
+</code></pre>
+
+<h2 id="练习-5">练习 5</h2>
+
+<p>在本练习中, 您将向 PHPish 添加一些功能, 以便探索我们一直在研究的 QAST 节点。</p>
+
+<p>看看 NQP grammar 和 actions, 了解他们的工作原理 <code>:-)</code></p>
+
+<h1 id="探索-nqp-ops">探索 nqp::ops</h1>
+
+<p><em>学习所有的运算符!</em></p>
+
+<h2 id="仅仅瞄一眼">仅仅瞄一眼</h2>
+
+<p>有几百个可用的 <code>nqp::op</code>s。 它们的范围从算术到字符串操作, 从流控制(如循环)到类型创建。</p>
+
+<p>我们已经看到了一些运算符。 明天, 我们将看到一堆更多的运算符, 因为我们看看 6model 和序列化上下文, 它们有一堆与它们相关的 <code>nqp::ops</code>。</p>
+
+<p>在本节中, 我们将概述“其余的”。 概述不是详尽无遗, 因为那会令人精疲力尽。</p>
+
+<p>记住它们可以以 <code>nqp::op</code> 形式*或*在 <code>QAST::Op</code> 节点中使用, 因此这些知识可以重复使用！</p>
+
+<h2 id="算术">算术</h2>
+
+<p>这些是以原生整数形式:</p>
+
+<pre><code>add_i   sub_i   mul_i   div_i   mod_i
+neg_i   abs_i
+</code></pre>
+
+<p>还有原生浮点数形式:</p>
+
+<pre><code>add_n   sub_n   mul_n   div_n   mod_n
+neg_n   abs_n
+</code></pre>
+
+<p>为了帮助实现有理数, 我们还有:</p>
+
+<pre><code>lcm_i   gcd_i
+</code></pre>
+
+<h2 id="数字">数字</h2>
+
+<p>基础的东西:</p>
+
+<pre><code>pow_n       ceil_n      floor_n
+ln_n        sqrt_n      log_n
+exp_n       isnanorinf  inf
+neginf      nan
+</code></pre>
+
+<p>三角函数:</p>
+
+<pre><code>sin_n   asin_n  cos_n   acos_n  tan_n
+atan_n  atan2_n sinh_n  cosh_n  tanh_n
+sec_n   asec_n  sech_n
+</code></pre>
+
+<h2 id="关系">关系</h2>
+
+<p>为了比较原生整数, 原生浮点数和原生字符串(如有必要代码生成器将会拆箱)。 例如, 原生整数形式是:</p>
+
+<pre><code>cmp_i       compare; returns -1, 0, or 1
+iseq_i      non-zero if equal
+isne_i      non-zero if non-equal
+islt_i      non-zero if less than
+isle_i      non-zero if less than or equal to
+isgt_i      non-zero if greater than
+isge_i      non-zero if greater than or equal to
+</code></pre>
+
+<p><code>_n</code> 和 <code>_s</code> 形式也都存在。</p>
+
+<h2 id="数组操作">数组操作</h2>
+
+<p>有各种运算符操作数组:</p>
+
+<pre><code>atpos       atpos_i     atpos_n     atpos_s
+bindpos     bindpos_i   bindpos_n   bindpos_s
+push        push_i      push_n      push_s
+pop         pop_i       pop_n       pop_s
+shift       shift_i     shift_n     shift_s
+unshift     unshift_i   unshift_n   unshift_s
+splice      existspos   elems       setelems
+</code></pre>
+
+<p>请注意, 原生类型的版本是<strong>非强制的</strong>, 但只适用于原生类型的数组。</p>
+
+<h2 id="散列操作">散列操作</h2>
+
+<p>看起来跟数组操作并无二至。</p>
+
+<pre><code>atkey       atkey_i     atkey_n     atkey_s
+bindkey     bindkey_i   bindkey_n   bindkey_s
+existskey   deletekey   elems
+</code></pre>
+
+<p>这些都假定键是字符串; 任何非字符串键将首先被强制转换为字符串。</p>
+
+<h2 id="旁白-raku-数组-散列-ops-的用法">旁白: Raku 数组/散列 ops 的用法</h2>
+
+<p>在 Raku 中, 像下面这样的东西:</p>
+
+<pre><code>@a[0] = 42;
+</code></pre>
+
+<p>实际上使用 <code>atpos</code> 来使标量容器绑定到底层的数组存储, 然后分配给该容器。 <code>bindpos</code> 只用于做:</p>
+
+<pre><code>@a[0] := 42;
+</code></pre>
+
+<p>此外, 你永远不会直接在 Raku 的 <code>Array</code> 或 <code>Hash</code> 对象上这样做。 这些对象*包含*一个较低级别(lower-level)的数组或散列作为属性, 而方法在那上面使用这个 ops。</p>
+
+<h2 id="创建列表和散列">创建列表和散列</h2>
+
+<p><code>nqp::list</code> op 创建一个(低级)数组, 其元素传递给它。 因此, 它是一个可变参数 op。</p>
+
+<pre><code>nqp::list($foo, $bar, $baz)
+</code></pre>
+
+<p>原生类型的列表可以使用 <code>list_i</code>, <code>list_n</code> 和 <code>list_s</code> 创建。</p>
+
+<p>有一个类似的 <code>nqp::hash</code>, 它期望一个键, 一个值 &hellip;</p>
+
+<pre><code>nqp::hash('name', $name, 'age', $age)
+</code></pre>
+
+<p>最后, <code>islist</code> 和 <code>ishash</code> 告诉你某个东西是否是低级的数组或散列。</p>
+
+<h2 id="字符串">字符串</h2>
+
+<p>字符串操作大多数命名为 Raku 那样。</p>
+
+<pre><code>chars       uc          lc          x
+concat      chr         join        split
+flip        replace     substr      ord
+index       rindex      codepointfromname
+</code></pre>
+
+<p>还有用于检查字符类成员资格的操作。 这些主要是在编译正则表达式或正则表达式相关的类时发出的, 但可以在其他地方使用。 他们是:</p>
+
+<pre><code>nqp::iscclass(class, str, index)
+nqp::findcclass(class, str, index, limit)
+nqp::findnotcclass(class, str, index, limit)
+</code></pre>
+
+<p>其中 <code>class</code> 是 <code>nqp::const::CCLASS_*</code> 其中之一。</p>
+
+<h2 id="条件">条件</h2>
+
+<p><code>if</code> 和 <code>unless</code> ops 期望两个或三个孩子: 一个条件, 一个 &ldquo;then&rdquo; 和一个可选的 &ldquo;else&rdquo;。 注意, NQP 和 Raku 中的 <code>elsif</code> 是通过嵌套 <code>if</code> <code>QAST::Op</code> 节点来编译的。</p>
+
+<pre><code># AST for '$/.ast ?? $/.ast !! $/.Str'
+QAST::Op.new(
+    :op('if'),
+    QAST::Op.new(
+        :op('callmethod'), :name('ast'),
+        QAST::Var.new( :name('$/'), :scope('lexical') )
+    ),
+    QAST::Op.new(
+        :op('callmethod'), :name('ast'),
+        QAST::Var.new( :name('$/'), :scope('lexical') )
+    ),
+    QAST::Op.new(
+        :op('callmethod'), :name('Str'),
+        QAST::Var.new( :name('$/'), :scope('lexical') )
+    )
+)
+</code></pre>
+
+<h2 id="条件和一元块">条件和一元块</h2>
+
+<p>NQP 和 Raku 都支持像下面这样的东西:</p>
+
+<pre><code>if %core_ops{$name} -&gt; $mapper {
+    return $mapper($qastcomp, $op);
+}
+</code></pre>
+
+<p>这将计算 <code>%core_ops{$name}</code>, 然后将它传递给 <code>$mapper</code>, 如果它是一个真值的话。</p>
+
+<p>在 QAST 级别, 这由 <code>if</code> op 的第二个孩子代表 <code>QAST::Block</code>, 它的元数 <code>arity</code> 被设置为一个非零值。</p>
+
+<h2 id="循环">循环</h2>
+
+<p>有四个相关的循环结构:</p>
+
+<pre><code>                            Loop while true    Loop while false
+                            ---------------    ---------------
+Condition, then body      | while              until
+Body, then condition      | repeat_while       repeat_until               
+</code></pre>
+
+<p>它们接收两个或三个孩子:</p>
+
+<ul>
+<li>条件</li>
+<li>循环体</li>
+<li>可选的, 在循环体之后要做的事情</li>
+</ul>
+
+<p>如果抛出 <code>redo</code> 控制异常, 则重新计算第二个子节点。 第三个只有在任何 <code>redo</code> 发生后才被计算。 它由 Raku(C风格)的 <code>loop</code> 结构使用。</p>
+
+<h2 id="loop-example">Loop example</h2>
+
+<p>Raku 的 <code>let</code> 和 <code>temp</code> 关键字保存容器及其原始值的列表(容器, 值等)。这是在块退出时遍历此列表进行恢复的循环。</p>
+
+<pre><code>$phaser_block.push(QAST::Op.new(
+    :op('while'),
+    QAST::Var.new( :name($value_stash), :scope('lexical') ),
+    QAST::Op.new(
+        :op('p6store'),
+        QAST::Op.new(
+            :op('shift'),
+            QAST::Var.new( :name($value_stash), :scope('lexical') )
+        ),
+        QAST::Op.new(
+            :op('shift'),
+            QAST::Var.new( :name($value_stash), :scope('lexical') )
+        ))));
+</code></pre>
+
+<h2 id="其它控制结构">其它控制结构</h2>
+
+<p>还有三个值得了解的控制结构:</p>
+
+<ul>
+<li><strong><code>for</code></strong> 需要两个孩子, 一个可迭代(通常是一个低级数组或列表)和一个块。 它为迭代中的每个东西调用该块。 仅用于 NQP; Rakudo 中处理迭代是完全不同的。</li>
+<li><strong><code>ifnull</code></strong> 需要两个孩子。 它计算第一个。 如果它不为 null, 它只是产生这个值。 如果<em>是</em> null, 它将计算第二个孩子。</li>
+<li><strong><code>defor</code></strong> 与 <code>ifnull</code> 相同, 但是考虑的是定义而不是 nullness</li>
+</ul>
+
+<h2 id="抛出异常">抛出异常</h2>
+
+<p>有各种创建和抛出异常的操作:</p>
+
+<pre><code>newexception    创建一个新的, 空的异常对象
+setextype       设置异常类别 (nqp::const::CONTROL_*)
+setmessage      设置异常信息 (string)
+setpayload      设置异常有效负载(object)
+throw           抛出异常对象
+die             执行/抛出带有字符串信息的异常
+</code></pre>
+
+<p>有一个更简单的方法来抛出一些常见的控制异常:</p>
+
+<pre><code>QAST::Op.new( :op('control'), :name('next') )
+</code></pre>
+
+<p>这里其它有效的名字有 <code>redo</code> 和 <code>last</code>。</p>
+
+<h2 id="处理异常">处理异常</h2>
+
+<p><code>handle</code> op 用于表示异常处理。 第一个孩子是用处理程序保护的代码。 然后处理程序被指定为一个字符串, 指定要处理的异常的类型, 后面跟着要运行的 QAST 来处理它。</p>
+
+<p>NQP 和 Rakudo 保留每个块 <code>%*HANDLERS</code>, 并且当块被完全解析时在块外面构建它的 <code>handle</code> op。</p>
+
+<pre><code>my $ast := $&lt;statementlist&gt;.ast;
+if %*HANDLERS {
+    $ast := QAST::Op.new( :op('handle'), $ast );
+    for %*HANDLERS {
+        $past.push($_.key);
+        $past.push($_.value);
+    }
+}
+</code></pre>
+
+<h2 id="使用异常对象">使用异常对象</h2>
+
+<p>在处理程序内, 可以使用以下操作。 除了第一个之外, 他们都接受一个异常对象。</p>
+
+<pre><code>exception       获取当前的异常对象
+getextype       获取异常类别 (nqp::const::CONTROL_*)
+getmessage      获取异常信息 (string)
+getpayload      获取异常有效负载 (object)
+rethrow         重新抛出异常
+resume          如果可能的话, 恢复异常
+</code></pre>
+
+<p>最后, 还有两个与回溯相关的操作; <code>backtrace</code> 返回一个散列数组, 每个散列描述一个回溯条目, <code>backtracestrings</code> 只返回一个描述条目的字符串数组。</p>
+
+<h2 id="上下文自省">上下文自省</h2>
+
+<p>可以使用各种操作来对词法作用域中的符号进行内省, 或者遍历动态(调用者)或静态(词法的)作用域链。 它们通常用于实现诸如 Raku 中的 <code>CALLER</code> 和 <code>OUTER</code> 伪包功能。</p>
+
+<pre><code>ctx             获取一个代表当前上下文的对象
+ctxouter        接收一个上下文并返回它的外部上下文或 null
+ctxcaller       接收一个上下文并返回它的调用者上下文或 null
+ctxlexpad       接收一个上下文并返回它的 lexpad
+curlexpad       获取当前的 lexpad
+lexprimspec     给定一个 lexpad 和 名字, 获取名字的原始类型
+</code></pre>
+
+<p>lexpad 本身可以与适当的散列操作(<code>atkey</code>, <code>bindkey</code>)一起使用, 以操作其中包含的符号。</p>
+
+<h2 id="大整数">大整数</h2>
+
+<p>Raku 需要大的整数支持其 <code>Int</code> 类型。 因此, 它在 NQP 操作中提供。 大整数操作仅对具有 <code>P6bigint</code> 表示(明天更多地表示)的对象有效, 或者对其进行封装。</p>
+
+<p>具有大整数结果的那些操作与它们的原生亲属不同, 通过采用额外的操作数(这是结果的类型对象)。
+下面的来自于 Raku 设置的 <code>mult</code>s 说明了这一点。</p>
+
+<pre><code>multi infix:&lt;+&gt;(Int:D \a, Int:D \b) returns Int:D {
+    nqp::add_I(nqp::decont(a), nqp::decont(b), Int);
+}
+multi infix:&lt;+&gt;(int $a, int $b) returns int {
+    nqp::add_i($a, $b)
+}
+</code></pre>
+
+<p><code>_I</code> 后缀用于大整数 ops.</p>
+
+<h2 id="练习-6">练习 6</h2>
+
+<p>如果时间允许, 您可以通过添加对 PHPish 的支持来探索一些 nqp::ops(按顺序, 或选择你觉得最有趣的):</p>
+
+<ul>
+<li>基本的数字关系运算 (<code>&lt;</code>, <code>&gt;</code>, <code>==</code>, etc.)</li>
+<li><code>if</code>/<code>else if</code>/<code>else</code></li>
+<li><code>while</code> 循环</li>
+</ul>
+
+<p>参见练习表得到一些提示。</p>
+
+<h2 id="今天就到这儿了">今天就到这儿了</h2>
+
+<p>今天, 我们已经涉及了很多领域, 从 NQP 语言开始, 然后建立如何使用它来实现一个简单的编译器。</p>
+
+<p>这是一个好的开始, 但我们仍然缺少几个 NQP 和 Rakudo 严重依赖的非常重要的部分。这包括对象和序列化上下文的概念。 我们明天再来看看。</p>
+
+<p>还有什么问题吗?</p>
+
+<p>(修理)</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/nqp/">NQP</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-12-31-raku-tips-%E5%88%9B%E5%BB%BA%E5%8F%AF%E9%87%8D%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" data-toggle="tooltip" data-placement="top" title="Raku Tips - 创建可重用的数据类型">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-01-02-stackoverflow/" data-toggle="tooltip" data-placement="top" title="2017 StackOverFlow-sort,deepmap,flat">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

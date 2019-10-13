@@ -233,11 +233,11 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         <p>这一年即将结束，我们有很多值得庆祝的事情！与家人和朋友相比，庆祝今年年底更好的方式是什么？为了帮助实现这一目标，在我家，我们决定开办秘密圣诞老人游戏！所以，我的目标是写一个秘密圣诞老人计划！这就是我可以使用这个名为<a href="https://github.com/FCO/Red">Red的</a>精彩项目的地方。</p>
 
-<p><a href="https://github.com/FCO/Red">Red</a>是一个仍在开发中的<strong>perl6</strong>的<em>ORM</em> （对象关系模型），尚未作为模块发布。但它正在增长，而且接近发布。</p>
+<p><a href="https://github.com/FCO/Red">Red</a>是一个仍在开发中的<strong>raku</strong>的<em>ORM</em> （对象关系模型），尚未作为模块发布。但它正在增长，而且接近发布。</p>
 
 <p>因此，让我们创建我们的第一张桌子：一张桌子，用于存储参与我们的秘密圣诞老人的人。代码：</p>
 
-<pre><code class="language-perl6">use Red;
+<pre><code class="language-raku">use Red;
 
 model Person {
    has UInt     $.id        is serial;
@@ -287,7 +287,7 @@ Person.^create: :name&lt;Sophia&gt;;
 
 <p>这将运行：</p>
 
-<pre><code class="language-perl6">CREATE TABLE person(
+<pre><code class="language-raku">CREATE TABLE person(
     id integer NOT NULL primary key AUTOINCREMENT,
     name varchar(255) NOT NULL,
     email varchar(255) NULL
@@ -298,7 +298,7 @@ Person.^create: :name&lt;Sophia&gt;;
 
 <p>它运行：</p>
 
-<pre><code class="language-perl6">INSERT INTO person(
+<pre><code class="language-raku">INSERT INTO person(
     email,
     name
 ) VALUES(
@@ -311,7 +311,7 @@ Person.^create: :name&lt;Sophia&gt;;
 
 <p>在我们的示例中，<code>Person.^all.grep(*.email.defined).map: *.name</code>将运行如下查询：</p>
 
-<pre><code class="language-perl6">SELECT
+<pre><code class="language-raku">SELECT
     person.name
 FROM
     person
@@ -329,7 +329,7 @@ Aline
 
 <p>让我们修改代码，使其为参与秘密圣诞老人的每个人保存心愿单：</p>
 
-<pre><code class="language-perl6">use Red;
+<pre><code class="language-raku">use Red;
 
 model Person { ... }
 
@@ -355,7 +355,7 @@ Person.^create-table;
 
 my \fernando = Person.^create: :name&lt;Fernando&gt;, :email&lt;fco@aco.com&gt;;
 fernando.wishes.create: :name&lt;Comma&gt;,          :link&lt;https://commaide.com&gt;;
-fernando.wishes.create: :name(&quot;perl6 books&quot;),  :link&lt;https://perl6book.com&gt;;
+fernando.wishes.create: :name(&quot;raku books&quot;),  :link&lt;https://rakubook.com&gt;;
 fernando.wishes.create: :name(&quot;mac book pro&quot;), :link&lt;https://www.apple.com/shop/buy-mac/macbook-pro/15-inch-space-gray-2.6ghz-6-core-512gb#&gt;;
 
 my \aline = Person.^create: :name&lt;Aline&gt;, :email&lt;aja@aco.com&gt;;
@@ -375,7 +375,7 @@ say &quot;\n{ .name }\n{ .wishes.map({&quot; { .name } =&gt; { .link }&quot; }).
 
 <pre><code>Fernando
     Comma =&gt; https://commaide.com
-    perl6 books =&gt; https://perl6book.com
+    raku books =&gt; https://rakubook.com
     mac book pro =&gt; https://www.apple.com/shop/buy-mac/macbook-pro/15-inch-space-gray-2.6ghz-6-core-512gb#
 
 Aline
@@ -393,7 +393,7 @@ Sophia
 
 <p>让我们看看这个表是如何创建的：</p>
 
-<pre><code class="language-perl6">CREATE TABLE wishlist(
+<pre><code class="language-raku">CREATE TABLE wishlist(
    id integer NOT NULL primary key,
    name varchar(255) NOT NULL,
    link varchar(255) NULL,
@@ -409,7 +409,7 @@ Sophia
 
 <p>我们之前创建了一个新的  <em>Person</em>  ：  <code>my \fernando = Person.^create: :name&lt;Fernando&gt;, :email&lt;fco@aco.com&gt;;</code> 现在我们可以使用*关系*（<strong>愿望</strong>）来创建一个新的愿望（）。这为Fernando运行以下SQL创建了一个新的愿望：<code>fernando.wishes.create: :name&lt;Comma&gt;, :link&lt;https://commaide.com&amp;gt;</code></p>
 
-<pre><code class="language-perl6">INSERT INTO wishlist(
+<pre><code class="language-raku">INSERT INTO wishlist(
    name,
    link,
    wisher_id
@@ -428,7 +428,7 @@ Sophia
 
 <p>哦，我们可以拯救谁参与&hellip;&hellip;得到他们想要的东西&hellip;&hellip;但是平局？我应该送谁礼物？为此，我们再次更改程序：</p>
 
-<pre><code class="language-perl6">use lib &lt;lib&gt;;
+<pre><code class="language-raku">use lib &lt;lib&gt;;
 use Red;
 
 model Person { ... }
@@ -469,7 +469,7 @@ Person.^create-table;
 
 my \fernando = Person.^create: :name&lt;Fernando&gt;, :email&lt;fco@aco.com&gt;;
 fernando.wishes.create: :name&lt;Comma&gt;,            :link&lt;https://commaide.com&gt;;
-fernando.wishes.create: :name(&quot;perl6 books&quot;),    :link&lt;https://perl6book.com&gt;;
+fernando.wishes.create: :name(&quot;raku books&quot;),    :link&lt;https://rakubook.com&gt;;
 fernando.wishes.create: :name(&quot;mac book pro&quot;),   :link&lt;https://www.apple.com/shop/buy-mac/macbook-pro/15-inch-space-gray-2.6ghz-6-core-512gb#&gt;;
 
 my \aline = Person.^create: :name&lt;Aline&gt;, :email&lt;aja@aco.com&gt;;
@@ -508,14 +508,14 @@ ORDER BY
 Aline -&gt; Fernanda
 	Wishlist: mimikyu plush, camelia plush
 Fernanda -&gt; Fernando
-	Wishlist: COMMA, perl6 books, mac book pro
+	Wishlist: COMMA, raku books, mac book pro
 Sophia -&gt; Aline
 	Wishlist: a new closet
 </code></pre>
 
 <p>作为奖励，让我们看一下Red将要跟随的曲目。这是当前的工作代码：</p>
 
-<pre><code class="language-perl6">use Red;
+<pre><code class="language-raku">use Red;
 
 model Person {
    has UInt     $.id        is id;
@@ -559,7 +559,7 @@ Sophia
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -571,7 +571,7 @@ Sophia
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-12-20-perl6%E4%B8%AD%E7%9A%84%E5%91%BD%E9%A2%98%E7%BB%84%E5%90%88/" data-toggle="tooltip" data-placement="top" title="第二十天 - Perl 6 中的命题组合">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-20-raku%E4%B8%AD%E7%9A%84%E5%91%BD%E9%A2%98%E7%BB%84%E5%90%88/" data-toggle="tooltip" data-placement="top" title="第二十天 - Raku 中的命题组合">&larr; Previous Post</a>
             </li>
           
           

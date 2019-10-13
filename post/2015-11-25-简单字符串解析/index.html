@@ -8,12 +8,12 @@
   <title>简单字符串解析</title>
   <meta property="og:title" content="简单字符串解析" />
   <meta name="twitter:title" content="简单字符串解析" />
-  <meta name="description" content="简单字符串解析 我已经以好几种方式使用 Perl 6 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:
+  <meta name="description" content="简单字符串解析 我已经以好几种方式使用 Raku 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:
 grammar String::Simple::Grammar { our $quote; rule TOP {^ &lt;string&gt; $} # Note for now, {} gets around a rakudo binding issue token string { &lt;quote&gt; {} :temp $quote = $&lt;quote&gt;; &lt;quotebody&gt; $&lt;quote&gt; } token quote { &#39;&quot;&#39; | &quot;&#39;&quot; } token quotebody { ( &lt;escaped&gt; | &lt;!before $quote&gt; . )* } token escaped { &#39;\\&#39; ( $quote | &#39;\\&#39; ) } } class String::Simple::Actions { method TOP($/) { make $&lt;string&gt;.">
-  <meta property="og:description" content="简单字符串解析 我已经以好几种方式使用 Perl 6 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:
+  <meta property="og:description" content="简单字符串解析 我已经以好几种方式使用 Raku 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:
 grammar String::Simple::Grammar { our $quote; rule TOP {^ &lt;string&gt; $} # Note for now, {} gets around a rakudo binding issue token string { &lt;quote&gt; {} :temp $quote = $&lt;quote&gt;; &lt;quotebody&gt; $&lt;quote&gt; } token quote { &#39;&quot;&#39; | &quot;&#39;&quot; } token quotebody { ( &lt;escaped&gt; | &lt;!before $quote&gt; . )* } token escaped { &#39;\\&#39; ( $quote | &#39;\\&#39; ) } } class String::Simple::Actions { method TOP($/) { make $&lt;string&gt;.">
-  <meta name="twitter:description" content="简单字符串解析 我已经以好几种方式使用 Perl 6 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:
-grammar String::Simple::Grammar { our $quote; rule TOP {^ &lt;string&gt; $} # Note for now, {} gets …">
+  <meta name="twitter:description" content="简单字符串解析 我已经以好几种方式使用 Raku 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:
+grammar String::Simple::Grammar { our $quote; rule TOP {^ &lt;string&gt; $} # Note for now, {} gets around …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -211,7 +211,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (289 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (288 words)
   
   
 </span>
@@ -234,9 +234,9 @@ if (!doNotTrack) {
 
 <h2 id="简单字符串解析">简单字符串解析</h2>
 
-<p>我已经以好几种方式使用 Perl 6 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:</p>
+<p>我已经以好几种方式使用 Raku 解析用引号引起的字符串了。 但是我想知道有没有更好更干净的方法。下面有一个为引起的字符串准备的小型 grammar 而且还有一些测试:</p>
 
-<pre><code class="language-perl6">grammar String::Simple::Grammar {
+<pre><code class="language-raku">grammar String::Simple::Grammar {
     our $quote;
 
     rule TOP {^ &lt;string&gt; $}
@@ -276,7 +276,7 @@ is $grammar.parse(q{&quot;f\\\\oo&quot;}, :$actions).made, &quot;f\\oo&quot;, &q
 
 <p>另外一个版本:</p>
 
-<pre><code class="language-perl6">grammar String::Simple::Grammar {
+<pre><code class="language-raku">grammar String::Simple::Grammar {
     rule TOP {^ &lt;string&gt; $}
     # Note for now, {} gets around a rakudo binding issue
     token string { &lt;quote&gt; {} &lt;quotebody($&lt;quote&gt;)&gt; $&lt;quote&gt; }
@@ -300,7 +300,7 @@ class String::Simple::Actions {
 <li>更简单版本的 <code>quotebody</code> 方法使用了一元的点号和 <code>//</code> 用于定义。</li>
 </ul>
 
-<p><a href="https://www.reddit.com/r/perl6/comments/4snhqr/simple_string_parsing/">原文</a></p>
+<p><a href="https://www.reddit.com/r/raku/comments/4snhqr/simple_string_parsing/">原文</a></p>
 
 
         
@@ -323,7 +323,7 @@ class String::Simple::Actions {
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2015-11-25-%E6%89%A9%E5%B1%95perl6%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B/" data-toggle="tooltip" data-placement="top" title="扩展 Perl 6 中的类型">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2015-11-25-%E6%89%A9%E5%B1%95raku%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B/" data-toggle="tooltip" data-placement="top" title="扩展 Raku 中的类型">Next Post &rarr;</a>
             </li>
           
         </ul>

@@ -5,12 +5,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>第一天 - 移植 Vigilance, 将 Perl 6 与标准工具集成在一起</title>
-  <meta property="og:title" content="第一天 - 移植 Vigilance, 将 Perl 6 与标准工具集成在一起" />
-  <meta name="twitter:title" content="第一天 - 移植 Vigilance, 将 Perl 6 与标准工具集成在一起" />
-  <meta name="description" content="Porting Vigilance, integrating Perl 6 with standard tools">
-  <meta property="og:description" content="Porting Vigilance, integrating Perl 6 with standard tools">
-  <meta name="twitter:description" content="Porting Vigilance, integrating Perl 6 with standard tools">
+  <title>第一天 - 移植 Vigilance, 将 Raku 与标准工具集成在一起</title>
+  <meta property="og:title" content="第一天 - 移植 Vigilance, 将 Raku 与标准工具集成在一起" />
+  <meta name="twitter:title" content="第一天 - 移植 Vigilance, 将 Raku 与标准工具集成在一起" />
+  <meta name="description" content="Porting Vigilance, integrating Raku with standard tools">
+  <meta property="og:description" content="Porting Vigilance, integrating Raku with standard tools">
+  <meta name="twitter:description" content="Porting Vigilance, integrating Raku with standard tools">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -198,10 +198,10 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>第一天 - 移植 Vigilance, 将 Perl 6 与标准工具集成在一起</h1>
+              <h1>第一天 - 移植 Vigilance, 将 Raku 与标准工具集成在一起</h1>
                 
                   
-                    <h2 class="post-subheading">Porting Vigilance, integrating Perl 6 with standard tools</h2>
+                    <h2 class="post-subheading">Porting Vigilance, integrating Raku with standard tools</h2>
                   
                 
                 
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (852 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (840 words)
   
   
 </span>
@@ -233,9 +233,9 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="移植-vigilance-将perl-6与标准工具集成在一起">移植 Vigilance，将Perl 6与标准工具集成在一起</h1>
+<h1 id="移植-vigilance-将raku与标准工具集成在一起">移植 Vigilance，将Raku与标准工具集成在一起</h1>
 
-<p>大家好，今天我们将采用基础设施脚本并将其从Perl 5移植到Perl 6.本文基于James Clark的一对帖子，你可以在这里找到：</p>
+<p>大家好，今天我们将采用基础设施脚本并将其从Perl 5移植到Raku.本文基于James Clark的一对帖子，你可以在这里找到：</p>
 
 <ul>
 <li><a href="http://blog.lazycat.com.au/2014/05/integrating-integrity-part-1.html">第1部分</a></li>
@@ -244,7 +244,7 @@ if (!doNotTrack) {
 
 <p>此脚本用于创建和验证MD5总和。 这些是128位值，可用于验证数据完整性。 虽然MD5已经被证明在防范恶意行为者方面不安全，但它对于检测磁盘损坏仍然很有用。</p>
 
-<p>Perl 6生态系统正在发展，其中包含多种工具，这些工具可以从Perl 5 CPAN移植，也可以替代。 我将介绍原始脚本和移植的几个方面，并说明我为什么要进行一些特定的更改。 希望这会鼓励你出去移植你自己的小脚本。</p>
+<p>Raku生态系统正在发展，其中包含多种工具，这些工具可以从Perl 5 CPAN移植，也可以替代。 我将介绍原始脚本和移植的几个方面，并说明我为什么要进行一些特定的更改。 希望这会鼓励你出去移植你自己的小脚本。</p>
 
 <h2 id="shebang-和导入">Shebang 和导入</h2>
 
@@ -265,9 +265,9 @@ use File::Basename;
 use Data::Dumper;
 </code></pre>
 
-<p>Perl 6默认启用了警告和限制，并且内置了Unicode支持，因此我们可以将其保留。 Data::Dumper也已经实现，它具有非常有用的IO功能。 将所有这些加在一起我们可以得到一个非常精益的标头：</p>
+<p>Raku默认启用了警告和限制，并且内置了Unicode支持，因此我们可以将其保留。 Data::Dumper也已经实现，它具有非常有用的IO功能。 将所有这些加在一起我们可以得到一个非常精益的标头：</p>
 
-<pre><code class="language-perl6">#!/usr/bin/env perl6
+<pre><code class="language-raku">#!/usr/bin/env raku
 use v6;
 
 use Digest::MD5;
@@ -284,9 +284,9 @@ my %opts = ( 'blocksize' =&gt; 16384 );
 GetOptions(\%opts, &quot;verify=s&quot;, &quot;create=s&quot;, &quot;update=s&quot;, &quot;files&quot;, &quot;blocksize=s&quot;, &quot;help!&quot;);
 </code></pre>
 
-<p>在Perl 6中，我们可以直接在MAIN方法中定义命令行选项。 我们使用多个调度来根据传递的参数来控制脚本的执行：</p>
+<p>在Raku中，我们可以直接在MAIN方法中定义命令行选项。 我们使用多个调度来根据传递的参数来控制脚本的执行：</p>
 
-<pre><code class="language-perl6">multi MAIN (Str :$create, *@files where { so @files }) { ... }
+<pre><code class="language-raku">multi MAIN (Str :$create, *@files where { so @files }) { ... }
 multi MAIN (Str :$update, *@files) { ... }
 multi MAIN (Str :$verify, *@files) { ... }
 multi MAIN (*@files where { so @files }) { ... }
@@ -294,12 +294,12 @@ multi MAIN (*@files where { so @files }) { ... }
 
 <p>这也意味着我们不必定义帮助选项/sub，因为我们可以文档化我们的MAIN子例程，因此：</p>
 
-<pre><code class="language-perl6">#| Verify the MD5 sums in a file that conforms to md5sum output:
+<pre><code class="language-raku">#| Verify the MD5 sums in a file that conforms to md5sum output:
 #|   
 multi MAIN (Str :$verify, *@files) { ... }
 </code></pre>
 
-<p>您可能已经注意到Perl 6版本没有定义blocksize选项，我将回过头来看看。</p>
+<p>您可能已经注意到Raku版本没有定义blocksize选项，我将回过头来看看。</p>
 
 <h2 id="io-读写文件">IO: 读写文件</h2>
 
@@ -307,7 +307,7 @@ multi MAIN (Str :$verify, *@files) { ... }
 
 <p>一些基本的IO，我们使用正则表达式来解析每一行。 使用有意义的空格有助于保持每个正则表达式相当简洁：</p>
 
-<pre><code class="language-perl6">sub load_md5sum_file
+<pre><code class="language-raku">sub load_md5sum_file
 {
 	my ($filename) = @_;
 	my @plan;
@@ -342,9 +342,9 @@ multi MAIN (Str :$verify, *@files) { ... }
 }
 </code></pre>
 
-<p>Perl 6允许我们验证我们是否通过签名传递了实际存在的文件。 此外，我们用 grammar 替换正则表达式，如果需要，我们可以在脚本的不同位置使用该 grammar：</p>
+<p>Raku允许我们验证我们是否通过签名传递了实际存在的文件。 此外，我们用 grammar 替换正则表达式，如果需要，我们可以在脚本的不同位置使用该 grammar：</p>
 
-<pre><code class="language-perl6">grammar MD5SUM {
+<pre><code class="language-raku">grammar MD5SUM {
 	token TOP        { &lt;md5&gt; &lt;spacer&gt; &lt;filehandle&gt; }
 	token md5        { &lt;xdigit&gt; ** 32 }
 	token spacer     { \s+ }
@@ -400,9 +400,9 @@ sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
 }
 </code></pre>
 
-<p>值得注意的是，Perl 6默认以Unicode格式写入文件：</p>
+<p>值得注意的是，Raku默认以Unicode格式写入文件：</p>
 
-<pre><code class="language-perl6">sub save-md5sum-file (Str $filehandle, @plans) {
+<pre><code class="language-raku">sub save-md5sum-file (Str $filehandle, @plans) {
 	my $io = $filehandle.IO.open: :w;
 
 	WRITE: for @plans -&gt; $plan {
@@ -451,9 +451,9 @@ sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
 }
 </code></pre>
 
-<p>Perl 6版本使用纯Perl并且缺少添加功能，因此我使用微调器而不是进度条。 我们还需要专门设置我们的编码，以避免在将二进制数据读取为Unicode时出现的错误：</p>
+<p>Raku版本使用纯Perl并且缺少添加功能，因此我使用微调器而不是进度条。 我们还需要专门设置我们的编码，以避免在将二进制数据读取为Unicode时出现的错误：</p>
 
-<pre><code class="language-perl6">sub calc-md5-sum (MD5Plan $plan) {
+<pre><code class="language-raku">sub calc-md5-sum (MD5Plan $plan) {
     my $md5 = Digest::MD5.new;
 
     print &quot;Calculating MD5 sum for { $plan.filehandle }       &quot;; # We need some space for the spinner to take up.
@@ -482,13 +482,13 @@ sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
 
 <h2 id="结束之前的思考">结束之前的思考</h2>
 
-<p>我没有在我的系统上使用Perl 6版本因为Digest::MD5的低性能，在我的系统上我用md5sum调用替换它。 其他可能性是使用Inline::Perl5和Perl 5版本的Digest::MD5，或使用惊人的Perl 6原生调用接口来运行C实现。 我希望这篇文章能激发您将一些自己的Perl 5脚本移植到Perl 6，或者至少为您提供一些命令行交互的技巧。</p>
+<p>我没有在我的系统上使用Raku版本因为Digest::MD5的低性能，在我的系统上我用md5sum调用替换它。 其他可能性是使用Inline::Perl5和Perl 5版本的Digest::MD5，或使用惊人的Raku原生调用接口来运行C实现。 我希望这篇文章能激发您将一些自己的Perl 5脚本移植到Raku，或者至少为您提供一些命令行交互的技巧。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         

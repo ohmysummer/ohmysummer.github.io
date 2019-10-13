@@ -219,7 +219,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 11 minutes (2222 words)
+  <i class="fa fa-clock-o"></i> 11 minutes (2203 words)
   
   
 </span>
@@ -228,12 +228,13 @@ if (!doNotTrack) {
               <div class="post-entry">
                 
                   原生调用接口 入门指南 能想象出的最简单的 NativeCall 用法应该类似于这样的东西：
-use NativeCall; sub some_argless_function() is native('something') { * } some_argless_function();  第一行导入了各种 traits 和类型，接下来的一行看起来很像相对普通的 Perl 6 子例程声明 - 稍微有点变化。我们使用native这个 trait 是为了指定这个 sub 子例程实际上被定义在原生库中。Perl 6 会给你添加特定平台的扩展名（比如 .so 或者 .dll）还有任何惯常的前缀(例如: &lsquo;lib&rsquo;)。
+use NativeCall; sub some_argless_function() is native('something') { * } some_argless_function();  第一行导入了各种 traits 和类型，接下来的一行看起来很像相对普通的 Raku 子例程声明 - 稍微有点变化。我们使用native这个 trait 是为了指定这个 sub 子例程实际上被定义在原生库中。Raku 会给你添加特定平台的扩展名（比如 .so 或者 .dll）还有任何惯常的前缀(例如: &lsquo;lib&rsquo;)。
 当你第一次调用 “some_argless_function” 时，“libsomething” 将会被加载，然后会在 libsomething 库中定位到 “some_argless_function” 函数，接下来将会进行一次调用。之后的调用将会更快，因为符号句柄会被保留。
-当然，大部分的函数都会接受参数或者返回值 - 但是你可以做的其他事情只是增加了这个声明Perl 6 sub的简单模式
-但是一切你需要做的就是增加这个简单的模式，通过声明一个 Perl 6 的过程、在符号后面指出你想要调用的名字，并且使用 “native” trait。
-改变名字 有时你想要 Perl 6 子例程的名字和加载库中使用的名字不同，可能这个名字很长, 或者有不同的大小写或者在你想要创建的模块的上下文中, 这个名字很繁琐。
-NativeCall 为你提供了一个 symbol trait 以指定库中原生子例程的名字, 这个名字和你的 Perl 6 子例程名字不同。
+当然，大部分的函数都会接受参数或者返回值 - 但是你可以做的其他事情只是增加了这个声明Raku sub的简单模式
+但是一切你需要做的就是增加这个简单的模式，通过声明一个 Raku 的过程、在符号后面指出你想要调用的名字，并且使用 “native” trait。
+改变名字 有时你想要 Raku 子例程的名字和加载库中使用的名字不同，可能这个名字很长, 或者有不同的大小写或者在你想要创建的模块的上下文中, 这个名字很繁琐。
+NativeCall 为你提供了一个 symbol trait 以指定库中原生子例程的名字, 这个名字和你的 Raku 子例程名字不同。
+module Foo; use NativeCall; our sub init() is native('foo') is symbol('FOO_INIT') { * }  在 libfoo 库里面有一个子例程叫 FOO_INIT，因为我们创建了一个模块叫做 Foo，我们更愿意使用 Foo::init 调用子例程，我们使用 symbol trait 来指定在 libfoo 库名字符号的名字，然后以任何我们想要的方式调用这个子例程（这里是 “init”）。
                   <a href="https://ohmysummer.github.io/post/2018-11-12-perl6-native-call-interface/" class="post-read-more">[Read More]</a>
                 
               </div>

@@ -12,12 +12,12 @@
     
     
     <item>
-      <title>在 Perl 6 中异步地执行外部程序</title>
-      <link>https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/</link>
+      <title>在 Raku 中异步地执行外部程序</title>
+      <link>https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8raku%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/</link>
       <pubDate>Thu, 14 May 2015 00:00:00 +0000</pubDate>
       
-      <guid>https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/</guid>
-      <description>Execute an external program with timeout in Perl6
+      <guid>https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8raku%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/</guid>
+      <description>Execute an external program with timeout in Raku
 Proc::Async 允许我们异步地执行外部程序。
 my $proc = Proc::Async.new(&amp;quot;curl&amp;quot;, &amp;quot;-s&amp;quot;, &amp;quot;-o&amp;quot;, &amp;quot;index.html&amp;quot;, &amp;quot;http://www.cpan.org&amp;quot;); my $res = await $proc.start;  我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
 class Proc::Async::Timeout is Proc::Async { has $.timeout is rw; method start($self: |) { return callsame unless $.timeout; my $killer = Promise.in($.timeout).then: { $self.kill }; my $promise = callsame; Promise.anyof($promise, $killer).then: { $promise.result }; } } my $proc = Proc::Async::Timeout.new(&amp;quot;perl&amp;quot;, &amp;quot;-E&amp;quot;, &amp;quot;sleep 5; warn &#39;end&#39;&amp;quot;); $proc.</description>

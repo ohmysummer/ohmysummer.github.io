@@ -237,7 +237,7 @@ if (!doNotTrack) {
 
 <p>第一个小的改变: when 的开关行为不仅仅是用于 given 块儿中的, 而是可以用在任何&rdquo;主题化&rdquo;的块儿中的, 例如 for 循环中或接收 <code>$_</code>作为参数的子例程中。</p>
 
-<pre><code class="language-perl6">given $answer {
+<pre><code class="language-raku">given $answer {
     when &quot;Atlantis&quot; { say &quot;那是对的&quot; }
     default { say &quot;BZZZZZZZZZZZZZ!&quot; }
 }
@@ -259,7 +259,7 @@ sub expand($_) {
 
 <p>但是甚至不接受 <code>$_</code>作为参数的子例程也得到了它们自己的词法变量 <code>$_</code>供修改。所以规则就是&rdquo;现在, 在 $_ 中有某些我能启动的好东西吗&rdquo;。如果我们想要, 我们甚至能自己设置 <code>$_</code>。</p>
 
-<pre><code class="language-perl6">sub seek-the-answer() {
+<pre><code class="language-raku">sub seek-the-answer() {
     $_ = (^100).pick;
     when 42 { say &quot;The answer&quot; }
     default { say &quot;A number&quot;   }
@@ -272,7 +272,7 @@ sub expand($_) {
 
 <p>我很确信你没有在野外见过这种用法。但它有时候特别有用:</p>
 
-<pre><code class="language-perl6">when * &gt; 2 {
+<pre><code class="language-raku">when * &gt; 2 {
     when 4  { say 'Four!' }
     default { say 'huge'  }
 }
@@ -283,7 +283,7 @@ default {
 
 <p>你可能记得, 在 when 块儿中有一个隐式的 <em>succeed</em> 语句在末尾, 这让周围的主题化块退出。(意思是你不必记着手动退出 switch 语句)。 如果你想重写 succeed 语句并继续通过 when block, 那么你在 <em>when</em> block 的末尾写上一个显式的 <em>proceed</em> 即可。</p>
 
-<pre><code class="language-perl6">given $verse-number {
+<pre><code class="language-raku">given $verse-number {
     when * &gt;= 12 { say &quot;Twelve drummers drumming&quot;; proceed }
     when * &gt;= 11 { say &quot;Eleven pipers piping&quot;; proceed     }
     # ...

@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 18 minutes (3736 words)
+  <i class="fa fa-clock-o"></i> 18 minutes (3728 words)
   
   
 </span>
@@ -237,16 +237,16 @@ if (!doNotTrack) {
 
 <h2 id="词法约定">词法约定</h2>
 
-<p>Perl 6 正则表达式有特殊的写法:</p>
+<p>Raku 正则表达式有特殊的写法:</p>
 
-<pre><code class="language-perl6">m/abc/;         # a regex that is immediately matched against $_ 
+<pre><code class="language-raku">m/abc/;         # a regex that is immediately matched against $_ 
 rx/abc/;        # a Regex object 
 /abc/;          # a Regex object 
 </code></pre>
 
 <p>对于前两个例子,  分隔符还能用除了斜线之外的其它字符:</p>
 
-<pre><code class="language-perl6">m{abc};
+<pre><code class="language-raku">m{abc};
 rx{abc};
 </code></pre>
 
@@ -254,27 +254,27 @@ rx{abc};
 
 <p>空白符在正则表达式中通常被忽略(带有 <code>:s</code> 或 <code>:sigspace</code> 副词的正则表达式除外)。</p>
 
-<p>通常, 对于 Perl 6 来说, 正则表达式中的注释以 <code>#</code> 号开头, 直至行尾。</p>
+<p>通常, 对于 Raku 来说, 正则表达式中的注释以 <code>#</code> 号开头, 直至行尾。</p>
 
 <h2 id="字面值">字面值</h2>
 
 <p>正则表达式最简单的情况是匹配字符串字面值。</p>
 
-<pre><code class="language-perl6">if 'properly' ~~ m/ perl / {
+<pre><code class="language-raku">if 'properly' ~~ m/ perl / {
     say &quot;'properly' contains 'perl'&quot;;
 }
 </code></pre>
 
 <p>字母数字和下划线 <code>_</code> 按字面值匹配。所有其它字符要么使用反斜线转义(例如, <code>\:</code> 匹配一个冒号), 要么用引号引起来:</p>
 
-<pre><code class="language-perl6">/ 'two words' /;     # matches 'two words' including the blank 
+<pre><code class="language-raku">/ 'two words' /;     # matches 'two words' including the blank 
 / &quot;a:b&quot;       /;     # matches 'a:b' including the colon 
 / '#' /;             # matches a hash character 
 </code></pre>
 
 <p>字符串是从左往右搜索的, 所以如果只有部分字符串匹配正则表达式也足够:</p>
 
-<pre><code class="language-perl6">if 'abcdef' ~~ / de / {
+<pre><code class="language-raku">if 'abcdef' ~~ / de / {
     say ~$/;            # OUTPUT: «de␤» 
     say $/.prematch;    # OUTPUT: «abc␤» 
     say $/.postmatch;   # OUTPUT: «f␤» 
@@ -283,7 +283,7 @@ rx{abc};
 };
 </code></pre>
 
-<p>匹配结果存储在 <code>$/</code> 变量中并且也从匹配中返回。如果匹配成功, 那么结果就是 <a href="https://docs.perl6.org/type/Match">Match</a> 类型, 否则它就是 <a href="https://docs.perl6.org/type/Nil">Nil</a></p>
+<p>匹配结果存储在 <code>$/</code> 变量中并且也从匹配中返回。如果匹配成功, 那么结果就是 <a href="https://docs.raku.org/type/Match">Match</a> 类型, 否则它就是 <a href="https://docs.raku.org/type/Nil">Nil</a></p>
 
 <h2 id="通配符和字符类">通配符和字符类</h2>
 
@@ -293,7 +293,7 @@ rx{abc};
 
 <p>所以,  这些都匹配:</p>
 
-<pre><code class="language-perl6">'perl' ~~ /per./;       # matches the whole string 
+<pre><code class="language-raku">'perl' ~~ /per./;       # matches the whole string 
 'perl' ~~ / per . /;    # the same; whitespace is ignored 
 'perl' ~~ / pe.l /;     # the . matches the r 
 'speller' ~~ / pe.l/;   # the . matches the first l 
@@ -301,7 +301,7 @@ rx{abc};
 
 <p>下面这个不匹配:</p>
 
-<pre><code class="language-perl6">'perl' ~~ /. per /;
+<pre><code class="language-raku">'perl' ~~ /. per /;
 </code></pre>
 
 <p>因为在目标字符串中 <code>per</code> 前面没有要匹配的字符。</p>
@@ -310,7 +310,7 @@ rx{abc};
 
 <h3 id="unicode-properties">Unicode properties</h3>
 
-<p>Perl 6 有 <code>\w</code> 形式的预定义字符类。大写形式是它的反面, <code>\W</code>。</p>
+<p>Raku 有 <code>\w</code> 形式的预定义字符类。大写形式是它的反面, <code>\W</code>。</p>
 
 <ul>
 <li>\d 和 \D</li>
@@ -318,7 +318,7 @@ rx{abc};
 
 <p><code>\d</code> 匹配单个数字(Unicode 属性 N) 而 <code>\D</code> 匹配单个不是数字的字符。</p>
 
-<pre><code class="language-perl6">'ab42' ~~ /\d/ and say ~$/;     # OUTPUT: «4␤» 
+<pre><code class="language-raku">'ab42' ~~ /\d/ and say ~$/;     # OUTPUT: «4␤» 
 'ab42' ~~ /\D/ and say ~$/;     # OUTPUT: «a␤» 
 </code></pre>
 
@@ -358,7 +358,7 @@ U+2001 EM QUAD
 
 <p><code>\s</code> 匹配单个空白符。 <code>\S</code> 匹配单个非空白符。</p>
 
-<pre><code class="language-perl6">if 'contains a word starting with &quot;w&quot;' ~~ / w \S+ / {
+<pre><code class="language-raku">if 'contains a word starting with &quot;w&quot;' ~~ / w \S+ / {
     say ~$/;        # OUTPUT: «word␤» 
 }
 </code></pre>
@@ -405,7 +405,7 @@ U+2029 PARAGRAPH SEPARATOR
 
 <p>预定义的 subrules:</p>
 
-<pre><code class="language-perl6">&lt;alnum&gt;   \w       'alpha' plus 'digit'
+<pre><code class="language-raku">&lt;alnum&gt;   \w       'alpha' plus 'digit'
 &lt;alpha&gt;   &lt;:L&gt;     Alphabetic characters
 &lt;blank&gt;   \h       Horizontal whitespace
 &lt;cntrl&gt;            Control characters
@@ -427,7 +427,7 @@ U+2029 PARAGRAPH SEPARATOR
 
 <p>要匹配一个 Unicode 属性:</p>
 
-<pre><code class="language-perl6">&quot;a&quot;.uniprop('Script');                 # OUTPUT: «Latin␤» 
+<pre><code class="language-raku">&quot;a&quot;.uniprop('Script');                 # OUTPUT: «Latin␤» 
 &quot;a&quot; ~~ / &lt;:Script&lt;Latin&gt;&gt; /;
 &quot;a&quot;.uniprop('Block');                  # OUTPUT: «Basic Latin␤» 
 &quot;a&quot; ~~ / &lt;:Block('Basic Latin')&gt; /;
@@ -496,14 +496,14 @@ Cn	Unassigned
 
 <p>使用圆括号将类别和一组类别分组也是可以的; 例如:</p>
 
-<pre><code class="language-perl6">'perl6' ~~ m{\w+(&lt;:Ll+:N&gt;)}  # OUTPUT: «0 =&gt; ｢6｣␤» 
+<pre><code class="language-raku">'raku' ~~ m{\w+(&lt;:Ll+:N&gt;)}  # OUTPUT: «0 =&gt; ｢6｣␤» 
 </code></pre>
 
 <h3 id="可枚举的字符类和区间">可枚举的字符类和区间</h3>
 
 <p>有时候, 预先存在的通配符和字符类不够用。幸运的是, 定义你自己的字符类相当简单。在 <code>&lt;[]&gt;</code> 中, 你可以放入任何数量的单个字符和字符区间(两个端点之间有两个点号), 带有或不带有空白。</p>
 
-<pre><code class="language-perl6">&quot;abacabadabacaba&quot; ~~ / &lt;[ a .. c 1 2 3 ]&gt; /;
+<pre><code class="language-raku">&quot;abacabadabacaba&quot; ~~ / &lt;[ a .. c 1 2 3 ]&gt; /;
 # Unicode hex codepoint range 
 &quot;ÀÁÂÃÄÅÆ&quot; ~~ / &lt;[ \x[00C0] .. \x[00C6] ]&gt; /;
 # Unicode named codepoint range 
@@ -512,7 +512,7 @@ Cn	Unassigned
 
 <p>在 <code>&lt;&gt;</code> 中你可以使用 <code>+</code> 或 <code>-</code> 来添加或移除多个区间定义, 甚至混合某些上面的 unicode 属性。你还可以在 <code>[]</code> 之间写上反斜线形式的字符类。</p>
 
-<pre><code class="language-perl6">/ &lt;[\d] - [13579]&gt; /;
+<pre><code class="language-raku">/ &lt;[\d] - [13579]&gt; /;
 # starts with \d and removes odd ASCII digits, but not quite the same as 
 / &lt;[02468]&gt; /;
 # because the first one also contains &quot;weird&quot; unicodey digits 
@@ -520,14 +520,14 @@ Cn	Unassigned
 
 <p>解析引号分割的字符串的一个常见模式涉及到对字符类取反:</p>
 
-<pre><code class="language-perl6">say '&quot;in quotes&quot;' ~~ / '&quot;' &lt;-[ &quot; ]&gt; * '&quot;'/;
+<pre><code class="language-raku">say '&quot;in quotes&quot;' ~~ / '&quot;' &lt;-[ &quot; ]&gt; * '&quot;'/;
 </code></pre>
 
-<p>这先匹配一个引号, 然后匹配任何不是引号的字符, 再然后还是一个引号。 上面例子中的 <code>*</code> 和 <code>+</code> 会在<a href="https://docs.perl6.org/language/regexes#Quantifiers">量词</a>一节中解释。</p>
+<p>这先匹配一个引号, 然后匹配任何不是引号的字符, 再然后还是一个引号。 上面例子中的 <code>*</code> 和 <code>+</code> 会在<a href="https://docs.raku.org/language/regexes#Quantifiers">量词</a>一节中解释。</p>
 
 <p>就像你可以使用 <code>-</code> 用于集合差集和取反单个值, 你也可以在前面显式地放上一个 <code>+</code>:</p>
 
-<pre><code class="language-perl6">/ &lt;+[123]&gt; /  # same as &lt;[123]&gt; 
+<pre><code class="language-raku">/ &lt;+[123]&gt; /  # same as &lt;[123]&gt; 
 </code></pre>
 
 <h2 id="量词">量词</h2>
@@ -542,7 +542,7 @@ Cn	Unassigned
 
 <p>例如, 要匹配 <code>form=value</code> 形式的字符串, 你可以这样写正则表达式:</p>
 
-<pre><code class="language-perl6">/ \w+ '=' \w+ /
+<pre><code class="language-raku">/ \w+ '=' \w+ /
 </code></pre>
 
 <h3 id="零次-或-多次">零次 或 多次: *</h3>
@@ -551,7 +551,7 @@ Cn	Unassigned
 
 <p>例如, 要允许 <em>a</em> 和 <em>b</em> 之间出现可选的空白,  你可以这样写:</p>
 
-<pre><code class="language-perl6">/ a \s* b /
+<pre><code class="language-raku">/ a \s* b /
 </code></pre>
 
 <h3 id="零次-或-一次匹配">零次 或 一次匹配: ?</h3>
@@ -562,29 +562,29 @@ Cn	Unassigned
 
 <p>要限定原子匹配任意次数,　你可以写出像 <code>a ** 2..5</code> 那样的表达式来匹配字符 <em>a</em> 至少 2 次, 至多 5 次。</p>
 
-<pre><code class="language-perl6">say so 'a' ~~ /a ** 2..5/;        # OUTPUT: «False␤» 
+<pre><code class="language-raku">say so 'a' ~~ /a ** 2..5/;        # OUTPUT: «False␤» 
 say so  'aaa' ~~ /a ** 2..5/;     # OUTPUT: «True␤» 
 </code></pre>
 
 <p>如果最小匹配次数和最大匹配次数相同, 那么使用单个整数: <code>a ** 5</code> 精确地匹配 5 次。</p>
 
-<pre><code class="language-perl6">say so 'aaaaa' ~~ /a ** 5/;       # OUTPUT: «True␤» 
+<pre><code class="language-raku">say so 'aaaaa' ~~ /a ** 5/;       # OUTPUT: «True␤» 
 </code></pre>
 
 <p>也可以使用 <code>^</code> 脱字符来排除区间的端点:</p>
 
-<pre><code class="language-perl6">say so 'a'    ~~ /a ** 1^..^6/;   # OUTPUT: «False␤» -- there are 2 to 5 'a's in a row 
+<pre><code class="language-raku">say so 'a'    ~~ /a ** 1^..^6/;   # OUTPUT: «False␤» -- there are 2 to 5 'a's in a row 
 say so 'aaaa' ~~ /a ** 1^..^6/;   # OUTPUT: «True␤» 
 </code></pre>
 
 <p>下面这个包含从 0 开始的数值区间:</p>
 
-<pre><code class="language-perl6">say so 'aaa' ~~ /a ** ^6/;        # OUTPUT: «True␤» -- there are 0 to 5 'a's in a row 
+<pre><code class="language-raku">say so 'aaa' ~~ /a ** ^6/;        # OUTPUT: «True␤» -- there are 0 to 5 'a's in a row 
 </code></pre>
 
 <p>或使用一个 Whatever Star <code>*</code> 操作符来表示无限区间:</p>
 
-<pre><code class="language-perl6">say so 'aaaa' ~~ /a ** 1^..*/;    # OUTPUT: «True␤» -- there are 2 or more 'a's in a row 
+<pre><code class="language-raku">say so 'aaaa' ~~ /a ** 1^..*/;    # OUTPUT: «True␤» -- there are 2 or more 'a's in a row 
 </code></pre>
 
 <h3 id="modified-quantifier">Modified quantifier: %</h3>
@@ -595,12 +595,12 @@ say so 'aaaa' ~~ /a ** 1^..^6/;   # OUTPUT: «True␤»
 
 <p>默认地, 量词要求进行贪婪匹配:</p>
 
-<pre><code class="language-perl6">'abababa' ~~ /a .* a/ &amp;&amp; say ~$/;   # OUTPUT: «abababa␤» 
+<pre><code class="language-raku">'abababa' ~~ /a .* a/ &amp;&amp; say ~$/;   # OUTPUT: «abababa␤» 
 </code></pre>
 
 <p>你可以给量词附加一个 <code>?</code> 修饰符来开启非贪婪匹配:</p>
 
-<pre><code class="language-perl6">'abababa' ~~ /a .*? a/ &amp;&amp; say ~$/;   # OUTPUT: «aba␤» 
+<pre><code class="language-raku">'abababa' ~~ /a .*? a/ &amp;&amp; say ~$/;   # OUTPUT: «aba␤» 
 </code></pre>
 
 <p>你还可以使用 <code>!</code> 修饰符显式地要求贪婪匹配。</p>
@@ -609,13 +609,13 @@ say so 'aaaa' ~~ /a ** 1^..^6/;   # OUTPUT: «True␤»
 
 <p>你可以在正则表达式中通过为量词附加一个 <code>:</code> 修饰符来阻止回溯:</p>
 
-<pre><code class="language-perl6">say so 'abababa' ~~ /a .* aba/;    # OUTPUT: «True␤» 
+<pre><code class="language-raku">say so 'abababa' ~~ /a .* aba/;    # OUTPUT: «True␤» 
 say so 'abababa' ~~ /a .*: aba/;   # OUTPUT: «False␤» 
 </code></pre>
 
 <h2 id="alternation">Alternation: ||</h2>
 
-<p><a href="https://docs.perl6.org/language/regexes#Alternation:_||">||</a> 在正则表达式中表示备选分支, 在匹配由 <code>||</code> 分割的几个可能的备选分支之一时, <strong>第一个</strong>匹配的备选分支胜出。例如, <em>ini</em> 文件有如下形式:</p>
+<p><a href="https://docs.raku.org/language/regexes#Alternation:_||">||</a> 在正则表达式中表示备选分支, 在匹配由 <code>||</code> 分割的几个可能的备选分支之一时, <strong>第一个</strong>匹配的备选分支胜出。例如, <em>ini</em> 文件有如下形式:</p>
 
 <pre><code>[section]
 key = value
@@ -623,7 +623,7 @@ key = value
 
 <p>因此, 如果你解析单行 <em>ini</em> 文件, 那么它要么是一个 section, 要么是一个键值对儿。所以正则表达式可以是:</p>
 
-<pre><code class="language-perl6">/ '[' \w+ ']' || \S+ \s* '=' \s* \S* /
+<pre><code class="language-raku">/ '[' \w+ ']' || \S+ \s* '=' \s* \S* /
 </code></pre>
 
 <p>即, 它要么是一个由方括号包围起来的单词, 要么是一个键值对。</p>
@@ -632,14 +632,14 @@ key = value
 
 <p>如果正则表达式由 <code>|</code> 分割, 则最长的那个匹配胜出。独立于正则表达式中的词法顺序。</p>
 
-<pre><code class="language-perl6">say ('abc' ~~ / a | .b /).Str;    # OUTPUT: «ab␤» 
+<pre><code class="language-raku">say ('abc' ~~ / a | .b /).Str;    # OUTPUT: «ab␤» 
 </code></pre>
 
 <h2 id="anchors">Anchors</h2>
 
 <p>正则表达式引擎尝试在字符串中从左至右地搜索来查找匹配。</p>
 
-<pre><code class="language-perl6">say so 'properly' ~~ / perl/;   # OUTPUT: «True␤» 
+<pre><code class="language-raku">say so 'properly' ~~ / perl/;   # OUTPUT: «True␤» 
 #          ^^^^ 
 </code></pre>
 
@@ -651,7 +651,7 @@ key = value
 
 <p><code>^</code> 断言只匹配字符串的开头:</p>
 
-<pre><code class="language-perl6">say so 'properly' ~~ /  perl/;    # OUTPUT: «True␤» 
+<pre><code class="language-raku">say so 'properly' ~~ /  perl/;    # OUTPUT: «True␤» 
 say so 'properly' ~~ /^ perl/;    # OUTPUT: «False␤» 
 say so 'perly'    ~~ /^ perl/;    # OUTPUT: «True␤» 
 say so 'perl'     ~~ /^ perl/;    # OUTPUT: «True␤» 
@@ -659,14 +659,14 @@ say so 'perl'     ~~ /^ perl/;    # OUTPUT: «True␤»
 
 <p><code>$</code> 断言只匹配字符串的结尾:</p>
 
-<pre><code class="language-perl6">say so 'use perl' ~~ /  perl  /;   # OUTPUT: «True␤» 
+<pre><code class="language-raku">say so 'use perl' ~~ /  perl  /;   # OUTPUT: «True␤» 
 say so 'use perl' ~~ /  perl $/;   # OUTPUT: «True␤» 
 say so 'perly'    ~~ /  perl $/;   # OUTPUT: «False␤» 
 </code></pre>
 
 <p>你可以把这两个断言组合起来:</p>
 
-<pre><code class="language-perl6">say so 'use perl' ~~ /^ perl $/;   # OUTPUT: «False␤» 
+<pre><code class="language-raku">say so 'use perl' ~~ /^ perl $/;   # OUTPUT: «False␤» 
 say so 'perl'     ~~ /^ perl $/;   # OUTPUT: «True␤» 
 </code></pre>
 
@@ -674,7 +674,7 @@ say so 'perl'     ~~ /^ perl $/;   # OUTPUT: «True␤»
 
 <p>下面的是多行字符串:</p>
 
-<pre><code class="language-perl6">my $str = q:to/EOS/; 
+<pre><code class="language-raku">my $str = q:to/EOS/; 
    Keep it secret
    and keep it safe
    EOS
@@ -693,7 +693,7 @@ say so $str ~~ /^and    /;   # OUTPUT: «False␤» -- 'and' is at the start of 
 
 <p>(为了理解下面的示例, 最好先了解 <code>q:to/EOS/...EOS</code> 的 &ldquo;heredoc&rdquo; 语法移除了前置的缩进, 使之与 <code>EOS</code> 标记同级, 以至于第一行, 第二行和最后一行没有前置空格而第三行和第四行各有两个前置空格。)</p>
 
-<pre><code class="language-perl6">my $str = q:to/EOS/; 
+<pre><code class="language-raku">my $str = q:to/EOS/; 
     There was a young man of Japan
     Whose limericks never would scan.
       When asked why this was,
@@ -723,7 +723,7 @@ say so $str ~~ / '.&quot;' $$/;        # OUTPUT: «True␤»  -- at the last lin
 
 <p><code>&gt;&gt;</code> 匹配右单词边界。它匹配左侧有一个单词字符而右侧(或者字符串的结尾)是一个非单词字符的位置。</p>
 
-<pre><code class="language-perl6">my $str = 'The quick brown fox';
+<pre><code class="language-raku">my $str = 'The quick brown fox';
 say so $str ~~ /br/;              # OUTPUT: «True␤» 
 say so $str ~~ /&lt;&lt; br/;           # OUTPUT: «True␤» 
 say so $str ~~ /br &gt;&gt;/;           # OUTPUT: «False␤» 
@@ -734,39 +734,39 @@ say so $str ~~ /own &gt;&gt;/;          # OUTPUT: «True␤»
 
 <p>你可以使用变体 <strong>«</strong> 和 <strong>»</strong> :</p>
 
-<pre><code class="language-perl6">my $str = 'The quick brown fox';
+<pre><code class="language-raku">my $str = 'The quick brown fox';
 say so $str ~~ /« own/;          # OUTPUT: «False␤» 
 say so $str ~~ /own »/;          # OUTPUT: «True␤» 
 </code></pre>
 
 <h2 id="分组和捕获">分组和捕获</h2>
 
-<p>在普通的(非正则表达式)Perl 6 代码中, 你可以使用圆括号把东西组织到一块, 通常用于覆盖操作符优先级:</p>
+<p>在普通的(非正则表达式)Raku 代码中, 你可以使用圆括号把东西组织到一块, 通常用于覆盖操作符优先级:</p>
 
-<pre><code class="language-perl6">say 1+4*2;   # 9, parsed as 1 + (4*2)
+<pre><code class="language-raku">say 1+4*2;   # 9, parsed as 1 + (4*2)
 say (1+4)*2; # 输出: 10
 </code></pre>
 
 <p>在正则表达式中也可以使用同样的分组工具:</p>
 
-<pre><code class="language-perl6">/ a || b c/;   # 匹配 'a' 或 'bc'
+<pre><code class="language-raku">/ a || b c/;   # 匹配 'a' 或 'bc'
 / (a || b) c/; # 匹配 'ac' 或 'bc'
 </code></pre>
 
 <p>分组可以应用在量词上:</p>
 
-<pre><code class="language-perl6">/ a b+ /;      # 匹配一个 'a', 后面再跟着一个或多个 'b'
+<pre><code class="language-raku">/ a b+ /;      # 匹配一个 'a', 后面再跟着一个或多个 'b'
 / (a b)+/;     # 匹配一个或多个 'ab' 序列
 / (a || b)+ /; # 匹配一个 'a' 序列或者 'b' 序列, 至少一次
 </code></pre>
 
-<p>一个非量词化的捕获产生一个 <a href="https://docs.perl6.org/type/Match">Match</a>对象。当捕获被量化(除了使用 ? 量词)之后, 该捕获就变成 <a href="https://docs.perl6.org/type/Match">Match</a>对象的列表。</p>
+<p>一个非量词化的捕获产生一个 <a href="https://docs.raku.org/type/Match">Match</a>对象。当捕获被量化(除了使用 ? 量词)之后, 该捕获就变成 <a href="https://docs.raku.org/type/Match">Match</a>对象的列表。</p>
 
 <h3 id="捕获">捕获</h3>
 
-<p>圆括号不仅仅能够分组, 它们也<em>捕获</em>; 也就是说, 它们使分组中匹配到的字符串用作变量，并且还作为生成的 <a href="https://docs.perl6.org/type/Match">Match</a> 对象的元素:</p>
+<p>圆括号不仅仅能够分组, 它们也<em>捕获</em>; 也就是说, 它们使分组中匹配到的字符串用作变量，并且还作为生成的 <a href="https://docs.raku.org/type/Match">Match</a> 对象的元素:</p>
 
-<pre><code class="language-perl6">my $str = 'number 42';
+<pre><code class="language-raku">my $str = 'number 42';
 if $str ~~ /'number' (\d+) / {
     say &quot;The number is $0&quot;;    # The number is 42
     # or
@@ -776,7 +776,7 @@ if $str ~~ /'number' (\d+) / {
 
 <p>圆括号对儿是从左到右编号的, 编号从零开始。</p>
 
-<pre><code class="language-perl6">if 'abc' ~~ /(a) b (c)/ {
+<pre><code class="language-raku">if 'abc' ~~ /(a) b (c)/ {
     say &quot;0:$0; 1:$1&quot;; # 输出: 0:a; 1:c
 }
 </code></pre>
@@ -785,7 +785,7 @@ if $str ~~ /'number' (\d+) / {
 
 <p>将匹配对象强制转换为列表可以方便地以编程方式访问所有元素:</p>
 
-<pre><code class="language-perl6">if 'abc' ~~ /(a) b (c)/ {
+<pre><code class="language-raku">if 'abc' ~~ /(a) b (c)/ {
     say $/.list.join: ','; # 输出 a,c
 }
 </code></pre>
@@ -796,7 +796,7 @@ if $str ~~ /'number' (\d+) / {
 
 <p>要仅仅获得分组行为, 可以使用方括号 <code>[...]</code> 代替圆括号。</p>
 
-<pre><code class="language-perl6">if 'abc' ~~ / [a||b] (c) / {
+<pre><code class="language-raku">if 'abc' ~~ / [a||b] (c) / {
     say ~$0;                # OUTPUT: «c␤» 
 }
 </code></pre>
@@ -811,20 +811,20 @@ if $str ~~ /'number' (\d+) / {
 
 <p>备选分支会重置捕获计数：</p>
 
-<pre><code class="language-perl6">/ (x) (y)  || (a) (.) (.) /
+<pre><code class="language-raku">/ (x) (y)  || (a) (.) (.) /
 # $0  $1      $0  $1  $2 
 </code></pre>
 
 <p>例子:</p>
 
-<pre><code class="language-perl6">if 'abc' ~~ /(x)(y) || (a)(.)(.)/ {
+<pre><code class="language-raku">if 'abc' ~~ /(x)(y) || (a)(.)(.)/ {
     say ~$1;            # b 
 }
 </code></pre>
 
 <p>如果两个（或多个）备选分支具有不同的捕获编号，则捕获编号最多的决定了下一个捕获的索引：</p>
 
-<pre><code class="language-perl6">$_ = 'abcd';
+<pre><code class="language-raku">$_ = 'abcd';
  
 if / a [ b (.) || (x) (y) ] (.) / {
     #      $0     $0  $1    $2 
@@ -834,7 +834,7 @@ if / a [ b (.) || (x) (y) ] (.) / {
 
 <p>捕获可以嵌套，在这种情况下，它们的每一级都会编号:</p>
 
-<pre><code class="language-perl6">if 'abc' ~~ / ( a (.) (.) ) / {
+<pre><code class="language-raku">if 'abc' ~~ / ( a (.) (.) ) / {
     say &quot;Outer: $0&quot;;                # Outer: abc 
     say &quot;Inner: $0[0] and $0[1]&quot;;   # Inner: b and c 
 }
@@ -844,7 +844,7 @@ if / a [ b (.) || (x) (y) ] (.) / {
 
 <p>除了给捕获编号，你也可以给他们起名字。 命名捕获的通用和略微冗长的方式是这样的：</p>
 
-<pre><code class="language-perl6">if 'abc' ~~ / $&lt;myname&gt; = [ \w+ ] / {
+<pre><code class="language-raku">if 'abc' ~~ / $&lt;myname&gt; = [ \w+ ] / {
     say ~$&lt;myname&gt;      # OUTPUT: «abc␤» 
 }
 </code></pre>
@@ -853,7 +853,7 @@ if / a [ b (.) || (x) (y) ] (.) / {
 
 <p>命名捕获也可以使用常规捕获分组语法进行嵌套:</p>
 
-<pre><code class="language-perl6">if 'abc-abc-abc' ~~ / $&lt;string&gt;=( [ $&lt;part&gt;=[abc] ]* % '-' ) / {
+<pre><code class="language-raku">if 'abc-abc-abc' ~~ / $&lt;string&gt;=( [ $&lt;part&gt;=[abc] ]* % '-' ) / {
     say ~$&lt;string&gt;;         # OUTPUT: «abc-abc-abc␤» 
     say ~$&lt;string&gt;&lt;part&gt;;   # OUTPUT: «[abc, abc, abc]␤» 
 }
@@ -861,7 +861,7 @@ if / a [ b (.) || (x) (y) ] (.) / {
 
 <p>将匹配对象强制为散列可让您轻松地以编程方式访问所有命名捕获:</p>
 
-<pre><code class="language-perl6">if 'count=23' ~~ / $&lt;variable&gt;=\w+ '=' $&lt;value&gt;=\w+ / {
+<pre><code class="language-raku">if 'count=23' ~~ / $&lt;variable&gt;=\w+ '=' $&lt;value&gt;=\w+ / {
     my %h = $/.hash;
     say %h.keys.sort.join: ', ';        # OUTPUT: «value, variable␤» 
     say %h.values.sort.join: ', ';      # OUTPUT: «23, count␤» 
@@ -891,33 +891,33 @@ if / a [ b (.) || (x) (y) ] (.) / {
 
 <p>替换和匹配的写法类似，但替换运算符既有正则表达式匹配的区域，也有替换的文本区域：</p>
 
-<pre><code class="language-perl6">s/replace/with/;           # a substitution that is applied to $_ 
+<pre><code class="language-raku">s/replace/with/;           # a substitution that is applied to $_ 
 $str ~~ s/replace/with/;   # a substitution applied to a scalar 
 </code></pre>
 
 <p>替换操作法允许除了斜线之外的分隔符:</p>
 
-<pre><code class="language-perl6">s|replace|with|;
+<pre><code class="language-raku">s|replace|with|;
 s!replace!with!;
 s,replace,with,;
 </code></pre>
 
 <p>注意, 冒号和诸如 <code>{}</code> 或 <code>()</code> 的分隔符不能作为替换分割符。带有副词的冒号斜线诸如 <code>s:i/Foo/Bar</code> 和其它分割符有其它用途。</p>
 
-<p>就像 <code>m//</code> 操作符一样, 通常会忽略空白。在 Perl 6 中, 注释以 <em>#</em> 号开头直到当前行的结尾。</p>
+<p>就像 <code>m//</code> 操作符一样, 通常会忽略空白。在 Raku 中, 注释以 <em>#</em> 号开头直到当前行的结尾。</p>
 
 <h3 id="替换字符串字面值">替换字符串字面值</h3>
 
 <p>要替换的最简单的东西就是字符串字面量。你要替换的字符串在替换运算符的左侧, 而替换它的字符串在替换操作符的右侧; 例如:</p>
 
-<pre><code class="language-perl6">$_ = 'The Replacements';
+<pre><code class="language-raku">$_ = 'The Replacements';
 s/Replace/Entrap/;
 .say;                    # OUTPUT: «The Entrapments␤» 
 </code></pre>
 
 <p>字母数字字符和下划线是文字匹配，就像其表哥 <code>m//</code> 操作符一样。 所有其他字符都必须使用反斜杠<code>\</code>转义，或包含在引号中：</p>
 
-<pre><code class="language-perl6">$_ = 'Space: 1999';
+<pre><code class="language-raku">$_ = 'Space: 1999';
 s/Space\:/Party like it's/;
 .say                        # OUTPUT: «Party like it's 1999␤» 
 </code></pre>
@@ -926,7 +926,7 @@ s/Space\:/Party like it's/;
 
 <p>默认情况下，替换仅在第一匹配中完成：</p>
 
-<pre><code class="language-perl6">$_ = 'There can be twly two';
+<pre><code class="language-raku">$_ = 'There can be twly two';
 s/tw/on/;                     # replace 'tw' with 'on' once 
 .say;                         # OUTPUT: «there can be only two␤» 
 </code></pre>
@@ -935,7 +935,7 @@ s/tw/on/;                     # replace 'tw' with 'on' once
 
 <p>任何可以进入 <code>m//</code> 操作符的内容都可以进入替换操作符的左侧，包括通配符和字符类。 当您匹配的文本不是静态的时，这很方便，例如尝试匹配字符串中间的数字：</p>
 
-<pre><code class="language-perl6">$_ = &quot;Blake's 9&quot;;
+<pre><code class="language-raku">$_ = &quot;Blake's 9&quot;;
 s/\d+/7/;         # replace any sequence of digits with '7' 
 .say;             # OUTPUT: «Blake's 7␤»
 </code></pre>
@@ -946,7 +946,7 @@ s/\d+/7/;         # replace any sequence of digits with '7'
 
 <p>就像在匹配运算符中一样，捕获组在左侧被允许，匹配的内容填充 <code>$0..$n</code> 变量和 <code>$/</code> 对象：</p>
 
-<pre><code class="language-perl6">$_ = '2016-01-23 18:09:00';
+<pre><code class="language-raku">$_ = '2016-01-23 18:09:00';
 s/ (\d+)\-(\d+)\-(\d+) /today/;   # replace YYYY-MM-DD with 'today' 
 .say;                             # OUTPUT: «today 18:09:00␤» 
 &quot;$1-$2-$0&quot;.say;                   # OUTPUT: «01-23-2016␤» 
@@ -955,14 +955,14 @@ s/ (\d+)\-(\d+)\-(\d+) /today/;   # replace YYYY-MM-DD with 'today'
 
 <p>任何这些变量 <code>$0</code>，<code>$1</code>，<code>$/</code> 也可以在运算符的右侧使用，所以你可以操纵你刚刚匹配的内容。 这样，您可以将日期的YYYY，MM和DD部分分开，并将其重新格式化为 <code>MM-DD-YYYY</code> 顺序：</p>
 
-<pre><code class="language-perl6">$_ = '2016-01-23 18:09:00';
+<pre><code class="language-raku">$_ = '2016-01-23 18:09:00';
 s/ (\d+)\-(\d+)\-(\d+) /$1-$2-$0/;    # transform YYYY-MM-DD to MM-DD-YYYY 
 .say;                                 # OUTPUT: «01-23-2016 18:09:00␤» 
 </code></pre>
 
-<p>由于右侧实际上是一个常规的 Perl 6 内插字符串，因此可以将时间从 <code>HH:MM</code> 重新格式化为 `h:MM {AM,PM} 格式, 如下所示：</p>
+<p>由于右侧实际上是一个常规的 Raku 内插字符串，因此可以将时间从 <code>HH:MM</code> 重新格式化为 `h:MM {AM,PM} 格式, 如下所示：</p>
 
-<pre><code class="language-perl6">$_ = '18:38';
+<pre><code class="language-raku">$_ = '18:38';
 s/(\d+)\:(\d+)/{$0 % 12}\:$1 {$0 &lt; 12 ?? 'AM' !! 'PM'}/;
 .say;                                                    # OUTPUT: «6:38 PM␤» 
 </code></pre>
@@ -975,22 +975,22 @@ s/(\d+)\:(\d+)/{$0 % 12}\:$1 {$0 &lt; 12 ?? 'AM' !! 'PM'}/;
 
 <p><code>~</code> 运算符是一个帮助器，用于匹配具有特定终结符的嵌套子规则作为目标。 它被设计为放置在开口和闭合括号之间，如下所示：</p>
 
-<pre><code class="language-perl6">/ '(' ~ ')' &lt;expression&gt; /
+<pre><code class="language-raku">/ '(' ~ ')' &lt;expression&gt; /
 </code></pre>
 
 <p>然而, 它主要忽略左侧的参数, 并且在接下来的两个原子（可以被量化）上操作。 它对下两个原子的操作是“旋转”它们，使得它们实际上以相反的顺序匹配。 因此，上面的表达式，起初是腮红，只不过是下面的简写:</p>
 
-<pre><code class="language-perl6">/ '(' &lt;expression&gt; ')' /
+<pre><code class="language-raku">/ '(' &lt;expression&gt; ')' /
 </code></pre>
 
 <p>但是除此之外，当它重写原子时，它还会插入将设置内部表达式以识别终止符的设备，并且如果内部表达式不在所需的闭合原子上终止，则产生适当的错误消息。 所以它确实也注意了左边的括号，它实际上把我们的例子改写成更像:</p>
 
-<pre><code class="language-perl6">$&lt;OPEN&gt; = '(' &lt;SETGOAL: ')'&gt; &lt;expression&gt; [ $GOAL || &lt;FAILGOAL&gt; ]
+<pre><code class="language-raku">$&lt;OPEN&gt; = '(' &lt;SETGOAL: ')'&gt; &lt;expression&gt; [ $GOAL || &lt;FAILGOAL&gt; ]
 </code></pre>
 
 <p>FAILGOAL 是一种可以由用户定义的特殊方法，它将在解析失败时被调用：</p>
 
-<pre><code class="language-perl6">grammar A { token TOP { '[' ~ ']' \w+  };
+<pre><code class="language-raku">grammar A { token TOP { '[' ~ ']' \w+  };
             method FAILGOAL($goal) {
                 die &quot;Cannot find $goal near position {self.pos}&quot;
             }
@@ -1004,7 +1004,7 @@ CATCH { default { put .^name, ': ', .Str } };
 
 <p>请注意，即使没有开头括号，也可以使用此构造来设置闭合结构的期望值：</p>
 
-<pre><code class="language-perl6">&quot;3)&quot;  ~~ / &lt;?&gt; ~ ')' \d+ /;  # RESULT: «｢3)｣» 
+<pre><code class="language-raku">&quot;3)&quot;  ~~ / &lt;?&gt; ~ ')' \d+ /;  # RESULT: «｢3)｣» 
 &quot;(3)&quot; ~~ / &lt;?&gt; ~ ')' \d+ /;  # RESULT: «｢3)｣» 
 </code></pre>
 
@@ -1012,7 +1012,7 @@ CATCH { default { put .^name, ': ', .Str } };
 
 <p>正则表达式捕获的顺序是原始的：</p>
 
-<pre><code class="language-perl6">&quot;abc&quot; ~~ /a ~ (c) (b)/;
+<pre><code class="language-raku">&quot;abc&quot; ~~ /a ~ (c) (b)/;
 say $0; # OUTPUT: «｢c｣␤» 
 say $1; # OUTPUT: «｢b｣␤» 
 </code></pre>
@@ -1021,7 +1021,7 @@ say $1; # OUTPUT: «｢b｣␤»
 
 <p>就像你可以把代码片段放进子例程中一样, 你同样可以把正则表达式片段放进命名规则中(named rules)。</p>
 
-<pre><code class="language-perl6">my regex line { \N*\n }
+<pre><code class="language-raku">my regex line { \N*\n }
 if &quot;abc\ndef&quot; ~~ /&lt;line&gt; def/ {
     say &quot;First line:&quot;, $&lt;line&gt;.chomp; # OUTPUT:«First line: abc␤» 
 }
@@ -1033,7 +1033,7 @@ if &quot;abc\ndef&quot; ~~ /&lt;line&gt; def/ {
 
 <p>下面是一个更完善的解析 ini 文件的例子:</p>
 
-<pre><code class="language-perl6">my regex header { \s* '[' (\w+) ']' \h* \n+ }
+<pre><code class="language-raku">my regex header { \s* '[' (\w+) ']' \h* \n+ }
 my regex identifier  { \w+ }
 my regex kvpair { \s* &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
 my regex section {
@@ -1066,7 +1066,7 @@ say %config.perl;
 #          &quot;quotas&quot; =&gt; {&quot;jack&quot; =&gt; &quot;123&quot;, &quot;joy&quot; =&gt; &quot;42&quot;}).hash» 
 </code></pre>
 
-<p>命名正则可以规整到 <a href="https://docs.perl6.org/language/grammars">gramamrs</a> 中。<a href="https://design.perl6.org/S05.html#Predefined_Subrules">S05</a>中有一组预定义的 subrules。</p>
+<p>命名正则可以规整到 <a href="https://docs.raku.org/language/grammars">gramamrs</a> 中。<a href="https://design.raku.org/S05.html#Predefined_Subrules">S05</a>中有一组预定义的 subrules。</p>
 
 <h2 id="副词">副词</h2>
 
@@ -1078,7 +1078,7 @@ say %config.perl;
 
 <p><code>'abc' ~~ /../</code> 大致相当于 <code>'abc'.match(/../)</code>, 甚至可以更清楚地单独写成一行:</p>
 
-<pre><code class="language-perl6">my $regex = /../;           # definition 
+<pre><code class="language-raku">my $regex = /../;           # definition 
 if 'abc'.match($regex) {    # matching 
     say &quot;'abc' has at least two characters&quot;;
 }
@@ -1086,7 +1086,7 @@ if 'abc'.match($regex) {    # matching
 
 <p>正则表达式副词像 <code>:i</code> 会进入定义行而匹配副词像 <code>:overlap</code> 会附加到匹配调用上:</p>
 
-<pre><code class="language-perl6">my $regex = /:i . a/;
+<pre><code class="language-raku">my $regex = /:i . a/;
 for 'baA'.match($regex, :overlap) -&gt; $m {
     say ~$m;
 }
@@ -1095,7 +1095,7 @@ for 'baA'.match($regex, :overlap) -&gt; $m {
 
 <h3 id="regex-adverbs">Regex Adverbs</h3>
 
-<p>在正则表达式声明时出现的副词是实际正则表达式的一部分, 并影响 Perl 6 编译器如何将正则表达式转换为二进制代码。</p>
+<p>在正则表达式声明时出现的副词是实际正则表达式的一部分, 并影响 Raku 编译器如何将正则表达式转换为二进制代码。</p>
 
 <p>例如: <code>:ignorecase (:i)</code> 副词告诉编译器忽略大写, 小写和标题大小写字母之间的区别。</p>
 
@@ -1103,24 +1103,24 @@ for 'baA'.match($regex, :overlap) -&gt; $m {
 
 <p>正则表达式副词可以在正则表达式声明之前或之内, 并且仅在词法上影响其后的正则表达式部分。 请注意, 在正则表达式之前出现的正则表达式副词必须出现在将正则表达式引入解析器之后, 如 &lsquo;rx&rsquo; 或 &rsquo;m&rsquo; 或裸的 &lsquo;/&lsquo;。 但是这样是无效的:</p>
 
-<pre><code class="language-perl6">my $rx1 = :i/a/;      # adverb is before the regex is recognized =&gt; exception 
+<pre><code class="language-raku">my $rx1 = :i/a/;      # adverb is before the regex is recognized =&gt; exception 
 </code></pre>
 
 <p>下面这些是等价的:</p>
 
-<pre><code class="language-perl6">my $rx1 = rx:i/a/;      # before 
+<pre><code class="language-raku">my $rx1 = rx:i/a/;      # before 
 my $rx2 = rx/:i a/;     # inside 
 </code></pre>
 
 <p>而下面这两种是不等价的:</p>
 
-<pre><code class="language-perl6">my $rx3 = rx/a :i b/;   # matches only the b case insensitively 
+<pre><code class="language-raku">my $rx3 = rx/a :i b/;   # matches only the b case insensitively 
 my $rx4 = rx/:i a b/;   # matches completely case insensitively 
 </code></pre>
 
 <p>方括号和圆括号约束副词的作用域:</p>
 
-<pre><code class="language-perl6">/ (:i a b) c /;         # matches 'ABc' but not 'ABC' 
+<pre><code class="language-raku">/ (:i a b) c /;         # matches 'ABc' but not 'ABC' 
 / [:i a b] c /;         # matches 'ABc' but not 'ABC' 
 </code></pre>
 
@@ -1130,7 +1130,7 @@ my $rx4 = rx/:i a b/;   # matches completely case insensitively
 
 <p>假如没有这个副词, 那么正则表达式的一部分将尝试不同的路径来匹配字符串, 以使正则表达式的其他部分可以匹配。 例如, 在 <code>'abc' ~~ / \w+ ./</code> 中, <code>\w+</code> 首先吃光整个字符串 abc, 然后 <code>.</code> 就失败了。 因此 <code>\w+</code> 放弃一个字符, 只匹配 ab 而 <code>.</code> 可以成功匹配字符串 c。 放弃字符的过程(或在轮试的情况下, 尝试不同的分支)被称为回溯。</p>
 
-<pre><code class="language-perl6">say so 'abc' ~~ / \w+ . /;        # OUTPUT: «True␤» 
+<pre><code class="language-raku">say so 'abc' ~~ / \w+ . /;        # OUTPUT: «True␤» 
 say so 'abc' ~~ / :r \w+ . /;     # OUTPUT: «False␤» 
 </code></pre>
 
@@ -1140,7 +1140,7 @@ say so 'abc' ~~ / :r \w+ . /;     # OUTPUT: «False␤»
 
 <p>由于 ratcheting 行为在解析器中通常是需要的, 所以有一个快捷方式来声明一个 ratcheting 正则表达式:</p>
 
-<pre><code class="language-perl6">my token thing { .... }
+<pre><code class="language-raku">my token thing { .... }
 # short for 
 my regex thing { :r ... }
 </code></pre>
@@ -1149,7 +1149,7 @@ my regex thing { :r ... }
 
 <p><code>:sigspace</code> 或 <code>:s</code> 副词使空白在正则表达式中有意义。</p>
 
-<pre><code class="language-perl6">say so &quot;I used Photoshop®&quot;   ~~ m:i/   photo shop /;      # OUTPUT: «True␤»
+<pre><code class="language-raku">say so &quot;I used Photoshop®&quot;   ~~ m:i/   photo shop /;      # OUTPUT: «True␤»
 say so &quot;I used a photo shop&quot; ~~ m:i:s/ photo shop /;   # OUTPUT: «True␤»
 say so &quot;I used Photoshop®&quot;   ~~ m:i:s/ photo shop /;   # OUTPUT: «False␤»
 </code></pre>
@@ -1170,7 +1170,7 @@ say so &quot;I used Photoshop®&quot;   ~~ m:i:s/ photo shop /;   # OUTPUT: «Fa
 
 <p><code>:continue</code> 或短的 <code>:c</code> 副词接收一个参数。 这个参数是正则表达式开始搜索的位置。 默认情况下, 它从字符串的开头搜索, 但是 <code>:c</code> 覆盖该位置。 如果没有为 <code>:c</code> 指定位置, 它将默认为 0, 除非设置了 <code>$/</code>, 在这种情况下, 它默认为 <code>$/.to</code>。</p>
 
-<pre><code class="language-perl6">given 'a1xa2' {
+<pre><code class="language-raku">given 'a1xa2' {
     say ~m/a./;         # OUTPUT: «a1␤» 
     say ~m:c(2)/a./;    # OUTPUT: «a2␤» 
 }
@@ -1178,7 +1178,7 @@ say so &quot;I used Photoshop®&quot;   ~~ m:i:s/ photo shop /;   # OUTPUT: «Fa
 
 <p>注意: 不同于 <code>:pos</code>, 使用 <code>:continue()</code> 的匹配将尝试在字符串中进一步匹配, 而不是马上失败:</p>
 
-<pre><code class="language-perl6">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
+<pre><code class="language-raku">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
 say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤» 
 </code></pre>
 
@@ -1186,7 +1186,7 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <p>要找到正则表达式的所有可能的匹配 - 包括重叠的 - 和几个从同一位置开始的匹配, 请使用 <code>:exhaustive</code>(short: <code>ex</code>) 副词。</p>
 
-<pre><code class="language-perl6">given 'abracadabra' {
+<pre><code class="language-raku">given 'abracadabra' {
     for m:exhaustive/ a .* a / -&gt; $match {
         say ' ' x $match.from, ~$match;
     }
@@ -1209,9 +1209,9 @@ abra
 
 <h3 id="global">Global</h3>
 
-<p>不是搜索一个匹配并返回一个 <a href="https://docs.perl6.org/type/Match">Match 对象</a>, Global 搜索每个不重叠的匹配, 并将其返回到<a href="https://docs.perl6.org/type/List">列表</a>中。 为此, 请使用 <code>:global</code> 副词:</p>
+<p>不是搜索一个匹配并返回一个 <a href="https://docs.raku.org/type/Match">Match 对象</a>, Global 搜索每个不重叠的匹配, 并将其返回到<a href="https://docs.raku.org/type/List">列表</a>中。 为此, 请使用 <code>:global</code> 副词:</p>
 
-<pre><code class="language-perl6">given 'several words here' {
+<pre><code class="language-raku">given 'several words here' {
     my @matches = m:global/\w+/;
     say @matches.elems;         # OUTPUT: «3␤» 
     say ~@matches[2];           # OUTPUT: «here␤» 
@@ -1224,7 +1224,7 @@ abra
 
 <p>在字符串的特定位置锚定匹配:</p>
 
-<pre><code class="language-perl6">given 'abcdef' {
+<pre><code class="language-raku">given 'abcdef' {
     my $match = m:pos(2)/.*/;
     say $match.from;        # OUTPUT: «2␤» 
     say ~$match;            # OUTPUT: «cdef␤» 
@@ -1235,7 +1235,7 @@ abra
 
 <p>注意: 不同于 <code>:continue</code>, 使用 <code>:pos()</code> 锚定的匹配在不匹配时将立即失败, 而不是尝试进一步匹配字符串:</p>
 
-<pre><code class="language-perl6">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
+<pre><code class="language-raku">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
 say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤» 
 </code></pre>
 
@@ -1243,7 +1243,7 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <p>要获得多个匹配, 包括重叠的匹配, 但每个起始位置只有一个(最长的)匹配, 请指定 <code>:overlap</code> (short <code>:ov</code>) 副词:</p>
 
-<pre><code class="language-perl6">given 'abracadabra' {
+<pre><code class="language-raku">given 'abracadabra' {
     for m:overlap/ a .* a / -&gt; $match {
         say ' ' x $match.from, ~$match;
     }
@@ -1252,7 +1252,7 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <p>产生:</p>
 
-<pre><code class="language-perl6">abracadabra
+<pre><code class="language-raku">abracadabra
    acadabra
      adabra
        abra
@@ -1264,54 +1264,54 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <p>要检查一个模式是否出现在另一个模式之前，请通过 <code>before</code> 断言使用 lookahead 断言。形式如下：</p>
 
-<pre><code class="language-perl6">&lt;?before pattern&gt;
+<pre><code class="language-raku">&lt;?before pattern&gt;
 </code></pre>
 
 <p>因此，要搜索字符串 foo 后面紧跟着字符串 bar, 请使用以下 regexp:</p>
 
-<pre><code class="language-perl6">rx{ foo &lt;?before bar&gt; }
+<pre><code class="language-raku">rx{ foo &lt;?before bar&gt; }
 </code></pre>
 
 <p>例如:</p>
 
-<pre><code class="language-perl6">say &quot;foobar&quot; ~~ rx{ foo &lt;?before bar&gt; };   # OUTPUT: «foo␤» 
+<pre><code class="language-raku">say &quot;foobar&quot; ~~ rx{ foo &lt;?before bar&gt; };   # OUTPUT: «foo␤» 
 </code></pre>
 
 <p>但是，如果要搜索一个不紧随某个模式的模式, 那么您需要使用反向向前查看断言, 其形式如下:</p>
 
-<pre><code class="language-perl6">&lt;!before pattern&gt;
+<pre><code class="language-raku">&lt;!before pattern&gt;
 </code></pre>
 
 <p>因此，所有出现的不在 bar 之前的 foo 都会匹配:</p>
 
-<pre><code class="language-perl6">rx{ foo &lt;!before bar&gt; }
+<pre><code class="language-raku">rx{ foo &lt;!before bar&gt; }
 </code></pre>
 
 <h3 id="lookbehind-assertions">Lookbehind assertions</h3>
 
 <p>要检查一个模式是否出现在另一个模式之后，请通过 <code>after</code> 断言使用 <code>lookbehind</code> 断言。 其形式如下：</p>
 
-<pre><code class="language-perl6">&lt;?after pattern&gt;
+<pre><code class="language-raku">&lt;?after pattern&gt;
 </code></pre>
 
 <p>因此, 要搜索字符串 foo 立即跟着的 bar 字符串, 使用如下正则表达式:</p>
 
-<pre><code class="language-perl6">rx{ &lt;?after foo&gt; bar } # read as after foo is bar
+<pre><code class="language-raku">rx{ &lt;?after foo&gt; bar } # read as after foo is bar
 </code></pre>
 
 <p>例如:</p>
 
-<pre><code class="language-perl6">say &quot;foobar&quot; ~~ rx{ &lt;?after foo&gt; bar }; #  OUTPUT: «bar␤» 
+<pre><code class="language-raku">say &quot;foobar&quot; ~~ rx{ &lt;?after foo&gt; bar }; #  OUTPUT: «bar␤» 
 </code></pre>
 
 <p>但是, 如果要搜索的模式不是紧随其后的模式, 那么您需要使用反向的 lookbehind 断言, 其形式如下:</p>
 
-<pre><code class="language-perl6">&lt;!after pattern&gt;
+<pre><code class="language-raku">&lt;!after pattern&gt;
 </code></pre>
 
 <p>因此, bar 前面不是 foo 的所有 bar 将被匹配:</p>
 
-<pre><code class="language-perl6">rx{ &lt;!after foo&gt; bar }
+<pre><code class="language-raku">rx{ &lt;!after foo&gt; bar }
 </code></pre>
 
 <h2 id="best-practices-and-gotchas">Best practices and gotchas</h2>
@@ -1320,16 +1320,16 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <h3 id="code-layout">Code layout</h3>
 
-<p>没有 <code>:sigspace</code> 副词, 空白在 Perl 6 正则表达式中就是没有意义的。 在能增加可读性的地方插入空格。 此外, 必要时插入注释。</p>
+<p>没有 <code>:sigspace</code> 副词, 空白在 Raku 正则表达式中就是没有意义的。 在能增加可读性的地方插入空格。 此外, 必要时插入注释。</p>
 
 <p>比较下面这个比较紧凑的正则表达式:</p>
 
-<pre><code class="language-perl6">my regex float { &lt;[+-]&gt;?\d*'.'\d+[e&lt;[+-]&gt;?\d+]? }
+<pre><code class="language-raku">my regex float { &lt;[+-]&gt;?\d*'.'\d+[e&lt;[+-]&gt;?\d+]? }
 </code></pre>
 
 <p>和可读性更好的版本:</p>
 
-<pre><code class="language-perl6">my regex float {
+<pre><code class="language-raku">my regex float {
      &lt;[+-]&gt;?        # optional sign 
      \d*            # leading digits, optional 
      '.'
@@ -1344,7 +1344,7 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <p>当你在方括号或圆括号中使用一组备选分支时, 请对齐垂直条:</p>
 
-<pre><code class="language-perl6">my regex example {
+<pre><code class="language-raku">my regex example {
     &lt;preamble&gt;
     [
     || &lt;choice_1&gt;
@@ -1363,7 +1363,7 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <p>例如, 您可以从前面获取 float 正则表达式：</p>
 
-<pre><code class="language-perl6">my regex float {
+<pre><code class="language-raku">my regex float {
      &lt;[+-]&gt;?        # optional sign 
      \d*            # leading digits, optional 
      '.'
@@ -1376,7 +1376,7 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
 
 <p>并把它分解成几部分:</p>
 
-<pre><code class="language-perl6">my token sign { &lt;[+-]&gt; }
+<pre><code class="language-raku">my token sign { &lt;[+-]&gt; }
 my token decimal { \d+ }
 my token exponent { 'e' &lt;sign&gt;? &lt;decimal&gt; }
 my regex float {
@@ -1390,7 +1390,7 @@ my regex float {
 
 <p>这很有用, 特别是当正则表达式变得更加复杂时。 例如, 你可能希望在存在指数的情况下使小数点可选。</p>
 
-<pre><code class="language-perl6">my regex float {
+<pre><code class="language-raku">my regex float {
     &lt;sign&gt;?
     [
     || &lt;decimal&gt;?  '.' &lt;decimal&gt; &lt;exponent&gt;?
@@ -1405,7 +1405,7 @@ my regex float {
 
 <p>例如，在 ini 文件中:</p>
 
-<pre><code class="language-perl6">[section]
+<pre><code class="language-raku">[section]
 key=value
 </code></pre>
 
@@ -1413,7 +1413,7 @@ key=value
 
 <p>显然, 不允许使用括号，因为 <code>[a] b]</code> 是不明确的。 同样的论据, 应禁止开口方括号。 这让我们有了</p>
 
-<pre><code class="language-perl6">token header { '[' &lt;-[ \[\] ]&gt;+ ']' }
+<pre><code class="language-raku">token header { '[' &lt;-[ \[\] ]&gt;+ ']' }
 </code></pre>
 
 <p>如果你只处理一行就行了。 但是，如果你正在处理整个文件，突然间正则表达式解析到一句</p>
@@ -1424,7 +1424,7 @@ newline in between]
 
 <p>这可能不是一个好方法。折中的方式是:</p>
 
-<pre><code class="language-perl6">token header { '[' &lt;-[ \[\] \n ]&gt;+ ']' }
+<pre><code class="language-raku">token header { '[' &lt;-[ \[\] \n ]&gt;+ ']' }
 </code></pre>
 
 <p>然后在扫尾处理中, 从 section 标题中移除前导和尾部空格和制表符。</p>
@@ -1435,26 +1435,26 @@ newline in between]
 
 <p>回到解析 ini 文件的例子, 我们有</p>
 
-<pre><code class="language-perl6">my regex kvpair { \s* &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
+<pre><code class="language-raku">my regex kvpair { \s* &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
 </code></pre>
 
 <p>这可能不像我们想要的那样自由, 因为用户可能会在等号周围放置空格。 那么我们可以试试这个:</p>
 
-<pre><code class="language-perl6">my regex kvpair { \s* &lt;key=identifier&gt; \s* '=' \s* &lt;value=identifier&gt; \n+ }
+<pre><code class="language-raku">my regex kvpair { \s* &lt;key=identifier&gt; \s* '=' \s* &lt;value=identifier&gt; \n+ }
 </code></pre>
 
 <p>但这看起来很笨重, 所以我们尝试其他方式:</p>
 
-<pre><code class="language-perl6">my rule kvpair { &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
+<pre><code class="language-raku">my rule kvpair { &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
 </code></pre>
 
 <p>可是等等! <code>value</code> 之后，隐含的空白匹配用光了所有的空白, 包括换行符, 所以 <code>\n+</code> 没有什么可以匹配的(rule 也禁止回溯, 所以运气不佳)。</p>
 
 <p>因此, 重要的是将隐式空白的定义重新定义为输入格式无意义的空白。</p>
 
-<p>这通过重新定义 token <code>ws</code>; 但是，它只适用于 <a href="https://docs.perl6.org/language/grammars">Grammars</a>:</p>
+<p>这通过重新定义 token <code>ws</code>; 但是，它只适用于 <a href="https://docs.raku.org/language/grammars">Grammars</a>:</p>
 
-<pre><code class="language-perl6">grammar IniFormat {
+<pre><code class="language-raku">grammar IniFormat {
     token ws { &lt;!ww&gt; \h* }
     rule header { \s* '[' (\w+) ']' \n+ }
     token identifier  { \w+ }
@@ -1482,14 +1482,14 @@ say so IniFormat.parse($contents);
 
 <p>除了把所有的正则表达式都放在一个 Grammar 中并把它们变成了 tokens(因为他们不需要回溯) 之外, 有趣的新花样是:</p>
 
-<pre><code class="language-perl6">token ws { &lt;!ww&gt; \h* }
+<pre><code class="language-raku">token ws { &lt;!ww&gt; \h* }
 </code></pre>
 
 <p>这被称为隐式空白解析。 当它不在两个字符之间 (<code>&lt;ww&gt;</code>, 反向的&rdquo;within word&rdquo; 断言)时匹配, 以及零个或多个水平空格字符。 对水平空白的限制很重要, 因为换行符(它们是垂直空白)定界记录, 不应该被隐式地匹配。</p>
 
 <p>还有一些与空白有关的麻烦潜伏着。 正则表达式 <code>\n+</code> 将不会匹配 <code>\n \n</code> 这样的字符串, 因为两个换行符之间有空白。 要允许这样的输入字符串, 用 <code>\n\s*</code> 代替 <code>\n+</code>。</p>
 
-<p><a href="https://docs.perl6.org/language/regexes">全文完</a></p>
+<p><a href="https://docs.raku.org/language/regexes">全文完</a></p>
 
 
         
@@ -1507,12 +1507,12 @@ say so IniFormat.parse($contents);
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-03-11-perl6%E4%B8%AD%E7%9A%84%E7%AC%91%E8%84%B8/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的笑脸">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2017-03-11-raku%E4%B8%AD%E7%9A%84%E7%AC%91%E8%84%B8/" data-toggle="tooltip" data-placement="top" title="Raku 中的笑脸">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/" data-toggle="tooltip" data-placement="top" title="Perl 6 Dispatch 解密">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/" data-toggle="tooltip" data-placement="top" title="Raku Dispatch 解密">Next Post &rarr;</a>
             </li>
           
         </ul>

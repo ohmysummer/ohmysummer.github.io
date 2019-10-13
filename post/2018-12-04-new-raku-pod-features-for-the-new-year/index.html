@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第四天 - 献给新年的 Raku Pod 新功能</title>
+  <meta property="og:title" content="第四天 - 献给新年的 Raku Pod 新功能" />
+  <meta name="twitter:title" content="第四天 - 献给新年的 Raku Pod 新功能" />
+  <meta name="description" content="New Raku Pod Features for the New Year">
+  <meta property="og:description" content="New Raku Pod Features for the New Year">
+  <meta name="twitter:description" content="New Raku Pod Features for the New Year">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-12-04-new-raku-pod-features-for-the-new-year/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-04-new-raku-pod-features-for-the-new-year/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第四天 - 献给新年的 Raku Pod 新功能</h1>
+                
+                  
+                    <h2 class="post-subheading">New Raku Pod Features for the New Year</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 4, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 3 minutes (480 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="介绍">介绍</h1>
+
+<p>Rakudo NQP 文件包含解析 Raku 输入文件并将其转换为正在运行的 Raku 程序的代码。 本文将重点介绍最近使用 Rakudo NQP 文件时的经验所学到的一些细节。 这项工作涉及实现一些尚未实现的（NYI）Raku POD 功能，我希望尽快合并这些更改。</p>
+
+<h1 id="准备">准备</h1>
+
+<p>使用的 NQP 文件保存在 <a href="https://github.com/rakudo/rakudo/tree/master/src/Raku">https://github.com/rakudo/rakudo/src/Raku</a> 的git存储库中。 有关我的开发设置和工作流的更多背景信息，请参阅 <a href="https://rakuadvent.wordpress.com/2017/12/08/">https://rakuadvent.wordpress.com/2017/12/08/</a> 上的 2017 年 Raku Advent 条目。</p>
+
+<h1 id="背景">背景</h1>
+
+<p>在我实现 NYI POD 功能的过程中，我已经给我添加到 Rakudo 仓库中的文档添加了注释: <a href="https://github.com/rakudo/rakudo/blob/master/docs/rakudo-nqp-and-pod-notes.md">rakudo/docs/rakudo-nqp-and-pod-notes.md</a>。我更新它，因为我发现了可能没有记录的新内容或者可能不容易找到其文档。该文件还包含一份完整的清单，通过我的计算，NYI POD 功能。以下是我已经工作了几个月的 NYI POD 功能列表，我希望在今年或新年初完成（以及每个功能的 roast 测试）:</p>
+
+<ul>
+<li>NYI: %config :numbered 对于段落或分隔的POD块，使用&rsquo;#&lsquo;别名</li>
+<li>NYI: POD 数据块</li>
+<li>NYI: 以defn块术语格式化代码</li>
+</ul>
+
+<p>缺少的项目描述在由 Damian Conway 博士撰写的精美制作的<a href="https://design.raku.org/S26.html">概要S26</a>中，Larry Wall 是多产的得力男人 - 世界知名的 Perl 专家和著名的 Perl 作者。（请注意，现在很少有人在积极研究 POD，我的 NYI 功能列表可能不完整. S26 写得非常密实，如果不高度集中就不容易理解。我花了不少时间试图实现一个我认为已被描述的功能但我误读了文档！）</p>
+
+<p>受许多因素的影响, 这项工作比我预期的时间更长，因为我将简要讨论，希望它可以帮助未来的开发人员。</p>
+
+<h1 id="rakudo-nqp-grammar-和-actions-学到的东西">Rakudo NQP grammar 和 actions: 学到的东西</h1>
+
+<h2 id="match-对象">Match 对象</h2>
+
+<p>在 token 上完成一个 grammar 匹配会产生一个匹配对象。 如果 token 具有与该 token 同名的 action 操作方法，则使用匹配对象作为隐式或显式参数调用该 action 方法。 按照惯例，&rsquo;$/&rsquo; 用作显式参数，但可以使用另一个名称（不要这样做！）。 我不建议依赖隐式参数。 如果需要，可以添加其他参数。</p>
+
+<p>请注意，随着解析的继续，匹配数据将保留在匹配对象中，因为它在其他 token 和方法中使用。</p>
+
+<h2 id="断言">断言</h2>
+
+<p>断言在 POD 处理中发现的动态 grammar 中很重要。 在主匹配期间，通常必须选择几种匹配路径。 调试错误使用给我带来很多麻烦的一个例子是在定义分隔文本块的 token 内。</p>
+
+<p>触发问题的测试用例是文件&rsquo;b.t&rsquo;:</p>
+
+<pre><code>=begin pod
+text
+=end pod
+
+my $o = $=pod[0];
+say $o;
+</code></pre>
+
+<p>当我对它运行raku时，我得到了</p>
+
+<pre><code>$ ./raku b.t
+Preceding context expects a term, but found infix = instead.
+Did you make a mistake in Pod syntax?
+at /usr/local/people/tbrowde/mydata/tbrowde-home-bzr/raku/raku-repo-forks/rakudo/b.t:1
+------&gt; =begin ⏏pod
+</code></pre>
+
+<p>不是很有帮助！ 然后我尝试了：</p>
+
+<pre><code>$ ./raku b.t --ll-exception b.t
+Preceding context expects a term, but found infix = instead.
+Did you make a mistake in Pod syntax?
+   at SETTING::src/core/Exception.pm6:57  (./CORE.setting.moarvm:throw)
+ from src/Raku/World.nqp:4955  (blib/Raku/World.moarvm:throw)
+ from gen/moar/Raku-Grammar.nqp:301  (blib/Raku/Grammar.moarvm:typed_panic)
+ from gen/moar/Raku-Grammar.nqp:3609  (blib/Raku/Grammar.moarvm:)
+ ...more files and line numbers...
+</code></pre>
+
+<p>更没用了！ 我尝试手动调查列出的文件，并且无法很好地解密代码以获得线索。</p>
+
+<p>然后我尝试了另一个似乎有效的类似测试用例，文件&rsquo;b2.t&rsquo;：</p>
+
+<pre><code>=begin table
+text
+=end table
+
+my $o = $=pod[0];
+say $o;
+</code></pre>
+
+<p>当我对它运行raku时，我得到了</p>
+
+<pre><code>$ ./raku b2.t
+Pod::Block::Table
+  text
+</code></pre>
+
+<p>成功了！</p>
+
+<p>但是这个失败的测试案例导致我几周尝试各种调试技术，直到最后，再次查看 Grammar.nqp 中的 <strong>delimited</strong> token 并在心里计算每个子匹配组正在做什么。 然后我仔细查看了包含<strong>断言</strong>的这个组：</p>
+
+<pre><code class="language-raku">[
+    # defn-line is all text to the newline
+    &lt;?{ ~$&lt;type&gt; eq 'defn' }&gt; # &lt;== assertion: this is a 'defn' type
+    \s* &lt;defn-line&gt;
+]
+</code></pre>
+
+<p>在 <strong>delimited</strong> 块 token 定义中，该组是顺序的而不是备选分支的一部分，必须匹配或全部 token 失败。不幸的是，失败的结果是 LTA , 对于这种情况是例外（这在 NQP 中并不常见，并且在其中工作的危险之一），并且我在寻找原因的过程中犯了太长时间的错误。欺骗我的一件事就是认为在一个没有得到满足的小组中的断言就像是&rsquo;?&lsquo;量词意味着忽略失败的匹配。在我仔细研究之后，我认为绝对不是这样！该组是否匹配，因此如果不匹配是可接受的，则量词必须在那里。</p>
+
+<p>当我将 <strong>delimited</strong> token 的代码与 <strong>delimited_table</strong> 块 token 的起作用代码（之前我曾做过很多次）进行比较时，我看到 <strong>delimited_table</strong> 块中的同一匹配组具有&rsquo;?&lsquo;量词。在我给 <strong>delimited</strong> 块 token 中的组添加&rsquo;?&lsquo;后, 坏的测试用例再次起作用！</p>
+
+<h2 id="调试">调试</h2>
+
+<p>对我来说最有用的 grammar 和 actions 调试技术是经典的：print 语句用于显示执行期间变量的值。该方法取决于哪种文件类型以及希望显示的值。以下是一些例子：</p>
+
+<ul>
+<li>1、显示匹配对象的内容：</li>
+</ul>
+
+<pre><code class="language-raku">method do-foo($/) {
+    say(&quot;DEBUG: dumping method 'do-foo' match:&quot;);
+    say($/.dump);
+}
+</code></pre>
+
+<ul>
+<li>2、显示 grammar 匹配期间的结果</li>
+</ul>
+
+<pre><code class="language-raku">token blah {
+    \h* $&lt;tok&gt; = [ foo | bar ] # &lt;== note '=' instead of ':='
+    { say(&quot;DEBUG: \$&lt;tok&gt; value: '{$&lt;tok&gt;}'&quot;); }
+}
+</code></pre>
+
+<p>请注意，say 语句位于由花括号定义的块内。另请注意，即使在 NQP 源文件中，grammar 中使用的匹配对象的赋值运算符（&rsquo;=&lsquo;）也不是绑定运算符（&rsquo;:=&lsquo;）。</p>
+
+<h2 id="动态变量">动态变量</h2>
+
+<p>grammar 和 action 大量使用动态变量（带有 <code>*</code> twigil 的变量，例如 <strong>$*IN-DEFN-BLOCK</strong>）。当需要在解析树中深入更改变量时，它们显示了它们的多功能性，并且该值在该解析的剩余部分（调用者）和子解析操作期间保持不变。</p>
+
+<h2 id="make-made-和-ast">make, made 和 ast</h2>
+
+<p>尽管在所有已发表的 Raku 书籍中都有解释，但 grammar 和 action 中使用的术语 “make”，“made” 和 “ast”一直让我很困惑。感谢 Raku 作者 <strong>Moritz Lenz</strong> 对 <strong>IRC#raku-dev</strong> 的问题的进一步解释和回答，他们更清楚了。</p>
+
+<p>基本上，在 action 方法中，使用 <code>make</code> 会将当前值分配给匹配对象的 <code>.ast</code> 属性（或其别名 <code>.made</code>）和方法的名字。因此，给出以下方法：</p>
+
+<pre><code class="language-raku">method do-foo($/) {
+    my $val = 6;
+    make $val;
+}
+</code></pre>
+
+<p>或可选地：</p>
+
+<pre><code class="language-raku">method do-foo($/) {
+    $/.ast := 6;
+}
+</code></pre>
+
+<p>我们以后可以用这些惯用法中的一个来获得这个值：</p>
+
+<pre><code class="language-raku">say(&quot;do-foo.ast = {$&lt;do-foo&gt;.ast}&quot;);  # output: 6
+say(&quot;do-foo.ast = {$&lt;do-foo&gt;.made}&quot;); # output: 6
+</code></pre>
+
+<p>选择属性名称 <code>.ast</code> 是误导性的，因为它通常是指抽象语法树（AST），但在这种情况下，它与 AST 无关（尽管它可能具有 QAST 节点或任何其他类型的 NQP 对象值）。</p>
+
+<p>请注意，分配给 <code>.ast</code> 属性的任何值都可能在 grammar 或 action 的稍后阶段被覆盖或删除。</p>
+
+<h2 id="推迟生成qast节点">推迟生成QAST节点</h2>
+
+<p>有时在现有 grammar 中过早生成QAST节点阻止了正确的POD功能实现。一个例子是POD块的%config部分，它具有稍后解析所需的一些值。我正在做的部分工作需要重新编写%config匹配代码，因此在父对象（通常是POD类）的所有部分都已根据需要进行计算或构建之前，不会生成QAST节点。</p>
+
+<h2 id="隔离pod-only代码">隔离POD-only代码</h2>
+
+<p>当前的 grammar 和 grammar action 代码是复杂的，并且有些谜题，因为插入了块并且超过15年没有再次触及。因此，很难避免合并冲突与大而必要的变化。核心开发人员提出的一个建议是帮助将 POD 代码与其他代码分开，这就是创建一个与其他现有方言类似的单独POD方言（子语言）。我曾经认为这将是一个有用的改变，但现在，在理解了更多的代码后，创建一个单独的POD方言似乎并不是特别有利。但是，将所有 POD-only 代码移动到封闭类或 grammar 块的末尾将有助于在个人合并重叠代码时最小化版本控制意外和冲突。</p>
+
+<p>因此，几个星期前我抓住机会（1）询问了几个关键开发人员，如 @lizmat 和 @jnthn，如果他们对该计划没有问题，（2）创建并测试这样的更改作为拉取请求（PR），（3）合并相当大的PR。不幸的是，这一重大变化令一些开发人员感到意外，并在 IRC#raku-dev 上引发了一些惊讶的评论和投诉！幸运的是，发布经理 @AlexDaniel 运用了他惯用的外交和 git 代码讽刺风度，因为他让人群平静下来，并演示了改变实际上只是一个简单（但很大）的代码转换。所以我即将推出的PR不应该导致合并问题，因为我所知道的其他人都不会在同一个区域工作。</p>
+
+<p>您可以通过在每个文件中搜索 POD-ONLY 来查看 Grammar.nqp 和 Actions.nqp 中 POD-only 代码的起点，您会发现：</p>
+
+<pre><code>#================================================================
+# POD-ONLY CODE HANDLERS
+#================================================================
+# move ALL Pod-only [grammar|action] objects here
+</code></pre>
+
+<h1 id="总结">总结</h1>
+
+<p>我逐渐了解了如何改进 Rakudo Raku grammar 和实现一些 NYI POD 功能的 actions，我希望尽快交付它们。在工作期间，我从困难的方式学到了许多课程，并希望我对 POD 解析的黑暗角落有所了解。</p>
+
+<p>从任何主要编码项目中拿走的最后一课：为合并提交制作，测试和提交小的（即有限的）更改！我在 POD 特征的有时弯曲的解析路径中被包裹起来，我做了太多的改变，并且不能轻易地撤消它们。我希望我不要重蹈覆辙。</p>
+
+<p>我希望你和你的 Rakuish 圣诞快乐和新年快乐，并且用 Charles Dickens 的 Tiny Tim（圣诞颂歌）不朽的话来说，“上帝保佑我们，每一个人！”</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-12-03-jmp2it/" data-toggle="tooltip" data-placement="top" title="第三天 – Raku – 跳转到那儿">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-12-05-variables/" data-toggle="tooltip" data-placement="top" title="第五天 - 变量">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

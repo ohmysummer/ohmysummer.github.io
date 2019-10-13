@@ -9,20 +9,22 @@
   <meta property="og:title" content="It&#39;s blocks all the way down" />
   <meta name="twitter:title" content="It&#39;s blocks all the way down" />
   <meta name="description" content="It’s blocks all the way down
-当我在 glot.io 上玩 Perl 6 的时候我知道它们真的很像带有简单程序的 docker：
+当我在 glot.io 上玩 Raku 的时候我知道它们真的很像带有简单程序的 docker：
 dir(&#39;/&#39;)&gt;&gt;.Str.say;  我想知道递归到目录里面是否还有更好的方法。 IO::Path.dir 会返回一个 IO::Path 对象的 Seq 序列。那就是为什么 &gt;&gt;. 超运算符会有效。它当然不会递归因为没有用来进行递归的子例程, 经过一段时间的冥思苦想我找到了我找了很久的东西。
-在 Perl 6 中带有一个位置参数的 block 块是可调用的(Callable)。那个参数被绑定给主题变量 $_。 那是我们为什么能做:
+在 Raku 中带有一个位置参数的 block 块是可调用的(Callable)。那个参数被绑定给主题变量 $_。 那是我们为什么能做:
 for 1,2,3 {.say}  递归到目录中会很容易如果我们把 Str &#39;/&#39; 变成 IO::Path 对象并且检测我们是否得到了一个目录并且使用那个元素调用那个 block 块。那个 block 块需要一个名字, 这个我们可以通过使用 my &amp;block = {Nil} 做到, 或者我们使用编译时变量 &amp;?BLOCK。
-for &#39;.&#39; { .Str.say when !.IO.d; .IO.dir()&gt;&gt;.&amp;?BLOCK.IO.d }  .&amp;?BLOCK 形式会把调用看作像方法调用一样, 这意味着 . 号左侧的对象会成为调用的第一个参数, 在调用者所属的地方。">
+for &#39;.&#39; { .Str.say when !.IO.d; .IO.dir()&gt;&gt;.&amp;?BLOCK.IO.d }  .&amp;?BLOCK 形式会把调用看作像方法调用一样, 这意味着 . 号左侧的对象会成为调用的第一个参数, 在调用者所属的地方。
+我相信这是一个相当好的关于怎样使用 &amp;?BLOCK 来避免嵌套循环和短变量的例子。这会在稍后被添加到文档中。">
   <meta property="og:description" content="It’s blocks all the way down
-当我在 glot.io 上玩 Perl 6 的时候我知道它们真的很像带有简单程序的 docker：
+当我在 glot.io 上玩 Raku 的时候我知道它们真的很像带有简单程序的 docker：
 dir(&#39;/&#39;)&gt;&gt;.Str.say;  我想知道递归到目录里面是否还有更好的方法。 IO::Path.dir 会返回一个 IO::Path 对象的 Seq 序列。那就是为什么 &gt;&gt;. 超运算符会有效。它当然不会递归因为没有用来进行递归的子例程, 经过一段时间的冥思苦想我找到了我找了很久的东西。
-在 Perl 6 中带有一个位置参数的 block 块是可调用的(Callable)。那个参数被绑定给主题变量 $_。 那是我们为什么能做:
+在 Raku 中带有一个位置参数的 block 块是可调用的(Callable)。那个参数被绑定给主题变量 $_。 那是我们为什么能做:
 for 1,2,3 {.say}  递归到目录中会很容易如果我们把 Str &#39;/&#39; 变成 IO::Path 对象并且检测我们是否得到了一个目录并且使用那个元素调用那个 block 块。那个 block 块需要一个名字, 这个我们可以通过使用 my &amp;block = {Nil} 做到, 或者我们使用编译时变量 &amp;?BLOCK。
-for &#39;.&#39; { .Str.say when !.IO.d; .IO.dir()&gt;&gt;.&amp;?BLOCK.IO.d }  .&amp;?BLOCK 形式会把调用看作像方法调用一样, 这意味着 . 号左侧的对象会成为调用的第一个参数, 在调用者所属的地方。">
+for &#39;.&#39; { .Str.say when !.IO.d; .IO.dir()&gt;&gt;.&amp;?BLOCK.IO.d }  .&amp;?BLOCK 形式会把调用看作像方法调用一样, 这意味着 . 号左侧的对象会成为调用的第一个参数, 在调用者所属的地方。
+我相信这是一个相当好的关于怎样使用 &amp;?BLOCK 来避免嵌套循环和短变量的例子。这会在稍后被添加到文档中。">
   <meta name="twitter:description" content="It’s blocks all the way down
-当我在 glot.io 上玩 Perl 6 的时候我知道它们真的很像带有简单程序的 docker：
-dir(&#39;/&#39;)&gt;&gt;.Str.say;  我想知道递归到目录里面是否还有更好的方法。 IO::Path.dir 会返回一个 IO::Path 对象的 Seq 序列。那就是为什么 &gt;&gt;. 超运算符会有效。它当然不会递归因 …">
+当我在 glot.io 上玩 Raku 的时候我知道它们真的很像带有简单程序的 docker：
+dir(&#39;/&#39;)&gt;&gt;.Str.say;  我想知道递归到目录里面是否还有更好的方法。 IO::Path.dir 会返回一个 IO::Path 对象的 Seq 序列。那就是为什么 &gt;&gt;. 超运算符会有效。它当然不会递归因为没 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -220,7 +222,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (81 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (79 words)
   
   
 </span>
@@ -241,21 +243,21 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         <p><a href="https://gfldex.wordpress.com/2016/07/19/its-blocks-all-the-way-down/">It’s blocks all the way down</a></p>
 
-<p>当我在 <a href="https://glot.io/new/perl6">glot.io</a> 上玩 Perl 6 的时候我知道它们真的很像带有简单程序的 docker：</p>
+<p>当我在 <a href="https://glot.io/new/raku">glot.io</a> 上玩 Raku 的时候我知道它们真的很像带有简单程序的 docker：</p>
 
-<pre><code class="language-perl6">dir('/')&gt;&gt;.Str.say;
+<pre><code class="language-raku">dir('/')&gt;&gt;.Str.say;
 </code></pre>
 
 <p>我想知道递归到目录里面是否还有更好的方法。 IO::Path.dir 会返回一个 IO::Path 对象的 Seq 序列。那就是为什么 <code>&gt;&gt;.</code> 超运算符会有效。它当然不会递归因为没有用来进行递归的子例程, 经过一段时间的冥思苦想我找到了我找了很久的东西。</p>
 
-<p>在 Perl 6 中带有一个位置参数的 block 块是可调用的(Callable)。那个参数被绑定给主题变量 <code>$_</code>。 那是我们为什么能做:</p>
+<p>在 Raku 中带有一个位置参数的 block 块是可调用的(Callable)。那个参数被绑定给主题变量 <code>$_</code>。 那是我们为什么能做:</p>
 
-<pre><code class="language-perl6">for 1,2,3 {.say}
+<pre><code class="language-raku">for 1,2,3 {.say}
 </code></pre>
 
 <p>递归到目录中会很容易如果我们把 <code>Str '/'</code> 变成 IO::Path 对象并且检测我们是否得到了一个目录并且使用那个元素调用那个 block 块。那个 block 块需要一个名字, 这个我们可以通过使用 <code>my &amp;block = {Nil}</code> 做到, 或者我们使用编译时变量 <code>&amp;?BLOCK</code>。</p>
 
-<pre><code class="language-perl6">for '.' {
+<pre><code class="language-raku">for '.' {
     .Str.say when !.IO.d;
     .IO.dir()&gt;&gt;.&amp;?BLOCK.IO.d
 }
@@ -265,9 +267,9 @@ if (!doNotTrack) {
 
 <p>我相信这是一个相当好的关于怎样使用 <code>&amp;?BLOCK</code> 来避免嵌套循环和短变量的例子。这会在稍后被添加到文档中。</p>
 
-<p>在 <a href="http://perl6.party/">Zoffix</a> 的友好帮助下, 那个例子被进一步优化了。</p>
+<p>在 <a href="http://raku.party/">Zoffix</a> 的友好帮助下, 那个例子被进一步优化了。</p>
 
-<pre><code class="language-perl6">{ .d &amp;&amp; .dir».&amp;?BLOCK || .put }(&quot;.&quot;.IO)
+<pre><code class="language-raku">{ .d &amp;&amp; .dir».&amp;?BLOCK || .put }(&quot;.&quot;.IO)
 </code></pre>
 
 
@@ -286,7 +288,7 @@ if (!doNotTrack) {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2016-07-07-perl6%E4%B8%AD%E7%9A%84%E6%A2%B3%E5%AD%90/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的梳子!">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2016-07-07-raku%E4%B8%AD%E7%9A%84%E6%A2%B3%E5%AD%90/" data-toggle="tooltip" data-placement="top" title="Raku 中的梳子!">&larr; Previous Post</a>
             </li>
           
           

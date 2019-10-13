@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 25 minutes (5215 words)
+  <i class="fa fa-clock-o"></i> 25 minutes (5205 words)
   
   
 </span>
@@ -235,13 +235,13 @@ if (!doNotTrack) {
 
 <h1 id="声明">声明</h1>
 
-<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+<p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
 
 <h1 id="第十七章-grammars">第十七章. Grammars</h1>
 
-<p>Grammars are patterns on a higher plane of existence. They integrate and reuse pattern fragments to parse and react to complicated formats. This feature is at the core of Perl 6 in a very literal sense; the language itself is implemented as a grammar. Once you start using it you’ll probably prefer it to regexes for all but the most simple problems.</p>
+<p>Grammars are patterns on a higher plane of existence. They integrate and reuse pattern fragments to parse and react to complicated formats. This feature is at the core of Raku in a very literal sense; the language itself is implemented as a grammar. Once you start using it you’ll probably prefer it to regexes for all but the most simple problems.</p>
 
-<p>Grammars 是存在于更高层面上的模式。它们集成并重用模式片段来解析复杂的格式并做出反应。从字面意义上讲，这个功能是Perl 6的核心;语言本身是作为语法实现的。一旦你开始使用它，你可能更喜欢它除了最简单的问题之外的所有正则表达式。</p>
+<p>Grammars 是存在于更高层面上的模式。它们集成并重用模式片段来解析复杂的格式并做出反应。从字面意义上讲，这个功能是Raku的核心;语言本身是作为语法实现的。一旦你开始使用它，你可能更喜欢它除了最简单的问题之外的所有正则表达式。</p>
 
 <h1 id="a-simple-grammar">A Simple Grammar</h1>
 
@@ -249,7 +249,7 @@ if (!doNotTrack) {
 
 <h6 id="note">NOTE</h6>
 
-<p>Perl 6 tends to refer to <code>regex</code>, <code>token</code>, and <code>rule</code> declarations as “rules,” which can be a bit imprecise at times. In this book, you can tell the difference between the language keyword and the general term by the typesetting. I’ll try to not present an ambiguous situation.</p>
+<p>Raku tends to refer to <code>regex</code>, <code>token</code>, and <code>rule</code> declarations as “rules,” which can be a bit imprecise at times. In this book, you can tell the difference between the language keyword and the general term by the typesetting. I’ll try to not present an ambiguous situation.</p>
 
 <p>Start with something simple (too simple for grammars). Define a <code>TOP</code> pattern that matches digits as the starting point. That name is special because <code>.parse</code> uses it by default. In this example, you declare that with <code>regex</code>:</p>
 
@@ -257,7 +257,7 @@ if (!doNotTrack) {
 
 <h6 id="注意">注意</h6>
 
-<p>Perl 6 倾向于将 <code>regex</code>，<code>token</code> 和 <code>rule</code> 声明称为“规则”，有时可能有点不精确。在本书中，您可以通过排版来区分语言关键字和一般术语。我会尽量不提出模棱两可的情况。</p>
+<p>Raku 倾向于将 <code>regex</code>，<code>token</code> 和 <code>rule</code> 声明称为“规则”，有时可能有点不精确。在本书中，您可以通过排版来区分语言关键字和一般术语。我会尽量不提出模棱两可的情况。</p>
 
 <p>从简单的东西开始（对于 grammar 来说太简单了）。定义匹配数字作为起点的 <code>TOP</code> 模式。该名称很特殊，因为 <code>.parse</code> 默认使用它。在此示例中，您使用 <code>regex</code> 声明一个 <code>TOP</code>：</p>
 
@@ -272,11 +272,11 @@ put $result ?? 'Parsed!' !! 'Failed!';  # Parsed!
 
 <p>This succeeds. <code>.parse</code> applies the grammar to the entire value of <code>7</code>. It starts with the parts that <code>TOP</code> describes. It can match a digit, and the value you pass to <code>.parse</code> is a digit.</p>
 
-<p>When <code>.parse</code> succeeds, it returns a <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object (it returns <code>Nil</code> when it fails). Try it with a different value. Instead of a single digit, try several digits:</p>
+<p>When <code>.parse</code> succeeds, it returns a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object (it returns <code>Nil</code> when it fails). Try it with a different value. Instead of a single digit, try several digits:</p>
 
 <p>这成功了。 <code>.parse</code> 将 grammar 应用于整个值 <code>7</code>. 它从 <code>TOP</code> 描述的部分开始。它可以匹配一个数字，你传递给 <code>.parse</code> 的值是一个数字。</p>
 
-<p>当 <code>.parse</code> 成功时，它返回一个 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 对象（当它失败时返回 <code>Nil</code>）。尝试使用不同的值。尝试几个数字而不是单个数字：</p>
+<p>当 <code>.parse</code> 成功时，它返回一个 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象（当它失败时返回 <code>Nil</code>）。尝试使用不同的值。尝试几个数字而不是单个数字：</p>
 
 <pre><code>my $result = Number.parse( '137' );  # fails (extra digits)
 
@@ -331,9 +331,9 @@ for @strings -&gt; $string {
     }
 </code></pre>
 
-<p>Now the second <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> matches too because the implicit whitespace can match the space at the end (but not the beginning):</p>
+<p>Now the second <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> matches too because the implicit whitespace can match the space at the end (but not the beginning):</p>
 
-<p>现在第二个 <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> 也匹配，因为隐式空格可以匹配末尾的空格（但不是开头）：</p>
+<p>现在第二个 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> 也匹配，因为隐式空格可以匹配末尾的空格（但不是开头）：</p>
 
 <pre><code>｢137｣ parsed!
 ｢137 ｣ parsed!
@@ -358,9 +358,9 @@ for @strings -&gt; $string {
     }
 </code></pre>
 
-<p>Instead of showing <code>Parsed!</code>, you can on success output the <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object you stored in <code>$result</code>:</p>
+<p>Instead of showing <code>Parsed!</code>, you can on success output the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object you stored in <code>$result</code>:</p>
 
-<p>您可以在成功输出存储在 <code>$result</code> 中的  <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 对象，而不是显示 <code>Parsed!</code></p>
+<p>您可以在成功输出存储在 <code>$result</code> 中的  <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象，而不是显示 <code>Parsed!</code></p>
 
 <pre><code>grammar Number {
     regex digits { \d+ &lt;.ws&gt; }
@@ -403,9 +403,9 @@ Failed!
 Failed!
 </code></pre>
 
-<p>This still doesn’t match the <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> with leading whitespace. The parser couldn’t match that since <code>rule</code> only inserts <code>&lt;.ws&gt;</code> after explicit parts of the pattern. To match leading whitespace you need to add something to the front of the pattern. The beginning-of-string anchor does that, and now there’s something that <code>&lt;.ws&gt;</code> can come after:</p>
+<p>This still doesn’t match the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with leading whitespace. The parser couldn’t match that since <code>rule</code> only inserts <code>&lt;.ws&gt;</code> after explicit parts of the pattern. To match leading whitespace you need to add something to the front of the pattern. The beginning-of-string anchor does that, and now there’s something that <code>&lt;.ws&gt;</code> can come after:</p>
 
-<p>这仍然与带有前导空格的 <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> 不匹配。解析器无法匹配，因为 <code>rule</code> 仅在模式的显式部分之后插入 <code>&lt;.ws&gt;</code>。要匹配前导空格，您需要在模式的前面添加一些内容。字符串开头的锚点就是这样，现在有一些 <code>&lt;.ws&gt;</code> 后面可以出现的东西：</p>
+<p>这仍然与带有前导空格的 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> 不匹配。解析器无法匹配，因为 <code>rule</code> 仅在模式的显式部分之后插入 <code>&lt;.ws&gt;</code>。要匹配前导空格，您需要在模式的前面添加一些内容。字符串开头的锚点就是这样，现在有一些 <code>&lt;.ws&gt;</code> 后面可以出现的东西：</p>
 
 <pre><code>grammar Number {
     rule digits { ^ \d+ }    # ^ &lt;.ws&gt; \d+ &lt;.ws&gt;
@@ -464,9 +464,9 @@ my $result = OctalNumber.parse( $number );
 say $result // &quot;failed&quot;;
 </code></pre>
 
-<p>The stringified <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object shows the overall match and the named subcaptures:</p>
+<p>The stringified <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object shows the overall match and the named subcaptures:</p>
 
-<p>字符串化的 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 对象显示整体匹配和命名的子捕获：</p>
+<p>字符串化的 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象显示整体匹配和命名的子捕获：</p>
 
 <pre><code>｢0o177｣
  prefix =&gt; ｢0o｣
@@ -481,11 +481,11 @@ say $result // &quot;failed&quot;;
 put &quot;Digits: $result&lt;digits&gt;&quot;;
 </code></pre>
 
-<p>EXERCISE 17.2Create a grammar to match a Perl 6 variable name with a sigil (ignore sigilless variables, because that’s too easy). Use separate rules to match the sigil and the identifier. Here is a list of candidates to check if you don’t come up with your own:<code>my @candidates = qw/     sigilless   $scalar  @array   %hash     $123abc    $abc'123 $ab'c123     $two-words $two-    $-dash     /;</code></p>
+<p>EXERCISE 17.2Create a grammar to match a Raku variable name with a sigil (ignore sigilless variables, because that’s too easy). Use separate rules to match the sigil and the identifier. Here is a list of candidates to check if you don’t come up with your own:<code>my @candidates = qw/     sigilless   $scalar  @array   %hash     $123abc    $abc'123 $ab'c123     $two-words $two-    $-dash     /;</code></p>
 
 <p>You can suppress some of those named captures by prefixing the rule with a dot. You probably don’t care about the prefix, so don’t save it:</p>
 
-<p>练习17.2 创建一个 grammar，匹配带有 sigil 的 Perl 6 变量名（忽略无符号变量，因为这太简单了）。使用单独的规则来匹配 sigil 和标识符。这是一个候选人列表，检查你是否没有自己的：<code>my @candidates = qw/     sigilless   $scalar  @array   %hash     $123abc    $abc'123 $ab'c123     $two-words $two-    $-dash     /;</code></p>
+<p>练习17.2 创建一个 grammar，匹配带有 sigil 的 Raku 变量名（忽略无符号变量，因为这太简单了）。使用单独的规则来匹配 sigil 和标识符。这是一个候选人列表，检查你是否没有自己的：<code>my @candidates = qw/     sigilless   $scalar  @array   %hash     $123abc    $abc'123 $ab'c123     $two-words $two-    $-dash     /;</code></p>
 
 <p>您可以通过在规则前加一个点号来抑制某些命名捕获。您可能不关心前缀，所以不要保存它：</p>
 
@@ -552,9 +552,9 @@ say $/ // &quot;failed&quot;;
  digits =&gt; ｢177｣
 </code></pre>
 
-<p>Changing the data to include invalid digits, such as <code>0o178</code>, means the grammar will fail. In the trace you can see it matches up to <code>0o17</code> but can’t continue, so you know where in your <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> things went wrong. It could be that the grammar should not match the text or the grammar is not as accommodating as it should be:</p>
+<p>Changing the data to include invalid digits, such as <code>0o178</code>, means the grammar will fail. In the trace you can see it matches up to <code>0o17</code> but can’t continue, so you know where in your <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> things went wrong. It could be that the grammar should not match the text or the grammar is not as accommodating as it should be:</p>
 
-<p>更改数据以包含无效数字（例如 <code>0o178</code>）意味着 grammar 将失败。在跟踪中，您可以看到它最多匹配到 <code>0o17</code> 但无法继续，因此你就知道  <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>  中的哪些地方出错了。可能是 grammar 不应该与文本匹配，或者 grammar 不应该像它应该的那样适应：</p>
+<p>更改数据以包含无效数字（例如 <code>0o178</code>）意味着 grammar 将失败。在跟踪中，您可以看到它最多匹配到 <code>0o17</code> 但无法继续，因此你就知道  <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>  中的哪些地方出错了。可能是 grammar 不应该与文本匹配，或者 grammar 不应该像它应该的那样适应：</p>
 
 <pre><code>TOP
 |  prefix
@@ -573,7 +573,7 @@ failed
 
 <p>您可以使用 <code>-M</code> 开关从命令行加载 <code>Grammar::Tracer</code>，而不是将 <code>Grammar::Tracer</code> 添加到程序中。你可能并不是故意把它留下来：</p>
 
-<pre><code>% perl6 -MGrammar::Tracer program.p6
+<pre><code>% raku -MGrammar::Tracer program.p6
 </code></pre>
 
 <h2 id="grammar-debugger">Grammar::Debugger</h2>
@@ -582,7 +582,7 @@ failed
 
 <p><code>Grammar::Debugger</code> 模块与 <code>Grammar::Tracer</code> （它们在同一个发行版中）执行相同的操作，但允许您一次执行一个步骤。当你启动它时，你得到一个提示; 键入 <code>h</code> 以获取命令列表：</p>
 
-<pre><code>% perl6 -MGrammar::Debugger test.p6
+<pre><code>% raku -MGrammar::Debugger test.p6
 TOP
 &gt; h
     r              run (until breakpoint, if any)
@@ -613,13 +613,13 @@ digits
 
 <h1 id="a-simple-action-class">A Simple Action Class</h1>
 
-<p>A grammar does its work by descending into its rules to take apart text. You can go the opposite way by processing each part of the parsed text to build a new <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> (or data structure, or whatever you like). You can tell <code>.parse</code> to use an action class to do this.</p>
+<p>A grammar does its work by descending into its rules to take apart text. You can go the opposite way by processing each part of the parsed text to build a new <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> (or data structure, or whatever you like). You can tell <code>.parse</code> to use an action class to do this.</p>
 
-<p>grammar 通过下降到它的规则中分解文本来完成其工作。你可以通过处理已解析文本的每个部分来构建新的 <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>（或数据结构，或任何您喜欢的任何内容）。您可以告诉 <code>.parse</code> 使用 action 类来执行此操作。</p>
+<p>grammar 通过下降到它的规则中分解文本来完成其工作。你可以通过处理已解析文本的每个部分来构建新的 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>（或数据结构，或任何您喜欢的任何内容）。您可以告诉 <code>.parse</code> 使用 action 类来执行此操作。</p>
 
-<p>Here’s a simple action class, <code>OctalActions</code>. It doesn’t need to have the same name as the grammar, but the method names are the same as the rule names. Each method takes a <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object argument. In this example, the signature uses <code>$/</code>, which is a variable with a few advantages that you’ll see in a moment:</p>
+<p>Here’s a simple action class, <code>OctalActions</code>. It doesn’t need to have the same name as the grammar, but the method names are the same as the rule names. Each method takes a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object argument. In this example, the signature uses <code>$/</code>, which is a variable with a few advantages that you’ll see in a moment:</p>
 
-<p>这是一个简单的 action 类 <code>OctalActions</code>。它不需要与 grammar 具有相同的名称，但方法名称与规则名称相同。每个方法都接收 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 对象参数。在此示例中，签名使用 <code>$/</code>，这是一个具有一些优势的变量，稍后你将看到：</p>
+<p>这是一个简单的 action 类 <code>OctalActions</code>。它不需要与 grammar 具有相同的名称，但方法名称与规则名称相同。每个方法都接收 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象参数。在此示例中，签名使用 <code>$/</code>，这是一个具有一些优势的变量，稍后你将看到：</p>
 
 <pre><code>class OctalActions {
     method digits ($/) { put &quot;Action class got $/&quot; }
@@ -652,15 +652,15 @@ say $result // &quot;failed&quot;;
  digits =&gt; ｢177｣
 </code></pre>
 
-<p>EXERCISE 17.3Implement your own action class for the <code>OctalNumber</code> grammar. When the <code>digits</code> method matches, output the decimal version of the number. The <code>parse-base</code> routine from <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> may be useful. For extra credit, take one number per line from standard input and turn them into decimal numbers.</p>
+<p>EXERCISE 17.3Implement your own action class for the <code>OctalNumber</code> grammar. When the <code>digits</code> method matches, output the decimal version of the number. The <code>parse-base</code> routine from <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> may be useful. For extra credit, take one number per line from standard input and turn them into decimal numbers.</p>
 
-<p>练习17.3 为 <code>OctalNumber</code> grammar 实现自己的 action 类。当 <code>digits</code> 方法匹配时，输出数字的十进制版本。 <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> 的 <code>parse-base</code> 例程可能很有用。如需额外学分，请从标准输入中每行获取一个数字并将其转换为十进制数字。</p>
+<p>练习17.3 为 <code>OctalNumber</code> grammar 实现自己的 action 类。当 <code>digits</code> 方法匹配时，输出数字的十进制版本。 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> 的 <code>parse-base</code> 例程可能很有用。如需额外学分，请从标准输入中每行获取一个数字并将其转换为十进制数字。</p>
 
 <h2 id="creating-an-abstract-syntax-tree">Creating an Abstract Syntax Tree</h2>
 
-<p>Actions shouldn’t output information directly. Instead, they can add values to the <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object. Calling <code>make</code>in the action method sets a value in the abstract syntax tree (or <code>.ast</code>) slot of the <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a>. You can access that with <code>.made</code>:</p>
+<p>Actions shouldn’t output information directly. Instead, they can add values to the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object. Calling <code>make</code>in the action method sets a value in the abstract syntax tree (or <code>.ast</code>) slot of the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>. You can access that with <code>.made</code>:</p>
 
-<p>Action 不应直接输出信息。相反，他们可以向 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 对象添加值。在 action 方法中调用 <code>make</code> 会在 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 的抽象语法树（或 <code>.ast</code> ）槽中设置一个值。您可以使用 <code>.made</code> 访问它：</p>
+<p>Action 不应直接输出信息。相反，他们可以向 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象添加值。在 action 方法中调用 <code>make</code> 会在 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 的抽象语法树（或 <code>.ast</code> ）槽中设置一个值。您可以使用 <code>.made</code> 访问它：</p>
 
 <pre><code>class OctalActions {
     method digits ($/) {
@@ -683,13 +683,13 @@ put $result ??
     !! 'Failed!';
 </code></pre>
 
-<p>The <code>make</code> puts something into the <code>.ast</code> slot of the <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> and <code>.made</code> gets it back out. You can <code>make</code> any value that you like, including containers, objects, and most other things you can imagine. You still get the original, literal match.</p>
+<p>The <code>make</code> puts something into the <code>.ast</code> slot of the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> and <code>.made</code> gets it back out. You can <code>make</code> any value that you like, including containers, objects, and most other things you can imagine. You still get the original, literal match.</p>
 
-<p>In the previous example, the <code>digits</code> action method handled the value. A <code>TOP</code> action method could do it, but it has to reach one level below the <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> object:</p>
+<p>In the previous example, the <code>digits</code> action method handled the value. A <code>TOP</code> action method could do it, but it has to reach one level below the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object:</p>
 
-<p><code>make</code> 将一些内容放入<a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a>的 <code>.ast</code> 插槽中，然后 <code>.made</code> 将其恢复原状。您可以<code>make</code> 任何您喜欢的值，包括容器，对象和您可以想象的大多数其他内容。你仍然得到原始的，字面上的匹配。</p>
+<p><code>make</code> 将一些内容放入<a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>的 <code>.ast</code> 插槽中，然后 <code>.made</code> 将其恢复原状。您可以<code>make</code> 任何您喜欢的值，包括容器，对象和您可以想象的大多数其他内容。你仍然得到原始的，字面上的匹配。</p>
 
-<p>在前面的示例中，<code>digits</code> action 方法处理了该值。 <code>TOP</code> action 方法可以做到，但它必须到达  <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 对象下面的一个级别：</p>
+<p>在前面的示例中，<code>digits</code> action 方法处理了该值。 <code>TOP</code> action 方法可以做到，但它必须到达  <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象下面的一个级别：</p>
 
 <pre><code>class OctalActions {
     method digits ($/) {
@@ -742,9 +742,9 @@ put $result.so ??
     }
 </code></pre>
 
-<p>This <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a> could satisfy that pattern. It has stuff, some digits, and more stuff:</p>
+<p>This <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> could satisfy that pattern. It has stuff, some digits, and more stuff:</p>
 
-<p>这个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>可以满足这种模式。它有东西，一些数字和更多的东西：</p>
+<p>这个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>可以满足这种模式。它有东西，一些数字和更多的东西：</p>
 
 <pre><code>my $string = 'abcdef123xyx456';
 </code></pre>
@@ -779,11 +779,11 @@ put &quot;｢$string｣ &quot;, $result ?? 'Parsed!' !! 'Failed!'; # Failed!
 
 <h1 id="parsing-json">Parsing JSON</h1>
 
-<p>In <em>Mastering Perl</em> I presented a JSON parser that Randal Schwartz created using some advanced features of Perl 5 regular expressions. In many ways his implementation was a grammar, but he was forced to inseparably combine the parsing and the actions. That made the regular expression almost impenetrable. It’s much cleaner and more accessible to write it as a Perl 6 grammar.</p>
+<p>In <em>Mastering Perl</em> I presented a JSON parser that Randal Schwartz created using some advanced features of Perl 5 regular expressions. In many ways his implementation was a grammar, but he was forced to inseparably combine the parsing and the actions. That made the regular expression almost impenetrable. It’s much cleaner and more accessible to write it as a Raku grammar.</p>
 
 <p>JSON is actually quite simple with only a few weird things to handle, but it gives you the opportunity to see how <code>proto</code> rules can simplify actions:</p>
 
-<p>在 Mastering Perl 中，我提到了一个 Randal Schwartz 使用 Perl 5 正则表达式的一些高级功能创建的 JSON 解析器。在许多方面，他的实现是一种 grammar，但他被迫不可分割地将解析和 action 组合在一块。这使得正则表达式几乎无法穿透。用 Perl 6 grammar 编写它会更清晰，更容易访问。</p>
+<p>在 Mastering Perl 中，我提到了一个 Randal Schwartz 使用 Perl 5 正则表达式的一些高级功能创建的 JSON 解析器。在许多方面，他的实现是一种 grammar，但他被迫不可分割地将解析和 action 组合在一块。这使得正则表达式几乎无法穿透。用 Raku grammar 编写它会更清晰，更容易访问。</p>
 
 <p>JSON 实际上非常简单，只需处理几个奇怪的事情，但它让您有机会了解 <code>proto</code> 规则如何简化 action：</p>
 
@@ -891,13 +891,13 @@ token value:sym&lt;null&gt;   { &lt;sym&gt;    }
 
 <p>Some of these use the special <code>&lt;sym&gt;</code> subrule in their pattern. This means that the name of the rule is the literal text to match. The <code>proto</code> rule <code>&lt;true&gt;</code> matches the literal text <code>true</code>. You don’t have to type that out in the name and the pattern.</p>
 
-<p>It doesn’t matter which of those matches; the grammar calls each of them <code>$&lt;value&gt;</code>. The superrule only knows that something that is a value matched and that the subrule handled it appropriately. The action class <code>make</code>s the right value and stores it in the <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a>:</p>
+<p>It doesn’t matter which of those matches; the grammar calls each of them <code>$&lt;value&gt;</code>. The superrule only knows that something that is a value matched and that the subrule handled it appropriately. The action class <code>make</code>s the right value and stores it in the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>:</p>
 
 <p>第一个 <code>proto</code> 规则匹配 <code>*</code>，这实际上意味着它将分派给该组中的另一个规则。它可以发送给所有人并找到有效的。</p>
 
 <p>其中一些在其模式中使用特殊的 <code>&lt;sym&gt;</code> 子规则。这意味着规则的名称是要匹配的文字文本。 <code>proto</code> 规则 <code>&lt;true&gt;</code> 匹配文字文本 <code>true</code>。您不必在名称和模式中输入该内容。</p>
 
-<p>哪些匹配无关紧要; grammar 调用每个 <code>$&lt;value&gt;</code>。超级规则只知道值匹配的东西，并且子规则适当地处理它。 action 类生成正确的值并将其存储在 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 中：</p>
+<p>哪些匹配无关紧要; grammar 调用每个 <code>$&lt;value&gt;</code>。超级规则只知道值匹配的东西，并且子规则适当地处理它。 action 类生成正确的值并将其存储在 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 中：</p>
 
 <pre><code>class JSON::Actions {
     method TOP    ($/) { make $&lt;value&gt;.made }
@@ -954,12 +954,12 @@ token value:sym&lt;null&gt;   { &lt;sym&gt;    }
 <li>The ratcheting behavior keeps things simple.</li>
 <li>You can easily handle balanced openers and closers (i.e., the quoting stuff).</li>
 <li>A grammar can inherit other grammars, so you can adjust a grammar based on the data instead of writing one grammar that handles all the data.</li>
-<li>You’ve seen action classes, but you can also have action instances that remember extra non-<a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> data.</li>
+<li>You’ve seen action classes, but you can also have action instances that remember extra non-<a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> data.</li>
 <li>There’s a <code>.subparse</code> method that lets you parse chunks so you can handle one record at a time.</li>
 <li>棘轮行为使事情变得简单。</li>
 <li>您可以轻松地处理平衡的开口和闭合（即引用的东西）。</li>
 <li>grammar 可以继承其他 grammar，因此您可以根据数据调整 grammar，而不是编写一个处理所有数据的 grammar。</li>
-<li>您已经看过 action 类，但你也可以拥有记住额外非<a href="https://docs.perl6.org/type/Match.html"><code>匹配</code></a>数据的 action 实例。</li>
+<li>您已经看过 action 类，但你也可以拥有记住额外非<a href="https://docs.raku.org/type/Match.html"><code>匹配</code></a>数据的 action 实例。</li>
 <li>有一个 <code>.subparse</code> 方法，可以让你解析块，这样你就可以一次处理一条记录。</li>
 </ul>
 
@@ -1003,11 +1003,11 @@ my $result = Grammar::CSV.parse( $data );
 
 <p>You typically don’t want to parse entire files, though. Let’s fix the first part of that problem. You want to process records as you run into them. Instead of using <code>.parse</code>, which anchors to the end of the text, you can use <code>.subparse</code>, which doesn’t. This means you can parse part of the text then stop.</p>
 
-<p>You can deal with one record at a time. Using <code>.subparse</code> with the <code>record</code> rule gets you the first record and only the first record. The <code>.subparse</code> method always returns a <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a>, unlike <code>.parse</code>, which only returns a <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> when it succeeds. You can’t rely on the type of the object as an indication of success:</p>
+<p>You can deal with one record at a time. Using <code>.subparse</code> with the <code>record</code> rule gets you the first record and only the first record. The <code>.subparse</code> method always returns a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>, unlike <code>.parse</code>, which only returns a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> when it succeeds. You can’t rely on the type of the object as an indication of success:</p>
 
 <p>但是，您通常不希望解析整个文件。让我们解决这个问题的第一部分。您希望在遇到记录时处理记录。你可以使用 <code>.subparse</code>，而不是使用锚定到文本末尾的 <code>.parse</code>，  <code>.subparse</code> 不会锚定到文本末尾。这意味着您可以解析部分文本然后停止。</p>
 
-<p>您可以一次处理一条记录。将 <code>.subparse</code> 与 <code>record</code> 规则一起使用可以获得第一条记录，并且只获得第一条记录。与 <code>.parse</code> 不同，<code>.subparse</code> 方法总是返回一个 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a>，<code>.parse</code> 方法只在成功时返回一个 <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a>。你不能依赖对象的类型作为成功的指示：</p>
+<p>您可以一次处理一条记录。将 <code>.subparse</code> 与 <code>record</code> 规则一起使用可以获得第一条记录，并且只获得第一条记录。与 <code>.parse</code> 不同，<code>.subparse</code> 方法总是返回一个 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>，<code>.parse</code> 方法只在成功时返回一个 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>。你不能依赖对象的类型作为成功的指示：</p>
 
 <pre><code>my $data = $filename.IO.slurp;
 my $first_result = Grammar::CSV.subparse(
@@ -1016,9 +1016,9 @@ my $first_result = Grammar::CSV.subparse(
 if $first-result { ... }
 </code></pre>
 
-<p>That works for the first line. Use <code>:c(N)</code> to tell these methods where to start in the <a href="https://docs.perl6.org/type/Str.html"><code>Str</code></a>. You have to know where you want to start. The <a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> knows how far it got; look in the <code>.from</code> slot:</p>
+<p>That works for the first line. Use <code>:c(N)</code> to tell these methods where to start in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. You have to know where you want to start. The <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> knows how far it got; look in the <code>.from</code> slot:</p>
 
-<p>这适用于第一行。使用 <code>:c(N)</code> 告诉这些方法在 <a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>中从哪里开始。你必须知道你想要从哪里开始。<a href="https://docs.perl6.org/type/Match.html"><code>Match</code></a> 知道它进行了多远;看看 <code>.from</code> 插槽：</p>
+<p>这适用于第一行。使用 <code>:c(N)</code> 告诉这些方法在 <a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中从哪里开始。你必须知道你想要从哪里开始。<a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 知道它进行了多远;看看 <code>.from</code> 插槽：</p>
 
 <pre><code>my $data  = $filename.IO.slurp;
 
@@ -1084,9 +1084,9 @@ for %formats.values -&gt; $hash {
     }
 </code></pre>
 
-<p>The <code>%formats</code> <a href="https://docs.perl6.org/type/Hash.html"><code>Hash</code></a> of <a href="https://docs.perl6.org/type/Hash.html"><code>Hash</code></a>es stores the filenames and the grammars for them. You can load a grammar and use it to parse the data without the explicit grammar name:</p>
+<p>The <code>%formats</code> <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> of <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>es stores the filenames and the grammars for them. You can load a grammar and use it to parse the data without the explicit grammar name:</p>
 
-<p><code>%formats</code> <a href="https://docs.perl6.org/type/Hash.html"><code>散列</code></a>的<a href="https://docs.perl6.org/type/Hash.html"><code>散列</code></a>存储文件名和 grammar。您可以加载 grammar 并使用它来解析数据而不使用显式的 grammar 名称：</p>
+<p><code>%formats</code> <a href="https://docs.raku.org/type/Hash.html"><code>散列</code></a>的<a href="https://docs.raku.org/type/Hash.html"><code>散列</code></a>存储文件名和 grammar。您可以加载 grammar 并使用它来解析数据而不使用显式的 grammar 名称：</p>
 
 <pre><code>corpus/test.csv with Grammar::CSV parsed
 corpus/test-backslash.csv with Grammar::CSV::Backslashed parsed
@@ -1100,13 +1100,13 @@ corpus/test-backslash.csv with Grammar::CSV::Backslashed parsed
 
 <p>Roles can supply rules and methods that grammars can use. In the previous section you handled different sorts of double-quote escaping through inheritance, where you overrode the rule. You can do the same thing with roles.</p>
 
-<p>A grammar can have methods and subroutines. The way you declare a name with <code>sub</code>, <code>method</code>, or <code>rule</code> tells the language parser (not your grammar!) how to parse the stuff in the <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a>.</p>
+<p>A grammar can have methods and subroutines. The way you declare a name with <code>sub</code>, <code>method</code>, or <code>rule</code> tells the language parser (not your grammar!) how to parse the stuff in the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>.</p>
 
 <p>First, adjust the main grammar to have a stub method for <code>&lt;escaped-quote&gt;</code>. This forces something else to define it:</p>
 
 <p>角色可以提供 grammar 可以使用的规则和方法。在上一节中，您通过继承处理了不同类型的双引号转义，其中您重写了规则。你可以用角色做同样的事情。</p>
 
-<p>Grammar 可以有方法和子程序。使用 <code>sub</code>，<code>method</code>或 <code>rule</code> 声明名称的方式告诉语言解析器（而不是 grammar！）如何解析<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中的东西。</p>
+<p>Grammar 可以有方法和子程序。使用 <code>sub</code>，<code>method</code>或 <code>rule</code> 声明名称的方式告诉语言解析器（而不是 grammar！）如何解析<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中的东西。</p>
 
 <p>首先，调整主 grammar，使其具有 <code>&lt;escaped-quote&gt;</code> 的存根方法。这迫使别人定义它：</p>
 
@@ -1156,7 +1156,7 @@ say $match // 'Failed!';
 
 <p>Doing this doesn’t fix the double quotes in the data—a <code>&quot;&quot;</code> stays as a <code>&quot;&quot;</code>—but you can fix that in an action class.</p>
 
-<p>EXERCISE 17.6Adjust the CSV example to use roles instead of inheritance. Create an action class to adjust the escaped double quotes as you run into them. You can start with <em>Grammars/test.csv</em> from the downloads section of <a href="https://www.learningperl6.com/">the book’s website</a> if you like.</p>
+<p>EXERCISE 17.6Adjust the CSV example to use roles instead of inheritance. Create an action class to adjust the escaped double quotes as you run into them. You can start with <em>Grammars/test.csv</em> from the downloads section of <a href="https://www.learningraku.com/">the book’s website</a> if you like.</p>
 
 <p>这样做不会修复数据中的双引号 -  <code>&quot;&quot;</code> 保留为 <code>&quot;&quot;</code> - 但您可以在 action 类中修复它。</p>
 
@@ -1166,13 +1166,13 @@ say $match // 'Failed!';
 
 <p>Grammars are one of the killer features of the language. You can define complex relationships between patterns and use action classes to run arbitrarily complex code when something matches. You might find that your entire program ends up being one big grammar.</p>
 
-<p>Grammars 是 Perl 6 语言的杀手级特性之一。您可以定义模式之间的复杂关系，并在匹配时使用 action 类来运行任意复杂的代码。您可能会发现整个程序最终变成一个大的 grammar。</p>
+<p>Grammars 是 Raku 语言的杀手级特性之一。您可以定义模式之间的复杂关系，并在匹配时使用 action 类来运行任意复杂的代码。您可能会发现整个程序最终变成一个大的 grammar。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/learningraku/">LearningRaku</a>&nbsp;
             
           </div>
         

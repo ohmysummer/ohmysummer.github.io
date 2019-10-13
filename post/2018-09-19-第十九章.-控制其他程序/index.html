@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (659 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (657 words)
   
   
 </span>
@@ -235,7 +235,7 @@ if (!doNotTrack) {
 
 <h1 id="声明">声明</h1>
 
-<p>本章翻译仅用于 Perl 6 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
+<p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
 
 <h1 id="第十九章-控制其它程序">第十九章. 控制其它程序</h1>
 
@@ -267,14 +267,14 @@ shell( $command );
 
 <p>注意变量作为 <code>shell</code> 的参数！一定要知道它们里面有什么。如果 shell 中的字符是特殊的，那么它在该值中也是特殊的。稍后详细介绍。</p>
 
-<p><code>shell</code> 返回一个 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象。当你在 sink 上下文中使用它（对结果不执行任何操作）并且命令失败时，<a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象会抛出异常：</p>
+<p><code>shell</code> 返回一个 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象。当你在 sink 上下文中使用它（对结果不执行任何操作）并且命令失败时，<a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象会抛出异常：</p>
 
 <pre><code>shell( '/usr/bin/false' );  # throws X::Proc::Unsuccessful
 </code></pre>
 
 <p>当命令以 <code>0</code> 以外的值退出时，命令“失败”。这是一种 Unix 惯例，其中非零数字表示各种错误条件。并非所有程序都遵循该惯例，如果不遵循，你将不得不做更多的工作。</p>
 
-<p>你可以保存结果以避免异常。你可以检查 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象以查看发生的情况：</p>
+<p>你可以保存结果以避免异常。你可以检查 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象以查看发生的情况：</p>
 
 <pre><code>my $proc = shell( '/usr/bin/false' );
 unless $proc.so {
@@ -293,14 +293,14 @@ given $proc {
 }
 </code></pre>
 
-<p>如果你不关心命令是否失败，则可以在返回的对象上调用 <code>.so</code>。这“处理”对象并阻止 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 抛出异常：</p>
+<p>如果你不关心命令是否失败，则可以在返回的对象上调用 <code>.so</code>。这“处理”对象并阻止 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 抛出异常：</p>
 
 <pre><code>shell( '/usr/bin/false' ).so
 </code></pre>
 
 <h2 id="引起来的命令">引起来的命令</h2>
 
-<p>有时你想捕获命令的输出或将其保存在变量中。你可以使用带 <code>:x</code> 副词的引用从命令的输出创建一个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>：</p>
+<p>有时你想捕获命令的输出或将其保存在变量中。你可以使用带 <code>:x</code> 副词的引用从命令的输出创建一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
 
 <pre><code>my $output = Q:x{ls -1};
 my $output = q:x{ls -1};
@@ -321,15 +321,15 @@ my $output = qqx{$command};
 
 <h2 id="更安全的命令">更安全的命令</h2>
 
-<p><code>run</code> 例程允许你将命令表示为列表。列表中的第一项是命令名，Perl 6 直接执行而没有 shell 交互。这个命令并不像它看起来那样令人讨厌，因为没有一个字符对 shell 来说是特殊的。那些分号不会结束命令并启动另一个命令：</p>
+<p><code>run</code> 例程允许你将命令表示为列表。列表中的第一项是命令名，Raku 直接执行而没有 shell 交互。这个命令并不像它看起来那样令人讨厌，因为没有一个字符对 shell 来说是特殊的。那些分号不会结束命令并启动另一个命令：</p>
 
 <pre><code># don't do this, just in case
 run( '/bin/echo', '-n', ';;;; rm -rf /' );
 </code></pre>
 
-<p>如果你在 shell 中将其作为单个<a href="https://docs.perl6.org/type/Str.html"><code>字符串</code></a>输入，则可以启动递归操作以删除所有文件。即使在开玩笑中也不要尝试这个（或者使用带有保存快照的虚拟机！）。</p>
+<p>如果你在 shell 中将其作为单个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>输入，则可以启动递归操作以删除所有文件。即使在开玩笑中也不要尝试这个（或者使用带有保存快照的虚拟机！）。</p>
 
-<p><code>run</code> 返回一个 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象; 以与 <code>shell</code> 相同的方式处理它：</p>
+<p><code>run</code> 返回一个 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象; 以与 <code>shell</code> 相同的方式处理它：</p>
 
 <pre><code>unless run( ... ) {
     put &quot;Command failed&quot;;
@@ -357,7 +357,7 @@ run( 'echo', '-n', 'Hello' );
 
 <p>这并不意味着你找到的命令是正确的;有人可能已经篡改过。没有办法提供完美的安全性 - 但你不必太担心。每当你与程序之外的事物进行交互时，请考虑这一点。</p>
 
-<p>像 <code>shell</code> 一样，<code>run</code> 返回一个 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象。 <code>:out</code> 参数捕获标准输出并通过 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象使其可用。使用 <code>.slurp</code> 来提取它：</p>
+<p>像 <code>shell</code> 一样，<code>run</code> 返回一个 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象。 <code>:out</code> 参数捕获标准输出并通过 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象使其可用。使用 <code>.slurp</code> 来提取它：</p>
 
 <pre><code>my $proc = run(
     '/bin/some_command', '-n', '-t', $filename
@@ -414,9 +414,9 @@ $hex.in.print: $string;
 ...;
 </code></pre>
 
-<p>你可以将一个外部程序的输出重定向到另一个外部程序的输入。此示例获取 <code>perl6 -v</code> 的输出并使其成为下一个<a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 的输入：</p>
+<p>你可以将一个外部程序的输出重定向到另一个外部程序的输入。此示例获取 <code>raku -v</code> 的输出并使其成为下一个<a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 的输入：</p>
 
-<pre><code>my $proc1 = run( 'perl6', '-v', :out );
+<pre><code>my $proc1 = run( 'raku', '-v', :out );
 my $proc2 = run(
     'tr', '-s', Q/[:lower:]/,  Q/[:upper:]/,
     :in($proc1.out)
@@ -431,12 +431,12 @@ IMPLEMENTING PERL 6.C.
 
 <h1 id="procs">Procs</h1>
 
-<p><a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 对象处理 <code>shell</code> 和 <code>run</code>。自己构造对象以获得更多控制。这分两步进行; <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 设置了稍后运行命令的东西：</p>
+<p><a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象处理 <code>shell</code> 和 <code>run</code>。自己构造对象以获得更多控制。这分两步进行; <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 设置了稍后运行命令的东西：</p>
 
 <pre><code>my $proc = Proc.new: ...;
 </code></pre>
 
-<p>设置捕获并合并标准输出和错误流的通用 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>：</p>
+<p>设置捕获并合并标准输出和错误流的通用 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>：</p>
 
 <pre><code>my $proc =  Proc.new: :err, :out, :merge;
 </code></pre>
@@ -456,11 +456,11 @@ unless $worked {
 }
 </code></pre>
 
-<p>练习19.2 创建捕获标准输出和错误的 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>。生成命令以获取目录列表。</p>
+<p>练习19.2 创建捕获标准输出和错误的 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>。生成命令以获取目录列表。</p>
 
 <h1 id="异步控制">异步控制</h1>
 
-<p>通过 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>（以及 <code>shell</code> 和 <code>run</code>）执行命令会使程序等待，直到外部程序完成其工作。使用 <a href="https://docs.perl6.org/type/Proc::Async.html"><code>Proc::Async</code></a> 允许这些程序在自己的 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 中运行，而程序的其余部分继续运行。</p>
+<p>通过 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>（以及 <code>shell</code> 和 <code>run</code>）执行命令会使程序等待，直到外部程序完成其工作。使用 <a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 允许这些程序在自己的 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 中运行，而程序的其余部分继续运行。</p>
 
 <p>运行外部 <code>find</code> 并等待它遍历所有文件系统可能几乎永远等不到（至少感觉像）：</p>
 
@@ -476,10 +476,10 @@ put 'Finished';
 
 <p>运行此程序时，你会看到 <em>find</em> 的所有输出行。完成后，可能需要很长时间，然后你将看到 <code>Finished</code> 消息。你可以异步地执行此操作。</p>
 
-<p>你可以在这些示例中看到 Unix *find*，但你还在第8章中创建了一个类似的目录列表程序，你可以将其用作外部程序来练习使用 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a>：</p>
+<p>你可以在这些示例中看到 Unix *find*，但你还在第8章中创建了一个类似的目录列表程序，你可以将其用作外部程序来练习使用 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>：</p>
 
 <pre><code>my $proc = Proc.new: :out;
-$proc.spawn: 'perl6', 'dir-listing.p6';
+$proc.spawn: 'raku', 'dir-listing.p6';
 
 for $proc.out.lines -&gt; $line {
     put $++, ': ', $line;
@@ -488,7 +488,7 @@ for $proc.out.lines -&gt; $line {
 put 'Finished';
 </code></pre>
 
-<p><a href="https://docs.perl6.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的接口与 <a href="https://docs.perl6.org/type/Proc.html"><code>Proc</code></a> 的有点不同。一旦有了对象，就可以使用第18章中看到的 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 和 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 功能。这个例子使用 <code>.lines</code> 将输出分解为行（而不是缓冲区的块），然后轻敲该 <a href="https://docs.perl6.org/type/Supply.html"><code>Supply</code></a> 以处理进来的行：</p>
+<p><a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的接口与 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 的有点不同。一旦有了对象，就可以使用第18章中看到的 <a href="https://docs.raku.org/type/Supply.html"><code>Supply</code></a> 和 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 功能。这个例子使用 <code>.lines</code> 将输出分解为行（而不是缓冲区的块），然后轻敲该 <a href="https://docs.raku.org/type/Supply.html"><code>Supply</code></a> 以处理进来的行：</p>
 
 <pre><code>my $proc = Proc::Async.new: 'find', '/', '-name', '*.txt';
 
@@ -500,7 +500,7 @@ put 'Moving on';
 await $promise;
 </code></pre>
 
-<p>这是 <a href="https://docs.perl6.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的简单使用，但你可以将它与你已经看到的并发功能结合使用。调用 <code>.stdout</code> 可以获得输出行，但只能在调用 <code>.start</code> 之后。在<a href="https://docs.perl6.org/type/Block.html"><code>块</code></a>中执行这两个操作：</p>
+<p>这是 <a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的简单使用，但你可以将它与你已经看到的并发功能结合使用。调用 <code>.stdout</code> 可以获得输出行，但只能在调用 <code>.start</code> 之后。在<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中执行这两个操作：</p>
 
 <pre><code>my $proc = Proc::Async.new: 'find', '/', '-name', '*.txt';
 
@@ -510,7 +510,7 @@ react {
 };
 </code></pre>
 
-<p><code>.start</code> 返回一个在外部程序完成之前不会保留的 <a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a>。即使 <code>whenever</code> 在程序开始时运行，<a href="https://docs.perl6.org/type/Promise.html"><code>Promise</code></a> 都不会保留到最后，然后 <a href="https://docs.perl6.org/type/Block.html"><code>Block</code></a> 就会完成它的工作。</p>
+<p><code>.start</code> 返回一个在外部程序完成之前不会保留的 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a>。即使 <code>whenever</code> 在程序开始时运行，<a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 都不会保留到最后，然后 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 就会完成它的工作。</p>
 
 <p>练习19.3 实现异步 <em>find</em> 程序。修改它，使其在找到你在命令行上指定的文件数后停止。报告找到的文件数。</p>
 
@@ -522,7 +522,7 @@ react {
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/learningperl6/">LearningPerl6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/learningraku/">LearningRaku</a>&nbsp;
             
           </div>
         

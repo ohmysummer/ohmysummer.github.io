@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku 中的函数</title>
+  <meta property="og:title" content="Raku 中的函数" />
+  <meta name="twitter:title" content="Raku 中的函数" />
+  <meta name="description" content="Raku 中的函数 例程（Routines）是 Raku 中代码重用的最小手段。它们有几种形式，最明显的是属于类和角色并与对象相关联的方法，还有函数, 也叫做子例程或短子程序，它们独立于对象而存在。
+子例程默认是词法（my）作用域的，对它们的调用通常在编译时解析。
+子例程可以具有签名，也称为*参数列表*，其指定签名期望的参数（如果有的话）。 它可以指定（或保持打开）参数的数量和类型，以及返回值。
+子例程的内省通过例程提供。
+定义/创建/使用 函数 子例程 创建子例程的基本方法是使用 sub 声明符，后跟可选标识符
+sub my-func { say &quot;Look ma, no args!&quot; } my-func;  sub 声明符返回可以存储在任何容器中的 Sub 类型的值:
+my &amp;c = sub { say &quot;Look ma, no name!&quot; } c; # OUTPUT: «Look ma, no name!␤» my Any:D $f = sub { say &#39;Still nameless...&#39; } $f(); # OUTPUT: «Still nameless...␤» my Code \a = sub { say ‚raw containers don&#39;t implement postcircumfix:&lt;( )&gt;‘ }; a.">
+  <meta property="og:description" content="Raku 中的函数 例程（Routines）是 Raku 中代码重用的最小手段。它们有几种形式，最明显的是属于类和角色并与对象相关联的方法，还有函数, 也叫做子例程或短子程序，它们独立于对象而存在。
+子例程默认是词法（my）作用域的，对它们的调用通常在编译时解析。
+子例程可以具有签名，也称为*参数列表*，其指定签名期望的参数（如果有的话）。 它可以指定（或保持打开）参数的数量和类型，以及返回值。
+子例程的内省通过例程提供。
+定义/创建/使用 函数 子例程 创建子例程的基本方法是使用 sub 声明符，后跟可选标识符
+sub my-func { say &quot;Look ma, no args!&quot; } my-func;  sub 声明符返回可以存储在任何容器中的 Sub 类型的值:
+my &amp;c = sub { say &quot;Look ma, no name!&quot; } c; # OUTPUT: «Look ma, no name!␤» my Any:D $f = sub { say &#39;Still nameless...&#39; } $f(); # OUTPUT: «Still nameless...␤» my Code \a = sub { say ‚raw containers don&#39;t implement postcircumfix:&lt;( )&gt;‘ }; a.">
+  <meta name="twitter:description" content="Raku 中的函数 例程（Routines）是 Raku 中代码重用的最小手段。它们有几种形式，最明显的是属于类和角色并与对象相关联的方法，还有函数, 也叫做子例程或短子程序，它们独立于对象而存在。
+子例程默认是词法（my）作用域的，对它们的调用通常在编译时解析。
+子例程可以具有签名，也称为*参数列表*，其指定签名期望的参数（如果有的话）。 它可以指定（或保持打开）参数的数量和类型，以及返回值。
+ …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-10-17-raku%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-17-raku%E4%B8%AD%E7%9A%84%E5%87%BD%E6%95%B0/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku 中的函数</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 17, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 11 minutes (2257 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="raku-中的函数-https-docs-raku-org-language-functions"><a href="https://docs.raku.org/language/functions">Raku 中的函数</a></h1>
+
+<p>例程（Routines）是 Raku 中代码重用的最小手段。它们有几种形式，最明显的是属于类和角色并与对象相关联的方法，还有函数, 也叫做子例程或短子程序，它们独立于对象而存在。</p>
+
+<p>子例程默认是词法（<code>my</code>）作用域的，对它们的调用通常在编译时解析。</p>
+
+<p>子例程可以具有<a href="https://docs.raku.org/type/Signature">签名</a>，也称为*参数列表*，其指定签名期望的参数（如果有的话）。 它可以指定（或保持打开）参数的数量和类型，以及返回值。</p>
+
+<p>子例程的内省通过<a href="https://docs.raku.org/type/Routine">例程</a>提供。</p>
+
+<h2 id="定义-创建-使用-函数">定义/创建/使用 函数</h2>
+
+<h3 id="子例程">子例程</h3>
+
+<p>创建子例程的基本方法是使用 <code>sub</code> 声明符，后跟可选<a href="https://docs.raku.org/language/syntax#Identifiers">标识符</a></p>
+
+<pre><code class="language-raku">sub my-func { say &quot;Look ma, no args!&quot; }
+my-func;
+</code></pre>
+
+<p>sub 声明符返回可以存储在任何容器中的 <a href="https://docs.raku.org/type/Sub">Sub</a> 类型的值:</p>
+
+<pre><code class="language-raku">my &amp;c = sub { say &quot;Look ma, no name!&quot; }
+c;     # OUTPUT: «Look ma, no name!␤» 
+ 
+my Any:D $f = sub { say 'Still nameless...' }
+$f();  # OUTPUT: «Still nameless...␤» 
+ 
+my Code \a = sub { say ‚raw containers don't implement postcircumfix:&lt;( )&gt;‘ };
+a.();  # OUTPUT: «raw containers don't implement postcircumfix:&lt;( )&gt;␤» 
+</code></pre>
+
+<p><code>sub</code> 声明符将在编译时在当前作用域内声明一个新名称。因此，任何间接性都必须在编译时解析：</p>
+
+<pre><code class="language-raku">constant aname = 'foo';
+sub ::(aname) { say 'oi‽' };
+foo;
+</code></pre>
+
+<p>一旦将宏添加到 Raku 中，这将变得更有用。</p>
+
+<p>为了使子程序接受参数，<a href="https://docs.raku.org/type/Signature">签名</a>被放置在子例程名称和它的函数主体之间，在括号中：</p>
+
+<pre><code class="language-raku">sub exclaim ($phrase) {
+    say $phrase ~ &quot;!!!!&quot;
+}
+exclaim &quot;Howdy, World&quot;;
+</code></pre>
+
+<p>默认地, 子例程是<a href="https://docs.raku.org/syntax/my">词法作用域</a>的。即 <code>sub foo {...}</code> 和 <code>my sub foo {...}</code> 是相同的并且只被定义在当前作用域中。</p>
+
+<pre><code class="language-raku">sub escape($str) {
+    # Puts a slash before non-alphanumeric characters
+    S:g[&lt;-alpha -digit&gt;] = &quot;\\$/&quot; given $str
+}
+
+say escape 'foo#bar?'; # foo\#bar\?
+
+{
+    sub escape($str) {
+        # Writes each non-alphanumeric character in its hexadecimal escape
+        S:g[&lt;-alpha -digit&gt;] = &quot;\\x[{ $/.ord.base(16) }]&quot; given $str
+    }
+
+    say escape 'foo#bar?' # foo\x[23]bar\x[3F]
+}
+
+# Back to original escape function
+say escape 'foo#bar?'; # foo\#bar\?
+</code></pre>
+
+<p>子例程不必命名; 这种情况下, 它们被叫做匿名的。</p>
+
+<pre><code class="language-raku">say sub ($a, $b) { $a ** 2 + $b ** 2 }(3, 4) # 25
+</code></pre>
+
+<p>但在这种情况下，通常希望使用更简洁的块语法。可以就地调用子例程和块，如上例所示。</p>
+
+<h3 id="blocks-和-lambdas">Blocks 和 Lambdas</h3>
+
+<p>每当你看到像</p>
+
+<pre><code class="language-raku">{ $_ + 42 }, -&gt; $a, $b { $a ** $b }
+</code></pre>
+
+<p>或</p>
+
+<pre><code class="language-raku">{ $^text.indent($:spaces) }
+</code></pre>
+
+<p>那么这是<a href="https://docs.raku.org/type/Block">块</a>语法。 它在每个 <code>if</code>，<code>for</code>，<code>while</code> 等关键字之后使用。</p>
+
+<pre><code class="language-raku">for 1, 2, 3, 4 -&gt; $a, $b {
+    say $a ~ $b;
+}
+# OUTPUT: «12␤34␤» 
+</code></pre>
+
+<p>它们也可以作为匿名代码块自己使用。</p>
+
+<pre><code class="language-raku">say { $^a ** 2 + $^b ** 2}(3, 4) # 25
+</code></pre>
+
+<p>有关块语法的详细信息，请参阅<a href="https://docs.raku.org/type/Block">块</a>类型的文档。</p>
+
+<h3 id="签名">签名</h3>
+
+<p>函数接受的参数在其签名中有描述。</p>
+
+<pre><code class="language-raku">sub format(Str $s) { ... }
+-&gt; $a, $b { ... }
+</code></pre>
+
+<p>有关签名的语法和使用的详细信息，请参阅 <a href="https://docs.raku.org/type/Signature">Signature</a> 类的文档。</p>
+
+<h3 id="自动签名">自动签名</h3>
+
+<p>如果没有提供签名，但在函数体中使用了两个自动变量 <code>@_</code> 或 <code>%_</code> 中的任何一个，则将生成带有 <code>*@_</code> 或 <code>*%_</code> 的签名。 两个自动变量可以同时使用。</p>
+
+<pre><code class="language-raku">sub s { say @_, %_ };
+dd &amp;s.signature # OUTPUT«:(*@_, *%_)␤»
+</code></pre>
+
+<h3 id="参数">参数</h3>
+
+<p>参数以逗号分隔列表的形式提供。 要消除嵌套调用的歧义, 可以使用圆括号或副词形式。</p>
+
+<pre><code class="language-raku">sub f(&amp;c){ c() * 2 }; # call the function reference c with empty parameter list
+sub g($p){ $p - 2 };
+say(g(42)); # nest call to g in call to say
+f: { say g(666) }; # call f with a block
+</code></pre>
+
+<p>当调用函数时，位置参数应该以与函数签名相同的顺序提供。 命名参数可以以任何顺序提供，但是最好将命名参数放在位置参数之后。 在函数调用的参数列表中，支持一些特殊的语法：</p>
+
+<pre><code class="language-raku">sub f(|c){};
+f :named(35);     # 具名参数(in &quot;adverb&quot; form.)
+f named =&gt; 35;    # 也是具名参数.
+f :35named;       # 使用缩写的副词形式的具名参数
+f 'named' =&gt; 35;  # 不是具名参数, 而是一个 Pair 位置参数
+my \c = &lt;a b c&gt;.Capture;
+f |c;             # Merge the contents of Capture $c as if they were supplied
+</code></pre>
+
+<p>传递给函数的参数在概念上首先被收集在 Capture 容器中。 关于这些容器的语法和使用的细节可以在 <a href="https://docs.raku.org/type/Capture">Capture</a> 类的文档中找到。</p>
+
+<p>当使用命名参数时，请注意，正常的 List &ldquo;pair-chaining&rdquo; 允许在命名参数之间跳过逗号。</p>
+
+<pre><code class="language-raku">sub f(|c){};
+f :dest&lt;/tmp/foo&gt; :src&lt;/tmp/bar&gt; :lines(512);
+f :32x :50y :110z;   # This flavor of &quot;adverb&quot; works, too
+f :a:b:c;            # The spaces are also optional.
+</code></pre>
+
+<h3 id="返回值">返回值</h3>
+
+<p>任何块或例程将把它的最后一个表达式作为返回值提供给调用者。如果 <a href="https://docs.raku.org/language/control#return">return</a> 或 <a href="https://docs.raku.org/language/control#return-rw">return-rw</a> 被调用，它们的参数（如果有的话）将成为返回值。 默认返回值为 <a href="https://docs.raku.org/type/Nil">Nil</a>。</p>
+
+<pre><code class="language-raku">sub a { 42 };
+sub b { say a };
+b;
+# OUTPUT«42␤»
+</code></pre>
+
+<p>多个返回值作为列表或通过创建<a href="https://docs.raku.org/type/Capture">捕获</a>返回。 解构可以用于解开多个返回值。</p>
+
+<pre><code class="language-raku">sub a { 42, 'answer' };
+put a.perl;
+# OUTPUT«(42, &quot;answer&quot;)␤»
+
+my ($n, $s) = a;
+put [$s, $n];
+# OUTPUT«answer 42␤»
+
+sub b { &lt;a b c&gt;.Capture };
+put b.perl;
+# OUTPUT«\(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)␤»
+</code></pre>
+
+<h3 id="返回类型约束">返回类型约束</h3>
+
+<p>Raku 有很多方式来指定函数的返回类型：</p>
+
+<pre><code class="language-raku">sub foo(--&gt; Int)      {}; say &amp;foo.returns; # (Int)
+sub foo() returns Int {}; say &amp;foo.returns; # (Int)
+sub foo() of Int      {}; say &amp;foo.returns; # (Int)
+my Int sub foo()      {}; say &amp;foo.returns; # (Int)
+</code></pre>
+
+<p>尝试返回另外一种类型的值会引起编译错误。</p>
+
+<pre><code class="language-raku">sub foo() returns Int { &quot;a&quot;; }; foo; # Type check fails
+</code></pre>
+
+<p>注意，<code>Nil</code> 和 <code>Failure</code> 是免于返回类型约束，并且可以从任何子例程返回，而不管其约束：</p>
+
+<pre><code class="language-raku">sub foo() returns Int { fail   }; foo; # Failure returned
+sub bar() returns Int { return }; bar; # Nil returned
+</code></pre>
+
+<h3 id="多重分派">多重分派</h3>
+
+<p>Raku 允许你使用同一个名字但是不同签名写出几个子例程。当子例程按名字被调用时, 运行时环境决定哪一个子例程是最佳匹配, 然后调用那个候选者。你使用 <code>multi</code> 声明符来声明每个候选者。</p>
+
+<pre><code class="language-raku">multi congratulate($name) {
+    say &quot;祝你生日快乐, $name&quot;;
+}
+
+multi congratulate($name, $age) {
+    say &quot;祝 $age 岁生日快乐, $name&quot;;
+}
+
+congratulate 'Camelia'; # 祝你生日快乐, Camelia
+congratulate 'Rakudo', 15; # 祝你 15 岁生日快乐, Rakudo
+</code></pre>
+
+<p>分发/分派(dispatch) 可以发生在参数的数量(元数)上, 但是也能发生在类型上:</p>
+
+<pre><code class="language-raku">multi as-json(Bool $d) { $d ?? 'true' !! 'false' }
+multi as-json(Real $d) { ~$d }
+multi as-json(@d)      { sprintf '[%s]', @d.map(&amp;as-json).join(', ') }
+
+say as-json([True, 42]); # [true, 42]
+</code></pre>
+
+<p>不带任何指定例程类型的 <code>multi</code> 总是默认为 <code>sub</code>, 但是你也可以把 <code>multi</code> 用在方法(methods)上。那些候选者全都是对象的 <code>multi</code> 方法:</p>
+
+<pre><code class="language-raku">class Congrats {
+    multi method congratulate($reason, $name) {
+        say &quot;Hooray for your $reason, $name&quot;;
+    }
+}
+
+role BirthdayCongrats {
+    multi method congratulate('birthday', $name) {
+        say &quot;Happy birthday, $name&quot;;
+    }
+    multi method congratulate('birthday', $name, $age) {
+        say &quot;Happy {$age}th birthday, $name&quot;;
+    }
+}
+
+my $congrats = Congrats.new does BirthdayCongrats;
+
+$congrats.congratulate('升职', 'Cindy');   #-&gt; 恭喜你升职,Cindy
+$congrats.congratulate('birthday', 'Bob'); #-&gt; Happy birthday, Bob
+</code></pre>
+
+<h3 id="proto">proto</h3>
+
+<p><a href="https://docs.raku.org/syntax/proto">proto</a> 从形式上声明了 <code>multi</code> 候选者之间的<code>共性</code>。 proto 充当作能检查但不会修改参数的包装器。看看这个基本的例子:</p>
+
+<pre><code class="language-raku">proto congratulate(Str $reason, Str $name, |) {*}
+multi congratulate($reason, $name) {
+   say &quot;Hooray for your $reason, $name&quot;;
+}
+multi congratulate($reason, $name, Int $rank) {
+   say &quot;Hooray for your $reason, $name -- you got rank $rank!&quot;;
+}
+
+congratulate('being a cool number', 'Fred');     # OK
+congratulate('being a cool number', 'Fred', 42); # OK
+congratulate('being a cool number', 42);         # Proto match error
+</code></pre>
+
+<p>所有的 <code>multi congratulate</code> 都会遵守基本的签名, 这个签名中有两个字符串参数, 后面跟着可选的更多的参数。 <code>|</code> 是一个未命名的 <code>Capture</code> 形参, 它允许 <code>multi</code> 接收额外的参数。第三个 congratulate 调用在编译时失败, 因为第一行的 proto 的签名变成了所有三个 multi congratulate 的共同签名, 而 42 不匹配 <code>Str</code>。</p>
+
+<pre><code class="language-raku">say &amp;congratulate.signature #-&gt; (Str $reason, Str $name, | is raw)
+</code></pre>
+
+<p>你可以给 <code>proto</code> 一个函数体, 并且在你想执行 dispatch 的地方放上一个 <code>{*}</code>。</p>
+
+<pre><code class="language-raku"># attempts to notify someone -- returns False if unsuccessful
+proto notify(Str $user,Str $msg) {
+   my \hour = DateTime.now.hour;
+   if hour &gt; 8 or hour &lt; 22 {
+      return {*};
+   } else {
+      # we can't notify someone when they might be sleeping
+      return False;
+   }
+}
+</code></pre>
+
+<p><code>{*}</code> 总是分派给带有参数的候选者。默认参数和类型强制转换会起作用单不会传递。</p>
+
+<pre><code class="language-raku">proto mistake-proto(Str() $str, Int $number = 42) {*}
+multi mistake-proto($str,$number) { say $str.WHAT }
+mistake-proto(7,42);   #-&gt; (Int) -- coercions not passed on
+mistake-proto('test'); #!&gt; fails -- defaults not passed on
+</code></pre>
+
+<h2 id="约定和惯用法">约定和惯用法</h2>
+
+<p>虽然上面描述的调度系统提供了很多灵活性，但是存在一些大多数内部函数以及许多模块中的函数将遵循的约定。 这些将产生一致的外观和感觉。</p>
+
+<h3 id="吞噬约定">吞噬约定</h3>
+
+<p>也许最重要的是处理 slurpy 列表参数的方式。 大多数时候，函数不会自动展平吞噬(slurpy)列表。 罕见的例外是在列表的列表上没有合理行为的那些函数（例如chrs），或者与已建立的习语有冲突的函数，例如 <a href="https://docs.raku.org/routine/pop">pop</a> 是 <a href="https://docs.raku.org/routine/push">push</a> 的逆操作。</p>
+
+<p>如果你想匹配这个外观和感觉，任何可迭代(Iterable)参数必须使用 <code>**@slurpy</code> 逐个元素地打开，有两个细微差别：</p>
+
+<ul>
+<li><a href="https://docs.raku.org/language/containers#Scalar_containers">Scalar 容器</a>内的 Iterable 不计数。</li>
+<li>在顶层使用 <code>,</code> 创建的列表只能计数为一个 Iterable。</li>
+</ul>
+
+<p>这可以通过使用带有 <code>+</code> 或 <code>+@</code> 而不是 <code>**</code>的 slurpy 来实现：</p>
+
+<pre><code class="language-raku">sub grab(+@a) { &quot;grab $_&quot;.say for @a }
+</code></pre>
+
+<p>这非常接近于:</p>
+
+<pre><code class="language-raku">multi sub grab(**@a) { &quot;grab $_&quot;.say for @a }
+multi sub grab(\a) {
+    a ~~ Iterable and a.VAR !~~ Scalar ?? nextwith(|a) !! nextwith(a,)
+}
+</code></pre>
+
+<p>这导致以下行为，称为「单参数规则」，并且理解什么时间调用 slurpy 函数很重要：</p>
+
+<pre><code class="language-raku">grab(1, 2);      # grab 1 grab 2
+grab((1, 2));    # grab 1 grab 2
+grab($(1, 2));   # grab 1 2
+grab((1, 2), 3); # grab 1 2 grab 3
+</code></pre>
+
+<p>这也使得用户请求的展平感觉一致，无论有没有子列表，或很多</p>
+
+<pre><code class="language-raku">grab(flat (1, 2), (3, 4));   # grab 1 grab 2 grab 3 grab 4
+grab(flat $(1, 2), $(3, 4)); # grab 1 2 grab 3 4
+grab(flat (1, 2));           # grab 1 grab 2
+grab(flat $(1, 2));          # grab 1 2
+</code></pre>
+
+<p>值得注意的是，在这些情况下将绑定和无符号变量混合在一起需要一点技巧，因为在绑定期间没有使用 Scalar 中间人。</p>
+
+<pre><code class="language-raku">my $a = (1, 2);  # Normal assignment, equivalent to $(1, 2)
+grab($a);       # grab 1 2
+my $b := (1, 2); # Binding, $b links directly to a bare (1, 2)
+grab($b);       # grab 1 grab 2
+my \c = (1, 2);  # Sigilless variables always bind, even with '='
+grab(c);        # grab 1 grab 2
+</code></pre>
+
+<h2 id="函数是一等对象">函数是一等对象</h2>
+
+<p>函数和其他代码对象可以作为值传递，就像任何其他对象一样。</p>
+
+<p>有几种方法来获取代码对象。 您可以在声明点将其赋值给变量：</p>
+
+<pre><code class="language-raku">my $square = sub (Numeric $x) { $x * $x }
+# and then use it:
+say $square(6);    # 36
+</code></pre>
+
+<p>或者，您可以通过使用它前面的 <code>&amp;</code> 来引用现有的具名函数。</p>
+
+<pre><code class="language-raku">sub square($x) { $x * $x };
+
+# get hold of a reference to the function:
+my $func = &amp;square
+</code></pre>
+
+<p>这对于高阶函数非常有用，即，将其他函数作为输入的函数。 一个简单高阶函数的是 <a href="https://docs.raku.org/type/List#routine_map">map</a>，它对每个输入元素应用一个函数：</p>
+
+<pre><code class="language-raku">sub square($x) { $x * $x };
+my @squared = map &amp;square,  1..5;
+say join ', ', @squared;        # 1, 4, 9, 16, 25
+</code></pre>
+
+<h3 id="中缀形式">中缀形式</h3>
+
+<p>要像中缀运算符那样调用具有2个参数的子例程，请使用由 <code>[</code> 和 <code>]</code> 包围的子例程引用。</p>
+
+<pre><code class="language-raku">sub plus { $^a + $^b };
+say 21 [&amp;plus] 21;
+# OUTPUT«42␤»
+</code></pre>
+
+<h3 id="闭包">闭包</h3>
+
+<p>Raku 中的所有代码对象都是闭包，这意味着它们可以从外部作用域引用词法变量。</p>
+
+<pre><code class="language-raku">sub generate-sub($x) {
+    my $y = 2 * $x;
+    return sub { say $y };
+    #      ^^^^^^^^^^^^^^  inner sub, uses $y
+}
+my $generated = generate-sub(21);
+$generated(); # 42
+</code></pre>
+
+<p>这里 <code>$y</code> 是 <code>generate-sub</code> 中的词法变量，并且返回的内部子例程使用了 <code>$y</code>。 到内部 sub 被调用时，<code>generate-sub</code> 已经退出。 然而内部 sub 仍然可以使用 <code>$y</code>，因为它关闭了变量。</p>
+
+<p>一个不太明显但有用的闭包示例是使用 <a href="https://docs.raku.org/type/List#routine_map">map</a> 乘以数字列表：</p>
+
+<pre><code class="language-raku">my $multiply-by = 5;
+say join ', ', map { $_ * $multiply-by }, 1..5;     # 5, 10, 15, 20, 25
+</code></pre>
+
+<p>这里传递给 <code>map</code> 的块从外部作用域引用变量 <code>$multiply-by</code>，使块成为闭包。</p>
+
+<p>没有闭包的语言不能轻易地提供高阶函数，它们像 map 一样易于使用和强大。</p>
+
+<h3 id="routines">Routines</h3>
+
+<p>例程是遵守 <a href="https://docs.raku.org/type/Routine">Routine</a> 类型的代码对象，最明显的是 <a href="https://docs.raku.org/type/Sub">Sub</a>，<a href="https://docs.raku.org/type/Method">方法</a>，<a href="https://docs.raku.org/type/Regex">正则表达式</a>和<a href="https://docs.raku.org/type/Submethod">Submethod</a>。</p>
+
+<p>他们携带除了<a href="https://docs.raku.org/type/Block">块</a>提供的额外的功能：他们可以作为 <a href="https://docs.raku.org/language/functions#Multi-dispatch">multis</a>，你可以<a href="https://docs.raku.org/type/Routine#method_wrap">包装</a>它们，并使用 <code>return</code> 提前退出：</p>
+
+<pre><code class="language-raku">my $keywords = set &lt;if for unless while&gt;;
+
+sub has-keyword(*@words) {
+    for @words -&gt; $word {
+        return True if $word (elem) $keywords;
+    }
+    False;
+}
+
+say has-keyword 'not', 'one', 'here';       # False
+say has-keyword 'but', 'here', 'for';       # True
+</code></pre>
+
+<p>这里 <code>return</code> 不仅仅是将离开它所调用的块的内部，而是离开整个程序。 一般来说，块对于 <code>return</code> 是透明的，它们附加到外部程序。</p>
+
+<p>例程(Routines)可以是内联的，并且因此为包装设置了障碍。 使用指令 <code>use soft;</code> 以防止内联在运行时允许包装。</p>
+
+<pre><code class="language-raku">sub testee(Int $i, Str $s){
+    rand.Rat * $i ~ $s;
+}
+
+sub wrap-to-debug(&amp;c){
+    say &quot;wrapping {&amp;c.name} with arguments {&amp;c.signature.perl}&quot;;
+    &amp;c.wrap: sub (|args){
+        note &quot;calling {&amp;c.name} with {args.gist}&quot;;
+        my \ret-val := callwith(|args);
+        note &quot;returned from {&amp;c.name} with return value {ret-val.perl}&quot;;
+        ret-val
+    }
+}
+
+my $testee-handler = wrap-to-debug(&amp;testee);
+# OUTPUT«wrapping testee with arguments :(Int $i, Str $s)»
+
+say testee(10, &quot;ten&quot;);
+# OUTPUT«calling testee with \(10, &quot;ten&quot;)␤returned from testee with return value &quot;6.151190ten&quot;␤6.151190ten»
+&amp;testee.unwrap($testee-handler);
+say testee(10, &quot;ten&quot;);
+# OUTPUT«6.151190ten␤»
+</code></pre>
+
+<h3 id="定义操作符">定义操作符</h3>
+
+<p>操作符只是有趣名字的子例程。 有趣的名称由类别名称（中缀，前缀，后缀，环缀，后环缀）组成，后面跟着冒号，以及一个或多个操作符名称的列表（在环缀和后环缀的情况下为两个组件）。</p>
+
+<p>这既适用于向现有运算符添加多个候选项，也适用于定义新的运算符。 在后一种情况下，新子例程的定义自动将新运算符安装到 语法(grammar)中，但仅在当前词法作用域中。 通过 <code>use</code> 或 <code>import</code> 导入操作符也使其可用。</p>
+
+<pre><code class="language-raku"># adding a multi candidate to an existing operator:
+multi infix:&lt;+&gt;(Int $x, &quot;same&quot;) { 2 * $x };
+say 21 + &quot;same&quot;;            # 42
+
+# 定义一个新的操作符
+sub postfix:&lt;!&gt;(Int $x where { $x &gt;= 0 }) { [*] 1..$x };
+say 6!;                     # 720
+</code></pre>
+
+<p>运算符声明变得尽快可用，因此您甚至可以递归到刚才定义的运算符中，如果您真的想要：</p>
+
+<pre><code class="language-raku">sub postfix:&lt;!&gt;(Int $x where { $x &gt;= 0 }) {
+    $x == 0 ?? 1 !! $x * ($x - 1)!
+}
+say 6!;                     # 720
+</code></pre>
+
+<p>环缀和后环缀操作符由两个分隔符组成，一个开口和一个闭合。</p>
+
+<pre><code class="language-raku">sub circumfix:&lt;START END&gt;(*@elems) {
+    &quot;start&quot;, @elems, &quot;end&quot;
+}
+
+say START 'a', 'b', 'c' END;        # start a b c end
+</code></pre>
+
+<p>后环缀也接收这个术语，在它们被作为参数解析之后：</p>
+
+<pre><code class="language-raku">sub postcircumfix:&lt;!! !!&gt;($left, $inside) {
+    &quot;$left -&gt; ( $inside )&quot;
+}
+say 42!! 1 !!;      # 42 -&gt; ( 1 )
+</code></pre>
+
+<p>块可以直接赋值给操作符名。 使用变量声明符，并在操作符名前加上一个 <code>&amp;</code> 符号。</p>
+
+<pre><code class="language-raku">my &amp;infix:&lt;ieq&gt; = -&gt; |l { [eq] l&gt;&gt;.fc };
+say &quot;abc&quot; ieq &quot;Abc&quot;;
+# OUTPUT«True␤»
+</code></pre>
+
+<h3 id="优先级">优先级</h3>
+
+<p>Raku 中的运算符优先级相对于现有运算符指定。 <code>is tighter</code>、<code>is equiv</code> 和 <code>is looser</code> 特性能使用一个运算符提供，新的运算符优先级与之相关。 可以应用更多的特征。</p>
+
+<p>例如，<code>infix:&lt;*&gt;</code> 的优先级高于 <code>infix:&lt;+&gt;</code>，并且在中间挤压一个像这样：</p>
+
+<pre><code class="language-raku">sub infix:&lt;!!&gt;($a, $b) is tighter(&amp;infix:&lt;+&gt;) {
+    2 * ($a + $b)
+}
+
+say 1 + 2 * 3 !! 4;     # 21
+</code></pre>
+
+<p>这里 <code>1 + 2 * 3 !! 4</code> 被解析为 <code>1 + ((2 * 3) !! 4)</code>，因为新的 <code>!!</code> 运算符的优先级在 <code>+</code> 和 <code>*</code> 之间。</p>
+
+<p>可以使用下面的代码实现相同的效果:</p>
+
+<pre><code class="language-raku">sub infix:&lt;!!&gt;($a,$b) is looser(&amp;infix:&lt;x&gt;) { ... }
+</code></pre>
+
+<p>要将新运算符置于与现有运算符相同的优先级别上，请使用 <code>is equiv(&amp;other-operator)</code>。</p>
+
+<h3 id="结合性">结合性</h3>
+
+<p>当同一个操作符在一行中连续出现多次时，有多种可能的解释。 例如</p>
+
+<pre><code class="language-raku">1 + 2 + 3
+</code></pre>
+
+<p>能被解析为</p>
+
+<pre><code class="language-raku">(1 + 2) + 3 # 左结合性
+</code></pre>
+
+<p>或者解析为</p>
+
+<pre><code class="language-raku">1 + (2 + 3) # 右结合性
+</code></pre>
+
+<p>对于实数的加法，区别有点模糊，因为 <code>+</code> 是<a href="https://en.wikipedia.org/wiki/Associative_property">数学上相关的</a>。</p>
+
+<p>但对其他运算符来说它很重要。 例如对于指数/幂运算符，<code>infix:&lt;**&gt;</code>：</p>
+
+<pre><code class="language-raku">say 2 ** (2 ** 3);      # 256
+say (2 ** 2) ** 3;      # 64
+</code></pre>
+
+<p>Raku 拥有以下可能的结合性配置：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">A</th>
+<th align="center">Assoc</th>
+<th align="left">Meaning of $a ! $b ! $c</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">L</td>
+<td align="center">left</td>
+<td align="left">($a ! $b) ! $c</td>
+</tr>
+
+<tr>
+<td align="center">R</td>
+<td align="center">right</td>
+<td align="left">$a ! ($b ! $c)</td>
+</tr>
+
+<tr>
+<td align="center">N</td>
+<td align="center">non</td>
+<td align="left">ILLEGAL</td>
+</tr>
+
+<tr>
+<td align="center">C</td>
+<td align="center">chain</td>
+<td align="left">($a ! $b) and ($b ! $c)</td>
+</tr>
+
+<tr>
+<td align="center">X</td>
+<td align="center">list</td>
+<td align="left">infix:&lt;!&gt;($a; $b; $c)</td>
+</tr>
+</tbody>
+</table>
+
+<p>您可以使用 <code>is assoc</code> trait 指定运算符的结合性，其中 <code>left</code> 是默认的结合性。</p>
+
+<pre><code class="language-raku">sub infix:&lt;§&gt;(*@a) is assoc&lt;list&gt; {
+    '(' ~ @a.join('|') ~ ')';
+}
+
+say 1 § 2 § 3;      # (1|2|3)
+</code></pre>
+
+<h3 id="traits">Traits</h3>
+
+<p>特性（*traits*）是在编译时运行以修改类型，变量，例程，属性或其他语言对象的行为的子例程。</p>
+
+<p>traits 的例子有：</p>
+
+<pre><code class="language-raku">class ChildClass is ParentClass { ... }
+#                ^^ trait, with argument ParentClass
+has $.attrib is rw;
+#            ^^^^^  trait with name 'rw'
+class SomeClass does AnotherRole { ... }
+#               ^^^^ trait
+has $!another-attribute handles &lt;close&gt;;
+#                       ^^^^^^^ trait
+</code></pre>
+
+<p>还有之前章节中的 <code>is tighter</code>、<code>is looser</code>、<code>is equiv</code>、<code>is assoc</code> 等。</p>
+
+<p>Traits 是 <code>trait_mod&lt;VERB&gt;</code> 形式的 subs, 其中  <code>VERB</code> 代表像 <code>is</code>、<code>does</code>、<code>handles</code> 那样的名字。它接受修改后的东西作为参数, 还有名字作为具名参数。</p>
+
+<pre><code class="language-raku">multi sub trait_mod:&lt;is&gt;(Routine $r, :$doubles!) {
+    $r.wrap({
+        2 * callsame;
+    });
+}
+
+sub square($x) is doubles {
+    $x * $x;
+}
+
+say square 3;       # 18
+</code></pre>
+
+<p>请参阅内置常规性状文档的<a href="https://docs.raku.org/type/Routine">类型例程</a>。</p>
+
+<h3 id="重新分派">重新分派</h3>
+
+<p>在某些情况下，例程可能想从链中调用下一个方法。 这个链可以是类层次结构中的父类的列表，或者它可以是来自多分派的较不具体的 multi 候选者，或者它可以是来自<code>wrap</code>的内部例程。</p>
+
+<p>在所有这些情况下，您可以使用 <code>callwith</code> 通过您自己选择的参数调用链中的下一个例程。</p>
+
+<pre><code class="language-raku">multi a(Any $x) {
+    say &quot;Any $x&quot;;
+    return 5;
+}
+multi a(Int $x) {
+    say &quot;Int $x&quot;;
+    my $res = callwith($x + 1);
+    say &quot;Back in Int with $res&quot;;
+}
+
+a 1;
+# OUTPUT:
+# Int 1
+# Any 2
+# Back in Int with 5
+</code></pre>
+
+<p>这里，<code>a 1</code> 首先调用最具体的 <code>Int</code> 候选者，并且 <code>callwith</code> 重新调度到较不具体的 <code>Any</code> 候选者。</p>
+
+<p>通常，重新分派传递和调用者接收到的相同的参数，因此有一个特殊的例程：<code>callsame</code>。</p>
+
+<pre><code class="language-raku">multi a(Any $x) {
+    say &quot;Any $x&quot;;
+    return 5;
+}
+multi a(Int $x) {
+    say &quot;Int $x&quot;;
+    my $res = callsame;
+    say &quot;Back in Int with $res&quot;;
+}
+
+a 1;        # Int 1\n Any 1\n Back in Int with 5
+</code></pre>
+
+<p>另一个常见的用例是重新分派到链中的下一个例程，之后不执行任何其他操作。 这就是为什么我们有 <code>nextwith</code> 和 <code>nextsame</code>，它使用任意的参数调用下一个例程（<code>nextwith</code>）或与调用者接收（<code>nextsame</code>）相同的参数，但不会返回给调用者。 或者对其进行不同的措辞，<code>nextsame</code> 和 <code>nextwith</code> 变体用下一个候选项替换当前的调用帧(callframe)。</p>
+
+<pre><code class="language-raku">multi a(Any $x) {
+    say &quot;Any $x&quot;;
+    return 5;
+}
+multi a(Int $x) {
+    say &quot;Int $x&quot;;
+    nextsame;
+    say &quot;back in a&quot;;    # never executed, because 'nextsame' doesn't return
+}
+
+a 1;        # Int 1\n Any 1
+</code></pre>
+
+<p>如前所述，multi sub 不是唯一能在 call，call me，nextwith 和 next 中有帮助的情况。 下面是是调度到包装的例程：</p>
+
+<pre><code class="language-raku"># enable wrapping:
+use soft;
+
+# function to be wrapped:
+sub square-root($x) { $x.sqrt }
+
+&amp;square-root.wrap(sub ($num) {
+   nextsame if $num &gt;= 0;
+   1i * callwith(abs($num));
+});
+
+say square-root(4);     # 2
+say square-root(-4);    # 0+2i
+</code></pre>
+
+<p>最后一个用例是从父类中重分派给方法。</p>
+
+<pre><code class="language-raku">class LoggedVersion is Version {
+    method new(|c) {
+        note &quot;New version object created with arguments &quot; ~ c.perl;
+        nextsame;
+    }
+}
+
+say LoggedVersion.new('1.0.2');
+</code></pre>
+
+<p>如果你需要对被包装的代码进行多次调用或获得一个引用，例如内省它，你可以使用 <code>nextcallee</code>。</p>
+
+<pre><code class="language-raku">sub power-it($x) { $x * $x }
+sub run-it-again-and-again($x) {
+    my &amp;again = nextcallee;
+    again again $x;
+}
+
+&amp;power-it.wrap(&amp;run-it-again-and-again);
+say power-it(5);    # 625
+</code></pre>
+
+<h3 id="强制类型">强制类型</h3>
+
+<p>强制类型可以帮助您在例程中拥有特定类型，但接受更宽的输入。 当调用例程时，参数将自动转换为较窄的类型。</p>
+
+<pre><code class="language-raku">sub double(Int(Cool) $x) {
+    2 * $x
+}
+
+say double '21'; # 42
+say double Any;  # Type check failed in binding $x; expected 'Cool' but got 'Any'
+</code></pre>
+
+<p>这里的 <code>Int</code> 是参数将被强制的目标类型，而 <code>Cool</code> 是例程接受的作为输入的类型。</p>
+
+<p>如果接受的输入类型为 <code>Any</code>，则可以将 <code>Int(Any)</code> 缩写为 <code>Int()</code>。</p>
+
+<p>强制只需查找与目标类型具有相同名称的方法即可。 所以你可以为你自己的类型定义强制，像这样：</p>
+
+<pre><code class="language-raku">class Bar {...}
+
+class Foo {
+   has $.msg = &quot;I'm a foo!&quot;;
+
+   method Bar {
+       Bar.new(:msg($.msg ~ ' But I am now Bar.'));
+   }
+}
+
+class Bar {
+   has $.msg;
+}
+
+sub print-bar(Bar() $bar) {
+   say $bar.WHAT; # (Bar)
+   say $bar.msg;  # I'm a foo! But I am now Bar.
+}
+
+print-bar Foo.new;
+</code></pre>
+
+<p>强制类型应该在类型工作的任何地方工作，但 Rakudo 当前（2015.02）仅针对子例程参数实现了它们。</p>
+
+<h2 id="sub-main">sub MAIN</h2>
+
+<p>具有特殊名称 MAIN 的 sub 在所有相关 parsers 之后执行，并且其签名是可以解析命令行参数的装置。 支持 multi 方法，如果未提供命令行参数，则会自动生成并显示使用方法。 所有命令行参数在 <a href="https://docs.raku.org/language/variables#Dynamic_variables">@*ARGS</a> 中也可用，它可以在被 MAIN 处理之前进行变换。</p>
+
+<p><code>MAIN</code> 的返回值被忽略。 要提供除 0 以外的退出代码，请调用 <a href="https://docs.raku.org/routine/exit">exit</a>。</p>
+
+<pre><code class="language-raku">sub MAIN( Int :$length = 24,
+           :file($data) where { .IO.f // die &quot;file not found in $*CWD&quot; } = 'file.dat',
+           Bool :$verbose )
+{
+    say $length if $length.defined;
+    say $data   if $data.defined;
+    say 'Verbosity ', ($verbose ?? 'on' !! 'off');
+
+    exit 1;
+}
+</code></pre>
+
+<h2 id="sub-usage">sub USAGE</h2>
+
+<p>如果对于给定的命令行参数没有找到 <code>MAIN</code> 的多个候选者，则调用 sub <code>USAGE</code>。 如果没有找到此类方法，则输出生成的使用消息。</p>
+
+<pre><code class="language-raku">sub MAIN(Int $i){ say $i == 42 ?? 'answer' !! 'dunno' }
+
+sub USAGE(){
+print Q:c:to/EOH/;
+Usage: {$*PROGRAM-NAME} [number]
+
+Prints the answer or 'dunno'.
+EOH
+}
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/%E5%87%BD%E6%95%B0/">函数</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-10-17-rakufromruby/" data-toggle="tooltip" data-placement="top" title="Raku From Ruby - Nutshell">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-10-19-raku%E4%B8%AD%E7%9A%84block/" data-toggle="tooltip" data-placement="top" title="Raku 中的 Block">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

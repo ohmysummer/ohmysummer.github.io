@@ -223,7 +223,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (416 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (415 words)
   
   
 </span>
@@ -244,7 +244,7 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="day-10-wrapping-rats-https-perl6advent-wordpress-com-2017-12-10-day-10-wrapping-rats"><a href="https://perl6advent.wordpress.com/2017/12/10/day-10-wrapping-rats/">Day 10 – Wrapping Rats</a></h1>
+<h1 id="day-10-wrapping-rats-https-rakuadvent-wordpress-com-2017-12-10-day-10-wrapping-rats"><a href="https://rakuadvent.wordpress.com/2017/12/10/day-10-wrapping-rats/">Day 10 – Wrapping Rats</a></h1>
 
 <p>沿着烟囱向下是一件危险的事情。</p>
 
@@ -282,11 +282,11 @@ if (!doNotTrack) {
 
 <p>一个名叫猫王的特殊精灵已经自己写了一个程序来帮助完成计算这个高度序列的任务。</p>
 
-<p>因为懒惰，猫王甚至不想添加上述任何分数，并希望程序完成所有工作。他也不想花费精力去找出每层高度的公式。幸运的是，他正在使用 Perl 6，它将 unicode 分数转换为有理数（类型为 <code>Rat</code>），并且还有一个序列运算符（<code>...</code>），它根据前几项计算出算术序列。</p>
+<p>因为懒惰，猫王甚至不想添加上述任何分数，并希望程序完成所有工作。他也不想花费精力去找出每层高度的公式。幸运的是，他正在使用 Raku，它将 unicode 分数转换为有理数（类型为 <code>Rat</code>），并且还有一个序列运算符（<code>...</code>），它根据前几项计算出算术序列。</p>
 
 <p>所以，猫王在程序中的第一个片段看起来像这样：</p>
 
-<pre><code class="language-perl6">my @heights = 0, ⅜, 3, 5+⅝ ... *;
+<pre><code class="language-raku">my @heights = 0, ⅜, 3, 5+⅝ ... *;
 
 say @heights[^10].join(', ')
 </code></pre>
@@ -302,7 +302,7 @@ say @heights[^10].join(', ')
 
 <p>他决定这样做的方式是包装(<code>wrap</code>) <code>Str</code> 方法（又名使用装饰器模式），如下所示：</p>
 
-<pre><code class="language-perl6">Rat.^find_method('Str').wrap:
+<pre><code class="language-raku">Rat.^find_method('Str').wrap:
   sub ($r) {
     my $whole = $r.Int || &quot;&quot;;
     my $frac = $r - $whole;
@@ -324,13 +324,13 @@ say @heights[^10].join(', ')
 
 <p>“当然”，猫王苦笑着说。然后他将这一行添加到他的包装函数中：</p>
 
-<pre><code class="language-perl6">return &quot;$whole {$frac.numerator}⁄{$frac.denominator}&quot;
+<pre><code class="language-raku">return &quot;$whole {$frac.numerator}⁄{$frac.denominator}&quot;
    unless $frac %% ⅛;
 </code></pre>
 
 <p>使用“可被整除”操作符（<code>%%</code>），以确保分数可以平分为八分之一，并且如果不是只显式地打印分子和分母。然后，对于 ⅕” 厚的砂浆，序列为：</p>
 
-<pre><code class="language-perl6">my @heights = 0, ⅕,
+<pre><code class="language-raku">my @heights = 0, ⅕,
                  ⅕ + 2+¼ + ⅕,
                  ⅕ + 2+¼ + ⅕
                    + 2+¼ + ⅕ ... *;
@@ -342,11 +342,11 @@ say @heights[^10].join(', ');
 
 <p>“实际上”，圣诞老人说，“现在在我看来，也许这没有用 - 卷尺只有十六分之一英寸，所以最好四舍五入到十六分之一英寸。”</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2017/12/tape-measure.jpg?w=1570" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/tape-measure.jpg?w=1570" alt="img" /></p>
 
 <p>猫王加了一个 <code>round</code> 调用来结束：</p>
 
-<pre><code class="language-perl6">Rat.^find_method('Str').wrap:
+<pre><code class="language-raku">Rat.^find_method('Str').wrap:
   sub ($r) {
         my $whole = $r.Int || '';
         my $frac = $r - $whole;
@@ -364,7 +364,7 @@ say @heights[^10].join(', ');
 
 <p>他向 Elvira 精灵展示了他的程序，他说：“真是巧合，我写了一个几乎完全一样的程序！除此之外，我也想知道砖层的底部在哪里。我无法使用序列运算符来完成此操作，因为它不是算术级数，但是我可以使用 lazy gather 和匿名有状态变量！就像这样：</p>
 
-<pre><code class="language-perl6">my \brick = 2 + ¼;
+<pre><code class="language-raku">my \brick = 2 + ¼;
 my \mortar = ⅜;
 my @heights = lazy gather {
     take 0;
@@ -408,7 +408,7 @@ my @heights = lazy gather {
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
             
           </div>
         
@@ -425,7 +425,7 @@ my @heights = lazy gather {
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-12-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9perl6%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E7%9A%84%E6%98%9F%E5%8F%B7/" data-toggle="tooltip" data-placement="top" title="第十一天-Perl 6 中所有的星号">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2017-12-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E5%A4%A9raku%E4%B8%AD%E7%9A%84%E6%89%80%E6%9C%89%E7%9A%84%E6%98%9F%E5%8F%B7/" data-toggle="tooltip" data-placement="top" title="第十一天-Raku 中所有的星号">Next Post &rarr;</a>
             </li>
           
         </ul>

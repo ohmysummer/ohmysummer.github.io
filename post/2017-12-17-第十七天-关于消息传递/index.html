@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (607 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (602 words)
   
   
 </span>
@@ -233,30 +233,30 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="day-17-something-about-messaging-but-i-couldn-t-think-of-a-snappier-title-https-perl6advent-wordpress-com-2017-12-17-something-about-messaging-but-i-couldnt-think-of-a-snappier-title"><a href="https://perl6advent.wordpress.com/2017/12/17/something-about-messaging-but-i-couldnt-think-of-a-snappier-title/">Day 17: Something about messaging (but I couldn’t think of a snappier title.)</a></h1>
+<h1 id="day-17-something-about-messaging-but-i-couldn-t-think-of-a-snappier-title-https-rakuadvent-wordpress-com-2017-12-17-something-about-messaging-but-i-couldnt-think-of-a-snappier-title"><a href="https://rakuadvent.wordpress.com/2017/12/17/something-about-messaging-but-i-couldnt-think-of-a-snappier-title/">Day 17: Something about messaging (but I couldn’t think of a snappier title.)</a></h1>
 
 <h2 id="为什么要传递消息">为什么要传递消息</h2>
 
-<p>当我第一次开始考虑写今年的 Advent 文章时，我反思我在过去的十二个月里并没有真正写过大量的 Perl 6，与往年相比，我似乎写了大量的模块。我一直在做的事情（至少在我的日常工作中）正在考虑和实施大量使用某些消息传递系统的应用程序。所以我认为将这些想法引入 Perl 6 会很有趣。</p>
+<p>当我第一次开始考虑写今年的 Advent 文章时，我反思我在过去的十二个月里并没有真正写过大量的 Raku，与往年相比，我似乎写了大量的模块。我一直在做的事情（至少在我的日常工作中）正在考虑和实施大量使用某些消息传递系统的应用程序。所以我认为将这些想法引入 Raku 会很有趣。</p>
 
-<p>作为一种“胶水语言”，Perl一直享有盛誉，Perl 6 具有与之竞争的功能，最显着的是响应式和并发功能，因此非常适合创建基于消息的集成服务。</p>
+<p>作为一种“胶水语言”，Perl一直享有盛誉，Raku 具有与之竞争的功能，最显着的是响应式和并发功能，因此非常适合创建基于消息的集成服务。</p>
 
 <h2 id="传递什么信息">传递什么信息</h2>
 
 <p>现在我的脚下就是优秀的<a href="http://www.enterpriseintegrationpatterns.com/">企业集成模式</a>，尽管它现在已经有近15年的历史了，但我仍然建议任何有兴趣（或工作于）该领域的人。然而，它是一个重量级的书（字面上，它在硬书中的重量接近一点五公斤），所以我用它来提醒自己不要试图在这个主题上详尽无遗，以免这会变成一本书本身。</p>
 
-<p>有相当多的自由和商业管理消息系统，使用一系列开放和专有的协议，但我将限制自己到我熟悉的 <a href="https://www.rabbitmq.com/">RabbitMQ</a>，并且在 Perl 6 中由 <a href="https://github.com/retupmoca/P6-Net-AMQP">Net::AMQP</a> 支持。</p>
+<p>有相当多的自由和商业管理消息系统，使用一系列开放和专有的协议，但我将限制自己到我熟悉的 <a href="https://www.rabbitmq.com/">RabbitMQ</a>，并且在 Raku 中由 <a href="https://github.com/retupmoca/P6-Net-AMQP">Net::AMQP</a> 支持。</p>
 
 <p>如果你想亲自尝试一下这些例子，你将需要访问一个 RabbitMQ 代理（它可以作为大多数操作系统发行版的包），但是你可以使用 <a href="https://hub.docker.com/_/rabbitmq/">Docker Image</a>，它看起来工作得很好。</p>
 
 <p>您还需要安装 Net::AMQP，这可以通过以下方式完成：</p>
 
-<pre><code class="language-perl6">zef install Net::AMQP
+<pre><code class="language-raku">zef install Net::AMQP
 </code></pre>
 
 <p>在示例中，我将使用 RabbitMQ 服务器的默认连接详细信息（即代理正在本地主机上运行，​​并且默认 <code>guest</code> 处于活动状态），如果您需要提供不同的详细信息，则可以更改 Net::AMQP 的构造函数以反映适当的值：</p>
 
-<pre><code class="language-perl6">my $n = Net::AMQP.new(
+<pre><code class="language-raku">my $n = Net::AMQP.new(
   host =&gt; 'localhost',
   port =&gt; 5672,
   login =&gt; 'guest',
@@ -273,7 +273,7 @@ if (!doNotTrack) {
 
 <p>发送消息（生产者）的最简单可能的例子可能是：</p>
 
-<pre><code class="language-perl6">use Net::AMQP;
+<pre><code class="language-raku">use Net::AMQP;
 
 my $n = Net::AMQP.new;
 
@@ -298,7 +298,7 @@ await $n.close(&quot;&quot;, &quot;&quot;);
 
 <p>当然，我们也需要阅读我们发布的消息（消费者）：</p>
 
-<pre><code class="language-perl6">use Net::AMQP;
+<pre><code class="language-raku">use Net::AMQP;
 
 my $n = Net::AMQP.new;
 
@@ -326,13 +326,13 @@ react {
 
 <p>在这个例子中，连接被关闭，并且在接收到第一条消息之后退出响应，但实际上您可能需要删除这些行：</p>
 
-<pre><code class="language-perl6">$n.close(&quot;&quot;, &quot;&quot;);
+<pre><code class="language-raku">$n.close(&quot;&quot;, &quot;&quot;);
 done();
 </code></pre>
 
 <p>从内到外，如果你想退出一个信号例如添加：</p>
 
-<pre><code class="language-perl6">whenever signal(SIGINT) {
+<pre><code class="language-raku">whenever signal(SIGINT) {
     $n.close(&quot;&quot;, &quot;&quot;);
     done();
 }
@@ -342,7 +342,7 @@ done();
 
 <p>我们当然可以用类似的方式在生产者示例中使用反应语法，但是它会增加冗长的好处，但是在一个更大的程序中，例如，您可能正在处理一个Supply，它可以很好地工作很好：</p>
 
-<pre><code class="language-perl6">use Net::AMQP;
+<pre><code class="language-raku">use Net::AMQP;
   
 my $supply = Supply.from-list(&quot;Hello, World&quot;, &quot;Bonjour le monde&quot;, &quot;Hola Mundo&quot;);
 my $n = Net::AMQP.new;
@@ -370,7 +370,7 @@ react {
 
 <p>在这个例子中，我们需要声明自己的队列，以便我们可以指定类型，但是生产者不会变得更加复杂：</p>
 
-<pre><code class="language-perl6">use Net::AMQP;
+<pre><code class="language-raku">use Net::AMQP;
 
 my $n = Net::AMQP.new;
 my $con =  await $n.connect;
@@ -384,7 +384,7 @@ await $n.close(&quot;&quot;, &quot;&quot;);
 
 <p>消费者代码与我们的原始消费者同样不存在差异：</p>
 
-<pre><code class="language-perl6">use Net::AMQP;
+<pre><code class="language-raku">use Net::AMQP;
 
 my $n = Net::AMQP.new;
 
@@ -426,7 +426,7 @@ react {
 
 <p>最简单的生产者可能是：</p>
 
-<pre><code class="language-perl6">use Net::AMQP;
+<pre><code class="language-raku">use Net::AMQP;
 
 multi sub MAIN(Str $message = 'Hello, World', Str $level = 'application.info') {
     my $n = Net::AMQP.new;
@@ -442,7 +442,7 @@ multi sub MAIN(Str $message = 'Hello, World', Str $level = 'application.info') {
 
 <p>消费者代码本身又与前面的例子非常相似，只不过它会在命令行上列出一些用于匹配发送到交换机的路由密钥的模式：</p>
 
-<pre><code class="language-perl6">use Net::AMQP;
+<pre><code class="language-raku">use Net::AMQP;
 
 multi sub MAIN(*@topics ) {
     my $n = Net::AMQP.new(:debug);
@@ -476,11 +476,11 @@ multi sub MAIN(*@topics ) {
 
 <h2 id="但是-生命比amqp更重要">但是，生命比AMQP更重要</h2>
 
-<p>当然。 Perl 6反应模型的优点在于可以将上面提到的供应商提供的各种源集成到您的生产者代码中，并且类似地，消费者可以将消息推送到另一个传输机制。</p>
+<p>当然。 Raku反应模型的优点在于可以将上面提到的供应商提供的各种源集成到您的生产者代码中，并且类似地，消费者可以将消息推送到另一个传输机制。</p>
 
 <p>我很高兴地发现，当我想到这个例子的时候，下面的工作是正常的：</p>
 
-<pre><code class="language-perl6">use EventSource::Server;
+<pre><code class="language-raku">use EventSource::Server;
 use Net::AMQP;
 use Cro::HTTP::Router;
 use Cro::HTTP::Server;
@@ -514,7 +514,7 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
 
 <p>这是EventSource :: Server中的示例的变体，您当然可以修改它以使用上面讨论的任何交换类型。它应该适用于第一个例子中的生产者代码。而且（如果你是这么说服的话），你可以用一小段node.js代码（或者在一些面向浏览器的javascript中）来消费事件：</p>
 
-<pre><code class="language-perl6">    var EventSource = require('eventsource');
+<pre><code class="language-raku">    var EventSource = require('eventsource');
 
     var event = process.argv[2] || 'message';
 
@@ -529,13 +529,13 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
 
 <h2 id="把它包起来">把它包起来</h2>
 
-<p>在输入第一段之后，我总结道，在一篇短文中，我永远无法做到这个主题正义，所以我希望你认为这是一个开胃菜，我不认为我会永远找到时间来写书，它可能值得。但是我确实有基于 <a href="https://github.com/jonathanstowe/Perl6-RMQ-Examples">RabbitMQ 教程</a>的所有示例，因此请检查并随意贡献。</p>
+<p>在输入第一段之后，我总结道，在一篇短文中，我永远无法做到这个主题正义，所以我希望你认为这是一个开胃菜，我不认为我会永远找到时间来写书，它可能值得。但是我确实有基于 <a href="https://github.com/jonathanstowe/Raku-RMQ-Examples">RabbitMQ 教程</a>的所有示例，因此请检查并随意贡献。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
             
           </div>
         
@@ -547,12 +547,12 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-perl-6%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" data-toggle="tooltip" data-placement="top" title="第十六天-Perl 6 性能改进">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-raku%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" data-toggle="tooltip" data-placement="top" title="第十六天-Raku 性能改进">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-12-18-%E7%AC%AC%E5%8D%81%E5%85%AB%E5%A4%A9-perl-6%E6%94%AF%E6%8C%81%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81/" data-toggle="tooltip" data-placement="top" title="第十八天-Perl 6 支持的工作流">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2017-12-18-%E7%AC%AC%E5%8D%81%E5%85%AB%E5%A4%A9-raku%E6%94%AF%E6%8C%81%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81/" data-toggle="tooltip" data-placement="top" title="第十八天-Raku 支持的工作流">Next Post &rarr;</a>
             </li>
           
         </ul>

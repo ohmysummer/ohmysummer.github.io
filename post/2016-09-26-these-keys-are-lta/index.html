@@ -243,7 +243,7 @@ if (!doNotTrack) {
 
 <p>让错误信息变得更具体有点困难。我们来创建几个 exceptions 来告诉我们当东西出错时究竟发生了什么。</p>
 
-<pre><code class="language-perl6">class X::Paramenter::Exclusive is Exception {
+<pre><code class="language-raku">class X::Paramenter::Exclusive is Exception {
 has $.type;
     method message {
         &quot;Parameters of {$.type.perl} are mutual exclusive&quot;
@@ -253,7 +253,7 @@ has $.type;
 
 <p>现在我们能检查 <em>Find::Type</em> 的选项是否是独占的从而抛出异常。</p>
 
-<pre><code class="language-perl6">&amp;&amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&gt; Find::Type) )
+<pre><code class="language-raku">&amp;&amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&gt; Find::Type) )
 
 class X::Parameter::UnrecognisedOption is Exception {
     has $.type;
@@ -266,13 +266,13 @@ class X::Parameter::UnrecognisedOption is Exception {
 
 <p>因为枚举对类型而言是容器, 我们能使用集合操作符来检查并挑选出不匹配的选项(基本上, +options 吞噬的任何东西我们都不知道)。</p>
 
-<pre><code class="language-perl6">or fail X::Parameter::UnrecognisedOption.new(type =&gt; (Find::Type, Find::Options),
+<pre><code class="language-raku">or fail X::Parameter::UnrecognisedOption.new(type =&gt; (Find::Type, Find::Options),
     unrecognised =&gt; .item ∖ (|Find::Type::.values, |Find::Options::.values) )
 </code></pre>
 
 <p>把错误信息拼接在一块儿有点复杂因为我们可以在一个给定的枚举中得到所有枚举键的一个列表, 除了那些不知道它们的限定名的。 我们不得不在枚举名的前面手动前置一个 <code>::</code>。</p>
 
-<pre><code class="language-perl6">class X::Parameter::UnrecognisedOption is Exception {
+<pre><code class="language-raku">class X::Parameter::UnrecognisedOption is Exception {
     has $.type;
     has $.unrecognised;
     method message {

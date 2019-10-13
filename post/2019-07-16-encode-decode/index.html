@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (891 words)
+  <i class="fa fa-clock-o"></i> 5 minutes (882 words)
   
   
 </span>
@@ -253,9 +253,9 @@ if (!doNotTrack) {
 
 <p>这种方法在 16 世纪被广泛认为是*“难以理解的”*，尽管查尔斯·巴贝奇在 1854 年“重新发现”的两周内打破了它的一个例子，弗里德里希·卡基斯基在不到十年之后发表了可靠的一般攻击。尽管如此，<em>Vigenère Cipher</em> 提供合理的安全性，提供的选择的关键是足够长的时间和不同寻常，足以防止简单的字典攻击。讽刺的是，我们稍后会看到，Vigenère’ 的实际密码优雅解决了这两个问题。</p>
 
-<p>为了实现 *VigenèreCipher*，我们首先需要构建一个 *tabularēcta*。在 Perl 6 中，这只是：</p>
+<p>为了实现 *VigenèreCipher*，我们首先需要构建一个 *tabularēcta*。在 Raku 中，这只是：</p>
 
-<pre><code class="language-perl6">constant @alphabet = ['A'...'Z'];
+<pre><code class="language-raku">constant @alphabet = ['A'...'Z'];
 
     constant @𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎
         = @alphabet, *.rotate ... *.head eq @alphabet.tail;
@@ -265,17 +265,17 @@ if (!doNotTrack) {
 
 <p>请注意，我们可以通过替换 <code>@alphabet</code> 的内容来更改我们正在使用的字母表。例如，如果我们想用密钥 <code>&quot;I❤️Bellaso&quot;</code> 编码 <code>&quot;Vigenère did NOT invent this!&quot;</code> 那样的消息一样 ，那么我们就像这样重新配置字母：</p>
 
-<pre><code class="language-perl6">    # Valid message characters are all printable Latin-1 + lurve...
+<pre><code class="language-raku">    # Valid message characters are all printable Latin-1 + lurve...
     constant @alphabet = [' '...'ÿ', '❤️'];
 </code></pre>
 
-<p>Perl 6 是一种现代语言，在数据和源代码中内置支持完整的 Unicode 字符集，所以完全可以使用带表情符号的字符串 <code>&quot;I❤️Bellaso&quot;</code>，或者声明像 <code>@𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎</code> 这样的变量，其名称包含那些奇怪的 <a href="https://unicode-search.net/unicode-namesearch.pl?term=MATHEMATICAL%20ITALIC">Unicode 数学斜体</a> 字符甚至是组合的标记(ēvēn ā cōmbīnīng mārk)。</p>
+<p>Raku 是一种现代语言，在数据和源代码中内置支持完整的 Unicode 字符集，所以完全可以使用带表情符号的字符串 <code>&quot;I❤️Bellaso&quot;</code>，或者声明像 <code>@𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎</code> 这样的变量，其名称包含那些奇怪的 <a href="https://unicode-search.net/unicode-namesearch.pl?term=MATHEMATICAL%20ITALIC">Unicode 数学斜体</a> 字符甚至是组合的标记(ēvēn ā cōmbīnīng mārk)。</p>
 
-<p>使用斜体的 Unicode 变量名称可能看起来很疯狂，但这也意味着我们不再受英语国家语言帝国主义的限制。 我们可以用我们通常所说的语言自然地命名它，而不是被迫命名一个关键变量 <code>$cipher-text</code>。<code>$texte-chiffré</code> 或 <code>$النص-المشفر</code> 或 <code>$加密文字</code> 或 <code>$Κρυπτογραφημένο-κείμενο</code> 甚至 <code>$ĉifrita- teksto</code>。 Perl 6 旨在为全球 100％ 的程序员提供支持。</p>
+<p>使用斜体的 Unicode 变量名称可能看起来很疯狂，但这也意味着我们不再受英语国家语言帝国主义的限制。 我们可以用我们通常所说的语言自然地命名它，而不是被迫命名一个关键变量 <code>$cipher-text</code>。<code>$texte-chiffré</code> 或 <code>$النص-المشفر</code> 或 <code>$加密文字</code> 或 <code>$Κρυπτογραφημένο-κείμενο</code> 甚至 <code>$ĉifrita- teksto</code>。 Raku 旨在为全球 100％ 的程序员提供支持。</p>
 
 <p>我们可以直接使用我们的 <code>@𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎</code> 数组来查找给定文本/键字符对的密码字符，但这样做有点笨拙。我们需要将每个字符转换回整数 ASCII 码（通过内置的 <code>.ord</code> 方法），然后将其归一化为 0..25 范围的表索引，如下所示：</p>
 
-<pre><code class="language-perl6">    my $key-index   = $key-char.ord  - 'A'.ord;
+<pre><code class="language-raku">    my $key-index   = $key-char.ord  - 'A'.ord;
     my $text-index  = $text-char.ord - 'A'.ord;
 
     my $cipher-char = @𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎[$key-index][$text-index];
@@ -283,11 +283,11 @@ if (!doNotTrack) {
 
 <p>如果我们后面切换到包含 <code>'❤️'</code> 的非连续字母表，那么代码会变得更加复杂。</p>
 
-<p>如果 2D 查找表是 2D 字典（在 Perl 6 行话：*哈希*）中会更简单，并且可以直接用我们字母表中的实际字符索引，而不是从零开始的整数。</p>
+<p>如果 2D 查找表是 2D 字典（在 Raku 行话：*哈希*）中会更简单，并且可以直接用我们字母表中的实际字符索引，而不是从零开始的整数。</p>
 
 <p>这很容易安排：</p>
 
-<pre><code class="language-perl6">    constant %encoder
+<pre><code class="language-raku">    constant %encoder
         = @𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎.map:
              { @^cipher.head =&gt; hash @alphabet Z=&gt; @^cipher }
 </code></pre>
@@ -296,26 +296,26 @@ if (!doNotTrack) {
 
 <p><code>Z=&gt;</code> 操作者拉链一起相应的它的两个列表元素 参数，每两个传递到一对的构造，所以 操作产生像散列条目：</p>
 
-<pre><code class="language-perl6">  # Key     Text-&gt;Cipher, etc.
+<pre><code class="language-raku">  # Key     Text-&gt;Cipher, etc.
 
     'M' =&gt; %('A'=&gt;'M', 'B'=&gt;'N', 'C'=&gt;'O' ... 'Y'=&gt;'K', 'Z'=&gt;'L')
 </code></pre>
 
 <p>所以现在当我们想要查找适当的密码字符时，顶级哈希索引选择键列，而第二级哈希索引选择明文字符的行。像这样：</p>
 
-<pre><code class="language-perl6">my $ciphertext-char = %encoder{$key-char}{$plaintext-char};
+<pre><code class="language-raku">my $ciphertext-char = %encoder{$key-char}{$plaintext-char};
 </code></pre>
 
 <p>更好的是，使用这种基于散列的方法来构建2D *解码*字典同样简单，只需将嵌套映射从字母字符反转为密码字符即可：</p>
 
-<pre><code class="language-perl6">constant %decoder
+<pre><code class="language-raku">constant %decoder
         = @𝑡𝑎𝑏𝑢𝑙𝑎-𝑟𝑒̄𝑐𝑡𝑎.map: 
             { @^cipher.head =&gt; hash @^cipher Z=&gt; @alphabet }
 </code></pre>
 
 <p>之后我们可以像这样解码一个加密的字符：</p>
 
-<pre><code class="language-perl6">my $plaintext-char = %encoder{$key-char}{$ciphertext-char};
+<pre><code class="language-raku">my $plaintext-char = %encoder{$key-char}{$ciphertext-char};
 </code></pre>
 
 <p>一旦我们有了这两个2D词典，*VigenèreCipher*就很容易实现：</p>
@@ -336,14 +336,14 @@ if (!doNotTrack) {
     }
 </code></pre>
 
-<p>子例程采用两个命名字符串参数：文本（明文或加密）和加密/解密密钥。该感叹号两个参数名称后告诉Perl 6的编译器所需要的两个参数。还有一个可选的命名 boolean参数（没有尾随感叹号），指示我们是否要解码。signature （）末尾的长箭头指定子例程返回一个字符串。<code>--&gt; Str</code></p>
+<p>子例程采用两个命名字符串参数：文本（明文或加密）和加密/解密密钥。该感叹号两个参数名称后告诉Raku的编译器所需要的两个参数。还有一个可选的命名 boolean参数（没有尾随感叹号），指示我们是否要解码。signature （）末尾的长箭头指定子例程返回一个字符串。<code>--&gt; Str</code></p>
 
 <p>在子例程中，我们首先将文本字符串和键分成单个字符（和）的列表。我们还 需要重复键字符序列，以便键至少 与文本字符串一样长。我们可以准确地计算出 需要多少次重复，但是只需要 经常无限地重复键（）就更容易了。 需要在开头的垂直条来展平关键字符列表。否则， 我们最终会得到一个重复的键列表列表，而不是重复的键字符列表 。<code>$text.comb</code><code>$key.comb</code></p>
 
 <pre><code>|$key.comb xx ∞
 </code></pre>
 
-<p>然后我们根据我们是否正在解码来选择我们需要的两个编码字典中的哪一个。在Perl 6中，三元选择运算符是<code>*真值*</code><code>*假值*</code>， 而不是<code>*真值*</code><code>*假值*</code>。<code>*test* ??</code>``` !!</p>
+<p>然后我们根据我们是否正在解码来选择我们需要的两个编码字典中的哪一个。在Raku中，三元选择运算符是<code>*真值*</code><code>*假值*</code>， 而不是<code>*真值*</code><code>*假值*</code>。<code>*test* ??</code>``` !!</p>
 
 <p>一旦我们完成了所有设置，实际的编码或解码是微不足道的：</p>
 
@@ -404,7 +404,7 @@ LLGMMZWRGIIVATJVVBKRVMMZWRGIILLEDCIVATJVV
 
 <p>然后我们用适当长度的每个可能的密钥解密密文，并打印出任何似乎包含可信数量的英文单词的解密：</p>
 
-<pre><code class="language-perl6"># Request text to be deciphered...
+<pre><code class="language-raku"># Request text to be deciphered...
     my $encoded = prompt &quot;Ciphertext: &quot;;
 
     # Try each potential key...
@@ -441,7 +441,7 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>这里的根本问题（与许多密码技术一样）是密钥*太短*。我们可以坚持要求用户提供至少与实际消息一样长的密钥：</p>
 
-<pre><code class="language-perl6">sub Vigenère (
+<pre><code class="language-raku">sub Vigenère (
         Str  :$text!,
         Str  :$key! where { $key.chars &gt;= $text.chars },
         Bool :$decode
@@ -471,7 +471,7 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>假设我们想扩展我们之前的<code>Vigenère</code>子程序以提供自动密钥加密。我们可能只是在签名中添加另一个参数，然后根据实际提供的参数选择适当的行为：</p>
 
-<pre><code class="language-perl6">sub Vigenère (
+<pre><code class="language-raku">sub Vigenère (
         Str :$text!,
         Str :$key,
         Str :$autokey,
@@ -484,7 +484,7 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
     }
 </code></pre>
 
-<p>但是Perl 6支持多个调度，因此有一种更清晰的方法可以向<code>Vigenère</code>子例程添加另一个互斥行为。我们简单地将现有代码从a <code>sub</code>更改为<code>multi</code>：</p>
+<p>但是Raku支持多个调度，因此有一种更清晰的方法可以向<code>Vigenère</code>子例程添加另一个互斥行为。我们简单地将现有代码从a <code>sub</code>更改为<code>multi</code>：</p>
 
 <p><code>**multi**</code><code>的V @ genere</code><code>(Str :$text!, Str :$key!, Bool :$decode --&gt;Str)</code>
 <code>{</code>
@@ -493,7 +493,7 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>然后我们添加第二个multiply dispatched *变体*，带有一组不同的参数和一个不同的主体：</p>
 
-<pre><code class="language-perl6">multi Vigenère (Str :$text!, Str :$key!, Bool :$decode --&gt; Str)
+<pre><code class="language-raku">multi Vigenère (Str :$text!, Str :$key!, Bool :$decode --&gt; Str)
     {
         # Body exactly as before
     }
@@ -501,7 +501,7 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>此版本需要参数，而不是参数。 然后立即重新分配到原始（Bellaso）变体，将文本 直接传递给未更改的（），但 通过将提供的自动键与文本连接来构造新的（非自动）键：<code>:autokey</code><code>:key</code></p>
 
-<pre><code class="language-perl6">multi Vigenère (Str :$text!, Str :$autokey! --&gt; Str) {
+<pre><code class="language-raku">multi Vigenère (Str :$text!, Str :$autokey! --&gt; Str) {
     Vigenère( :$text, :key($autokey ~ $text) );
 }
 </code></pre>
@@ -516,9 +516,9 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>鉴于此部分密钥，我们至少可以解密加密文本的许多初始字符。这给我们的前几个字符的原始邮件，所以我们可以立即使用这些字符作为关键的下一部分，使我们能够解密多一点的加密文本，从而给我们一些更多的信息字符，这给我们一些额外的关键字符，我们可以用它们提取几个明文字符，*等等等等*，直到整个文本被解码。</p>
 
-<p>在Perl 6中，看起来像这样：</p>
+<p>在Raku中，看起来像这样：</p>
 
-<pre><code class="language-perl6">    multi Vigenère (Str :$text!, Str :$autokey!, :$decode! --&gt; Str)
+<pre><code class="language-raku">    multi Vigenère (Str :$text!, Str :$autokey!, :$decode! --&gt; Str)
     {
         # Break out text that was enciphered by the original key...
         my ($cipherkey, $ciphertext)
@@ -542,12 +542,12 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>我们首先需要将文本分成两个字符串： 使用原始密钥（）加密的初始*N个*字符，以及 使用未加密的 消息本身（）加密的文本的其余部分。为此，我们调用文本字符串的方法，并将其传递给正则表达式。 在正则表达式匹配的地方，文本将被拆分，因此我们在正则表达式中使用断言，强制它仅匹配原始键的长度：</p>
 
-<pre><code class="language-perl6">/&lt;?at: $autokey.chars&gt;/
+<pre><code class="language-raku">/&lt;?at: $autokey.chars&gt;/
 </code></pre>
 
 <p>一旦我们有了前*N个*字符<code>$cipherkey</code>，我们可以通过调用原始 （Bellaso）解码变体简单地用原始密钥（in <code>$autokey</code>）解密它们，我们通过将原始密钥作为参数传递而不是作为参数来调用。像这样：</p>
 
-<pre><code class="language-perl6">Vigenère( :text($cipherkey), :key($autokey), :decode )
+<pre><code class="language-raku">Vigenère( :text($cipherkey), :key($autokey), :decode )
 </code></pre>
 
 <p>然后我们使用该方法将解密的明文 转换为我们存储的字符列表。<code>.comb</code><code>@autokey</code></p>
@@ -560,7 +560,7 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>然后每次我们解密循环中的另一个字符时，我们也必须<code>take</code>这样做，就在我们将它推入<code>@autokey</code>数组之前：</p>
 
-<pre><code class="language-perl6">@autokey.push:
+<pre><code class="language-raku">@autokey.push:
         take %decoder{@autokey.shift}{$^cipherchar} // 0.chr;
 </code></pre>
 
@@ -568,7 +568,7 @@ WEDGIE --&gt; PHDGEVANDCAREPGPNXONSGEVANDCAHPAAWAREPGPN
 
 <p>所以现在，当我们想要*VigenèreCipher时*，我们写道：</p>
 
-<pre><code class="language-perl6">   $ciphertext
+<pre><code class="language-raku">   $ciphertext
       = Vigenère( :text($plaintext), :key($secret) );
 
     # and later...
@@ -595,13 +595,13 @@ And when we want Vigenère’s actual cipher, we write:
 
 <p>当你在思考世界上的解决方案时，语言模糊，计算复杂，如Vigenère（或我们的！），你需要一种语言足够复杂，计算机表达能力强的语言，使你能够清晰有效地思考。</p>
 
-<p>这就是我在Perl 6中编程的原因。</p>
+<p>这就是我在Raku中编程的原因。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
             
           </div>
         
@@ -613,12 +613,12 @@ And when we want Vigenère’s actual cipher, we write:
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2019-06-29-odd-even-sort-in-perl6/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的 奇偶排序">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2019-06-29-odd-even-sort-in-raku/" data-toggle="tooltip" data-placement="top" title="Raku 中的 奇偶排序">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2019-07-31-parse-with-perl6-regexes-and-grammars/" data-toggle="tooltip" data-placement="top" title="Parse with Perl6 Regexes and Grammars">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2019-07-31-parse-with-raku-regexes-and-grammars/" data-toggle="tooltip" data-placement="top" title="Parse with Raku Regexes and Grammars">Next Post &rarr;</a>
             </li>
           
         </ul>

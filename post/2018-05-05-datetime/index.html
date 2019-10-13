@@ -233,20 +233,20 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="datetime-https-docs-perl6-org-type-datetime"><a href="https://docs.perl6.org/type/DateTime">DateTime</a></h1>
+<h1 id="datetime-https-docs-raku-org-type-datetime"><a href="https://docs.raku.org/type/DateTime">DateTime</a></h1>
 
-<pre><code class="language-perl6">class DateTime does Dateish {}
+<pre><code class="language-raku">class DateTime does Dateish {}
 </code></pre>
 
-<p>对于在国内处理点数，<code>DateTime</code> 对象存储年，月，日，小时，分钟（全部为 <a href="https://docs.perl6.org/type/Int">Int</a>），秒（可能为小数）和时区。</p>
+<p>对于在国内处理点数，<code>DateTime</code> 对象存储年，月，日，小时，分钟（全部为 <a href="https://docs.raku.org/type/Int">Int</a>），秒（可能为小数）和时区。</p>
 
 <p>它提供了用日期和时间计算的方法。</p>
 
 <p><code>DateTime</code> 方法是不可变的;如果你试图修改它，请改为创建修改后的副本。</p>
 
-<p>时区的处理时间为以 UTC 为单位的<a href="https://docs.perl6.org/type/Int">整数</a>，而不是时区名称。</p>
+<p>时区的处理时间为以 UTC 为单位的<a href="https://docs.raku.org/type/Int">整数</a>，而不是时区名称。</p>
 
-<pre><code class="language-perl6">use v6.c;
+<pre><code class="language-raku">use v6.c;
 my $dt = DateTime.new(
     year    =&gt; 2015,
     month   =&gt; 11,
@@ -270,7 +270,7 @@ say $now;
 
 <p>定义为:</p>
 
-<pre><code class="language-perl6">multi method new(Int :$year!, Int :$month = 1, Int :$day = 1,
+<pre><code class="language-raku">multi method new(Int :$year!, Int :$month = 1, Int :$day = 1,
                  Int :$hour = 0, Int :$minute = 0, :$second = 0,
                  Int :$timezone = 0, :&amp;formatter)
 multi method new(Date :$date!,
@@ -284,13 +284,13 @@ multi method new(Int:D $posix,  :$timezone=0, :&amp;formatter)
 multi method new(Str:D $format, :$timezone=0, :&amp;formatter)
 </code></pre>
 
-<p>创建一个新的 <code>DateTime</code> 对象。另外一个​​选项是分别从组件（年，月，日，小时&hellip;）创建新的 <code>DateTime</code> 对象。另一种方法是为 date 组件传递一个 <a href="https://docs.perl6.org/type/Date">Date</a> 对象，并以 component-wise 方式指定时间。另一种方法是从 <a href="https://docs.perl6.org/type/Instant">Instant</a> 获取时间，并仅提供时区和 formatter。或者，您可以提供 <a href="https://docs.perl6.org/type/Int">Int</a> 作为 UNIX 时间戳，而不是 Instant。</p>
+<p>创建一个新的 <code>DateTime</code> 对象。另外一个​​选项是分别从组件（年，月，日，小时&hellip;）创建新的 <code>DateTime</code> 对象。另一种方法是为 date 组件传递一个 <a href="https://docs.raku.org/type/Date">Date</a> 对象，并以 component-wise 方式指定时间。另一种方法是从 <a href="https://docs.raku.org/type/Instant">Instant</a> 获取时间，并仅提供时区和 formatter。或者，您可以提供 <a href="https://docs.raku.org/type/Int">Int</a> 作为 UNIX 时间戳，而不是 Instant。</p>
 
-<p>您还可以提供格式为 ISO 8601 时间戳记符号或完整 <a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a> 日期和时间的 <a href="https://docs.perl6.org/type/Str">Str</a>。字符串格式应为 <code>yyyy-mm-ddThh:mm:ssZ</code> 或 <code>yyyy-mm-ddThh:mm:ss+0100</code>。由于我们允许使用 Unicode 数字和混合浓缩和扩展时间格式，因此我们的限制性比 ISO 8601 标准少一些。</p>
+<p>您还可以提供格式为 ISO 8601 时间戳记符号或完整 <a href="https://tools.ietf.org/html/rfc3339">RFC 3339</a> 日期和时间的 <a href="https://docs.raku.org/type/Str">Str</a>。字符串格式应为 <code>yyyy-mm-ddThh:mm:ssZ</code> 或 <code>yyyy-mm-ddThh:mm:ss+0100</code>。由于我们允许使用 Unicode 数字和混合浓缩和扩展时间格式，因此我们的限制性比 ISO 8601 标准少一些。</p>
 
-<p>无效的输入字符串将引发 <a href="https://docs.perl6.org/type/X::Temporal::InvalidFormat">X::Temporal::InvalidFormat</a> 类型的异常。如果您提供的字符串包含时区并提供 <code>timezone</code> 具名参数，则会引发 <a href="https://docs.perl6.org/type/X::Temporal::InvalidFormat">X::DateTime::TimezoneClash</a> 类型的异常。</p>
+<p>无效的输入字符串将引发 <a href="https://docs.raku.org/type/X::Temporal::InvalidFormat">X::Temporal::InvalidFormat</a> 类型的异常。如果您提供的字符串包含时区并提供 <code>timezone</code> 具名参数，则会引发 <a href="https://docs.raku.org/type/X::Temporal::InvalidFormat">X::DateTime::TimezoneClash</a> 类型的异常。</p>
 
-<pre><code class="language-perl6">my $datetime = DateTime.new(year =&gt; 2015,
+<pre><code class="language-raku">my $datetime = DateTime.new(year =&gt; 2015,
                             month =&gt; 1,
                             day =&gt; 1,
                             hour =&gt; 1,
@@ -314,35 +314,35 @@ $datetime = DateTime.new(&quot;2015-01-01T03:17:30+0500&quot;) # Formatted strin
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method now(:$timezone = $*TZ, :&amp;formatter --&gt; DateTime:D)
+<pre><code class="language-raku">method now(:$timezone = $*TZ, :&amp;formatter --&gt; DateTime:D)
 </code></pre>
 
-<p>从当前系统时间创建一个新的 <code>DateTime</code> 对象。可以提供自定义 <a href="https://docs.perl6.org/routine/formatter">formatter</a> 和 <a href="https://docs.perl6.org/routine/timezone">timezone</a>。 <code>:$timezone</code> 是 GMT 的偏移量（<strong>以秒为单位</strong>），默认为 <a href="https://docs.perl6.org/language/variables#index-entry-%2524%2ATZ">$*TZ</a> 变量的值。</p>
+<p>从当前系统时间创建一个新的 <code>DateTime</code> 对象。可以提供自定义 <a href="https://docs.raku.org/routine/formatter">formatter</a> 和 <a href="https://docs.raku.org/routine/timezone">timezone</a>。 <code>:$timezone</code> 是 GMT 的偏移量（<strong>以秒为单位</strong>），默认为 <a href="https://docs.raku.org/language/variables#index-entry-%2524%2ATZ">$*TZ</a> 变量的值。</p>
 
-<pre><code class="language-perl6">say DateTime.now; # OUTPUT: «2018-01-08T13:05:32.703292-06:00␤»
+<pre><code class="language-raku">say DateTime.now; # OUTPUT: «2018-01-08T13:05:32.703292-06:00␤»
 </code></pre>
 
 <p>请注意，可以使用链接到 <code>.now</code> 的以下方法轻松表示当前值，例如，</p>
 
-<pre><code class="language-perl6">say DateTime.now.year; # OUTPUT: «2018␤»
+<pre><code class="language-raku">say DateTime.now.year; # OUTPUT: «2018␤»
 </code></pre>
 
 <h3 id="clone-方法">clone 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method clone(:$year, :$month, :$day, :$hour, :$minute, :$second, :$timezone, :&amp;formatter)
+<pre><code class="language-raku">method clone(:$year, :$month, :$day, :$hour, :$minute, :$second, :$timezone, :&amp;formatter)
 </code></pre>
 
 <p>根据 invocant 创建一个新的 <code>DateTime</code> 对象，但给定的参数会覆盖 invocant 中的值。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').clone(hour =&gt; 0);
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00Z').clone(hour =&gt; 0);
 # OUTPUT: «2015-12-24T00:23:00Z␤»
 </code></pre>
 
 <p>请注意，在某些情况下，这可能会导致日期无效：</p>
 
-<pre><code class="language-perl6">say DateTime.new(&quot;2012-02-29T12:34:56Z&quot;).clone(year =&gt; 2015);
+<pre><code class="language-raku">say DateTime.new(&quot;2012-02-29T12:34:56Z&quot;).clone(year =&gt; 2015);
 CATCH { default { put .^name, ': ', .Str } };
 # OUTPUT: «X::OutOfRange: Day out of range. Is: 29, should be in 1..28␤»
 </code></pre>
@@ -351,12 +351,12 @@ CATCH { default { put .^name, ': ', .Str } };
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method hh-mm-ss(DateTime:D: --&gt; Str:D)
+<pre><code class="language-raku">method hh-mm-ss(DateTime:D: --&gt; Str:D)
 </code></pre>
 
 <p>以 24 小时 HH:MM:SS 格式返回对象以字符串形式表示的时间：</p>
 
-<pre><code class="language-perl6">say DateTime.new(&quot;2052-02-29T22:34:56Z&quot;).hh-mm-ss;
+<pre><code class="language-raku">say DateTime.new(&quot;2052-02-29T22:34:56Z&quot;).hh-mm-ss;
 # OUTPUT: «22:34:56␤»
 </code></pre>
 
@@ -364,36 +364,36 @@ CATCH { default { put .^name, ': ', .Str } };
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method hour(DateTime:D: --&gt; Int:D)
+<pre><code class="language-raku">method hour(DateTime:D: --&gt; Int:D)
 </code></pre>
 
 <p>返回小时组件。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56Z').hour;      # OUTPUT: «12␤»
+<pre><code class="language-raku">say DateTime.new('2012-02-29T12:34:56Z').hour;      # OUTPUT: «12␤»
 </code></pre>
 
 <h3 id="minute-方法">minute 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method minute(DateTime:D: --&gt; Int:D)
+<pre><code class="language-raku">method minute(DateTime:D: --&gt; Int:D)
 </code></pre>
 
 <p>返回分钟组件。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56Z').minute;     # OUTPUT: «34␤»
+<pre><code class="language-raku">say DateTime.new('2012-02-29T12:34:56Z').minute;     # OUTPUT: «34␤»
 </code></pre>
 
 <h3 id="second-方法">second 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method second(DateTime:D:)
+<pre><code class="language-raku">method second(DateTime:D:)
 </code></pre>
 
 <p>返回秒组件，可能包括小数秒。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56Z').second;     # OUTPUT: «56␤»
+<pre><code class="language-raku">say DateTime.new('2012-02-29T12:34:56Z').second;     # OUTPUT: «56␤»
 say DateTime.new('2012-02-29T12:34:56.789Z').second; # OUTPUT: «56.789␤»
 say DateTime.new('2012-02-29T12:34:56,789Z').second; # comma also ok
 </code></pre>
@@ -402,91 +402,91 @@ say DateTime.new('2012-02-29T12:34:56,789Z').second; # comma also ok
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method whole-second(DateTime:D:)
+<pre><code class="language-raku">method whole-second(DateTime:D:)
 </code></pre>
 
-<p>返回秒组件，向下舍入为 <a href="https://docs.perl6.org/type/Int">Int</a>。</p>
+<p>返回秒组件，向下舍入为 <a href="https://docs.raku.org/type/Int">Int</a>。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2012-02-29T12:34:56.789Z').whole-second;      # OUTPUT: «56␤»
+<pre><code class="language-raku">say DateTime.new('2012-02-29T12:34:56.789Z').whole-second;      # OUTPUT: «56␤»
 </code></pre>
 
 <h3 id="timezone-方法">timezone 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method timezone(DateTime:D: --&gt; Int:D)
+<pre><code class="language-raku">method timezone(DateTime:D: --&gt; Int:D)
 </code></pre>
 
 <p><strong>以秒为单位</strong> 返回时区，作为与 UTC 的偏移量。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').timezone;          # OUTPUT: «7200␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00+0200').timezone;          # OUTPUT: «7200␤»
 </code></pre>
 
 <h3 id="offset-方法">offset 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method offset(DateTime:D: --&gt; Int:D)
+<pre><code class="language-raku">method offset(DateTime:D: --&gt; Int:D)
 </code></pre>
 
-<p><strong>以秒为单位</strong> 返回时区，作为与UTC的偏移量。这是<a href="https://docs.perl6.org/type/DateTime#method_timezone">方法时区</a>的别名。</p>
+<p><strong>以秒为单位</strong> 返回时区，作为与UTC的偏移量。这是<a href="https://docs.raku.org/type/DateTime#method_timezone">方法时区</a>的别名。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').offset;            # OUTPUT: «7200␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00+0200').offset;            # OUTPUT: «7200␤»
 </code></pre>
 
 <h3 id="offset-in-minutes-方法">offset-in-minutes 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method offset-in-minutes(DateTime:D: --&gt; Real:D)
+<pre><code class="language-raku">method offset-in-minutes(DateTime:D: --&gt; Real:D)
 </code></pre>
 
 <p>以 UTC 为单位返回以小时为单位的时区。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').offset-in-hours;   # OUTPUT: «2␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00+0200').offset-in-hours;   # OUTPUT: «2␤»
 </code></pre>
 
 <h3 id="str-方法">Str 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method Str(DateTime:D: --&gt; Str:D)
+<pre><code class="language-raku">method Str(DateTime:D: --&gt; Str:D)
 </code></pre>
 
 <p>返回调用者的字符串表示形式，由格式化程序完成。如果未指定格式化程序，则会返回ISO 8601时间戳。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').Str; # OUTPUT: «2015-12-24T12:23:00+02:00␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00+0200').Str; # OUTPUT: «2015-12-24T12:23:00+02:00␤»
 </code></pre>
 
 <h3 id="instant-方法">Instant 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method Instant(DateTime:D: --&gt; Instant:D)
+<pre><code class="language-raku">method Instant(DateTime:D: --&gt; Instant:D)
 </code></pre>
 
 <p>基于调用者返回一个Instant对象。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').Instant; # OUTPUT: «2015-12-24T12:23:00+02:00␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00+0200').Instant; # OUTPUT: «2015-12-24T12:23:00+02:00␤»
 </code></pre>
 
 <h3 id="posix-方法">posix 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method posix(DateTime:D: $ignore-timezone = False --&gt; Int:D)
+<pre><code class="language-raku">method posix(DateTime:D: $ignore-timezone = False --&gt; Int:D)
 </code></pre>
 
 <p>将日期和时间作为POSIX / UNIX时间戳（自Epoch，1970年1月1日UTC以来的秒数）返回。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').posix;       # OUTPUT: «1450959780␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00Z').posix;       # OUTPUT: «1450959780␤»
 </code></pre>
 
 <h3 id="later-方法">later 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method later(DateTime:D: *%unit)
+<pre><code class="language-raku">method later(DateTime:D: *%unit)
 </code></pre>
 
 <p>返回基于当前日期对象的DateTime对象，但应用了时间增量。时间增量可以作为参数名称为单位的命名参数传递。</p>
@@ -497,12 +497,12 @@ say DateTime.new('2012-02-29T12:34:56,789Z').second; # comma also ok
 
 <p>第二种形式的结构可以用作指定三角洲的紧凑和自我记录方式：</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').later(:2years); # OUTPUT: «2017-12-24T12:23:00Z␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00Z').later(:2years); # OUTPUT: «2017-12-24T12:23:00Z␤»
 </code></pre>
 
 <p>由于添加几个不同的时间单位不可交换，所以只能传递一个单位。</p>
 
-<pre><code class="language-perl6">my $d = DateTime.new(date =&gt; Date.new('2015-02-27'));
+<pre><code class="language-raku">my $d = DateTime.new(date =&gt; Date.new('2015-02-27'));
 say $d.later(month =&gt; 1).later(:2days);  # OUTPUT: «2015-03-29T00:00:00Z␤»
 say $d.later(days =&gt; 2).later(:1month);  # OUTPUT: «2015-04-01T00:00:00Z␤»
 say $d.later(days =&gt; 2).later(:month);   # same, as +True === 1
@@ -510,7 +510,7 @@ say $d.later(days =&gt; 2).later(:month);   # same, as +True === 1
 
 <p>如果结果时间的值为60秒，但实际上当前没有闰秒，则秒数将设置为59：</p>
 
-<pre><code class="language-perl6">say DateTime.new('2008-12-31T23:59:60Z').later: :1day;
+<pre><code class="language-raku">say DateTime.new('2008-12-31T23:59:60Z').later: :1day;
 # OUTPUT: «2009-01-01T23:59:59Z␤»
 </code></pre>
 
@@ -520,18 +520,18 @@ say $d.later(days =&gt; 2).later(:month);   # same, as +True === 1
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method earlier(DateTime:D: *%unit)
+<pre><code class="language-raku">method earlier(DateTime:D: *%unit)
 </code></pre>
 
 <p>返回基于当前日期对象的日期时间对象，但是应用了过去的时间差值。除非给定的单位是秒或秒，否则给定的值将被转换为Int。请参阅后面的使用方法。</p>
 
-<pre><code class="language-perl6">my $d = DateTime.new(date =&gt; Date.new('2015-02-27'));
+<pre><code class="language-raku">my $d = DateTime.new(date =&gt; Date.new('2015-02-27'));
 say $d.earlier(month =&gt; 1).earlier(:2days);  # OUTPUT: «2015-01-25T00:00:00Z␤»
 </code></pre>
 
 <p>如果结果时间的值为60秒，但实际上当前没有闰秒，则秒数将设置为59：</p>
 
-<pre><code class="language-perl6">say DateTime.new('2008-12-31T23:59:60Z').earlier: :1day;
+<pre><code class="language-raku">say DateTime.new('2008-12-31T23:59:60Z').earlier: :1day;
 # OUTPUT: «2008-12-30T23:59:59Z␤»
 </code></pre>
 
@@ -541,12 +541,12 @@ say $d.earlier(month =&gt; 1).earlier(:2days);  # OUTPUT: «2015-01-25T00:00:00Z
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method truncated-to(DateTime:D: Cool $unit)
+<pre><code class="language-raku">method truncated-to(DateTime:D: Cool $unit)
 </code></pre>
 
 <p>返回调用者的副本，将小于指定单位的所有内容截断为尽可能最小的值。</p>
 
-<pre><code class="language-perl6">my $d = DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;);
+<pre><code class="language-raku">my $d = DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;);
 say $d.truncated-to('second');      # OUTPUT: «2012-02-29T12:34:56Z␤»
 say $d.truncated-to('minute');      # OUTPUT: «2012-02-29T12:34:00Z␤»
 say $d.truncated-to('hour');        # OUTPUT: «2012-02-29T12:00:00Z␤»
@@ -561,13 +561,13 @@ say $d.truncated-to('year');        # OUTPUT: «2012-01-01T00:00:00Z␤»
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">multi method Date(DateTime:U --&gt; Date:U)
+<pre><code class="language-raku">multi method Date(DateTime:U --&gt; Date:U)
 multi method Date(DateTime:D --&gt; Date:D)
 </code></pre>
 
-<p>将调用者转换为 <a href="https://docs.perl6.org/type/Date">Date</a></p>
+<p>将调用者转换为 <a href="https://docs.raku.org/type/Date">Date</a></p>
 
-<pre><code class="language-perl6">say DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;).Date; # OUTPUT: «2012-02-29␤»
+<pre><code class="language-raku">say DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;).Date; # OUTPUT: «2012-02-29␤»
 say DateTime.Date;                                    # OUTPUT: «(Date)␤»
 </code></pre>
 
@@ -575,12 +575,12 @@ say DateTime.Date;                                    # OUTPUT: «(Date)␤»
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method DateTime(--&gt; DateTime)
+<pre><code class="language-raku">method DateTime(--&gt; DateTime)
 </code></pre>
 
 <p>返回调用者。</p>
 
-<pre><code class="language-perl6">say DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;).DateTime; # 2012-02-29T12:34:56.946314Z
+<pre><code class="language-raku">say DateTime.new(&quot;2012-02-29T12:34:56.946314Z&quot;).DateTime; # 2012-02-29T12:34:56.946314Z
 say DateTime.DateTime;                                    # OUTPUT: «(DateTime)␤»
 </code></pre>
 
@@ -588,36 +588,36 @@ say DateTime.DateTime;                                    # OUTPUT: «(DateTime)
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method utc(DateTime:D: --&gt; DateTime:D)
+<pre><code class="language-raku">method utc(DateTime:D: --&gt; DateTime:D)
 </code></pre>
 
 <p>同时返回一个 DateTime 对象，但是在 UTC 时区。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00+0200').utc;  # OUTPUT: «2015-12-24T10:23:00Z␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00+0200').utc;  # OUTPUT: «2015-12-24T10:23:00Z␤»
 </code></pre>
 
 <h3 id="in-timezone-方法">in-timezone 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method in-timezone(DateTime:D: $timezone = 0 --&gt; DateTime:D)
+<pre><code class="language-raku">method in-timezone(DateTime:D: $timezone = 0 --&gt; DateTime:D)
 </code></pre>
 
 <p>同一时间返回一个DateTime对象，但在指定的$ timezone中，这是距离GMT的偏移量（以秒为单位）。</p>
 
-<pre><code class="language-perl6">say DateTime.new('2015-12-24T12:23:00Z').in-timezone(3600 + 1800); # OUTPUT: «2015-12-24T13:53:00+0130␤»
+<pre><code class="language-raku">say DateTime.new('2015-12-24T12:23:00Z').in-timezone(3600 + 1800); # OUTPUT: «2015-12-24T13:53:00+0130␤»
 </code></pre>
 
 <h3 id="local-方法">local 方法</h3>
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">method local(DateTime:D: --&gt; DateTime:D)
+<pre><code class="language-raku">method local(DateTime:D: --&gt; DateTime:D)
 </code></pre>
 
 <p>同时返回DateTime对象，但在本地时区（$ * TZ）中。</p>
 
-<pre><code class="language-perl6">my $*TZ = -3600;
+<pre><code class="language-raku">my $*TZ = -3600;
 say DateTime.new('2015-12-24T12:23:00+0200').local; # OUTPUT: «2015-12-24T09:23:00-0100␤»
 </code></pre>
 
@@ -625,13 +625,13 @@ say DateTime.new('2015-12-24T12:23:00+0200').local; # OUTPUT: «2015-12-24T09:23
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">multi sub infix:&lt;-&gt; (DateTime:D, Duration:D --&gt; DateTime:D)
+<pre><code class="language-raku">multi sub infix:&lt;-&gt; (DateTime:D, Duration:D --&gt; DateTime:D)
 multi sub infix:&lt;-&gt; (DateTime:D, DateTime:D --&gt; Duration:D)
 </code></pre>
 
 <p>将DateTime从持续时间或另一个DateTime对象中减去。分别返回一个新的DateTime对象或两个日期之间的持续时间。当减去持续时间时，原始DateTime的时区保留在返回的DateTime对象中。</p>
 
-<pre><code class="language-perl6">say perl DateTime.new(:2016year) - DateTime.new(:2015year):;           # OUTPUT: «Duration.new(31536001.0)␤»
+<pre><code class="language-raku">say perl DateTime.new(:2016year) - DateTime.new(:2015year):;           # OUTPUT: «Duration.new(31536001.0)␤»
 say DateTime.new(:2016year, :3600timezone) - Duration.new(31536001.0); # OUTPUT: «2015-01-01T00:00:00+01:00␤»
 </code></pre>
 
@@ -639,13 +639,13 @@ say DateTime.new(:2016year, :3600timezone) - Duration.new(31536001.0); # OUTPUT:
 
 <p>定义为：</p>
 
-<pre><code class="language-perl6">multi sub infix:&lt;+&gt; (DateTime:D, Duration:D --&gt; DateTime:D)
+<pre><code class="language-raku">multi sub infix:&lt;+&gt; (DateTime:D, Duration:D --&gt; DateTime:D)
 multi sub infix:&lt;+&gt; (Duration:D, DateTime:D --&gt; DateTime:D)
 </code></pre>
 
 <p>采用日期时间并按给定持续时间增加它，以保留时区。</p>
 
-<pre><code class="language-perl6">say DateTime.new(:2015year) + Duration.new(31536001.0);        # OUTPUT: «2016-01-01T00:00:00Z␤»
+<pre><code class="language-raku">say DateTime.new(:2015year) + Duration.new(31536001.0);        # OUTPUT: «2016-01-01T00:00:00Z␤»
 say Duration.new(42) + DateTime.new(:2015year, :3600timezone); # OUTPUT: «2015-01-01T00:00:42+01:00␤»
 </code></pre>
 
@@ -665,7 +665,7 @@ say Duration.new(42) + DateTime.new(:2015year, :3600timezone); # OUTPUT: «2015-
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-04-27-perl-6%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" data-toggle="tooltip" data-placement="top" title="Awesome Async Interfaces with Perl 6">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-04-27-raku%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" data-toggle="tooltip" data-placement="top" title="Awesome Async Interfaces with Raku">&larr; Previous Post</a>
             </li>
           
           

@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 11 minutes (2222 words)
+  <i class="fa fa-clock-o"></i> 11 minutes (2203 words)
   
   
 </span>
@@ -239,26 +239,26 @@ if (!doNotTrack) {
 
 <p>能想象出的最简单的 <code>NativeCall</code> 用法应该类似于这样的东西：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 sub some_argless_function() is native('something') { * }
 some_argless_function();
 </code></pre>
 
-<p>第一行导入了各种 <code>traits</code> 和类型，接下来的一行看起来很像相对普通的 Perl 6 子例程声明 - 稍微有点变化。我们使用<strong>native</strong>这个 <code>trait</code> 是为了指定这个 sub 子例程实际上被定义在<strong>原生库</strong>中。Perl 6 会给你添加特定平台的扩展名（比如 <code>.so</code> 或者 <code>.dll</code>）还有任何惯常的前缀(例如: &lsquo;lib&rsquo;)。</p>
+<p>第一行导入了各种 <code>traits</code> 和类型，接下来的一行看起来很像相对普通的 Raku 子例程声明 - 稍微有点变化。我们使用<strong>native</strong>这个 <code>trait</code> 是为了指定这个 sub 子例程实际上被定义在<strong>原生库</strong>中。Raku 会给你添加特定平台的扩展名（比如 <code>.so</code> 或者 <code>.dll</code>）还有任何惯常的前缀(例如: &lsquo;lib&rsquo;)。</p>
 
 <p>当你第一次调用 “some_argless_function” 时，“<strong>lib</strong>something” 将会被加载，然后会在 libsomething 库中定位到 “some_argless_function” 函数，接下来将会进行一次调用。之后的调用将会更快，因为符号句柄会被保留。</p>
 
-<p>当然，大部分的函数都会接受参数或者返回值 - 但是你可以做的其他事情只是增加了这个声明Perl 6 sub的简单模式</p>
+<p>当然，大部分的函数都会接受参数或者返回值 - 但是你可以做的其他事情只是增加了这个声明Raku sub的简单模式</p>
 
-<p>但是一切你需要做的就是增加这个简单的模式，通过声明一个 Perl 6 的过程、在符号后面指出你想要调用的名字，并且使用 “native” trait。</p>
+<p>但是一切你需要做的就是增加这个简单的模式，通过声明一个 Raku 的过程、在符号后面指出你想要调用的名字，并且使用 “native” trait。</p>
 
 <h2 id="改变名字">改变名字</h2>
 
-<p>有时你想要 Perl 6 子例程的名字和加载库中使用的名字不同，可能这个名字很长, 或者有不同的大小写或者在你想要创建的模块的上下文中, 这个名字很繁琐。</p>
+<p>有时你想要 Raku 子例程的名字和加载库中使用的名字不同，可能这个名字很长, 或者有不同的大小写或者在你想要创建的模块的上下文中, 这个名字很繁琐。</p>
 
-<p>NativeCall 为你提供了一个 <code>symbol</code> trait 以指定库中<strong>原生子例程</strong>的名字, 这个名字和你的 Perl 6 子例程名字不同。</p>
+<p>NativeCall 为你提供了一个 <code>symbol</code> trait 以指定库中<strong>原生子例程</strong>的名字, 这个名字和你的 Raku 子例程名字不同。</p>
 
-<pre><code class="language-perl6">module Foo;
+<pre><code class="language-raku">module Foo;
 use NativeCall;
 our sub init() is native('foo') is symbol('FOO_INIT') { * }
 </code></pre>
@@ -267,22 +267,22 @@ our sub init() is native('foo') is symbol('FOO_INIT') { * }
 
 <h2 id="传递值和返回值">传递值和返回值</h2>
 
-<p>普通的 Perl 6 签名和 <code>returns</code> trait 的使用是为了传送原生函数期望的参数类型以及返回的东西，下面有个例子：</p>
+<p>普通的 Raku 签名和 <code>returns</code> trait 的使用是为了传送原生函数期望的参数类型以及返回的东西，下面有个例子：</p>
 
-<pre><code class="language-perl6">sub add(int32, int32) returns int32 is native('calculator') { * }
+<pre><code class="language-raku">sub add(int32, int32) returns int32 is native('calculator') { * }
 </code></pre>
 
-<p>在这里，我们声明该函数接受两个32位整数，返回一个32位整数。你可以在<a href="https://docs.perl6.org/language/nativetypes">原生类型</a>页面中找到可以传递的其他类型。 请注意，缺少 <code>returns</code> trait 用于指示 <code>void</code> 返回类型。 除指针参数化外，不要在任何地方使用 <code>void</code> 类型。</p>
+<p>在这里，我们声明该函数接受两个32位整数，返回一个32位整数。你可以在<a href="https://docs.raku.org/language/nativetypes">原生类型</a>页面中找到可以传递的其他类型。 请注意，缺少 <code>returns</code> trait 用于指示 <code>void</code> 返回类型。 除指针参数化外，不要在任何地方使用 <code>void</code> 类型。</p>
 
 <p>对于字符串，还有一个额外的 <code>encoded</code> trait，可以提供一些关于如何进行编组的额外提示。</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 sub message_box(Str is encoded('utf8')) is native('gui') { * }
 </code></pre>
 
 <p>为了指定如何对返回类型进行编组，只需在子例程自身应用这个 trait 即可。</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 sub input_box() returns Str is encoded('utf8') is native('gui') { * }
 </code></pre>
 
@@ -290,7 +290,7 @@ sub input_box() returns Str is encoded('utf8') is native('gui') { * }
 
 <p>如果 C 函数要求字符串的生命周期超过函数调用，则必须手动编码该参数并将其作为 <code>CArray[uint8]</code> 传递：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 # C prototype is void set_foo(const char *) 
 sub set_foo(CArray[uint8]) is native('foo') { * }
 # C prototype is void use_foo(void) 
@@ -311,7 +311,7 @@ use_foo();
 
 <p>使用原生函数时，有时需要指定要使用的原生数据结构类型。 <code>is repr</code> 是用于此的术语。</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
  
 class timespec is repr('CStruct') {
     has uint32 $.tv_sec;
@@ -327,13 +327,13 @@ my $result = clock_gettime( 0, $this-time);
 say &quot;$result, $this-time&quot;; # OUTPUT: «0, timespec&lt;65385480&gt;␤» 
 </code></pre>
 
-<p><a href="https://linux.die.net/man/3/clock_gettime">我们调用的原始函数</a>, <a href="https://docs.perl6.org/routine/clock_gettime">clock_gettime</a> 使用指向 <code>timespec</code> 结构的指针作为第二个参数。 我们在这里将它声明为一个<a href="https://docs.perl6.org/routine/class">类</a>，但是将其表示指定为 <code>repr('CStruct')</code>, 以指示它对应于 C 数据结构。 当我们创建该类的对象时，我们正在创建 <code>clock_gettime</code> 所期望的指针类型。 这样，数据可以无缝地传输到原生接口和从原生接口传输。</p>
+<p><a href="https://linux.die.net/man/3/clock_gettime">我们调用的原始函数</a>, <a href="https://docs.raku.org/routine/clock_gettime">clock_gettime</a> 使用指向 <code>timespec</code> 结构的指针作为第二个参数。 我们在这里将它声明为一个<a href="https://docs.raku.org/routine/class">类</a>，但是将其表示指定为 <code>repr('CStruct')</code>, 以指示它对应于 C 数据结构。 当我们创建该类的对象时，我们正在创建 <code>clock_gettime</code> 所期望的指针类型。 这样，数据可以无缝地传输到原生接口和从原生接口传输。</p>
 
 <h2 id="指针的基本使用">指针的基本使用</h2>
 
 <p>当你的原生函数签名需要一个指向某些原生类型（<code>int32</code>、<code>uint32</code>等等）的指针时，所有你需要做的就是将参数声明为 <code>is rw</code>：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 # C prototype is void my_version(int *major, int *minor) 
 sub my_version(int32 is rw, int32 is rw) is native('foo') { * }
 my_version(my int32 $major, my int32 $minor); # Pass a pointer to 
@@ -341,14 +341,14 @@ my_version(my int32 $major, my int32 $minor); # Pass a pointer to
 
 <p>有的时候你需要获取一个从 C 库返回的指针（比如一个库句柄），你不关心它指向什么 - 你只需要保存它就可以了，<code>Pointer</code> 类型就是为此而生的：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 sub Foo_init() returns Pointer is native(&quot;foo&quot;) { * }
 sub Foo_free(Pointer) is native(&quot;foo&quot;) { * }
 </code></pre>
 
 <p>这个可以正常工作，但是你可能想要使用比 <code>Pointer</code> 更好的类型，事实证明，任何具有表示“CPointer”的类都可以担任此角色，这意味着你可以通过编写如下类来暴露工作在句柄上的库：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
  
 class FooHandle is repr('CPointer') {
     # Here are the actual NativeCall functions. 
@@ -381,7 +381,7 @@ class FooHandle is repr('CPointer') {
 
 <p>当然，你总是可以有一个空类：</p>
 
-<pre><code class="language-perl6">class DoorHandle is repr('CPointer') { }
+<pre><code class="language-raku">class DoorHandle is repr('CPointer') { }
 </code></pre>
 
 <p>只需像使用 <code>Pointer</code> 一样使用类，但有可能提高类型安全性和更易读的代码。</p>
@@ -394,7 +394,7 @@ class FooHandle is repr('CPointer') {
 
 <p>使用定义所需函数参数和返回值的签名调用函数“f”返回的函数指针“$fptr”的示例：</p>
 
-<pre><code class="language-perl6">sub f() returns Pointer is native('mylib') { * }
+<pre><code class="language-raku">sub f() returns Pointer is native('mylib') { * }
 
 my $fptr    = f();
 my $nfptr   = nativecast(:(Str, size_t --&gt; int32), $fptr);
@@ -406,11 +406,11 @@ say $nfptr(&quot;test&quot;, 4);
 
 <p>NativeCall 对数组有一些支持。 它受限于使用机器大小的整数，双精度和字符串，定型的数字类型，指针数组，结构体数组和数组的数组。</p>
 
-<p>Perl 6 数组支持懒惰，在内存中以与 C 数组完全不同的方式布局。 因此，NativeCall 库提供了更原始的 CArray 类型，如果使用 C 数组，则必须使用该类型。</p>
+<p>Raku 数组支持懒惰，在内存中以与 C 数组完全不同的方式布局。 因此，NativeCall 库提供了更原始的 CArray 类型，如果使用 C 数组，则必须使用该类型。</p>
 
 <p>这是传递 C 数组的示例。</p>
 
-<pre><code class="language-perl6">sub RenderBarChart(Str, int32, CArray[Str], CArray[num64]) is native(&quot;chart&quot;) { * }
+<pre><code class="language-raku">sub RenderBarChart(Str, int32, CArray[Str], CArray[num64]) is native(&quot;chart&quot;) { * }
 my @titles := CArray[Str].new;
 @titles[0]  = 'Me';
 @titles[1]  = 'You';
@@ -422,9 +422,9 @@ my @values := CArray[num64].new;
 RenderBarChart('Weights (kg)', 3, @titles, @values);
 </code></pre>
 
-<p>注意我们对 <code>@titles</code> 使用了绑定，而不是赋值，如果你使用赋值，则会把值放进 Perl 6 数组，然后它就不会工作了。如果这令你抓狂，忘记你所知道的关于 <code>@</code> 符号的事情，使用 NativeCall 的时候直接使用 <code>$</code> 吧。</p>
+<p>注意我们对 <code>@titles</code> 使用了绑定，而不是赋值，如果你使用赋值，则会把值放进 Raku 数组，然后它就不会工作了。如果这令你抓狂，忘记你所知道的关于 <code>@</code> 符号的事情，使用 NativeCall 的时候直接使用 <code>$</code> 吧。</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 my $titles = CArray[Str].new;
 $titles[0] = 'Me';
 $titles[1] = 'You';
@@ -435,13 +435,13 @@ $titles[2] = 'Hagrid';
 
 <p>某些库 API 可能会将数组作为缓冲区，将由 C 函数填充，例如，返回填充的实际项数：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 sub get_n_ints(CArray[int32], int32) returns int32 is native('ints') { * }
 </code></pre>
 
 <p>在这些情况下，重要的是 CArray 在将其传递给原生子例程之前至少具有要填充的元素的数量，否则 C 函数可能会遍历 Perl 的内存，从而可能导致不可预测的行为：</p>
 
-<pre><code class="language-perl6">my $number_of_ints = 10;
+<pre><code class="language-raku">my $number_of_ints = 10;
 my $ints = CArray[int32].allocate($number_of_ints); # instantiates an array with 10 elements 
 my $n = get_n_ints($ints, $number_of_ints);
 </code></pre>
@@ -450,7 +450,7 @@ my $n = get_n_ints($ints, $number_of_ints);
 <p>注意：<code>allocate</code> 是在 Rakudo 2018.05 中引入的。 在此之前，你必须使用此机制将数组扩展为许多元素：</p>
 </blockquote>
 
-<pre><code class="language-perl6">my $ints = CArray[int32].new;
+<pre><code class="language-raku">my $ints = CArray[int32].new;
 my $number_of_ints = 10;
 $ints[$number_of_ints - 1] = 0; # extend the array to 10 items 
 </code></pre>
@@ -461,19 +461,19 @@ $ints[$number_of_ints - 1] = 0; # extend the array to 10 items
 
 <h2 id="carray-方法">CArray 方法</h2>
 
-<p>除了每个 Perl 6 实例上可用的常用方法之外，CArray 还提供了以下方法，可以从 Perl 6 的角度与它进行交互：</p>
+<p>除了每个 Raku 实例上可用的常用方法之外，CArray 还提供了以下方法，可以从 Raku 的角度与它进行交互：</p>
 
 <ul>
 <li><p><code>elems</code> 提供数组中的元素数量;</p></li>
 
 <li><p><code>AT-POS</code> 在给定位置提供特定元素（从零开始）;</p></li>
 
-<li><p><code>list</code> 提供了从原生数组迭代器构建它的数组中的元素<a href="https://docs.perl6.org/type/List">列表</a>。</p></li>
+<li><p><code>list</code> 提供了从原生数组迭代器构建它的数组中的元素<a href="https://docs.raku.org/type/List">列表</a>。</p></li>
 </ul>
 
 <p>例如，请考虑以下简单的代码：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
  
 my $native-array = CArray[int32].new( 1, 2, 3, 4, 5 );
 say 'Number of elements: ' ~ $native-array.elems;
@@ -507,9 +507,9 @@ Element at position 4 is 5
 
 <h2 id="结构体">结构体</h2>
 
-<p>由于表示多态性，可以声明一个看起来很正常的 Perl 6 类，实际上，C 编译器将它们放置在类似的结构体定义中以相同的方式存储其属性。 所需要的只是快速使用“repr” trait：</p>
+<p>由于表示多态性，可以声明一个看起来很正常的 Raku 类，实际上，C 编译器将它们放置在类似的结构体定义中以相同的方式存储其属性。 所需要的只是快速使用“repr” trait：</p>
 
-<pre><code class="language-perl6">class Point is repr('CStruct') {
+<pre><code class="language-raku">class Point is repr('CStruct') {
     has num64 $.x;
     has num64 $.y;
 }
@@ -521,7 +521,7 @@ Element at position 4 is 5
 
 <p>NativeCall 目前并不把对象成员放到容器里面，所以不能对对象进行赋（使用 =）新值。 相反，你必须将新值绑定到私有成员上：</p>
 
-<pre><code class="language-perl6">class MyStruct is repr('CStruct') {
+<pre><code class="language-raku">class MyStruct is repr('CStruct') {
     has CArray[num64] $!arr;
     has Str $!str;
     has Point $!point; # Point is a user-defined class 
@@ -531,7 +531,7 @@ Element at position 4 is 5
         $arr[0] = 0.9e0;
         $arr[1] = 0.2e0;
         $!arr := $arr;
-        $!str := 'Perl 6 is fun';
+        $!str := 'Raku is fun';
         $!point := Point.new;
     }
 }
@@ -541,9 +541,9 @@ Element at position 4 is 5
 
 <h2 id="cunions">CUnions</h2>
 
-<p>同样地，我们可以声明一个 Perl 6 类，它的属性拥有和 C 编译器中联合体（<code>union</code>）的相同的内存布局，这可以使用 <code>CUnion</code> 表示：</p>
+<p>同样地，我们可以声明一个 Raku 类，它的属性拥有和 C 编译器中联合体（<code>union</code>）的相同的内存布局，这可以使用 <code>CUnion</code> 表示：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
  
 class MyUnion is repr('CUnion') {
     has int32 $.flags32;
@@ -557,7 +557,7 @@ say nativesizeof(MyUnion.new);  # 8, ie. max(sizeof(MyUnion.flags32), sizeof(MyU
 
 <p>反过来, CStructs 和 CUnions 可以被周围的 CStruct 和 CUnion 引用，或者嵌入到其他的 CStructs 和 CUnions 里面，如果是引用我们则像往常一样使用 <code>has</code> 来声明，如果是嵌入则使用 <code>HAS</code> 代替：</p>
 
-<pre><code class="language-perl6">class MyStruct is repr('CStruct') {
+<pre><code class="language-raku">class MyStruct is repr('CStruct') {
     has Point $.point;  # referenced 
     has int32 $.flags;
 }
@@ -576,9 +576,9 @@ say nativesizeof(MyStruct2.new);  # 24, ie. sizeof(struct Point) + sizeof(int32_
 
 <p>分配结构体以用作结构体时，请确保在 C 函数中分配自己的内存。 如果要将结构体传递给需要提前分配的 <code>Str/char*</code> 的C函数，请确保在将结构体传递给函数之前为 <code>Str</code> 类型的变量分配容器。</p>
 
-<h4 id="在你的-perl-6-代码中">在你的 Perl 6 代码中&hellip;</h4>
+<h4 id="在你的-raku-代码中">在你的 Raku 代码中&hellip;</h4>
 
-<pre><code class="language-perl6">class AStringAndAnInt is repr(&quot;CStruct&quot;) {
+<pre><code class="language-raku">class AStringAndAnInt is repr(&quot;CStruct&quot;) {
   has Str $.a_string;
   has int32 $.an_int32;
  
@@ -594,7 +594,7 @@ say nativesizeof(MyStruct2.new);  # 24, ie. sizeof(struct Point) + sizeof(int32_
 
 <h4 id="在你的-c-代码中">在你的 C 代码中 &hellip;</h4>
 
-<pre><code class="language-perl6">typedef struct a_string_and_an_int32_t_ {
+<pre><code class="language-raku">typedef struct a_string_and_an_int32_t_ {
   char *a_string;
   int32_t an_int32;
 } a_string_and_an_int32_t;
@@ -612,7 +612,7 @@ say nativesizeof(MyStruct2.new);  # 24, ie. sizeof(struct Point) + sizeof(int32_
 
 <p>在这个函数中，我们通过按值分配整数并通过引用传递字符串来初始化 C 结构体。 该函数在复制字符串时将 <code>&lt;point * a_string&gt;</code> 指向的内存分配到结构中。 （注意，你还必须管理内存的释放以避免内存泄漏。）</p>
 
-<pre><code class="language-perl6"># A long time ago in a galaxy far, far away... 
+<pre><code class="language-raku"># A long time ago in a galaxy far, far away... 
 my $foo = AStringAndAnInt.new(a_string =&gt; &quot;str&quot;, an_int =&gt; 123);
 say &quot;foo is {$foo.a_string} and {$foo.an_int32}&quot;;
 # OUTPUT: «foo is str and 123␤» 
@@ -622,7 +622,7 @@ say &quot;foo is {$foo.a_string} and {$foo.an_int32}&quot;;
 
 <p>将 <code>Pointer</code> 作为参数传递时可以类型化你的 <code>Pointer</code>。这不但对原生类型可用，同样适用于 <code>CArray</code> 以及 <code>CStruct</code> 定义类型，NativeCall 将不会显式为他们分配内存，即使在它们身上调用 <code>new</code> 方法也不会。这适用于那种 C 函数返回指针或者 <code>CStruct</code> 中嵌入的指针情况。</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
 sub strdup(Str $s --&gt; Pointer[Str]) is native {*}
 my Pointer[Str] $p = strdup(&quot;Success!&quot;);
 say $p.deref;
@@ -630,7 +630,7 @@ say $p.deref;
 
 <p>原生函数返回指向元素的数组的指针是很常见的。 可以将类型化指针解引用为数组以获取单个元素。</p>
 
-<pre><code class="language-perl6">my $n = 5;
+<pre><code class="language-raku">my $n = 5;
 # returns a pointer to an array of length $n 
 my Pointer[Point] $plot = some_other_c_routine($n);
 # display the 5 elements in the array 
@@ -643,7 +643,7 @@ for 1 .. $n -&gt; $i {
 
 <p>指针也可以更新以引用数组中的连续元素：</p>
 
-<pre><code class="language-perl6">my Pointer[Point] $elem = $plot;
+<pre><code class="language-raku">my Pointer[Point] $elem = $plot;
 # show differences between successive points 
 for 1 ..^ $n {
     my Point $lo = $elem.deref;
@@ -655,7 +655,7 @@ for 1 ..^ $n {
 }
 </code></pre>
 
-<p>通过声明 <code>Pointer[void]</code> 也可以使用 Void 指针。 有关该主题的更多信息，请参阅<a href="https://docs.perl6.org/language/nativetypes#The_void_type">原生类型文档</a>。</p>
+<p>通过声明 <code>Pointer[void]</code> 也可以使用 Void 指针。 有关该主题的更多信息，请参阅<a href="https://docs.raku.org/language/nativetypes#The_void_type">原生类型文档</a>。</p>
 
 <h2 id="字符串">字符串</h2>
 
@@ -670,7 +670,7 @@ for 1 ..^ $n {
 <h1 id="void-setcallback-int-callback-char-const">void SetCallBack(int (*callback)(char const *))</h1>
 
 <p>my sub SetCallBack(&amp;callback(Str &ndash;&gt; int32)) is native(&lsquo;mylib&rsquo;) { * }
-注意：原生代码负责传递给 Perl 6 回调的值的内存管理，换句话说，NativeCall 将不会释放传递给回调的字符串占用的内存。</p>
+注意：原生代码负责传递给 Raku 回调的值的内存管理，换句话说，NativeCall 将不会释放传递给回调的字符串占用的内存。</p>
 
 <h2 id="库路径以及名字">库路径以及名字</h2>
 
@@ -753,13 +753,13 @@ sub getpwuid(uint32 $uid)    returns PwStruct     is native(Str) { * }</p>
 
 <h3 id="postgresql">PostgreSQL</h3>
 
-<p><a href="https://github.com/perl6/DBIish/blob/master/examples/pg.p6">DBIish</a> 中的 PostgreSQL 示例使用 NativeCall 库，并且<code>原生使用</code> Windows 中的原生 <code>_putenv</code> 函数调用。</p>
+<p><a href="https://github.com/raku/DBIish/blob/master/examples/pg.p6">DBIish</a> 中的 PostgreSQL 示例使用 NativeCall 库，并且<code>原生使用</code> Windows 中的原生 <code>_putenv</code> 函数调用。</p>
 
 <h3 id="mysql">MySQL</h3>
 
 <p>注意：请记住，自 Stretch 版本以来，Debian 已经将 MySQL 替换为 MariaDB，因此如果要安装 MySQL，请使用 <a href="https://dev.mysql.com/downloads/repo/apt/">MySQL APT 存储库</a>而不是默认存储库。</p>
 
-<p>要在 <a href="https://github.com/perl6/DBIish/blob/master/examples/mysql.p6">DBIish</a> 中使用 MySQL 示例，您需要在本地安装 MySQL 服务器; 在Debian-esque 系统上，它可以安装如下：</p>
+<p>要在 <a href="https://github.com/raku/DBIish/blob/master/examples/mysql.p6">DBIish</a> 中使用 MySQL 示例，您需要在本地安装 MySQL 服务器; 在Debian-esque 系统上，它可以安装如下：</p>
 
 <pre><code class="language-shell">wget https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb
 sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb # Don't forget to select 5.6.x 
@@ -780,7 +780,7 @@ CREATE DATABASE test;
 
 <p>这是一个 Windows API 调用的例子：</p>
 
-<pre><code class="language-perl6">use NativeCall;
+<pre><code class="language-raku">use NativeCall;
  
 sub MessageBoxA(int32, Str, Str, int32)
     returns int32
@@ -792,7 +792,7 @@ MessageBoxA(0, &quot;We have NativeCall&quot;, &quot;ohai&quot;, 64);
 
 <h3 id="关于调用-c-函数的简明指南">关于调用 C 函数的简明指南</h3>
 
-<p>这是一个调用标准函数并在 Perl 6 程序中使用返回信息的示例。</p>
+<p>这是一个调用标准函数并在 Raku 程序中使用返回信息的示例。</p>
 
 <p><code>getaddrinfo</code> 是 POSIX 标准函数，用于获取有关网络节点的网络信息，例如 <code>google.com</code>。 这是一个有趣的功能，因为它说明了 NativeCall 的许多元素。</p>
 
@@ -807,7 +807,7 @@ MessageBoxA(0, &quot;We have NativeCall&quot;, &quot;ohai&quot;, 64);
 
 <p>从 NativeCall 类型表我们知道 <code>int</code> 是 <code>int32</code>。 我们也知道 <code>char *</code> 是 C <code>Str</code> 的形式 C 之一，它简单地映射到 Str。 但是 <code>addrinfo</code> 是一个结构体，这意味着我们需要编写自己的 Type 类。 但是，函数声明很简单：</p>
 
-<pre><code class="language-perl6">sub getaddrinfo( Str $node, Str $service, Addrinfo $hints, Pointer $res is rw )
+<pre><code class="language-raku">sub getaddrinfo( Str $node, Str $service, Addrinfo $hints, Pointer $res is rw )
     returns int32
     is native
     { * }
@@ -833,9 +833,9 @@ MessageBoxA(0, &quot;We have NativeCall&quot;, &quot;ohai&quot;, 64);
 
 <p>复杂的是 <code>sockaddr</code>，它取决于 <code>ai_socktype</code> 是否是未定义的，INET 还是 INET6（标准的v4 IP 地址或 v6 地址）。</p>
 
-<p>所以我们创建一个 Perl 6 类来映射到 C <code>struct addrinfo</code>; 当我们在它的时候，我们还为 <code>SockAddr</code> 创建了另一个类。</p>
+<p>所以我们创建一个 Raku 类来映射到 C <code>struct addrinfo</code>; 当我们在它的时候，我们还为 <code>SockAddr</code> 创建了另一个类。</p>
 
-<pre><code class="language-perl6">class SockAddr is repr('CStruct') {
+<pre><code class="language-raku">class SockAddr is repr('CStruct') {
     has int32    $.sa_family;
     has Str      $.sa_data;
 }
@@ -857,20 +857,20 @@ class Addrinfo is repr('CStruct') {
 
 <p>映射到 C <code>Struct</code> 的重要一点是类的状态部分的结构，即属性。 但是，类可以有方法，而 <code>NativeCall</code> 不会“触摸”它们以映射到C.这意味着我们可以向类添加额外的方法以更易读的方式解包属性，例如，</p>
 
-<pre><code class="language-perl6">method flags {
+<pre><code class="language-raku">method flags {
     do for AddrInfo-Flags.enums { .key if $!ai_flags +&amp; .value }
 }
 </code></pre>
 
 <p>通过定义适当的 <code>enum</code>，<code>flags</code> 将返回一串键而不是一个打包的整数。</p>
 
-<p><code>sockaddr</code> 结构中最有用的信息是节点的地址，它取决于 Socket 的族。 因此，我们可以将方法地址添加到 Perl 6 类中，该类根据族来解释地址。</p>
+<p><code>sockaddr</code> 结构中最有用的信息是节点的地址，它取决于 Socket 的族。 因此，我们可以将方法地址添加到 Raku 类中，该类根据族来解释地址。</p>
 
 <p>为了获得人类可读的 IP 地址，有一个 C 函数 <code>inet_ntop</code>，它给出一个带有 <code>addrinfo</code> 的缓冲区的 <code>char *</code>。</p>
 
 <p>将所有这些组合在一起会产生以下程序：</p>
 
-<pre><code class="language-perl6">#!/usr/bin/env perl6 
+<pre><code class="language-raku">#!/usr/bin/env raku 
  
 use v6;
 use NativeCall;

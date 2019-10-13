@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku 模块分析 - 并行查找文件</title>
+  <meta property="og:title" content="Raku 模块分析 - 并行查找文件" />
+  <meta name="twitter:title" content="Raku 模块分析 - 并行查找文件" />
+  <meta name="description" content="并行查找文件 如果你没有使用 panda 或 zef 安装该模块, 你可以下载到本地：
+use v6; use lib &quot;C:\\Users\\Administrator\\raku-concurrent-file-find\\lib&quot;; use Concurrent::File::Find;  下面来看具体代码：
+class X::IO::NotADirectory does X::IO is export { has $.path; method message { &quot;«$.path» is not a directory&quot; } } class X::IO::CanNotAccess does X::IO is export { has $.path; method message { &quot;Cannot access «$.path»: permission denied&quot; } } class X::IO::StaleSymlink does X::IO is export { has $.path; method message { &quot;Stale symlink «$.path»&quot; } }  上面的代码自定义了 3 个与 IO 错误相关的类并导出, 每个类中有一个 $.">
+  <meta property="og:description" content="并行查找文件 如果你没有使用 panda 或 zef 安装该模块, 你可以下载到本地：
+use v6; use lib &quot;C:\\Users\\Administrator\\raku-concurrent-file-find\\lib&quot;; use Concurrent::File::Find;  下面来看具体代码：
+class X::IO::NotADirectory does X::IO is export { has $.path; method message { &quot;«$.path» is not a directory&quot; } } class X::IO::CanNotAccess does X::IO is export { has $.path; method message { &quot;Cannot access «$.path»: permission denied&quot; } } class X::IO::StaleSymlink does X::IO is export { has $.path; method message { &quot;Stale symlink «$.path»&quot; } }  上面的代码自定义了 3 个与 IO 错误相关的类并导出, 每个类中有一个 $.">
+  <meta name="twitter:description" content="并行查找文件 如果你没有使用 panda 或 zef 安装该模块, 你可以下载到本地：
+use v6; use lib &quot;C:\\Users\\Administrator\\raku-concurrent-file-find\\lib&quot;; use Concurrent::File::Find;  下面来看具体代码：
+class X::IO::NotADirectory does …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-10-19-raku%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-19-raku%E6%A8%A1%E5%9D%97%E5%88%86%E6%9E%90-%E5%B9%B6%E8%A1%8C%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku 模块分析 - 并行查找文件</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 19, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 7 minutes (1394 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="并行查找文件">并行查找文件</h2>
+
+<p>如果你没有使用 panda 或 zef 安装该模块, 你可以下载到本地：</p>
+
+<pre><code class="language-raku">use v6;
+
+use lib &quot;C:\\Users\\Administrator\\raku-concurrent-file-find\\lib&quot;;
+use Concurrent::File::Find;
+</code></pre>
+
+<p>下面来看具体代码：</p>
+
+<pre><code class="language-raku">class X::IO::NotADirectory does X::IO is export {
+    has $.path;
+    method message {
+        &quot;«$.path» is not a directory&quot;
+    }
+}
+
+class X::IO::CanNotAccess does X::IO is export {
+    has $.path;
+    method message {
+        &quot;Cannot access «$.path»: permission denied&quot;
+    }
+}
+
+class X::IO::StaleSymlink does X::IO is export {
+    has $.path;
+    method message {
+        &quot;Stale symlink «$.path»&quot;
+    }
+}
+</code></pre>
+
+<p>上面的代码自定义了 3 个与 <code>IO</code> 错误相关的类并导出, 每个类中有一个 <code>$.path</code> 属性和 <code>message</code> 方法。如果在查找文件/目录时出现异常则会打印出相关的信息, 每个信息中会包含该文件/目录的绝对路径。</p>
+
+<p>自定义的类都遵守了 <a href="https://docs.raku.org/type/X$COLON$COLONIO">X::IO</a> 这个角色(Role), 角色 <code>X::IO</code> 是一个用于 IO 错误相关的通用角色, <code>X::IO</code> 没有提供任何额外的方法, 它遵守 <a href="https://docs.raku.org/type/X$COLON$COLONOS">X::OS</a> 角色,</p>
+
+<pre><code class="language-raku">role X::IO does X::OS {}
+</code></pre>
+
+<p>而 X::OS 角色的定义为:</p>
+
+<pre><code class="language-raku">role X:OS { has $.os-error }
+</code></pre>
+
+<p>它是由操作系统报告的一些错误触发的所有异常的通用角色（失败的 IO，系统调用，fork，内存分配）。</p>
+
+<p>定义一个参数互斥类并导出。如果传递给 <code>find</code> 方法的参数之间有相互排斥, 则抛出这个异常。</p>
+
+<pre><code class="language-raku">class X::Paramenter::Exclusive is Exception is export {
+    has $.type;
+    method message {
+        &quot;Parameters {$.type} are mutual exclusive&quot;
+    }
+}
+</code></pre>
+
+<p>下面来看 <code>find</code> 方法的签名。第一个参数 <code>$dir</code> 是需要用户指定的文件查找的<strong>起始路径</strong>, <code>$dir</code> 是一个 <strong>Str</strong> 类型的参数, 在 <code>find</code> 方法中被强制为 IO 类型。<code>$dir</code> 前面的 <code>IO(Str)</code>, 表示它既可以是一个字符串, 也可以是一个 <code>IO</code> 路径, 如果传入的是字符串, 那么在该 find 方法中就会被强制为 <code>IO</code> 类型。<code>$dir</code> 后面的 <code>where</code> 从句(从句的内容是一个 Block, 直接执行)是对该参数的约束：该路径必须真实存在(否则抛出异常)、必须是一个目录(否则抛出异常)、路径必须可访问(否则抛出异常)。</p>
+
+<p>where 从句的 <code>Block</code> 中使用了<code>点语法</code>, 即调用了 IO 方法, 调用者是 <code>$_</code>, 这里就是 <code>$dir</code> 了。下面还会见到这种 <code>Block</code> 和点语法的用法。</p>
+
+<pre><code class="language-raku">sub find (
+    IO(Str) $dir where {
+           ( .IO.e || fail X::IO::DoesNotExist.new(path =&gt; .Str ) )
+        &amp;&amp; ( .IO.d || fail X::IO::NotADirectory.new(path =&gt; .Str) )
+        &amp;&amp; ( .IO.r || fail X::IO::CanNotAccess.new(path =&gt; .Str ) )
+    },
+    :$name, :$exclude, :$exclude-dir, :$include, :$include-dir, :$extension,
+    :&amp;return-type = { .IO.Str },
+    :$no-thread = False,
+    :$file = True, :$directory, :$symlink,
+    :$max-depth where { $^a ~~ Int || $^a ~~ ∞ &amp;&amp; $^a &gt; 0 } = ∞,
+    :$recursive = True, :$follow-symlink = False,
+    :$keep-going = True, :$quiet = False
+) is export { ... }
+</code></pre>
+
+<p><code>find</code> 方法的其余参数都是一个一个的 <code>Pair</code> 了, 它们就像袜子一样, 都是一对儿一对儿的:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">副词</th>
+<th align="center">等价于</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">:$name</td>
+<td align="center">name           =&gt; $name</td>
+</tr>
+
+<tr>
+<td align="center">:$exclude</td>
+<td align="center">exclude        =&gt; $exclude</td>
+</tr>
+
+<tr>
+<td align="center">:$exclude-dir</td>
+<td align="center">exclude-dir    =&gt; $exclude-dir</td>
+</tr>
+
+<tr>
+<td align="center">:$include</td>
+<td align="center">include        =&gt; $include</td>
+</tr>
+
+<tr>
+<td align="center">:$include-dir</td>
+<td align="center">include-dir    =&gt; $include-dir</td>
+</tr>
+
+<tr>
+<td align="center">:$extension</td>
+<td align="center">extension      =&gt; $extension</td>
+</tr>
+
+<tr>
+<td align="center">:&amp;return-type</td>
+<td align="center">return-type    =&gt; &amp;return-type</td>
+</tr>
+
+<tr>
+<td align="center">:$no-thread = False</td>
+<td align="center">no-thread      =&gt; False</td>
+</tr>
+
+<tr>
+<td align="center">:$file = True</td>
+<td align="center">file           =&gt; True</td>
+</tr>
+
+<tr>
+<td align="center">:$directory</td>
+<td align="center">directory      =&gt; $directory</td>
+</tr>
+
+<tr>
+<td align="center">:$symlink</td>
+<td align="center">symlink        =&gt; $symlink</td>
+</tr>
+
+<tr>
+<td align="center">:$max-depth</td>
+<td align="center">max-depth      =&gt; $max-depth</td>
+</tr>
+
+<tr>
+<td align="center">:$recursive = True</td>
+<td align="center">recursive      =&gt; True</td>
+</tr>
+
+<tr>
+<td align="center">:$follow-symlink = False</td>
+<td align="center">follow-symlink =&gt; False</td>
+</tr>
+
+<tr>
+<td align="center">:$keep-going = True</td>
+<td align="center">keep-going     =&gt; True</td>
+</tr>
+
+<tr>
+<td align="center">:$quiet = Flase</td>
+<td align="center">quiet          =&gt; False</td>
+</tr>
+</tbody>
+</table>
+
+<p><code>:$no-thread = False</code> 表示默认开启多线程, <code>:$file = True</code> 表示默认查找文件, <code>:$recursive = True</code> 表示默认开启递归查找, <code>:$keep-going = True</code> 表示遇到异常也会继续查找而不退出, <code>:$quiet = Flase</code> 表示默认静默查找。</p>
+
+<p>有一个参数很奇怪, 它后面还有一个 where 从句, 用以约束最大深度, <code>$max-depth</code> 必须为整型或者它的值无穷大并且为正值</p>
+
+<pre><code class="language-raku">:$max-depth where { $^a ~~ Int || $^a ~~ ∞ &amp;&amp; $^a &gt; 0 } = ∞
+</code></pre>
+
+<p>下面是 <code>find</code> 方法的函数主体:</p>
+
+<p><code>$*SPEC.dir-sep</code> 为路径分割符, Windows 下为 <code>\</code>, Linux 下为 <code>/</code>。使用 <code>constant</code> 声明了一个常量来保存路径分割符。
+<code>&amp;max-depth</code> 是一个可调用的 <code>Block</code>：</p>
+
+<pre><code class="language-raku">constant dir-sep = $*SPEC.dir-sep;
+my &amp;max-depth = $max-depth &lt; ∞ ?? { .IO.path.split(dir-sep).elems &lt;= $max-depth } !! { True };
+</code></pre>
+
+<pre><code class="language-raku">my @tests; # 保存文件查找所用的条件测试
+my @types; #
+</code></pre>
+
+<p>下面的代码再次用到了 <code>Block</code> 和主题化变量 <code>$_</code>。</p>
+
+<pre><code class="language-raku">@types.append({.f}) if $file;
+@types.append({.d}) if $directory;
+@types.append({.l}) if $symlink;
+
+@tests.append(@types.any);
+@tests.append({.basename.Str ~~ $name}) with $name;
+</code></pre>
+
+<p>我们往 <code>@types</code> 数组里面追加了一个 <code>Block</code>, 这个数组中的元素不是普通值, 它是一个带有占位符参数(<code>$_</code>)的花括号块儿。 <code>{.f}</code> 等价于 <code>{$_.f}</code>。那么这里的 <code>$_</code> 代表着什么呢? 从这句代码所在的上下文可以知道, find 方法的函数主体中并没有显式的声明 <code>$_</code> 主题变量, 也没有 <code>for</code>、 <code>given</code>、<code>where</code> 等能主题化的关键字, 所以, <code>{.f}</code>、<code>{.d}</code>、<code>{.l}</code> 中的 <code>$_</code> 来自别的地方。怎么知道它来自哪个地方呢？ 我们知道只有当有文件、有目录、有 sysmlink  的时候才把相关的 Block 追加到 <code>@types</code> 数组中。既然数组中每个元素都是 <code>Block</code>, 那么对每个 Block 可以进行调用。我们现在先知道这些。</p>
+
+<p><code>@types.any</code> 是一个 any <code>Junction</code>, 意思为查找时遇到文件、目录或 symlink 中的任意一种类型都可以保留下来。
+<code>with</code> 修饰符的意思是如果定义了具体的文件名, 则在 <code>@tests</code> 数组中追加一个 <code>Block</code>, 这个 <code>Block</code> 检查找到的文件名和要查找的文件名是否匹配, 如果匹配的话这个 Block 的值就为 True, 否则为 Flase。</p>
+
+<p>下面的代码是查找文件时用到的一些测试, <code>exclude-tests</code> 是要排除在外的文件名：</p>
+
+<pre><code class="language-raku">my @exclude-tests;
+for $exclude.list -&gt; $exclude {
+    @exclude-tests.push({ .Str ~~ $exclude })        if $exclude ~~ Regex;
+    @exclude-tests.push({ $exclude.(.IO) })          if $exclude ~~ Callable ^ Regex;
+    @exclude-tests.push({ .Str.contains($exclude) }) if $exclude ~~ Str;
+}
+@tests.append(@exclude-tests.none);
+</code></pre>
+
+<p><code>$exclude</code> 来自于传递进来的 Pair 参数, 它可以包含单个值, 也可以包含多个值, 所以使用 <code>.list</code> 用来遍历所有的可能。<code>$exclude</code> 可以是正则表达式、<code>Callable</code> 和普通字符串。</p>
+
+<p>与上面的类似, 下面是要包含在内的文件名。 <code>@include-tests</code> 数组中保存的是要包含在查询结果中的文件, 数组中每一个元素都是一个 <code>Block</code>
+每个 <code>Block</code> 接收一个参数作为 <code>$_</code> 的值, 每个 <code>.</code> 号前面是有一个参数的, 这个会在调用 <code>Block</code> 时传入：</p>
+
+<pre><code class="language-raku">my @include-tests;
+for $include.list -&gt; $include {
+
+    @include-tests.push({ .Str ~~ $include })        if $include ~~ Regex;
+    @include-tests.push({ $include.(.IO) })          if $include ~~ Callable ^ Regex;
+    @include-tests.push({ .Str.contains($include) }) if $include ~~ Str;
+}
+@tests.append(@include-tests.any) if @include-tests;
+</code></pre>
+
+<p>文件名后缀与之类似, 可以是正则表达式、<code>Callable ^ Regex</code> 和普通字符串：</p>
+
+<pre><code class="language-raku">my @extension-tests;
+for $extension.list -&gt; $test {
+    @extension-tests.push({ .extension ~~ $test if .extension }) if $test ~~ Regex;
+    @extension-tests.push({ $test.(.extension) })  if $test ~~ Callable ^ Regex;
+    @extension-tests.push({ $test eq .extension }) if $test ~~ Str;
+}
+@tests.append(@extension-tests.any) if @extension-tests;
+</code></pre>
+
+<p>目录测试, 如果 <code>$follow-symlink</code> 为真则在该路径是目录 &amp;&amp; sysmlink &amp;&amp; （路径不存在就直接抛出 fail 异常）, 然后返回这个目录。</p>
+
+<pre><code class="language-raku">my @dir-tests = $follow-symlink
+    ?? { .d &amp;&amp; .l &amp;&amp; ( !.e &amp;&amp; fail X::IO::StaleSymlink.new(:path(.Str)) ); .d }
+    !! { .d &amp;&amp; ! .l };
+</code></pre>
+
+<p>排除目录的测试:</p>
+
+<pre><code class="language-raku">my @exclude-dir-tests;
+for $exclude-dir.list -&gt; $exclude {
+    @exclude-dir-tests.push({ .Str ~~ $exclude })        if $exclude ~~ Regex;
+    @exclude-dir-tests.push({ $exclude.(.IO) })          if $exclude ~~ Callable &amp; !Regex;
+    @exclude-dir-tests.push({ .Str.contains($exclude) }) if $exclude ~~ Str;
+}
+@dir-tests.append(@exclude-dir-tests.none);
+</code></pre>
+
+<p>包含目录的测试:</p>
+
+<pre><code class="language-raku">my @include-dir-tests;
+for $include-dir.list -&gt; $include {
+    @include-dir-tests.push({ .Str ~~ $include })        if $include ~~ Regex;
+    @include-dir-tests.push({ $include.(.IO) })          if $include ~~ Callable &amp; !Regex;
+    @include-dir-tests.push({ .Str.contains($include) }) if $include ~~ Str;
+}
+@dir-tests.append(@include-dir-tests.any) if @include-dir-tests;
+</code></pre>
+
+<p>下面是并发查找部分：</p>
+
+<pre><code class="language-raku">my $channel = Channel.new;
+my &amp;start = -&gt; ( &amp;c ) { c } if $no-thread;
+my $promise = start { ... }
+</code></pre>
+
+<p>在 <code>for</code> 这个块中, <code>$_</code> 代表当前找到的文件/文件夹。如果有错误发生(例如禁止访问)并且非安静模式下会打印出有异常的文件/目录的路径并继续，否则重新抛出<a href="https://docs.raku.org/routine/rethrow">rethrow</a>这个异常：</p>
+
+<pre><code class="language-raku">for dir($dir) {
+    CATCH { default { if $keep-going { warn .Str unless $quiet } else { .rethrow } } }
+
+    # 如果这个文件/目录是link的并且不存在,就抛出异常
+    if .IO.l &amp;&amp; !.IO.e {
+        X::IO::StaleSymlink.new(path=&gt;.Str).throw;
+    }
+...
+</code></pre>
+
+<p>调用一个关闭了的 channel 会导致 <a href="https://docs.raku.org/type/X$COLON$COLONChannel$COLON$COLONSendOnClosed">X::Channel::SendOnClosed</a>.
+<code>last</code> 不仅会退出当前块, 还会退出当前 for 循环。</p>
+
+<pre><code class="language-raku">CATCH { when X::Channel::SendOnClosed { last } }
+</code></pre>
+
+<p><code>@tests».(.IO)</code> 意为对 <code>@tests</code> 中的每一个 <code>Block</code> 元素都执行一次 <code>.(.IO)</code> 调用，参数为 <code>.IO</code>， 即 <code>$_.IO</code>, 语法为 <code>$someBlock.(paramter)</code>。
+<code>all</code> 代表所有测试条件都通过, 即每一个 <code>Block</code> <strong>调用</strong>都返回真:</p>
+
+<pre><code class="language-raku">$channel.send(.&amp;return-type) if all @tests».(.IO);
+</code></pre>
+
+<p><code>&amp;return-type</code> 是一个 <code>Block</code>, 所以可以用点语法调用, 这个 <code>Block</code> 为 <code>{ .IO.Str }</code>, 所以调用后得到的是路径的字符串表示。</p>
+
+<p>如果所有的目录测试条件通过并且最大深度为真并且递归查找开启, 则对该目录中的每一个元素（文件/目录）
+按照存在和文件名排序后再对每一项执行一次当前块(<code>&amp;?BLOCK</code>)</p>
+
+<pre><code class="language-raku">.IO.dir().sort({.e &amp;&amp; .f}).map(&amp;?BLOCK) if $recursive &amp;&amp; .&amp;max-depth &amp;&amp; all @dir-tests».(.IO)
+</code></pre>
+
+<p>离开的时候关闭 Channel</p>
+
+<pre><code class="language-raku">LEAVE $channel.close;
+</code></pre>
+
+<pre><code class="language-raku">return $channel.list but role :: { method channel { $channel } };
+</code></pre>
+
+<p>该模块还提供了一个简单的查找方法:</p>
+
+<pre><code class="language-raku">sub find-simple ( IO(Str) $dir,
+    :$keep-going = True,
+    :$no-thread = False
+) is export {
+    my $channel = Channel.new;
+
+    my &amp;start = -&gt; ( &amp;c ) { c } if $no-thread;
+
+    my $promise = start {
+        for dir($dir) {
+            CATCH { default { if $keep-going { note .Str } else { .rethrow } } }
+
+            if .IO.l &amp;&amp; !.IO.e {
+                X::IO::StaleSymlink.new(path=&gt;.Str).throw;
+            }
+            {
+                CATCH { when X::Channel::SendOnClosed { last } }
+                $channel.send(.IO) if .IO.f; # 这里的 $_ 代表当前查找到的文件
+                $channel.send(.IO) if .IO.d; # 这里的 $_ 代表当前查找到的目录
+            }
+            # 如果目录存在, 默认对该目录执行递归查找
+            .IO.dir()».&amp;?BLOCK if .IO.e &amp;&amp; .IO.d;
+        }
+        LEAVE $channel.close unless $channel.closed;
+    }
+
+    return $channel.list but role :: { method channel { $channel } };
+}
+</code></pre>
+
+<hr />
+
+<h1 id="概要">概要</h1>
+
+<pre><code class="language-raku">use v6;
+use Concurrent::File::Find;
+
+find(%*ENV&lt;HOME&gt;
+    , :extension('txt', {.contains('~')}) # ends in .txt or ends in something that contains a ~
+    , :exclude('covers') # exclude any path that contains covers, both for files and directories
+    , :exclude-dir('.') # exclude any directory-path that contains a .
+    , :file # return file paths
+    , :!directory # don't return directory paths
+    , :symlink # return symlink paths
+    , :max-depth(5) # but not deeper then 5 directories deep
+    , :follow-symlink # follow symlinks (no loop detection yet)
+    , :keep-going # on error (no access, stale symlink, etc.), keep going
+    , :quiet # don't report errors on STDERR
+).elems.say; # count how many files and symlinks we got
+
+sleep 10;
+
+my @l := find-simple(%*ENV&lt;HOME&gt;, :keep-going, :!no-thread); # binding to avoid eagerness
+
+for @l {
+    @l.channel.close if $++ &gt; 5000; # hard-close the channel after 5000 found files
+    .say if $++ %% 100 # print every 100th file
+}
+</code></pre>
+
+<h1 id="描述">描述</h1>
+
+<h2 id="例程">例程</h2>
+
+<h3 id="sub-find">sub find</h3>
+
+<p>将由后台线程获取到的文件、目录和符号链接作为 <code>Str</code> 的<code>列表</code>返回。 该列表得到了一个混合到唯一方 <code>channel</code> 中的角色，它能可用于关闭 <code>List</code> 后面的 channel，以中止任何仍在进行的获取。 这是有点靠不住，当底层的 <code>Promise</code>被 <code>DESTROY</code> 时可能会产生警告。 有如下所述的各种包括和排他的过滤器选项。 对于任何目录, 在返回的列表中文件被排在目录之前。只有在返回项目后，才可能递归到子目录中。</p>
+
+<h4 id="matcher">Matcher</h4>
+
+<p>一些参数采用匹配器或一组匹配器。 给定列表时使用的“Junction”类型取决于参数。 因为匹配器 <code>Str</code>，<code>Regex</code> 和 <code>Callable</code> 被接受。 除非另有说明，否则 <code>Str</code> 匹配文件名的某一部分并且区分大小写或匹配整个路径。 <code>Regexp</code> 智能匹配 <code>IO::Path.Str</code> 并且 <code>Callable</code> 用 <code>IO::Path</code> 调用。</p>
+
+<h4 id="参数">参数</h4>
+
+<p><code>IO(Str) $dir</code> - 从哪个目录开始, 要么是 <code>IO::Path</code>, 要么是 <code>Str</code>.</p>
+
+<p><code>:$file = True</code> - 也返回文件</p>
+
+<p><code>:$directory</code> - 也返回目录</p>
+
+<p><code>:$symlink</code> - 也返回符号链接</p>
+
+<p><code>:&amp;return-type = { .IO.Str }</code> - 默认把匹配到的项目转换为 <code>Str</code>。该 block 被馈以 <code>IO::Path</code> 对象.结果原样返回, 而不是由 <code>find</code> 本身使用，你可以在这里疯狂。</p>
+
+<p><code>:$name</code> - 返回匹配所提供的匹配器的任意目录的任意文件。使用 <code>Str</code> 作为匹配器需要确切的, 区分大小写的匹配。</p>
+
+<p><code>:$include</code> - 返回任何 <code>IO::Path.basename</code> 匹配所提供的匹配器的文件。使用 <code>Str</code> 作为匹配器需要部分匹配。</p>
+
+<p><code>:$exclude</code> - 不返回任何匹配了所提供的匹配器的文件。使用 <code>Str</code> 作为匹配器需要部分匹配。</p>
+
+<p><code>:$include-dir</code> - 返回或下降到匹配了所提供的匹配器的目录。使用 <code>Str</code> 作为匹配器需要部分匹配。</p>
+
+<p><code>:$exclude-dir</code> - 不返回或下降到匹配了所提供的匹配器的目录。使用 <code>Str</code> 作为匹配器需要部分匹配。.</p>
+
+<p><code>:$extension</code> - 返回任何匹配 <code>IO::Path.extension</code> 的项目.使用 <code>Str</code> 作为匹配器需要确切的, 区分大小写的匹配。</p>
+
+<p><code>:$recursive = True</code> - 下降到子目录。</p>
+
+<p><code>Int :$max-depth = ∞</code> - 尽可能深地下降到子目录中。</p>
+
+<p><code>:$follow-symlink = False</code> - 跟随符号链接. 还没有循环检测.</p>
+
+<p><code>:$keep-going = True</code> - 发生错误时 (拒绝访问, 陈旧的符号链接, 等等.) 继续但是在标准错误 $*ERR 上输出警告。</p>
+
+<p><code>:$quiet = False</code> - 配合 $keep-going, 不输出警告.</p>
+
+<p><code>:$no-thread = False</code> - 禁止创建 <code>Promise</code>. 用于调试.</p>
+
+<h3 id="sub-find-simple">sub find-simple</h3>
+
+<p>和 <code>find</code> 一样, 但是没有了过滤器选项, 并且永远是递归的, 跟随现有的符号链接(尚没有循环检测)也没有排序。速度快可能包含少量 bug。它可能抛出 <code>X::IO::StaleSymlink</code>.</p>
+
+<h4 id="参数-1">参数</h4>
+
+<p><code>IO(Str) $dir</code> - <code>Path</code> as <code>IO::Path</code> or Str at where to start looking for files</p>
+
+<p><code>:$keep-going = True</code> - 出现错误不停止</p>
+
+<p><code>:$no-thread = False</code> - 不创建 <code>Promise</code>, 调试时有用</p>
+
+<h2 id="异常">异常</h2>
+
+<h3 id="x-io-notadirectory-does-x-io"><code>X::IO::NotADirectory does X::IO</code></h3>
+
+<p>尝试获取不是目录的路径的内容</p>
+
+<h3 id="x-io-cannotaccess-does-x-io"><code>X::IO::CanNotAccess does X::IO</code></h3>
+
+<p>访问文件夹(目录)被操作系统拒绝。</p>
+
+<h3 id="x-io-stalesymlink-does-x-io"><code>X::IO::StaleSymlink does X::IO</code></h3>
+
+<p>我们的意图是返回或跟随一个确实存在，但没有目标的符号链接，</p>
+
+<h3 id="x-paramenter-exclusive-is-exception"><code>X::Paramenter::Exclusive is Exception</code></h3>
+
+<p>命名参数一起使用是互斥的。</p>
+
+<h1 id="警告">警告</h1>
+
+<p>尚不支持循环检测。 只要有 readlink 和/或 stat 的便携版本，就会添加循环检测。 到那时避免 <code>:follow-symlink</code> 或使用 <code>:max-depth</code>。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/junction/">Junction</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/smartmatch/">Smartmatch</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/block/">Block</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/%E9%80%92%E5%BD%92/">递归</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-10-19-raku%E4%B8%AD%E7%9A%84block/" data-toggle="tooltip" data-placement="top" title="Raku 中的 Block">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-10-19-raku%E4%B8%AD%E7%9A%84with/" data-toggle="tooltip" data-placement="top" title="Raku 中的 with">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

@@ -12,12 +12,12 @@
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
 my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
 src/core/Bool.pm 32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False }); 33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True }); 35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
-&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Perl 6 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
+&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
   <meta property="og:description" content="Sneaky methods
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
 my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
 src/core/Bool.pm 32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False }); 33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True }); 35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
-&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Perl 6 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
+&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
   <meta name="twitter:description" content="Sneaky methods
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
 my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
@@ -219,7 +219,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (140 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (138 words)
   
   
 </span>
@@ -242,12 +242,12 @@ if (!doNotTrack) {
 
 <p>就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 <code>my</code> 关键字声明的免费浮点方法。现在为什么你想要:</p>
 
-<pre><code class="language-perl6">my method foo(SomeClass:D:) { self }
+<pre><code class="language-raku">my method foo(SomeClass:D:) { self }
 </code></pre>
 
-<p>明显的答案是<a href="https://docs.perl6.org/language/mop">元对象协议</a>中的 <a href="https://docs.perl6.org/type/Metamodel$COLON$COLONMethodContainer#method_add_method">add_method</a> 方法, 在 Rakudo 里你能找到它：</p>
+<p>明显的答案是<a href="https://docs.raku.org/language/mop">元对象协议</a>中的 <a href="https://docs.raku.org/type/Metamodel$COLON$COLONMethodContainer#method_add_method">add_method</a> 方法, 在 Rakudo 里你能找到它：</p>
 
-<pre><code class="language-perl6">src/core/Bool.pm
+<pre><code class="language-raku">src/core/Bool.pm
 32:    Bool.^add_method('pred',  my method pred() { Bool::False });
 33:    Bool.^add_method('succ',  my method succ() { Bool::True });
 35:    Bool.^add_method('enums', my method enums() { self.^enum_values });
@@ -257,16 +257,16 @@ if (!doNotTrack) {
 
 <!-- more -->
 
-<pre><code class="language-perl6">&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;
+<pre><code class="language-raku">&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;
 
 # output
 # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
 # (a b c)
 </code></pre>
 
-<p>没有显式调用我们就不能没有名字, 因为 Perl 6 不允许我们这样做, 所以我们使用了空的作用域 <code>::</code> 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 <code>.&amp;</code> 来调用它。如果我们需要多次使用那个方法我们可以把它拉出来并给它一个名字。</p>
+<p>没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 <code>::</code> 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 <code>.&amp;</code> 来调用它。如果我们需要多次使用那个方法我们可以把它拉出来并给它一个名字。</p>
 
-<pre><code class="language-perl6">my multi method debug(List:D:) { dd self; self };
+<pre><code class="language-raku">my multi method debug(List:D:) { dd self; self };
 &lt;a b c&gt;.&amp;debug.say;
 
 # output
@@ -276,7 +276,7 @@ if (!doNotTrack) {
 
 <p>或者, 如果我们想允许回调的话, 我们可以把它作为默认参数赋值。</p>
 
-<pre><code class="language-perl6">sub f(@l, :&amp;debug = my method (List:D:){self}) { @l.&amp;debug.say };
+<pre><code class="language-raku">sub f(@l, :&amp;debug = my method (List:D:){self}) { @l.&amp;debug.say };
 f &lt;a b c&gt;, debug =&gt; my method ::(List:D){dd self; self};
 
 # output
@@ -284,7 +284,7 @@ f &lt;a b c&gt;, debug =&gt; my method ::(List:D){dd self; self};
 # (a b c)
 </code></pre>
 
-<p>在 Perl 6 中基本上所有的东西都是类, 包括<a href="https://docs.perl6.org/type/Method">方法</a>。 如果它是类它可以是一个对象并且我们能在我们喜欢的任何地方溜进去。</p>
+<p>在 Raku 中基本上所有的东西都是类, 包括<a href="https://docs.raku.org/type/Method">方法</a>。 如果它是类它可以是一个对象并且我们能在我们喜欢的任何地方溜进去。</p>
 
 
         
@@ -302,12 +302,12 @@ f &lt;a b c&gt;, debug =&gt; my method ::(List:D){dd self; self};
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2015-04-28-perl6%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%94/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的正则表达式(五)">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2015-04-28-raku%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BA%94/" data-toggle="tooltip" data-placement="top" title="Raku 中的正则表达式(五)">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2015-05-08-perl-6-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/" data-toggle="tooltip" data-placement="top" title="Perl 6 入门指南">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2015-05-08-raku%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/" data-toggle="tooltip" data-placement="top" title="Raku 入门指南">Next Post &rarr;</a>
             </li>
           
         </ul>

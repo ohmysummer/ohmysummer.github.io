@@ -232,11 +232,11 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<h1 id="下标副词-https-desgin-perl6-org-s02-html-subscript-adverbs"><a href="https://desgin.perl6.org/S02.html#Subscript_adverbs">下标副词</a></h1>
+<h1 id="下标副词-https-desgin-raku-org-s02-html-subscript-adverbs"><a href="https://desgin.raku.org/S02.html#Subscript_adverbs">下标副词</a></h1>
 
 <p>为了使切片下标返回除了值以外的其它东西，那么给下标(subscript)添加合适的副词。</p>
 
-<pre><code class="language-perl6">@array = &lt;A B&gt;;
+<pre><code class="language-raku">@array = &lt;A B&gt;;
 @array[0,1,2];      # returns 'A', 'B', (Any)
 @array[0,1,2] :p;   # returns 0 =&gt; 'A', 1 =&gt; 'B'
 @array[0,1,2] :kv;  # returns 0, 'A', 1, 'B'
@@ -253,18 +253,18 @@ if (!doNotTrack) {
 
 <p>如果副词为真，那么这些副词形式都会清除不存在的条目；如果为假的话，就会留下不存在的项，就像普通的切片那样。所以：</p>
 
-<pre><code class="language-perl6">@array[0,1,2] :!p;  # returns 0 =&gt; 'A', 1 =&gt; 'B', 2 =&gt; (Any)
+<pre><code class="language-raku">@array[0,1,2] :!p;  # returns 0 =&gt; 'A', 1 =&gt; 'B', 2 =&gt; (Any)
 %hash&lt;a b c&gt;  :!kv; # returns 'a', 'A', 'b', 'B', 'c', (Any)
 </code></pre>
 
 <p>同样地，</p>
 
-<pre><code class="language-perl6">my ($a,$b,$c) = %hash&lt;a b c&gt; :delete;
+<pre><code class="language-raku">my ($a,$b,$c) = %hash&lt;a b c&gt; :delete;
 </code></pre>
 
 <p>删除那些条目并顺道返回它们。这种形式能够工作是因为下标是顶端的在前的操作符。如果某些其它的操作符的优先级比处于顶端的逗号操作符的优先级紧凑，那么你必须用括号括起它或强制为列表上下文：</p>
 
-<pre><code class="language-perl6">1 + (%hash{$x} :delete);
+<pre><code class="language-raku">1 + (%hash{$x} :delete);
 $x = (%hash{$x} :delete);
 ($x) = %hash{$x} :delete;
 </code></pre>
@@ -273,7 +273,7 @@ $x = (%hash{$x} :delete);
 
 <p>你也可以执行存在性测试，要么测试单个条目是否存在，要么测试条目的连接是否存在：</p>
 
-<pre><code class="language-perl6">if %hash&lt;foo&gt; :exists           {...}
+<pre><code class="language-raku">if %hash&lt;foo&gt; :exists           {...}
 if %hash{any &lt;a b c&gt;}  :exists  {...}
 if %hash{all &lt;a b c&gt;}  :exists  {...}
 if %hash{one &lt;a b c&gt;}  :exists  {...}
@@ -282,7 +282,7 @@ if %hash{none &lt;a b c&gt;} :exists  {...}
 
 <p>把 <code>:exists</code> 副词和一组切片结果的布尔值列表结合起来使用，你也可以用类型的语义这样使用：</p>
 
-<pre><code class="language-perl6">if any %hash&lt;a b c&gt;  :exists {...}
+<pre><code class="language-raku">if any %hash&lt;a b c&gt;  :exists {...}
 if all %hash&lt;a b c&gt;  :exists {...}
 if one %hash&lt;a b c&gt;  :exists {...}
 if none %hash&lt;a b c&gt; :exists {...}
@@ -294,12 +294,12 @@ if none %hash&lt;a b c&gt; :exists {...}
 
 <p>像调用中得具名参数那样，下标中处理多个副词是没有顺序之分的。有些组合有意义，例如：</p>
 
-<pre><code class="language-perl6"> %a = %b{@keys-to-extract} :delete :p; # same as :p :delete
+<pre><code class="language-raku"> %a = %b{@keys-to-extract} :delete :p; # same as :p :delete
 </code></pre>
 
 <p>会把给定的键分片到另外一个散列中。而</p>
 
-<pre><code class="language-perl6">@actually-deleted = %h{@keys-to-extract} :delete :k; # same as :k :delete
+<pre><code class="language-raku">@actually-deleted = %h{@keys-to-extract} :delete :k; # same as :k :delete
 </code></pre>
 
 <p>会返回真正从散列中删除的键。</p>
@@ -308,7 +308,7 @@ if none %hash&lt;a b c&gt; :exists {...}
 
 <p>下面的这些副词组合被看做是合法的：</p>
 
-<pre><code class="language-perl6">:delete :kv            delete, return key/values of actually deleted keys
+<pre><code class="language-raku">:delete :kv            delete, return key/values of actually deleted keys
 :delete :!kv           delete, return key/values of all keys attempted
 :delete :p             delete, return pairs of actually deleted keys
 :delete :!p            delete, return pairs of all keys attempted
@@ -354,12 +354,12 @@ if none %hash&lt;a b c&gt; :exists {...}
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8perl6%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="在 Perl 6 中异步地执行外部程序">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8raku%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/" data-toggle="tooltip" data-placement="top" title="在 Raku 中异步地执行外部程序">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2015-05-19-%E6%80%8E%E4%B9%88%E5%9C%A8perl6%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%98%E5%8F%96%E5%99%A8/" data-toggle="tooltip" data-placement="top" title="怎么在 Perl 6 中自定义存取器">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2015-05-19-%E6%80%8E%E4%B9%88%E5%9C%A8raku%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%98%E5%8F%96%E5%99%A8/" data-toggle="tooltip" data-placement="top" title="怎么在 Raku 中自定义存取器">Next Post &rarr;</a>
             </li>
           
         </ul>

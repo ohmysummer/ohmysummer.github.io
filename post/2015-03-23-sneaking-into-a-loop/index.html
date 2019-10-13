@@ -242,14 +242,14 @@ if (!doNotTrack) {
 
 <p>[Sneaking into a loop]<a href="https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/">https://gfldex.wordpress.com/2016/08/10/sneaking-into-a-loop/</a></p>
 
-<p>Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的<a href="http://irclog.perlgeek.de/perl6/2016-08-09#i_12993090">问题</a>。</p>
+<p>Zoffix 回答了一个关于 Perl 5s &lt;&gt; 操作符的<a href="http://irclog.perlgeek.de/raku/2016-08-09#i_12993090">问题</a>。</p>
 
-<pre><code class="language-perl6">slurp.words.Bag.sort(-*.value).fmt(&quot;%10s3d\n&quot;).say;
+<pre><code class="language-raku">slurp.words.Bag.sort(-*.value).fmt(&quot;%10s3d\n&quot;).say;
 </code></pre>
 
 <p><code>slurp</code> 会从 STDIN 中读取整个 &ldquo;file&rdquo; 并返回一个 Str。方法 <code>Str::words</code> 会按照某种 Unicode 意义的单词把该字符串分割成一个列表。把列表强转为 Bag 则创建一个计数 Hash, 它是如下表述的快捷方式。</p>
 
-<pre><code class="language-perl6">my %h;
+<pre><code class="language-raku">my %h;
 %h{$_}++ for &lt;peter paul marry&gt;;
 dd %h;
 
@@ -258,34 +258,34 @@ dd %h;
 
 <p>在关联数组上调用 <code>.sort(-*.value)</code> 会按照值的降序排序并返回一个排序后的 Pairs 列表。List::fmt 会调用 Pair::fmt, 它调用 fmt 方法, .key 作为其第二个参数, .value 也作为参数。say 会会使用一个空格连接各个元素并输出到标准输出。最后一步有一点错误因为除了第一行之外的每一行前面都会有一个额外的空格。</p>
 
-<pre><code class="language-perl6">slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quot;).say;
+<pre><code class="language-raku">slurp.words.Bag.sort(-*.value).fmt(&quot;%10s =&gt; %3d&quot;).join(&quot;\n&quot;).say;
 </code></pre>
 
 <p>手动连接字符串更好。这对于简短的单行程序来说有点多了。我们需要找到最长的单词并使用 <code>.chars</code> 来获取列宽。</p>
 
 <p>slurp 会在 <code>$*IN</code> 身上调用 <code>.slurp-rest</code> 方法。</p>
 
-<pre><code class="language-perl6">$*IN = &lt;peter paul marry peter paul paul&gt; but role { method slurp-rest { self.Str } };
+<pre><code class="language-raku">$*IN = &lt;peter paul marry peter paul paul&gt; but role { method slurp-rest { self.Str } };
 </code></pre>
 
 <p>这是一种 hack 因为它会在任何形式的类型检测上失败并且它除了 slurp 之外不会对任何东西起作用。还有, 实际上我们从 <code>$*IN</code> 那里解绑 STDIN。不要在工作中使用这个奇淫技巧。</p>
 
 <p>现在我们能开心地吞噬并开始计数了。</p>
 
-<pre><code class="language-perl6">my %counted-words = slurp.words.Bag;
+<pre><code class="language-raku">my %counted-words = slurp.words.Bag;
 my $word-width = [max] %counted-words.keys».chars;
 </code></pre>
 
 <p>并且继续在链子断开的地方继续。</p>
 
-<pre><code class="language-perl6">%counted-words.sort(-*.value).fmt(&quot;%{$word-width}s3d&quot;).join(&quot;\n&quot;).say;
+<pre><code class="language-raku">%counted-words.sort(-*.value).fmt(&quot;%{$word-width}s3d&quot;).join(&quot;\n&quot;).say;
 </code></pre>
 
 <p>问题解决了但是很丑陋。我们把一个单行程序拆开了。我们来修复 fmt 以使它再次完整。</p>
 
 <p>我们想要的是一个 fmt 方法, 它接收一个位置的(Positional), 一个 printf 风格的格式字符串和一个格式字符串中的 block per <code>%*</code>。还有, 我们可能需要在 self.fmt 前面放上一个分隔符。</p>
 
-<pre><code class="language-perl6">my multi method fmt(Positional:D: $fmt-str, *@width where *.all ~~ Callable, :$separator = &quot; &quot;){
+<pre><code class="language-raku">my multi method fmt(Positional:D: $fmt-str, *@width where *.all ~~ Callable, :$separator = &quot; &quot;){
     self.fmt(
         $fmt-str.subst(:g, &quot;%*&quot;, {
             my &amp;width = @width[$++] // Failure.new(&quot;missingh block&quot;);
@@ -294,11 +294,11 @@ my $word-width = [max] %counted-words.keys».chars;
 }
 </code></pre>
 
-<p>表达式 <code>*.all ~~ Callable</code> 检查 <a href="https://docs.perl6.org/type/Signature#Slurpy_(A.K.A._Variadic)_Parameters">slurp array</a>中的所有元素是否实现了 CALL-ME(那是实际被执行的方法在你执行 foo()的时候)。</p>
+<p>表达式 <code>*.all ~~ Callable</code> 检查 <a href="https://docs.raku.org/type/Signature#Slurpy_(A.K.A._Variadic)_Parameters">slurp array</a>中的所有元素是否实现了 CALL-ME(那是实际被执行的方法在你执行 foo()的时候)。</p>
 
 <p>然后我们在格式字符串上使用了 <code>subst</code> 来替换 <code>%*</code>, 替换是一个(闭包)块儿, 它每次匹配被调用一次。而且这儿我们有不错的惯用法。</p>
 
-<pre><code class="language-perl6">say &quot;1-a 2-b 3-c&quot;.subst(:g, /\d/, {&lt;one two three&gt;[$++]});
+<pre><code class="language-raku">say &quot;1-a 2-b 3-c&quot;.subst(:g, /\d/, {&lt;one two three&gt;[$++]});
 # one-a two-b three-c
 </code></pre>
 
@@ -308,12 +308,12 @@ my $word-width = [max] %counted-words.keys».chars;
 
 <p>用户提供的块儿使用一组 Pairs 调用。我们不得不深入一层以得到更大的键。</p>
 
-<pre><code class="language-perl6">{[max] .values».keys».chars}
+<pre><code class="language-raku">{[max] .values».keys».chars}
 </code></pre>
 
 <p>得到第一列的列宽。</p>
 
-<pre><code class="language-perl6">print %counted-words.sort(-*.value).&amp;fmt(&quot;%*s3d&quot;, {[max] .values».keys».chars}, separator =&gt; &quot;\n&quot;);
+<pre><code class="language-raku">print %counted-words.sort(-*.value).&amp;fmt(&quot;%*s3d&quot;, {[max] .values».keys».chars}, separator =&gt; &quot;\n&quot;);
 </code></pre>
 
 <p>那个时髦的 <code>.&amp;fmt</code> 调用是必须的因为我们免费的浮点方法不是 List 的方法。</p>
@@ -338,12 +338,12 @@ my $word-width = [max] %counted-words.keys».chars;
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2015-03-22-perl-6-%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB-junctions/" data-toggle="tooltip" data-placement="top" title="Perl 6 的薛定谔的猫--Junctions">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2015-03-22-raku%E7%9A%84%E8%96%9B%E5%AE%9A%E8%B0%94%E7%9A%84%E7%8C%AB-junctions/" data-toggle="tooltip" data-placement="top" title="Raku 的薛定谔的猫--Junctions">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2015-03-23-perl6%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97/" data-toggle="tooltip" data-placement="top" title="Perl 6 中的模块">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2015-03-23-raku%E4%B8%AD%E7%9A%84%E6%A8%A1%E5%9D%97/" data-toggle="tooltip" data-placement="top" title="Raku 中的模块">Next Post &rarr;</a>
             </li>
           
         </ul>

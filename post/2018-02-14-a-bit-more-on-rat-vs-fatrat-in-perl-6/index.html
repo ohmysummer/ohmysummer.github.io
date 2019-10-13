@@ -5,19 +5,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>A bit more on Rat vs FatRat in Perl 6</title>
-  <meta property="og:title" content="A bit more on Rat vs FatRat in Perl 6" />
-  <meta name="twitter:title" content="A bit more on Rat vs FatRat in Perl 6" />
-  <meta name="description" content="昨天，我们正在深入研究 Rakudo Perl 6，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
-我们找到了它发生的地方。今天，让我们进行一个练习，看看Perl 6的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
+  <title>A bit more on Rat vs FatRat in Raku</title>
+  <meta property="og:title" content="A bit more on Rat vs FatRat in Raku" />
+  <meta name="twitter:title" content="A bit more on Rat vs FatRat in Raku" />
+  <meta name="description" content="昨天，我们正在深入研究 Rakudo Raku，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
+我们找到了它发生的地方。今天，让我们进行一个练习，看看Raku的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
 改变很简单。所有你需要的是更新DIVIDE_N例程中的ifs：
---- a/src/core/Rat.pm &#43;&#43;&#43; b/src/core/Rat.pm @@ -48,16 &#43;48,14 @@ sub DIVIDE_NUMBERS(Int:D \nu, Int:D \de, \t1, \t2) { ($numerator := -$numerator), ($denominator := -$denominator))), nqp::if( - nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat), &#43; nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat) || $denominator &gt;= UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(FatRat),FatRat,&#39;$!numerator&#39;,$numerator), FatRat,&#39;$!denominator&#39;,$denominator), - nqp::if( - $denominator &lt; UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(Rat),Rat,&#39;$!numerator&#39;,$numerator), - Rat,&#39;$!denominator&#39;,$denominator), - nqp::p6box_n(nqp::div_In($numerator, $denominator))))) &#43; Rat,&#39;$!denominator&#39;,$denominator) &#43; )) }  现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。">
-  <meta property="og:description" content="昨天，我们正在深入研究 Rakudo Perl 6，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
-我们找到了它发生的地方。今天，让我们进行一个练习，看看Perl 6的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
+--- a/src/core/Rat.pm &#43;&#43;&#43; b/src/core/Rat.pm @@ -48,16 &#43;48,14 @@ sub DIVIDE_NUMBERS(Int:D \nu, Int:D \de, \t1, \t2) { ($numerator := -$numerator), ($denominator := -$denominator))), nqp::if( - nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat), &#43; nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat) || $denominator &gt;= UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(FatRat),FatRat,&#39;$!numerator&#39;,$numerator), FatRat,&#39;$!denominator&#39;,$denominator), - nqp::if( - $denominator &lt; UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(Rat),Rat,&#39;$!numerator&#39;,$numerator), - Rat,&#39;$!denominator&#39;,$denominator), - nqp::p6box_n(nqp::div_In($numerator, $denominator))))) &#43; Rat,&#39;$!denominator&#39;,$denominator) &#43; )) }  现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。
+从昨天的帖子中用牛顿算法编译并测试我们修改过的raku可执行文件：
+my $N = 25; my @x = Rat.">
+  <meta property="og:description" content="昨天，我们正在深入研究 Rakudo Raku，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
+我们找到了它发生的地方。今天，让我们进行一个练习，看看Raku的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
 改变很简单。所有你需要的是更新DIVIDE_N例程中的ifs：
---- a/src/core/Rat.pm &#43;&#43;&#43; b/src/core/Rat.pm @@ -48,16 &#43;48,14 @@ sub DIVIDE_NUMBERS(Int:D \nu, Int:D \de, \t1, \t2) { ($numerator := -$numerator), ($denominator := -$denominator))), nqp::if( - nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat), &#43; nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat) || $denominator &gt;= UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(FatRat),FatRat,&#39;$!numerator&#39;,$numerator), FatRat,&#39;$!denominator&#39;,$denominator), - nqp::if( - $denominator &lt; UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(Rat),Rat,&#39;$!numerator&#39;,$numerator), - Rat,&#39;$!denominator&#39;,$denominator), - nqp::p6box_n(nqp::div_In($numerator, $denominator))))) &#43; Rat,&#39;$!denominator&#39;,$denominator) &#43; )) }  现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。">
-  <meta name="twitter:description" content="昨天，我们正在深入研究 Rakudo Perl 6，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
-我们找到了它发生的地方。今天，让我们进行一个练习，看看Perl 6的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
+--- a/src/core/Rat.pm &#43;&#43;&#43; b/src/core/Rat.pm @@ -48,16 &#43;48,14 @@ sub DIVIDE_NUMBERS(Int:D \nu, Int:D \de, \t1, \t2) { ($numerator := -$numerator), ($denominator := -$denominator))), nqp::if( - nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat), &#43; nqp::istype(t1, FatRat) || nqp::istype(t2, FatRat) || $denominator &gt;= UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(FatRat),FatRat,&#39;$!numerator&#39;,$numerator), FatRat,&#39;$!denominator&#39;,$denominator), - nqp::if( - $denominator &lt; UINT64_UPPER, nqp::p6bindattrinvres( nqp::p6bindattrinvres(nqp::create(Rat),Rat,&#39;$!numerator&#39;,$numerator), - Rat,&#39;$!denominator&#39;,$denominator), - nqp::p6box_n(nqp::div_In($numerator, $denominator))))) &#43; Rat,&#39;$!denominator&#39;,$denominator) &#43; )) }  现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。
+从昨天的帖子中用牛顿算法编译并测试我们修改过的raku可执行文件：
+my $N = 25; my @x = Rat.">
+  <meta name="twitter:description" content="昨天，我们正在深入研究 Rakudo Raku，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。
+我们找到了它发生的地方。今天，让我们进行一个练习，看看Raku的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。
 改变很简单。所有你需要的是更新DIVIDE_N例程中的ifs：
 --- …">
   <meta name="author" content="焉知非鱼"/>
@@ -207,7 +211,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>A bit more on Rat vs FatRat in Perl 6</h1>
+              <h1>A bit more on Rat vs FatRat in Raku</h1>
                 
                 
                   <span class="post-meta">
@@ -217,7 +221,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (134 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (131 words)
   
   
 </span>
@@ -238,9 +242,9 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p><a href="https://perl6.online/2018/02/13/55-fatrat-vs-rat-in-perl-6/">昨天</a>，我们正在深入研究 Rakudo Perl 6，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。</p>
+<p><a href="https://raku.online/2018/02/13/55-fatrat-vs-rat-in-perl-6/">昨天</a>，我们正在深入研究 Rakudo Raku，以了解Rat值成为Num值的时间。事实证明，如果该值变得太小，这意味着它的分母变得越来越大，Rakudo开始使用Num值而不是Rat。</p>
 
-<p>我们找到了它发生的地方。今天，让我们进行一个练习，看看Perl 6的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。</p>
+<p>我们找到了它发生的地方。今天，让我们进行一个练习，看看Raku的行为是否可能不同，即扩展数据类型而不是将其切换为浮点数并且失去准确性。</p>
 
 <p>改变很简单。所有你需要的是更新DIVIDE_N例程中的ifs：</p>
 
@@ -268,9 +272,9 @@ if (!doNotTrack) {
 
 <p>现在有两种结果：例程产生一个Rat值或一个FatRat。当子参数已经是FatRats或当前Rat太接近于零时，后者发生。</p>
 
-<p>从昨天的帖子中用牛顿算法编译并测试我们修改过的perl6可执行文件：</p>
+<p>从昨天的帖子中用牛顿算法编译并测试我们修改过的raku可执行文件：</p>
 
-<pre><code class="language-perl6">my $N = 25;
+<pre><code class="language-raku">my $N = 25;
 my @x = 
     Rat.new(1, 1), 
     -&gt; $x { 
@@ -318,13 +322,13 @@ my @x =
 
 <p>对于尚未执行数字作用的值，将返回Int，Rat，Num或Complex的最窄适合类型;然而，包含由/分隔的两个整数的字符串将作为Rat返回（如果分母溢出int64，则返回FatRat）。</p>
 
-<p>同样感觉更自然的是默默地为更多数字增加更多空间，而不是打破鼠类型的想法。无论如何，对此有不同的看法，但这不应阻止Perl 6的普及。</p>
+<p>同样感觉更自然的是默默地为更多数字增加更多空间，而不是打破鼠类型的想法。无论如何，对此有不同的看法，但这不应阻止Raku的普及。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
             
           </div>
         
@@ -341,7 +345,7 @@ my @x =
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-perl-6/" data-toggle="tooltip" data-placement="top" title="FatRat vs Rat in Perl 6">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-02-15-fatrat-vs-rat-in-raku/" data-toggle="tooltip" data-placement="top" title="FatRat vs Rat in Raku">Next Post &rarr;</a>
             </li>
           
         </ul>

@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (567 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (566 words)
   
   
 </span>
@@ -245,7 +245,7 @@ Robin 2 Robin Street, Gotham Nice
 
 <p>S.夫人用这样的 grammar 开头：</p>
 
-<pre><code class="language-perl6">grammar naughty-nice-list {
+<pre><code class="language-raku">grammar naughty-nice-list {
     token TOP { &lt;details&gt;+ } # Find one or more records made up of name, address, assessment (defined below)
     
     token details { &lt;name&gt; &lt;address&gt; &lt;assessment&gt; }  # Find the elements from below, in this order
@@ -260,14 +260,14 @@ Robin 2 Robin Street, Gotham Nice
 
 <p>并在列表上调用它，如下所示：</p>
 
-<pre><code class="language-perl6">naughty-nice-list.parsefile(&quot;./list.txt&quot;);
+<pre><code class="language-raku">naughty-nice-list.parsefile(&quot;./list.txt&quot;);
 </code></pre>
 
 <p>但是，当然，她必须做一些事情将细节放入单独的列表中。</p>
 
 <p>为此，她创建了一个 action 动作类：</p>
 
-<pre><code class="language-perl6">class santa-list-actions {
+<pre><code class="language-raku">class santa-list-actions {
     has %!filtered-lists; # Create a private hash for this class
 
     method show { return %!filtered-lists } # Create a method to return our hash to the user
@@ -286,7 +286,7 @@ Robin 2 Robin Street, Gotham Nice
 
 <p>她这样使用:</p>
 
-<pre><code class="language-perl6">my $actions = santa-list-actions.new;
+<pre><code class="language-raku">my $actions = santa-list-actions.new;
 naughty-nice-list.parsefile(&quot;./list.txt&quot;, actions=&gt;$actions); # As Mrs S. called the object 'actions', the same as the keyword, she could write :$actions instead of actions=&gt;$actions
 my %hash-naughty-nice = $actions.show;
 </code></pre>
@@ -309,14 +309,14 @@ Victor Mancho 3 Mancho Street, New York City Malo
 
 <p>所以，为了现在调用她的脚本，她创建了两个数组并将它们传递给 grammar：</p>
 
-<pre><code class="language-perl6">my @nice = ['Nice', 'Bueno'];
+<pre><code class="language-raku">my @nice = ['Nice', 'Bueno'];
 my @naughty = ['Naughty', 'Malo'];
 naughty-nice-list.parsefile(&quot;./list.txt&quot;, args=&gt;(@nice, @naughty), actions=&gt;$actions);
 </code></pre>
 
 <p>她改变了这样的 grammar 来使用新的数组：</p>
 
-<pre><code class="language-perl6">grammar naughty-nice-list {
+<pre><code class="language-raku">grammar naughty-nice-list {
     token TOP (@*nice-words, @*naughty-words) { &lt;details&gt;+ } # Create dynamic arrays with the passed in arrays, available throughout the grammar
     token details { &lt;name&gt; &lt;address&gt; &lt;assessment&gt; }
     token name { .*? \t }
@@ -329,12 +329,12 @@ naughty-nice-list.parsefile(&quot;./list.txt&quot;, args=&gt;(@nice, @naughty), 
 
 <p>因此，她进行了另一项更改，为评估令牌命名语法中的潜在匹配：</p>
 
-<pre><code class="language-perl6">token assessment { $&lt;Naughty&gt;=@*naughty-words|$&lt;Nice&gt;=@*nice-words \n } # Mrs S. has now added names to the potential matches
+<pre><code class="language-raku">token assessment { $&lt;Naughty&gt;=@*naughty-words|$&lt;Nice&gt;=@*nice-words \n } # Mrs S. has now added names to the potential matches
 </code></pre>
 
 <p>在 action 动作类中，必须进行更改以适应这种情况。使用 <code>make</code> 和 <code>made</code>，圣诞老人将存储相应匹配的名称：</p>
 
-<pre><code class="language-perl6">class santa-list-actions {
+<pre><code class="language-raku">class santa-list-actions {
     has %!filtered-lists;
 
     method show { return %!filtered-lists };
@@ -356,18 +356,18 @@ naughty-nice-list.parsefile(&quot;./list.txt&quot;, args=&gt;(@nice, @naughty), 
 
 <p>一旦圣诞老人将数据捕获到她自己的哈希中，她就可以轻松地检查出今年已经被马洛的 Victor Mancho 将其列入正确的列表：</p>
 
-<pre><code class="language-perl6">say %hash-naughty-nice&lt;Naughty&gt;[2][0]; # Produces the output 'Victor Mancho'
+<pre><code class="language-raku">say %hash-naughty-nice&lt;Naughty&gt;[2][0]; # Produces the output 'Victor Mancho'
 </code></pre>
 
 <p>所以现在，圣诞老人可以将 “Naughty” 或 “Nice” 的任何新翻译添加到相关数组，而不会触及 grammar。</p>
 
-<p>圣诞老人发现自己对 Perl 6 grammar 的灵活性非常满意。圣诞老人对这个问题的研究起初不那么重要&hellip;&hellip;但是她知道她在确保每个人都能得到一个礼物或者在这个圣诞节的窗户上扔蛋的方法上做得很好。</p>
+<p>圣诞老人发现自己对 Raku grammar 的灵活性非常满意。圣诞老人对这个问题的研究起初不那么重要&hellip;&hellip;但是她知道她在确保每个人都能得到一个礼物或者在这个圣诞节的窗户上扔蛋的方法上做得很好。</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -379,7 +379,7 @@ naughty-nice-list.parsefile(&quot;./list.txt&quot;, args=&gt;(@nice, @naughty), 
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-perl-6/" data-toggle="tooltip" data-placement="top" title="第十一天 - 使用 Perl 6 测试你的时刻表">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-raku/" data-toggle="tooltip" data-placement="top" title="第十一天 - 使用 Raku 测试你的时刻表">&larr; Previous Post</a>
             </li>
           
           

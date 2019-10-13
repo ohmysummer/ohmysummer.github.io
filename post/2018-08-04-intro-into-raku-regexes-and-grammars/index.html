@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Intro Into Raku Regexes and Grammars</title>
+  <meta property="og:title" content="Intro Into Raku Regexes and Grammars" />
+  <meta name="twitter:title" content="Intro Into Raku Regexes and Grammars" />
+  <meta name="description" content="tpm-regex.raku.party
+STATUS QUO: PCRE “Perl 兼容的正则表达式”非常神秘，但许多语言只是盲目地遵循现状。
+它们是 &lt;?!, &lt;=?!, or &lt;!#?@$%^( 吗？
+/(?&lt;!foo)bar(?=baz)/  更好的正则表达式语法 Raku 并不害怕拒绝现状。
+/&lt;!after foo&gt; bar &lt;before baz&gt;/  空格可以自由使用 文字字符串：字母数字字符可以按原样使用。 其他的字符，只需使用引号或反斜杠：
+say so &quot;I ♥ Raku&quot; ~~ /I \♥ Raku/; # False say so &quot;I ♥ Raku&quot; ~~ / &#39;I ♥ Raku&#39; /; # True say so &quot;I ♥ Raku&quot; ~~ / I #`(BTW, you can use inline,) &quot; ♥ &quot; &quot;Raku&quot; # as well as end-of-line comments /; # True  文本内容的变量 默认设置是将内容与纯文本匹配。将变量放入尖括号中以将其解释为正则表达式。">
+  <meta property="og:description" content="tpm-regex.raku.party
+STATUS QUO: PCRE “Perl 兼容的正则表达式”非常神秘，但许多语言只是盲目地遵循现状。
+它们是 &lt;?!, &lt;=?!, or &lt;!#?@$%^( 吗？
+/(?&lt;!foo)bar(?=baz)/  更好的正则表达式语法 Raku 并不害怕拒绝现状。
+/&lt;!after foo&gt; bar &lt;before baz&gt;/  空格可以自由使用 文字字符串：字母数字字符可以按原样使用。 其他的字符，只需使用引号或反斜杠：
+say so &quot;I ♥ Raku&quot; ~~ /I \♥ Raku/; # False say so &quot;I ♥ Raku&quot; ~~ / &#39;I ♥ Raku&#39; /; # True say so &quot;I ♥ Raku&quot; ~~ / I #`(BTW, you can use inline,) &quot; ♥ &quot; &quot;Raku&quot; # as well as end-of-line comments /; # True  文本内容的变量 默认设置是将内容与纯文本匹配。将变量放入尖括号中以将其解释为正则表达式。">
+  <meta name="twitter:description" content="tpm-regex.raku.party
+STATUS QUO: PCRE “Perl 兼容的正则表达式”非常神秘，但许多语言只是盲目地遵循现状。
+它们是 &lt;?!, &lt;=?!, or &lt;!#?@$%^( 吗？
+/(?&lt;!foo)bar(?=baz)/  更好的正则表达式语法 Raku 并不害怕拒绝现状。
+/&lt;!after foo&gt; bar &lt;before …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-08-04-intro-into-raku-regexes-and-grammars/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-04-intro-into-raku-regexes-and-grammars/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Intro Into Raku Regexes and Grammars</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 4, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 8 minutes (1624 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p><a href="tpm-regex.raku.party">tpm-regex.raku.party</a></p>
+
+<h2 id="status-quo-pcre">STATUS QUO: PCRE</h2>
+
+<p>“Perl 兼容的正则表达式”非常神秘，但许多语言只是盲目地遵循现状。</p>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/sheep1.jpg" alt="img" /></p>
+
+<p>它们是 <code>&lt;?!</code>, <code>&lt;=?!</code>, or <code>&lt;!#?@$%^(</code> 吗？</p>
+
+<pre><code class="language-perl">/(?&lt;!foo)bar(?=baz)/
+</code></pre>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/sheep2.jpg" alt="img" /></p>
+
+<h2 id="更好的正则表达式语法">更好的正则表达式语法</h2>
+
+<p>Raku 并不害怕拒绝现状。</p>
+
+<pre><code class="language-raku">/&lt;!after foo&gt; bar &lt;before baz&gt;/
+</code></pre>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/cat.jpg" alt="img" /></p>
+
+<h2 id="空格可以自由使用">空格可以自由使用</h2>
+
+<p>文字字符串：字母数字字符可以按原样使用。
+其他的字符，只需使用引号或反斜杠：</p>
+
+<pre><code class="language-raku">say so &quot;I ♥ Raku&quot; ~~ /I \♥ Raku/;    # False
+say so &quot;I ♥ Raku&quot; ~~ / 'I ♥ Raku' /; # True
+say so &quot;I ♥ Raku&quot; ~~ /
+    I #`(BTW, you can use inline,) &quot; ♥ &quot;
+    &quot;Raku&quot; # as well as end-of-line comments
+/; # True
+</code></pre>
+
+<h2 id="文本内容的变量">文本内容的变量</h2>
+
+<p>默认设置是将内容与纯文本匹配。将变量放入尖括号中以将其解释为正则表达式。</p>
+
+<pre><code class="language-raku">my $stuff := 'the.+stuff';
+say so &quot;the.+stuff&quot;      ~~ / $stuff /; # True
+say so &quot;the other stuff&quot; ~~ / $stuff /; # False
+say so &quot;the other stuff&quot; ~~ /&lt;$stuff&gt;/; # True
+</code></pre>
+
+<h2 id="方括号">方括号</h2>
+
+<p>方括号用于非捕获分组：</p>
+
+<pre><code class="language-raku">say &quot;I really love Raku&quot; ~~ /
+    I \s+ [really \s+]? 'love Raku'
+/;  # OUTPUT: «｢I really love Raku｣␤»
+</code></pre>
+
+<h2 id="圆括号">圆括号</h2>
+
+<p>圆括号仍用于捕获分组：</p>
+
+<pre><code class="language-raku">say &quot;I love Raku&quot; ~~ /
+    I \s+ (\w+) ' Raku'
+/;  # OUTPUT: «｢I love Raku｣
+    #             0 =&gt; ｢love｣␤»
+</code></pre>
+
+<h2 id="与-pcre-相同">与 PCRE 相同&hellip;&hellip;</h2>
+
+<p>有些东西保持不变：</p>
+
+<pre><code class="language-raku">say &quot;I love Raku&quot; ~~ /
+    ^ . \s+ \S+ .? \w+ .*? \d+ $
+/;  # OUTPUT: «｢I love Raku｣␤»
+</code></pre>
+
+<h2 id="除了">…除了</h2>
+
+<p><code>^</code> 和 <code>$</code> 有更简单的含义：<strong>字符串</strong>的开始和结束 - 没有其他魔法。 <code>^^</code> 和 <code>$$</code> 用于<strong>行</strong>的开头和结尾（在 &ldquo;\n&rdquo; 之前，不包括在内）。</p>
+
+<pre><code class="language-raku">say so &quot;foo\n&quot; ~~ /^ foo $/;    # False
+say so &quot;foo\n&quot; ~~ /^ foo \n $/; # True
+say so &quot;foo\nbar&quot; ~~ /^ foo $$ \n ^^ bar $/; # True
+</code></pre>
+
+<h2 id="唔">唔&hellip;</h2>
+
+<p>那么&hellip;&hellip; <code>\S+</code> 地狱？</p>
+
+<pre><code class="language-raku">/^ I \s+ truly \s+ madly \s+ deeply
+    \s+ love  \s+ Perl  \s+ 6 \n  $/
+</code></pre>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/cat-scared.jpg" alt="img" /></p>
+
+<h2 id="sigspace">SIGSPACE</h2>
+
+<p>不：使用 <strong><code>:sigspace</code></strong>（ <code>:s</code> 更短）
+（在 grammars 中：声明 <strong><code>rule</code></strong> 而不是 <strong><code>token</code></strong>）</p>
+
+<pre><code class="language-raku">/^ :s I truly madly deeply love Raku $/
+</code></pre>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/cat-happy.jpg" alt="img" /></p>
+
+<p><strong>SIGSPACE</strong> 在正则表达式中的 terms 之后自动放置 <strong><code>&lt;.ws&gt;</code></strong> token，<code>&lt;.ws&gt;</code> 默认情况下匹配零个或多个空白字符（只要不在单词内 (<strong><code>&lt;!ww&gt; \s*</code></strong>)）:</p>
+
+<pre><code class="language-raku">say so &quot;This is neat!&quot; ~~ /
+  :s  This    is     neat \!
+/; # True
+
+say so &quot;This is neat!&quot; ~~ /
+  :s  T h i s i s n e a t \!
+/; # False
+</code></pre>
+
+<h2 id="字符类">字符类</h2>
+
+<p>与之前相同，<strong><code>[...]</code></strong>，除了还添加尖括号（对特殊的东西使用尖括号是常见的模式）</p>
+
+<pre><code class="language-raku">say &quot;I love Raku&quot; ~~ /&lt;[a..zIP\d\s]&gt;+/
+# OUTPUT: «｢I love Raku｣␤»
+</code></pre>
+
+<p>Ranges 使用 <strong><code>..</code></strong> 而不是 <strong><code>-</code></strong>。</p>
+
+<p>要否定一个字符类，在方括号前放置一个减号：</p>
+
+<pre><code class="language-raku">say &quot;I love Raku&quot; ~~ /&lt;-[I]&gt; &lt;-[A..Z]&gt;+ \s+ \d+/
+# OUTPUT: «｢Raku｣»
+</code></pre>
+
+<p>您可以通过添加/减去现有类来创建自定义类。使用加号而不是减号来添加内容：</p>
+
+<pre><code class="language-raku">say &quot;Awesome Raku&quot; ~~ /&lt;[\w]-[a..z]+[erl]&gt;**4/
+# OUTPUT: «｢Perl｣»
+</code></pre>
+
+<p>匹配 Unicode 属性，在尖括号内使用冒号：</p>
+
+<pre><code class="language-raku">say &quot;Я люблю Raku&quot; ~~ /&lt;:Script('Latin')&gt;+/
+# OUTPUT: «｢Perl｣»
+</code></pre>
+
+<p>可以否定 Unicode 属性或将它们与其他字符类混合和匹配：</p>
+
+<pre><code class="language-raku">say &quot;Я люблю Raku&quot; ~~ /&lt;-:Script('Latin')&gt;+/
+# OUTPUT: «｢Я люблю ｣»
+
+say &quot;Я люблю Raku&quot; ~~ /&lt;:Script('Latin')  +[\d\s]&gt;**4..*/
+# OUTPUT: «｢ Raku｣»
+</code></pre>
+
+<h2 id="量化修改">量化修改</h2>
+
+<p>匹配用分隔符分隔的东西：</p>
+
+<pre><code class="language-raku">say &quot;this,is,a,really,neat,feature&quot;
+  ~~ /(\w+)**3 % ',' $/
+
+# OUTPUT: «｢really,neat,feature｣
+#             0 =&gt; ｢really｣
+#             0 =&gt; ｢neat｣
+#             0 =&gt; ｢feature｣»
+</code></pre>
+
+<p>捕获一个&rdquo;单词&rdquo; <strong><code>(\w+)</code></strong>，我们想要其中三个单词 <strong><code>**3</code></strong>，用逗号 <strong><code>% ','</code></strong> 分隔，锚定到字符串 <strong><code>$</code></strong> 的结尾。</p>
+
+<h2 id="alternations">ALTERNATIONS</h2>
+
+<p>最长 token 匹配（LTM）的选择 <code>|</code>，或首次列出的匹配 <code>||</code>：</p>
+
+<pre><code class="language-raku">say &quot;Perler&quot; ~~ / [Perl |  \w+] /;
+# OUTPUT: «｢Perler｣» # this alternative is the longest
+
+say &quot;Perler&quot; ~~ / [Perl || \w+] /;
+# OUTPUT: «｢Perl｣»
+# this alternative was the first listed in our regex
+</code></pre>
+
+<h2 id="变量的内容">变量的内容</h2>
+
+<p>列表被解释为匹配的 alternatives 列表：</p>
+
+<pre><code class="language-raku">my @stuff := &lt;foo bar ber&gt;
+say so &quot;thefoo&quot; ~~ /the @stuff/;      # True
+say so &quot;thefoo&quot; ~~ /&lt; foo bar ber &gt;/; # True
+
+# this is equivalent to the last regex above:
+say so &quot;thefoo&quot; ~~ /[ foo | bar | ber ]/;
+</code></pre>
+
+<h2 id="conjugations">CONJUGATIONS</h2>
+
+<p><strong><code>&amp;&amp;</code></strong> 测试两个正则表达式是否匹配字符串的相同部分：</p>
+
+<pre><code class="language-raku">say &quot;Perl ۶ or Raku&quot; ~~ / Perl \s+ \d /;
+# OUTPUT: «｢Perl ۶｣␤»
+
+say &quot;Perl ۶ or Raku&quot; ~~ /
+    Perl \s+ [\d &amp;&amp; &lt;:Block('Basic Latin')&gt;]
+/ # OUTPUT: «｢Raku｣␤»
+</code></pre>
+
+<h2 id="命名的-独立的正则表达式">命名的，独立的正则表达式</h2>
+
+<p>在尖括号中使用其名称：</p>
+
+<pre><code class="language-raku">my regex quoted { \&quot; &lt;( &lt;-[&quot;]&gt;+ )&gt; \&quot; }
+
+say 'I love &quot;Perl&quot; and &quot;Raku&quot;'
+    ~~ /&lt;quoted&gt; &amp;&amp; .+ \d .+/;
+
+# OUTPUT: «｢&quot;Raku&quot;｣
+#            quoted =&gt; ｢Raku｣␤»
+</code></pre>
+
+<p><strong><code>&lt;(</code></strong> 是左匹配标记，<strong><code>)&gt;</code></strong> 是右匹配标记。控制在匹配中捕获的内容。（ <strong>&lt;(</strong> 在 Perl 5 中就像 <strong><code>\K</code></strong>）。</p>
+
+<h2 id="命名捕获">命名捕获</h2>
+
+<p>使用美元符号，后跟名称和等号。下一个 term 将被捕获（使用方括号将多个 term 分组以进行捕获）。</p>
+
+<pre><code class="language-raku">say '2018-07-26T19:00:00-04:00' ~~ /
+    $&lt;year&gt;=\d**4 '-' $&lt;month&gt;=\d**2 '-' $&lt;day&gt;=[\d\d]
+  T $&lt;time&gt;=[\d\d]**3 % ':'
+/;
+
+say &quot;TPM is at $&lt;time&gt; on $&lt;year month day&gt;.join('.')&quot;
+# OUTPUT: «TPM is at 19:00:00 on 2018.07.26␤»
+</code></pre>
+
+<p>在正则表达式之外，<strong><code>$&lt;...&gt;</code></strong> 是 <strong><code>$/&lt;...&gt;</code></strong> 的快捷方式。 <strong><code>$/</code></strong> 是存储最后一个匹配项的默认变量，但您可以将匹配项赋值给任何变量：</p>
+
+<pre><code class="language-raku">my $m := 'I really love Raku' ~~ / :s
+  (I|You) .+  $&lt;how&gt;=&lt; love like &gt;
+  $&lt;what&gt;=.+
+/;
+
+say &quot;$0 $&lt;how&gt; $&lt;what&gt;&quot;;      # OUTPUT: «I love Raku␤»
+say &quot;$/[0] $/&lt;how&gt; $/&lt;what&gt;&quot;; # OUTPUT: «I love Raku␤»
+say &quot;$m[0] $m&lt;how&gt; $m&lt;what&gt;&quot;; # OUTPUT: «I love Raku␤»
+</code></pre>
+
+<p>几个用于命名捕获的修饰符：</p>
+
+<pre><code class="language-raku">&lt;foo&gt;       # match regex `foo` and capture under `foo`
+&lt;.foo&gt;      # match, but don't capture
+&lt;bar=.foo&gt;  # match, but name capture `bar` (in grammars)
+&lt;bar=.&amp;foo&gt; # same as above, but used for standalone regexes
+</code></pre>
+
+<h2 id="重载">重载?</h2>
+
+<p>你的大脑是否从所有新信息中融化了？</p>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/cat-exhausted.jpg" alt="img" /></p>
+
+<h2 id="p5-模式">P5 模式</h2>
+
+<p>在正则表达式上使用 <strong><code>:P5</code></strong> 副词启用 Perl 5（PCRE +）正则表达式模式：</p>
+
+<pre><code class="language-raku">say &quot;barbarbaz&quot; ~~ m:P5/(?&lt;!foo)bar(?=baz)/;
+# OUTPUT: «｢bar｣␤»
+
+say &quot;foo bar&quot; ~~ m:P5/foo ([a-r]+)/;
+# OUTPUT: «｢foo bar｣
+#            0 =&gt; ｢bar｣␤»
+</code></pre>
+
+<p>Perl 5.10 的大多数功能都可用。在学习 Raku 正则表达式时很好的训练轮，但很少被 Raku 用户使用。</p>
+
+<h2 id="复杂的正则表达式">复杂的正则表达式</h2>
+
+<p>让我们分解我们的 date-time 匹配正则表达式：</p>
+
+<pre><code class="language-raku">my regex date {
+    $&lt;year&gt;=\d**4 '-' $&lt;month&gt;=\d**2 '-' $&lt;day&gt;=[\d\d]
+}
+my regex time { $&lt;clock&gt;=[\d\d]**3 % ':' $&lt;tz&gt;=.+ }
+my regex date-time { &lt;date&gt; T &lt;time&gt; }
+</code></pre>
+
+<p>与它匹配会生成一个 <strong><code>Match</code></strong> 对象树，其中包含我们所有的命名捕获：</p>
+
+<pre><code class="language-raku">say '2018-07-26T19:00:00-04:00' ~~ &amp;date-time;
+
+# OUTPUT: «｢2018-07-26T19:00:00-04:00｣
+#             date =&gt; ｢2018-07-26｣
+#                year =&gt; ｢2018｣
+#                month =&gt; ｢07｣
+#                day =&gt; ｢26｣
+#             time =&gt; ｢19:00:00-04:00｣
+#                clock =&gt; ｢19:00:00｣
+#                tz =&gt; ｢-04:00｣␤»
+</code></pre>
+
+<p>我们可以访问单个内容，就像它是嵌套哈希一样：</p>
+
+<pre><code class="language-raku">'2018-07-26T19:00:00-04:00' ~~ &amp;date-time;
+say &quot;In $&lt;date&gt;&lt;year&gt; TPM had a meeting at $&lt;time&gt;&lt;clock&gt;&quot;;
+
+# OUTPUT: «In 2018 TPM had a meeting at 19:00:00␤»
+</code></pre>
+
+<h2 id="grammars-就像类一样">GRAMMARS 就像类一样</h2>
+
+<p>单独的正则表达式就像单独的方法</p>
+
+<pre><code class="language-raku">my regex  re { ...               }
+my method me { self.substr: 0, 3 }
+
+say 'foobar' ~~ &amp;re; # OUTPUT: «｢foo｣␤»
+say 'foobar' ~~ &amp;me; # OUTPUT: «foo␤»
+</code></pre>
+
+<p>独立的方法只是空想的 subs。第一个参数变成了调用者。</p>
+
+<p>方法保存在 <strong>classes</strong> 中。正则表达式保留在 <strong>grammars</strong> 中。</p>
+
+<pre><code class="language-raku">grammar Re { regex  re { ...                 } }
+class   Me { method me (\v) { v.substr: 0, 3 } }
+
+say Re.subparse: 'foobar', :rule&lt;re&gt;; # OUTPUT: «｢foo｣␤»
+say Me.me:       'foobar';            # OUTPUT: «foo␤»
+</code></pre>
+
+<p>grammars 开始解析的默认值是 <strong><code>TOP</code></strong>; 在这里，我们将其重写为 <strong><code>re</code></strong> regex。</p>
+
+<p>你可以将 grammars 子类化并将角色混合到它们中&hellip;&hellip;</p>
+
+<pre><code class="language-raku">grammar GDate {
+    regex TOP {
+        $&lt;year&gt;=\d**4 '-' $&lt;month&gt;=\d**2 '-' $&lt;day&gt;=[\d\d]
+    }
+}
+role GDateTime is GDate {
+    regex time { $&lt;clock&gt;=[\d\d]**3 % ':' $&lt;tz&gt;=.+ }
+    regex date-time { &lt;date=.GDate::TOP&gt; [T &lt;time&gt;]? }
+}
+</code></pre>
+
+<p>&hellip;&hellip;甚至定义常规方法：</p>
+
+<pre><code class="language-raku">grammar TPM does GDateTime {
+    regex TOP { &lt;date-time&gt; }
+    method when (\date) {
+        self.parse: date;
+        say &quot;TPM had a meeting at &quot;
+          ~ $&lt;date-time&gt;&lt;time&gt;&lt;clock&gt;
+    }
+}
+TPM.when: '2018-07-26T19:00:00-04:00'
+# OUTPUT: «TPM had a meeting at 19:00:00␤»
+</code></pre>
+
+<h2 id="其它正则表达式类型">其它正则表达式类型</h2>
+
+<p>与 <strong><code>regex</code></strong> 一起，你还可以使用 <strong><code>rule</code></strong> 和 <strong><code>token</code></strong>：</p>
+
+<pre><code class="language-raku">grammar {
+    regex TOP  { … }
+    rule  date { … }
+    token time { … }
+}
+</code></pre>
+
+<ul>
+<li><strong><code>token</code></strong> - 像 <strong><code>regex</code></strong>, 但是拥有 <strong><code>:ratchet</code></strong> (短形式：<strong><code>:r</code></strong>) 开启(不回溯)</li>
+<li><strong><code>rule</code></strong> - 像 <strong><code>token</code></strong>, 但是拥有 <strong><code>sigspace</code></strong> (短形式：<strong><code>:s</code></strong>) 开启</li>
+</ul>
+
+<p>您可以在本地禁用这些副词：</p>
+
+<pre><code class="language-raku">rule date { # :ratchet and :sigspace here
+    [ :!ratchet # no ratchet
+        [
+            :ratchet # ratchet again
+        ]
+        # no ratchet here
+        [ :!sigspace
+            # no ratchet and no sigspace here
+        ]
+    ]
+}
+</code></pre>
+
+<h2 id="让我们解析一些东西">让我们解析一些东西</h2>
+
+<p>构建 Grammar 来解析这些数据：</p>
+
+<pre><code>[Grammars Talk]
+    name: Zoffix
+    lang: Raku
+    topic: grammars and regexes
+    length: 80
+[Perf Talk]
+    name: Zoffix
+    lang: Raku
+    topic: performance
+    length: 30
+</code></pre>
+
+<pre><code class="language-raku">grammar TPM {
+    token key    { &lt;-[:\n]&gt;+         }
+    token value  { &lt;-[\]\n]&gt;+        }
+    rule row     { &lt;key&gt; ':' &lt;value&gt; }
+    rule header  { '[' ~ ']' &lt;value&gt; }
+    rule section { &lt;header&gt; &lt;row&gt;+   }
+    rule TOP     { &lt;section&gt;+        }
+}
+
+TPM.parse: q:to/END/;
+  [Grammars Talk]
+      name: Zoffix
+      lang: Raku
+      topic: grammars and regexes
+      length: 80
+  [Perf Talk]
+      name: Zoffix
+      lang: Raku
+      topic: performance
+      length: 30
+  END
+
+my %result;
+for $&lt;section&gt; {
+    %result{.&lt;header&gt;&lt;value&gt;} = .&lt;row&gt;.map({
+        ~.&lt;key&gt; =&gt; ~.&lt;value&gt;
+    }).hash
+}
+say %result;
+
+# OUTPUT:
+# {
+#   Grammars Talk =&gt; {
+#     lang =&gt; Raku, length =&gt; 80, name =&gt; Zoffix,
+#     topic =&gt; grammars and regexes
+#   },
+#   Perf Talk =&gt; {
+#     lang =&gt; Raku, length =&gt; 30, name =&gt; Zoffix,
+#     topic =&gt; performance
+#   }
+# }
+</code></pre>
+
+<h2 id="ewww">EWWW？</h2>
+
+<p>如果我们对 token 进行更改，则可能很难在此处进行适当的更改。特别是对于大型 grammars。</p>
+
+<pre><code class="language-raku">my %result;
+for $&lt;section&gt; {
+    %result{.&lt;header&gt;&lt;value&gt;} = .&lt;row&gt;.map({
+        ~.&lt;key&gt; =&gt; ~.&lt;value&gt;
+    }).hash
+}
+say %result;
+</code></pre>
+
+<p>（Raku 核心 grammar 目前长 5,570 行）</p>
+
+<h2 id="action-类">ACTION 类!</h2>
+
+<p>一旦解析了 token（rule/regex），就会调用 Actions 类中具有相同名称的方法，并将该 token 的匹配对象作为参数</p>
+
+<pre><code class="language-raku">grammar Grammar {
+    token TOP   { &lt;stuff&gt; }
+    token stuff { …       }
+}
+class Actions {
+    method TOP   ($match) { $match.make: $match.made }
+    method stuff ($/)     { make 42 }
+    # naming param `$/` lets us use some shortcuts
+}
+Grammar.parse('…', :actions(Actions)).made.say # 42
+</code></pre>
+
+<h2 id="make-made">MAKE/MADE</h2>
+
+<p>这真的很简单：</p>
+
+<pre><code class="language-raku">class PretendMatch {
+    has $!stuff;
+    method make($stuff) {
+        $!stuff = $stuff
+    }
+    method made { $!stuff }
+}
+</code></pre>
+
+<p>只是一种附加并随后从 <strong><code>Match</code></strong> 对象中检索任意数据的方法。</p>
+
+<p>方法为他们负责的 token 制作东西：</p>
+
+<pre><code class="language-raku">class TPMActions {
+    method row     ($/) { make ~$&lt;key&gt; =&gt; ~$&lt;value&gt; }
+    method header  ($/) { make ~$&lt;value&gt; }
+    method section ($/) {
+        make $&lt;header&gt;.made =&gt; $&lt;row&gt;».made.hash
+    }
+    method TOP ($/) { make $&lt;section&gt;».made.hash }
+}
+</code></pre>
+
+<p>您不需要为每个 token 定义方法。</p>
+
+<p>和以前一样，除了现在我们给我们的 Actions 类一个 <strong><code>:actions</code></strong> 命名参数：</p>
+
+<pre><code class="language-raku">my $match := TPM.parse: q:to/END/, :actions(TPMActions);
+    [Grammars Talk]
+        name: Zoffix
+
+        […]
+    END
+
+dd $match.made
+</code></pre>
+
+<p>现在，我们可以自由地更改单个 token 和相应的 action 方法，而不会影响其他内容</p>
+
+<pre><code class="language-raku"># {
+#     Grammars Talk =&gt; {
+#         lang =&gt; Raku, length =&gt; 80, name =&gt; Zoffix,
+#         topic =&gt; grammars and regexes
+#     },
+#     Perf Talk =&gt; {
+#         lang =&gt; Raku, length =&gt; 30, name =&gt; Zoffix,
+#         topic =&gt; performance
+#     }
+# }
+</code></pre>
+
+<h2 id="有用的模块">有用的模块</h2>
+
+<p>安装 <strong><code>[ Grammar::Debugger](https://github.com/jnthn/grammar-debugger)</code></strong> (还包括 <strong><code>Grammar::Tracer</code></strong>)。</p>
+
+<pre><code class="language-raku">use Grammar::Tracer;
+grammar {
+    token TOP   { &lt;stuff&gt; }
+    token stuff { &lt;some&gt; &lt;other&gt; }
+    token some  { abc }
+    token other { \d+ }
+}.parse: 'abcdef';
+</code></pre>
+
+<p>只需 <strong><code>use</code></strong> 其中一个&hellip;&hellip;</p>
+
+<p>&hellip;而漂亮的输出将显示你的 grammar 无法匹配的地方：</p>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/debugger.png" alt="img" /></p>
+
+<h2 id="更多的-grammar-功能">更多的 GRAMMAR 功能</h2>
+
+<p>&hellip;&hellip;我们今天不会谈论这个问题。</p>
+
+<pre><code class="language-raku"># Word boundaries
+/ &lt;|w&gt; &lt;!|w&gt; &lt;ww&gt; &lt;!ww&gt;    /
+/ «'Raku'»  &lt;&lt;'Raku'&gt;&gt; /
+
+# Look arounds
+/ &lt;!before …&gt; &lt;after …&gt; /
+/ &lt;?[xyz]&gt; &lt;![xyz]&gt; /
+
+# Executing arbitrary code and optionally using its value:
+/   { ... }  /
+/  &lt;{ ... }&gt; /
+/ &lt;!{ ... }&gt; /
+/ &lt;?{ ... }&gt; /
+
+# The &quot;between&quot; operator and FAILGOAL method
+grammar A {
+    token TOP { '[' ~ ']' &lt;stuff-inside&gt;  };
+    method FAILGOAL($goal) {
+        die &quot;Cannot find $goal near position {self.pos}&quot;
+    }
+}
+
+# Proto-regexes (sort of like multi-dispatch for regexes)
+regex statement { &lt;term&gt; &lt;operator&gt; &lt;term&gt; }
+regex operator:sym&lt;+&gt; { &lt;sym&gt; }
+regex operator:sym&lt;-&gt; { &lt;sym&gt; }
+...
+method operator:sym&lt;-&gt; ($/) { say &quot;It's a minus op&quot; }
+method operator:sym&lt;+&gt; ($/) { say &quot;It's a plus op&quot;  }
+</code></pre>
+
+<h2 id="grammer-book">GRAMMER BOOK</h2>
+
+<p>由核心开发者 moritz++ 编写</p>
+
+<p><img src="https://tpm-regex.raku.party/2018-pics/grammar-book.png" alt="img" /></p>
+
+<p><a href="https://www.amazon.com/Parsing-Perl-Regexes-Grammars-Recursive/dp/1484232275">亚马逊</a>和 <a href="https://www.apress.com/us/book/9781484232279">Apress</a> 上可买。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/grammars/">Grammars</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-raku/" data-toggle="tooltip" data-placement="top" title="Ping Pang in Raku">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-08-07-command-line-arguments-in-raku/" data-toggle="tooltip" data-placement="top" title="Command Line Arguments in Raku">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

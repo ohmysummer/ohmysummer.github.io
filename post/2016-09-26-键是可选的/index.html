@@ -217,7 +217,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (123 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (122 words)
   
   
 </span>
@@ -246,7 +246,7 @@ if (!doNotTrack) {
 
 <p>首先, 我们定义两个枚举用作要查找的选项。</p>
 
-<pre><code class="language-perl6">package Find {
+<pre><code class="language-raku">package Find {
   enum Type (&lt;File Dir Symlink&gt;);
   enum Options (&lt;Recursive Keep-going&gt;);
 }
@@ -254,7 +254,7 @@ if (!doNotTrack) {
 
 <p>现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。</p>
 
-<pre><code class="language-perl6">+@options where {
+<pre><code class="language-raku">+@options where {
   @options.all (elem) (Find::Type::.values (|) Find::Options::.values)
   &amp;&amp; (+(@options.grep: * ~~ Find::Type) &lt;= 1 or die &quot;can only check for one type at a time&quot;)
 }
@@ -262,7 +262,7 @@ if (!doNotTrack) {
 
 <p>在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。</p>
 
-<pre><code class="language-perl6">my Bool $recursive = any(@options) ~~ Find::Recursive;
+<pre><code class="language-raku">my Bool $recursive = any(@options) ~~ Find::Recursive;
 my %tests = Find::File =&gt; {so .f}, Find::Dir =&gt; {so .d}, Find::Symlink =&gt; {so .l};
 @tests.append(%tests{@options.grep: * ~~ Find::Type});
 </code></pre>
@@ -272,7 +272,7 @@ my %tests = Find::File =&gt; {so .f}, Find::Dir =&gt; {so .d}, Find::Symlink =&g
 <pre><code>find(%*ENV&lt;HOME&gt;, include =&gt; {.extension eq 'txt'}, exclude =&gt; ['cfg', /.xml $/] , Find::File, Find::Recursive, Find::Keep-going);
 </code></pre>
 
-<p>同样在具名参数上那也可以有同样的可能, 但是在一个 where 从句中我找不到方法来处理独占。我喜欢在签名中处理尽可能多的参数因为它让写文档变得更加容易了。使用换行符把所有的参数分开然后把类型约束和 where 从句转换成普通的英语。还有, 让枚举作为 flags 感觉很 Perl 6 而那正是这篇博客所谈论的。</p>
+<p>同样在具名参数上那也可以有同样的可能, 但是在一个 where 从句中我找不到方法来处理独占。我喜欢在签名中处理尽可能多的参数因为它让写文档变得更加容易了。使用换行符把所有的参数分开然后把类型约束和 where 从句转换成普通的英语。还有, 让枚举作为 flags 感觉很 Raku 而那正是这篇博客所谈论的。</p>
 
 
         

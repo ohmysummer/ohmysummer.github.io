@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (253 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (248 words)
   
   
 </span>
@@ -233,17 +233,17 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         <p>这是另一个版本的 <a href="https://github.com/nige123/jmp.nigelhamilton.com">jmp</a> 供你在圣诞节前解开。</p>
 
-<p><strong>jmp</strong> 是一个命令行工具，用于搜索成堆的代码，然后快速跳转到 <code>$EDITOR</code>。这有助于<a href="https://perl6advent.wordpress.com/2015/12/20/perl-6-christmas-have-an-appropriate-amount-of-fun/">保持流动</a>。</p>
+<p><strong>jmp</strong> 是一个命令行工具，用于搜索成堆的代码，然后快速跳转到 <code>$EDITOR</code>。这有助于<a href="https://rakuadvent.wordpress.com/2015/12/20/perl-6-christmas-have-an-appropriate-amount-of-fun/">保持流动</a>。</p>
 
-<p>然而，计算机编程具有许多潜在的<a href="https://perl6advent.wordpress.com/2016/12/19/fixing-flow/">流阻塞器</a>。要在编码时保持流状态，通常需要在其他情况下快速<strong>跳转</strong>(jmp)到一行代码：修复错误，运行测试，检查日志文件，检查git状态等. <strong>jmp</strong> 也可以帮助加速这些任务吗？</p>
+<p>然而，计算机编程具有许多潜在的<a href="https://rakuadvent.wordpress.com/2016/12/19/fixing-flow/">流阻塞器</a>。要在编码时保持流状态，通常需要在其他情况下快速<strong>跳转</strong>(jmp)到一行代码：修复错误，运行测试，检查日志文件，检查git状态等. <strong>jmp</strong> 也可以帮助加速这些任务吗？</p>
 
 <p>幸运的是，重构 <strong>jmp</strong> 以容纳这些额外的使用场景相对容易。最新版本的 <strong>jmp</strong> 现在的工作原理如下：</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/demo.gif?w=600&amp;zoom=2" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/demo.gif?w=600&amp;zoom=2" alt="img" /></p>
 
 <p>在命令前加上 <strong>jmp</strong> 将导致命令再次执行，并且其输出会被吞噬并被分页。</p>
 
-<pre><code class="language-perl6">#| find matching lines
+<pre><code class="language-raku">#| find matching lines
 method find-files-in-command-output ($command) {
  
     # execute the command
@@ -265,7 +265,7 @@ method find-files-in-command-output ($command) {
 
 <p>速度对命令行工具很重要。<strong>jmp</strong> 只在用户选择编辑特定行时查找文件名, 而不是提前扫描每一行的文件名。这是懒惰地解析查找文件的行的代码：</p>
 
-<pre><code class="language-perl6">submethod find-file-path {
+<pre><code class="language-raku">submethod find-file-path {
  
     given self.context {
  
@@ -274,12 +274,12 @@ method find-files-in-command-output ($command) {
             proceed unless self.found-file-path($/[0], $/[1]);
         }
  
-        # matches Perl 6 error output (e.g., at SomePerl6.p6:12)
+        # matches Raku error output (e.g., at SomeRaku.p6:12)
         when /at \s (&lt;-[\s:]&gt;+) ':' (\d+)/ {
             proceed unless self.found-file-path($/[0], $/[1]);
         }
  
-        # matches Perl 6 error output (e.g., SomePerl6.p6 (Some::Perl6):12)
+        # matches Raku error output (e.g., SomeRaku.p6 (Some::Raku):12)
         when /at \s (&lt;-[\s:]&gt;+) '(' \S+ ')' ':' (\d+)/ {
             proceed unless self.found-file-path($/[0], $/[1]);
         }
@@ -297,7 +297,7 @@ method find-files-in-command-output ($command) {
 }
 </code></pre>
 
-<p><strong>when</strong> 块匹配不同类型的错误格式（例如，Perl 5 和 Perl 6）以提取文件名和行号。 <strong>proceed</strong> 语句对于移动到下一个 <strong>when</strong> 块非常有用。</p>
+<p><strong>when</strong> 块匹配不同类型的错误格式（例如，Perl 5 和 Raku）以提取文件名和行号。 <strong>proceed</strong> 语句对于移动到下一个 <strong>when</strong> 块非常有用。</p>
 
 <p>这意味着你可以跳转(<strong>jmp</strong>)到工作流程中出现错误的任何位置：例如命令行的输出，测试输出，日志文件等。</p>
 
@@ -306,7 +306,7 @@ method find-files-in-command-output ($command) {
 <pre><code class="language-shell">shell&gt; zef upgrade jmp
 </code></pre>
 
-<p>要首次安装 <strong>jmp</strong>，请<a href="https://perl6.org/downloads/">安装 Perl 6</a>，然后使用 <a href="https://github.com/ugexe/zef">zef</a> Perl 6 模块管理器来安装它：</p>
+<p>要首次安装 <strong>jmp</strong>，请<a href="https://raku.org/downloads/">安装 Raku</a>，然后使用 <a href="https://github.com/ugexe/zef">zef</a> Raku 模块管理器来安装它：</p>
 
 <pre><code class="language-shell">shell&gt; zef install jmp   # install the jmp command line tool
 shell&gt; jmp config        # set up jmp to use your tools
@@ -319,7 +319,7 @@ shell&gt; jmp to sub MAIN   # find files containing &quot;sub MAIN&quot;
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -331,12 +331,12 @@ shell&gt; jmp to sub MAIN   # find files containing &quot;sub MAIN&quot;
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-12-09-constants-in-perl6/" data-toggle="tooltip" data-placement="top" title="第九天 - Perl 6 中的常量">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-09-constants-in-perl6/" data-toggle="tooltip" data-placement="top" title="第九天 - Raku 中的常量">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-perl-6/" data-toggle="tooltip" data-placement="top" title="第十一天 - 使用 Perl 6 测试你的时刻表">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-11-testing-your-times-tables-with-raku/" data-toggle="tooltip" data-placement="top" title="第十一天 - 使用 Raku 测试你的时刻表">Next Post &rarr;</a>
             </li>
           
         </ul>

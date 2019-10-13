@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku FAQ</title>
+  <meta property="og:title" content="Raku FAQ" />
+  <meta name="twitter:title" content="Raku FAQ" />
+  <meta name="description" content="源文件可以在 github 或 raku.org上找到.
+General Rakudo 和 Raku 的区别是什么？ Rakudo 是 Raku 的一个实现。目前它是完成度最好的但是过去也有其它的实现, 将来也可能会有其它实现。Raku 是语言的定义。很多场合
+这两个名字可以宽松地使用并互相替换。
+会有 Raku 版本 6.0.0 吗? 第一个稳定语言版本的版本称为 v6.c，而不是 6.0.0。 不同的命名方案使得不太可能发布具有精确版本 6.0.0 的语言。
+您可以使用下面的代码检查您的 Rakudo 编译器是当前至少是什么版本（注意这可能不是真正的供应商二进制文件）：
+raku -e &#39;say q[too old] if $*PERL.version before Version.new(q[6.c])&#39;  它首先由 Rakudo Raku 编译器版本的 2015.12 实现，并且可能通过使用 &lsquo;use 6.c&rsquo; 指令在可预见的未来支持后续版本。 下一个语言版本（无发布日期）为 v6.d.
+作为一个 Raku 初学者我应该安装什么？ 如果你是一个 Linux 或 Mac 用户, 你可能需要下载 Rakudo Star 并通过编译 MoarVM 版本安装（一个简单的处理）
+如果你是一个 Windows 32 或 64 位用户, 那么 Rakudo Star 二进制版本在 rakudo 网站也能获得。你需要 Windows Git 来使用 panda。">
+  <meta property="og:description" content="源文件可以在 github 或 raku.org上找到.
+General Rakudo 和 Raku 的区别是什么？ Rakudo 是 Raku 的一个实现。目前它是完成度最好的但是过去也有其它的实现, 将来也可能会有其它实现。Raku 是语言的定义。很多场合
+这两个名字可以宽松地使用并互相替换。
+会有 Raku 版本 6.0.0 吗? 第一个稳定语言版本的版本称为 v6.c，而不是 6.0.0。 不同的命名方案使得不太可能发布具有精确版本 6.0.0 的语言。
+您可以使用下面的代码检查您的 Rakudo 编译器是当前至少是什么版本（注意这可能不是真正的供应商二进制文件）：
+raku -e &#39;say q[too old] if $*PERL.version before Version.new(q[6.c])&#39;  它首先由 Rakudo Raku 编译器版本的 2015.12 实现，并且可能通过使用 &lsquo;use 6.c&rsquo; 指令在可预见的未来支持后续版本。 下一个语言版本（无发布日期）为 v6.d.
+作为一个 Raku 初学者我应该安装什么？ 如果你是一个 Linux 或 Mac 用户, 你可能需要下载 Rakudo Star 并通过编译 MoarVM 版本安装（一个简单的处理）
+如果你是一个 Windows 32 或 64 位用户, 那么 Rakudo Star 二进制版本在 rakudo 网站也能获得。你需要 Windows Git 来使用 panda。">
+  <meta name="twitter:description" content="源文件可以在 github 或 raku.org上找到.
+General Rakudo 和 Raku 的区别是什么？ Rakudo 是 Raku 的一个实现。目前它是完成度最好的但是过去也有其它的实现, 将来也可能会有其它实现。Raku 是语言的定义。很多场合
+这两个名字可以宽松地使用并互相替换。
+会有 Raku 版本 6.0.0 吗? 第一个稳定语言版本的版本称为 v6.c，而不是 6.0.0。 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-06-06-raku-faq/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-06-06-raku-faq/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku FAQ</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 6, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 8 minutes (1583 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p>源文件可以在 <a href="https://github.com/raku/faq">github</a> 或 <a href="https://doc.raku.org/language/faq">raku.org</a>上找到.</p>
+
+<h2 id="general">General</h2>
+
+<h3 id="rakudo-和-raku-的区别是什么">Rakudo 和 Raku 的区别是什么？</h3>
+
+<p>Rakudo 是 Raku 的一个实现。目前它是完成度最好的但是过去也有其它的实现, 将来也可能会有其它实现。Raku 是语言的定义。很多场合</p>
+
+<p>这两个名字可以宽松地使用并互相替换。</p>
+
+<h3 id="会有-raku-版本-6-0-0-吗">会有 Raku 版本 6.0.0 吗?</h3>
+
+<p>第一个稳定语言版本的版本称为 v6.c，而不是 6.0.0。 不同的命名方案使得不太可能发布具有精确版本 6.0.0 的语言。</p>
+
+<p>您可以使用下面的代码检查您的 Rakudo 编译器是当前至少是什么版本（注意这可能不是真正的供应商二进制文件）：</p>
+
+<pre><code class="language-raku">raku -e 'say q[too old] if $*PERL.version before Version.new(q[6.c])'
+</code></pre>
+
+<p>它首先由 Rakudo Raku 编译器版本的 2015.12 实现，并且可能通过使用 &lsquo;use 6.c&rsquo; 指令在可预见的未来支持后续版本。 下一个语言版本（无发布日期）为 v6.d.</p>
+
+<h3 id="作为一个-raku-初学者我应该安装什么">作为一个 Raku 初学者我应该安装什么？</h3>
+
+<p>如果你是一个 Linux 或 Mac 用户, 你可能需要下载 <a href="http://rakudo.org/downloads/star/">Rakudo Star</a> 并通过编译 MoarVM 版本安装（一个简单的处理）</p>
+
+<p>如果你是一个 Windows 32 或 64 位用户, 那么 Rakudo Star 二进制版本在 rakudo 网站也能获得。你需要 Windows Git 来使用 panda。</p>
+
+<p>Linux 和 Mac 二进制版本稍后也可能从供应商和第三方那儿获取到。尽管供应商版本可能过时了。</p>
+
+<p>或者有一个官方的 rakudo star Docker 镜像, 地址为 <a href="https://hub.docker.com/_/rakudo-star/">https://hub.docker.com/_/rakudo-star/</a></p>
+
+<h3 id="作为一个中高级用户我想跟进-rakudo-开发">作为一个中高级用户我想跟进 Rakudo 开发</h3>
+
+<p>安装类似于 Perl 5 的 perlbrew &ndash; <a href="https://github.com/tadzik/rakudobrew">rakudobrew</a> , 同等的 Python 还有 Ruby 工具。</p>
+
+<h3 id="从哪里能找到关于-raku-的好文档">从哪里能找到关于 Raku 的好文档？</h3>
+
+<p>最令人信赖的信息能在 raku.org 或那儿的直接链接。</p>
+
+<p>你也可以使用 <a href="https://www.google.co.uk/search?q=site:irclog.perlgeek.de+inurl:raku">Google</a> 搜索 Freenode #raku IRC 频道。</p>
+
+<p><a href="http://www.raku.org/documentation/">http://www.raku.org/documentation/</a> 和 <a href="http://doc.raku.org/">http://doc.raku.org/</a></p>
+
+<h3 id="什么是-raku-spec">什么是 Raku spec？</h3>
+
+<p>&ldquo;spec&rdquo; 指的是 Raku的官方测试套件。它被称作 roast 并被托管在 <a href="https://github.com/raku/roast">github</a> 上.</p>
+
+<p>它被用来测量一个 Raku 的实现有多彻底。</p>
+
+<h3 id="有没有-raku-的术语相关的项目">有没有 Raku 的术语相关的项目？</h3>
+
+<p>查看 <a href="http://design.raku.org/S99.html">glossary</a></p>
+
+<h3 id="我是一个-perl-5-程序员-perl-5-和-raku-的区别在哪儿">我是一个 Perl 5 程序员. Perl 5 和 Raku 的区别在哪儿？</h3>
+
+<p>在 <a href="https://docs.raku.org/language/5to6-nutshell"> https://docs.raku.org/language/5to6-nutshell</a> 下面查看 ‘5to6-nutshell’ pod 文档和相关页面。</p>
+
+<h2 id="模块">模块</h2>
+
+<h3 id="raku-有-cpan-吗-或者-raku-会使用-perl-5-的-cpan-吗">Raku 有 CPAN 吗? 或者 Raku 会使用 Perl 5 的 CPAN 吗?</h3>
+
+<p>Raku 还没有像 CPAN 那样成熟的模块仓库. 但是 <a href="http://modules.raku.org/">modules.raku.org</a> 有很多已知的 Raku 模块, <a href="https://github.com/tadzik/panda/">panda</a> 能在 Rakudo 上安装这些模块.</p>
+
+<h3 id="我能在-raku-中使用-perl-5的模块吗">我能在 Raku 中使用 Perl 5的模块吗？</h3>
+
+<p>使用 <a href="https://github.com/niner/Inline-Perl5/">Inline::Perl5</a> 能让大部分 Perl 5 模块工作, 它甚至能很好地运行 Perl 5 的 Catalyst 和 DBI。</p>
+
+<h3 id="我能在-raku-中使用-c-和-c-吗">我能在 Raku 中使用 C 和 C++ 吗？</h3>
+
+<p><a href="http://docs.raku.org/language/nativecall">Nativecall</a> 让这个特别容易。</p>
+
+<h3 id="nativecall-找不到-libfoo-so-并且我只有-libfoo-so-1-2">Nativecall 找不到 libfoo.so 并且我只有 libfoo.so.1.2!</h3>
+
+<p>这在 Debian 那样的系统中很常见。 你需要安装 &ldquo;libfoo-dev&rdquo; 来为丢失的文件设置符号链接。</p>
+
+<h3 id="所有的传统-unix-库函数去哪儿了">所有的传统 Unix 库函数去哪儿了？</h3>
+
+<p>使用 Nativecall 访问它们很容易。
+<a href="https://github.com/cspencer/raku-posix">POSIX</a> 模块也可以。</p>
+
+<h3 id="rakudo-有核心标准库吗">Rakudo 有核心标准库吗?</h3>
+
+<p>Rakudo 是一个包含最小电量的编译器发布（Test 和 Nativecall等等），像 linux 内核一样。</p>
+
+<p>Rakudo Star 是一个带有一些有用模块的 rakudo, 并且更多的模块可以从生态系统里安装。</p>
+
+<h3 id="有像-b-deparse-那样的东西吗-我怎么抓住-ast">有像 B::Deparse 那样的东西吗?/我怎么抓住 AST?</h3>
+
+<p>使用 <code>raku --target=ast -e 'very-short-example()'</code> 来抓取编译单元的抽象语法树(AST)。</p>
+
+<h2 id="语言特性">语言特性</h2>
+
+<h3 id="我怎么-dump-raku-的数据结构-就像-perl-5-的-data-dumper-和类似的">我怎么 dump Raku 的数据结构(就像 Perl 5 的 Data::Dumper 和类似的)？</h3>
+
+<p>examples:</p>
+
+<pre><code class="language-raku">
+my $foo=&quot;bar&quot;
+dd $foo        # Str $foo = &quot;bar&quot;
+say :$foo.perl # :foo(&quot;bar&quot;)
+say :$foo.gist # foo =&gt; bar
+</code></pre>
+
+<p>生态系统中还有模块来做这个事情, 例如 <a href="https://github.com/tony-o/raku-data-dump/">Data::Dump</a> 使用颜色来 Dump。</p>
+
+<h3 id="我怎么在-raku-提示符-repl-中找到历史命令行">我怎么在 Raku 提示符（REPL）中找到历史命令行？</h3>
+
+<p>从生态系统中安装 <a href="https://github.com/hoelzro/p6-linenoise/">Linenoise</a>.</p>
+
+<p>作为一种选择, 在 UNIX 那样的系统中可以安装 rlwrap。这在类 Debian 系统中可以通过<code>apt-get install rlwrap</code> 安装。</p>
+
+<h3 id="为什么-rakudo-编译器有时候报错更友好">为什么 Rakudo 编译器有时候报错更友好？</h3>
+
+<p>如果在输出中出现 <code>SORRY!</code> , 则错误是编译时错误, 否则是运行时错误。</p>
+
+<p>Examples:</p>
+
+<pre><code class="language-raku">
+say 1/0     # Attempt to divide 1 by zero using div
+
+sub foo ( Int $a, Int $b ) {...}
+foo(1)      # ===SORRY!=== Error while compiling ...
+
+</code></pre>
+
+<h3 id="什么是-any">什么是 (Any)?</h3>
+
+<p><a href="http://doc.raku.org/routine/type%2FAny">Any</a> 是一个用于新类的默认超类(superclass)的顶层类。
+它经常在这样的上下文出现：变量被定义但没有被赋值， 这里它类似于其它语言中的 undef 或 null 值。</p>
+
+<p>examples:</p>
+
+<pre><code class="language-raku">my $foo;
+say $foo;       # (Any) 注意圆括号表明的类型对象
+say $foo.^name  # Any
+
+</code></pre>
+
+<p>(Any) 不应该被用于检查 definedness。 在 Raku 中, definedness 可能是一个对象的属性。 通常实例是被定义的, 而类型对象是未定义的。</p>
+
+<pre><code class="language-raku">say 1.defined       # True
+say (Any).defined   # False
+</code></pre>
+
+<h3 id="so-是什么">so 是什么?</h3>
+
+<p><code>so</code> 是一个松散优先级的操作符, 它强制上下文为 <a href="https://docs.raku.org/type/Bool">Bool</a>.</p>
+
+<p><code>so</code> 拥有和 <code>?</code> 前缀操作符同样的语义, 就像 <code>and</code> 是 <code>&amp;&amp;</code> 的低优先级版本一样.</p>
+
+<p>用法示例:</p>
+
+<pre><code class="language-raku">say so 1|2 == 2;    # Bool::True
+</code></pre>
+
+<p>在这个例子中, 比较的结果(结果是 <a href="https://docs.raku.org/type/Junction">Junction</a>)在打印之前被转换为 Bool 值了.</p>
+
+<h3 id="签名中的那些-d-和-u-是什么东东">签名中的那些 :D 和 :U 是什么东东？</h3>
+
+<p>在 Raku 中, 类和其它类型是对象, 并且传递自身类型的类型检测。
+例如如果你声明一个变量</p>
+
+<pre><code class="language-raku">my Int $x = 42;
+</code></pre>
+
+<p>那么, 你不仅可以给它赋值整数（即， Int 类的实例）, 还能给它赋值 Int 类型对象自身：</p>
+
+<pre><code class="language-raku">$x = Int
+</code></pre>
+
+<p>如果你想排除类型对象, 你可以追加一个 <code>:D</code> 类型微笑符, 它代表&rdquo;定义&rdquo;（definite）:</p>
+
+<pre><code class="language-raku">my Int:D $x = 42;
+$x = Int;  # dies with:
+           # Type check failed in assignment to $x;
+           # expected Int:D but got Int
+</code></pre>
+
+<p>同样地, <code>:U</code> 约束为未定义的值, 即类型对象。
+要显式地允许类型对象或实例, 你可以使用 <code>:_</code>。</p>
+
+<h3 id="签名中的-是什么东东">签名中的 &ndash;&gt; 是什么东东？</h3>
+
+<p><code>--&gt;</code> 是一个返回值约束, 要么是类型要么是有定义的值。</p>
+
+<p>类型约束的例子:</p>
+
+<pre><code class="language-raku">sub divide-to-int( Int $a, Int $b --&gt; Int ) {
+        return ($a / $b).narrow;
+}
+
+divide-to-int(3, 2)
+# Type check failed for return value; expected Int but got Rat
+</code></pre>
+
+<p>有明确返回值的例子:</p>
+
+<pre><code class="language-raku">sub discard-random-number( --&gt; 42 ) { rand }
+say discard-random-number
+# 42
+</code></pre>
+
+<p>在这种情况下，最终值被抛弃，因为已经指定了返回值。</p>
+
+<h3 id="any-和-mu-的区别是什么">Any 和 Mu 的区别是什么?</h3>
+
+<p><code>Mu</code> 是所派生出的所有其它类型的基类型. <code>Any</code> 是从  <code>Mu</code>派生来的, 代表着任何类型的 Raku 值. 主要区别是, <code>Any</code> 不包含 <code>Junction</code>.</p>
+
+<p>子例程参数的默认类型是 <code>Any</code>, 以至于当你声明 <code>sub foo ($a)</code> 时, 你真正表达的是 <code>sub foo (Any $a)</code> . 类似地, 类的声明被假定继承自 <code>Any</code>, 除非使用了像 <code>is Mu</code> 这样的 trait 特征.</p>
+
+<h3 id="怎么从-junction-中提取值">怎么从 Junction 中提取值?</h3>
+
+<p>如果你想从 <a href="https://docs.raku.org/type/Junction">Junction</a> 中提取值(特征态), 那你可能正误入歧途. 应该使用 <a href="https://docs.raku.org/type/Set">Set</a> 代替</p>
+
+<p>Junctions 作为匹配器, 而不是使用它们做代数.</p>
+
+<p>如果你还是想那样做, 你可以滥用自动线程(autothreading):</p>
+
+<pre><code class="language-raku">sub eigenstates(Mu $j) {
+    my @states;
+    -&gt; Any $s { @states.push: $s }.($j);
+    @states;
+}
+
+say eigenstates(1|2|3).join(', ');
+# prints 1, 2, 3 or a permutation thereof
+</code></pre>
+
+<h3 id="如果-str-是不可变的-那么-s-是怎么工作的-如果-int-是不可变的-i-是怎么工作的">如果 Str 是不可变的, 那么 <code>s///</code> 是怎么工作的? 如果 Int 是不可变的, <code>$i++</code> 是怎么工作的?</h3>
+
+<p>在 Raku 中, 很多基本类型是不可变的, 但是保存它们的变量不是. <code>s///</code> 作用于变量上, 在这个变量中放入一个新创建的字符串对象. 同样地, <code>$i++</code> 作用于 <code>$i</code> 变量上, 而不是作用在它里面的值身上.</p>
+
+<p>更多详情请查看:  <a href="http://doc.raku.org/language/containers">containers</a> 文档。</p>
+
+<h3 id="什么是数组引用和自动解引用-我仍然需要-符号吗">什么是数组引用和自动解引用? 我仍然需要 @ 符号吗?</h3>
+
+<p>在 Raku 中, 几乎所有的东西都是引用. 所以谈论 taking references 没有多大意义. 不像 Perl 5 那样, Raku 的标量变量也能直接包含数组:</p>
+
+<pre><code class="language-raku">my @a = 1, 2, 3;
+say @a;                 # &quot;1 2 3\n&quot;
+say @a.WHAT;            # (Array)
+
+my $scalar = @a;
+say $scalar;            # &quot;1 2 3\n&quot;
+say $scalar.WHAT;       # (Array)
+</code></pre>
+
+<p>最大的区别是, 标量中的数组在列表上下文中是一个值, 然而数组会被愉快地迭代:</p>
+
+<pre><code class="language-raku">my @a = 1, 2, 3;
+my $s = @a;
+
+for @a { ... }          # loop body executed 3 times
+for $s { ... }          # loop body executed only once
+
+my @flat = flat @a, @a;
+say @flat.elems;        # 6
+
+my @nested = flat $s, $s;
+say @nested.elems;      # 2
+</code></pre>
+
+<p>你可以使用 <code>@( ... )</code> 或通过在表达式身上调用 <code>.list</code> 方法来强制展平, 使用 <code>$( ... )</code> 或通过在表达式身上调用 <code>.item</code> 方法强制为 item  上下文(不展平).</p>
+
+<h3 id="为什么还要符号-你不能没有它们吗">为什么还要符号? 你不能没有它们吗?</h3>
+
+<p>有几个原因:</p>
+
+<ul>
+<li>它们使插值变量到字符串中变得更容易</li>
+<li>它们为不同的变量和 twigils 组成了微型命名空间, 因此避免了名字冲突</li>
+<li>它们允许简单的 单数/复数 区别</li>
+<li>它们像使用强制性名词标记的自然语言一样工作，所以我们的大脑为处理它而生</li>
+<li>它们不是强制性的，因为你可以声明无符号名字（如果你不介意含糊不清）</li>
+</ul>
+
+<h3 id="类型-str-不支持关联索引">&ldquo;类型 Str 不支持关联索引&rdquo;</h3>
+
+<p>你可能会把字符串插值和 HTML 搞混。</p>
+
+<pre><code class="language-raku">my $foo = &quot;abc&quot;;
+say &quot;$foo&lt;html-tag&gt;&quot;;
+</code></pre>
+
+<p>Raku 认为 <code>$foo</code> 是一个散列而 <code>&lt;html-tag&gt;</code> 是一个字符串字面量的散列键。使用闭包来帮助你理解吧。</p>
+
+<pre><code class="language-raku">my $foo = &quot;abc&quot;;
+say &quot;{$foo}&lt;html-tag&gt;&quot;;
+</code></pre>
+
+<h3 id="raku-有协程吗-什么是-yield">Raku 有协程吗? 什么是 yield ?</h3>
+
+<p>Raku 没有 Python 那样的 <code>yield</code> 语句, 但是它通过惰性列表却能提供类似的功能. 有两种很潮的方式来写出能返回惰性列表的例程:</p>
+
+<pre><code class="language-raku"># first method, gather/take
+my @values := gather while have_data() {
+    # do some computations
+    take some_data();
+    # do more computations
+}
+
+# second method, use .map or similar method
+# on a lazy list
+my @squares := (1..*).map(-&gt; $x { $x * $x });
+# or
+my @squares = (1..*).map(-&gt; \x { x² });
+</code></pre>
+
+<h3 id="为什么我需要反斜线-unspace-在多行上分割方法调用">为什么我需要反斜线(unspace)在多行上分割方法调用?</h3>
+
+<p>(请在这儿添加答案)</p>
+
+<h3 id="为什么我不能从-new-方法初始化私有属性-我怎么修复它">为什么我不能从 new 方法初始化私有属性, 我怎么修复它?</h3>
+
+<p>这样的代码:</p>
+
+<pre><code class="language-raku">
+class A {
+    has $!x;
+    method show-x {
+        say $!x;
+    }
+}
+A.new(x =&gt; 5).show-x;
+</code></pre>
+
+<p>不会打印出 5. Private 属性是私有的, 这意味着私有属性在外面是不可见的. 如果默认的构造器能够初始化私有属性, 那么这些私有属性就会泄露到公共 API 中.</p>
+
+<p>如果你仍旧想让它工作, 你可以添加一个 <code>submethod BUILD</code> 来初始化它们:</p>
+
+<pre><code class="language-raku">class B {
+    has $!x;
+    submethod BUILD(:$!x) { }
+    method show-x {
+        say $!x;
+    }
+}
+A.new(x =&gt; 5).show-x;
+</code></pre>
+
+<p><code>BUILD</code> 由默认的构造器使用用户传递给构造器的所有具名参数调用（间接地, 更多细节查看<a href="https://docs.raku.org/language/objects#Object_Construction">Object Construction</a>）。 <code>:$!x</code> 是名为 <code>x</code> 的具名参数, 当使用名为 <code>x</code> 的具名参数来调用时, 它的值被绑定到属性 <code>$!x</code> 上.</p>
+
+<p>但不要这样做。如果名字是 public 的，使用 <code>$.x</code> 以那样的方式声明没有什么不好，因为默认情况下外部视图是只读的(readonly)，你仍然可以使用 <code>$!x</code> 从内部访问它。</p>
+
+<h3 id="say-put-和-print-怎么不同-为什么不同">say, put 和 print 怎么不同, 为什么不同?</h3>
+
+<p>最明显的区别是, <code>say</code> 和 <code>put</code> 在输出后面添加了一个换行符, 而 <code>print</code> 没有.</p>
+
+<p>但是还有另外一个区别: <code>print</code> 和 <code>put</code> 通过对每一个传递来的 item 调用 <code>Str</code> 方法来把它的参数转换为字符串, 相反,  <code>say</code> 使用  <code>gist</code> 方法. 前者是为计算机设计的, 后者是为人类.</p>
+
+<p>或者它俩被解析的方式不同, <code>$obj.Str</code> 给出一个字符串表示, <code>$obj.gist</code> 是对象的一个简短总结, 适合编程人员的快速识别, <code>$obj.perl</code> 打印一个 Perlish 的表示.</p>
+
+<p>例如, 类型对象, 也是熟知的 “未定义值”, 字符串化为一个空的字符串和警告, 而 <code>gist</code> 方法返回由一对圆括号包裹的类型的名字.(用于表明除了类型之外什么也没有).</p>
+
+<pre><code class="language-raku">my Date $x;     # $x now contains the Date type object
+print $x;       # empty string plus warning
+say $x;         # (Date)\n
+</code></pre>
+
+<p>所以, <code>say</code> 优化的用于调试和向人们展示, <code>print</code> 和 <code>put</code> 更适合于产生用于其它程序的输出.</p>
+
+<p><code>put</code> 因此是 <code>print</code> 和 <code>say</code> 之间的一种混合; 像 <code>print</code>, 它的输出适合于其它程序, 也像 <code>say</code>, 它在输出的末尾添加了换行符。</p>
+
+<h3 id="token-和-rule-之间的区别是什么">token 和 rule 之间的区别是什么?</h3>
+
+<p><code>regex</code> , <code>token</code> 和 <code>rule</code> 这三个都引入了正则表达式, 但是语义略微有一点不同.</p>
+
+<p><code>token</code> 隐含了 <code>:ratchet</code> 或 <code>:r</code> 修饰符, 这防止了 rule 的回溯.</p>
+
+<p><code>rule</code> 隐含了 <code>:ratchet</code> 和  <code>:sigspace</code> (缩写为 <code>:s</code>)修饰符, 这意味着规则(rule)不会回溯, 并且它把 regex 的文本中的空白当作 <code>&lt;.ws&gt;</code> 调用(例如匹配空白, 除了在两个单词字符之间之外, 它是可选的).  regex 开头的空白和备选分支中每个分支开头的空白会被忽略.</p>
+
+<p><code>regex</code> 声明一个简单的正则表达式，没有任何隐含的修饰符。</p>
+
+<h3 id="die-和-fail-之间的区别是什么">die 和 fail 之间的区别是什么?</h3>
+
+<p><code>die</code> 抛出一个异常.</p>
+
+<p><code>fail</code> 返回一个 Failure 对象。 （如果调用者已经声明了 <code>use fatal;</code> 在调用作用域中, <code>fail</code> 会抛出一个异常而不返回）</p>
+
+<p><code>Failure</code> 是一个 “未知的” 或 “懒惰的” 异常.它是一个含有异常的对象, 当这个 Failure 被用作普通的对象或者在 sink 上下文中忽略它时, 则会抛出一个异常.</p>
+
+<p>Failure 从 <code>defined</code> 检查中返回 False, 并且你可以使用 <code>exception</code> 方法提取出异常.</p>
+
+<h3 id="为什么-wantarray-或-want-不见了-我能在不同的上下文中返回不同的东西吗">为什么 wantarray 或 want 不见了? 我能在不同的上下文中返回不同的东西吗?</h3>
+
+<p>Perl 拥有 <a href="https://docs.raku.org/language/5to6-perlfunc#wantarray">wantarray</a> 函数来告诉你这是在空上下文, 标量上下文,还是在列表上下文中调用的. Raku 没有与之等价的结构, 因为上下文不是向内流动的,  例如, 子例程不知道调用所在的上下文.</p>
+
+<p>一个愿意是因为 Raku 有多重分派, 在这样一个例子中:</p>
+
+<pre><code class="language-raku">multi w(Int $x) { say 'Int' }
+multi w(Str $x) { say 'Str' }
+w(f());
+</code></pre>
+
+<p>没办法决定子例程 <code>f</code> 的调用者想要一个字符串还是想要一个整数, 因为它还不知道调用者是什么. 通常这要求解决 halting 问题, 在这个问题上, 即使写 Raku编译器的人也会遇到麻烦.</p>
+
+<p>在 Raku 中达到上下文敏感的方式是返回一个知道怎样响应方法调用的对象.</p>
+
+<p>例如, regex 匹配返回 Match <a href="http://doc.raku.org/type/Match">对象</a>, 该对象知道怎样响应列表索引, 散列索引, 并能变成匹配的字符串.</p>
+
+<h3 id="pointer-和-opaquepointer-的区别是声明">Pointer 和 OpaquePointer 的区别是声明?</h3>
+
+<p><code>OpaquePointer</code> 被废弃了并且已经用 <code>Pointer</code> 代替了。</p>
+
+<h2 id="raku-实现">Raku 实现</h2>
+
+<h3 id="哪个-raku-的实现是可用的">哪个 Raku 的实现是可用的?</h3>
+
+<p>当前开发最好的是 Rakudo(使用多个虚拟机后端)。历史上的实现还包括 Niecza (.NET) 和 Pugs (Haskell). 其它的列出在 <a href="https://www.raku.org/compilers/">Raku Compilers</a> 下面。</p>
+
+<h3 id="rakudo-是用什么语言写的">Rakudo 是用什么语言写的?</h3>
+
+<p>NQP 是（1）NQP 代码，（2）底层虚拟机使用的任何语言，（3）一些第三方 C 和 Java 库，以及（4）早期运行构建过程创建的一些引导文件的混合 。</p>
+
+<h3 id="为什么我不能把所有的数值都赋值给-num-类型的变量">为什么我不能把所有的数值都赋值给 Num 类型的变量?</h3>
+
+<pre><code class="language-raku">my Num $x = 42;
+# dies with
+# Type check failed in assignment to '$x'; expected 'Num' but got 'Int'
+
+</code></pre>
+
+<p><a href="http://doc.raku.org/type/Num">Num</a> 是浮点类型, 与 <a href="http://doc.raku.org/type/Int"> integers</a> 不兼容. 如果你想要一个允许任何数字值的类型约束, 使用 <a href="http://doc.raku.org/type/Numeric">Numeric</a> (它也允许<a href="http://doc.raku.org/type/Complex">复数</a>), 或 <a href="http://doc.raku.org/type/Real">Real</a>如果你想排除复数.</p>
+
+<h2 id="元问题和宣传">元问题和宣传</h2>
+
+<h3 id="raku-什么时间会准备好-就是现在吗">Raku 什么时间会准备好? 就是现在吗?</h3>
+
+<p>编程语言和它们的编译器的准备就绪不是一个二元决策. 因为它们(语言和实现)能进化, 它们平稳地发展变得更可用. 根据你对编程语言的要求, 它可能适合也可能不适合你.</p>
+
+<p>请查看 <a href="http://raku.org/compilers/features">功能对比矩阵</a> 了解更详尽的实现了的功能.</p>
+
+<p>请注意, Larry Wall 已经在 FOSDEM 2015 会议上宣布, 一个产品级的 Rakudo Raku 将会在 2015 圣诞节发布.</p>
+
+<h3 id="为什么我要学习-raku-它有什么了不起的吗">为什么我要学习 Raku? 它有什么了不起的吗?</h3>
+
+<p>Raku 统一了很多其它编程语言中不经常有的伟大想法. 虽然其中的几种语言提供了其中的某些功能, 但是没有提供全部.</p>
+
+<p>不像大部分语言那样, 它提供了：</p>
+
+<ul>
+<li>Raku 提供了过程式的, 面向对象的和函数式编程方法。</li>
+<li>易于使用的一致性语法, 数据结构中的符号不变性。</li>
+<li>完全基于字素的 Unicode 支持, 包括附件 #29</li>
+<li>足够清晰的正则表达式, 更易读, 更多功能。</li>
+<li>Junctions 允许多个可能性的简单检测, 例如 $a == 1|3|42（意思是 $a 等于 1 或 3 或 42）</li>
+<li>相对于全局变量, 动态作用域变量提供了词法作用域备选</li>
+<li>强调可组合性和本地作用域以阻止「超距作用」。例如, imports 总是本地作用域的。</li>
+<li>易于理解的一致性作用域规则和闭包</li>
+<li>强大的面向对象, 含有类和 roles(所有的东西都可以当做对象)。继承、子类型、代码复用。</li>
+<li>内省到对象和元对象中（叠罗汉）</li>
+<li>元对象协议允许元编程而不需要生成/解析代码。</li>
+<li>子例程和方法签名，便于解包位置参数和命名参数。</li>
+<li>根据元数,类型和可选的额外代码使用不同的签名对同一具名子例程/方法进行多重分派。</li>
+<li>未知子例程/不可能的分派在编译时给出错误报告。</li>
+<li>可选的渐进类型检查，无需额外的运行时成本。 还有可选类型注解。</li>
+<li>基于对编译器/运行时状态的内省的高级错误报告。这意味着更有用，更精确的错误信息。</li>
+<li>Phasers(如 BEGIN/END) 允许代码作用域 进入/退出, 首次循环/last/next 和其它更多上下文中执行。</li>
+<li>高级并发模型，用于隐式以及显式多进程处理，这超越了原始线程和锁。 Raku 的并发提供了一组丰富的（可组合的）工具。</li>
+<li>多核计算机越来越多地被使用，由于并行性使得 Raku 可以使用多核，包括隐式（例如使用&gt;&gt;.方法）和显式 (start {code}) 。这很重要，因为摩尔定律正在结束。</li>
+<li>提供结构化语言支持以实现异步执行代码的编程。</li>
+<li>Supplies 允许在发生某些事情时执行代码（如定时器，信号或文件系统事件）。</li>
+<li>react/whenever/supply 关键字允许容易地构建交互式，事件驱动的应用程序。</li>
+<li>懒惰求值，如果可能的话，急切求值当需要或必要时。这意味着，例如，惰性列表，甚至无限延迟列表，如斐波纳契序列或所有素数。</li>
+<li>原生数据类型用于更快的处理</li>
+<li>使用 NativeCall 连接到 C/C++ 中的外部库非常简单。</li>
+<li>使用 Inline::Perl5 和 Inline::Python 连接 Perl 5(CPAN)/Python 非常简单。</li>
+<li>可以同时安装和加载模块的多个版本。</li>
+<li>由于更简单的更新/升级策略，简化了系统管理。</li>
+<li>简单的数值计算没有损失精度，因为 Rats（有理数）。</li>
+<li>用于解析数据或代码的可扩展语法（Raku 用它解析自身）</li>
+<li>Raku 是一种非常易变的语言（定义自己的函数，运算符，traits 和数据类型，为您修改解析器）。</li>
+<li>很多的数据类型选择，加上创建自己的类型的可能性。</li>
+<li>具有适当边界检查的多维成型的和/或原生数组</li>
+<li>在某个匹配出现时, 词法解析期间随时执行代码</li>
+<li>添加自定义运算符或添加 trait 特征和编写子例程一样简单。</li>
+<li>在任何运算符（系统或自定义添加的）上自动生成超运算符。</li>
+<li>运行在各种后端上。目前 MoarVM 和 JVM，JavaScript在开发中，可能会有更多。</li>
+<li>执行期间（JIT）热代码路径的运行时优化。</li>
+<li>运行在小型（例如 Raspberry Pi）和大型多处理器硬件上。</li>
+<li>基于垃圾收集：没有及时销毁，所以引用计数没有必要。使用 phasers 用以及时的动作。</li>
+<li>方法可以在运行时混合到任何实例化的对象中，例如。以允许添加带外数据。</li>
+<li>通过使用具有多重分派和自动生成使用信息的 MAIN 子例程，使命令行接口易于访问。</li>
+<li>更少的代码行创建更紧凑的程序。名字的霍夫曼编码允许更好的可读性。</li>
+<li>使用简单的迭代器接口定义的惰性列表，任何类可以通过最小化的提供单个方法来提供。</li>
+<li>Perl  6 的座右铭与 Perl一直保持不变：Perl是不同的。简而言之，Perl旨在&rdquo;使容易的工作变得容易，使困难的工作变得可能&rdquo;。和&rdquo;条条大路通罗马&rdquo;。现在有更多 -Ofun 添加进来。</li>
+</ul>
+
+<p>请查看 <a href="http://raku.org/compilers/features">功能比较矩阵</a> 获取更多信息.</p>
+
+<h3 id="为什么不把它叫做除了-perl-以外的其它东西">为什么不把它叫做除了 Perl 以外的其它东西?</h3>
+
+<p>很多人建议, Raku 跟之前的 Perl 版本的区别太大了, 我们应该考虑给它改名, 或者考虑到 Raku 伤害了 Perl 5, 仅仅拥有同样的名字却有更高的版本号.</p>
+
+<p>Raku 仍然叫做 “Perl&rdquo; 的主要原因是:</p>
+
+<ul>
+<li>Raku 仍然是一个 perlish 风格的语言, 和之前的版本遵守相同的底层思想(用于微型命名空间的符号, 条条大路通罗马, 吸收了很多自然语言的思想..)</li>
+<li>Raku 的代码很 perlish.</li>
+<li>Perl 仍然是一个强健的品牌名, 我们不想马上抛弃它</li>
+<li>找到一个替代的名字很困难. 而且, “camelia” 和 “rakudo&rdquo; 不是合适的编程语言名</li>
+<li>即使 Raku 更改了它的名字, Perl 5 也不大可能增加它的版本号为 6.因为 Raku 已经根植于人们的头脑中了</li>
+</ul>
+
+<h3 id="raku-对我来说足够快了吗">Raku 对我来说足够快了吗?</h3>
+
+<p>那取决于你正在做什么。Raku 一直奉行“做对的事情然后做的更快”的哲学进行开发。对于某些东西来说它够快了, 但是需要做的更多。
+Raku 大部分是由志愿者开发的, 但是 Raku 的性能在不久的将来有待提高, 因为 MoarVM 后端包含一个现代的即时（JIT）编译器。
+Perl 5 程序员应该意识到 Raku 在面向对象方面有很多内建函数并且还有更多其它的。
+简单的基准测试会误导除非你在你的 Perl 5脚本中包含了诸如 Moose, 类型检测模块等。</p>
+
+<p>下面这个粗超的基准测试, 使用了所有诸如此类的一般说明, 能展示 Raku 在某些类似任务上能和 Perl 5的速度接近。
+在你的系统上尝试下, 你可能会感到很惊讶!</p>
+
+<pre><code class="language-raku"># Raku version
+use v6;
+
+class Foo { has $.i is rw };
+
+for (1..1_000_000) -&gt; $i {
+    my $obj = Foo.new;
+    $obj.i = $i;
+}
+
+# Perl 5 version
+package Foo;
+use Moose;
+
+has i =&gt; (is =&gt; 'rw');
+
+__PACKAGE__-&gt;meta-&gt;make_immutable;
+
+for my $i (1..1_000_000) {
+    my $obj = Foo-&gt;new;
+    $obj-&gt;i($i);
+}
+
+1;
+
+# Another Perl 5 version that offers bare-bones set of features
+# compared to Moose/Raku's version but those are not needed in this
+# specific, simple program anyway.
+package Foo;
+use Mojo::Base -base;
+
+has 'i';
+
+for my $i (1..1_000_000) {
+    my $obj = Foo-&gt;new;
+    $obj-&gt;i($i);
+}
+
+1;
+
+# A perl program which works under both perl5 (with perl -Mbigint)
+# and raku
+
+my ($prev, $current) = (1, 0);
+
+for (0..100_000) {
+    ($prev, $current) = ($current, $prev + $current);
+}
+print $current;
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/faq/">FAQ</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-06-01-raku%E4%B8%AD%E7%9A%84subscripts/" data-toggle="tooltip" data-placement="top" title="Raku 中的 Subscripts">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-06-19-%E7%BB%99%E6%A0%87%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%8D%A2%E8%A1%8C/" data-toggle="tooltip" data-placement="top" title="给标题添加换行">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

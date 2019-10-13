@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku 概览</title>
+  <meta property="og:title" content="Raku 概览" />
+  <meta name="twitter:title" content="Raku 概览" />
+  <meta name="description" content="A Review of Raku">
+  <meta property="og:description" content="A Review of Raku">
+  <meta name="twitter:description" content="A Review of Raku">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2018-07-06-raku%E6%A6%82%E8%A7%88/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-06-raku%E6%A6%82%E8%A7%88/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Raku 概览</h1>
+                
+                  
+                    <h2 class="post-subheading">A Review of Raku</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on July 6, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 15 minutes (3068 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p><a href="http://www.evanmiller.org/a-review-of-perl-6.html">http://www.evanmiller.org/a-review-of-perl-6.html</a></p>
+
+<p>Raku 让我想起了我叔叔的博士学位论文。在前五年, 我们会问（圣诞节前）他什么时候完成; 时间久了我们就越来越不相信他的答案了, 并且没有任何证据表明论文确实存在过, 我们使完成日期成为一种流行的笑话, 就像波士顿 Big Dig 或纽约的第二大道地铁线。但是, 经过多次自我强加的最后期限后, 我们已经不再拿它开玩笑了。过了那么多年, 我们不再问了。</p>
+
+<p>如果你错过了, 我认为每个人都错过了, Raku 在一年半前 - 在 2015 年的圣诞节 - 碰巧发布了 - 在名义上跨越了近 16 年之后被发布了。 （我想, 但我不确定, 我的叔叔的论文也在某个时候完成了。）我在 2017 年写这篇文章的新编程语言市场虽然具有竞争力, 但并不是难以理解的 - 但就像一位新博士生, 似乎没有人确定 Raku 的市场前景, 就像一篇刚刚开始的论文, 似乎没有人知道多年的劳动成果是否真的值得一试。</p>
+
+<p>除了你想要的任何简单答案之外, Raku 的提供者几乎没有提供关于你应该用这个语言做什么的一些提示。 Raku 是多范式的, 也许是全范式的; 它声称支持面向对象的编程, 函数式编程, 面向标记的编程, 数组编程和（旧的）过程式编程。这是一种新语言, 而不仅仅是 Perl 5 的清理版本, 只不过英语是德语减去变音符号。了解以前的版本, 唉, 不会让你走得太远。出于同样的原因, 对前面化身的偏见并不一定适用于今天的水。</p>
+
+<p>接下来是我试图向世界提供一个对编程世界中最白的大象Raku的一个诚实的, 如果不完整的评估。我受到以下思想的激励：每个系统管理员至少知道一点 Perl, 但我不认识任何人我知道任何 Raku, 也不认识任何知道 Raku 的人。我从来没有读过任何关于 Raku 的信息。我同样可以想象一个 Raku 是一堆垃圾的世界, 还有一个语言设计的 Hope Diamond。似乎没有人知道;没有人会知道。 Raku 是一个已写入的寄存器, 仍在等待读取。</p>
+
+<p>经过多年的错误开始（怪我）, 我终于在设法花了足够的时间在 Raku 上之后自信地说我熟悉它了。我已经阅读了大量的博客文章, 狼吞虎咽了很多文档, 并编写了一个小型（500行）的 Raku 库, 其中包含粗略的测试覆盖率。我仍然不知道使用 Raku 一年, 甚至是一个适当的工作周是什么样的, 所以这篇评论将不再是一个明确的推荐, 更像是那些妈妈尝试的 Linux 反应视频之一。我很可能错过了一些东西。</p>
+
+<p>Raku 缺乏强大的“钩子”, 而且它也有点慢。因此, 通过拿着我的啤酒瓶子（来源于某笑话）示范来激发读者的兴趣是困难的, 但并非不可能。 （如果你喜欢, 请参阅<a href="http://www.evanmiller.org/why-im-learning-perl-6.html">为什么我要学习 Raku</a>.）相反, 我将从小例子开始。</p>
+
+<h2 id="数字">数字</h2>
+
+<p>Raku 很容易从 <a href="https://raku.org/">Raku 官网</a>安装;与 Perl 5 不同, 它带有一个还凑合的 shell：</p>
+
+<pre><code>$ raku
+To exit type 'exit' or '^D'
+&gt;
+</code></pre>
+
+<p>如果你对某些版本号感兴趣, 如果任何 Raku 人正在阅读这个版本号, 那么应该在 shell 问候语中显示, 只需运行 <code>raku --version</code>：</p>
+
+<pre><code>$ raku --version
+This is Rakudo version 2017.04.3 built on MoarVM version 2017.04-53-g66c6dda
+implementing Raku.c.
+</code></pre>
+
+<p>Raku 实际上包含语言规范（Raku.c; c 代表圣诞节）, 编译器（称为 Rakudo）和虚拟机（称为 MoarVM）。绰号多种多样的原因是：Raku 那帮人认为没有任何实现应该优于其他实现.</p>
+
+<p>Raku 的教程和预告片通常从乍一看看起来像是世界上最简单的数学问题开始：</p>
+
+<pre><code>&gt; 0.1 + 0.2 == 0.3
+True
+</code></pre>
+
+<p>大多数语言将此表达式计算为 false, 并且教程继续解释浮点和精确算术之间的区别。 （Raku 将点后面的小数作为有理数处理 - 也就是说, 作为两个整数的商 - 而不是不精确的浮点数。）</p>
+
+<p>Raku 是面向对象的, 你可以使用 <code>.WHAT</code> 方法看到任何对象的类：</p>
+
+<pre><code class="language-raku">&gt; (10).WHAT
+(Int)
+&gt; (0.1).WHAT
+(Rat)
+&gt; (1e-1).WHAT
+(Num)
+</code></pre>
+
+<p><code>Int</code> 是一个整数, <code>Rat</code> 是一个有理数（精确分数）, <code>Num</code> 是一个双精度浮点数。如果你想要“传统的”浮点行为, 只需在添加它们之前从每个数字中加一个 <code>Num</code>：</p>
+
+<pre><code>&gt; Num(0.1) + Num(0.2) == Num(0.3)
+False
+</code></pre>
+
+<p>科学记数法（例如 <code>1e-1</code> 表示 <code>1×10⁻¹</code>）总是在 Raku 中产生一个浮点数 <code>Num</code>。然而, 由于我不理解的原因, 它们有时似乎加起来作为有理数, 而不是浮点数。 ：</p>
+
+<pre><code class="language-raku">&gt; 0.1e0 + 0.2e0 == 0.3e0
+False
+&gt; 1e-1 + 2e-1 == 3e-1
+True
+</code></pre>
+
+<p>也许有人可以通过礼貌的电子邮件向我解释这种差异。无论如何, 我全心全意地赞同 Raku 使用有理数进行精确算术, 我认为更多语言可以从类似的实现中受益。作为参考, Julia 和 Haskell 有内置的有理数, 分别用 <code>//</code> 和 <code>%</code> 运算符构造;大多数其他语言都将它们作为库, 如果有的话, 不支持字面量。</p>
+
+<p>Raku 中的整体数学支持非常好, 复杂的数字和常用的常量内置于语言中。这是欧拉公式, 精确到 15 位小数：</p>
+
+<pre><code class="language-raku">&gt; e**(pi*i)
+-1+1.22464679914735e-16i
+</code></pre>
+
+<p>说到这一点, 如果你经常处理浮点数, Raku 有一个方便的近似运算符 <code>=〜=</code>, 可以测量 <code>10⁻¹⁵</code> 之内的事物</p>
+
+<pre><code class="language-raku">&gt; e**(pi*i) + 1 =~= 0
+True
+</code></pre>
+
+<p>Raku 到处都是 Unicode, 所以如果你希望你也可以使用 <code>π</code> 代替 <code>pi</code>（而且, 可爱的是, 上标可以取整数到整数）。但是, Raku shell 似乎不是完全可以识别多字节的, 所以通过 Unicode 表达式退格会造成你自己的危险。非交互式编译器可以正常使用 UTF-8。</p>
+
+<p>请注意, 数字类型的选择会对性能产生重大影响。例如, 这是一个用于计算谐波序列的第 999,999 项的小脚本：</p>
+
+<pre><code class="language-raku">my $num = 1;
+my $total = 0;
+
+while $num &lt; 1_000_000 {
+    $total += 1/$num;
+    $num++;
+}
+
+say $total;
+</code></pre>
+
+<p>我的机器大约需要 4.4 秒。但是将 <code>1/$num</code> 更改为 <code>1e0/$num</code> 仅需 1.75 秒 - 在第一种情况下, Raku 构造一个有理数来表示 <code>1/$num</code>, 但直接使用 <code>1e0/$num</code> 表示浮点表示。</p>
+
+<p>如果你仔细检查 <code>$total</code>, 就会发现另一个奇怪的现象。它作为 <code>Int</code> 开始, 在第一次循环迭代中变成 <code>Rat</code>, 并在第 46 次迭代时转换为 <code>Num</code>。幕后有一些微妙的诡计, 一个人感觉到 Larry Wall 的良性存在, 他在原版 Perl 中使用字符串和数字进行了欺骗, 这使得程序员厌倦了 <code>scanf</code> 和 <code>sprintf</code>。</p>
+
+<p>在我的小测试中, Raku 脚本的“快速”版本仍然比 Perl Classic 慢四倍, 比 C 慢 500 倍（!）.Raku 那帮人经常指出自最初的圣诞节发布以来他们所做的速度改进, 速度情况可能会随着时间的推移而改善。总的来说, 在数字计算方面, 我想你可以说, 虽然 Raku 完全能够进行繁重的提升, 但提升人员并没有明显匆忙。</p>
+
+<p>如果你开始担心在 Raku 中只有计算谐波序列的方法, 你可以用这个象形文字的单行计算同样的东西：</p>
+
+<pre><code class="language-raku">[+] (1..^1e6).map: 1/*
+</code></pre>
+
+<p>我不会在这里跟踪这个 22 字节代码片段的机制, 但我会在这一刻注意到, 在他的其他成就中, Perl 的创建者和 Raku 的设计者 Larry Wall 是两次混淆 C 比赛的获奖者。</p>
+
+<p>关于 Raku 和数学的最后一个观察结果：虽然 Raku 具有 math.h 的所有常用功能, 但它肯定可以使用<a href="http://www.evanmiller.org/statistical-shortcomings-in-standard-math-libraries.html">更多</a>。</p>
+
+<h2 id="字符串和正则表达式">字符串和正则表达式</h2>
+
+<p>Raku 的字符串支持, 特别是 Unicode 支持, 是业内最好的。与 Go 或 JavaScript 不同, Raku 知道字形和组合代码点, 与 Python, Swift 或 Elixir 不同, Raku 可以在恒定时间内按位置访问任意字形, 而不是遍历每个字形以访问某个特定字形。允许使用 Unicode 标识符, 自定义 Unicode 运算符也是如此。 Raku 有许多内置的 Unicode 运算符（带有 ASCII 回退）, 用于集合运算和相等测试。</p>
+
+<p>还记得欧拉公式, 用近似检验吗？你可以这样写, 如果你喜欢：</p>
+
+<pre><code>&gt; e**(π×i) + 1 ≅ 0
+True
+</code></pre>
+
+<p>Raku 允许 Unicode 标准识别的任何形式的引号构造, 因此以下内容是等效的：</p>
+
+<pre><code>｢Man is amazing, but he is not a masterpiece｣
+“Man is amazing, but he is not a masterpiece”
+&quot;Man is amazing, but he is not a masterpiece&quot;
+</code></pre>
+
+<p>Larry Wall 在采访中表达的 Raku 哲学是, Unicode 符号现在可能很难打字, 但技术会有所改进, 将来你很乐意拥有定义源代码的富有表现力的 Unicode。我个人对 ASCII 变体感到满意 - 在 Raku 的说法中, 它们被称为德克萨斯符号（因为一切都更大, 得到它吗？） - 但也许有些人会发现 Unicode 更容易看到。值得注意的是, 即将推出的 Apple 硬件中有关于电子墨水键盘的传闻, 因此 Larry Wall 可能领先于这一特定曲线。</p>
+
+<p>早在 20 世纪 80 年代后期, Perl 就将正则表达式引入到编程世界中, 或者至少是人们可能真正想用来捕获和打印东西的非堆栈类型。 Raku 具有 Perl 的正则表达式, 只有一些变化：扩展 Unicode 支持, 移动修改器, 重新分配一些符号, 以及更改空白规则更清晰。他们觉得我更现代, 有更多的呼吸空间。我举几个例子。</p>
+
+<p>字符类使用 <code>&lt;[]&gt;</code> 而不是 <code>[]</code>,  范围使用 <code>..</code> 而不是 <code>-</code>。所以：</p>
+
+<pre><code class="language-perl">[a-zA-Z0-9]
+</code></pre>
+
+<p>现在是</p>
+
+<pre><code class="language-raku">&lt;[ a..z A..Z 0..9 ]&gt;
+</code></pre>
+
+<p>捕获组仍然使用括号, 但非捕获组现在使用普通方括号。空格现在必须是显式的。所以这：</p>
+
+<pre><code class="language-raku">(Male|Female) (?:Cat|Dog)
+</code></pre>
+
+<p>现在是：</p>
+
+<pre><code class="language-raku">(Male || Female) ' ' [Cat || Dog]
+</code></pre>
+
+<p>修饰符（<code>i</code> 表示不区分大小写是最重要的）在前面有冒号时可以出现在正则表达式中。例如, 这个 Perl 5 正则表达式：</p>
+
+<pre><code class="language-perl">(Male|Female) (?:[Cc][Aa][Tt]|[Dd][Oo][Gg])
+</code></pre>
+
+<p>将被翻译为 Raku：</p>
+
+<pre><code class="language-raku">(Male || Female) ' ' [:i cat || dog]
+</code></pre>
+
+<p><code>\d</code> 现在匹配 Unicode 数字, 如 ᭕ （巴厘语中的数字五）和 ๓（泰文中的三）。 <code>\w</code> 匹配数字和 Unicode 认为是字母的任何内容, 包括 <code>Ж</code> 和 <code>Θ</code>。 <code>\h</code> 匹配任何 Unicode 定义的水平空白字符; 如果你只想匹配爷爷的ASCII 打字机上的空格, 你可以选择 <code>\c[SPACE],</code>\x[20]<code>或</code>&rsquo; &lsquo;`。</p>
+
+<p>可以通过传统的 Perl 分组（如 <code>alnum</code> 或 <code>xdigit</code>）或使用 Unicode 通用类别（如 <code>Lu</code>（大写字母）或 <code>Sm</code>（数学符号））来标识字符集：</p>
+
+<pre><code>&lt;alnum&gt; # traditional character class name, now in angle brackets
+&lt;:Lu&gt; # Unicode General Category, note the colon
+</code></pre>
+
+<p>可以通过定义范围或使用集合运算符, 并集, 交集, 差异等来计算其他集合。</p>
+
+<pre><code>&lt;alnum - [0..9]&gt;  # Alphanumerics, excluding 0 through 9
+&lt;alnum + :Sm&gt;     # Alphanumerics, plus Unicode-defined math symbols
+&lt;alpha &amp; xdigit&gt;  # Alphabetical hexadecimal digits; same as &lt;[ a..f A..F ]&gt;
+</code></pre>
+
+<p>如果我定期处理 Unicode 文本文件, 我可能会感觉到这些功能 ☺︎ 。</p>
+
+<h2 id="grammars">Grammars</h2>
+
+<p>我非常兴奋地阅读 Raku 的特性 - 事实上, 除了病态的好奇之外, 我被 Raku 吸引的最初原因是语言中包含了 Grammar。简化 grammar 的好方法是重构正则表达式, 例如：</p>
+
+<pre><code class="language-raku">my regex sex     { &quot;Male&quot;   || &quot;Female&quot; };
+my regex species { :i &quot;cat&quot; || &quot;dog&quot;    };
+
+if &quot;Male CAT&quot; ~~ /&lt;sex&gt; \s &lt;species&gt;/ {
+    say &quot;Sex: &quot;     ~ $/&lt;sex&gt;;
+    say &quot;Species: &quot; ~ $/&lt;species&gt;.lc;
+}
+</code></pre>
+
+<p>(波浪号是 Raku 的字符串连接操作符; 双波浪号是&rdquo;智能匹配&rdquo;, 在此上下文中应用正则表达式。)</p>
+
+<p>接下来, 你可以将正则表达式组合成一个 grammar 块, 提供一个名为 <code>TOP</code> 的特殊正则表达式, 它指示解析应该从哪里开始：</p>
+
+<pre><code class="language-raku">grammar Animal {
+    regex sex     { &quot;Male&quot;   || &quot;Female&quot; }
+    regex species { :i &quot;cat&quot; || &quot;dog&quot;    }
+
+    regex TOP {
+        &lt;sex&gt; \s &lt;species&gt;
+    }
+}
+
+if my $result = Animal.parse(&quot;Male CAT&quot;) {
+    say &quot;Sex: &quot;     ~ $result&lt;sex&gt;;
+    say &quot;Species: &quot; ~ $result&lt;species&gt;;
+}
+</code></pre>
+
+<p>因为命名正则表达式（或 rules）可以相互引用, 所以 Raku grammar 引擎可以用于构建递归下降解析器。我使用 Ragel 进行了许多解析任务, 所以我喜欢有一种Ragel-ish内置语言的想法 - 但我担心我不会很快放弃 Ragel, 也不会迁移到 Raku, 至少不是因为它的 grammar 引擎。</p>
+
+<p>Raku 的 grammar 引擎的问题 - 也许这个缺点可以在该语言的未来版本中解决 - 是如果解析因任何原因失败, 则解析方法只返回 <code>Nil</code>。没有迹象表明发生故障的地方;因此, 对于任何类型的非平凡输入,  调试 grammar 都会很痛苦。一个放错位置的字符会杀死整个解析, 而验尸官的报告是确是空白的。</p>
+
+<p>Raku 编译器是使用 Raku grammar 引擎编写的, 所以我想知道 Raku 解析器如何产生其行号和错误消息。我开始探索语言的 grammar 文件, 就像一个孩子从他父母的床头柜上掠过, 我很遗憾我曾经有过这个想法。</p>
+
+<p>Raku grammar 文件是混合了 grammar, 代码和错误消息的泡沫派对, 这已经足够糟糕了, 但这里是最重要的：Raku grammar 文件中的大多数规则都有一个额外的条件, 而不是匹配的东西, 抛出异常, 异常处理程序选择解析器的内部状态, 以确定在抛出异常之前处理了多少输入。它的工作原理, 但如果你想要的只是一些行号, 那么这是一种复制的技术。传统的解析器生成器在处理非匹配输入方面做得更好。</p>
+
+<p>这个缺点部分解释了为什么如果你的源代码中存在语法错误, Raku 的错误消息有时会无用。 Raku 的许多错误消息都很有用, 但是例如, 如果你忘记关闭引号, Raku 会告诉你文件的最后一行有错误 - 当然错误更可能在附近打开报价, 可以是文件中的任何位置。祝你好运, 因为 Raku 的异常抛出解析器提供了一些线索。</p>
+
+<p>作为一个长期的 Ragel 瘾君子, 我真的很想要 Raku 的 grammar 引擎, 但缺乏合适的故障处理意味着我不能认可它, 除非作为一个可重构的正则表达式机器。例如, Raku 可能是一个有趣的新编程语言原型平台, 但是只要看一下 Raku 的 grammar 文件, 你就会想要关闭抽屉并回到更无辜的时间。</p>
+
+<h2 id="关于标识符的注释">关于标识符的注释</h2>
+
+<p>让我们解决一些问题：Raku 标识符可以包含破折号。</p>
+
+<pre><code class="language-raku">$why-hello-there = &quot;Why, hello there!&quot;;
+</code></pre>
+
+<p>Rakuers 称之为“烤肉串”; 我被告知有良好的权威, Lispers 使用相同的案例约定, 但他们从未真正拥有与肉类相关的名称。</p>
+
+<p>Kebab 案例是 Raku 标准库中的首选案例约定, 包括函数和变量名称(例如 <code>is-prime($a-big-number)</code>)。因为 Raku 中的变量几乎总是以符号(美元符号, @符号或百分号)开头, 所以该约定通常不会对减法操作产生任何歧义。因此, 对于 Raku 而言, 这并不是一个糟糕的选择, 并且至少与 Larry Wall 对 Unicode 的赌注一致, 他的大胆愿景是, 有一天我们能够将连字符和减号作为单独的字符键入我们的计算机。</p>
+
+<p>我展示 Raku 的大多数程序员都会立刻在烤肉盒的情况下退缩, 好像有人肉挂在上面。我个人长得喜欢它。它为 Raku 代码提供了一个独特的视觉识别屏幕, 即使你不喜欢审美, 你也不得不承认它在 Shift 手指上比CamelCase 或下划线更容易。</p>
+
+<p>当然, 对你的左小指的健康有任何有益的影响可能会被 Raku 的 $@%&amp;! 变量符号。</p>
+
+<h2 id="数组和散列">数组和散列</h2>
+
+<p>Perl 5 有数组, 用 <code>@</code> 表示, 用整数索引, 散列, 前面是 <code>%</code>, 用字符串作为键;在这些块中, Perl 教堂建成了。</p>
+
+<p>Raku 具有相同的两个数据结构, 但有许多修改。一个明显的语法变化是 <code>$array[0]</code> 现在写成 <code>@array[0]</code>, 也就是说, 值访问使用数据结构的符号（@符号或百分号）, 而不是标量符号（美元符号）。</p>
+
+<p>一个重要的语义差异是数组和散列可以用值类型参数化;例如,</p>
+
+<pre><code class="language-raku">my Int @array;
+my Str %hash;
+</code></pre>
+
+<p>声明一个只存储整数的数组, 以及一个只存储字符串的散列。默认情况下, 散列键是字符串, 因此你无需对它们进行参数化。</p>
+
+<p>字面值数组用方括号写成：</p>
+
+<pre><code class="language-raku">@array = [99, 100, 101];
+</code></pre>
+
+<p>字面值散列可以用几种不同的方式编写。以下是等效的：</p>
+
+<pre><code class="language-raku">%( minutes =&gt; 3, seconds =&gt; 45 )
+%( &quot;minutes&quot; =&gt; 3, &quot;seconds&quot; =&gt; 45 )
+%( &quot;minutes&quot;, 3, &quot;seconds&quot;, 45 )
+%( :minutes(3), :seconds(45) )
+%( :3minutes, :45seconds )
+</code></pre>
+
+<p>最后一种形式感觉就像一个 hack, 但我想这比  <code>3.minutes</code> 或 <code>45.seconds</code> 这样的 Rails 方法的菠萝倒置本体更好。</p>
+
+<p>在构造散列时, 可以使用花括号代替 <code>%(...)</code>, 也就是说, 除非花括号包含默认变量 <code>$_</code>, 在这种情况下, Raku 会变得困惑并认为正在声明一个块。由于这个原因, 文档不鼓励使用花括号创建散列 - 但是当 Raku 打印散列时, 花括号是默认表示, 所以我得到关于使用什么的混合消息。在 Perl 的传统中, 确实有不止一种方法可以做到, 但在这种情况下, 我仍然在寻找一个令人满意的解释为什么。在我看来, Raku 应该只支持一个周围的散列语法, 禁止另一个, 并省下自己无数的 StackOverflow 问题标记为 #newbie。</p>
+
+<p>散列成员可以作为 <code>%hash&lt;key&gt;</code> 或 <code>%hash{&quot;key&quot;}</code> 访问。一个可爱的功能是散列可以查找键的数组, 因此 <code>%hash&lt;key1 key2&gt;</code> 返回 &ldquo;key1&rdquo; 和 &ldquo;key2&rdquo; 的值。</p>
+
+<p>如果你对字符串键不满意, 则可以在花括号内声明不同类型的键：</p>
+
+<pre><code class="language-raku">my %hash{Int};
+</code></pre>
+
+<p>或者创建一个由带有冒号前缀的任意对象键入的散列：</p>
+
+<pre><code class="language-raku">my %hash := :{ 100 =&gt; &quot;One hundred&quot;,
+               200 =&gt; &quot;Two hundred&quot;,
+               $(pi) =&gt; &quot;Three point one four one five nine&quot; }
+</code></pre>
+
+<p>对于记录, 这是创建对象散列的唯一字面语法;奇怪的 <code>$_</code> 禁令也适用于此。并注意上面的 <code>$()</code> 语法, 必须防止 Raku 将 <code>pi</code> 解释为字符串。关于 Raku 比 Perl 5 更加一致的所有言论, 肯定有很多小规则。</p>
+
+<h2 id="列表">列表</h2>
+
+<p>从技术上讲, Perl 5 有第三个数据结构, 即列表。列表可以赋值给数组或散列 - 列表的值用逗号分隔并用圆括号括起来 - 但它们本身是不可变的, 并且不能显式绑定到变量。</p>
+
+<p>列表仍然存在于 Raku 中（并且是不可变的）, 但与先前的语言不同, Raku 允许你使用 bind-to(<code>:=</code>)运算符将列表绑定到变量以供以后重用：</p>
+
+<pre><code class="language-raku">my @list := (1, &quot;One&quot;, pi);
+</code></pre>
+
+<p>给列表中的项(item)赋值可能会导致错误：</p>
+
+<pre><code class="language-raku">@list[0] = 2
+# Cannot modify an immutable Int (1)
+</code></pre>
+
+<p>请注意, 此错误消息表示你无法修改 Int, 而不是不能修改 List。如果列表包含变量, 则可以修改变量的内容, 而无需更改实际的列表（仍包含变量）：</p>
+
+<pre><code class="language-raku">my $value = 10;
+my @list2 := (1, 2, $value);
+
+@list2[0] = pi; # Error: Cannot modify an immutable Int
+@list2[1] = pi; # Error: Cannot modify an immutable Int
+@list2[2] = pi; # Works
+
+say @list2; # (1 2 3.14159265358979)
+say $value; # 3.14159265358979
+</code></pre>
+
+<p>很奇怪, 是吗？从某种意义上说, 因为列表本身是不可变的, 所以值赋值只是重新路由到特定的列表成员。通过这种方式, 列表赋值有点自然地遵循：</p>
+
+<pre><code class="language-raku">my $value1 = 1;
+my $value2 = 2;
+
+($value1, $value2) = ($value2, $value1);
+</code></pre>
+
+<p>但是不要太兴奋, 因为这个赋值不会像你期望的那样表现：</p>
+
+<pre><code class="language-raku">my $value1 = 1;
+my $value2 = 2;
+my $value3 = 3;
+
+(($value1, $value2), $value3) = ((100, 200), 300);
+</code></pre>
+
+<p>由于我不清楚的原因, 在赋值之前左侧是扁平的, 并且相当于：</p>
+
+<pre><code class="language-raku">($value1, $value2, $value3) = ((100, 200), 300);
+</code></pre>
+
+<p>因此, 在两种情况下, <code>$value1</code> 被赋值为 (100,200), <code>$value2</code> 被赋值为 300, <code>$value3</code> 什么都没有得到。有一个单独的冒号前缀用于进行解构赋值（请注意, 在此用法中需要 bind-to <code>:=</code>）：</p>
+
+<pre><code class="language-raku">:(($value1, $value2), $value3) := ((100, 200), 300);
+</code></pre>
+
+<p>在上面的行中, <code>$value1</code> 得到 100, <code>$value2</code> 是 200, <code>$value3</code> 成为 300. 我不理解在列表赋值和完全解构赋值之间进行语法区分的逻辑 - 并且第一种情况静默地展平左侧列表结构 - 但你有它。</p>
+
+<p>列表可以包含其他列表, 还包含数组和散列。数组和散列可以包含数组和散列（这仍然是 Perl）, 也可以包含列表。</p>
+
+<p>关于列表, 我要注意的最后一件事是它们可以使用特殊的管道运算符展开：</p>
+
+<pre><code class="language-raku">my @list := (2, 3, 4);
+
+say (1,  @list, 5); # &quot;(1 (2 3 4) 5)&quot;
+say (1, |@list, 5); # &quot;(1 2 3 4 5)&quot;
+</code></pre>
+
+<p>这在调用函数时会派上用场。但是在我们还是在谈论困扰我的事情后, 再谈到这一点。</p>
+
+<h2 id="itemization">Itemization</h2>
+
+<p>如果你对列表与数组的不同之处并不特别感兴趣, 请跳过本节。</p>
+
+<p>数组是一个列表, 但数组（或散列）中的项与列表中的项的行为不同：</p>
+
+<pre><code class="language-raku">my @array = (1, 2, 3);
+my @list := (1, 2, 3);
+
+say @array.WHAT;        # &quot;(Array)&quot;
+say @list.WHAT;         # &quot;(List)&quot;
+
+say @array[0].WHAT;     # &quot;(Int)&quot;
+say @list[0].WHAT;      # &quot;(Int)&quot;
+
+say @array[0].VAR.WHAT; # &quot;(Scalar)&quot;
+say @list[0].VAR.WHAT;  # &quot;(Int)&quot;
+</code></pre>
+
+<p>数组有一个额外的, 隐藏的间接层, 文档称之为逐项化(itemization)。与列表不同, 该数组实际上充满了透明容器, 这些容器指向实际值, 并且可以通过 <code>.VAR</code> 方法访问。赋值给数组成员确实修改了容器, 而修改列表成员则会操作项(item)本身。</p>
+
+<p>但是, 列表也可以使用特殊的美元函数 <code>$(...)</code> 在每个成员的基础上拥有这一间接层。你仍然无法修改列表, 但项化(itemized)的成员免于了列表展平操作。</p>
+
+<p>分项(Itemization)是已经很复杂的语言的一个令人困惑的部分 - 大多数情况下, 方法直接通过容器, 但是因为列表的逐项列表成员没有被 <code>List.flat</code> 展平, 当你从函数返回一个嵌套列表时, 你是根据你希望调用者在返回值上调用 <code>List.flat</code> 时期望调用者所期望的内容, 期望知道哪些成员是逐项列出的, 哪些不是。</p>
+
+<p>了解了吗？</p>
+
+<p>该文档提供了五种启发式方法, 用于决定何时逐项列出从函数返回的列表中的项目;在几十个读数之后, 启发式对我来说仍然大多数是笨蛋, 所以我想我会坚持简单的列表和对象以及对象数组。</p>
+
+<h2 id="函数">函数</h2>
+
+<p>在我使用的所有语言中, Raku 可能有我最喜欢的函数调度机制; 它当然是最灵活的。</p>
+
+<p>函数参数可以是命名的或位置的, 但不能既是命名参数又是位置参数。命名参数前面带有冒号：</p>
+
+<pre><code class="language-raku">sub triangle-area(:$base, :$height) {
+    return 0.5 * $base * $height;
+}
+
+triangle-area( height =&gt; 3, base =&gt; 4 ); # 6
+triangle-area(4, 3); # error, &quot;Too many positionals passed&quot;
+</code></pre>
+
+<p>签名可以解构它们的参数, 这是函数式语言中的一个流行特性：</p>
+
+<pre><code class="language-raku">sub first-item([$head, *@tail]) {
+    return $head;
+}
+
+my @array = (99, 100, 101);
+first-item(@array); # 99
+</code></pre>
+
+<p>如果你错过了将所有参数放入数组的旧 Perl 5 惯例, 你可以使用所谓的 slurpy：</p>
+
+<pre><code class="language-raku">sub add-em-up(**@numbers) {
+    return @numbers.sum;
+}
+
+add-em-up(1, 2, 3); # returns 6
+</code></pre>
+
+<p>上一节中提到的管道运算符也可用于将常规列表作为参数列表传递：</p>
+
+<pre><code class="language-raku">my @args := (3, 4, 5);
+ 
+add-em-up(|@args); # equivalent to add-em-up(3, 4, 5)
+</code></pre>
+
+<p>散列解构：</p>
+
+<pre><code class="language-raku">sub volume(%( :length($x), :width($y), :depth($z) )) {
+    return $x * $y * $z;
+}
+
+my %dimensions = %(depth =&gt; 2, length =&gt; 10, width =&gt; 5);
+volume(%dimensions); # 100
+</code></pre>
+
+<p>并且可以使用管道运算符展开为命名参数：</p>
+
+<pre><code class="language-raku">sub triangle-area(:$base, :$height) {
+    return 0.5 * $base * $height;
+}
+
+my %dims = %( base =&gt; 4, height =&gt; 5 );
+triangle-area( %dims); # Error: Too many positionals passed
+triangle-area(|%dims); # Works
+</code></pre>
+
+<p>多重调度不仅发生在类型上, 如 Julia 和 C++, 还发生在值上, 如 Elixir 和 Haskell。通常有更快的<a href="http://www.evanmiller.org/mathematical-hacker.html">方法</a>来计算阶乘, 但是：</p>
+
+<pre><code class="language-raku">multi sub factorial(0) { 1 } # &quot;return&quot; and semicolon are optional, btw
+multi sub factorial(Int $n where * &gt; 0) { $n * samewith($n-1) }
+
+factorial(4);   # 24
+factorial(4.0); # type error
+</code></pre>
+
+<p>注意 <code>samewith</code> 在第二个从子中的使用; 这是我在 Erlang 中执行的一项功能, 这是一个执行递归的关键字, 因此你可以重命名函数, 而无需更改其中的所有递归调用。这是 Raku 中的一个受欢迎的功能。</p>
+
+<p>候选子句按顺序进行计算, 但请注意, 在 Raku shell 中定义多分派函数可能会出现意外结果。每个子句似乎只知道它之前的子句, 因此例如切换上面的两个子句会导致运行时错误。但是, 如果你使用常规编译器, 则切换顺序很好。</p>
+
+<p>在目前为止的几个地方, 我使用了 “Whatever Star”, 它创建了一个以自身为参数的闭包：</p>
+
+<pre><code class="language-raku">my $add-two = * + 2;
+say $add-two(pi); # 5.14159265358979
+</code></pre>
+
+<p>Whatever Star 是一些奇怪的 Raku 表达式的骨架键, 如下所示（顺便提一下, 强化 Unicode 运算符的情况）：</p>
+
+<pre><code class="language-raku">(1, 2, 3).map: * * 2    # multiply by 2; first * is Whatever, second is multiply
+(1, 2, 3).map: * ** 2   # raise Whatever to power of 2
+</code></pre>
+
+<p>我已经避开了 Whatever Star, 因为除了使 Raku 看起来像是 brainfuck 的直系后代之外, 它还受到对我的理解过于微妙的规则的支配。所有以下工作, 并做同样的事情（计算数字列表的平方根）：</p>
+
+<pre><code class="language-raku">(1, 4, 9).map: *.sqrt
+(1, 4, 9).map: { $_.sqrt }
+(1, 4, 9).map: { sqrt($_) }
+</code></pre>
+
+<p>这不起作用：</p>
+
+<pre><code class="language-raku">(1, 4, 9).map: sqrt(*)
+</code></pre>
+
+<p>我确信在互联网上某处存在这种差异的有效解释。在这样的情况下, 我喜欢说 monad 必须再次表现, 并继续前进。</p>
+
+<h2 id="nativecall">NativeCall</h2>
+
+<p>Raku 函数调用对我来说最令人愉快的惊喜 - 实际上 Raku 中的一些更令人愉快的惊喜 - 是与 C 库几乎没有摩擦的接口。</p>
+
+<p>为了感受和 C 语言的互操作, 我决定使用 Raku 来包装一个我最喜欢的 C 库 <a href="https://libxlsxwriter.github.io/">libxlsxwriter</a>。具有讽刺意味的是, 这个 C 库开始是作为 <a href="http://search.cpan.org/~jmcnamara/Excel-Writer-XLSX/lib/Excel/Writer/XLSX.pm">Perl 5 库</a>存在的, 后来被移植到 C, 但是, 唉, 从来没有移植到 Raku. 顾名思义, libxlsxwriter 可以用来生成基于 XML 的 Excel 文档。</p>
+
+<p>（这是我提出的代码, 如果你想在家里跟随：<a href="https://github.com/evanmiller/XLSX-Writer">XLSX::Writer</a>, 一个用于生成 Excel 电子表格的 Raku 库; 请原谅 SEO 关键字。）</p>
+
+<p>Raku 中的 NativeCall 模块解锁了各种用于调用 C 代码的黑魔法。将 Raku 类声明为不透明的 C 指针很简单：</p>
+
+<pre><code class="language-raku">class Writer::Workbook is repr('CPointer');
+</code></pre>
+
+<p>声明一个返回不透明指针对象的 C 函数就是这样子：</p>
+
+<pre><code class="language-raku">sub workbook_new(Str is encoded('utf8'))
+    returns Writer::Workbook is native(&quot;xlsxwriter&quot;) {...}
+</code></pre>
+
+<p>NativeCall 自动将 Raku 字符串转换为 C 字符串, 并自动将其转换为一个选择的编码（通过 <code>is encoded(…)</code>）。上面花括号之间的省略号是字面省略号, 但是可以在它们的位置使用 Whatever Star（我不知道为什么）; 无论如何, 现在可以从任何方法那儿调用 <code>workbook_new</code> 例程了。例如, 如果在 <code>Writer::Workbook</code> 类中创建一个 <code>new</code> 方法：</p>
+
+<pre><code class="language-raku">method new(Str $path) { workbook_new($path) }
+</code></pre>
+
+<p>然后可以在脚本中使用如下代码打开一个工作簿：</p>
+
+<pre><code class="language-raku">use Writer::Workbook;
+
+my $workbook = Writer::Workbook.new(&quot;/path/to/workbook.xlsx&quot;);
+</code></pre>
+
+<p>包装过程很快变成一种三步华尔兹：将 C 函数声明为子例程, 为一个漂亮的 OO 接口创建一个方法, 并在测试脚本中添加几行。一二三, 一二三, 一二三&hellip;&hellip;</p>
+
+<p>如果 C 库需要了解 C 结构, 则镜像数据布局非常简单。例如, 这个 C 结构：</p>
+
+<pre><code class="language-raku">typedef struct lxw_datetime {
+    int year;
+    int month;
+    int day;
+    int hour;
+    int min;
+    double sec;
+} lxw_datetime;
+</code></pre>
+
+<p>变为：</p>
+
+<pre><code class="language-raku">class Writer::CDateTime is repr('CStruct') is export;
+has int32 $.year;
+has int32 $.month;
+has int32 $.day;
+has int32 $.hour;
+has int32 $.min;
+has num64 $.sec; # alignment is ok!
+</code></pre>
+
+<p>我无法弄清楚 intNativeCall 中是否存在特定于平台的 C 类型（ Rust 和 Julia 提供此类型）, 但 int 在所有现代计算机上都是 32 位, 所以我没有失去任何睡眠。</p>
+
+<p>一个特别令人惊喜的是, NativeCall 使用正确的对齐规则来填充数据结构; 在上面的例子中, sec 字段从 C 和 Raku 结构中的字节 24 开始, 即使它前面只有 20 个字节（5个4字节整数）。子弹躲闪了。然后将 C 结构初始化为常规 Raku 对象：</p>
+
+<pre><code class="language-raku">my $now = DateTime.now;
+my $dt = Writer::CDateTime.new(:year($now.year), :month($now.month),
+                               :day($now.day), :hour($now.hour),
+                               :min($now.minute), :sec($now.second));
+</code></pre>
+
+<p>事情变得有趣。NativeCall 总是传递指向结构的指针, 因此你不必在 Raku 代码中使用指针类型。这样这个 C 函数：</p>
+
+<pre><code class="language-raku">void workbook_set_creation_datetime(lxw_workbook *workbook,
+                                    lxw_datetime *datetime);
+</code></pre>
+
+<p>在Raku中会被很好地和整齐地声明：</p>
+
+<pre><code class="language-raku">sub workbook_set_creation_datetime(Writer::Workbook, Writer::CDateTime)
+    is native(&quot;xlsxwriter&quot;) {...}
+</code></pre>
+
+<p>并包含在 Writer::Workbook 方法中：</p>
+
+<pre><code class="language-raku">method set-creation-datetime(Dateish $date) {
+    my $dt = Writer::CDateTime.new(:year($date.year), :month($date.month),
+                                   :day($date.day), :hour($date.hour),
+                                   :min($date.minute), :sec($date.second));
+    workbook_set_creation_datetime(self, $dt)
+}
+</code></pre>
+
+<p>然后从脚本调用：</p>
+
+<pre><code class="language-raku">my $wb = Writer::Workbook.new(&quot;/path/to/workbook.xlsx&quot;);
+$wb.set-creation-datetime(DateTime.now);
+</code></pre>
+
+<p>C 和 Raku 之间的大多数类型映射都是自动且直接的; 我遇到的唯一例外是 num64 类型, 它需要 Num（浮点）类型, 并且不接受通用数字（Num, Int 或 Rat）。但 <code>.Num</code> 转换方法是一种简单的解决方法。</p>
+
+<p>我将提到另一种语言特性, 它使包装 C 库变得愉快, Raku 的枚举构造：</p>
+
+<pre><code class="language-raku">enum LibraryError &lt;LXW_NO_ERROR
+               LXW_ERROR_MEMORY_MALLOC_FAILED
+               LXW_ERROR_CREATING_XLSX_FILE
+               LXW_ERROR_CREATING_TMPFILE
+               # many more
+               &gt;;
+</code></pre>
+
+<p>枚举的每个值实际上都是一个键值对, 从零值开始。一个很好的例子是, 如果 C 函数返回一个整数, Raku 端可以轻松访问符号表示：</p>
+
+<pre><code class="language-raku">sub some_c_function() returns int32 is native(&quot;something&quot;) {...}
+
+my Int $code = some_c_function();
+say LibraryError($code) # LXW_NO_ERROR, etc
+</code></pre>
+
+<p>枚举可以以零以外的值开头：</p>
+
+<pre><code class="language-raku">enum Script &lt;&lt;:superscript(1) subscript&gt;&gt;;
+</code></pre>
+
+<p>或者有指定的值：</p>
+
+<pre><code class="language-raku">enum Color ( black =&gt; 0x1000000, blue =&gt; 0x0000FF,
+             brown =&gt; 0x800000, cyan =&gt; 0x00FFFF);
+</code></pre>
+
+<p>我毫不犹豫地建议进一步扩展这种语言 - 即使是在这一点上的一个小小的建议可能就像在生命的意义中在Creosote先生那里做的致命薄荷- 但Raku可能从Go借用的一个特征是通过增加枚举值位移, 即Go太聪明的1 &lt;&lt; iota构造。</p>
+
+<p>Raku枚举功能的唯一真正的缺点是它看起来枚举符号在声明范围内必须是唯一的, 否则你会收到警告和奇怪的错误。我不希望被导出到范围的符号, 然后通过枚举名访问符号（LibraryError::none, Color::black等）。现在, 如果颜色和LibraryError枚举在同一范围内声明的, 然后Color::none和LibraryError::none会产生冲突。所以你必须要么使用C风格的全局唯一名称（LIBRARY_ERROR_NONE,, LIBRARY_COLOR_NONE&hellip;）, 这对我来说感觉不太Perlish, 要么将每个枚举放在自己的文件中然后导入它, 这非常不方便。</p>
+
+<p>尽管如此, 在Raku中包装C库是一种无痛的体验, 即使是令人上瘾的体验。你甚至可以使用Raku函数或闭包作为C回调, int32直接在Raku代码中使用本机类型（以及所有这些）。但是, 此功能的有用性有所减轻, 因为你无法从void *上下文指针获取Raku对象, 这是设计了多少个C API。另一个限制是NativeCall不支持按值传递或返回C结构; 当然, 有一个黑客。</p>
+
+<h2 id="并发">并发</h2>
+
+<p>Raku 有许多用于处理并发的抽象 - promises, channel, 和称为 supplies 的东西 - 但我认为从 Raku 执行模型的画像开始更有帮助, 这样你就可以看到这些抽象实际上在做什么以及什么他们的局限是什么。</p>
+
+<p>Raku 运行在一个叫做 MoarVM 的虚拟机上, MoarVM 具有线程调度器, 垃圾收集器和事件循环。与 Python 和 Ruby 的 C 实现不同, MoarVM 没有全局解释器锁, 因此 Raku 代码总是可以在单个进程内并发地执行。在撰写本文时, Raku 线程直接映射到 OS 线程, 但这种行为将在即将发布的 “Diwali”（Raku.d）版本中发生变化, 它将支持<a href="http://www.evanmiller.org/why-im-learning-perl-6.html">一定程度</a>的 M:N 线程复用。Raku 线程有自己的存储空间, 但是能够访问彼此的对象, 因此必须注意避免竞争条件。提供了一种锁机制, 但不鼓励使用该语言的消息传递抽象。</p>
+
+<p>MoarVM 将使用的 OS 线程数量有固定的上限; 此数字默认为 16, 但可以使用环境变量 <code>RAKUDO_MAX_THREADS</code> 进行更改。如果你的代码尝试使用的线程启动数超过该数量的后台任务, 则执行可能会死锁。</p>
+
+<p>垃圾收集器是世代的, 并且在它运行时停止所有线程的所有执行（即它是停止世界）。垃圾收集器本身是多线程的。它将“运行直至完成”, 因此它没有与 Go 的垃圾收集器相同的时间保证。</p>
+
+<p>为了处理异步 I/O, MoarVM 使用 libuv, Node.js 中的“秘密酱”; 我没有尝试过, 但在单线程 Raku 服务器中处理成千上万的并发网络连接不应该带来任何难以克服的挑战。</p>
+
+<p>尽管如此, 让我们来谈谈 Raku 的核心并发抽象：promises, channel 和 supplies。</p>
+
+<p><code>start</code> 关键字在另一个线程上启动代码, 假定线程可用; 这是一个快捷方式的 <code>Promise.start</code>, 应该满足 <code>await</code>：</p>
+
+<pre><code class="language-raku">my $task = start { 
+    say &quot;Hello from {$*THREAD.id}&quot;;
+}
+
+say &quot;Ahoy from {$*THREAD.id}&quot;;
+await $task;
+</code></pre>
+
+<p>如果运行上面的代码, 你将看到问候语是从不同的线程启动的, 并且消息可能以任何顺序出现。请注意,  在 Raku.c 中, <code>await</code> 从当前线程返回, 但可能在将来的版本中从不同的线程返回。</p>
+
+<p>要查看正在运行的线程池, 请尝试启动超过 16 个任务：</p>
+
+<pre><code class="language-raku">my @p = (1..32).map: { start { say &quot;Sleeping on {$*THREAD.id}&quot;; sleep 5; } };
+await @p;
+</code></pre>
+
+<p>你应该分两批看到生成的消息; 16 个消息会立即看到, 使用线程池中的每个线程, 然后是后面的 16 个消息（5秒后）, 重用那些相同的线程。你可以想象, 如果某些代码等待特定线程启动, 代码可能会意外死锁, 但线程池中没有可用的线程。如果 Raku 线程正在等待来自 channel 的消息, 则 Raku 的未来版本应该通过在 OS 线程上移动 Raku 线程来缓解这些线程耗尽问题。这将使实现更接近 Erlang, Go 或 .NET 的并发模型。</p>
+
+<p>我们正在谈论的 Channels, 在 Raku 中用于线程通信。该语言包括用于在 channel 上接收消息的 react/whenever 关键字。</p>
+
+<pre><code class="language-raku">my $channel = Channel.new;
+
+my $p = start {
+    react {
+        whenever $channel { say &quot;Hello from {$*THREAD.id}! You said \&quot;$_\&quot;&quot;; }
+    }
+};
+
+my $message = &quot;Ahoy&quot;;
+say &quot;This is {$*THREAD.id}. Let's send \&quot;$message\&quot; to our buddy (twice).&quot;;
+
+$channel.send($message);
+$channel.send($message);
+$channel.close; # mandatory
+
+await $p;
+</code></pre>
+
+<p><code>react</code> 是一个阻塞构造, 只有当它正在侦听的每个 channel 都已关闭时, 或者从 <code>react</code> 里面显式地调用 <code>done</code>, 才会返回。在上面的示例中, 未能关闭channel（通过注释掉 # mandatory 标记行）将导致 <code>start</code> 块永远不会返回, 因此修改后的程序将导致 <code>await</code> 调用挂起。</p>
+
+<p>Raku 中的 Channels 类似于 Go 的通道, 或者 Erlang 中的消息传递, 但具有重要的差异。Go 的通道可以类型化, 并且可以对 Erlang 的消息进行模式匹配; Raku channels 上的监听者只需接受任何发送的内容。Go 和 Erlang 都在接收端有一个超时机制; 而 Raku 没有。（我想, 随着 Raku 社区获得并发和分布式系统的经验, 他们将要求在它们的语言中使用类似的功能。）</p>
+
+<p>在 Raku 中处理并发性的最后一点抽象称为 supply。Supplier 对象（通过 <code>emit</code> 方法）向其 Supply 对象发出一系列值; Supply 可以有一个或多个监听者, 叫做水龙头(taps)。水龙头(Taps)不是对象, 而是对每个提供的值执行单次的回调函数。</p>
+
+<p>默认情况下, 在调用 <code>Supplier.emit</code> 的线程上调用 tap 。例如：</p>
+
+<pre><code class="language-raku">my $supplier = Supplier.new;
+my $supply = $supplier.Supply; 
+
+$supply.tap({ say &quot;Tap #1 got \&quot;$_\&quot; on {$*THREAD.id}&quot; });
+$supply.tap({ say &quot;Tap #2 got \&quot;$_\&quot; on {$*THREAD.id}&quot; });
+
+say &quot;Sending values from {$*THREAD.id}...&quot;;
+$supplier.emit(&quot;Hello&quot;);
+</code></pre>
+
+<p>如果你运行该代码, 你将看到所有操作都发生在单个线程上。Supplies 不引入并发; 他们更像是隐藏并发的窗帘。例如, 在从通道（例如, 在 <code>react</code> 块内）接收消息时发出值的 supplier 将确保应用程序逻辑以可预测的顺序运行在可预测的线程上。</p>
+
+<p>supplies 的一个更有趣的应用是从外部程序接收数据。在 Perl 5 中, 从标准输出流和标准错误流接收数据都是一个令人头痛的问题; 在 Raku 中, 他们俩都有自己的 supply：</p>
+
+<pre><code class="language-raku">my $proc = Proc::Async.new(:r, 'echo',
+    'Man is amazing, but he is not a masterpiece');
+
+$proc.stdout.tap({ say &quot;OUT: $_&quot;; });
+$proc.stderr.tap({ say &quot;ERR: $_&quot;; });
+
+await $proc.start;
+</code></pre>
+
+<p>顺便说一下, Proc::Async 类也有 <code>write</code> 和 <code>close-stdin</code> 方法, 方便与外部程序的双向交互。</p>
+
+<p>也可以从 supply 访问 UNIX 信号：</p>
+
+<pre><code class="language-raku">signal(SIGINT).tap( { say &quot;Perhaps the artist was a little mad...&quot;; exit 0 } )
+</code></pre>
+
+<p>请注意, 在此示例和前一个示例中, 因为 <code>emit</code> 从前台后面调用, 所以这些特定的回调将在主程序中不同的线程上执行。</p>
+
+<p>并发在任何语言中都不容易, 但 Raku 似乎有一套很好的抽象来编写复杂的程序而不会引入竞争条件。但是, 这些抽象的线程模型乍一看并不明显, 似乎是StackOverflow 上常见的困惑源。我也没有看到并发代码中关于异常处理的指导, 这是无共享 Erlang 侨民之外的 bug 和死锁的常见来源。</p>
+
+<p>最后, 我并没有完全卖掉 supplies ​​的理由; 他们的横幅用例（信号处理和 stdout/stderr 处理）实际上并不需要顺序执行不同的回调, 并且因为 <code>emit</code> 发生在标准库的深处, 所以回调最终会在 Mystery Thread 上执行, 直到主应用程序被关注到。</p>
+
+<p>我怀疑这些 Supply 用例会更好地服务于能够向多个订阅者广播消息的通道。例如, 以下假设的 API 更详细, 但会更清楚地说明哪个代码在哪个线程上执行：</p>
+
+<pre><code class="language-raku">my $proc = Proc::Async.new(:r, 'echo',
+    'Man is amazing, but he is not a masterpiece');
+
+# Get channels for the external process's output
+my $out = $proc.stdout-channel;
+my $err = $proc.stderr-channel;
+
+# Start a worker thread that listens on the channels
+my $worker = start {
+    react {
+        whenever $out { say &quot;OUT: $_&quot;; } # Print stdout on the worker
+        whenever $err { say &quot;ERR: $_&quot;; } # And also stderr on the worker
+    }
+};
+
+# Run the external program
+await $proc.start;
+
+# Wait for the worker to finish
+await $worker;
+</code></pre>
+
+<p>现在, channels 随机选择一个监听者来发送消息, 因此即使数据流是通过通道传送的, 就像上面的假 API 一样, 你也无法插入多个接收器。目前的 1:1 通道设计非常适合工作线程设计, 但对于事件监听器则不太合适。</p>
+
+<h2 id="所以呢">所以呢？</h2>
+
+<p>正如你可能猜到的那样, Raku 还有更多 - 我几乎遗漏了它的对象模型, 类层次结构, 数组编程功能和控制流结构, 但我认为我已经覆盖了足够的领域来提供一般性对语言和运行时的看法。直截了当地提出这个问题, Raku 擅长什么呢？</p>
+
+<p>Raku 的数学支持非常出色 - 复数和有理数可以无缝处理 - 但我担心 Raku 对于严肃的科学数字运算来说太慢了。为了跟上 Joneses 的步伐, 需要对原生库进行大量投资, 比如 Python 的 Numpy, 或像 Julia 这样的内置 JIT 编译器。据说有一个 JIT 在工作, 但它似乎已经存在了好几年, 所以我没报多大希望。</p>
+
+<p>Raku 的字符串处理, 特别是 Unicode 支持, 是无与伦比的。我喜欢新的正则表达式语法。然而, grammar 引擎有点令人失望, 尽管我最初投入了很大热情, 但它不会取代解析器生成器, 至少现在不在我的工具箱中。编译Raku 代码和处理来自磁盘的文本文件的操作相对较慢, 并且非瞬时 VM 启动时间都没有帮助。Raku 可能很难在 UNIX 管道世界中取代 Perl 5, 至少目前的形式如此。</p>
+
+<p>Raku 在并发方面比 Ruby 和 Python 更好。但对于高吞吐量, 低延迟的应用程序, 当前版本明显落后于 Go, Erlang 或 .NET。它将开始在 6.d &ldquo;Diwali&rdquo;(排灯节)版本赶上来, 它引入了 M:N 线程多路复用, 但 VM 仍然需要一些严肃的战斗测试和战斗调优才能宣称与其他平台竞争。</p>
+
+<p>测试很简单 - 只需将测试脚本放在 <code>t/</code> 目录中并遵循 Test 模块文档 - 但我仍然不确定编写函数和模块文档是否有更好的方法。人们似乎只是把所有的东西放在 README.md 中, 我没有看到任何以 pydoc 或 javadoc 的方式从源代码中提取 API 的东西。</p>
+
+<p>鉴于上述情况, 我很难证明 Raku 目前达到了“真正能用”。然后, 我从来没想过 Ruby 作为服务器技术会有这么大的影响, 所以任何事情都可能发生, 我想。</p>
+
+<p>我喜欢编写 Raku 程序。泛型, 类型检查和 OO 模型比 Perl 5 的 Little Rascals Clubhouse 态度更有信心, 同时大大缩短了 Rust 或 Haskell 的奴隶制自由心态。Raku 的功能让我可以提炼出我喜欢的基本逻辑。编写难以阅读的 Raku 代码很容易, 但我个人更喜欢被视为一个负责任的成年人, 而不是像一个被困在父亲知道最好的 Go 家中的少年。</p>
+
+<p>尽管如此, 这种语言依旧令人沮丧; 越界数组访问只返回 <code>Nil</code>, 这两行代码：</p>
+
+<pre><code class="language-raku">($one, $two, $three) = (1, 2);
+($one, $two, $three) = (1, 2, 3, 4);
+</code></pre>
+
+<p>每个编译都能运行。对于在这些情况下表达至少温和关注的编译器, 我会更加舒服, 因为代码中可能存在 bug。</p>
+
+<p>Raku 中的大多数内容都有很好的名字, 但依赖于 sigils 等等, 这使得许多操作符 - 以及 Raku 中的许多操作符 - 难被谷歌搜索到。有时候我觉得我正试图从 Beetle Bailey 漫画中查找一个咒骂词。这是一种单一类型角色可以传达重要世界的语言; 我个人喜欢这种语言的简洁美学, 但我也比大多数认为自己心理健康的人更喜欢代数问题。喜欢用修饰符关键词拼写的程序员可能会被 Raku 的承载星号和管道符号等推迟。</p>
+
+<p>Raku 语言很庞大, 并且有许多陷阱门。学习有时可能会像参观 Willy Wonka 的巧克力工厂一样, 每个房间似乎都有新奇的效果。但是, 如果在足够的距离观察, 工厂平面图基本上是连贯的, 甚至是可预测的：我发现自己在不止一些场合正确地猜测句法结构以及如何做到这一点或那个。我特别喜欢 Raku 的函数调度, 感觉就像 Erlang 一样, 增加了命名参数, varargs 和内置类型检查。我可能会开始将 Raku 用于切片和骰子系统脚本, 就像我使用 Ragel 充实语法或使用 Julia 来探索数学问题一样。</p>
+
+<p>那么 Raku 最适合什么？</p>
+
+<p>也许这对其他人来说并不是最激动人心的, 但在我看来, 最直接的应用是将 C 库粘合在一起并为 C 库编写命令行包装器。对于我维护的 <a href="https://github.com/WizardMac/ReadStat">ReadStat</a> 库, 我非常乐意用干净的原生接口 Raku 脚本替换 <code>bin/</code> 目录中的 Hieronymous Bosch hellscape 。（如果要实现梦想, 我需要对 NativeCall 进行上述改进, 按值传递结构体并能够将上下文指针转换为 Raku 对象。）</p>
+
+<p>这听起来很愚蠢, 但如果全屏终端程序再次流行, Raku 的并发性和强大的系统支持将使它成为一个很好的选择。我会把<a href="https://github.com/evanmiller/hecate">赫卡特:地狱的十六进制编辑器</a>移植到心跳中, 我很想看到 Raku 邮件客户端, 文本编辑器等等。（终极疯狂编程运动肯定会在任何一天火起来。）</p>
+
+<p>我之前没有提到这一点, 但 Raku 在制作命令行工具方面非常聪明。如果这是你的文件：</p>
+
+<pre><code class="language-raku"># script.pl6
+sub MAIN(Str $input-file, Int :$lines = 10) {
+    say &quot;blah&quot;;
+}
+</code></pre>
+
+<p>不带任何参数运行该脚本会给出：</p>
+
+<pre><code class="language-raku">$ raku script.pl6
+Usage:
+  script.pl6 --lines=&lt;Int&gt; &lt;input-file&gt;
+</code></pre>
+
+<p>让你微笑了吧？（Raku: 命令行工具中的 Ruby on Rails。）</p>
+
+<p>Raku 中有许多意想不到的惊喜; 一些, 就像这些命令行缓冲一样, 让我感到奇怪, 但其他的, 比如关于散列花括号里面的 <code>$_</code> 规则或任何与项目化(itemization)有关的规则, 让我傻眼了。</p>
+
+<p>关于 Raku 中的生物舒适的一些注释。编译器的错误消息通常是足够的, 但有时它们是不正确的或不相关的。REPL 非常有用, 但对于多行复制粘贴和多字节字符退格需要更好的支持。默认的 Vim 高亮很慢, vim-raku 软件包有一个烦人的<a href="https://github.com/vim-perl/vim-raku/issues/1">高亮显示 bug</a>, 它已经在 GitHub 上开放了将近一年。Travis CI 支持 Raku, 但每次都会下载和编译语言, 每次测试运行都会增加几分钟。这不是西大荒, 确切地说, 但它确实感觉像一个妈妈和流行的酒店, 你必须摇晃厕所把手, 还可能打击电视屏幕的一侧, 直到图片被清除。</p>
+
+<h2 id="如果它太棒了-我怎么没听说过呢">如果它太棒了, 我怎么没听说过呢？</h2>
+
+<p>语言与他们的社区是不可分割的, 因此有些人对此有所分离。我发现自己, 在困惑的深夜时刻, 在 #raku 的IRC 频道上, 寻求有关这个语言的更精细点和更暗角的帮助。回复通常很有帮助, 而且总是彬彬有礼。至少令我困惑的一个问题之一结果是 VM 中的一个 bug, 这个 bug 很快被修复了。</p>
+
+<p>关于 IRC 频道的大多数讨论都是技术性的, 但如果你潜伏得足够长, 那么很难不错过 Raku 没有被广泛采用的挫折感。有一种正义的愤慨, 语言是非常好的 - 所以该死的（我在预测）, 人们什么时候开始认真对待我们？</p>
+
+<p>我在软件业务上花了足够长的时间, 不仅仅是熟悉这种感觉。没有什么比花费一年或两年的时间更令人沮丧 - 或者在 Raku 花了十五年的情况下 - 并且无法确保潜在用户的五分钟时间。</p>
+
+<p>当然, 解释是平庸的：如果你是一个极客, 编写正确的计算机代码要比重新编程人们的观念容易得多。</p>
+
+<p>我不觉得我有资格向 Raku 那帮人提供营销建议, 但是为了纪念他们的蝴蝶吉祥物 - 一个名叫 Camelia 的精彩精灵, 它掩盖了一个复杂的庞大世界 - 我将通过指向它们的大蝴蝶而分道扬镳..西方文学的收藏家, 来自约瑟夫康拉德的吉姆勋爵的角色斯坦。</p>
+
+<p><img src="http://www.evanmiller.org/images/a-review-of-perl-6/stein.jpg" alt="img" /></p>
+
+<p>斯坦（右）, 吉姆（左）偶尔的良心, 改编于 1965年的电影。（哥伦比亚影业）</p>
+
+<p>事实上, 斯坦因在 19 世纪后期的冒险生活中度过了他的青春, 在公海航行, 与土匪作战, 在东印度群岛生活, 以及所有这些。他的角色转折点是一个故事, 他被七名潜在的刺客击中, 其中三人从他的左轮手枪中连续射击, 并继续追逐一只穿过田野的蝴蝶。他终于在帽子的帮助下抓住了它：</p>
+
+<blockquote>
+<p>翻牌！我找到他了！当我起床的时候, 我兴奋地摇晃着一片叶子, 当我打开这些美丽的翅膀, 确定我有一个罕见的, 非常完美的标本时, 我的头转了一圈, 我的双腿变得如此虚弱, 我不得不坐下来在地上。在给教授收集标本时, 我非常希望自己拥有该物种的标本。我走了很长一段路, 经历了很大的困难; 我在睡梦中梦见过他, 突然间, 我为了自己而把手指放在他身上！- 吉姆勋爵. 20</p>
+</blockquote>
+
+<p>当我重新阅读那篇文章时, 我不禁想起拉里·沃尔（Larry Wall）, 他为了追求自己的梦想而进行了长途旅行并经历了巨大的挫折, 这是一个经过重新设计的 Perl。 我想起了我写论文的叔叔, 虽然我不敢问他是否完成了这件事。就他自己而言, 在一定年龄之后, 斯坦因不再追求财富, 名利和冒险, 以培养和珍惜他蝴蝶的虹彩美。</p>
+
+<p>我有时想知道软件行业是否可以使用更多的蝴蝶 - 不是作为商业帝国的投入, 而是作为学习, 欣赏和欣赏木质搁置房间的灯光沉默的标本。</p>
+
+<p>Raku 是杰作吗？我不确定我会给那个特定评审团的工头做什么指示, 但是 Raku 肯定是独一无二的, 因为它的雄心壮志和纯粹的语言复杂性。如果不使用它至少一年或五年, 这可能是不可能判断出来的。我担心我将不得不为将来的文章保存我的最终判决, 但与此同时, 我有足够的理由在 /usr/local 古董柜内保持稳定版本的 Raku。</p>
+
+<p>Raku 会征服世界吗？这些事情很难预测, 但从某种意义上说 - 我现在正在与 IRC 频道的沮丧成员交谈 - 这无所谓。Raku 是独一无二的; 没有人可以争辩。也许这已经足够了, 一旦你在这个不确定的世界中捕获了一些罕见而美丽的东西, 就坐在地上并用手指握住它一会儿。“他们在伦敦只有一个这样的标本, ”出生于巴伐利亚的斯坦因对吉姆勋爵的叙述者说道, 手捂着玻璃包裹的青铜色和白色和黄色的蝴蝶。“然后 - 没了。在我的小乡镇, 我的遗产将留给我。我的一些东西。最好的。”</p>
+
+<h2 id="笔记">笔记</h2>
+
+<p>1、我认为我们其他人可以同意这些是相当缺乏灵感的名字, 并且容易引起混淆。编译器可能应该被称为 rakuc, 虚拟机应该是 PerlVM, 并且应该调用其他语言。我一直认为 Surf 对于编程语言来说是一个很好的名字, 因此愿意将它捐赠给 Raku 项目以改进编程。 ⇧</p>
+
+<p>2、然而, 常量时间算法带来了成本。字素在内部存储为 32 位整数; 这个地址空间足够大, 可以包含所有合法的代码点组合, 但与其他语言相比, 内存中的字符串大小往往会膨胀 2-4 倍。 ⇧</p>
+
+<p>3、我将花点时间注意 Raku shell 的另一个 bug, 即它似乎只接受复制粘贴操作的第一行。 ⇧</p>
+
+<p>4、也许不是最令人大笑的功能; 但是, 例如, Erlang 仍然无法中途关闭管道。 ⇧</p>
+
+<p>5、可以通过向 <code>Supply.schedule-on</code> 方法提供自己的调度器对象来指定线程。 ⇧</p>
+
+<p>6、唯一可以让体验变得更好的是, 如果将 Raku 的功能从他们古老的 Request Tracker 转移到 GitHub 问题, 就像所有人一样, 它使用由名为 Bjørn 的人运行的第三方认证服务。其他。（比约恩, 我向你致敬。） ⇧</p>
+
+<p>7、还记得了 Perl 的原始版本所命名的“大价格之珠”寓言; 我怀疑这个原因是 Raku 名称更改永远不会获得 BDFL 批准, 即使提出了像 Surf 这样明确的名字。 ⇧</p>
+
+<p>8、还有一些蝴蝶收藏家, 在我们的集体情节的关键时刻分配了一些智慧。 ⇧</p>
+
+<p>你正在阅读 <a href="http://www.evanmiller.org/">evanmiller.org</a>, 这是一本随机收集的数学, 技术和思考。如果你喜欢这个, 你可能也会喜欢：</p>
+
+<ul>
+<li><a href="http://www.evanmiller.org/a-taste-of-rust.html">Rust 的味道</a></li>
+<li><a href="http://www.evanmiller.org/four-days-of-go.html">四天的 Go 之旅</a></li>
+<li><a href="http://www.evanmiller.org/why-im-learning-perl-6.html">为什么我要学习 Raku</a></li>
+<li><a href="http://www.evanmiller.org/why-i-program-in-erlang.html">为什么我用 Erlang 编程</a></li>
+</ul>
+
+<p>通过 <a href="https://twitter.com/EvMill">Twitter</a> 或 <a href="http://www.evanmiller.org/news.xml">RSS</a> 获知新发布的文章。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2018-07-05-%E6%95%A3%E5%88%97%E7%9A%84%E6%95%A3%E5%88%97/" data-toggle="tooltip" data-placement="top" title="散列的散列">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2018-07-07-%E6%88%91%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%A6%E4%B9%A0raku/" data-toggle="tooltip" data-placement="top" title="我为什么学习Raku">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

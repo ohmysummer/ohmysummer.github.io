@@ -8,15 +8,15 @@
   <title>Going over the Bridge, part 2. Let’s get rid of it</title>
   <meta property="og:title" content="Going over the Bridge, part 2. Let’s get rid of it" />
   <meta name="twitter:title" content="Going over the Bridge, part 2. Let’s get rid of it" />
-  <meta name="description" content="今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+  <meta name="description" content="今天，我们继续在 Rakudo Raku 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
 里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
 method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.">
-  <meta property="og:description" content="今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+  <meta property="og:description" content="今天，我们继续在 Rakudo Raku 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
 里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
 method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.">
-  <meta name="twitter:description" content="今天，我们继续在 Rakudo Perl 6 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
+  <meta name="twitter:description" content="今天，我们继续在 Rakudo Raku 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
 里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
-method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() …">
+method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -214,7 +214,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (598 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (597 words)
   
   
 </span>
@@ -235,15 +235,15 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p>今天，我们继续在 Rakudo Perl 6 中使用 <code>Bridge</code> 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。</p>
+<p>今天，我们继续在 Rakudo Raku 中使用 <code>Bridge</code> 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。</p>
 
-<p><img src="https://inperl6.files.wordpress.com/2018/02/bridge1.jpg" alt="img" /></p>
+<p><img src="https://inraku.files.wordpress.com/2018/02/bridge1.jpg" alt="img" /></p>
 
 <h2 id="里面有什么">里面有什么?</h2>
 
 <p>该方法的主要用途在 <code>Real</code> 角色中，该角色包含以下一组方法：</p>
 
-<pre><code class="language-perl6">method sqrt() { self.Bridge.sqrt }
+<pre><code class="language-raku">method sqrt() { self.Bridge.sqrt }
 method rand() { self.Bridge.rand }
 method sin() { self.Bridge.sin }
 method asin() { self.Bridge.asin }
@@ -279,7 +279,7 @@ multi method exp(Real:D: ) { self.Bridge.exp }
 
 <p>有几个例程具有不同的模式，其中该方法被调用两次：一次用于获得所需的功能;其次是强制价值：</p>
 
-<pre><code class="language-perl6">multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
+<pre><code class="language-raku">multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
 multi method atan2(Cool $x = 1e0) { self.Bridge.atan2($x.Numeric.Bridge) }
 multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
 multi method atan2(Cool $x = 1e0) { self.Bridge.atan2($x.Numeric.Bridge) }
@@ -290,7 +290,7 @@ multi sub atan2(Real \a, Real \b = 1e0) { a.Bridge.atan2(b.Bridge) }
 
 <p>正如你所看到的，<code>atan2</code> 函数被定义为方法和子例程。为了更多地混淆你，它有两个版本：</p>
 
-<pre><code class="language-perl6">proto sub atan2($, $?) {*}
+<pre><code class="language-raku">proto sub atan2($, $?) {*}
 multi sub atan2(Real \a, Real \b = 1e0) { a.Bridge.atan2(b.Bridge) }
 # should really be (Cool, Cool), and then (Cool, Real) and (Real, Cool)
 # candidates, but since Int both conforms to Cool and Real, we'd get lots
@@ -300,7 +300,7 @@ multi sub atan2( \a, \b = 1e0) { a.Numeric.atan2(b.Numeric) }
 
 <p>最后，一些类型转换的方法：</p>
 
-<pre><code class="language-perl6">method Bridge(Real:D:) { self.Num }
+<pre><code class="language-raku">method Bridge(Real:D:) { self.Num }
 method Int(Real:D:) { self.Bridge.Int }
 method Num(Real:D:) { self.Bridge.Num }
 multi method Str(Real:D:) { self.Bridge.Str }
@@ -311,7 +311,7 @@ method Rat(Real:D: Real $epsilon = 1.0e-6) { self.Bridge.Rat($epsilon) }
 
 <p>一些中缀方法也在使用该方法：</p>
 
-<pre><code class="language-perl6">multi sub infix:&lt;+&gt;(Real \a, Real \b) { a.Bridge + b.Bridge }
+<pre><code class="language-raku">multi sub infix:&lt;+&gt;(Real \a, Real \b) { a.Bridge + b.Bridge }
 multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge }
 multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge }
 multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge }
@@ -334,7 +334,7 @@ multi sub prefix:&lt;-&gt;(Real:D \a) { -a.Bridge }
 
 <p>使用 <code>Num</code> 数据类型时，会调用一个直接方法：</p>
 
-<pre><code class="language-perl6">&gt; my Num $n = 1e1; 
+<pre><code class="language-raku">&gt; my Num $n = 1e1; 
 10
 &gt; $n.sin
 Num.sin
@@ -342,7 +342,7 @@ Num.sin
 
 <p>这个方法调用底层的 NQP 函数：</p>
 
-<pre><code class="language-perl6">proto method sin(|) {*}
+<pre><code class="language-raku">proto method sin(|) {*}
 multi method sin(Num:D: ) {
     nqp::p6box_n(nqp::sin_n(nqp::unbox_n(self)));
 }
@@ -350,7 +350,7 @@ multi method sin(Num:D: ) {
 
 <p>使用其他数据类型，您可以通过真实角色出行：</p>
 
-<pre><code class="language-perl6">&gt; my Int $i = 1;
+<pre><code class="language-raku">&gt; my Int $i = 1;
 1
 &gt; $i.sin
 Real.sin
@@ -365,7 +365,7 @@ Num.sin
 
 <p>如果它们是从内置类型继承的，则可以使用与自己的类型相同的路径：</p>
 
-<pre><code class="language-perl6">&gt; class MyInt is Int {}
+<pre><code class="language-raku">&gt; class MyInt is Int {}
 &gt; my MyInt $mi = MyInt.new
 0
 &gt; $mi.sin
@@ -379,7 +379,7 @@ Num.sin
 
 <p>使用更新后的代码，所有来自 <code>Roast</code> 的测试都已通过。作为副作用，在某些情况下，速度增加了大约 3％：</p>
 
-<pre><code class="language-perl6">./perl6 -e'for 1..10_000_000 {Int.new(1).sin}'
+<pre><code class="language-raku">./raku -e'for 1..10_000_000 {Int.new(1).sin}'
 </code></pre>
 
 <p>这是一个相当广泛的变化，而且还有一件事：当您在新创建的 <code>Real</code> 对象上调用该方法时，会导致无限循环。看起来数字数据类型的错误层次结构是主要原因，但我认为我们至少可以安全地移除 <code>Bridge</code> 方法。</p>
@@ -388,7 +388,7 @@ Num.sin
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6/">Perl 6</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
             
           </div>
         
@@ -405,7 +405,7 @@ Num.sin
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/" data-toggle="tooltip" data-placement="top" title="A bit more on Rat vs FatRat in Perl 6">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-02-14-a-bit-more-on-rat-vs-fatrat-in-perl-6/" data-toggle="tooltip" data-placement="top" title="A bit more on Rat vs FatRat in Raku">Next Post &rarr;</a>
             </li>
           
         </ul>

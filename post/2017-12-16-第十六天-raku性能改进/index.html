@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>第十六天-Raku 性能改进</title>
+  <meta property="og:title" content="第十六天-Raku 性能改进" />
+  <meta name="twitter:title" content="第十六天-Raku 性能改进" />
+  <meta name="description" content="Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶">
+  <meta property="og:description" content="Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶">
+  <meta name="twitter:description" content="Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-raku%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-16-%E7%AC%AC%E5%8D%81%E5%85%AD%E5%A4%A9-raku%E6%80%A7%E8%83%BD%E6%94%B9%E8%BF%9B/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>第十六天-Raku 性能改进</h1>
+                
+                  
+                    <h2 class="post-subheading">Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on December 16, 2017
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 1 minutes (72 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h1 id="day-16-deck-the-halls-with-perf-improvements-https-rakuadvent-wordpress-com-2017-12-16-day-16-f0-9f-8e-b6-deck-the-halls-with-perf-improvements-f0-9f-8e-b6"><a href="https://rakuadvent.wordpress.com/2017/12/16/day-16-%F0%9F%8E%B6-deck-the-halls-with-perf-improvements-%F0%9F%8E%B6/">Day 16 – 🎶 Deck The Halls With Perf Improvements 🎶</a></h1>
+
+<p>在英国，我们缺乏感恩节给圣诞节带来了新的一年，感谢和反思。为此，我想围绕Raku性能的状态放置一些我已经坐了一段时间的零碎片断，这些片断强调了这个过程需要付出多少努力。我不确定更广泛的编程社区对正在发生的努力的速度和数量表示赞赏。</p>
+
+<p>我不是核心开发人员，但自2010年推出Rakudo *之后，我一直是Raku的低级用户。通常情况下，已经进入Rakudo的努力被未知的努力所掩盖。人们重新审视Rakudo Raku时尤其如此，他可能会想象下一个圣诞节将会如何。但是Raku在历史上证明，在下一个圣诞节之前，事情总会有所改善，无论您选择哪个圣诞节，</p>
+
+<p>回到2014年的圣诞节，我写了一篇关于为什么我认为Raku能够完成生物信息学工作的出色文章。那篇文章中没有提到的是，为什么在Rakudo上实现Raku根本没有准备好去做任何严肃的生物信息学。表演真的没有！我在Raku中的第一次尝试（当Parrot虚拟机完全使用时）让我执行了几十分钟的简单操作，我期望它是毫秒级的性能。这很遗憾，因为我没有跟踪时间。但这当然不是一个好起点。</p>
+
+<p>然而，快速转发到2014年和MoarVM，我觉得自己写这篇来临邮件感觉很舒服，因为我知道在作为用户的4年中有多少改进。而且，所有的发展都是在完成语言定义和正确的实施。然而，我是一直在等待perf到达那里的用户。我认为大部分时间到了。为此，我要感谢所有核心开发者所付出的巨大的日常努力。观看它展现出令人难以置信的动力。对我来说，这个圣诞节是圣诞节的目标，它已经到来。 👏🏻🎊</p>
+
+<p>我一直在为我的BioInfo模块运行和计时测试，这些模块对生物序列数据进行了多年的基本操作。它以非常糟糕的方式做到了这一点。在紧密循环中分配和丢弃哈希时出现了很多错误等等。但是我已经将这些代码留给了现在 - 在五年多的时间里。悄悄地进行私人基准测试，偶尔鼓励在IRC频道看到大幅飞跃的努力。 Sub 10s是一个很大的！它从30/40秒突然发生。在我暗示IRC一个地方，我的代码在分析时特别慢，这是一次跳跃！</p>
+
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/bioinfo_runtime.png" alt="img" /></p>
+
+<p>这是一个长期观点，如果我放大去年的这一年，可以看到，如果时间不是很长，整个系数的性能仍然在提高。</p>
+
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/bioinfo_runtime_2017.png" alt="img" /></p>
+
+<p>请记住，所有这些配置文件都不是来自Rakudo编译器的发布版本，而是来自当天的HEAD。所以偶尔会有一些奇怪的表现回归，正如你上面看到的，通常不会留下来发布。</p>
+
+<p>发生什么了？情况如何变好？有几个原因。 Raku中的许多算法选择和核心功能都已经在源代码级别（更晚些时候）逐步和积极地进行了优化。但支持Rakudo的MoarVM虚拟机的优化能力也得到了提高，并且可以降低到原生代码和内联专用版本的代码。这部分得益于2014年以来Rakudo Raku提供的-profile选项，它提供了所有这些信息。</p>
+
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/bioinfo_frame_optimisations.png" alt="img" /></p>
+
+<p>在上面关于MoarVM如何处理我编译过的Raku测试的代码框的情节中，应该很清楚的是，自从今年夏天以来，有相当多的框架被JIT编译，解释较少，并且几乎所有专用框架（橙色）结束原生JIT（绿色）。如果您想了解更多有关“spesh”MoarVM代码专门工具的最新工作，您可以在他的博客上阅读Jonathan Worthington的4篇文章。 Baart Weigmans还有一篇博客概述了他在JIT编译器方面的工作，最近还谈到了许多尚未登陆的新功能，希望能让许多新开发人员加入并帮助改进JIT。所以如果这对你来说是一件有趣的事情，我建议你查看一下上面的链接。</p>
+
+<p>所以这是我的基准和我的目标，其中大部分是围绕数据结构创建和解析。但是，数字作品等其他内容呢？那也保持了吗？没有任何人推动，就像我推动我对事情可以改进的地方的看法。答案是肯定的！</p>
+
+<p>曾几何时，早在2013年，一位名叫Tim King的绅士就开始对Raku中的素数感兴趣.Tim对他发现的性能颇为不满。正确如此。他从以下漂亮的代码开始：</p>
+
+<p>通过定义一个素数的交叉点找到任何素数，真是一个不错的优雅解决方案！但是蒂姆惊讶地发现联赛很慢，上面的代码让他看到了前1000个素数。今天，超级高级代码需要0.96s。</p>
+
+<p>对于基于联结的代码的缓慢程度，蒂姆继续做更标准的迭代方法感到不满。 Tim在这些帖子后不久就从网上消失。但他留下了我继续留下的遗产。他的主要基准测试代码和我对时间结果的适应性可以在这个要点中找到。以下是另一张图表，其中显示了每个超过100次试验找到前1000个素数所需的平均时间。 2015年的垂直线是较高的标准偏差。</p>
+
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/timking_primes.png" alt="img" /></p>
+
+<p>再次以最近的放大视图（最新的数据点让我担心一点，我以某种方式搞砸了&hellip;&hellip;）</p>
+
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/timking_primes_2017_improvement.png" alt="img" /></p>
+
+<p>上面的收敛到一个点，是启动和停止Rakudo运行时和MoarVM的开销。发现素数并不是它曾经的努力，它比Rakudo的开始稍微慢一些。无论您选择的代码解决方案的级别和优雅程度如何，至少要快一个数量级。</p>
+
+<p>好吧，我们已经看到MoarVM获得了一些闪亮的新运动部件。但是像Liz，jnthn，Zoffix以及最近在字符串Samcv世界中开发人员已经付出了巨大的努力，以改进MoarVM和Rakudo在算法上实际上正在做的事情。</p>
+
+<pre><code>旁注：我相信我根本不会做大多数其他开发人员的正义，特别是在这篇文章中忽略了JVM的努力。我建议每个人都去，并检查提交日志，看看有多少人现在参与使Rakudo更快，更好，更强大。我确定他们想在本文的底部看到您的感谢！
+</code></pre>
+
+<p>因此，节省你一份查看提交日志的工作我已经做了一些挖掘，看看自上个圣诞节以来与提高性能有关的提交。 N％或Nx更快的东西。如下所示：</p>
+
+<pre><code>3c6277c77 Have .codes use nqp::codes op. 350% faster for short strings
+
+ee4593601 Make Baggy (^) Baggy about 150x faster
+</code></pre>
+
+<p>这两项承诺将以一年的核心发展时间表推动编程项目的发展。但是，今年，它们仅仅是数百次提交中的两次。</p>
+
+<p>下面是一些提交数量的直方图以及他们提到的性能的百分比和x乘数的增加。你可以用上面的代码自己grep日志。在2016年有一些更令人兴奋的收益值得检查。</p>
+
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/percent_improvements_since_xmas2016.png" alt="img" /></p>
+
+<p><img src="https://rakuadvent.files.wordpress.com/2017/12/x_improvements_since_xmas2016.png" alt="img" /></p>
+
+<p>这仅仅是2017年的性能提升承诺，几乎每天都会有更多的降落。这甚至不包括许多来自Zoffix授予的I / O性能收益，因为它们在之前/之后并不总是基准。 2016年同样密集，一些疯狂的&gt; 1000倍的改进。今年只有十个左右提交，提高40倍！看到这真是令人印象深刻。至少对我来说。我认为这对项目的许多人来说并不明显，他们正在完成多少。记住这些是单数提交。有些甚至在一年中复合改进！</p>
+
+<p>我会把它留在这里。但是真的很感谢核心开发者，你们所有人。这是一个很棒的观看和等待体验。但现在是时候在2018年继续使用一些Raku代码了！终于圣诞节了。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" data-toggle="tooltip" data-placement="top" title="第十五天-带有 Promise 的简单网络爬虫">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2017-12-17-%E7%AC%AC%E5%8D%81%E4%B8%83%E5%A4%A9-%E5%85%B3%E4%BA%8E%E6%B6%88%E6%81%AF%E4%BC%A0%E9%80%92/" data-toggle="tooltip" data-placement="top" title="第十七天-关于消息传递">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

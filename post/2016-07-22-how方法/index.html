@@ -8,21 +8,21 @@
   <title>HOW 方法</title>
   <meta property="og:title" content="HOW 方法" />
   <meta name="twitter:title" content="HOW 方法" />
-  <meta name="description" content="Why can&rsquo;t I call the methods method on a Perl 6&rsquo;s ClassHOW object?
+  <meta name="description" content="Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?
 我可以在某个对象身上调用 ^methods 方法, 以列出我能调用的方法的名字列表:
 my $object = &#39;Camelia&#39; my @object_methods = $object.^methods; @object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;  ^methods 返回一个列表, 通过对列表中的每个元素调用 .gist 方法, 得到一个人类友好的形式。
 但是 ^methods 中的 ^ 暗含了 .HOW 方法:
 我想下面这段代码本该有效的, 但是没有:
 my $object = &#39;Camelia&#39;; my @object_objects = $object.HOW.methods;  但是我得到了一个错误:
 Too few positionals passed; expected 2 arguments but got 1 in any methods at gen/moar/m-Metamodel.nqp line 490 in block &lt;unit&gt; at.">
-  <meta property="og:description" content="Why can&rsquo;t I call the methods method on a Perl 6&rsquo;s ClassHOW object?
+  <meta property="og:description" content="Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?
 我可以在某个对象身上调用 ^methods 方法, 以列出我能调用的方法的名字列表:
 my $object = &#39;Camelia&#39; my @object_methods = $object.^methods; @object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;  ^methods 返回一个列表, 通过对列表中的每个元素调用 .gist 方法, 得到一个人类友好的形式。
 但是 ^methods 中的 ^ 暗含了 .HOW 方法:
 我想下面这段代码本该有效的, 但是没有:
 my $object = &#39;Camelia&#39;; my @object_objects = $object.HOW.methods;  但是我得到了一个错误:
 Too few positionals passed; expected 2 arguments but got 1 in any methods at gen/moar/m-Metamodel.nqp line 490 in block &lt;unit&gt; at.">
-  <meta name="twitter:description" content="Why can&rsquo;t I call the methods method on a Perl 6&rsquo;s ClassHOW object?
+  <meta name="twitter:description" content="Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?
 我可以在某个对象身上调用 ^methods 方法, 以列出我能调用的方法的名字列表:
 my $object = &#39;Camelia&#39; my @object_methods = $object.^methods; …">
   <meta name="author" content="焉知非鱼"/>
@@ -222,7 +222,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 1 minutes (128 words)
+  <i class="fa fa-clock-o"></i> 1 minutes (126 words)
   
   
 </span>
@@ -243,11 +243,11 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p><a href="http://stackoverflow.com/questions/35819026/why-cant-i-call-the-methods-method-on-a-perl-6s-classhow-object">Why can&rsquo;t I call the methods method on a Perl 6&rsquo;s ClassHOW object?</a></p>
+<p><a href="http://stackoverflow.com/questions/35819026/why-cant-i-call-the-methods-method-on-a-perl-6s-classhow-object">Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?</a></p>
 
 <p>我可以在某个对象身上调用 <code>^methods</code> 方法, 以列出我能调用的方法的名字列表:</p>
 
-<pre><code class="language-perl6">my $object = 'Camelia'
+<pre><code class="language-raku">my $object = 'Camelia'
 my @object_methods = $object.^methods;
 @object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;
 </code></pre>
@@ -258,7 +258,7 @@ my @object_methods = $object.^methods;
 
 <p>我想下面这段代码本该有效的, 但是没有:</p>
 
-<pre><code class="language-perl6">my $object = 'Camelia';
+<pre><code class="language-raku">my $object = 'Camelia';
 my @object_objects = $object.HOW.methods;
 </code></pre>
 
@@ -273,26 +273,26 @@ my @object_objects = $object.HOW.methods;
 
 <p>举个例子:</p>
 
-<pre><code class="language-perl6">$obj.^can('sqrt')
+<pre><code class="language-raku">$obj.^can('sqrt')
 </code></pre>
 
 <p>就是下面这段代码的语法糖:</p>
 
-<pre><code class="language-perl6">$obj.HOW.can($obj, 'sqrt')
+<pre><code class="language-raku">$obj.HOW.can($obj, 'sqrt')
 </code></pre>
 
 <p>在你的例子中, 你应该写作:</p>
 
-<pre><code class="language-perl6">my @object_methods = $object.HOW.methods($object);
+<pre><code class="language-raku">my @object_methods = $object.HOW.methods($object);
 </code></pre>
 
 <h2 id="d-和-d-之间的区别">:D 和 :D: 之间的区别</h2>
 
 <hr />
 
-<p>在一段定义 <code>shift</code> 子例程的Perl 6 代码里:</p>
+<p>在一段定义 <code>shift</code> 子例程的Raku 代码里:</p>
 
-<pre><code class="language-perl6">multi sub    shift(Array:D)
+<pre><code class="language-raku">multi sub    shift(Array:D)
 multi method shift(Array:D:)
 </code></pre>
 
@@ -300,7 +300,7 @@ multi method shift(Array:D:)
 
 <p><code>D</code>后面的冒号表示方法的调用者作为第一个参数被隐式地传入进来。如果你想在签名中使用显式的参数(例如给它添加一个诸如 :D 的类型笑脸或者给它一个更具描述性的名字), 你需要使用 <code>:</code> 而非 <code>,</code> 以把它和剩余的参数列表分割开。这甚至在空列表时也是必要的, 所以这能消除含有常规位置参数的签名中的歧义。</p>
 
-<p>更多信息, 请查看<a href="http://design.perl6.org/S06.html#Invocant_parameters">Invocant_parameters</a>。</p>
+<p>更多信息, 请查看<a href="http://design.raku.org/S06.html#Invocant_parameters">Invocant_parameters</a>。</p>
 
 
         
@@ -318,12 +318,12 @@ multi method shift(Array:D:)
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2016-07-20-the-awesome-errors-of-perl-6/" data-toggle="tooltip" data-placement="top" title="The Awesome Errors of Perl 6">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2016-07-20-the-awesome-errors-of-raku/" data-toggle="tooltip" data-placement="top" title="The Awesome Errors of Raku">&larr; Previous Post</a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2016-07-25-%E5%AD%A6%E4%B9%A0perl6%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BD%91%E7%AB%99/" data-toggle="tooltip" data-placement="top" title="学习Perl6的一些网站">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2016-07-25-%E5%AD%A6%E4%B9%A0raku%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BD%91%E7%AB%99/" data-toggle="tooltip" data-placement="top" title="学习Raku的一些网站">Next Post &rarr;</a>
             </li>
           
         </ul>

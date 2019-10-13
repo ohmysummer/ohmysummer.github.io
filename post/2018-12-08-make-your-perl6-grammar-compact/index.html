@@ -5,12 +5,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>第八天 — 让你的 Perl 6 grammar 紧凑一点</title>
-  <meta property="og:title" content="第八天 — 让你的 Perl 6 grammar 紧凑一点" />
-  <meta name="twitter:title" content="第八天 — 让你的 Perl 6 grammar 紧凑一点" />
-  <meta name="description" content="Make your Perl 6 grammar compact">
-  <meta property="og:description" content="Make your Perl 6 grammar compact">
-  <meta name="twitter:description" content="Make your Perl 6 grammar compact">
+  <title>第八天 — 让你的 Raku grammar 紧凑一点</title>
+  <meta property="og:title" content="第八天 — 让你的 Raku grammar 紧凑一点" />
+  <meta name="twitter:title" content="第八天 — 让你的 Raku grammar 紧凑一点" />
+  <meta name="description" content="Make your Raku grammar compact">
+  <meta property="og:description" content="Make your Raku grammar compact">
+  <meta name="twitter:description" content="Make your Raku grammar compact">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -198,10 +198,10 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>第八天 — 让你的 Perl 6 grammar 紧凑一点</h1>
+              <h1>第八天 — 让你的 Raku grammar 紧凑一点</h1>
                 
                   
-                    <h2 class="post-subheading">Make your Perl 6 grammar compact</h2>
+                    <h2 class="post-subheading">Make your Raku grammar compact</h2>
                   
                 
                 
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (614 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (600 words)
   
   
 </span>
@@ -233,24 +233,24 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         
 
-<p>欢迎来到今年的 Perl 6 Advent Calendar 的第8天！</p>
+<p>欢迎来到今年的 Raku Advent Calendar 的第8天！</p>
 
-<p>Grammars 是使 Perl 6 成为一种优秀编程语言的众多因素之一。 我甚至不会尝试预测轮询的结果，以便在 grammars，Unicode 支持，并发功能，超运算符或集合语法之间进行选择，或者选择 Whatever star。 谷歌发现了自己在互联网上发布的最好的 Perl 6 功能列表。</p>
+<p>Grammars 是使 Raku 成为一种优秀编程语言的众多因素之一。 我甚至不会尝试预测轮询的结果，以便在 grammars，Unicode 支持，并发功能，超运算符或集合语法之间进行选择，或者选择 Whatever star。 谷歌发现了自己在互联网上发布的最好的 Raku 功能列表。</p>
 
-<p><img src="https://perl6advent.files.wordpress.com/2018/12/screen-shot-2018-12-01-at-13-15-01.png" alt="img" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/screen-shot-2018-12-01-at-13-15-01.png" alt="img" /></p>
 
-<p>无论如何，今天我们将讨论 Perl 6 grammars，我将分享一些技巧，用于使 grammars 更紧凑。</p>
+<p>无论如何，今天我们将讨论 Raku grammars，我将分享一些技巧，用于使 grammars 更紧凑。</p>
 
 <h2 id="1-拆分-actions">1.拆分 actions</h2>
 
 <p>假设您正在编写 grammar 来解析 Perl 的变量声明。 您希望它与以下语句匹配：</p>
 
-<pre><code class="language-perl6">my $s; my @a;
+<pre><code class="language-raku">my $s; my @a;
 </code></pre>
 
 <p>它们都声明了一个变量，因此我们可以制定一个通用规则来解析这两种情况。 下面是完整的程序：</p>
 
-<pre><code class="language-perl6">grammar G {
+<pre><code class="language-raku">grammar G {
     rule TOP {
         &lt;variable-declaration&gt;* %% ';'
     }
@@ -297,11 +297,11 @@ G.parse('my $s; my @a;', :actions(A.new));
 
 <p>现在感兴趣的对象是规则 <code>variable-declaration</code> 及其相应的 action。</p>
 
-<p>该规则包含两个选项：是否声明了标量或数组。 该 action 还在选项之间进行选择，并使用 <code>if-else</code> 块执行该 action 操作。 Perl 6 允许你省略布尔条件周围的括号，但是，整个结构仍然很大。 例如，想想如果添加哈希声明，则需要添加另一个 <code>elsif</code> 分支。</p>
+<p>该规则包含两个选项：是否声明了标量或数组。 该 action 还在选项之间进行选择，并使用 <code>if-else</code> 块执行该 action 操作。 Raku 允许你省略布尔条件周围的括号，但是，整个结构仍然很大。 例如，想想如果添加哈希声明，则需要添加另一个 <code>elsif</code> 分支。</p>
 
 <p>为每个子分支分别采取 action 操作会更清楚：</p>
 
-<pre><code class="language-perl6">method scalar-declaration($/) {
+<pre><code class="language-raku">method scalar-declaration($/) {
     %!var{$&lt;variable-name&gt;} = 0;
 }
 
@@ -314,7 +314,7 @@ method array-declaration($/) {
 
 <p>在我们继续讨论下一个技巧之前，你可能需要实现另一个优化：<code>my</code> 关键字出现在任一声明中，因此请使用非捕获括号并将公用字符串从它们之中移出：</p>
 
-<pre><code class="language-perl6">rule variable-declaration {
+<pre><code class="language-raku">rule variable-declaration {
     'my' [
         | &lt;scalar-declaration&gt;
         | &lt;array-declaration&gt;
@@ -334,12 +334,12 @@ rule array-declaration {
 
 <p>让我们改进 grammar 以允许使用目标语言进行赋值：</p>
 
-<pre><code class="language-perl6">my $s; my @a; $s = 3; $a[1] = 4;
+<pre><code class="language-raku">my $s; my @a; $s = 3; $a[1] = 4;
 </code></pre>
 
 <p>请注意，赋值是以 Perl 5 样式完成的，数组元素为 sigil。 有了这个，可以使用以美元开头的单个规则来完成赋值：</p>
 
-<pre><code class="language-perl6">grammar G {
+<pre><code class="language-raku">grammar G {
     rule TOP {
         [
             | &lt;variable-declaration&gt;
@@ -368,7 +368,7 @@ rule array-declaration {
 
 <p>同样，您可以使用我们的老朋友，action 操作中的 <code>if-else</code> 块。 根据索引的存在，您可以确定这是一个简单的标量还是数组的元素：</p>
 
-<pre><code class="language-perl6">method assignment($/) {
+<pre><code class="language-raku">method assignment($/) {
     if $&lt;index&gt; {
         %!var{$&lt;variable-name&gt;}[$&lt;index&gt;&lt;value&gt;] = +$&lt;value&gt;;
     }
@@ -380,7 +380,7 @@ rule array-declaration {
 
 <p>此代码也可以轻松简化，但这次使用 multi 方法：</p>
 
-<pre><code class="language-perl6">multi method assignment($/ where !$&lt;index&gt;) {
+<pre><code class="language-raku">multi method assignment($/ where !$&lt;index&gt;) {
     %!var{$&lt;variable-name&gt;} = +$&lt;value&gt;;
 }
 
@@ -389,7 +389,7 @@ multi method assignment($/ where $&lt;index&gt;) {
 }
 </code></pre>
 
-<p><code>where</code> 子句允许 Perl 6 决定哪个候选方法在给定情况下更适合。</p>
+<p><code>where</code> 子句允许 Raku 决定哪个候选方法在给定情况下更适合。</p>
 
 <p>另请注意在第二个 multi 方法中如何使用 <code>&lt;value&gt;</code> 键两次。 <code>&lt;value&gt;</code> 的每个条目指的是目标代码的不同部分：一个用于索引值，另一个用于右侧值。</p>
 
@@ -397,12 +397,12 @@ multi method assignment($/ where $&lt;index&gt;) {
 
 <p>有时，Perl 可以为我们完成工作，特别是如果你想实现 Perl 熟悉的东西。 例如，让我们在赋值中允许不同类型的数字：</p>
 
-<pre><code class="language-perl6">my $a; my $b; $a = 3; $b = -3.14;
+<pre><code class="language-raku">my $a; my $b; $a = 3; $b = -3.14;
 </code></pre>
 
 <p>在 grammar 中引入浮点数比较容易：</p>
 
-<pre><code class="language-perl6">token value {
+<pre><code class="language-raku">token value {
     | '-'? \d+
     | '-'? \d+ '.' \d+
 }
@@ -412,21 +412,21 @@ multi method assignment($/ where $&lt;index&gt;) {
 
 <p>如果您使用更改运行代码，您可能会对获得所需结果感到惊讶。 两个变量都接收值：</p>
 
-<pre><code class="language-perl6">Hash %!var = {:a(3), :b(-3.14)}
+<pre><code class="language-raku">Hash %!var = {:a(3), :b(-3.14)}
 </code></pre>
 
 <p>在这两种情况下，都触发了相同的 action 操作：</p>
 
-<pre><code class="language-perl6">multi method assignment($/ where !$&lt;index&gt;) {
+<pre><code class="language-raku">multi method assignment($/ where !$&lt;index&gt;) {
     %!var{$&lt;variable-name&gt;} = +$&lt;value&gt;;
 }
 </code></pre>
 
-<p>在赋值的右侧，我们看到 <code>+$&lt;value&gt;</code>，这是从 Match 对象转换为数字的类型。 grammar 将 <code>3</code> 或 <code>-3.14</code> 放在 <code>$&lt;value&gt;</code> 中，两者都作为字符串。 <code>+</code> 这个一元运算符尝试将字符串转换为数字。 两个字符串都是有效数字，因此 Perl 6 不会抱怨。</p>
+<p>在赋值的右侧，我们看到 <code>+$&lt;value&gt;</code>，这是从 Match 对象转换为数字的类型。 grammar 将 <code>3</code> 或 <code>-3.14</code> 放在 <code>$&lt;value&gt;</code> 中，两者都作为字符串。 <code>+</code> 这个一元运算符尝试将字符串转换为数字。 两个字符串都是有效数字，因此 Raku 不会抱怨。</p>
 
-<p>自己编写代码将字符串转换为数字会更加困难，因为需要考虑数值的所有不同形式。 要了解 Perl 6 知道的其他格式，请查看 <a href="https://github.com/rakudo/rakudo/blob/master/src/Perl6/Grammar.nqp">Perl 6 grammar</a> 中 <code>numish</code> 标记的定义：</p>
+<p>自己编写代码将字符串转换为数字会更加困难，因为需要考虑数值的所有不同形式。 要了解 Raku 知道的其他格式，请查看 <a href="https://github.com/rakudo/rakudo/blob/master/src/Raku/Grammar.nqp">Raku grammar</a> 中 <code>numish</code> 标记的定义：</p>
 
-<pre><code class="language-perl6">token numish {
+<pre><code class="language-raku">token numish {
     [
     | 'NaN' &gt;&gt;
     | &lt;integer&gt;
@@ -449,7 +449,7 @@ multi method assignment($/ where $&lt;index&gt;) {
 
 <p>让我们更新我们的 grammar，以允许在赋值的右侧使用数学表达式：</p>
 
-<pre><code class="language-perl6">my $a; $a = 6 + 5 * (4 - 3);
+<pre><code class="language-raku">my $a; $a = 6 + 5 * (4 - 3);
 </code></pre>
 
 <p>这里的新问题是解析表达式并处理运算符优先级和括号。 您可以通过以下方式描述任何表达式：</p>
@@ -460,7 +460,7 @@ multi method assignment($/ where $&lt;index&gt;) {
 
 <p>话虽如此，您最终会得到以下 grammar 变更：</p>
 
-<pre><code class="language-perl6">grammar G {
+<pre><code class="language-raku">grammar G {
     # . . .
 
     rule assignment {
@@ -494,13 +494,13 @@ multi method assignment($/ where $&lt;index&gt;) {
 
 <p>这里，rules 和 tokes 都是 multi 方法，它采用反映表达式深度的单个整数值。 操作符也是如此：在第一级，你期望 <code>+</code> 和 <code>-</code> ，在第二级 -  <code>*</code> 和 <code>/</code>。</p>
 
-<p>不要忘记 Perl 6 中的 multi 方法（以及 multi-subs）可以基于常量进行调度，这就是为什么你可以, 例如, 使用你在 <code>multi token op(2)</code> 中看到的签名。</p>
+<p>不要忘记 Raku 中的 multi 方法（以及 multi-subs）可以基于常量进行调度，这就是为什么你可以, 例如, 使用你在 <code>multi token op(2)</code> 中看到的签名。</p>
 
-<p><code>expr($n)</code> 规则通过 <code>expr($n + 1)</code> 递归定义。 <code>$n</code> 达到3时递归停止，Perl 6 选择最后一个候选 <code>multi rule expr(3)</code>。</p>
+<p><code>expr($n)</code> 规则通过 <code>expr($n + 1)</code> 递归定义。 <code>$n</code> 达到3时递归停止，Raku 选择最后一个候选 <code>multi rule expr(3)</code>。</p>
 
 <p>让我懒惰，并使用以前的建议让 Perl 计算表达式：</p>
 
-<pre><code class="language-perl6">multi method assignment($/ where !$&lt;index&gt;) {
+<pre><code class="language-raku">multi method assignment($/ where !$&lt;index&gt;) {
     use MONKEY-SEE-NO-EVAL;
     %!var{$&lt;variable-name&gt;} = EVAL($&lt;expression&gt;);
 }
@@ -510,16 +510,16 @@ multi method assignment($/ where $&lt;index&gt;) {
 
 <p>我还建议一些额外的阅读，以便更好地了解如何使用 <code>multi</code> 和 <code>proto</code> 关键字：</p>
 
-<p>1、<a href="https://perl6.online/2017/12/21/the-proto-keyword/">Perl 6 中的 proto 关键字</a><br />
-2、<a href="https://perl6.online/2018/02/21/63-more-on-the-proto-keyword-in-perl-6/">有关 Perl 6 中 proto 关键字的更多信息</a></p>
+<p>1、<a href="https://raku.online/2017/12/21/the-proto-keyword/">Raku 中的 proto 关键字</a><br />
+2、<a href="https://raku.online/2018/02/21/63-more-on-the-proto-keyword-in-perl-6/">有关 Raku 中 proto 关键字的更多信息</a></p>
 
-<p>此时此刻，令人惊叹的 Perl 6 grammar 之旅就要结束了。 你可以在 <a href="https://github.com/ash/advent-2018-day8">GitHub</a> 上找到今天帖子的完整例子。 祝你读完其余的 Perl Advent Calendars，祝你愉快！</p>
+<p>此时此刻，令人惊叹的 Raku grammar 之旅就要结束了。 你可以在 <a href="https://github.com/ash/advent-2018-day8">GitHub</a> 上找到今天帖子的完整例子。 祝你读完其余的 Perl Advent Calendars，祝你愉快！</p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/perl-6-advent-calendar/">Perl 6 Advent Calendar</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/raku-advent-calendar/">Raku Advent Calendar</a>&nbsp;
             
           </div>
         
@@ -536,7 +536,7 @@ multi method assignment($/ where $&lt;index&gt;) {
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2018-12-09-constants-in-perl6/" data-toggle="tooltip" data-placement="top" title="第九天 - Perl 6 中的常量">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2018-12-09-constants-in-perl6/" data-toggle="tooltip" data-placement="top" title="第九天 - Raku 中的常量">Next Post &rarr;</a>
             </li>
           
         </ul>

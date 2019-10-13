@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>在手机中运行 Raku</title>
+  <meta property="og:title" content="在手机中运行 Raku" />
+  <meta name="twitter:title" content="在手机中运行 Raku" />
+  <meta name="description" content="准备工作  一只 Root 过的安卓智能手机(例如 Smartisan T1) 下载并安装 busybox.apk 、 Linux Deploy.apk 和 JuiceSSH.apk  安装 Linux 下面以在我的锤子手机上安装 Debian 为例, 说明如何在手机上运行 Linux:
+设置 Linux Deploy 打开手机上的 Linux Deploy.apk：
+在下面工具栏「启动」-&gt;「停止」-&gt; 「下载」 tab 中找到那个类似下载图标的按钮点击, 进入属性设置, 其中属性设置如下所示:
+其中,
+   选项 值 说 明     发行版 Debian 根据自己需要的系统选择   发行版本 jsssie 选择稳定版   架构 armhf 软件会自省判断 CPU 架构类型   镜像地址 http://debian.bjtu.edu.cn/debian/ http://ftp.cn.debian.org/debian/   镜像大小 不用填写 默认就行   选择组件 只保留 SSH 服务器 手机上用什么桌面环境   图形界面 取消勾选 手机上不需要 GUI   自定义挂载 勾选 在挂载点那里选择 sdcard0    设置完成后回到最上面的 Intall(安装 GNU/Linux), 就会开始下载镜像文件了:">
+  <meta property="og:description" content="准备工作  一只 Root 过的安卓智能手机(例如 Smartisan T1) 下载并安装 busybox.apk 、 Linux Deploy.apk 和 JuiceSSH.apk  安装 Linux 下面以在我的锤子手机上安装 Debian 为例, 说明如何在手机上运行 Linux:
+设置 Linux Deploy 打开手机上的 Linux Deploy.apk：
+在下面工具栏「启动」-&gt;「停止」-&gt; 「下载」 tab 中找到那个类似下载图标的按钮点击, 进入属性设置, 其中属性设置如下所示:
+其中,
+   选项 值 说 明     发行版 Debian 根据自己需要的系统选择   发行版本 jsssie 选择稳定版   架构 armhf 软件会自省判断 CPU 架构类型   镜像地址 http://debian.bjtu.edu.cn/debian/ http://ftp.cn.debian.org/debian/   镜像大小 不用填写 默认就行   选择组件 只保留 SSH 服务器 手机上用什么桌面环境   图形界面 取消勾选 手机上不需要 GUI   自定义挂载 勾选 在挂载点那里选择 sdcard0    设置完成后回到最上面的 Intall(安装 GNU/Linux), 就会开始下载镜像文件了:">
+  <meta name="twitter:description" content="准备工作  一只 Root 过的安卓智能手机(例如 Smartisan T1) 下载并安装 busybox.apk 、 Linux Deploy.apk 和 JuiceSSH.apk  安装 Linux 下面以在我的锤子手机上安装 Debian 为例, 说明如何在手机上运行 Linux:
+设置 Linux Deploy 打开手机上的 Linux Deploy.apk：
+在下面工具栏「启 …">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-10-14-%E5%9C%A8%E6%89%8B%E6%9C%BA%E4%B8%AD%E8%BF%90%E8%A1%8Craku/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-14-%E5%9C%A8%E6%89%8B%E6%9C%BA%E4%B8%AD%E8%BF%90%E8%A1%8Craku/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>在手机中运行 Raku</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on October 14, 2016
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 2 minutes (333 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="准备工作">准备工作</h2>
+
+<ul>
+<li>一只 Root 过的安卓智能手机(例如 Smartisan T1)</li>
+<li>下载并安装 busybox.apk 、 Linux Deploy.apk 和 JuiceSSH.apk</li>
+</ul>
+
+<h2 id="安装-linux">安装 Linux</h2>
+
+<p>下面以在我的锤子手机上安装 Debian 为例, 说明如何在手机上运行 Linux:</p>
+
+<h3 id="设置-linux-deploy">设置 Linux Deploy</h3>
+
+<p>打开手机上的 Linux Deploy.apk：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-e26d3ec9f0f75281.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Linux Deploy" /></p>
+
+<p>在下面工具栏「启动」-&gt;「停止」-&gt; 「下载」 tab 中找到那个类似下载图标的按钮点击, 进入属性设置, 其中属性设置如下所示:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-97f24c469a53d65f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="发行版至安装类型" /></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-52e6e4259a203066.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="安装路径至选择组件" /></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-d812fab30694ce20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Chroot目录至挂载点" /></p>
+
+<p>其中,</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">选项</th>
+<th align="left">值</th>
+<th align="left">说 明</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">发行版</td>
+<td align="left">Debian</td>
+<td align="left">根据自己需要的系统选择</td>
+</tr>
+
+<tr>
+<td align="left">发行版本</td>
+<td align="left">jsssie</td>
+<td align="left">选择稳定版</td>
+</tr>
+
+<tr>
+<td align="left">架构</td>
+<td align="left">armhf</td>
+<td align="left">软件会自省判断 CPU 架构类型</td>
+</tr>
+
+<tr>
+<td align="left">镜像地址</td>
+<td align="left"><a href="http://debian.bjtu.edu.cn/debian/">http://debian.bjtu.edu.cn/debian/</a></td>
+<td align="left"><a href="http://ftp.cn.debian.org/debian/">http://ftp.cn.debian.org/debian/</a></td>
+</tr>
+
+<tr>
+<td align="left">镜像大小</td>
+<td align="left">不用填写</td>
+<td align="left">默认就行</td>
+</tr>
+
+<tr>
+<td align="left">选择组件</td>
+<td align="left">只保留 SSH 服务器</td>
+<td align="left">手机上用什么桌面环境</td>
+</tr>
+
+<tr>
+<td align="left">图形界面</td>
+<td align="left">取消勾选</td>
+<td align="left">手机上不需要 GUI</td>
+</tr>
+
+<tr>
+<td align="left">自定义挂载</td>
+<td align="left">勾选</td>
+<td align="left">在挂载点那里选择 sdcard0</td>
+</tr>
+</tbody>
+</table>
+
+<p>设置完成后回到最上面的 Intall(安装 GNU/Linux), 就会开始下载镜像文件了:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-d27228af7d710726.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="开始下载" /></p>
+
+<p>注意, 如果中间出现 E, 表示有错误发生, 某些文件下载失败, 需要停掉(Stop)重新开始:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-a153a030532ae345.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Error" /></p>
+
+<p>成功安装不会耗费太多时间, 如果网速够好的情况下, 我是连续下载了好几次都失败, 曾一度放弃不搞了, 可能是因为网络不稳定的原因, 这次选择在夜深人静的12点之后进行, 经过若干次(n&gt;=2， n&lt;=4)后最终下载成功:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-df34331d9bf011cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Success" /></p>
+
+<p>这个时候, 说明手机中的 Debian 系统已经成功启动了。但是我们怎么进去呢？还记得我们之前安装的 JuiceSSH 吗？ 用这个软件进行连接。首先打开这个软件, 点击「连接」一栏, 进行 SSH 配置:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-32e1d18c27fe86c5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="连接" /></p>
+
+<p>然后点击右下角的加号按钮, 新建一个连接：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-36ad51a18c1157c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="点击右下角的加号" /></p>
+
+<p>在弹出的「新建连接」窗口中, 在地址栏中填入 <code>127.0.0.1</code>：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-bad556143435fef9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建连接" /></p>
+
+<p>然后选中「认证」一栏, 在下拉列表中选择「新建」：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-53b8e009b1d9d7cb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建认证" /></p>
+
+<p>填入用户名 android, 密码 changeme, 然后点击对号按钮完成设置:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-0b69fd7a1f81d82a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="JuiceSSH设置完成" /></p>
+
+<p>这样设置就完成了, 如要进入 Linux 命令行界面, 就点击 JuiceSSH 中的连接 「127.0.0.1」或者你自己设置的昵称, 进入 Debian 8:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-f08529d79e74503d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="进入 Debian" /></p>
+
+<p>这样还没完, 你会发现输入不了中文, 没有 vim 编辑器, git。。。</p>
+
+<h2 id="中文环境的配置">中文环境的配置</h2>
+
+<p>进入终端后用 <code>ls</code>查看含有中文名的文件时显示 <code>?????.txt</code> 的乱码。然后终端里面也输入不了中文。解决方法的步骤如下：</p>
+
+<h3 id="重新配置-locales">重新配置 locales</h3>
+
+<p>在终端中输入:</p>
+
+<pre><code>dpkg-reconfigure locales
+</code></pre>
+
+<p>使用空格键选中需要安装的本地化的语言,  <code>zh_CN.UTF-8</code> 和 <code> en_US.UTF-8</code>。</p>
+
+<h3 id="在终端里设置本地化为-zh-cn-utf-8">在终端里设置本地化为 <code>zh_CN.UTF-8</code></h3>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-05549ceb477f5f00.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="服务器端命令" /></p>
+
+<h3 id="安装中文字体">安装中文字体</h3>
+
+<p>首先安装 vim 编辑器:</p>
+
+<pre><code>sudo apt-get install vim
+</code></pre>
+
+<p>在 <code>/etc/default/locale</code> 文件里写入：</p>
+
+<pre><code>LANG=en_US.utf8
+LC_CTYPE=en_US.utf8
+LC_NUMERIC=en_US.utf8
+LC_TIME=en_US.utf8
+LC_COLLATE=en_US.utf8
+LC_MONETARY=en_US.utf8
+LC_MESSAGES=en_US.utf8
+LC_PAPER=en_US.utf8
+LC_NAME=en_US.utf8
+LC_ADDRESS=en_US.utf8
+LC_TELEPHONE=en_US.utf8
+LC_MEASUREMENT=en_US.utf8
+LC_IDENTIFICATION=en_US.utf8
+LC_ALL=
+</code></pre>
+
+<p>在 <code>/etc/environment</code> 里面写入:</p>
+
+<pre><code>LANGUAGE=&quot;en_US:en&quot;
+LANG=en_US.utf8
+LC_CTYPE=&quot;zh_CN.utf8&quot;   
+LC_NUMERIC=&quot;en_US.utf8&quot;
+LC_TIME=&quot;en_US.utf8&quot;
+LC_COLLATE=&quot;en_US.utf8&quot;
+LC_MONETARY=&quot;en_US.utf8&quot;
+LC_MESSAGES=&quot;en_US.utf8&quot;
+LC_PAPER=&quot;en_US.utf8&quot;
+LC_NAME=&quot;en_US.utf8&quot;
+LC_ADDRESS=&quot;en_US.utf8&quot;
+LC_TELEPHONE=&quot;en_US.utf8&quot;
+LC_MEASUREMENT=&quot;en_US.utf8&quot;
+LC_IDENTIFICATION=&quot;en_US.utf8&quot;
+</code></pre>
+
+<p>然后在 deploy linux 这个软件中重启 Debian 系统, 就是先 Stop，再 Start，重新使用 JuiceSSH 进入 Debian 命令行界面, 再次输入中文就可以了：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-829e830b303f05f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="哈哈哈" /></p>
+
+<h2 id="安装-rakudo-raku">安装 Rakudo Raku</h2>
+
+<p>在手机上输入一系列命令不太方便, 所以在 Windows/Linux/Mac 下使用 ssh 工具可以连接到手机上, 直接在电脑上操作手机中的终端, 下面以 Windows 为例, 使用 ssh 工具(注意你必须已经安装了它)连接 Debian, 打开 Windows 上的命令行提示符, 输入:</p>
+
+<pre><code>ssh android@192.168.1.101
+</code></pre>
+
+<p>然后会提示你输入密码 changeme, 之后就连接成功了：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-bed78be742dbac15.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="succ.png" /></p>
+
+<p>然后安装 Rakudo：</p>
+
+<h3 id="准备">准备</h3>
+
+<pre><code>apt-get install build-essential git
+</code></pre>
+
+<h3 id="从源代码安装">从源代码安装</h3>
+
+<pre><code>git clone git://github.com/rakudo/rakudo.git
+cd rakudo
+perl Configure.pl --gen-moar --gen-nqp --backends=moar
+make
+make install
+</code></pre>
+
+<p>安装完成后要注意环境变量的设置, 否则会提示 command not found:</p>
+
+<pre><code>echo &quot;export PATH=\$PATH:$HOME/rakudo/install/bin&quot; &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+
+<p>然后退出终端, 再次打开终端输入 <code>raku --version</code> 就可以使用 raku了。</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-28753a43a57d3d2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="raku" /></p>
+
+<h3 id="安装-panda">安装 panda</h3>
+
+<pre><code>git clone --recursive git://github.com/tadzik/panda.git
+cd panda
+raku bootstrap.pl
+</code></pre>
+
+<p>然后根据提示:</p>
+
+<pre><code>==&gt; Please make sure that /home/android/.raku/bin is in your PATH
+</code></pre>
+
+<p>把 panda 也加到 PATH 变量中:</p>
+
+<pre><code>echo &quot;export PATH=\$PATH:$HOME/.raku/bin&quot; &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</code></pre>
+
+<p>或者编辑 <code>vim  ~/.bash_profile</code> 文件:</p>
+
+<pre><code>PATH=$PATH:/home/android/rakudo/install/bin:/home/android/.raku/bin/
+export PATH
+</code></pre>
+
+<p>安装 Linenoise 模块</p>
+
+<pre><code>panda install Linenoise
+</code></pre>
+
+<h2 id="总结">总结</h2>
+
+<p>比较容易失败的地方的是系统镜像的下载和中文环境的配置。注意这两点, 就抓住重点确保安装顺利进行了。安装完你可以干什么？ 我先运行个 Python, 微信机器人，Mojo-Webqq, Mojo-Weixin, 写写  jekyll 博客，使用 Raku, 都能如你所愿, 因为它既使用 Wifi 也可以使用 3g/4g 蜂窝网络, 随时随地写东西。Once Build, Write Anywhere。</p>
+
+<p>最后, Just For fun!</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/debian/">Debian</a>&nbsp;
+            
+              <a href="https://ohmysummer.github.io//tags/juicessh/">JuiceSSH</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2016-10-05-raku%E4%B8%AD%E7%9A%84subst/" data-toggle="tooltip" data-placement="top" title="Raku 中的 subst">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2016-10-14-stackoverflowweekly1014/" data-toggle="tooltip" data-placement="top" title="stackoverflowWeekly1014">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+

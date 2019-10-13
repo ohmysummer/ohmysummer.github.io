@@ -236,7 +236,7 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         <p>学会了怎么创建类, 我们继续用它来构建我们的中心内容:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 class Hammer {
     method hammer($stuff) {
         say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;
@@ -263,7 +263,7 @@ class Mallet {
 
 <p>所以我们的新玩具, 类, 展现出了一个问题。我们想在每个类中重用 hammer 方法。一个新的概念, <strong>role</strong> 来拯救我们来了:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 role Hammering {
     method hammer($stuff) {
         say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;
@@ -274,7 +274,7 @@ role Hammering {
 
 <p>虽然类经常以一个合适的名词命名, 但是 roles 经常以一个分词命名, 例如 <strong>Hammering</strong>。这不是一个必须遵守的规则, 但是它是一个好的经验法则。现在类的定义变的简单了:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 class Hammer does Hammering { }
 class Gavel  does Hammering { }
 class Mallet does Hammering { }
@@ -289,7 +289,7 @@ class Mallet does Hammering { }
 
 <p>但是好处不止这一点儿。至少有两个好处:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 my $hammer = Hammer.new;    # create a new hammer object
 say $hammer ~~ Hammer;      # &quot;Bool::True&quot; -- yes, this we know
 say $hammer ~~ Hammering;   # &quot;Bool::True&quot; -- ooh!
@@ -298,7 +298,7 @@ say $hammer ~~ Hammering;   # &quot;Bool::True&quot; -- ooh!
 
 <p>所以 <code>$hammer</code> 知道它遵守了(does)<strong>Hammering</strong>, 我们现在不仅知道了对象属于哪个类, 还知道了对象并入了什么 role。这很有用如果我们不确定我们处理的是什么类型的对象:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 if $unkown_object ~~ Hammering {
     $unknown_object.hammer(&quot;砸在钉子上&quot;);     # will always work
 }
@@ -307,7 +307,7 @@ if $unkown_object ~~ Hammering {
 
 <p>一个类能一次接收几个 roles 吗？ 是的, 它可以:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 role Flying {
     method fly {
         say &quot;Whooosh!&quot;;
@@ -328,7 +328,7 @@ class FlyingHammer does Hammering does Flying { }
 
 <p>这种情况下选项 3  应该是正确答案。原因和之前相同: 因为类和工程越来越庞大, 程序员可能意识不到两个 role 之间在哪儿发生冲突。所以我们标记了它。</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 role Sleeping {
     method lie {
         say &quot;水平躺下&quot;;
@@ -347,7 +347,7 @@ class SleepingLiar does Sleeping does Lying { }    # 冲突!
 
 <p>下一个问题, 那么: 当在类中有  role 冲突时, 我们怎么修复它？ 简单: 在类中自己定义一个同名的方法:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 class SleepingLiar does Sleeping does Lying {
     method lie {
         say &quot;Lying in my sleep....&quot;;
@@ -358,7 +358,7 @@ class SleepingLiar does Sleeping does Lying {
 
 <p>如果你想从一个贴别的 role 中调用一个方法, 语法是这样的:</p>
 
-<pre><code class="language-perl6">
+<pre><code class="language-raku">
 class SleepingLiar does Sleeping does Lying {
     method lie {
         self.Sleeping::lie;
@@ -392,7 +392,7 @@ class SleepingLiar does Sleeping does Lying {
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2015-11-16-perl6%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98grammar/" data-toggle="tooltip" data-placement="top" title="Perl6 中的可变 Grammar">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2015-11-16-raku%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98grammar/" data-toggle="tooltip" data-placement="top" title="Raku 中的可变 Grammar">Next Post &rarr;</a>
             </li>
           
         </ul>

@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>面向对象的 Raku</title>
+  <meta property="og:title" content="面向对象的 Raku" />
+  <meta name="twitter:title" content="面向对象的 Raku" />
+  <meta name="description" content="Object orientation in Raku">
+  <meta property="og:description" content="Object orientation in Raku">
+  <meta name="twitter:description" content="Object orientation in Raku">
+  <meta name="author" content="焉知非鱼"/>
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta property="og:url" content="https://ohmysummer.github.io/post/2015-06-15-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84raku/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Rakudo Perl 6" />
+
+  <meta name="generator" content="Hugo 0.53" />
+  <link rel="canonical" href="https://ohmysummer.github.io/post/2015-06-15-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84raku/" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Rakudo Perl 6">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Rakudo Perl 6</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Rakudo Perl 6" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Rakudo Perl 6" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Search Rakudo Perl 6</h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>面向对象的 Raku</h1>
+                
+                  
+                    <h2 class="post-subheading">Object orientation in Raku</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp; Posted on June 15, 2015
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 14 minutes (2812 words)
+  
+  
+</span>
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<p><a href="https://docs.raku.org/language/objects">https://docs.raku.org/language/objects</a></p>
+
+<p>Raku 为<a href="https://en.wikipedia.org/wiki/Object-oriented_programming">面向对象编程(OOP)</a>提供强大支持。尽管 Raku 允许程序员以多种范式进行编程，但面向对象编程是该语言的核心。</p>
+
+<p>Raku 带有丰富的预定义类型，可分为两类：常规类型和<a href="https://docs.raku.org/language/nativetypes">原生类型</a>。所有你能存储到变量中的东西要么是一个原生的 value, 要么是一个对象。这包括字面值、类型（类型对象）、code 和容器。</p>
+
+<p>原生类型用于<code>底层类型</code>（例如 <code>uint64</code>）。尽管原生类型没有和对象同样的功能，如果在其上调用方法，它们也会自动装入普通对象。</p>
+
+<p>一切不是原生值的东西都是一个对象。对象确实允许<a href="https://en.wikipedia.org/wiki/Object-oriented_programming#Inheritance_and_behavioral_subtyping">继承</a>和<a href="https://en.wikipedia.org/wiki/Object-oriented_programming#Encapsulation">封装</a>。</p>
+
+<h2 id="使用对象">使用对象</h2>
+
+<p>要在对象上调用方法，请在对象名上添加一个点，然后添加方法名称：</p>
+
+<pre><code class="language-raku">say &quot;abc&quot;.uc;
+# OUTPUT: «ABC␤» 
+</code></pre>
+
+<p>这将在 &ldquo;abc&rdquo; 上调用 <code>uc</code> 方法, 这是一个 <code>Str</code> 类型的对象。要为方法提供参数, 请在方法后面的括号内添加参数。</p>
+
+<pre><code class="language-raku">my $formatted-text = &quot;Fourscore and seven years ago...&quot;.indent(8);
+say $formatted-text;
+# OUTPUT: «        Fourscore and seven years ago...
+» 
+</code></pre>
+
+<p><code>$formatted-text</code> 现在包含上面的文本，但缩进了8个空格。</p>
+
+<p>多个参数由逗号分隔：</p>
+
+<pre><code class="language-raku">my @words = &quot;Abe&quot;, &quot;Lincoln&quot;;
+@words.push(&quot;said&quot;, $formatted-text.comb(/\w+/));
+say @words;
+# OUTPUT: «[Abe Lincoln said (Fourscore and seven years ago)]␤» 
+</code></pre>
+
+<p>类似地，可以通过在方法后放置冒号并使用逗号分隔参数列表来指定多个参数：</p>
+
+<pre><code class="language-raku">say @words.join('--').subst: 'years', 'DAYS';
+# OUTPUT: «Abe--Lincoln--said--Fourscore and seven DAYS ago␤» 
+</code></pre>
+
+<p>如果要在没有括号的情况下传递参数，则必须在方法之后添加一个 <code>:</code>，因此没有冒号或括号的方法调用明确地是没有参数列表的方法调用：</p>
+
+<pre><code class="language-raku">say 4.log:   ; # OUTPUT: «1.38629436111989␤» ( natural logarithm of 4 ) 
+say 4.log: +2; # OUTPUT: «2␤» ( base-2 logarithm of 4 ) 
+say 4.log  +2; # OUTPUT: «3.38629436111989␤» ( natural logarithm of 4, plus 2 )
+</code></pre>
+
+<p>许多看起来不像方法调用的操作（例如，智能匹配或将对象插值到字符串中）可能会导致方法调用。</p>
+
+<p>方法可以返回可变容器，在这种情况下，您可以分配方法调用的返回值。这是使用对象的可读写属性的方式：</p>
+
+<pre><code class="language-raku">$*IN.nl-in = &quot;\r\n&quot;;
+</code></pre>
+
+<p>在这里，我们在 <code>$*IN</code> 对象上调用 <code>nl-in</code> 方法, 不带参数，并使用 <code>=</code> 运算符将其赋值给它返回的容器。</p>
+
+<p>所有对象都支持类<a href="https://docs.raku.org/type/Mu">Mu</a>的方法，它是层次结构的根。所有对象都来自 <code>Mu</code>。</p>
+
+<h2 id="类型对象">类型对象</h2>
+
+<p>类型本身是对象，你可以使用类型的名字获取类型对象:</p>
+
+<pre><code class="language-raku">my $int-type-obj = Int;
+</code></pre>
+
+<p>你可以通过调用 <code>WHAT</code> 方法查看任何对象的 type object(它实际上是一个方法形式的宏):</p>
+
+<pre><code class="language-raku">my $int-type-obj = 1.WHAT;
+</code></pre>
+
+<p>使用 <a href="https://docs.raku.org/routine/===">===</a> 恒等运算符可以比较类型对象(<a href="https://docs.raku.org/type/Mu">Mu</a>除外)的相等性：</p>
+
+<pre><code class="language-raku">sub f(Int $x) {
+    if $x.WHAT === Int {
+        say 'you passed an Int';
+    }
+    else {
+        say 'you passed a subtype of Int';
+    }
+}
+</code></pre>
+
+<p>虽然，在大多数情况下，<a href="https://docs.raku.org/routine/isa"><code>.isa</code></a>方法就足够了：</p>
+
+<pre><code class="language-raku">sub f($x) {
+    if $x.isa(Int) {
+        ...
+    }
+    ...
+}
+</code></pre>
+
+<p>子类型可以使用 <a href="https://docs.raku.org/language/operators#infix_~~">smartmatching</a> 来检查：</p>
+
+<pre><code class="language-raku">if $type ~~ Real {
+    say '$type contains Real or a subtype thereof';
+}
+</code></pre>
+
+<h2 id="类">类</h2>
+
+<p>使用 <code>class</code> 关键字进行类的声明，通常后跟类名：</p>
+
+<pre><code class="language-raku">class Journey {
+}
+</code></pre>
+
+<p>此声明会创建类型对象并将其安装在名字 <code>Journey</code> 下的当前包和当前词法作用域中。您还可以通过词法声明类</p>
+
+<pre><code class="language-raku">my class Journey {
+}
+</code></pre>
+
+<p>这限制了它们对当前词法范围的可见性，如果该类是嵌套在模块或另一个类中的实现细节，这可能很有用。</p>
+
+<h2 id="属性">属性</h2>
+
+<p>属性存在于每个类的实例中。属性中存储着对象的状态。在 Raku 中, 一切属性都是<code>私有的</code>.  它们一般使用 <code>has</code> 关键字和 <code>!</code> twigil 进行声明.</p>
+
+<pre><code class="language-raku">class Journey {
+    has $!origin;
+    has $!destination;
+    has @!travellers;
+    has $!notes;
+}
+</code></pre>
+
+<p>虽然没有公共(甚至保护属性)属性, 不过有一种方式可以自动生成访问器方法: 使用 <code>.</code> twigil 代替 <code>!</code>  twigil 。(那个 <code>.</code> 应该让你想起了<strong>方法调用</strong>)。</p>
+
+<pre><code class="language-raku">class Journey {
+    has $.origin;
+    has $.destination;
+    has @!travellers;
+    has $.notes;
+}
+</code></pre>
+
+<p>这默认提供<strong>只读</strong>访问器, 为了允许更改属性, 要添加 <code>is rw</code> 特性:</p>
+
+<pre><code class="language-raku">class Journey {
+    has $.origin;
+    has $.destination;
+    has @!travellers;
+    has $.notes is rw;
+}
+</code></pre>
+
+<p>现在，<code>Journey</code>对象创建之后，它的 <code>.origin</code>，<code>.destination</code> 和 <code>.notes</code> 都能从类的外部访问，但只有 <code>.notes</code> 可以被修改。</p>
+
+<p>如果在没有某些属性（例如 <code>origin</code> 或 <code>destination</code>）的情况下实例化对象，我们可能无法获得想要的结果。要防止这种情况，请提供默认值或通过使用<a href="https://docs.raku.org/routine/is%20required">is required</a> trait 来标记属性以确保在对象创建时设置属性。</p>
+
+<pre><code class="language-raku">class Journey {
+    # error if origin is not provided 
+    has $.origin is required;
+    # set the destination to Orlando as default (unless that is the origin!) 
+    has $.destination = self.origin eq 'Orlando' ?? 'Kampala' !! 'Orlando';
+    has @!travelers;
+    has $.notes is rw;
+}
+</code></pre>
+
+<p>因为类从 <code>Mu</code> 继承了一个默认的构造器, 并且我们也要求类为我们生成一些<strong>访问器方法</strong>.</p>
+
+<pre><code class="language-raku"># 创建一个新的类的实例.
+my $vacation = Journey.new(
+    origin      =&gt; 'Sweden',
+    destination =&gt; 'Switzerland',
+    notes       =&gt; 'Pack hiking gear!'
+);
+# 使用访问器; 这打印出 Sweden.
+say $vacation.origin;
+# 使用 rw 存取器来更改属性的值.
+$vacation.notes = 'Pack hiking gear and sunglasses!';
+</code></pre>
+
+<p>请注意，虽然默认构造函数可以初始化只读属性，但它只会设置具有访问器方法的属性。也就是说，即使您传递<code>travelers =&gt; [&quot;Alex&quot;, &quot;Betty&quot;]</code>给默认构造函数，<code>@!travelers</code>也不会初始化该属性。</p>
+
+<h2 id="方法">方法</h2>
+
+<p>使用 <code>method</code> 关键字在类的 body 中声明方法：</p>
+
+<pre><code class="language-raku">class Journey {
+    has $.origin;
+    has $.destination;
+    has @!travellers;
+    has $.notes is rw;
+
+    method add_traveller($name) {
+        if $name ne any(@!travellers) {
+            push @!travellers, $name;
+        }
+        else {
+            warn &quot;$name is already going on the journey!&quot;;
+        }
+    }
+
+    method describe() {
+        &quot;From $!origin to $!destination&quot;
+    }
+}
+</code></pre>
+
+<p>方法可以有签名, 就像子例程一样。 属性可以在方法中使用，并且可以始终与<code>!</code>twigil 一起使用, 即使属性是用 <code>.</code> twigil 声明的。 这是因为 <code>.</code> twigil 声明了 <code>!</code> twigil 并生成一个访问方法。</p>
+
+<p>看看上面的代码，在方法 <code>describe</code> 中使用 <code>$!origin</code> 和 <code>$.origin</code> 有一个微妙但重要的区别。<code>$!origin</code> 是一种廉价且明显的属性查找。<code>$.origin</code> 是一个方法调用，因此可以在子类中重写。只在你想要允许覆盖时使用 <code>$.origin</code>。</p>
+
+<p>与子例程不同，其他命名参数不会产生编译时或运行时错误。这允许通过<a href="https://docs.raku.org/language/functions#Re-dispatching">重新分派</a>来链接方法。</p>
+
+<p>你可以编写自己的访问器来覆盖任何或所有自动生成的访问器。</p>
+
+<pre><code class="language-raku">my $ⲧ = &quot; &quot; xx 4; # A tab-like thing 
+class Journey {
+    has $.origin;
+    has $.destination;
+    has @.travelers;
+    has Str $.notes is rw;
+ 
+    multi method notes() { &quot;$!notes\n&quot; };
+    multi method notes( Str $note ) { $!notes ~= &quot;$note\n$ⲧ&quot; };
+ 
+    method Str { &quot;⤷ $!origin\n$ⲧ&quot; ~ self.notes() ~ &quot;$!destination ⤶\n&quot; };
+}
+ 
+my $trip = Journey.new( :origin&lt;Here&gt;, :destination&lt;There&gt;,
+                        travelers =&gt; &lt;þor Freya&gt; );
+ 
+$trip.notes(&quot;First steps&quot;);
+notes $trip: &quot;Almost there&quot;;
+print $trip;
+ 
+# OUTPUT: 
+#⤷ Here 
+#       First steps 
+#       Almost there 
+# 
+#There ⤶ 
+</code></pre>
+
+<p>声明的multi方法 <code>notes</code> 使用不同的签名进行读写，<code>notes</code> 覆盖了 <code>$.notes</code> 声明中隐含的自动生成的方法。</p>
+
+<p>请注意，在 <code>notes $trip: &quot;Almost there&quot;</code> 中我们使用了间接调用语法，它首先放置方法名称，然后放置对象，然后用冒号分隔参数：<code>method invocant: arguments</code>。只要感觉比经典的句点和括号更自然，我们就可以使用这种语法。它的工作原理完全相同。</p>
+
+<p>可以在运行时使用<code>.&quot;&quot;</code>运算符解析方法名称。</p>
+
+<pre><code class="language-raku">class A { has $.b };
+my $name = 'b';
+A.new.&quot;$name&quot;().say;
+# OUTPUT: «(Any)␤» 
+</code></pre>
+
+<p>相对于先前的<a href="https://docs.raku.org/language/objects#Attributes">属性</a>部分，过去用于更新 <code>$.notes</code> 的语法在本节已改变。代替赋值：</p>
+
+<pre><code class="language-raku">$vacation.notes = 'Pack hiking gear and sunglasses!';
+</code></pre>
+
+<p>我们现在做一个方法调用:</p>
+
+<pre><code class="language-raku">$trip.notes(&quot;First steps&quot;);
+</code></pre>
+
+<p>覆盖默认的自动生成的访问器意味着它在返回赋值时提供可变容器不再可用。方法调用是将属性的更新添加到计算和逻辑的首选方法。许多现代语言可以通过使用 “setter” 方法重载赋值来更新属性。虽然 Raku 可以为此目的使用 <a href="https://github.com/raku/roast/blob/master/S12-attributes/mutators.t"><code>Proxy</code></a> 对象重载赋值运算符，但是目前不鼓励使用复杂逻辑重载赋值运算符来设置属性作为<a href="https://6guts.wordpress.com/2016/11/25/perl-6-is-biased-towards-mutators-being-really-simple-thats-a-good-thing/">弱面向对象设计</a>。</p>
+
+<pre><code class="language-raku">    has $!attribute
+    method attribute() { ... }
+</code></pre>
+
+<pre><code class="language-raku">class A {    
+    has $.attr is rw;
+}
+</code></pre>
+
+<p>等价于:</p>
+
+<pre><code class="language-raku">class A {    
+    has $!attr;    
+    method attr() is rw {
+        $!attr;
+    }
+}
+</code></pre>
+
+<h2 id="类和实例方法">类和实例方法</h2>
+
+<p>方法的签名可以有一个<em>调用者</em>(invocant)作为第一个参数, 后跟一个冒号，这允许该方法引用它被调用的对象。</p>
+
+<pre><code class="language-raku">class Foo {
+    method greet($me: $person) {
+        say &quot;Hi, I am $me.^name(), nice to meet you, $person&quot;;
+    }
+}
+Foo.new.greet(&quot;Bob&quot;);    # OUTPUT: «Hi, I am Foo, nice to meet you, Bob␤» 
+</code></pre>
+
+<p>在方法签名中提供调用者还允许通过使用<a href="https://docs.raku.org/type/Signature#Type_constraints">类型约束</a>将方法定义为类方法或对象方法。<code>::?CLASS</code> 变量可用于在编译时提供类名，与 <code>:U</code>（对于类方法）或 <code>:D</code>（对于实例方法）结合使用。</p>
+
+<pre><code class="language-raku">class Pizza {
+    has $!radius = 42;
+    has @.ingredients;
+ 
+    # 类方法: construct from a list of ingredients 
+    method from-ingredients(::?CLASS:U $pizza: @ingredients) {
+        $pizza.new( ingredients =&gt; @ingredients );
+    }
+ 
+    # 实例方法 
+    method get-radius(::?CLASS:D:) { $!radius }
+}
+my $p = Pizza.from-ingredients: &lt;cheese pepperoni vegetables&gt;;
+say $p.ingredients;     # OUTPUT: «[cheese pepperoni vegetables]␤» 
+say $p.get-radius;      # OUTPUT: «42␤» 
+say Pizza.get-radius;   # This will fail. 
+CATCH { default { put .^name ~ &quot;:\n&quot; ~ .Str } };
+# OUTPUT: «X::Parameter::InvalidConcreteness:␤ 
+#          Invocant of method 'get-radius' must be 
+#          an object instance of type 'Pizza', 
+#          not a type object of type 'Pizza'. 
+#          Did you forget a '.new'?» 
+</code></pre>
+
+<p>通过使用<a href="https://docs.raku.org/syntax/multi">multi</a>声明符，方法既可以是类方法也可以是对象方法：</p>
+
+<pre><code class="language-raku">class C {
+    multi method f(::?CLASS:U:) { say &quot;class method&quot;  }
+    multi method f(::?CLASS:D:) { say &quot;object method&quot; }
+}
+C.f;       # OUTPUT: «class method␤» 
+C.new.f;   # OUTPUT: «object method␤» 
+</code></pre>
+
+<h2 id="self">self</h2>
+
+<p>在方法内部，术语 <code>self</code> 可用并绑定到调用对象。<code>self</code> 可以用来调用调用者的其他方法，包括构造函数：</p>
+
+<pre><code class="language-raku">class Box {
+  has $.data;
+ 
+  method make-new-box-from() {
+      self.new: data =&gt; $!data;
+  }
+}
+</code></pre>
+
+<p><code>self</code> 也可以用在类方法或实例方法中，但要注意尝试从另一个方法调用一种类型的方法：</p>
+
+<pre><code class="language-raku">class C {
+    method g()            { 42     }
+    method f(::?CLASS:U:) { self.g }
+    method d(::?CLASS:D:) { self.f }
+}
+C.f;        # OUTPUT: «42␤» 
+C.new.d;    # This will fail. 
+CATCH { default { put .^name ~ &quot;:\n&quot; ~ .Str } };
+# OUTPUT: «X::Parameter::InvalidConcreteness:␤ 
+#          Invocant of method 'f' must be a type object of type 'C', 
+#          not an object instance of type 'C'.  Did you forget a 'multi'?» 
+</code></pre>
+
+<p><code>self</code> 也可以与属性一起使用，只要它们具有访问器。<code>self.a</code> 将为声明为 <code>has $.a</code> 的属性调用访问器。然而，<code>self.a</code> 和 <code>$.a</code> 之间存在差异，因为后者将项化;  <code>$.a</code> 将等同于 <code>self.a.item</code> 或 <code>$(self.a)</code>。</p>
+
+<pre><code class="language-raku">class A {
+    has $.x = (1, 2, 3);
+    method b() { .say for self.x; .say for $.x }
+};
+A.new.b; # OUTPUT: «1␤2␤3␤(1 2 3)␤» 
+</code></pre>
+
+<p>方法调用的冒号语法仅支持使用方法调用<code>self</code>，而不支持快捷方式。</p>
+
+<p>请注意，如果 <a href="https://docs.raku.org/type/Mu">Mu</a> 中的相关方法 <code>bless</code>，<code>CREATE</code> 没有重载，<code>self</code> 将指向这些方法的类型对象。</p>
+
+<p>在另一方面，在初始化的不同阶段，在实例上调用子方法 <code>BUILD</code> 和 <code>TWEAK</code>。子类中同名的子方法尚未运行，因此你不应该依赖这些方法中的潜在虚方法调用。</p>
+
+<h3 id="私有方法">私有方法</h3>
+
+<p>方法名前带有感叹号的方法不能从定义类之外的任何地方调用; 这些方法是私有的，因为它们在声明它们的类之外是不可见的。使用感叹号而不是点号调用私有方法：</p>
+
+<pre><code class="language-raku">class FunMath {
+    has $.value is required;
+    method !do-subtraction( $num ) {
+        if $num ~~ Str {
+            return $!value + (-1 * $num.chars);
+        }
+        return $!value + (-1 * $num);
+    }
+    method minus( $minuend: $subtrahend ) {
+        # invoking the private method on the explicit invocant 
+        $minuend!do-subtraction($subtrahend);
+    }
+}
+my $five = FunMath.new(value =&gt; 5);
+say $five.minus(6);         # OUTPUT: «-1␤» 
+ 
+say $five.do-subtraction(6);
+CATCH { default { put .^name ~ &quot;:\n&quot; ~ .Str } }
+# OUTPUT: «X::Method::NotFound: 
+# No such method 'do-subtraction' for invocant of type 
+# 'FunMath'. Did you mean '!do-subtraction'?␤» 
+</code></pre>
+
+<p>私有方法不能被子类继承。</p>
+
+<h3 id="子方法">子方法</h3>
+
+<p>子方法是子类不继承的公共方法。该名称源于它们在语义上与子例程类似的事实。</p>
+
+<p>子方法对于对象构造和销毁任务以及特定于特定类型的任务非常有用，因此子类型必须重写它们。</p>
+
+<p>例如，<a href="https://docs.raku.org/type/Mu#method_new">默认方法 new</a> 在<a href="https://docs.raku.org/language/objects#Inheritance">继承</a>链中的每个类上调用 submethod <code>BUILD</code>:</p>
+
+<pre><code class="language-raku">class Point2D {
+    has $.x;
+    has $.y;
+ 
+    submethod BUILD(:$!x, :$!y) {
+        say &quot;Initializing Point2D&quot;;
+    }
+}
+ 
+class InvertiblePoint2D is Point2D {
+    submethod BUILD() {
+        say &quot;Initializing InvertiblePoint2D&quot;;
+    }
+    method invert {
+        self.new(x =&gt; - $.x, y =&gt; - $.y);
+    }
+}
+ 
+say InvertiblePoint2D.new(x =&gt; 1, y =&gt; 2);
+# OUTPUT: «Initializing Point2D␤» 
+# OUTPUT: «Initializing InvertiblePoint2D␤» 
+# OUTPUT: «InvertiblePoint2D.new(x =&gt; 1, y =&gt; 2)␤» 
+</code></pre>
+
+<p>另请参见：<a href="https://docs.raku.org/language/objects#Object_construction">Object_construction</a>。</p>
+
+<h2 id="继承">继承</h2>
+
+<p>类可以有父类:</p>
+
+<pre><code class="language-raku">class Child is Parent1 is Parent2 { }
+</code></pre>
+
+<p>如果在子类上调用一个方法, 但是子类没有提供该方法, 则调用其中一个父类中同名方法(如果存在)。 父类被查询的顺序就叫做<em>方法解析顺序(MRO)</em>. Raku 使用 <a href="https://en.wikipedia.org/wiki/C3_linearization">C3 方法解析顺序</a>。 你可以通过调用类型的元类型方法得知这个类型的 MRO.</p>
+
+<pre><code class="language-raku">say Parcel.^mro;    # Parcel() Cool() Any() Mu()
+</code></pre>
+
+<p>如果一个类没有指定它的父类, 就默认使用 <a href="https://docs.raku.org/type/Any">Any</a>. 所有的类都直接或间接的派生于 <a href="https://docs.raku.org/type/Mu">Mu</a> - 类型层级结构的根。</p>
+
+<p>所有对公共方法的调用都是 C++ 意义上的“虚拟”，这意味着对象的实际类型决定了要调用的方法，而不是声明的类型：</p>
+
+<pre><code class="language-raku">class Parent {
+    method frob {
+        say &quot;the parent class frobs&quot;
+    }
+}
+ 
+class Child is Parent {
+    method frob {
+        say &quot;the child's somewhat more fancy frob is called&quot;
+    }
+}
+ 
+my Parent $test;
+$test = Child.new;
+$test.frob;          # calls the frob method of Child rather than Parent 
+# OUTPUT: «the child's somewhat more fancy frob is called␤» 
+</code></pre>
+
+<h2 id="对象构造">对象构造</h2>
+
+<p>对象通常通过方法调用创建, 或者通过类型对象或者通过同类型的其它对象创建。</p>
+
+<p>类 <a href="https://docs.raku.org/type/Mu">Mu</a> 提供了一个名为 <a href="https://docs.raku.org/routine/new">new</a> 的构造函数方法，它接受命名<a href="https://docs.raku.org/language/functions#Arguments">参数</a>并使用它们来初始化公共属性。</p>
+
+<pre><code class="language-raku">class Point {
+    has $.x;
+    has $.y;
+}
+my $p = Point.new( x =&gt; 5, y =&gt; 2);
+#             ^^^ inherited from class Mu 
+say &quot;x: &quot;, $p.x;
+say &quot;y: &quot;, $p.y;
+# OUTPUT: «x: 5␤» 
+# OUTPUT: «y: 2␤» 
+</code></pre>
+
+<p><code>Mu.new</code> 在调用者身上调用 <code>bless</code> 方法, 传递所有的命名<a href="https://docs.raku.org/language/functions#Arguments">参数</a>。 <code>bless</code> 创建新的对象, 然后以反向方法解析顺序(即从<a href="https://docs.raku.org/type/Mu">Mu</a>到大多数派生类)遍历所有子类, 并且在每个类中检查是否存在名为 <code>BUILD</code> 的方法。 如果该方法存在, 则使用该方法中的所有命名参数调用该 <code>new</code> 方法。如果不存在名为 <code>BUILD</code> 的方法, 这个类的公开属性就会用<code>同名的</code>命名参数进行初始化。  在任何一种情况下, 如果 <strong>BULID</strong> 方法和 <strong>默认构造函数</strong> 都没有对属性进行初始化, 则应用默认值。这意味着 <code>BUILD</code> 可以更改属性，但它无权访问声明为其默认值的属性的内容; 这些只在 <code>TWEAK</code>（见下文）中可用，它可以“看到”在类的声明中初始化的属性的内容。</p>
+
+<p>在 <code>BUILD</code> 被调用之后, 名为 <code>TWEAK</code> 的方法会被调用，如果它们存在，传递给 <code>new</code> 的所有命名参数也会传递给 <code>TWEAK</code>。请参阅下面的使用示例。</p>
+
+<p>由于 <code>BUILD</code> 和 <code>TWEAK</code> 子方法的默认行为，派生于 <code>Mu</code> 的 <code>new</code> 构造函数的命名参数可直接对应的任何方法解析顺序类的公共属性，或对应于任何 <code>BUILD</code> 或 <code>TWEAK</code> 子方法的任何命名参数。</p>
+
+<p>此对象构造方案对自定义构造函数有几个含义。首先，自定义 <code>BUILD</code> 方法应始终是子方法，否则它们会破坏子类中的属性初始化。其次，<code>BUILD</code> 子方法可用于在对象构造时运行自定义代码。它们还可用于为属性初始化创建别名：</p>
+
+<pre><code class="language-raku">class EncodedBuffer {
+    has $.enc;
+    has $.data;
+ 
+    submethod BUILD(:encoding(:$enc), :$data) {
+        $!enc  :=  $enc;
+        $!data := $data;
+    }
+}
+my $b1 = EncodedBuffer.new( encoding =&gt; 'UTF-8', data =&gt; [64, 65] );
+my $b2 = EncodedBuffer.new( enc      =&gt; 'UTF-8', data =&gt; [64, 65] );
+#  both enc and encoding are allowed now 
+</code></pre>
+
+<p>因为传递实参给子例程把实参绑定给了形参, 如果把属性用作形参, 则不需要单独的绑定步骤。 所以上面的例子可以写为:</p>
+
+<pre><code class="language-raku">submethod BUILD(:encoding(:$!enc), :$!data) {
+    # nothing to do here anymore, the signature binding
+    # does all the work for us.
+}
+</code></pre>
+
+<p>但是，当属性可能具有特殊类型要求（例如<code>:$!id</code>必须为正整数）时，请谨慎使用此属性的自动绑定。请记住，除非您专门处理此属性，否则将分配默认值，并且该默认值将为 <code>Any</code>, 这会导致类型错误。</p>
+
+<p>第三个含义是，如果你想要一个接受位置参数的构造函数，你必须编写自己的 <code>new</code> 方法：</p>
+
+<pre><code class="language-raku">class Point {
+    has $.x;
+    has $.y;
+    method new($x, $y) {
+        self.bless(:$x, :$y);
+    }
+}
+</code></pre>
+
+<p>然而, 这不是最佳实践, 因为它使得从子类正确地初始化对象变得更难了。</p>
+
+<p>另外需要注意的是，名字  <code>new</code> 在 Raku 中并不特别。它只是一个常见的约定，在<a href="https://docs.raku.org/routine/new">大多数Raku类中</a>都非常彻底。你可以从在调用的任何方法调用 <code>bless</code>，或者使用 <code>CREATE</code> 来摆弄低级别的工作。</p>
+
+<p><code>TWEAK</code> 子方法允许你在对象构造后检查或修改属性：</p>
+
+<pre><code class="language-raku">class RectangleWithCachedArea {
+    has ($.x1, $.x2, $.y1, $.y2);
+    has $.area;
+    submethod TWEAK() {
+        $!area = abs( ($!x2 - $!x1) * ( $!y2 - $!y1) );
+    }
+}
+ 
+say RectangleWithCachedArea.new( x2 =&gt; 5, x1 =&gt; 1, y2 =&gt; 1, y1 =&gt; 0).area;
+# OUTPUT: «4␤» 
+</code></pre>
+
+<h2 id="对象克隆">对象克隆</h2>
+
+<p>克隆是使用所有对象上可用的<a href="https://docs.raku.org/routine/clone">clone</a>方法完成的，这些克隆方法可以浅克隆公共和私有属性。公共属性的新值可以作为命名参数提供。</p>
+
+<pre><code class="language-raku">class Foo {
+    has $.foo = 42;
+    has $.bar = 100;
+}
+ 
+my $o1 = Foo.new;
+my $o2 = $o1.clone: :bar(5000);
+say $o1; # Foo.new(foo =&gt; 42, bar =&gt; 100) 
+say $o2; # Foo.new(foo =&gt; 42, bar =&gt; 5000) 
+</code></pre>
+
+<p>有关如何<a href="https://docs.raku.org/routine/clone">克隆</a>非标量属性的详细信息，请参阅文档以获取克隆，以及实现自己的自定义克隆方法的示例。</p>
+
+<h2 id="角色">角色</h2>
+
+<p>角色是属性和方法的集合; 但是，与类不同，角色仅用于描述对象行为的一部分; 这就是为什么一般来说，角色应该*在*类和对象中*混合使用*。通常，类用于管理对象，而角色用于管理对象内的行为和代码重用。</p>
+
+<p>角色使用关键字  <code>role</code> 放在所声明的角色名称前面。角色使用 <code>does</code> 关键字 mixed in,  does 关键字放在角色名之前。</p>
+
+<pre><code class="language-raku">constant ⲧ = &quot; &quot; xx 4; #Just a ⲧab 
+role Notable {
+    has Str $.notes is rw;
+ 
+    multi method notes() { &quot;$!notes\n&quot; };
+    multi method notes( Str $note ) { $!notes ~= &quot;$note\n&quot; ~ ⲧ };
+ 
+}
+ 
+class Journey does Notable {
+    has $.origin;
+    has $.destination;
+    has @.travelers;
+ 
+    method Str { &quot;⤷ $!origin\n&quot; ~ ⲧ ~ self.notes() ~ &quot;$!destination ⤶\n&quot; };
+}
+ 
+my $trip = Journey.new( :origin&lt;Here&gt;, :destination&lt;There&gt;,
+                        travelers =&gt; &lt;þor Freya&gt; );
+ 
+$trip.notes(&quot;First steps&quot;);
+notes $trip: &quot;Almost there&quot;;
+print $trip;
+# OUTPUT: 
+#⤷ Here 
+#       First steps 
+#       Almost there 
+# 
+#There ⤶ 
+</code></pre>
+
+<p>一旦编译器解析角色声明的结束大括号，角色就是不可变的。</p>
+
+<pre><code class="language-raku">role Serializable {
+    method serialize() {
+        self.perl; # 很粗超的序列化
+    }
+    method deserialization-code($buf) {
+        EVAL $buf; #  反转 .perl 操作
+    }
+}
+
+class Point does Serializable {
+    has $.x;
+    has $.y;
+}
+my $p = Point.new(:x(1), :y(2));
+my $serialized = $p.serialize;      # 由 role 提供的方法
+my $clone-of-p = Point.deserialization-code($serialized);
+say $clone-of-p.x;      # 1
+</code></pre>
+
+<p>编译器一解析到 role 声明的闭合花括号, roles 就不可变了。</p>
+
+<h2 id="应用角色">应用角色</h2>
+
+<p>角色应用程序与类继承有很大不同。将角色应用于类时，该角色的方法将复制到类中。如果将多个角色应用于同一个类，则冲突（例如，同名的属性或 non-multi 方法）会导致编译时错误，这可以通过在类中提供同名的方法来解决。</p>
+
+<p>这比多重继承安全得多，其中编译器从不检测冲突，而是解析为方法解析顺序中较早出现的超类，这可能不是程序员想要的。</p>
+
+<p>例如，如果你已经发现了一种有效的方法来骑牛，并试图把它作为一种新的流行交通形式推销，你可能会有一个 <code>Bull</code> 类，对于你在房子周围的所有公牛，以及一个 <code>Automobile</code> 类，你可以驾驶的东西。</p>
+
+<pre><code class="language-raku">class Bull {
+    has Bool $.castrated = False;
+    method steer {
+        # Turn your bull into a steer 
+        $!castrated = True;
+        return self;
+    }
+}
+class Automobile {
+    has $.direction;
+    method steer($!direction) { }
+}
+class Taurus is Bull is Automobile { }
+ 
+my $t = Taurus.new;
+say $t.steer;
+# OUTPUT: «Taurus.new(castrated =&gt; Bool::True, direction =&gt; Any)␤» 
+</code></pre>
+
+<p>通过这种设置，您的贫困客户将发现自己无法转动他们的金牛座，您将无法生产更多的产品！在这种情况下，使用角色可能更好：</p>
+
+<pre><code class="language-raku">role Bull-Like {
+    has Bool $.castrated = False;
+    method steer {
+        # Turn your bull into a steer 
+        $!castrated = True;
+        return self;
+    }
+}
+role Steerable {
+    has Real $.direction;
+    method steer(Real $d = 0) {
+        $!direction += $d;
+    }
+}
+class Taurus does Bull-Like does Steerable { }
+</code></pre>
+
+<p>这段代码会死于：</p>
+
+<pre><code>===SORRY!===
+Method 'steer' must be resolved by class Taurus because it exists in
+multiple roles (Steerable, Bull-Like)
+</code></pre>
+
+<p>这项检查可以为你省去很多麻烦：</p>
+
+<pre><code class="language-raku">class Taurus does Bull-Like does Steerable {
+    method steer($direction?) {
+        self.Steerable::steer($direction)
+    }
+}
+</code></pre>
+
+<p>将角色应用于第二个角色时，实际应用程序将延迟，直到第二个角色应用于类，此时两个角色都将应用于该类。从而</p>
+
+<pre><code class="language-raku">role R1 {
+    # methods here 
+}
+role R2 does R1 {
+    # methods here 
+}
+class C does R2 { }
+</code></pre>
+
+<p>产生相同类 <code>C</code> 为</p>
+
+<pre><code class="language-raku">role R1 {
+    # methods here 
+}
+role R2 {
+    # methods here 
+}
+class C does R1 does R2 { }
+</code></pre>
+
+<h2 id="stubs">Stubs</h2>
+
+<p>当角色包含 <a href="https://docs.raku.org/routine/....html">stubbed</a> 方法时，必须在将角色应用于类时提供同名方法的 non-stubbed  版本。这允许您创建充当抽象接口的角色。</p>
+
+<pre><code class="language-raku">role AbstractSerializable {
+    method serialize() { ... }        # literal ... here marks the 
+                                      # method as a stub 
+}
+ 
+# the following is a compile time error, for example 
+#        Method 'serialize' must be implemented by Point because 
+#        it's required by a role 
+ 
+class APoint does AbstractSerializable {
+    has $.x;
+    has $.y;
+}
+ 
+# this works: 
+class SPoint does AbstractSerializable {
+    has $.x;
+    has $.y;
+    method serialize() { &quot;p($.x, $.y)&quot; }
+}
+</code></pre>
+
+<p>stubbed 方法的实现也可以由另一个角色提供。</p>
+
+<h2 id="继承-1">继承</h2>
+
+<p>角色不能从类继承，但它们可以*携带*类，导致任何具有该角色的类从承载的类继承。所以，如果你写：</p>
+
+<pre><code class="language-raku">role A is Exception { }
+class X::Ouch does A { }
+X::Ouch.^parents.say # OUTPUT: «((Exception))␤»
+</code></pre>
+
+<p>然后 <code>X::Ouch</code> 将直接从 Exception 继承，我们可以通过列出其父项来看到。</p>
+
+<p>由于它们不使用可能称为继承的东西，因此角色不是类层次结构的一部分。使用 <code>.^roles</code> 元方法列出角色，它使用 <code>transitive</code> 标记来包含所有级别或仅包含第一个级别。尽管如此，仍然可以使用智能匹配或类型约束来测试类或实例，以查看它是否起作用。</p>
+
+<pre><code class="language-raku">role F { }
+class G does F { }
+G.^roles.say;                    # OUTPUT: «((F))␤» 
+role Ur {}
+role Ar does Ur {}
+class Whim does Ar {}; Whim.^roles(:!transitive).say;   # OUTPUT: «((Ar))␤» 
+say G ~~ F;                      # OUTPUT: «True␤» 
+multi a (F $a) { &quot;F&quot;.say }
+multi a ($a)   { &quot;not F&quot;.say }
+a(G);                            # OUTPUT: «F␤» 
+</code></pre>
+
+<h2 id="主从秩序">主从秩序</h2>
+
+<pre><code class="language-raku">role M {
+  method f { say &quot;I am in role M&quot; }
+}
+ 
+class A {
+  method f { say &quot;I am in class A&quot; }
+}
+ 
+class B is A does M {
+  method f { say &quot;I am in class B&quot; }
+}
+ 
+class C is A does M { }
+ 
+B.new.f; # OUTPUT «I am in class B␤» 
+C.new.f; # OUTPUT «I am in role M␤» 
+</code></pre>
+
+<p>请注意，multi-method 的每个候选项都是它自己的方法。在这种情况下，以上仅适用于两个这样的候选项具有相同签名的情况。否则，没有冲突，候选者只是添加到 multi-method 中。</p>
+
+<h2 id="自动角色双关">自动角色双关</h2>
+
+<p>任何直接实例化角色或将其用作类型对象的尝试都将自动创建一个与角色同名的类，从而可以透明地使用角色，就好像它是一个类一样。</p>
+
+<pre><code class="language-raku">role Point {
+    has $.x;
+    has $.y;
+    method abs { sqrt($.x * $.x + $.y * $.y) }
+    method dimensions { 2 }
+}
+say Point.new(x =&gt; 6, y =&gt; 8).abs; # OUTPUT «10␤» 
+say Point.dimensions;              # OUTPUT «2␤» 
+</code></pre>
+
+<p>我们把这种自动创建的类叫*双关*，并且将生成的类叫*双关语*。</p>
+
+<p>但是，Punning 不是由大多数<a href="https://docs.raku.org/language/mop">元编程</a>构造引起的，因为它们有时用于直接使用角色。</p>
+
+<h2 id="参数化角色">参数化角色</h2>
+
+<p>角色可以通过在方括号中给它们签名来参数化：</p>
+
+<pre><code class="language-raku">role BinaryTree[::Type] {
+    has BinaryTree[Type] $.left;
+    has BinaryTree[Type] $.right;
+    has Type $.node;
+ 
+    method visit-preorder(&amp;cb) {
+        cb $.node;
+        for $.left, $.right -&gt; $branch {
+            $branch.visit-preorder(&amp;cb) if defined $branch;
+        }
+    }
+    method visit-postorder(&amp;cb) {
+        for $.left, $.right -&gt; $branch {
+            $branch.visit-postorder(&amp;cb) if defined $branch;
+        }
+        cb $.node;
+    }
+    method new-from-list(::?CLASS:U: *@el) {
+        my $middle-index = @el.elems div 2;
+        my @left         = @el[0 .. $middle-index - 1];
+        my $middle       = @el[$middle-index];
+        my @right        = @el[$middle-index + 1 .. *];
+        self.new(
+            node    =&gt; $middle,
+            left    =&gt; @left  ?? self.new-from-list(@left)  !! self,
+            right   =&gt; @right ?? self.new-from-list(@right) !! self,
+        );
+    }
+}
+ 
+my $t = BinaryTree[Int].new-from-list(4, 5, 6);
+$t.visit-preorder(&amp;say);    # OUTPUT: «5␤4␤6␤» 
+$t.visit-postorder(&amp;say);   # OUTPUT: «4␤6␤5␤» 
+</code></pre>
+
+<p>这里, 签名只包含类型捕获，但任何签名都可以：</p>
+
+<pre><code class="language-raku">enum Severity &lt;debug info warn error critical&gt;;
+ 
+role Logging[$filehandle = $*ERR] {
+    method log(Severity $sev, $message) {
+        $filehandle.print(&quot;[{uc $sev}] $message\n&quot;);
+    }
+}
+ 
+Logging[$*OUT].log(debug, 'here we go'); # OUTPUT: «[DEBUG] here we go␤» 
+</code></pre>
+
+<p>您可以拥有多个同名角色，但签名不同; 多重分派的正常规则适用于选择多个候选者。</p>
+
+<h2 id="混合角色">混合角色</h2>
+
+<p>角色可以混合到对象中。角色的给定属性和方法将添加到对象已有的方法和属性中。支持多个mixin和匿名角色。</p>
+
+<pre><code class="language-raku">role R { method Str() {'hidden!'} };
+my $i = 2 but R;
+sub f(\bound){ put bound };
+f($i); # OUTPUT: «hidden!␤» 
+my @positional := &lt;a b&gt; but R;
+say @positional.^name; # OUTPUT: «List+{R}␤» 
+</code></pre>
+
+<p>请注意，对象混合了角色，而不是对象的类或容器。因此，@-sigiled 容器将需要绑定以使角色坚持，如示例中的 <code>@positional</code> 所示。某些运算符将返回一个新值，从而有效地从结果中删除 mixin。这就是为什么使用<code>does</code> 在变量声明中混合角色可能更为清晰：</p>
+
+<pre><code class="language-raku">role R {};
+my @positional does R = &lt;a b&gt;;
+say @positional.^name; # OUTPUT: «Array+{R}␤» 
+</code></pre>
+
+<p>运算符 <code>infix:&lt;but&gt;</code>比列表构造函数窄。提供要混合的角色列表时，请始终使用括号。</p>
+
+<pre><code class="language-raku">role R1 { method m {} }
+role R2 { method n {} }
+my $a = 1 but R1,R2; # R2 is in sink context, issues a WARNING 
+say $a.^name;
+# OUTPUT: «Int+{R1}␤» 
+my $all-roles = 1 but (R1,R2);
+say $all-roles.^name; # OUTPUT: «Int+{R1,R2}␤» 
+</code></pre>
+
+<p>Mixins 可用于对象生命中的任何一点。</p>
+
+<pre><code class="language-raku"># A counter for Table of Contents 
+role TOC-Counter {
+    has Int @!counters is default(0);
+    method Str() { @!counters.join: '.' }
+    method inc($level) {
+        @!counters[$level - 1]++;
+        @!counters.splice($level);
+        self
+    }
+}
+ 
+my Num $toc-counter = NaN;     # don't do math with Not A Number 
+say $toc-counter;              # OUTPUT: «NaN␤» 
+$toc-counter does TOC-Counter; # now we mix the role in 
+$toc-counter.inc(1).inc(2).inc(2).inc(1).inc(2).inc(2).inc(3).inc(3);
+put $toc-counter / 1;          # OUTPUT: «NaN␤» (because that's numerical context) 
+put $toc-counter;              # OUTPUT: «2.2.2␤» (put will call TOC-Counter::Str) 
+</code></pre>
+
+<p>角色可以是匿名的。</p>
+
+<pre><code class="language-raku">my %seen of Int is default(0 but role :: { method Str() {'NULL'} });
+say %seen&lt;not-there&gt;;          # OUTPUT: «NULL␤» 
+say %seen&lt;not-there&gt;.defined;  # OUTPUT: «True␤» (0 may be False but is well defined) 
+say Int.new(%seen&lt;not-there&gt;); # OUTPUT: «0␤» 
+</code></pre>
+
+<h2 id="元对象编程和自省">元对象编程和自省</h2>
+
+<p>Raku 有一个元对象系统, 这意味着对象,类,角色,grammars,enums 等行为本身由其它对象控制; 这些对象叫做元对象(想想元操作符, 它操作的对象是普通操作符). 像普通对象一样,  元对象是类的实例, 这时我们称它们为元类.</p>
+
+<p>对每个对象或类, 你能通过调用 <code>.HOW</code>方法获取元对象. 注意, 尽管这看起来像是一个方法调用, 但它更像宏.</p>
+
+<p>所以, 你能用元对象干些什么呢? 你可以通过比较元类的相等性来检查两个对象是否具有同样的元类:</p>
+
+<pre><code class="language-raku">say 1.HOW ===   2.HOW;      # True
+say 1.HOW === Int.HOW;      # True
+say 1.HOW === Num.HOW;      # False
+</code></pre>
+
+<p>Raku 使用单词 <code>HOW</code>, Higher Order Workings, 来引用元对象系统. 因此, 在 Rakudo 中不必对此吃惊, 控制类行为的元类的类名叫做 <code>Raku::Metamodel::ClassHow</code>. 每个类都有一个 <code>Raku::Metamodel::ClassHOW</code>的实例.</p>
+
+<p>但是,理所当然的, 元模型为你做了很多. 例如它允许你内省对象和类.  元对象方法调用的约定是, 在元对象上调用方法, 并且传递感兴趣的对象作为对象的第一参数. 所以, 要获取对象的类名, 你可以这样写:</p>
+
+<pre><code class="language-raku">my $object = 1;
+my $metaobject = 1.HOW;
+say $metaobject.name($object);      # Int
+# or shorter:
+say 1.HOW.name(1);                  # Int
+</code></pre>
+
+<p>为了避免使用同一个对象两次, 有一个便捷写法:</p>
+
+<pre><code class="language-raku">say 1.^name;                        # Int
+# same as
+say 1.HOW.name(1);                  # Int
+</code></pre>
+
+<h2 id="内省">内省</h2>
+
+<p>内省就是在运行时获取对象或类的信息的过程. 在 Raku 中,  所有的内省都会搜查原对象. 标准的基于类对象的 ClassHow 提供了这些工具:</p>
+
+<h3 id="can">can</h3>
+
+<p>给定一个方法名, 它返回一个Parcel, 这个 Parcel 里面是可用的方法名</p>
+
+<pre><code class="language-raku">class A      { method x($a) {} };
+class B is A { method x()   {} };
+say B.^can('x').elems;              # 2
+for B.^can('x') {
+    say .arity;                     # 1, 2
+}
+</code></pre>
+
+<p>在这个例子中, 类 B 中有两个名为 x 的方法可能可用(尽管一个正常的方法调用仅仅会直接调用安置在 B 中那个方法). B 中的那个方法有一个参数(例如, 它期望一个参数, 一个调用者(self)), 而 A 中的 x 方法期望 2 个参数( self 和 $a).</p>
+
+<h3 id="methods">methods</h3>
+
+<p>返回类中可用公共方法的列表( 这包括父类和 roles 中的方法). 默认它会停在类 Cool, Any 或 Mu 那儿; 若真要获取所有的方法, 使用副词 <code>:all</code>.</p>
+
+<pre><code class="language-raku">class A {
+    method x() { };
+}
+say A.^methods();                   # x
+say A.^methods(:all);               # x infinite defined ...
+</code></pre>
+
+<h3 id="mro">mro</h3>
+
+<p>按方法解析顺序返回类自身的列表和它们的父类.  当方法被调用时, 类和它的父类按那个顺序被访问.(仅仅是概念上; 实际上方法列表在类构建是就创建了).</p>
+
+<pre><code class="language-raku">say 1.^mro;                         # (Int) (Cool) (Any) (Mu)
+</code></pre>
+
+<h3 id="name">name</h3>
+
+<p>返回类的名字:</p>
+
+<pre><code class="language-raku">say 'a string'.^name;               # Str
+</code></pre>
+
+<h3 id="parents">parents</h3>
+
+<p>返回一个父类的列表. 默认它会停在 Cool, Any 或者 Mu 那儿, 但你可以提供一个副词 <code>:all</code>来压制它. 使用副词 <code>:tree</code> 会返回一个嵌套列表.</p>
+
+<pre><code class="language-raku">class D             { };
+class C1 is D       { };
+class C2 is D       { };
+class B is C1 is C2 { };
+class A is B        { };
+say A.^parents(:all).perl;          # (B, C1, C2, D, Any, Mu)
+say A.^parents(:all, :tree).perl;
+    # ([B, [C1, [D, [Any, [Mu]]]], [C2, [D, [Any, [Mu]]]]],)
+</code></pre>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a>&nbsp;
+            
+          </div>
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2015-06-14-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%80%E4%BE%8B/" data-toggle="tooltip" data-placement="top" title="正则表达式一例">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://ohmysummer.github.io/post/2015-06-18-%E6%89%BE%E5%88%B0%E4%B8%A4%E4%B8%AA%E6%96%87%E4%BB%B6%E4%B8%AD%E5%85%B1%E6%9C%89%E7%9A%84%E8%A1%8C/" data-toggle="tooltip" data-placement="top" title="找到两个文件中共有的行">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            
+            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          <span style="color: red;">❤</span>&nbsp;Perl 6
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+  </body>
+</html>
+
