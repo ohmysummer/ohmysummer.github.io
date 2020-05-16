@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-22-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%BA%8C%E5%A4%A9-raku-6.d%E7%9A%84%E7%89%B9%E6%80%A7/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,17 +231,11 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="day-22-features-of-raku-d-https-rakuadvent-wordpress-com-2017-12-22-day-22-features-of-perl-6-d"><a href="https://rakuadvent.wordpress.com/2017/12/22/day-22-features-of-perl-6-d/">Day 22 – Features of Raku.d</a></h1>
-
+        <h1 id="day-22--features-of-rakudhttpsrakuadventwordpresscom20171222day-22-features-of-perl-6-d"><a href="https://rakuadvent.wordpress.com/2017/12/22/day-22-features-of-perl-6-d/">Day 22 – Features of Raku.d</a></h1>
 <p>所以我们就是这样。 Rakudo Raku第一次正式发布两年后，或者更准确的说是6.c。自从马特奥茨从那时起就开始关注性能的提升之后，圣诞老人认为要对此进行对比，描述自那时起实施的6.d的新功能。因为有很多，圣诞老人不得不做出选择。</p>
-
 <h2 id="在创建时调整对象">在创建时调整对象</h2>
-
 <p>您创建的任何课程现在都可以使用TWEAK方法。在新的类的新实例的所有其他初始化完成之前，这个方法将被调用。一个简单的，有点人为的例子，其中一个类A有一个属性，默认值是42，但如果在创建对象时指定了默认值，它应该更改该值：</p>
-
-<pre><code class="language-raku">class A {
+<pre><code class="language-raku" data-lang="raku">class A {
     has $.value = 42;
     method TWEAK(:$value = 0) { # default prevents warning
         # change the attribute if the default value is specified
@@ -256,24 +250,16 @@ dd A.new(value =&gt; 77); # A.new(value =&gt; 77)
 
 # value specified, and it is the default 
 dd A.new(value =&gt; 42); # A.new(value =&gt; 666)
-</code></pre>
-
-<h2 id="并发性改进">并发性改进</h2>
-
+</code></pre><h2 id="并发性改进">并发性改进</h2>
 <p>Rakudo Raku的并发功能在引擎盖下看到了许多改进。其中一些暴露为新功能。最显着的是Lock :: Async（一个返回Promise的非阻塞锁）和原子操作符。</p>
-
 <p>在大多数情况下，您不需要直接使用它们，但是如果您正在编写使用并发功能的程序，那么您可能知道原子操作符。经常发生的逻辑错误，特别是如果你在Pumpking Perl 5中使用线程，是因为在Rakudo Raku中没有对共享变量的隐式锁定。例如：</p>
-
-<pre><code class="language-raku">my int $a;
+<pre><code class="language-raku" data-lang="raku">my int $a;
     await (^5).map: {
         start { ++$a for ^100000 }
     }
     say $a; # something like 419318
-</code></pre>
-
-<p>那么为什么没有显示500000？原因是我们有5个线程同时递增相同的变量。由于增量由读步骤，增量步骤和写步骤组成，因此一个线程与另一个线程同时执行读取步骤变得非常容易。因此失去了一个增量。在我们有原子操作符之前，做上述代码的正确方法是：</p>
-
-<pre><code class="language-raku">   my int $a;
+</code></pre><p>那么为什么没有显示500000？原因是我们有5个线程同时递增相同的变量。由于增量由读步骤，增量步骤和写步骤组成，因此一个线程与另一个线程同时执行读取步骤变得非常容易。因此失去了一个增量。在我们有原子操作符之前，做上述代码的正确方法是：</p>
+<pre><code class="language-raku" data-lang="raku">   my int $a;
     my $l = Lock.new;
     await (^5).map: {
        start {
@@ -283,116 +269,63 @@ dd A.new(value =&gt; 42); # A.new(value =&gt; 666)
        }
     }
     say $a; # 500000
-</code></pre>
-
-<p>这会给你正确的答案，但速度至少要慢20倍。</p>
-
+</code></pre><p>这会给你正确的答案，但速度至少要慢20倍。</p>
 <p>现在我们有了原子变量，上面的代码就变成了：</p>
-
-<pre><code class="language-raku">   my atomicint $a;
+<pre><code class="language-raku" data-lang="raku">   my atomicint $a;
     await (^5).map: {
         start { ++⚛$a for ^100000 }
     }
     say $a; # 500000
-</code></pre>
-
-<p>这非常类似于原始（不正确）的代码。这至少是使用Lock.protect的正确代码的6倍。</p>
-
+</code></pre><p>这非常类似于原始（不正确）的代码。这至少是使用Lock.protect的正确代码的6倍。</p>
 <h2 id="unicode-goodies">Unicode goodies</h2>
-
 <p>太多了，太多了。例如，现在可以使用≤，≥，≠作为Unicode版本的&lt;=，&gt; =和！=（完整列表）。</p>
-
 <p>您现在还可以通过指定字形的Unicode名称来创建字形，例如：</p>
-
-<pre><code class="language-raku">say &quot;BUTTERFLY&quot;.parse-names; # 🦋
-</code></pre>
-
-<p>或者在运行时创建Unicode名称字符串：</p>
-
-<pre><code class="language-raku">my $t = &quot;THUMBS UP SIGN, EMOJI MODIFIER FITZPATRICK TYPE&quot;;
+<pre><code class="language-raku" data-lang="raku">say &quot;BUTTERFLY&quot;.parse-names; # 🦋
+</code></pre><p>或者在运行时创建Unicode名称字符串：</p>
+<pre><code class="language-raku" data-lang="raku">my $t = &quot;THUMBS UP SIGN, EMOJI MODIFIER FITZPATRICK TYPE&quot;;
 print &quot;$t-$_&quot;.parse-names for 3..6; # 👍🏼👍🏽👍🏾👍🏿
-</code></pre>
-
-<p>或者整理而不是仅仅排序：</p>
-
-<pre><code class="language-raku"># sort by codepoint value
+</code></pre><p>或者整理而不是仅仅排序：</p>
+<pre><code class="language-raku" data-lang="raku"># sort by codepoint value
 say &lt;ä a o ö&gt;.sort; # (a o ä ö)
 # sort using Unicode Collation Algorithm
 say &lt;ä a o ö&gt;.collate; # (a ä o ö)
-</code></pre>
-
-<p>或者使用unicmp而不是cmp：</p>
-
-<pre><code class="language-raku">say &quot;a&quot; cmp &quot;Z&quot;; # More
+</code></pre><p>或者使用unicmp而不是cmp：</p>
+<pre><code class="language-raku" data-lang="raku">say &quot;a&quot; cmp &quot;Z&quot;; # More
 say &quot;a&quot; unicmp &quot;Z&quot;; # Less
-</code></pre>
-
-<p>或者您现在可以使用任何Unicode数字匹配变量（$ 1为$ 1），负数（-1为-1）和基数基数（：3（“22”）为3（“22”））。</p>
-
+</code></pre><p>或者您现在可以使用任何Unicode数字匹配变量（$ 1为$ 1），负数（-1为-1）和基数基数（：3（“22”）为3（“22”））。</p>
 <p>圣诞老人认为Rakudo Raku拥有世界上任何编程语言的最佳Unicode支持！</p>
-
 <h2 id="跳过值">跳过值</h2>
-
 <p>您现在可以在Seq和Supply上调用.skip跳过正在生成的多个值。与.head和.tail一起，这给了你Iterables和Supplies充足的操作性。</p>
-
 <p>顺便说一下，.head现在也会带一个WhateverCode，所以你可以指明除了最后N以外的所有值（例如.head（*  -  3）会给你除了最后三个以外的所有值）。 .tail也是如此（例如.tail（*  -  3）会为您提供除前三个之外的所有值）。</p>
-
 <p>对迭代器角色的一些补充使得迭代器可以更好地支持.skip功能。如果一个迭代器可以更有效地跳过一个值而不是实际产生它，它应该实现skip-one方法。派生于此的是可以由迭代器提供的跳过至少和跳过至少拉一个方法。</p>
-
 <p>使用.skip查找第1000个素数的示例：</p>
-
-<pre><code class="language-raku">say (^Inf).grep(*.is-prime)[999]; # 7919
-</code></pre>
-
-<p>与</p>
-
-<pre><code class="language-raku">say (^Inf).grep(*.is-prime).skip(999).head; # 7919
-</code></pre>
-
-<p>后者的CPU效率略高一些，但更重要的是内存效率更高，因为它不需要保留内存中的前999个素数。</p>
-
+<pre><code class="language-raku" data-lang="raku">say (^Inf).grep(*.is-prime)[999]; # 7919
+</code></pre><p>与</p>
+<pre><code class="language-raku" data-lang="raku">say (^Inf).grep(*.is-prime).skip(999).head; # 7919
+</code></pre><p>后者的CPU效率略高一些，但更重要的是内存效率更高，因为它不需要保留内存中的前999个素数。</p>
 <h2 id="of-bufs-and-blobs">Of Bufs and Blobs</h2>
-
 <p>Buf变得更像一个Array，因为它现在支持.push，.append，.pop，.unshift，.prepend，.shift和.splice。它也变得更像Str，增加了一个subbuf-rw（类似于.substr-rw），例如：</p>
-
-<pre><code class="language-raku">my $b = Buf.new(100..105);
+<pre><code class="language-raku" data-lang="raku">my $b = Buf.new(100..105);
 $b.subbuf-rw(2,3) = Blob.new(^5);
 say $b.perl; # Buf.new(100,101,0,1,2,3,4,105)
-</code></pre>
-
-<p>您现在也可以使用给定数量的元素和模式来分配Buf或Blob。或者用.reallocate改变Buf的大小：</p>
-
-<pre><code class="language-raku">my $b = Buf.allocate(10,(1,2,3));
+</code></pre><p>您现在也可以使用给定数量的元素和模式来分配Buf或Blob。或者用.reallocate改变Buf的大小：</p>
+<pre><code class="language-raku" data-lang="raku">my $b = Buf.allocate(10,(1,2,3));
 say $b.perl; # Buf.new(1,2,3,1,2,3,1,2,3,1)
 $b.reallocate(5);
 say $b.perl; # Buf.new(1,2,3,1,2)
-</code></pre>
-
-<h2 id="测试-测试-测试">测试，测试，测试！</h2>
-
+</code></pre><h2 id="测试测试测试">测试，测试，测试！</h2>
 <p>Test.pm的计划子例程现在还采用可选的：skip-all参数来指示文件中的所有测试都应该跳过。或者您可以拨打救助中止测试运行，将其标记为失败。或者将PERL6_TEST_DIE_ON_FAIL环境变量设置为真值，以指示您希望测试一旦第一次测试失败就立即结束。</p>
-
 <h2 id="这是怎么回事">这是怎么回事</h2>
-
 <p>您现在可以通过调用Kernel.cpu-cores来反思计算机中CPU内核的数量。程序启动后使用的CPU数量在Kernel.cpu-usage中可用，但您可以使用VM.osname轻松检查操作系统的名称。</p>
-
 <p>就好像这还不够，还有一个新的遥测模块，您需要在需要时加载，就像测试模块一样。遥测模块提供了许多可直接使用的基元，例如：</p>
-
-<pre><code class="language-raku">use Telemetry;
+<pre><code class="language-raku" data-lang="raku">use Telemetry;
 say T&lt;wallclock cpu max-rss&gt;; # (138771 280670 82360)
-</code></pre>
-
-<p>它显示自程序启动以来的微秒数，所用CPU的微秒数以及调用时正在使用的内存数量。</p>
-
+</code></pre><p>它显示自程序启动以来的微秒数，所用CPU的微秒数以及调用时正在使用的内存数量。</p>
 <p>如果你想得到你的程序中发生的事情的报告，你可以使用管理单元，并在程序完成时显示报告。例如：</p>
-
-<pre><code class="language-raku">use Telemetry;
+<pre><code class="language-raku" data-lang="raku">use Telemetry;
 snap;
 Nil for ^10000000;  # something that takes a bit of time
-</code></pre>
-
-<p>结果将显示在STDERR上：</p>
-
+</code></pre><p>结果将显示在STDERR上：</p>
 <pre><code>Telemetry Report of Process #60076
 Number of Snapshots: 2
 Initial/Final Size: 82596 / 83832 Kbytes
@@ -409,17 +342,11 @@ Legend:
 wallclock  Number of microseconds elapsed
     util%  Percentage of CPU utilization (0..100%)
   max-rss  Maximum resident set size (in Kbytes)
-</code></pre>
-
-<p>如果你想要每秒1次的程序状态，你可以使用snapper：</p>
-
-<pre><code class="language-raku">use Telemetry;
+</code></pre><p>如果你想要每秒1次的程序状态，你可以使用snapper：</p>
+<pre><code class="language-raku" data-lang="raku">use Telemetry;
 snapper;
 Nil for ^10000000;  # something that takes a bit of time
-</code></pre>
-
-<p>结果：</p>
-
+</code></pre><p>结果：</p>
 <pre><code>Telemetry Report of Process #60722
 Number of Snapshots: 7
 Initial/Final Size: 87324 / 87484 Kbytes
@@ -441,46 +368,29 @@ Legend:
 wallclock  Number of microseconds elapsed
     util%  Percentage of CPU utilization (0..100%)
   max-rss  Maximum resident set size (in Kbytes)
-</code></pre>
-
-<p>还有更多选项可用，例如以.csv格式获取输出。</p>
-
+</code></pre><p>还有更多选项可用，例如以.csv格式获取输出。</p>
 <h2 id="main-函数">MAIN 函数</h2>
-
 <p>您现在可以通过设置％* SUB-MAIN-OPTS中的选项来修改MAIN参数的处理方式。默认的USAGE消息现在可以在MAIN中作为$ * USAGE动态变量使用，所以如果你愿意，你可以改变它。</p>
-
 <h2 id="嵌入-raku">嵌入 Raku</h2>
-
 <p>两个新功能使嵌入Rakudo Raku更易于处理：
 现在可以设置＆* EXIT动态变量来指定调用exit（）时要执行的操作。</p>
-
 <p>将环境变量RAKUDO_EXCEPTIONS_HANDLER设置为“JSON”将引发JSON中的异常，而不是文本，例如：</p>
-
-<pre><code class="language-raku">$ RAKUDO_EXCEPTIONS_HANDLER=JSON raku -e '42 = 666'
+<pre><code class="language-raku" data-lang="raku">$ RAKUDO_EXCEPTIONS_HANDLER=JSON raku -e '42 = 666'
 {
   &quot;X::Assignment::RO&quot; : {
     &quot;value&quot; : 42,
     &quot;message&quot; : &quot;Cannot modify an immutable Int (42)&quot;
   }
 }
-</code></pre>
-
-<h2 id="礼品袋的底部">礼品袋的底部</h2>
-
+</code></pre><h2 id="礼品袋的底部">礼品袋的底部</h2>
 <p>在翻看仍然相当完整的礼品袋的同时，圣诞老人发现了以下较小的惊悚片：</p>
-
 <p>本地字符串数组现在实现（我的str @a）
 IO :: CatHandle允许您将多个数据源抽象为单个虚拟IO :: Handle
 parse-base（）执行base（）的相反操作</p>
-
 <h2 id="赶上雪橇的时间">赶上雪橇的时间</h2>
-
 <p>圣诞老人想留下来告诉你更多有关已添加的内容，但是没有足够的时间来做到这一点。如果您真的想了解新功能的最新情况，您应该查看Changelog中的Additions部分，这些部分随每个Rakudo编译器版本一起更新。</p>
-
 <p>所以，明年再来抓你！</p>
-
 <p>来自美好的祝福</p>
-
 <p>🎅🏾</p>
 
 
@@ -573,7 +483,7 @@ parse-base（）执行base（）的相反操作</p>
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/datetime/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/datetime/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -227,11 +227,11 @@ if (!doNotTrack) {
               </p>
               <div class="post-entry">
                 
-                  DateTime class DateTime does Dateish {}  对于在国内处理点数，DateTime 对象存储年，月，日，小时，分钟（全部为 Int），秒（可能为小数）和时区。
+                  DateTime class DateTime does Dateish {}对于在国内处理点数，DateTime 对象存储年，月，日，小时，分钟（全部为 Int），秒（可能为小数）和时区。
 它提供了用日期和时间计算的方法。
 DateTime 方法是不可变的;如果你试图修改它，请改为创建修改后的副本。
 时区的处理时间为以 UTC 为单位的整数，而不是时区名称。
-use v6.c; my $dt = DateTime.new( year =&gt; 2015, month =&gt; 11, day =&gt; 21, hour =&gt; 16, minute =&gt; 1, ); say $dt; # OUTPUT: «2015-11-21T16:01:00Z␤» say $dt.later(days =&gt; 20); # OUTPUT: «2015-12-11T16:01:00Z␤» say $dt.truncated-to('hour'); # OUTPUT: «2015-11-21T16:00:00Z␤» say $dt.in-timezone(-8 * 3600); # OUTPUT: «2015-11-21T08:01:00-0800␤» my $now = DateTime.now(formatter =&gt; { sprintf &quot;%02d:%02d&quot;, .
+use v6.c;my $dt = DateTime.new(year =&gt; 2015,month =&gt; 11,day =&gt; 21,hour =&gt; 16,minute =&gt; 1,);say $dt; # OUTPUT: «2015-11-21T16:01:00Z␤»say $dt.later(days =&gt; 20); # OUTPUT: «2015-12-11T16:01:00Z␤»say $dt.truncated-to('hour'); # OUTPUT: «2015-11-21T16:00:00Z␤»say $dt.in-timezone(-8 * 3600); # OUTPUT: «2015-11-21T08:01:00-0800␤»my $now = DateTime.now(formatter =&gt; { sprintf &quot;%02d:%02d&quot;, .hour, .
                   <a href="https://ohmysummer.github.io/post/2018-05-05-datetime/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -270,9 +270,10 @@ use v6.c; my $dt = DateTime.new( year =&gt; 2015, month =&gt; 11, day =&gt; 21, 
               <div class="post-entry">
                 
                   Raku By Example: Datetime Conversion for the Command Line 我偶尔会在数据库中存储 UNIX 时间戳, 即从 1970-01-01 开始的秒数。我在按照日期查询数据库中的数据时, 需要将 UNIX 时间戳转换为人类可读的时间, 所以我写了个很小的工具来帮助我在 UNIX 时间戳和日期/时间之间来回转换:
-$ autotime 2015-12-24 1450915200 $ autotime 2015-12-24 11:23:00 1450956180 $ autotime 1450915200 2015-12-24 $ autotime 1450956180 2015-12-24 11:23:00  使用库 Raku 的 DateTime 和 Date 模块会做实际的转换。 DateTime.new 构造函数有一个接收单个整数作为 UNIX 时间戳的变体:
-$ raku -e &quot;say DateTime.new(1480915200)&quot; 2016-12-05T05:20:00Z  看起来我们已经完成了一个方向的转换,对吗?
-#!/usr/bin/env raku sub MAIN (Int $timestamp) { say DateTime.new($timestamp) }  我们来运行它:
+$ autotime 2015-12-24 1450915200 $ autotime 2015-12-24 11:23:00 1450956180 $ autotime 1450915200 2015-12-24 $ autotime 1450956180 2015-12-24 11:23:00 使用库 Raku 的 DateTime 和 Date 模块会做实际的转换。 DateTime.new 构造函数有一个接收单个整数作为 UNIX 时间戳的变体:
+$ raku -e &quot;say DateTime.new(1480915200)&quot; 2016-12-05T05:20:00Z 看起来我们已经完成了一个方向的转换,对吗?
+#!/usr/bin/env raku sub MAIN (Int $timestamp) { say DateTime.new($timestamp) } 我们来运行它:
+$ autotime 1450915200 Invalid DateTime string '1450915200'; use an ISO 8601 timestamp (yyyy-mm-ddThh:mm:ssZ or yyyy-mm-ddThh:mm:ss+01:00) instead in sub MAIN at autotime line 2 in block &lt;unit&gt; at autotime line 2 发生了什么？看起来 DateTime 构造函数把参数当作了字符串, 尽管 sub MAIN 的参数被声明为 Int。怎么会变成那样呢?
                   <a href="https://ohmysummer.github.io/post/2016-12-31-raku%E6%97%B6%E9%97%B4%E6%88%B3%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%89%88/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -323,7 +324,7 @@ $ raku -e &quot;say DateTime.new(1480915200)&quot; 2016-12-05T05:20:00Z  看起�
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -9,15 +9,15 @@
   <meta property="og:title" content="stackoverflowWeekly1014" />
   <meta name="twitter:title" content="stackoverflowWeekly1014" />
   <meta name="description" content="Raku List Concatenation without Slip Raku List Concatenation without Slip 在 Perl 5 中 , 操作符用来连接列表; 然而在 Raku 中需要使用 | 操作符, 即 slip 操作符。
-my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = |@a, |@b;  有比这短点的写法吗？
+my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = |@a, |@b; 有比这短点的写法吗？
  答案  你可以使用 「flat」sub:
 my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = flat @a, @b; say @ab.perl; #&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;] my @abf = (@a, @b).">
   <meta property="og:description" content="Raku List Concatenation without Slip Raku List Concatenation without Slip 在 Perl 5 中 , 操作符用来连接列表; 然而在 Raku 中需要使用 | 操作符, 即 slip 操作符。
-my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = |@a, |@b;  有比这短点的写法吗？
+my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = |@a, |@b; 有比这短点的写法吗？
  答案  你可以使用 「flat」sub:
 my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = flat @a, @b; say @ab.perl; #&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;] my @abf = (@a, @b).">
   <meta name="twitter:description" content="Raku List Concatenation without Slip Raku List Concatenation without Slip 在 Perl 5 中 , 操作符用来连接列表; 然而在 Raku 中需要使用 | 操作符, 即 slip 操作符。
-my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = |@a, |@b;  有比 …">
+my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = |@a, |@b; 有比这 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -27,7 +27,7 @@ my @a = &lt;a b c&gt;; my @b = &lt;d e f&gt;; my @ab = |@a, |@b;  有比 …">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-14-stackoverflowweekly1014/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -234,128 +234,82 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="raku-list-concatenation-without-slip">Raku List Concatenation without Slip</h2>
-
+        <h2 id="raku-list-concatenation-without-slip">Raku List Concatenation without Slip</h2>
 <p><a href="http://stackoverflow.com/questions/34567902/perl-6-list-concatenation-without-slip">Raku List Concatenation without Slip</a>
 在 Perl 5 中 <code>,</code> 操作符用来连接列表; 然而在 Raku 中需要使用 <code>|</code> 操作符, 即 slip 操作符。</p>
-
-<pre><code class="language-raku">my @a = &lt;a b c&gt;;
+<pre><code class="language-raku" data-lang="raku">my @a = &lt;a b c&gt;;
 my @b = &lt;d e f&gt;;
 my @ab = |@a, |@b;
-</code></pre>
-
-<p>有比这短点的写法吗？</p>
-
+</code></pre><p>有比这短点的写法吗？</p>
 <ul>
 <li>答案</li>
 </ul>
-
 <p>你可以使用 「flat」sub:</p>
-
-<pre><code class="language-raku">my @a  = &lt;a b c&gt;;
+<pre><code class="language-raku" data-lang="raku">my @a  = &lt;a b c&gt;;
 my @b  = &lt;d e f&gt;;
 my @ab = flat @a, @b;
 say @ab.perl; #&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;]
 my @abf = (@a, @b).flat;
 say @abf.perl; #&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;]
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p>注意, flat 可以移除多层嵌套, 如果该层中的值不是标量的话。</p>
 </blockquote>
-
-<pre><code class="language-raku"># 使用无符号变量
+<pre><code class="language-raku" data-lang="raku"># 使用无符号变量
 my \list = (1,2,(3,4,(5,6)));
 say flat list; # (1 2 3 4 5 6)
-</code></pre>
-
-<p>但是使用 <code>|()</code> 只能脱去一层：</p>
-
-<pre><code class="language-raku">my \list = (1,2,|( (3,4,(5,6)) ));
+</code></pre><p>但是使用 <code>|()</code> 只能脱去一层：</p>
+<pre><code class="language-raku" data-lang="raku">my \list = (1,2,|( (3,4,(5,6)) ));
 say list;  # (1 2 3 4 (5 6))
-</code></pre>
-
-<h2 id="how-many-ways-are-there-to-describe-the-fibonacci-sequence-in-raku">How many ways are there to describe the Fibonacci sequence in Raku?</h2>
-
+</code></pre><h2 id="how-many-ways-are-there-to-describe-the-fibonacci-sequence-in-raku">How many ways are there to describe the Fibonacci sequence in Raku?</h2>
 <p><a href="http://stackoverflow.com/questions/3980842/how-many-ways-are-there-to-describe-the-fibonacci-sequence-in-perl-6">How many ways are there to describe the Fibonacci sequence in Raku?</a></p>
-
-<pre><code class="language-raku">my @fibs = (0, 1, -&gt; $a, $b { $a + $b } ... *);
+<pre><code class="language-raku" data-lang="raku">my @fibs = (0, 1, -&gt; $a, $b { $a + $b } ... *);
 my @fibs = (0, 1, { $^a + $^b } ... *);  
 my @fibs = (0, 1, *+* ... *);
-</code></pre>
-
-<pre><code class="language-raku"># 迭代
+</code></pre><pre><code class="language-raku" data-lang="raku"># 迭代
 sub fib (Int $n --&gt; Int) {
     $n &gt; 1 or return $n;
     my ($prev, $this) = 0, 1;
     ($prev, $this) = $this, $this + $prev for 1 ..^ $n;
     return $this;
 }
-</code></pre>
-
-<pre><code class="language-raku"># 递归
+</code></pre><pre><code class="language-raku" data-lang="raku"># 递归
 use experimental :cached;
 proto fib (Int $n --&gt; Int) is cached {*}
 multi fib (0)  { 0 }
 multi fib (1)  { 1 }
 multi fib ($n) { fib($n - 1) + fib($n - 2) }
-</code></pre>
-
-<pre><code class="language-raku"># 解析
+</code></pre><pre><code class="language-raku" data-lang="raku"># 解析
 sub fib (Int $n --&gt; Int) {
     constant φ1 = 1 / constant φ = (1 + sqrt 5)/2;
     constant invsqrt5 = 1 / sqrt 5;
 
     floor invsqrt5 * (φ**$n + φ1**$n);
 }
-</code></pre>
-
-<h2 id="what-performance-increases-can-we-expect-as-the-raku-implementations-mature">What performance increases can we expect as the Raku implementations mature?</h2>
-
+</code></pre><h2 id="what-performance-increases-can-we-expect-as-the-raku-implementations-mature">What performance increases can we expect as the Raku implementations mature?</h2>
 <p><a href="http://stackoverflow.com/questions/3135673/what-performance-increases-can-we-expect-as-the-perl-6-implementations-mature">What performance increases can we expect as the Raku implementations mature?</a></p>
-
 <p>现在已经没有那么慢了：</p>
-
-<pre><code class="language-raku">$ raku -e 'say [+] 1..10**1000; say now - INIT now'
+<pre><code class="language-raku" data-lang="raku">$ raku -e 'say [+] 1..10**1000; say now - INIT now'
 5000000000000000000000000000000000000000000000 ...
 0.007447
-</code></pre>
-
-<pre><code class="language-raku">$ raku -e 'say [+] (1..100000).list; say now - INIT now'
+</code></pre><pre><code class="language-raku" data-lang="raku">$ raku -e 'say [+] (1..100000).list; say now - INIT now'
 5000050000
 0.13052975
-</code></pre>
-
-<h2 id="像-int-cool-这样的类型强制有什么用">像 Int(Cool) 这样的类型强制有什么用？</h2>
-
+</code></pre><h2 id="像-intcool-这样的类型强制有什么用">像 Int(Cool) 这样的类型强制有什么用？</h2>
 <p><a href="http://stackoverflow.com/questions/34874779/what-is-the-point-of-coercions-like-intcool">What is the point of coercions like Int(Cool)?</a></p>
-
 <p>类型强制能让你在子例程中拥有一个特殊的类型, 但是接收更广的输入。当该子例程被调用时, 参数会被自动转换为更窄的类型。</p>
-
-<pre><code class="language-raku">sub double(Int(Cool) $x) {
+<pre><code class="language-raku" data-lang="raku">sub double(Int(Cool) $x) {
     2 * $x
 }
 
 say double '21';    # 42
 say double Any;     # Type check failed in binding $x; expected 'Cool' but got 'Any'
-</code></pre>
-
-<p>这里, <code>Int</code> 是参数将被强制的目标类型， 而 <code>Cool</code> 类型是子例程的输入参数的类型。</p>
-
+</code></pre><p>这里, <code>Int</code> 是参数将被强制的目标类型， 而 <code>Cool</code> 类型是子例程的输入参数的类型。</p>
 <p>但是这个子例程有什么用呢？ <code>$x</code> 不就是 <code>Int</code> 类型吗？ 为什么你还约束调用者来为参数实现 <code>Cool</code>？</p>
-
 <p>这个子例程所做的就是接收一个 Cool 的子类型的值, 然后尝试把这个值转换为 Int。那个时候它就是一个 Int 类型的值了, 不管它之前是什么类型的值。</p>
-
 <p>所以：</p>
-
-<pre><code class="language-raku">sub double ( Int(Cool) $n ) { $n * 2 }
-</code></pre>
-
-<p>真的可以被看作（我认为这是它在 Rakudo 中的实现方式）</p>
-
-<pre><code class="language-raku"># Int 是 Cool 的子类型否则它就是 Any 或 Mu 类型
+<pre><code class="language-raku" data-lang="raku">sub double ( Int(Cool) $n ) { $n * 2 }
+</code></pre><p>真的可以被看作（我认为这是它在 Rakudo 中的实现方式）</p>
+<pre><code class="language-raku" data-lang="raku"># Int 是 Cool 的子类型否则它就是 Any 或 Mu 类型
 proto sub double ( Cool $n ) {*} # 定义一个原型
 
 # 这儿有你写的内在部分
@@ -366,24 +320,15 @@ multi sub double ( Cool $n ) {
     # 调用其它 multi, 因为它现在是 Int 类型
     samewith Int($n);
 }
-</code></pre>
-
-<p>所以它接受任何 Int, Str, Rat, FatRat, Num, Array, Hash, 等类型. 并在调用  &amp;infix:&lt;*&gt; （带有 $n 和 2）之前尝试把它转换为 Int 类型。</p>
-
-<pre><code class="language-raku">say double '  5  '; # 10
+</code></pre><p>所以它接受任何 Int, Str, Rat, FatRat, Num, Array, Hash, 等类型. 并在调用  &amp;infix:&lt;*&gt; （带有 $n 和 2）之前尝试把它转换为 Int 类型。</p>
+<pre><code class="language-raku" data-lang="raku">say double '  5  '; # 10
 say double 2.5;     # 4
 say double [0,0,0]; # 6
 say double { a =&gt; 0, b =&gt; 0 }; # 4
-</code></pre>
-
-<p>你可以把它限制为 Cool 而非 Any 类型, 因为所有的 Cool 值本来要为 Int 提供一个强制。</p>
-
-<pre><code class="language-raku">( :( Int(Any) $ ) can be shortened to just :( Int() $ ) )
-</code></pre>
-
-<p>你这样做的原因可能是因为你需要在子例程中让它是 Int 类型因为你正调用其它含有不同类型的代码来做不同的事情：</p>
-
-<pre><code class="language-raku">sub example ( Int(Cool) $n ) returns Int {
+</code></pre><p>你可以把它限制为 Cool 而非 Any 类型, 因为所有的 Cool 值本来要为 Int 提供一个强制。</p>
+<pre><code class="language-raku" data-lang="raku">( :( Int(Any) $ ) can be shortened to just :( Int() $ ) )
+</code></pre><p>你这样做的原因可能是因为你需要在子例程中让它是 Int 类型因为你正调用其它含有不同类型的代码来做不同的事情：</p>
+<pre><code class="language-raku" data-lang="raku">sub example ( Int(Cool) $n ) returns Int {
     other-multi( $n ) * $n;
 }
 
@@ -392,11 +337,8 @@ multi sub other-multi ( Any $ ) {  1 }
 
 say example 5;   # 50
 say example 4.5; # 40
-</code></pre>
-
-<p>在这种特殊情况下, 你可以把它写为下面的其中之一。</p>
-
-<pre><code class="language-raku">sub example ( Cool $n ) returns Int {
+</code></pre><p>在这种特殊情况下, 你可以把它写为下面的其中之一。</p>
+<pre><code class="language-raku" data-lang="raku">sub example ( Cool $n ) returns Int {
     other-multi( Int($n) ) * Int($n);
 }
 
@@ -409,12 +351,9 @@ sub example ( Cool $n is copy ) returns Int {
     $n = Int($n);
     other-multi( $n ) * $n;
 }
-</code></pre>
-
-<p>它们中没有一种比使用签名来为你强制类型更清晰。
+</code></pre><p>它们中没有一种比使用签名来为你强制类型更清晰。
 通常对于这样简单的功能你可以使用如下几种方法中的任意一种, 它会很好地满足你想要的。</p>
-
-<pre><code class="language-raku">my &amp;double = * * 2; # WhateverCode
+<pre><code class="language-raku" data-lang="raku">my &amp;double = * * 2; # WhateverCode
 my &amp;double = * × 2; # 同上
 
 my &amp;double = { $_ * 2 };       # bare block
@@ -428,9 +367,7 @@ my &amp;double = &amp;infix:&lt;*&gt;.assuming(*,2); # 柯里化
 my &amp;double = &amp;infix:&lt;*&gt;.assuming(2);
 
 sub double ( $n ) { $n * 2 } # same as :( Any $n )
-</code></pre>
-
-<p>我不太清楚 proto 是干什么用的。
+</code></pre><p>我不太清楚 proto 是干什么用的。
 当你调用一个 <code>multi sub</code> 的时候, 实际上你调用的是一个「原型 sub」(proto sub), 然后这个原型 sub 再调用合适的 multi 候选者。</p>
 
 
@@ -523,7 +460,7 @@ sub double ( $n ) { $n * 2 } # same as :( Any $n )
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

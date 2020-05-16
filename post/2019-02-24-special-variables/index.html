@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2019-02-24-special-variables/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (963 words)
+  <i class="fa fa-clock-o"></i> 5 minutes (965 words)
   
   
 </span>
@@ -231,202 +231,140 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="描述">描述</h2>
-
+        <h2 id="描述">描述</h2>
 <p>一个（希望）全面的 Perl 5 特殊变量列表及其 Raku 等价物，并在必要时记录它们之间的变化。</p>
-
 <h2 id="注意">注意</h2>
-
 <p>本文档试图引导读者从 Perl 5 中的特殊变量到 Raku 中的等效变量。有关 Raku 特殊变量的完整文档，请参阅每个变量的 Raku 文档。</p>
-
 <h2 id="特殊变量">特殊变量</h2>
-
 <h3 id="通用变量">通用变量</h3>
-
 <ul>
-<li>$ARG<br /></li>
-<li>$_<br /></li>
+<li>$ARG</li>
+<li>$_</li>
 </ul>
-
 <p>值得庆幸的是， <code>$_</code> 是 Perl 5 中的常规默认变量。Raku 的主要区别在于现在你可以在它身上调用方法。 例如，Perl 5 的 <code>say $_</code> 可以在 Raku 中以 <code>$_.say</code> 表示。 此外，因为它是默认变量，您甚至不需要使用变量名称。 前面的例子也可以 通过使用 <code>.say</code> 实现。</p>
-
 <ul>
-<li>@ARG<br /></li>
-<li>@_<br /></li>
+<li>@ARG</li>
+<li>@_</li>
 </ul>
-
 <p>由于 Raku 现在具有函数签名，您的参数可以去那里，而不是依赖于 <code>@_</code>。 事实上，如果你使用函数签名，使用 <code>@_</code> 会吐出你告诉它不能覆盖一个现有签名。</p>
-
 <p>但是，如果您不使用函数签名，则 <code>@_</code> 将包含您传递给函数的参数, 就像它在Perl 5中那样。再次，与 <code>$_</code> 一样 ，您可以在其上调用方法。 与 <code>$_</code> 不同，你不能假设 <code>@_</code> 为 这些方法的默认变量（即 <code>@_.shift</code> works， <code>.shift</code> 不 work）。</p>
-
 <ul>
 <li>$LIST_SEPARATOR</li>
-<li>$&rdquo;<br /></li>
+<li>$&rdquo;</li>
 </ul>
-
 <p>目前，Raku 中没有与 List Separator 变量等效的设计文档 S28 在那里说 不是一个，所以你可能不想屏住呼吸。</p>
-
 <ul>
-<li>$PROCESS_ID<br /></li>
-<li>$PID<br /></li>
-<li>$$<br /></li>
+<li>$PROCESS_ID</li>
+<li>$PID</li>
+<li>$$</li>
 </ul>
-
 <p>在 Raku 中用 <code>$*PID</code> 替换 <code>$$</code></p>
-
 <ul>
-<li>$PROGRAM_NAME<br /></li>
-<li>$0<br /></li>
+<li>$PROGRAM_NAME</li>
+<li>$0</li>
 </ul>
-
 <p>您可以通过 <code>$*PROGRAM-NAME</code> 访问 Raku 中的程序名称 。 注意： Raku 中的 <code>$0</code> 是保持正则表达式匹配中第一个捕获值的变量（即捕获变量现在从 <code>$0</code> 而不是 <code>$1</code> 开始 )。</p>
-
 <ul>
-<li>$REAL_GROUP_ID<br /></li>
-<li>$GID<br /></li>
-<li>$(<br />
-<br /></li>
+<li>$REAL_GROUP_ID</li>
+<li>$GID</li>
+<li>$(</li>
 </ul>
-
 <p>在 Raku 中，组信息由 <code>$*GROUP</code> 处理 ，它包含一个 IntStr 类型的对象  因此 可以在字符串或数字上下文中使用。 因此，组ID通过 <code>+$*GROUP</code> 获得 ， 而组名通过 <code>~$*GROUP</code> 获得 。</p>
-
 <ul>
-<li>$EFFECTIVE_GROUP_ID<br /></li>
-<li>$EGID<br /></li>
-<li>$)<br /></li>
+<li>$EFFECTIVE_GROUP_ID</li>
+<li>$EGID</li>
+<li>$)</li>
 </ul>
-
 <p>Raku目前似乎没有提供有效的组ID。</p>
-
 <ul>
-<li>$REAL_USER_ID<br /></li>
-<li>$UID<br /></li>
-<li>$&lt;<br /></li>
+<li>$REAL_USER_ID</li>
+<li>$UID</li>
+<li>$&lt;</li>
 </ul>
-
 <p>在 Raku 中，用户信息由 <code>$*USER</code>处理 ，后者持有 IntStr 类型的对象，因此可以 可以在字符串或数字上下文中使用（这类似于处理组信息的方式） 由 <code>$*GROUP</code> 对象）。 因此，用户ID通过 <code>+$*USER</code> 获得 ，而用户名通过 <code>~$*USER</code> 获得 。</p>
-
 <ul>
-<li>$EFFECTIVE_USER_ID<br /></li>
-<li>$EUID<br /></li>
-<li>$&gt;<br /></li>
+<li>$EFFECTIVE_USER_ID</li>
+<li>$EUID</li>
+<li>$&gt;</li>
 </ul>
-
 <p>Raku当前似乎没有提供有效的用户ID。</p>
-
 <ul>
-<li>$SUBSCRIPT_SEPARATOR<br /></li>
-<li>$SUBSEP<br /></li>
-<li>$;<br /></li>
+<li>$SUBSCRIPT_SEPARATOR</li>
+<li>$SUBSEP</li>
+<li>$;</li>
 </ul>
-
 <p>Raku中不包含下标分隔符变量。坦率地说，如果你的Perl 5代码正在使用它，那就是 几乎可以肯定，真的很老。</p>
-
 <ul>
-<li>$a<br /></li>
-<li>$b<br /></li>
+<li>$a</li>
+<li>$b</li>
 </ul>
-
 <p><code>$a</code> 和 <code>$b</code> 在 Raku 中没有特殊含义 <code>.sort()</code> 不会将它们用于任何特殊的东西。 他们只是常规的旧变量。 通过使用具有更多功能的占位符参数的块来扩展此功能。 占位符变量是使用 <code>^twigil</code> 创建的 （例如 <code>$^z</code> 。它们可以在裸块中使用或在没有显式参数列表的子程序。 块的参数将分配给占位符 Unicode 顺序中的变量。 I. e。 即使变量出现在块中的顺序 （<code>$^q</code>, <code>$^z</code>, <code>$^a</code>） ，它们将按顺序分配 （<code>$^a</code>, <code>$^q</code>, <code>$^z</code>） 。 人机工程学：</p>
-
-<pre><code class="language-raku">sort { $^a cmp $^z }, 1, 5, 6, 4, 2, 3;
+<pre><code class="language-raku" data-lang="raku">sort { $^a cmp $^z }, 1, 5, 6, 4, 2, 3;
 # OUTPUT: «(1 2 3 4 5 6)␤» 
 sort { $^g cmp $^a }, 1, 5, 6, 4, 2, 3;
 # OUTPUT: «(6 5 4 3 2 1)␤» 
 for 1..9 { say $^c, $^a, $^b; last }
 # OUTPUT: «312␤» 
-</code></pre>
-
-<p>有关占位符变量的更多信息，请参阅<a href="https://docs.raku.org/language/variables#The_%5E_Twigil">此页面</a></p>
-
+</code></pre><p>有关占位符变量的更多信息，请参阅<a href="https://docs.raku.org/language/variables#The_%5E_Twigil">此页面</a></p>
 <ul>
 <li>%ENV</li>
 </ul>
-
 <p>％ENV已被Raku中的％*ENV取代。请注意，此哈希的键可能不完全是 在Perl 5和Raku之间相同。例如， Raku的％ENV中缺少OLDPWD 。</p>
-
 <ul>
-<li>$OLD_PERL_VERSION<br /></li>
-<li>$]<br /></li>
+<li>$OLD_PERL_VERSION</li>
+<li>$]</li>
 </ul>
-
 <p>Raku 的运行版本由 <code>$*PERL</code> 特殊变量保存，即一个对象。 正在运行的版本是 通过 <code>$*PERL.version</code> 检索 ，返回类似 <code>v6.c</code> 的内容 ; Perl 的完整字符串化版本解释器是通过 <code>~$*PERL</code> 获得的 ，它返回类似于 Raku（6.c）的内容 。</p>
-
 <ul>
-<li>$SYSTEM_FD_MAX<br /></li>
-<li>$^F<br /></li>
+<li>$SYSTEM_FD_MAX</li>
+<li>$^F</li>
 </ul>
-
 <p>虽然设计文件（S28）表明这可能会变成 <code>$*SYS_FD_MAX</code> ，但这还没有b被实现。</p>
-
 <ul>
-<li>@F<br /></li>
+<li>@F</li>
 </ul>
-
 <p>[需要进一步研究]此时有点混乱。 设计文档S28表示 @F in Perl 5在Raku中被 @_ 取代 ，但目前还不清楚它是如何工作的。 另一方面，它是目前的 有点问题，因为 Perl 5 to Raku Translation doc 指出 <code>-a</code> 和 <code>-F</code> 命令 - rakudo 尚未实现行开关。</p>
-
 <ul>
-<li>@INC<br /></li>
+<li>@INC</li>
 </ul>
-
 <p>Raku 中不再存在。请使用“use lib”来操作要搜索的模块存储库。 该 最接近 <code>@INC</code> 的是 <code>$*REPO</code>。 但这与@INC完全不同 因为 Raku 的预编译功能。</p>
-
-<pre><code class="language-raku"># Print out a list of compunit repositories 
+<pre><code class="language-raku" data-lang="raku"># Print out a list of compunit repositories 
 .say for $*REPO.repo-chain;
-</code></pre>
-
-<ul>
-<li>%INC<br /></li>
+</code></pre><ul>
+<li>%INC</li>
 </ul>
-
 <p>Raku 中不再存在。因为每个 Repository 都负责记住哪些模块已经装好了。 您可以获得所有已加载模块（编译单元）的列表，如下所示：</p>
-
-<pre><code class="language-raku">use Test;
+<pre><code class="language-raku" data-lang="raku">use Test;
 use MyModule;
 say flat $*REPO.repo-chain.map(*.loaded); #-&gt; (MyModule Test) 
-</code></pre>
-
-<ul>
-<li>$INPLACE_EDIT<br /></li>
-<li>$^I<br /></li>
+</code></pre><ul>
+<li>$INPLACE_EDIT</li>
+<li>$^I</li>
 </ul>
-
 <p>S28 建议使用 <code>$*INPLACE_EDIT</code>，但它尚不存在。</p>
-
 <ul>
-<li>$^M<br /></li>
+<li>$^M</li>
 </ul>
-
 <p>S28 建议使用 <code>$*EMERGENCY_MEMORY</code>，但它尚不存在。</p>
-
 <ul>
-<li>$OSNAME<br /></li>
-<li>$^o<br /></li>
+<li>$OSNAME</li>
+<li>$^o</li>
 </ul>
-
 <p>这有点不清楚。 它可能取决于你的意思是“操作系统的名称” 作为设计文档 <a href="https://design.raku.org/S28.html">S28</a> 有三个不同的建议，所有建议都给出了不同的答案。</p>
-
 <p>目前有三个主要对象包含有关“运行环境”的信息：</p>
-
 <ul>
-<li><code>$*KERNEL</code> 提供有关正在运行的操作系统内核的信息;<br /></li>
-<li><code>$*DISTRO</code> 提供有关操作系统分发的信息;<br /></li>
-<li><code>$*VM</code> 提供有关 Raku 的运行后端机器的信息。<br /></li>
+<li><code>$*KERNEL</code> 提供有关正在运行的操作系统内核的信息;</li>
+<li><code>$*DISTRO</code> 提供有关操作系统分发的信息;</li>
+<li><code>$*VM</code> 提供有关 Raku 的运行后端机器的信息。</li>
 </ul>
-
 <p>以上所有对象都有共同的方法：</p>
-
 <ul>
-<li><code>version</code> 提供该组件的版本号;<br /></li>
-<li><code>name</code> 提供该组件的助记符名称;<br /></li>
-<li><code>auth</code> 为该组件提供已知作者。<br /></li>
+<li><code>version</code> 提供该组件的版本号;</li>
+<li><code>name</code> 提供该组件的助记符名称;</li>
+<li><code>auth</code> 为该组件提供已知作者。</li>
 </ul>
-
 <p>作为一个简短示例，以下代码打印有关上述所有组件的信息：</p>
-
-<pre><code class="language-raku">for $*KERNEL, $*DISTRO, $*VM -&gt; $what {
+<pre><code class="language-raku" data-lang="raku">for $*KERNEL, $*DISTRO, $*VM -&gt; $what {
     say $what.^name;
     say 'version '  ~ $what.version
         ~ ' named ' ~ $what.name
@@ -439,238 +377,160 @@ say flat $*REPO.repo-chain.map(*.loaded); #-&gt; (MyModule Test)
 # version 17.04.Zesty.Zapus named ubuntu by https://www.ubuntu.com/ 
 # VM 
 # version 2017.11 named moar by The MoarVM Team 
-</code></pre>
-
-<p>上面所有的 <code>Str</code> 方法产生了当前时间的信息的短版本名字 。</p>
-
+</code></pre><p>上面所有的 <code>Str</code> 方法产生了当前时间的信息的短版本名字 。</p>
 <p>所有对象都有其他方法，在尝试识别正确运行的实例时非常有用， 有关更多信息，请使用 <code>&lt;.^methods&gt;</code> 来内省以上所有内容。</p>
-
 <ul>
-<li>%SIG<br /></li>
+<li>%SIG</li>
 </ul>
-
 <p>没有等效变量。 要在接收信号时执行代码，您可以调用 <a href="https://docs.raku.org/routine/signal#%28Supply%29_sub_signal">signal</a> 子程序，返回可以点击的 <code>Supply</code> 。</p>
-
-<pre><code class="language-raku">$SIG{&quot;INT&quot;} = sub { say &quot;bye&quot;; exit }
-</code></pre>
-
-<pre><code class="language-raku">signal(SIGINT).tap: { say &quot;bye&quot;; exit }; loop {}
-</code></pre>
-
-<p>或者，如果您有一个通用代码，想知道它得到了哪个信号：</p>
-
-<pre><code class="language-raku">signal(SIGINT).tap: -&gt; $signal { say &quot;bye with $signal&quot;; exit }; loop {}
-</code></pre>
-
-<p>在事件驱动的情况下使用信号的更惯用的方式：</p>
-
-<pre><code class="language-raku">react {
+<pre><code class="language-raku" data-lang="raku">$SIG{&quot;INT&quot;} = sub { say &quot;bye&quot;; exit }
+</code></pre><pre><code class="language-raku" data-lang="raku">signal(SIGINT).tap: { say &quot;bye&quot;; exit }; loop {}
+</code></pre><p>或者，如果您有一个通用代码，想知道它得到了哪个信号：</p>
+<pre><code class="language-raku" data-lang="raku">signal(SIGINT).tap: -&gt; $signal { say &quot;bye with $signal&quot;; exit }; loop {}
+</code></pre><p>在事件驱动的情况下使用信号的更惯用的方式：</p>
+<pre><code class="language-raku" data-lang="raku">react {
     whenever signal(SIGINT) {
         say &quot;goodbye&quot;;
         done
     }
 }
-</code></pre>
-
-<ul>
-<li>$BASETIME<br /></li>
-<li>$^T<br /></li>
+</code></pre><ul>
+<li>$BASETIME</li>
+<li>$^T</li>
 </ul>
-
 <p>在 Raku 中用 <code>$*INIT-INSTANT</code> 替换 。 与 Perl 5 不同，这不是自纪元以来的秒数，而是一个 <a href="https://docs.raku.org/type/Instant">Instant</a> 对象，以原子秒计，带有分数。</p>
-
 <ul>
-<li>$PERL_VERSION<br /></li>
-<li>$^V<br /></li>
+<li>$PERL_VERSION</li>
+<li>$^V</li>
 </ul>
-
 <p>与 <code>$]</code> 一样，这已被 <code>$*PERL.version</code> 取代。</p>
-
 <ul>
-<li>${^WIN32_SLOPPY_STAT}<br /></li>
+<li>${^WIN32_SLOPPY_STAT}</li>
 </ul>
-
 <p>在 Raku 中没有类似的东西。</p>
-
 <ul>
-<li>$EXECUTABLE_NAME<br /></li>
-<li>$^X<br /></li>
+<li>$EXECUTABLE_NAME</li>
+<li>$^X</li>
 </ul>
-
 <p>这已被 <code>$*EXECUTABLE-NAME</code> 取代 。 请注意，还有 <code>$*EXECUTABLE</code> ，这在 Raku 中是一个 <code>IO</code> 对象。</p>
-
 <h3 id="与正则表达式相关的变量">与正则表达式相关的变量</h3>
-
 <h4 id="性能问题">性能问题</h4>
-
-<p>如下所示，  <code>$</code><code>,</code>$&amp;<code>和</code>$&rsquo;<code>从 Raku 中删除了，主要由</code>$/` 和它的变体代替， 消除它们，Perl 5 中的相关性能问题不适用。</p>
-
+<p>如下所示，  <code>$``, </code>$&amp;<code>和</code>$'<code>从 Raku 中删除了，主要由</code>$/` 和它的变体代替， 消除它们，Perl 5 中的相关性能问题不适用。</p>
 <ul>
-<li><code>$&lt;digits&gt; ($1, $2, ...)</code><br /></li>
+<li><code>$&lt;digits&gt; ($1, $2, ...)</code></li>
 </ul>
-
-<p>Raku 中的这些现有变量与 Perl 5 中的相同，除了它们现在从 <code>$0</code> 开始而不是 <code>$1</code>。 此外，它们是匹配变量 <code>$/</code> 中索引项的同义词。 例如  <code>$0</code> 相当于 <code>$/[0]，</code>$1<code>相当于</code>$/[1]`等。</p>
-
+<p>Raku 中的这些现有变量与 Perl 5 中的相同，除了它们现在从 <code>$0</code> 开始而不是 <code>$1</code>。 此外，它们是匹配变量 <code>$/</code> 中索引项的同义词。 例如  <code>$0</code> 相当于 <code>$/[0]， </code>$1<code>相当于</code>$/[1]`等。</p>
 <ul>
-<li>$MATCH<br /></li>
-<li>$＆<br /></li>
+<li>$MATCH</li>
+<li>$＆</li>
 </ul>
-
 <p><code>$/</code> 现在包含<a href="https://docs.raku.org/type/Match">匹配</a>对象，因此 <code>$＆</code> 的 Perl 5 行为可以通过字符串化来获得，即 <code>~$/</code> 。 请注意，虽然 <code>$/.Str</code> 也可以工作， 但 <code>~$/</code> 目前是更常见的用法。</p>
-
 <ul>
-<li>${^MATCH}<br /></li>
+<li>${^MATCH}</li>
 </ul>
-
 <p>由于以前的性能问题已经废除，因此 Raku 中没有使用此变量。</p>
-
 <ul>
-<li>$PREMATCH<br /></li>
-<li>$`<br /></li>
+<li>$PREMATCH</li>
+<li>$`</li>
 </ul>
-
 <p>替换为 <code>$/.prematch</code> 。</p>
-
 <ul>
-<li>${^PREMATCH}<br /></li>
+<li>${^PREMATCH}</li>
 </ul>
-
 <p>由于以前的性能问题已经废除，因此 Raku 中没有使用此变量。</p>
-
 <ul>
-<li>$POSTMATCH<br /></li>
-<li>$&rsquo;<br /></li>
+<li>$POSTMATCH</li>
+<li>$&rsquo;</li>
 </ul>
-
 <p>替换为 <code>$/.postmatch</code>。</p>
-
 <ul>
-<li>${^POSTMATCH}<br /></li>
+<li>${^POSTMATCH}</li>
 </ul>
-
 <p>由于以前的性能问题已经废除，因此 Raku 中没有使用此变量。</p>
-
 <ul>
-<li>$LAST_PAREN_MATCH<br /></li>
-<li>$+<br /></li>
+<li>$LAST_PAREN_MATCH</li>
+<li>$+</li>
 </ul>
-
 <p>在 Raku 中不存在，但你可以使用 <code>$/[*-1].Str</code> 获得相同的信息。(<code>$/[*-1]</code> 将是匹配对象，而不是实际的字符串)。</p>
-
 <p>如果您想了解其工作原理，可以查看以下文档：</p>
-
 <ul>
-<li><a href="https://docs.raku.org/routine/[%20]#language_documentation_Operators">[]routine</a> 例程<br /></li>
-<li><a href="https://docs.raku.org/type/Whatever">Whatever</a><br /></li>
+<li><a href="https://docs.raku.org/routine/%5B%20%5D#language_documentation_Operators">[]routine</a> 例程</li>
+<li><a href="https://docs.raku.org/type/Whatever">Whatever</a></li>
 </ul>
-
 <p>可能</p>
-
 <ul>
 <li><a href="https://design.raku.org/S02.html#line_1126">https://design.raku.org/S02.html#line_1126</a></li>
 </ul>
-
 <p>虽然设计文件并不总是最新的。</p>
-
 <ul>
-<li>$LAST_SUBMATCH_RESULT<br /></li>
-<li>$^N<br /></li>
+<li>$LAST_SUBMATCH_RESULT</li>
+<li>$^N</li>
 </ul>
-
 <p>S28 建议 <code>$*MOST_RECENT_CAPTURED_MATCH</code> ，但似乎没有任何实现的变量匹配 <code>$^N</code>.</p>
-
 <ul>
-<li>@LAST_MATCH_END<br /></li>
-<li>@+<br /></li>
+<li>@LAST_MATCH_END</li>
+<li>@+</li>
 </ul>
-
 <p>与大多数正则表达式相关的变量一样，此功能至少部分地移至 Raku 中的 <code>$/</code>  变量。或者，在这种情况下，编号变量是索引的别名。 偏移是通过使用 <code>.to</code> 方法找到。 例如, 第一个偏移是 <code>$/[0].to</code> ，它与 <code>$0.to</code> 同义。 Perl 5 提供的 <code>$+[0]</code>  由 <code>$/.to</code> 提供。</p>
-
 <ul>
-<li>%LAST_PAREN_MATCH<br /></li>
-<li>%+<br /></li>
+<li>%LAST_PAREN_MATCH</li>
+<li>%+</li>
 </ul>
-
 <p>再一次，我们转移到 <code>$/</code>。 前面的 <code>$+{$match}</code> 是 <code>$/{$match}</code>。</p>
-
 <ul>
-<li>@LAST_MATCH_START<br /></li>
-<li>@-<br /></li>
+<li>@LAST_MATCH_START</li>
+<li>@-</li>
 </ul>
-
 <p>类似于使用 <code>.to</code> 方法替换 <code>@+</code> ，使用 <code>$/</code> 上的 <code>.from</code> 方法替换 <code>@-</code> 及其变化。 第一个偏移是 <code>$/[0].from</code> 或等价的 <code>$0.from</code>。 Perl 5 的 <code>$-[0]</code> 是 <code>$/.from</code>。</p>
-
 <ul>
-<li>%LAST_MATCH_START<br /></li>
-<li>%-<br /></li>
+<li>%LAST_MATCH_START</li>
+<li>%-</li>
 </ul>
-
 <p>与 <code>%+</code> 非常相似 ，使用 <code>%-{$match}</code> 将替换为 <code>$/{$match}</code> 。</p>
-
 <ul>
-<li>$LAST_REGEXP_CODE_RESULT<br /></li>
+<li>$LAST_REGEXP_CODE_RESULT</li>
 <li>$^R</li>
 </ul>
-
 <p>没有等价物。</p>
-
 <ul>
 <li>${^RE_DEBUG_FLAGS}</li>
 </ul>
-
 <p>没有等价物。</p>
-
 <ul>
-<li>${^RE_TRIE_MAXBUF}<br /></li>
+<li>${^RE_TRIE_MAXBUF}</li>
 </ul>
-
 <p>没有等价物。</p>
-
 <h4 id="与文件句柄相关的变量">与文件句柄相关的变量</h4>
-
 <ul>
-<li>$ARGV<br /></li>
+<li>$ARGV</li>
 </ul>
-
 <p>读取行时当前文件的名称可以通过 <code>$*ARGFILES.path</code> 获得。</p>
-
 <ul>
-<li>@ARGV<br /></li>
+<li>@ARGV</li>
 </ul>
-
 <p><code>@*ARGS</code> 包含命令行参数。</p>
-
 <ul>
-<li>ARGV<br /></li>
+<li>ARGV</li>
 </ul>
-
 <p>这被 <code>$*ARGFILES</code> 取代 。</p>
-
 <ul>
-<li>ARGVOUT<br /></li>
+<li>ARGVOUT</li>
 </ul>
-
 <p>由于尚未实现 <code>-i</code> 命令行开关，因此还没有相当于 <code>ARGVOUT</code> 的功能 。</p>
-
 <ul>
-<li>$OUTPUT_FIELD_SEPARATOR<br /></li>
-<li>$OFS<br /></li>
-<li>$<br /></li>
+<li>$OUTPUT_FIELD_SEPARATOR</li>
+<li>$OFS</li>
+<li>$</li>
 </ul>
-
 <p>目前没有明显的等价物</p>
-
 <ul>
-<li>$INPUT_LINE_NUMBER<br /></li>
-<li>$NR<br /></li>
-<li>$.<br /></li>
+<li>$INPUT_LINE_NUMBER</li>
+<li>$NR</li>
+<li>$.</li>
 </ul>
-
 <p>不存在直接替代品。</p>
-
 <p>迭代时使用 行方法 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 或 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 类型，您可以在其上调用 <code>.kv</code> 方法 获取交错的索引和值列表（然后每个循环迭代2次）：</p>
-
-<pre><code class="language-raku">for &quot;foo&quot;.IO.lines.kv -&gt; $n, $line {
+<pre><code class="language-raku" data-lang="raku">for &quot;foo&quot;.IO.lines.kv -&gt; $n, $line {
     say &quot;{$n + 1}: $line&quot;
 }
 # OUTPUT: 
@@ -678,54 +538,36 @@ say flat $*REPO.repo-chain.map(*.loaded); #-&gt; (MyModule Test)
 # 2: b 
 # 3: c 
 # 4: d 
-</code></pre>
-
-<p>对于 <a href="https://docs.raku.org/type/IO::CatHandle">IO::CatHandle</a> 类型（其中 <code>$*ARGFILES</code> 是一个），你可以使用 <a href="https://docs.raku.org/type/IO::CatHandle#method_on-switch">on-switch</a> hook 在句柄开关上重置行号，并手动递增。 另请参阅 <a href="https://modules.raku.org/repo/IO::CatHandle::AutoLines">IO::CatHandle::AutoLines</a> 和 <a href="https://modules.raku.org/repo/LN">LN</a> 模块简化此操作。</p>
-
+</code></pre><p>对于 <a href="https://docs.raku.org/type/IO::CatHandle">IO::CatHandle</a> 类型（其中 <code>$*ARGFILES</code> 是一个），你可以使用 <a href="https://docs.raku.org/type/IO::CatHandle#method_on-switch">on-switch</a> hook 在句柄开关上重置行号，并手动递增。 另请参阅 <a href="https://modules.raku.org/repo/IO::CatHandle::AutoLines">IO::CatHandle::AutoLines</a> 和 <a href="https://modules.raku.org/repo/LN">LN</a> 模块简化此操作。</p>
 <ul>
-<li>$INPUT_RECORD_SEPARATOR<br /></li>
-<li>$RS<br /></li>
-<li>$/<br /></li>
+<li>$INPUT_RECORD_SEPARATOR</li>
+<li>$RS</li>
+<li>$/</li>
 </ul>
-
 <p>这可以通过文件句柄上的 <code>.nl-in</code> 方法访问 。 例如。 <code>$*IN.nl-in</code>。</p>
-
 <ul>
-<li>$OUTPUT_RECORD_SEPARATOR<br /></li>
-<li>$ORS<br /></li>
-<li>$\<br /></li>
+<li>$OUTPUT_RECORD_SEPARATOR</li>
+<li>$ORS</li>
+<li>$\</li>
 </ul>
-
 <p>这可以通过文件句柄上的 <code>.nl-out</code> 方法访问 。 例如 <code>$*OUT.nl-out</code>。</p>
-
 <ul>
-<li>$OUTPUT_AUTOFLUSH<br /></li>
-<li>$|<br /></li>
+<li>$OUTPUT_AUTOFLUSH</li>
+<li>$|</li>
 </ul>
-
 <p>没有全球替代品。 对于其他设置，TTY 句柄默认是无缓冲的 <a href="https://docs.raku.org/routine/out-buffer">out-buffer</a> 设置为零或者使用 <code>:!out-buffer</code> 在特定的 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a>上和 open 一块使用 。</p>
-
 <ul>
-<li>${^LAST_FH}<br /></li>
+<li>${^LAST_FH}</li>
 </ul>
-
 <p>在 Raku 中没有实现。</p>
-
 <h4 id="与格式相关的变量">与格式相关的变量</h4>
-
 <p>Raku中没有内置格式。</p>
-
 <h3 id="错误变量">错误变量</h3>
-
 <p>关于 Raku 中的错误变量如何变化，因此这里不再详细说明。</p>
-
 <p>引用 Raku <a href="https://docs.raku.org/language/variables#index-entry-%2524%21">docs</a> 中的说法，<code>$!</code> 是错误变量。</p>
-
 <p>与 Raku 的其余部分一样，它是一个根据类型返回各种内容的错误类型或<a href="https://docs.raku.org/type/Exception">异常</a> 。</p>
-
 <p>特别是在处理<a href="https://docs.raku.org/type/Exception">异常</a>时, <code>$!</code> 提供有关抛出异常的信息， 假设程序没有停止：</p>
-
-<pre><code class="language-raku">try {
+<pre><code class="language-raku" data-lang="raku">try {
     fail &quot;Boooh&quot;;
     CATCH {
         # within the catch block 
@@ -740,71 +582,49 @@ say flat $*REPO.repo-chain.map(*.loaded); #-&gt; (MyModule Test)
 # into $! 
 say 'outside the catch:';
 say $!.^name ~ ' : ' ~ $!.message;
-</code></pre>
-
-<p>以上代码生成以下输出</p>
-
-<pre><code class="language-raku">within the catch:
+</code></pre><p>以上代码生成以下输出</p>
+<pre><code class="language-raku" data-lang="raku">within the catch:
 X::AdHoc : Boooh
 outside the catch:
 X::AdHoc : Boooh
-</code></pre>
-
-<p>因此，如前所述， <code>$!</code> 变量保存异常对象。</p>
-
+</code></pre><p>因此，如前所述， <code>$!</code> 变量保存异常对象。</p>
 <h3 id="与解释器状态相关的变量">与解释器状态相关的变量</h3>
-
 <ul>
-<li>$COMPILING<br /></li>
-<li>$^C<br /></li>
+<li>$COMPILING</li>
+<li>$^C</li>
 <li>$^D</li>
 </ul>
-
 <p>目前没有这些变量的等价物。</p>
-
 <ul>
-<li>${^ENCODING}<br /></li>
+<li>${^ENCODING}</li>
 </ul>
-
 <p>虽然在 Perl 5 中已弃用 ，但在 <code>$?ENC</code> 中 可能有某种等价物 ，但这还远未明朗。</p>
-
 <ul>
 <li>${^GLOBAL_PHASE}</li>
 </ul>
-
 <p>没有 Raku 等价物。</p>
-
 <ul>
-<li>$^H<br /></li>
-<li>%^H<br /></li>
-<li>${^OPEN}<br /></li>
+<li>$^H</li>
+<li>%^H</li>
+<li>${^OPEN}</li>
 </ul>
-
 <p>在 Raku 中可能有也可能没有这些等价物，但它们是内部的，你不应该搞乱 与他们在一起 - 当然，如果您对 Raku 的理解需要您阅读本文，那么肯定不会阅读该文献&hellip;</p>
-
 <ul>
-<li>$PERLDB<br /></li>
-<li>$^P<br /></li>
+<li>$PERLDB</li>
+<li>$^P</li>
 </ul>
-
 <p>Raku 调试器与 Perl 5 调试器相似的可能性最小，此时此处也是如此，似乎不等于这个变量。</p>
-
 <ul>
-<li>${^TAINT}<br /></li>
+<li>${^TAINT}</li>
 </ul>
-
 <p>S28 声称这个变量是“待定”的。 目前不在 Raku 中。</p>
-
 <ul>
-<li>${^UNICODE}<br /></li>
-<li>${^UTF8CACHE}<br /></li>
-<li>${^UTF8LOCALE}<br /></li>
+<li>${^UNICODE}</li>
+<li>${^UTF8CACHE}</li>
+<li>${^UTF8LOCALE}</li>
 </ul>
-
 <p>这些与 Unicode 相关的变量似乎不存在于 Raku 中，但是 - 也许？ - 可能在某处有 <code>$?ENC</code> 类似物吗？  然而，这完全未经证实。</p>
-
 <h3 id="弃用和删除变量">弃用和删除变量</h3>
-
 <p>不言而喻，因为已经从 Perl 5 中删除了这些，所以应该没有必要告诉你如何在 Raku 中使用它们。</p>
 
 
@@ -897,7 +717,7 @@ X::AdHoc : Boooh
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

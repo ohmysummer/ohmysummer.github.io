@@ -10,18 +10,18 @@
   <meta name="twitter:title" content="Sneaky methods" />
   <meta name="description" content="Sneaky methods
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
-my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
-src/core/Bool.pm 32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False }); 33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True }); 35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
-&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
+my method foo(SomeClass:D:) { self }明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
+src/core/Bool.pm32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False });33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True });35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
+&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;# output# (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)# (a b c)没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
   <meta property="og:description" content="Sneaky methods
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
-my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
-src/core/Bool.pm 32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False }); 33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True }); 35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
-&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
+my method foo(SomeClass:D:) { self }明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
+src/core/Bool.pm32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False });33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True });35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
+&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;# output# (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)# (a b c)没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .">
   <meta name="twitter:description" content="Sneaky methods
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
-my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
-src/core/Bool.pm 32: …">
+my method foo(SomeClass:D:) { self }明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
+src/core/Bool.pm32: …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -31,7 +31,7 @@ src/core/Bool.pm 32: …">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2015-05-01-sneaky-methods/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -239,52 +239,35 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p><a href="https://gfldex.wordpress.com/2016/07/20/sneaky-methods/">Sneaky methods</a></p>
-
 <p>就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 <code>my</code> 关键字声明的免费浮点方法。现在为什么你想要:</p>
-
-<pre><code class="language-raku">my method foo(SomeClass:D:) { self }
-</code></pre>
-
-<p>明显的答案是<a href="https://docs.raku.org/language/mop">元对象协议</a>中的 <a href="https://docs.raku.org/type/Metamodel$COLON$COLONMethodContainer#method_add_method">add_method</a> 方法, 在 Rakudo 里你能找到它：</p>
-
-<pre><code class="language-raku">src/core/Bool.pm
+<pre><code class="language-raku" data-lang="raku">my method foo(SomeClass:D:) { self }
+</code></pre><p>明显的答案是<a href="https://docs.raku.org/language/mop">元对象协议</a>中的 <a href="https://docs.raku.org/type/Metamodel$COLON$COLONMethodContainer#method_add_method">add_method</a> 方法, 在 Rakudo 里你能找到它：</p>
+<pre><code class="language-raku" data-lang="raku">src/core/Bool.pm
 32:    Bool.^add_method('pred',  my method pred() { Bool::False });
 33:    Bool.^add_method('succ',  my method succ() { Bool::True });
 35:    Bool.^add_method('enums', my method enums() { self.^enum_values });
-</code></pre>
-
-<p>这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。</p>
-
-<!-- more -->
-
-<pre><code class="language-raku">&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;
+</code></pre><p>这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。</p>
+<!-- raw HTML omitted -->
+<pre><code class="language-raku" data-lang="raku">&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;
 
 # output
 # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
 # (a b c)
-</code></pre>
-
-<p>没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 <code>::</code> 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 <code>.&amp;</code> 来调用它。如果我们需要多次使用那个方法我们可以把它拉出来并给它一个名字。</p>
-
-<pre><code class="language-raku">my multi method debug(List:D:) { dd self; self };
+</code></pre><p>没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 <code>::</code> 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 <code>.&amp;</code> 来调用它。如果我们需要多次使用那个方法我们可以把它拉出来并给它一个名字。</p>
+<pre><code class="language-raku" data-lang="raku">my multi method debug(List:D:) { dd self; self };
 &lt;a b c&gt;.&amp;debug.say;
 
 # output
 (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
 (a b c)
-</code></pre>
-
-<p>或者, 如果我们想允许回调的话, 我们可以把它作为默认参数赋值。</p>
-
-<pre><code class="language-raku">sub f(@l, :&amp;debug = my method (List:D:){self}) { @l.&amp;debug.say };
+</code></pre><p>或者, 如果我们想允许回调的话, 我们可以把它作为默认参数赋值。</p>
+<pre><code class="language-raku" data-lang="raku">sub f(@l, :&amp;debug = my method (List:D:){self}) { @l.&amp;debug.say };
 f &lt;a b c&gt;, debug =&gt; my method ::(List:D){dd self; self};
 
 # output
 #(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
 # (a b c)
-</code></pre>
-
-<p>在 Raku 中基本上所有的东西都是类, 包括<a href="https://docs.raku.org/type/Method">方法</a>。 如果它是类它可以是一个对象并且我们能在我们喜欢的任何地方溜进去。</p>
+</code></pre><p>在 Raku 中基本上所有的东西都是类, 包括<a href="https://docs.raku.org/type/Method">方法</a>。 如果它是类它可以是一个对象并且我们能在我们喜欢的任何地方溜进去。</p>
 
 
         
@@ -376,7 +359,7 @@ f &lt;a b c&gt;, debug =&gt; my method ::(List:D){dd self; self};
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

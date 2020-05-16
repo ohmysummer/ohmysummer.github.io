@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-02-08-raku-grammar%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7%E5%AF%B9%E5%84%BF/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,13 +231,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>欢迎来到这个系列的第 50 篇文章!</p>
-
+        <p>欢迎来到这个系列的第 50 篇文章!</p>
 <p>今天, 我们将讨论一个小的语法结构, 然而就 Grammar 来说这是非常复杂的。首先让我们看看整个 <code>colonpair</code> token:</p>
-
-<pre><code class="language-raku">token colonpair {
+<pre><code class="language-raku" data-lang="raku">token colonpair {
     :my $*key;
     :my $*value;
 
@@ -266,66 +262,42 @@ if (!doNotTrack) {
         { $*key := $&lt;var&gt;&lt;desigilname&gt;.Str; $*value := $&lt;var&gt;; self.check_variable($*value); }
     ]
 }
-</code></pre>
-
-<p>token 总是从冒号开始匹配。那么, 有六个主要的备选分支。让我们简单介绍一下他们的前半部分。</p>
-
+</code></pre><p>token 总是从冒号开始匹配。那么, 有六个主要的备选分支。让我们简单介绍一下他们的前半部分。</p>
 <p>每个分支以赋值给两个动态变量 <code>$*key</code> 和 <code>$*value</code> 结束。</p>
-
 <h2 id="1">1</h2>
-
 <p>当您想要传递 False 值作为命名参数时使用第一个变体,  例如:</p>
-
-<pre><code class="language-raku">sub f($x, :$print = 1) {
+<pre><code class="language-raku" data-lang="raku">sub f($x, :$print = 1) {
     say $x if $print;
 }
 
 f(3);          # 3
 f(4, :!print); # nothing
-</code></pre>
-
-<p>如果不将 <code>:$print</code> 命名参数设置为 False 值, 则此函数将打印其第一个参数。在 Raku 中, 这可以使用快捷方式 <code>:!print</code> 完成。因此, 在第二次调用中, 该函数不会打印任何内容。</p>
-
+</code></pre><p>如果不将 <code>:$print</code> 命名参数设置为 False 值, 则此函数将打印其第一个参数。在 Raku 中, 这可以使用快捷方式 <code>:!print</code> 完成。因此, 在第二次调用中, 该函数不会打印任何内容。</p>
 <h2 id="2">2</h2>
-
 <p>token 的第二个分支用于传递数值的特殊形式。检查以下代码片段:</p>
-
-<pre><code class="language-raku">sub g(:$value) {
+<pre><code class="language-raku" data-lang="raku">sub g(:$value) {
     say $value;
 }
 
 g(:10value); # 10
-</code></pre>
-
-<p>一个函数接受一个命名参数, 并且你可以以一种奇怪的格式 <code>:10value</code> 传递它的值, 这意味着使 <code>:$value</code> 值的值等于 <code>10</code>。</p>
-
+</code></pre><p>一个函数接受一个命名参数, 并且你可以以一种奇怪的格式 <code>:10value</code> 传递它的值, 这意味着使 <code>:$value</code> 值的值等于 <code>10</code>。</p>
 <h2 id="3">3</h2>
-
 <p>第三个选项可能是使用冒号语法的最常用方法。以下示例触发此分支:</p>
-
-<pre><code class="language-raku">sub g(:$value) {
+<pre><code class="language-raku" data-lang="raku">sub g(:$value) {
     say $value;
 }
 
 g(:value(10)); # 10
-</code></pre>
-
-<p>这与前一节中的功能相同, 但值的传递方式不同。</p>
-
+</code></pre><p>这与前一节中的功能相同, 但值的传递方式不同。</p>
 <p>当您需要与第一个相反时, 也使用此选项。在这种情况下, 您使用命名参数作为布尔标志并将其值设置为 True。下一个例子表明:</p>
-
-<pre><code class="language-raku">sub h(:$value) {
+<pre><code class="language-raku" data-lang="raku">sub h(:$value) {
     say $value;
 }
 
 h(:value); # True
+</code></pre><p>请注意, 如果您使用感叹号否定它（在这种情况下, token 的第一个分支起作用）, 则 value 的值为 False:</p>
+<pre><code class="language-raku" data-lang="raku">h(:!value); # False
 </code></pre>
-
-<p>请注意, 如果您使用感叹号否定它（在这种情况下, token 的第一个分支起作用）, 则 value 的值为 False:</p>
-
-<pre><code class="language-raku">h(:!value); # False
-</code></pre>
-
 
         
           <div class="blog-tags">
@@ -416,7 +388,7 @@ h(:value); # True
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

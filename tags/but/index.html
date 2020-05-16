@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>But</title>
-  <meta property="og:title" content="But" />
-  <meta name="twitter:title" content="But" />
+  <title>but</title>
+  <meta property="og:title" content="but" />
+  <meta name="twitter:title" content="but" />
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/but/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/but/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -184,7 +184,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#But</h1>
+              <h1>#but</h1>
               <hr class="small">
             </div>
           </div>
@@ -224,7 +224,7 @@ if (!doNotTrack) {
               <div class="post-entry">
                 
                   当我尝试把选项聚合到一个模块中时我无意中发现了一个常见问题的简洁解决办法。我想拥有一个子例程作为吞噬具名参数、做一些检查、并且要么返回 True 以满足那个 where 从句, 要么死掉并抛出一个合适的错误信息的 where 从句。 那很简单但是不彻底。那个 where 从句没有提供它所检查的参数的名字, 这需要拥有一个合适的错误信息。我们来简化下代码。
-sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {}  子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Raku 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
+sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {} 子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Raku 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
 如你所见 checker 接收一组冒号对(colon-pairs)。剩下的问题我们能提供给我们可能要输出的异常，特别的附加信息。如果我们希望该参数是可选的，避免奇怪的语法。我们可以有一个可选的位置，但我们就不能在checker中混合位置和具名参数。存储该值将是微不足道，因为返回的匿名子例程可以具有闭包变量。我们只需要填充它。幸运的是，子返回作为引用返回，然后由那个 where 从句调用。我们可以偷偷加进另一个呼叫，只要我们大家别忘了把代码引用返回给匿名子例程(sub)。
 返回引用给同一个对象是通过链式方法调用完成的。通常情况下，当事情在 Raku 的领地上变得复杂时，我们就混入一个 role 好了。然后，我们有了一个可以返回自身的方法。
 use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$closure-variable, $value-from-where-clause]; $value-from-where-clause == $i or die &quot;bad value $value-from-where-clause for $closure-variable&quot; } but role :: { method side-channel($second-value){ $closure-variable = $second-value; self } } } sub f($a where g(42).
@@ -269,8 +269,8 @@ use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$
               </p>
               <div class="post-entry">
                 
-                  扩展 Raku 中的类型 使用继承 class BetterInt is Int { method even { self %% 2 } } my BetterInt $x .= new: 42; say $x.even; $x .= new: 71; say $x.even; say $x + 42; # OUTPUT: # True # False # 113  my BetterInt $x 约束 $x 只能包含 BetterInt 或它的子类这种类型的对象。.= new: 42 等价于 = BetterInt.new: 42。 下面的子例程期望接收一个 Int 型的参数，但是你给它传递一个 BetterInt 类型的参数它会很高兴:
-sub foo(Int $x) { say &quot;\$x is $x&quot;} my BetterInt $x .
+                  扩展 Raku 中的类型 使用继承 class BetterInt is Int {method even { self %% 2 }}my BetterInt $x .= new: 42;say $x.even;$x .= new: 71;say $x.even;say $x + 42;# OUTPUT:# True# False# 113my BetterInt $x 约束 $x 只能包含 BetterInt 或它的子类这种类型的对象。.= new: 42 等价于 = BetterInt.new: 42。 下面的子例程期望接收一个 Int 型的参数，但是你给它传递一个 BetterInt 类型的参数它会很高兴:
+sub foo(Int $x) { say &quot;\$x is $x&quot;}my BetterInt $x .
                   <a href="https://ohmysummer.github.io/post/2015-11-25-%E6%89%A9%E5%B1%95raku%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -325,7 +325,7 @@ sub foo(Int $x) { say &quot;\$x is $x&quot;} my BetterInt $x .
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

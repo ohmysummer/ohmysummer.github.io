@@ -8,17 +8,17 @@
   <title>Raku 中的 Block</title>
   <meta property="og:title" content="Raku 中的 Block" />
   <meta name="twitter:title" content="Raku 中的 Block" />
-  <meta name="description" content="Raku 中的 Block class Block is Code { }  Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
+  <meta name="description" content="Raku 中的 Block class Block is Code { } Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
 如果没有显式的签名或占位符参数，那么 Block 会把 $_ 作为位置参数：
-my $block = { uc $_; }; say $block.WHAT; # (Block) say $block(&#39;hello&#39;); # HELLO  Block 和 -&gt; 或 &lt;-&gt; 之间还可以拥有签名:
-my $add = -&gt; $a, $b { $a &#43; $b }; say $add(38, 4); # 42  如果用 &lt;-&gt; 引入签名, 那么参数默认标记为 rw:
-my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) }; my ($a, $b) = (2, 4); $swap($a, $b); say $a; # 4  类型不是 Routine（它是 Block 的子类）的 Blocks 对于 return是透明的。">
-  <meta property="og:description" content="Raku 中的 Block class Block is Code { }  Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
+my $block = { uc $_; }; say $block.WHAT; # (Block) say $block(&#39;hello&#39;); # HELLO Block 和 -&gt; 或 &lt;-&gt; 之间还可以拥有签名:
+my $add = -&gt; $a, $b { $a &#43; $b }; say $add(38, 4); # 42 如果用 &lt;-&gt; 引入签名, 那么参数默认标记为 rw:
+my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) }; my ($a, $b) = (2, 4); $swap($a, $b); say $a; # 4 类型不是 Routine（它是 Block 的子类）的 Blocks 对于 return是透明的。">
+  <meta property="og:description" content="Raku 中的 Block class Block is Code { } Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
 如果没有显式的签名或占位符参数，那么 Block 会把 $_ 作为位置参数：
-my $block = { uc $_; }; say $block.WHAT; # (Block) say $block(&#39;hello&#39;); # HELLO  Block 和 -&gt; 或 &lt;-&gt; 之间还可以拥有签名:
-my $add = -&gt; $a, $b { $a &#43; $b }; say $add(38, 4); # 42  如果用 &lt;-&gt; 引入签名, 那么参数默认标记为 rw:
-my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) }; my ($a, $b) = (2, 4); $swap($a, $b); say $a; # 4  类型不是 Routine（它是 Block 的子类）的 Blocks 对于 return是透明的。">
-  <meta name="twitter:description" content="Raku 中的 Block class Block is Code { }  Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
+my $block = { uc $_; }; say $block.WHAT; # (Block) say $block(&#39;hello&#39;); # HELLO Block 和 -&gt; 或 &lt;-&gt; 之间还可以拥有签名:
+my $add = -&gt; $a, $b { $a &#43; $b }; say $add(38, 4); # 42 如果用 &lt;-&gt; 引入签名, 那么参数默认标记为 rw:
+my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) }; my ($a, $b) = (2, 4); $swap($a, $b); say $a; # 4 类型不是 Routine（它是 Block 的子类）的 Blocks 对于 return是透明的。">
+  <meta name="twitter:description" content="Raku 中的 Block class Block is Code { } Block 是用于小规模代码复用的代码对象。 Block 由花括号括起来的一组语句创建。
 如果没有显式的签名或占位符参数，那么 Block 会把 $_ 作为位置参数：
 my $block = { uc $_; }; say $block.WHAT; # (Block) say $block(&#39;hello&#39;); # …">
   <meta name="author" content="焉知非鱼"/>
@@ -30,7 +30,7 @@ my $block = { uc $_; }; say $block.WHAT; # (Block) say $block(&#39;hello&#39;); 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-19-raku%E4%B8%AD%E7%9A%84block/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -237,71 +237,42 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="raku-中的-block">Raku 中的 Block</h2>
-
-<pre><code class="language-raku">class Block is Code { }
-</code></pre>
-
-<p><a href="https://docs.raku.org/type/Block">Block</a> 是用于小规模代码复用的代码对象。 <code>Block</code> 由花括号括起来的一组语句创建。</p>
-
+        <h2 id="raku-中的-block">Raku 中的 Block</h2>
+<pre><code class="language-raku" data-lang="raku">class Block is Code { }
+</code></pre><p><a href="https://docs.raku.org/type/Block">Block</a> 是用于小规模代码复用的代码对象。 <code>Block</code> 由花括号括起来的一组语句创建。</p>
 <p>如果没有显式的签名或占位符参数，那么 <code>Block</code> 会把 <code>$_</code> 作为位置参数：</p>
-
-<pre><code class="language-raku">my $block = { uc $_; };
+<pre><code class="language-raku" data-lang="raku">my $block = { uc $_; };
 say $block.WHAT;            # (Block)
 say $block('hello');        # HELLO
-</code></pre>
-
-<p><code>Block</code> 和 <code>-&gt;</code> 或 <code>&lt;-&gt;</code> 之间还可以拥有签名:</p>
-
-<pre><code class="language-raku">my $add = -&gt; $a, $b { $a + $b };
+</code></pre><p><code>Block</code> 和 <code>-&gt;</code> 或 <code>&lt;-&gt;</code> 之间还可以拥有签名:</p>
+<pre><code class="language-raku" data-lang="raku">my $add = -&gt; $a, $b { $a + $b };
 say $add(38, 4);            # 42
-</code></pre>
-
-<p>如果用 <code>&lt;-&gt;</code> 引入签名, 那么参数默认标记为 <code>rw</code>:</p>
-
-<pre><code class="language-raku">my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) };
+</code></pre><p>如果用 <code>&lt;-&gt;</code> 引入签名, 那么参数默认标记为 <code>rw</code>:</p>
+<pre><code class="language-raku" data-lang="raku">my $swap = &lt;-&gt; $a, $b { ($a, $b) = ($b, $a) };
 my ($a, $b) = (2, 4);
 $swap($a, $b);
 say $a;                     # 4
-</code></pre>
-
-<p>类型不是 <code>Routine</code>（它是 <code>Block</code> 的子类）的 Blocks 对于 <a href="https://docs.raku.org/syntax/return">return</a>是透明的。</p>
-
-<pre><code class="language-raku">sub f() {
+</code></pre><p>类型不是 <code>Routine</code>（它是 <code>Block</code> 的子类）的 Blocks 对于 <a href="https://docs.raku.org/syntax/return">return</a>是透明的。</p>
+<pre><code class="language-raku" data-lang="raku">sub f() {
     say &lt;a b c&gt;.map: { return 42 };
                    #   ^^^^^^   exits &amp;f, not just the block
 }
-</code></pre>
-
-<p>隐式地, 最后一条语句是 Block 的返回值:</p>
-
-<pre><code class="language-raku">say {1}(); # 1
-</code></pre>
-
-<p>sink 上下文中的裸块会被自动执行:</p>
-
-<pre><code class="language-raku">say 1;
+</code></pre><p>隐式地, 最后一条语句是 Block 的返回值:</p>
+<pre><code class="language-raku" data-lang="raku">say {1}(); # 1
+</code></pre><p>sink 上下文中的裸块会被自动执行:</p>
+<pre><code class="language-raku" data-lang="raku">say 1;
 {
     say 2;                  # executed directly, not a Block object
 }
 say 3;
-</code></pre>
-
-<h2 id="block">&amp;?BLOCK</h2>
-
+</code></pre><h2 id="block">&amp;?BLOCK</h2>
 <p>Which block am I in? - 即我所在的块。有一个例子：</p>
-
-<pre><code class="language-raku">for '.' {
+<pre><code class="language-raku" data-lang="raku">for '.' {
     .Str.say when !.IO.d;
     .IO.dir()&gt;&gt;.&amp;?BLOCK when .IO.d # 我们来点递归!
 }
-</code></pre>
-
-<p>以上代码中, 从开括号 <code>{</code> 之后到闭合括号之前的这个花括号是一个 <code>Block</code> 块, <code>&amp;?BLOCK</code> 表示当前 Block 块,  <code>.IO.dir()&gt;&gt;.&amp;?BLOCK</code> 的意思是对于每个遍历到的目录/文件都执行一次当前块(即花括号)中的代码, 这样就使用 Block 达到了递归! 好神奇。</p>
-
-<p><img src="https://docs.raku.org/images/type-graph-Block.svg" alt="简书支持 SVG 图片" /></p>
+</code></pre><p>以上代码中, 从开括号 <code>{</code> 之后到闭合括号之前的这个花括号是一个 <code>Block</code> 块, <code>&amp;?BLOCK</code> 表示当前 Block 块,  <code>.IO.dir()&gt;&gt;.&amp;?BLOCK</code> 的意思是对于每个遍历到的目录/文件都执行一次当前块(即花括号)中的代码, 这样就使用 Block 达到了递归! 好神奇。</p>
+<p><img src="https://docs.raku.org/images/type-graph-Block.svg" alt="简书支持 SVG 图片"></p>
 
 
         
@@ -393,7 +364,7 @@ say 3;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

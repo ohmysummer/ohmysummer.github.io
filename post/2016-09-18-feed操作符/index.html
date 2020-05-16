@@ -28,7 +28,7 @@ infix ==&gt; 这个流操作符(feed operator)从它的左侧接收结果并把�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-18-feed%E6%93%8D%E4%BD%9C%E7%AC%A6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -235,17 +235,11 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p><a href="https://docs.raku.org/language/operators#Sequencer_Precedence">Sequencer Precedence</a></p>
-
-<h3 id="infix">infix ==&gt;</h3>
-
+        <p><a href="https://docs.raku.org/language/operators#Sequencer_Precedence">Sequencer Precedence</a></p>
+<h3 id="infix-">infix ==&gt;</h3>
 <p>这个流操作符(feed operator)从它的左侧接收结果并把结果作为最后一个参数传递给下一个(右侧的)例程(routine)。</p>
-
 <p>这个操作符的优先级很松散所以你需要使用圆括号把结果赋值给其它变量, 或者你甚至可以使用另外一个流操作符! 在接收单个参数或第一个参数为 block 的程序/方法的例子中, 你必须经常使用圆括号来调用(尽管这对于最后一个例程/方法不是必须的)。</p>
-
-<pre><code class="language-raku"># Traditional structure, read bottom-to-top
+<pre><code class="language-raku" data-lang="raku"># Traditional structure, read bottom-to-top
 my @result =
     sort               # (4) Sort, result is &lt;Earth People&gt;
     grep { /&lt;[PE]&gt;/ }, # (3) Look for P or E
@@ -282,17 +276,11 @@ my @result =
     ==&gt; grep /&lt;[PE]&gt;/
     ==&gt; sort()
     ==&gt; @result;
-</code></pre>
-
-<p>这个流操作符能让你在例程之外构建方法链那样的模式并且方法的结果能在不相关的数据上调用。在方法链中, 你被限制于使用数据身上可用的方法或使用之前的方法调用的结果。使用流操作符, 那个限制没有了。写出来的代码比一系列用多个换行符打断的方法调用更加可读。</p>
-
+</code></pre><p>这个流操作符能让你在例程之外构建方法链那样的模式并且方法的结果能在不相关的数据上调用。在方法链中, 你被限制于使用数据身上可用的方法或使用之前的方法调用的结果。使用流操作符, 那个限制没有了。写出来的代码比一系列用多个换行符打断的方法调用更加可读。</p>
 <p>注: 在将来, 这个操作符会在它获得并行地运行列表操作的能力之后有所变化。它会强制左侧的操作数作为一个闭包(它能被克隆并运行在子线程中)变得可闭合。</p>
-
-<h2 id="infix-1">infix &lt;==</h2>
-
+<h2 id="infix--1">infix &lt;==</h2>
 <p>这个向左的流操作符从右侧接收结果并把结果作为最后的一个参数传递给它前面的(左侧的)例程。这为一系列列表操作函数阐明了从右到左的数据流。</p>
-
-<pre><code class="language-raku"># Traditional structure, read bottom-to-top
+<pre><code class="language-raku" data-lang="raku"># Traditional structure, read bottom-to-top
 my @result =
     sort                   # (4) Sort, result is &lt;Earth People&gt;
     grep { /&lt;[PE]&gt;/ },     # (3) Look for P or E
@@ -321,10 +309,7 @@ my @result =
     &lt;== my @caps # unlike ==&gt;, there is no need for additional statement
     &lt;== map({ .tc })
     &lt;== &lt;people of earth&gt;;
-</code></pre>
-
-<p>和向右的流操作符不一样, 这个结果不能严格地映射为方法链。然而, 和上面传统的结构中每个参数使用一行分割相比,  feed 操作符写出的代码比逗号更具描述性。向左的流操作符也允许你打断语句并捕获一个可能对调试来说极其方便的中间结果或者接收那个结果并在最终结果身上创建另外一个变种。</p>
-
+</code></pre><p>和向右的流操作符不一样, 这个结果不能严格地映射为方法链。然而, 和上面传统的结构中每个参数使用一行分割相比,  feed 操作符写出的代码比逗号更具描述性。向左的流操作符也允许你打断语句并捕获一个可能对调试来说极其方便的中间结果或者接收那个结果并在最终结果身上创建另外一个变种。</p>
 <p>注意: 在将来, 这个操作符会在它获得并行地运行列表操作的能力之后有所变化。它会强制右侧的操作数作为一个闭包变得可闭合(它能被克隆并运行在子线程中)</p>
 
 
@@ -419,7 +404,7 @@ my @result =
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

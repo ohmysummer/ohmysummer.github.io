@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-06-%E7%AC%AC%E5%85%AD%E7%AB%A0.-positionals/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 53 minutes (11250 words)
+  <i class="fa fa-clock-o"></i> 53 minutes (11252 words)
   
   
 </span>
@@ -231,409 +231,215 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第六章-positionals">第六章. Positionals</h1>
-
 <p>Your programming career is likely to be, at its heart, about moving and transforming ordered lists of some kind. Those might be to-do lists, shopping lists, lists of web pages, or just about anything else.</p>
-
 <p>The broad term for such as list is <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>. Not everything in this chapter is strictly one of those; it’s okay to pretend that they are, though. The language easily interchanges among many of the types you’ll see in this chapter, and it’s sometimes important to keep them straight. Mind their differences and their different uses to get exactly the behavior you want.</p>
-
 <p>This is the first chapter where you’ll experience the laziness of the language. Instead of computing things immediately as you specify them in your code, your program will remember it needs to do something. It then only does it if you later use it. This feature allows you to have infinite lists and sequences without actually creating them.</p>
-
 <p>从本质上讲，你的编程职业可能是移动和转换某种有序列表。这些可能是待办事项列表，购物清单，网页列表或其他任何内容。</p>
-
 <p>列表的广义术语是 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>。并非本章中的所有内容都是其中之一;但是可以假装他们是。Raku 很容易在本章中看到的许多类型之间进行交换，有时候保持它们是正确的。注意他们的差异和他们的不同用途，以获得你想要的行为。</p>
-
 <p>这是你将体验这门语言懒惰的第一章。在你的代码中指定它们时，你的程序将记住它需要做某事，而不是立即计算事物。它只会在你以后使用它时才会这样做。此功能允许你拥有无限的列表和序列，而无需实际创建它们。</p>
-
 <h1 id="constructing-a-list">Constructing a List</h1>
-
 <p>A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> is an immutable series of zero or more items. The simplest <a href="https://docs.raku.org/type/List.html"><code>List</code></a> is the empty list. You can construct one with no arguments. The <a href="https://docs.raku.org/type/List.html"><code>List</code></a> as a whole is one thingy and you can store it in a scalar:</p>
-
 <p><a href="https://docs.raku.org/type/List.html"><code>List</code></a> 是零个或多个项目的不可变系列。最简单的 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 是空列表。你可以构造一个没有参数的列表。你可以将列表作为一个整体存储在标量中：</p>
-
 <pre><code>my $empty-list = List.new;
 put 'Elements: ', $empty-list.elems;  # Elements: 0
-</code></pre>
-
-<p>The <code>.elems</code> method returns the number of elements, which is <code>0</code> for the empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This might seem like a trivial result, but imagine those cases where you want to return no results: an empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a> can be just as meaningful as a nonempty one.</p>
-
+</code></pre><p>The <code>.elems</code> method returns the number of elements, which is <code>0</code> for the empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This might seem like a trivial result, but imagine those cases where you want to return no results: an empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a> can be just as meaningful as a nonempty one.</p>
 <p>Instead of the call to <code>.new</code>, you can use empty parentheses to do the same thing. Normally parentheses simply group items, but this is special syntax:</p>
-
 <p><code>.elems</code> 方法返回元素的个数，对于空列表，它返回 <code>0</code>。可能这看起来像一个微不足道的结果，但想象一下你想要返回没有结果的那些情况：一个空的列表可以和非空列表一样有意义。</p>
-
 <p>你可以使用空括号来执行相同的操作，而不是调用 <code>.new</code>。通常括号只是对项目进行分组，但这是特殊的语法：</p>
-
 <pre><code>my $empty-list = (); # Also the empty List
-</code></pre>
-
-<p>There’s also a special object for that. <code>Empty</code> clearly shows your intent:</p>
-
+</code></pre><p>There’s also a special object for that. <code>Empty</code> clearly shows your intent:</p>
 <p>还有一个特殊的对象。<code>Empty</code> 显示你的意图：</p>
-
 <pre><code>my $empty-list = Empty;
-</code></pre>
-
-<p>You can specify elements in <code>.new</code> by separating the elements with commas. Both the colon and parentheses forms work:</p>
-
+</code></pre><p>You can specify elements in <code>.new</code> by separating the elements with commas. Both the colon and parentheses forms work:</p>
 <p>你可以通过用逗号分隔元素来指定 <code>.new</code> 中的元素。冒号和括号形式都有用：</p>
-
 <pre><code>my $butterfly-genus = List.new:
     'Hamadryas', 'Sostrata', 'Junonia';
 
 my $butterfly-genus = List.new(
     'Hamadryas', 'Sostrata', 'Junonia'
     );
-</code></pre>
-
-<h6 id="警告">警告</h6>
-
+</code></pre><h6 id="警告">警告</h6>
 <p>You cannot make an empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a> with <code>$()</code>: that’s just <code>Nil</code>.</p>
-
 <p>The <code>$(...)</code> with a list inside also constructs a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. The <code>$</code> indicates that it is an item. This one happens to be a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> object. You can check the number of elements in it with <code>.elems</code>:</p>
-
 <p>你不能用 <code>$()</code> 创建一个空列表：那只是 <code>Nil</code>。</p>
-
 <p>带有列表的 <code>$(...)</code> 也构造了一个列表。 <code>$</code> 表示它是一个项。这恰好是一个 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 对象。你可以使用 <code>.elems</code> 检查其中的元素数量：</p>
-
 <pre><code>my $butterfly-genus = $('Hamadryas', 'Sostrata', 'Junonia');
 put $butterfly-genus.elems;     # 3
-</code></pre>
-
-<p>Or you can leave off the <code>$</code> in front of the parentheses. You still need the grouping parentheses because item assignment is higher precedence than the comma:</p>
-
+</code></pre><p>Or you can leave off the <code>$</code> in front of the parentheses. You still need the grouping parentheses because item assignment is higher precedence than the comma:</p>
 <p>或者你可以去掉括号前留下的 <code>$</code>。你仍然需要分组括号，因为项赋值的优先级高于逗号：</p>
-
 <pre><code>my $butterfly-genus = ('Hamadryas', 'Sostrata', 'Junonia');
 put $butterfly-genus.elems;     # 3
-</code></pre>
-
-<p>A container can be an element in a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. When you change the value in the container it looks like the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>changes, but it doesn’t actually change because the container is the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> item and that container itself was still the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> item:</p>
-
+</code></pre><p>A container can be an element in a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. When you change the value in the container it looks like the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>changes, but it doesn’t actually change because the container is the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> item and that container itself was still the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> item:</p>
 <p>列表中的元素可以是容器。当你更改容器中的值时，看起来像是列表更改了，但它实际上没有更改，因为容器是列表项，并且该容器本身仍然是列表项：</p>
-
 <pre><code>my $name = 'Hamadryas perlicus';
 my $butterflies = ( $name, 'Sostrata', 'Junonia' );
 put $butterflies; # (Hamadryas perlicus Sostrata Junonia)
 
 $name = 'Hamadryas';
 put $butterflies; # (Hamadryas Sostrata Junonia)
-</code></pre>
-
-<p>You don’t need the named variable, though. You can use an anonymous scalar container as a placeholder that you’ll fill in later. Since it has no value (or even a type), it’s an <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> type object:</p>
-
+</code></pre><p>You don’t need the named variable, though. You can use an anonymous scalar container as a placeholder that you’ll fill in later. Since it has no value (or even a type), it’s an <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> type object:</p>
 <p>但是，你不需要命名变量。你可以使用匿名标量容器作为占位符，稍后你将填写。由于它没有值（甚至是类型），因此它是一个Any类型的对象：</p>
-
 <pre><code>my $butterflies = ( $, 'Sostrata', 'Junonia' );
 put $butterflies; # ((Any) Sostrata Junonia)
-</code></pre>
-
-<p>All of this quoting and comma separating is a bit tedious, but there’s a shortcut. You can quote a list with <code>qw</code>. It creates items by breaking the text apart by whitespace. This makes a three-element <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>All of this quoting and comma separating is a bit tedious, but there’s a shortcut. You can quote a list with <code>qw</code>. It creates items by breaking the text apart by whitespace. This makes a three-element <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p>所有这些引用和逗号分离有点单调乏味，但有一条捷径。你可以用 <code>qw</code> 引起列表。它通过用空格分隔文本来创建项目。这使得三元素列表：</p>
-
 <pre><code>my $butterfly-genus = qw&lt;Hamadryas Sostrata Junonia&gt;;
 put 'Elements: ', $butterfly-genus.elems;  # Elements: 3
-</code></pre>
-
-<p><code>qw</code> is another form of the generalized quoting you saw in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings">Chapter 4</a>. It uses the <code>:w</code> adverb and returns a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. You won’t see this form much, but it’s what you’re doing here:</p>
-
+</code></pre><p><code>qw</code> is another form of the generalized quoting you saw in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings">Chapter 4</a>. It uses the <code>:w</code> adverb and returns a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. You won’t see this form much, but it’s what you’re doing here:</p>
 <p><code>qw</code>是你在第4章中看到的另一种形式的广义引用。它使用 <code>:w</code> 副词并返回一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。你不会看到这个形式太多，但这是你在这里做的：</p>
-
 <pre><code>my $butterfly-genus = Q :w/Hamadryas Sostrata Junonia/
-</code></pre>
-
-<p>That’s still too much work. You can enclose the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s in angle brackets and leave out the item quoting and the separating commas. This acts the same as <code>qw</code>:</p>
-
+</code></pre><p>That’s still too much work. You can enclose the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s in angle brackets and leave out the item quoting and the separating commas. This acts the same as <code>qw</code>:</p>
 <p>那仍然是太多的工作。你可以将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>括在尖括号中，并省略每项的引号和逗号分隔符。这与 <code>qw</code> 相同：</p>
-
 <pre><code>my $butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
-</code></pre>
-
-<p>The <code>&lt;&gt;</code> only works if you don’t have whitespace inside your <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. This gives you four elements because the space between <code>'Hamadryas</code> and <code>perlicus'</code> separates them:</p>
-
+</code></pre><p>The <code>&lt;&gt;</code> only works if you don’t have whitespace inside your <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. This gives you four elements because the space between <code>'Hamadryas</code> and <code>perlicus'</code> separates them:</p>
 <p>只有在<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中没有空格时，<code>&lt;&gt;</code> 才有效。这给你四个元素，因为 <code>'Hamadryas</code> 和 <code>perlicus'</code> 之间的空格将它们分开：</p>
-
 <pre><code>my $butterflies = &lt; 'Hamadryas perlicus' Sostrata Junonia &gt;;
 put 'Elements: ', $butterflies.elems;  # Elements: 4
-</code></pre>
-
-<p>Raku has thought of that too and provides a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> quoting mechanism with quote protection. The <code>&lt;&lt;&gt;&gt;</code> keeps the thingy in quotes as one item even though it has whitespace in it:</p>
-
+</code></pre><p>Raku has thought of that too and provides a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> quoting mechanism with quote protection. The <code>&lt;&lt;&gt;&gt;</code> keeps the thingy in quotes as one item even though it has whitespace in it:</p>
 <p>Raku 也考虑过这一点并提供带引号保护的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>引用机制。 <code>&lt;&lt;&gt;&gt;</code> 将引号中的东西保持为一个项，即使它里面有空格：</p>
-
 <pre><code>my $butterflies = &lt;&lt; 'Hamadryas perlicus' Sostrata Junonia &gt;&gt;;
 put 'Elements: ', $butterflies.elems;  # Elements: 3
-</code></pre>
-
-<p>With the <code>&lt;&lt;&gt;&gt;</code> you can interpolate a variable. After that the value of the variable is an item but isn’t linked to the original variable:</p>
-
+</code></pre><p>With the <code>&lt;&lt;&gt;&gt;</code> you can interpolate a variable. After that the value of the variable is an item but isn’t linked to the original variable:</p>
 <p>使用 <code>&lt;&lt;&gt;&gt;</code> 可以插入变量。之后，变量的值是一个项，但没有链接到原始变量：</p>
-
 <pre><code>my $name = 'Hamadryas perlicus';
 my $butterflies = &lt;&lt; $name Sostrata Junonia &gt;&gt;;
 say $butterflies;
-</code></pre>
-
-<p>Instead of <code>&lt;&lt;&gt;&gt;</code>, you can use the fancier quoting with the single-character <code>«»</code> version (double angle quotes). These are sometimes called French quotes:</p>
-
+</code></pre><p>Instead of <code>&lt;&lt;&gt;&gt;</code>, you can use the fancier quoting with the single-character <code>«»</code> version (double angle quotes). These are sometimes called French quotes:</p>
 <p>你可以使用单字符 <code>«»</code> 版本（双角引号）的更好看的引号代替 <code>&lt;&lt;&gt;&gt;</code>。这些有时被称为法语引号：</p>
-
 <pre><code>my $butterflies = « $name Sostrata Junonia »;
-</code></pre>
-
-<p>Both of these quote-protecting forms are the same as the <code>:ww</code> adverb for <code>Q</code>:</p>
-
+</code></pre><p>Both of these quote-protecting forms are the same as the <code>:ww</code> adverb for <code>Q</code>:</p>
 <p>这两个引号保护形式都与 <code>Q</code> 的 <code>:ww</code> 副词相同：</p>
-
 <pre><code>my $butterflies = Q :ww/ 'Hamadryas perlicus' Sostrata Junonia /;
 put 'Elements: ', $butterflies.elems;  # Elements: 3
-</code></pre>
-
-<p>Sometimes you want a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> where all the elements are the same. The <code>xx</code> list replication operator does that for you:</p>
-
+</code></pre><p>Sometimes you want a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> where all the elements are the same. The <code>xx</code> list replication operator does that for you:</p>
 <p>有时你需要一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>，其中所有元素都相同。 <code>xx</code> 列表复制操作符为你执行此操作：</p>
-
 <pre><code>my $counts = 0 xx 5; # ( 0, 0, 0, 0, 0 )
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> interpolates into a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> like any other scalar variable:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> interpolates into a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> like any other scalar variable:</p>
 <p><a href="https://docs.raku.org/type/List.html"><code>列表</code></a>像任何其他标量变量一样插入到<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中：</p>
-
 <pre><code>my $butterflies = &lt;&lt; 'Hamadryas perlicus' Sostrata Junonia &gt;&gt;;
 put &quot;Butterflies are: $butterflies&quot;;
-</code></pre>
-
-<p>The <a href="https://docs.raku.org/type/List.html"><code>List</code></a> stringifies by putting spaces between its elements. You can’t tell where one element stops and the next starts:</p>
-
+</code></pre><p>The <a href="https://docs.raku.org/type/List.html"><code>List</code></a> stringifies by putting spaces between its elements. You can’t tell where one element stops and the next starts:</p>
 <p><a href="https://docs.raku.org/type/List.html"><code>列表</code></a>通过在其元素之间放置空格来进行字符串化。你无法分辨元素停止的位置和下一个元素的开始：</p>
-
 <pre><code>Butterflies are: Hamadryas perlicus Sostrata Junonia
-</code></pre>
-
-<p>The <code>.join</code> method allows you to choose what goes between the elements:</p>
-
+</code></pre><p>The <code>.join</code> method allows you to choose what goes between the elements:</p>
 <p><code>.join</code> 方法允许你选择元素之间的内容：</p>
-
 <pre><code>my $butterflies = &lt;&lt; 'Hamadryas perlicus' Sostrata Junonia &gt;&gt;;
 put &quot;Butterflies are: &quot;, $butterflies.join: ', ';
-</code></pre>
-
-<p>Now the output has commas between the elements:</p>
-
+</code></pre><p>Now the output has commas between the elements:</p>
 <p>现在输出元素之间有逗号：</p>
-
 <pre><code>Butterflies are: Hamadryas perlicus, Sostrata, Junonia
-</code></pre>
-
-<p>You can combine both of these, which makes it easier to also surround the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> items with characters to set them off from the rest of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>You can combine both of these, which makes it easier to also surround the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> items with characters to set them off from the rest of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>你可以将这两者结合起来，这样可以更容易地使用字符围绕<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>项，以便将它们与<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的其余部分相关联：</p>
-
 <pre><code>my $butterflies = &lt;&lt; 'Hamadryas perlicus' Sostrata Junonia &gt;&gt;;
 put &quot;Butterflies are: /{$butterflies.join: ', '}/&quot;;
-</code></pre>
-
-<p>If you needed to parse this <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> in some other program you’d know to grab the elements between the slashes:</p>
-
+</code></pre><p>If you needed to parse this <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> in some other program you’d know to grab the elements between the slashes:</p>
 <p>如果你需要在其他程序中解析这个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>你知道要抓取斜杠之间的元素：</p>
-
 <pre><code>Butterflies are: /Hamadryas perlicus, Sostrata, Junonia/
-</code></pre>
-
-<p>EXERCISE 6.1Write a program that takes two arguments. The first is a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> and the second is the number of times to repeat it. Use <code>xx</code> and <code>.join</code> to output the text that number of times on separate lines.</p>
-
+</code></pre><p>EXERCISE 6.1Write a program that takes two arguments. The first is a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> and the second is the number of times to repeat it. Use <code>xx</code> and <code>.join</code> to output the text that number of times on separate lines.</p>
 <p>练习6.1 编写一个带有两个参数的程序。第一个是<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>，第二个是重复它的次数。使用 <code>xx</code> 和 <code>.join</code> 在单独的行上输出该次数的文本。</p>
-
 <h2 id="iterating-all-the-elements">Iterating All the Elements</h2>
-
 <p>Iteration is the repetition of a set of operations for each element of a collection. The <code>for</code> control structure iterates through each element of a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> and runs its <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> once for each element as the topic. You can use the <code>.List</code> method to treat the one thing in your scalar variable (your <a href="https://docs.raku.org/type/List.html"><code>List</code></a>) as its individual elements:</p>
-
 <p>迭代是对集合的每个元素重复一组操作。 <code>for</code> 控制结构遍历<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的每个元素，并为每个元素作为主题运行一次<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>。你可以使用 <code>.List</code> 方法将标量变量（<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>）中的一个元素视为其各个元素：</p>
-
 <pre><code>for $butterfly-genus.List {
     put &quot;Found genus $_&quot;;
     }
-</code></pre>
-
-<p>You get one line per element:</p>
-
+</code></pre><p>You get one line per element:</p>
 <p>每个元素得到一行：</p>
-
 <pre><code>Found genus Hamadryas
 Found genus Sostrata
 Found genus Junonia
-</code></pre>
-
-<h6 id="note">NOTE</h6>
-
+</code></pre><h6 id="note">NOTE</h6>
 <p>Although I tend to call these things <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s there is actually a separate role for <a href="https://docs.raku.org/type/Iterable.html"><code>Iterable</code></a>s that does the magic to make <code>for</code> work. The <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s I present in this book also do the <a href="https://docs.raku.org/type/Iterable.html"><code>Iterable</code></a> role, so I don’t distinguish them even though I’m strictly wrong.</p>
-
 <p>Calling <code>.List</code> is a bit annoying though, so there’s a shortcut for it. Prefix the variable with <code>@</code> to do the same thing:</p>
-
 <p>虽然我倾向于将这些东西称为“<a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>”，但<a href="https://docs.raku.org/type/Iterable.html"><code>Iterable</code></a>实际上有一个单独的角色可以为工作带来魔力。我在本书中提出的定位也做了<a href="https://docs.raku.org/type/Iterable.html"><code>Iterable</code></a>角色，所以即使我严重错误，我也不区分它们。</p>
-
 <p>调用 <code>.List</code> 虽然有点烦人，所以有一个快捷方式。使用 <code>@</code> 前缀变量来执行相同的操作：</p>
-
 <pre><code>for @$butterfly-genus {
     put &quot;Found genus $_&quot;;
 }
-</code></pre>
-
-<p>Skip the <code>$</code> sigil altogether and use the <code>@</code> sigil to store a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> in a variable:</p>
-
+</code></pre><p>Skip the <code>$</code> sigil altogether and use the <code>@</code> sigil to store a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> in a variable:</p>
 <p>完全跳过 <code>$</code> sigil并使用 <code>@</code> sigil 将 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 存储在变量中：</p>
-
 <pre><code>my @butterfly-genus = ('Hamadryas', 'Sostrata', 'Junonia');
 
 for @butterfly-genus {
     put &quot;Found genus $_&quot;;
 }
-</code></pre>
-
-<p>This is actually different from the item assignment you’ve seen before. It’s a list assignment where the <code>=</code> operator has a lower precedence:</p>
-
+</code></pre><p>This is actually different from the item assignment you’ve seen before. It’s a list assignment where the <code>=</code> operator has a lower precedence:</p>
 <p>这实际上与你之前看到的项赋值不同。这是一个列表赋值，其中 <code>=</code> 运算符的优先级较低：</p>
-
 <pre><code>my @butterfly-genus = 'Hamadryas', 'Sostrata', 'Junonia';
-</code></pre>
-
-<p>Why would you choose <code>$</code> or <code>@</code>? Assigning to <code>$butterfly-genus</code> gives you a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> and all the restrictions of that type. You can’t add or remove elements. You can change the values inside a container but not the container itself. What do you get when you assign this way?</p>
-
-<p>你为什么选择 <code>$</code> 或 <code>@</code>? 赋值给<code>$butterfly-genus</code> 会给你一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>以及该类型的所有限制。你无法添加或删除元素。你可以更改容器内的值，但不能更改容器本身。当你指定这种方式时你会得到什么？</p>
-
+</code></pre><p>Why would you choose <code>$</code> or <code>@</code>? Assigning to <code>$butterfly-genus</code> gives you a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> and all the restrictions of that type. You can’t add or remove elements. You can change the values inside a container but not the container itself. What do you get when you assign this way?</p>
+<p>你为什么选择 <code>$</code> 或 <code>@</code>? 赋值给<code> $butterfly-genus</code> 会给你一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>以及该类型的所有限制。你无法添加或删除元素。你可以更改容器内的值，但不能更改容器本身。当你指定这种方式时你会得到什么？</p>
 <pre><code>my @butterfly-genus = 'Hamadryas', 'Sostrata', 'Junonia';
 put @butterfly-genus.^name;  # Array
-</code></pre>
-
-<p>You get an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>, which you’ll see more of later in this chapter. An <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> relaxes all those restrictions. It allows you to add and remove elements and change values. Choose the type that does what you want. If you want the data to stay the same, choose the one that can’t change.</p>
-
+</code></pre><p>You get an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>, which you’ll see more of later in this chapter. An <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> relaxes all those restrictions. It allows you to add and remove elements and change values. Choose the type that does what you want. If you want the data to stay the same, choose the one that can’t change.</p>
 <p>This looks a little better with interpolation, which means you’re less likely to forget explicit whitespace around words:</p>
-
 <p>你得到一个<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>，你将在本章后面看到更多。<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a> 放宽了所有这些限制。它允许你添加和删除元素并更改值。选择满足你需求的类型。如果你希望数据保持不变，请选择无法更改的数据。</p>
-
 <p>插值看起来好一点，这意味着你不太可能忘记单词周围的显式空格：</p>
-
 <pre><code>for @butterfly-genus {
     put &quot;$_ has {.chars} characters&quot;;
 }
-</code></pre>
-
-<p>You’ll often want to give your variable a meaningful name. You can use a pointy <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> to name your parameter instead of using the topic variable, <code>$_</code>:</p>
-
+</code></pre><p>You’ll often want to give your variable a meaningful name. You can use a pointy <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> to name your parameter instead of using the topic variable, <code>$_</code>:</p>
 <p>你经常希望为变量赋予有意义的名称。你可以使用尖头<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>来命名参数，而不是使用主题变量 <code>$_</code>：</p>
-
 <pre><code>for @butterfly-genus -&gt; $genus {
     put &quot;$genus has {$genus.chars} characters&quot;;
 }
-</code></pre>
-
-<p>That looks a lot like the definition of a subroutine with <code>-&gt; { ... }</code>, because that’s what it is. That parameter is lexical to that <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> just as it would be in a subroutine.</p>
-
+</code></pre><p>That looks a lot like the definition of a subroutine with <code>-&gt; { ... }</code>, because that’s what it is. That parameter is lexical to that <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> just as it would be in a subroutine.</p>
 <p>If your <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> has more than one parameter, then the <code>for</code> takes as many elements as it needs to fill in all of them. This goes through the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> by twos:</p>
-
 <p>这看起来很像是带有 <code>-&gt; { ... }</code> 的子程序的定义，因为它就是它的本质。该参数对于该<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>是词法的，就像它在子例程中一样。</p>
-
 <p>如果你的<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>有多个参数，那么 <code>for</code> 需要尽可能多的元素来填充所有这些参数。这每俩个元素遍历<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>：</p>
-
 <pre><code>my @list = &lt;1 2 3 4 5 6 7 8&gt;;
 
 for @list -&gt; $a, $b {
     put &quot;Got $a and $b&quot;;
 }
-</code></pre>
-
-<p>Each iteration of the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> takes two elements:</p>
-
+</code></pre><p>Each iteration of the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> takes two elements:</p>
 <p><a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 的每次迭代都接收两个元素：</p>
-
 <pre><code>Got 1 and 2
 Got 3 and 4
 Got 5 and 6
 Got 7 and 8
-</code></pre>
-
-<p>Ensure that you have enough elements to fill all of the parameters or you’ll get an error. Try that bit of code with one less element to see what happens!</p>
-
+</code></pre><p>Ensure that you have enough elements to fill all of the parameters or you’ll get an error. Try that bit of code with one less element to see what happens!</p>
 <p>You can use placeholder variables in your <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>, but in that case you don’t want to use a pointy <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>, which would already create a signature for you. Using placeholder variables also works:</p>
-
 <p>确保你有足够的元素来填充所有参数，否则你将收到错误。用少一个元素尝试那些代码来看看会发生什么！</p>
-
 <p>你可以在块中使用占位符变量，但在这种情况下，你不希望使用尖头块，这会为你创建签名。使用占位符变量也有效：</p>
-
 <pre><code>my @list = &lt;1 2 3 4 5 6 7 8&gt;;
 
 for @list {
     put &quot;Got $^a and $^b&quot;;
 }
-</code></pre>
-
-<h3 id="reading-lines-of-input">READING LINES OF INPUT</h3>
-
+</code></pre><h3 id="reading-lines-of-input">READING LINES OF INPUT</h3>
 <p>The <code>lines</code> routine reads lines of input from the files you specify on the command line, or from standard input if you don’t specify any. You’ll read more about this in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch08.html#camelia-files">Chapter 8</a> but it’s immediately useful with <code>for</code>:</p>
-
 <p><code>lines</code> 例程从你在命令行中指定的文件中读取输入行，如果未指定任何文件，则从标准输入读取。你将在第8章中详细了解这一点，但它对以下内容非常有用：</p>
-
 <pre><code>for lines() {
     put &quot;Got line $_&quot;;
 }
-</code></pre>
-
-<p>Your programs reads and reoutputs all of the lines from all of the files. The line ending was autochomped; it was automatically stripped from the value because that’s probably what you wanted. The <code>put</code> adds a line ending for you:</p>
-
+</code></pre><p>Your programs reads and reoutputs all of the lines from all of the files. The line ending was autochomped; it was automatically stripped from the value because that’s probably what you wanted. The <code>put</code> adds a line ending for you:</p>
 <p>你的程序会读取并重新输出所有文件中的所有行。换行符是自动切除的;它会自动从值中删除，因为这可能是你想要的。 <code>put</code> 为你添加换行符：</p>
-
 <pre><code>% raku your-program.p6 file1.txt file2.txt
 Got line ...
 Got line ...
 ...
-</code></pre>
-
-<p>You need those parentheses even without an argument. The <code>lines</code> routine can take an argument that tells it how many lines to grab:</p>
-
+</code></pre><p>You need those parentheses even without an argument. The <code>lines</code> routine can take an argument that tells it how many lines to grab:</p>
 <p>即使没有参数，你也需要这些圆括号。<code>lines</code> 例程可以接收一个参数来告诉它要抓取多少行：</p>
-
 <pre><code>for lines(17) {
     put &quot;Got line $_&quot;;
 }
-</code></pre>
-
-<p>You can break the lines into “words.” This takes a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> (or something that can turn into a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>) and gives you back the nonwhitespace chunks as separate elements:</p>
-
+</code></pre><p>You can break the lines into “words.” This takes a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> (or something that can turn into a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>) and gives you back the nonwhitespace chunks as separate elements:</p>
 <p>你可以将这些行分解成“单词”。这接收一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a> （或者可以变成<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的东西），并将非空白块作为单独的元素返回：</p>
-
 <pre><code>say &quot;Hamadryas perlicus sixus&quot;.words; # (Hamadryas perlicus sixus)
 put &quot;Hamadryas perlicus sixus&quot;.words.elems; # 3
-</code></pre>
-
-<p>Combine this with <code>lines</code> to iterate one word at a time:</p>
-
+</code></pre><p>Combine this with <code>lines</code> to iterate one word at a time:</p>
 <p>将其与 <code>lines</code> 组合以一次迭代一个单词：</p>
-
 <pre><code>for lines.words { ... }
-</code></pre>
-
-<p>The <code>.comb</code> method takes it one step further by breaking it into characters:</p>
-
+</code></pre><p>The <code>.comb</code> method takes it one step further by breaking it into characters:</p>
 <p><code>.comb</code> 方法通过将其分解为字符更进一步：</p>
-
 <pre><code>for lines.comb { ... }
-</code></pre>
-
-<p>You’ll see more about <code>.comb</code> in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch16.html#camelia-regex2">Chapter 16</a>, where you’ll learn how to tell it to divide up the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>.</p>
-
+</code></pre><p>You’ll see more about <code>.comb</code> in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch16.html#camelia-regex2">Chapter 16</a>, where you’ll learn how to tell it to divide up the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>.</p>
 <p>With those three things you can implement your own <em>wc</em> program:</p>
-
 <p>你将在第16章中看到更多关于 <code>.comb</code> 的内容，在那里你将学习如何划分<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。</p>
-
 <p>有了这三个东西你可以实现自己的 <em>wc</em> 程序：</p>
-
 <pre><code>for lines() {
     state $lines = 0;
     state $words = 0;
@@ -645,70 +451,37 @@ put &quot;Hamadryas perlicus sixus&quot;.words.elems; # 3
         put &quot;lines: $lines\nwords: $words\nchars: $chars&quot;;
         }
     }
-</code></pre>
-
-<p>The character count with this version doesn’t count all of the characters because the line ending was automatically removed.</p>
-
+</code></pre><p>The character count with this version doesn’t count all of the characters because the line ending was automatically removed.</p>
 <p>EXERCISE 6.2Read the lines from the files you specify on the command line. Output each line prefixed by the line number. At the end of each line show the number of “words” in the line.</p>
-
 <p>EXERCISE 6.3Output all of the lines of the butterfly census file (from <a href="https://www.learningraku.com/downloads/"><em>https://www.learningraku.com/downloads/</em></a>) that contain the genus <em>Pyrrhogyra</em>. How many lines did you find? If you don’t want to use that file try something else you have lying around.</p>
-
 <p>此版本的字符计数不会计算所有字符，因为换行符会自动删除。</p>
-
 <p>练习6.2 从命令行中指定的文件中读取行。输出以行号为前缀的每一行。在每行的末尾显示行中“单词”的数量。</p>
-
-<p>练习6.3 输出包含 <em>Pyrrhogyra</em> 属的蝴蝶人口普查文件（来自<a href="https://www.learningraku.com/downloads/）的所有行。你找到了多少行？如果你不想使用该文件，请尝试其他的东西。">https://www.learningraku.com/downloads/）的所有行。你找到了多少行？如果你不想使用该文件，请尝试其他的东西。</a></p>
-
+<p>练习6.3 输出包含 <em>Pyrrhogyra</em> 属的蝴蝶人口普查文件（来自https://www.learningraku.com/downloads/）的所有行。你找到了多少行？如果你不想使用该文件，请尝试其他的东西。</p>
 <h1 id="ranges">Ranges</h1>
-
 <p>A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> specifies the inclusive bounds of possible values without creating all of the items that would be in that <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> can be infinite because it doesn’t create all the elements; a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> would take up all your memory.</p>
-
 <p>Create a <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> with <code>..</code> and your bounds on either side:</p>
-
 <p><a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 指定可能值的包含范围，而不创建该列表中的所有项。<a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 可以是无限的，因为它不会创建所有元素;<a href="https://docs.raku.org/type/List.html"><code>列表</code></a> 会占用你所有的内存。</p>
-
 <p>使用 <code>..</code> 创建一个 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>，并在两边创建边界：</p>
-
 <pre><code>my $digit-range =   0 .. 10;
 my $alpha-range = 'a' .. 'f';
-</code></pre>
-
-<p>If the lefthand value is larger than the righthand value you still get a <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, but it will have no elements and you won’t get a warning:</p>
-
+</code></pre><p>If the lefthand value is larger than the righthand value you still get a <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, but it will have no elements and you won’t get a warning:</p>
 <p>如果左手值大于右手值，你仍然得到一个 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>，但它没有元素，你不会收到警告：</p>
-
 <pre><code>my $digit-range = 10 .. 0;
 put $digit.elems; # 0
-</code></pre>
-
-<p>You can exclude one or both endpoints with <code>^</code> on the appropriate side of the <code>..</code> operator. Some people call thesethe cat ears:</p>
-
+</code></pre><p>You can exclude one or both endpoints with <code>^</code> on the appropriate side of the <code>..</code> operator. Some people call thesethe cat ears:</p>
 <p>你可以在 <code>..</code> 运算符的适当一侧使用 <code>^</code> 排除一个或两个端点。有人称这些是猫耳朵：</p>
-
 <pre><code>my $digit-range = 0 ^..  10;  # exclude  0        ( 1..10 )
 my $digit-range = 0  ..^ 10;  # exclude 10        ( 0..9  )
 my $digit-range = 0 ^..^ 10;  # exclude  0 and 10 ( 1..9  )
-</code></pre>
-
-<p>As a shortcut for a numeric range starting from 0, use the <code>^</code> and the upper (exclusive) bound. This is very common Raku code:</p>
-
+</code></pre><p>As a shortcut for a numeric range starting from 0, use the <code>^</code> and the upper (exclusive) bound. This is very common Raku code:</p>
 <p>作为从 0 开始的数字范围的快捷方式，使用 <code>^</code> 和上限（不包括）。这是非常常见的 Raku 代码：</p>
-
 <pre><code>my $digit-range = ^10; # Same as 0 ..^ 10
-</code></pre>
-
-<p>This gives you the values <code>0</code> to <code>9</code>, which is 10 values altogether even though <code>10</code> is not part of the range.</p>
-
+</code></pre><p>This gives you the values <code>0</code> to <code>9</code>, which is 10 values altogether even though <code>10</code> is not part of the range.</p>
 <p>EXERCISE 6.4How many items are in the range from <code>'aa'</code> to <code>'zz'</code>? How many from <code>'a'</code> to <code>'zz'</code>?</p>
-
 <p>A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> knows its bounds. To see all of the values it would produce you can use <code>.List</code> to turn it into a list. Be aware that if your <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> is very large you might suddenly hog most of the memory on your system, so this isn’t something you’d normally want to do. It’s nice for debugging though:</p>
-
 <p>这将为你提供值 <code>0</code> 到 <code>9</code>，即使 <code>10</code> 不是 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 的一部分，也是 <code>10</code> 个值。</p>
-
 <p>练习6.4 <code>'aa'</code> 到 <code>'zz'</code> <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>内有多少项？从 <code>'a'</code> 到 <code>'zz'</code> 有多少？</p>
-
 <p><a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 知道它的界限。要查看它将生成的所有值，你可以使用 <code>.List</code> 将其转换为列表。请注意，如果你的<a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 非常大，你可能会突然占用系统上的大部分内存，因此这通常不是你想要做的事情。虽然调试很好：</p>
-
 <pre><code>% raku
 &gt; my $range = 'a' .. 'f';
 &quot;a&quot;..&quot;f&quot;
@@ -716,27 +489,17 @@ my $digit-range = 0 ^..^ 10;  # exclude  0 and 10 ( 1..9  )
 6
 &gt; $range.List
 (a b c d e f)
-</code></pre>
-
-<p>EXERCISE 6.5Show all of the spreadsheet cell addresses from <code>B5</code> to <code>F9</code>.</p>
-
+</code></pre><p>EXERCISE 6.5Show all of the spreadsheet cell addresses from <code>B5</code> to <code>F9</code>.</p>
 <p>A smart match against a <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> checks if a value is between the <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>’s bounds:</p>
-
 <p>练习6.5 显示从 <code>B5</code> 到 <code>F9</code> 的所有电子表格单元格地址。</p>
-
 <p>针对 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 的智能匹配检查值是否在 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 的边界之间：</p>
-
 <pre><code>% raku
 &gt; 7 ~~ 0..10
 True
 &gt; 11 ~~ ^10
 False
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> isn’t a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, though. Any value between the bounds is part of the <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, even if it’s not a value that you would get if you listified the <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> isn’t a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, though. Any value between the bounds is part of the <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, even if it’s not a value that you would get if you listified the <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>:</p>
 <p>但是，<a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 不是<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。边界之间的任何值都是<a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>的一部分，即使它不是你为<a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>列表化时得到的值：</p>
-
 <pre><code>% raku
 &gt; 1.37 ~~ 0..10
 True
@@ -744,323 +507,172 @@ True
 True
 &gt; -137 ~~ -Inf..Inf # infinite range!
 True
-</code></pre>
-
-<p>Excluding the endpoint doesn’t mean that the last element is the next-lowest integer. Here, it’s the exact value <code>10</code> that’s excluded; everything positive and less than <code>10</code> is still in the <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>:</p>
-
+</code></pre><p>Excluding the endpoint doesn’t mean that the last element is the next-lowest integer. Here, it’s the exact value <code>10</code> that’s excluded; everything positive and less than <code>10</code> is still in the <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>:</p>
 <p>排除端点并不意味着最后一个元素是下一个最小的整数。在这里，它被排除在外的确切值 <code>10</code>;一切积极且小于 <code>10</code> 的东西仍然在范围内：</p>
-
 <pre><code>% raku
 &gt; 9.999 ~~ ^10
 True
-</code></pre>
-
-<p>This is quite different from the listified version!</p>
-
+</code></pre><p>This is quite different from the listified version!</p>
 <p>这与listified版本完全不同！</p>
-
-<h2 id="the-coercer">The @ Coercer</h2>
-
+<h2 id="the--coercer">The @ Coercer</h2>
 <p>A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> isn’t a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. In some situations it acts like separate elements instead of merely bounds but in others it maintains its rangeness. Usually that works because something implicitly coerces it for you.</p>
-
 <p>Start with a <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>. Output it using <code>put</code> and <code>say</code>. These show you different representations because their text representations of the object are different: <code>put</code> uses <code>.Str</code> and <code>say</code> uses <code>.gist</code>:</p>
-
 <p><a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>不是<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。在某些情况下，它的作用类似于单独的元素，而不仅仅是边界，但在其他情况下，它保持其范围。通常这是有效的，因为某些内容会暗中强转它。</p>
-
 <p>从 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 开始。用 <code>put</code> 和 <code>say</code> 输出它。这些显示了不同的表示形式，因为它们的对象的文本表示是不同的：<code>put</code> 使用 <code>.Str</code>， <code>say</code> 使用 <code>.gist</code>：</p>
-
 <pre><code>my $range = 0..3;
 put $range.^name; # Range
 say $range;       # 0..3
 put $range;       # 0 1 2 3
-</code></pre>
-
-<p>This distinction in the representation of the object is important. When you see <code>say</code> in this book it’s because I want to show you <code>.gist</code> because that’s closer to a summary of the object.</p>
-
+</code></pre><p>This distinction in the representation of the object is important. When you see <code>say</code> in this book it’s because I want to show you <code>.gist</code> because that’s closer to a summary of the object.</p>
 <p>You can make that a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> by coercing it with the <code>.List</code> method:</p>
-
 <p>这种对象表示的区别很重要。当你看到本书中的说法时，这是因为我想向你展示 <code>.gist</code>，因为它更接近于对象的摘要。</p>
-
 <p>你可以通过使用 <code>.List</code> 方法强制它来创建 <a href="https://docs.raku.org/type/List.html"><code>列表</code></a>：</p>
-
 <pre><code>my $list = $range.List;
 put $list.^name; # List
 say $list;       # (0 1 2 3)
-</code></pre>
-
-<p>Which one of these you have matters. A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> works differently in a smart match because the element must be part of the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>Which one of these you have matters. A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> works differently in a smart match because the element must be part of the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p>你有哪些重要事项。 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 在智能匹配中的工作方式不同，因为该元素必须是<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的一部分：</p>
-
 <pre><code>put &quot;In range? &quot;, 2.5 ~~ $range;  # True
 put &quot;In list? &quot;, 2.5  ~~ $list;   # False
-</code></pre>
-
-<p>Instead of typing <code>.List</code> everywhere that you want something treated as such, you can use the prefix list context operator, <code>@</code>, just like you’ve seen with the context operators <code>+</code> and <code>~</code>:</p>
-
+</code></pre><p>Instead of typing <code>.List</code> everywhere that you want something treated as such, you can use the prefix list context operator, <code>@</code>, just like you’ve seen with the context operators <code>+</code> and <code>~</code>:</p>
 <p>你可以使用前缀列表上下文运算符 <code>@</code>，而不是在你想要的上下文运算符 <code>+</code> 和 <code>~</code> 中使用。</p>
-
 <pre><code>my $range = 0..3;
 
 put &quot;In range? &quot;,  2.5 ~~ $range;       # True (Range object)
 put &quot;In .List? &quot;,  2.5 ~~ $range.List;  # False (List object)
 put &quot;In @?     &quot;,  2.5 ~~ @$range;      # False (List object)
-</code></pre>
-
-<p>Later you’ll use the <code>@</code> sigil for <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> variables. For now it’s a convenient way to treat something like a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>.</p>
-
+</code></pre><p>Later you’ll use the <code>@</code> sigil for <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> variables. For now it’s a convenient way to treat something like a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>.</p>
 <p>稍后你将对<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>变量使用 <code>@</code> sigil。现在，它是一种方便的方式来处理像<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>这样的东西。</p>
-
 <h1 id="sequences">Sequences</h1>
-
 <p>A sequence, <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>, knows how to make a future <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. It’s similar to a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> but it’s lazy. It knows where its values will come from and defers producing them until you actually need them.</p>
-
 <p>序列 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 知道如何创建未来的 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>。它类似于 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>，但它很惰性的。它知道它的值来自哪里，并推迟生产它们，直到你真正需要它们为止。</p>
-
 <h6 id="note-1">NOTE</h6>
-
 <p>A <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> isn’t really a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> but it has a way to fake it. Rather than explain that I’m going to fake it too.</p>
-
 <p>You call <code>.reverse</code> on a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> to flip the list around. When you call <a href="https://docs.raku.org/type/List.html"><code>List</code></a> methods it just works:</p>
-
 <p><a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 不是真正的 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> ，但它有办法伪造它。多说无意，我也会伪造它。</p>
-
 <p>你在列表上调用 <code>.reverse</code> 来翻转列表。当你调用<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>方法时，它只是起作用：</p>
-
 <pre><code>my $countdown = &lt;1 2 3 4 5&gt;.reverse;
 put $countdown.^name; # Seq
 put $countdown.elems; # 5
-</code></pre>
-
-<p>The result isn’t actually a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>, but in most common cases that isn’t important. The things that try to use it as a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> will get what they expect, and there’s no immediate need to create another <a href="https://docs.raku.org/type/List.html"><code>List</code></a> when the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> knows the values from the original one.</p>
-
+</code></pre><p>The result isn’t actually a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>, but in most common cases that isn’t important. The things that try to use it as a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> will get what they expect, and there’s no immediate need to create another <a href="https://docs.raku.org/type/List.html"><code>List</code></a> when the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> knows the values from the original one.</p>
 <p>However, calling <code>.eager</code> converts the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> to a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
 <p>结果实际上不是 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>，但在大多数常见情况下并不重要。尝试将其用作<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的东西将获得他们期望的东西，并且当<a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>知道原始值的值时，不需要立即创建另一个<a href="https://docs.raku.org/type/List.html"><code>List</code></a>。</p>
-
 <p>但是，调用 <code>.eager</code> 会将 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 转换为 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>：</p>
-
 <pre><code>my $countdown = &lt;1 2 3 4 5&gt;.reverse.eager;
 put $countdown.^name; # Seq
 put $countdown.elems; # 5
-</code></pre>
-
-<p>If you assign the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> to a variable with the <code>@</code> sigil the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> also turns into a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This is an eager assignmentto an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> (coming up soon):</p>
-
+</code></pre><p>If you assign the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> to a variable with the <code>@</code> sigil the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> also turns into a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This is an eager assignmentto an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> (coming up soon):</p>
 <p>如果将 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 赋值给带有 <code>@</code> sigil的变量，<a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 也会变成 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>。这是对<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>的急切赋值（即将推出）：</p>
-
 <pre><code>my @countdown = &lt;1 2 3 4 5&gt;.reverse;
 put @countdown.^name; # Array
 put @countdown.elems; # 5
-</code></pre>
-
-<p>The <code>.pick</code> method chooses a random element from a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>The <code>.pick</code> method chooses a random element from a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p><code>.pick</code> 方法从 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 中选择一个随机元素：</p>
-
 <pre><code>my $range = 0 .. 5;
 my $sequence = $range.reverse;
 say $sequence.^name; # Seq;
 
 put $sequence.pick;  # 5 (or maybe something else)
-</code></pre>
-
-<p>By default you can only iterate through a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> once. You use an item, then move on to the next one. This means that a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> needs to know how to make the next element, and once it uses it it can discard it—it doesn’t remember past values. If you try to use the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> after it’s gone through all of its elements you get an error:</p>
-
+</code></pre><p>By default you can only iterate through a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> once. You use an item, then move on to the next one. This means that a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> needs to know how to make the next element, and once it uses it it can discard it—it doesn’t remember past values. If you try to use the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> after it’s gone through all of its elements you get an error:</p>
 <p>默认情况下，你只能迭代一次 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>。你使用项，然后转到下一项。这意味着 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 需要知道如何制作下一个元素，一旦它使用它就可以丢弃它 - 它不记得过去的值。如果你尝试使用 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 后，它会遇到所有元素，则会出现错误：</p>
-
 <pre><code>put $sequence.pick;  # 3 (or maybe something else)
 put $sequence;       # Error
-</code></pre>
-
-<p>The error tells you what to do:</p>
-
+</code></pre><p>The error tells you what to do:</p>
 <p>错误告诉你该怎么做：</p>
-
 <pre><code>This Seq has already been iterated, and its values consumed
 (you might solve this by adding .cache on usages of the Seq, or
 by assigning the Seq into an array)
-</code></pre>
-
-<p>Adding <code>.cache</code> remembers the elements of the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> so you can reuse them. After the <code>.pick</code> there’s no error:</p>
-
+</code></pre><p>Adding <code>.cache</code> remembers the elements of the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> so you can reuse them. After the <code>.pick</code> there’s no error:</p>
 <p>添加 <code>.cache</code> 会记住 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 的元素，因此你可以重用它们。在 <code>.pick</code> 之后没有错误：</p>
-
 <pre><code>my $range = 0 .. 5;
 my $sequence = $range.reverse.cache;
 say $sequence.^name; # Seq;
 
 put $sequence.pick;  # 5 (or maybe something else)
 put $sequence;       # 5 4 3 2 1 0
-</code></pre>
-
-<p>This isn’t something you want to do carelessly, though. Part of the benefit of the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> is the memory saving it provides by not duplicating data unless it needs to.</p>
-
+</code></pre><p>This isn’t something you want to do carelessly, though. Part of the benefit of the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> is the memory saving it provides by not duplicating data unless it needs to.</p>
 <p>不过，这不是你想要做的事情。 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 的部分好处是它提供的内存节省，除非需要，否则不会复制数据。</p>
-
 <h2 id="infinite-lazy-lists">Infinite Lazy Lists</h2>
-
 <p>The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> has to make all of the elements to <code>.pick</code> one of them. Once it does that it forgets them and doesn’t have a way to make more elements. Raku does this to support infinite lazy lists. You make these with the triple-dot sequence operator, <code>...</code>. By binding to the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> you give it a name without immediately reducing it to its values:</p>
-
 <p><a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 必须使所有元素能 <code>.pick</code> 其中之一。一旦它这样做就会忘记它们，并且没有办法制作更多的元素。 Raku这样做是为了支持无限的惰性列表。你使用三点序列运算符 <code>...</code> 来制作它们。通过绑定到 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>，你给它一个名字，而不是立即将它减少到它的值：</p>
-
 <pre><code>my $number-sequence := 1 ... 5;
-</code></pre>
-
-<p>That’s the integers from 1 to 5. The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> looks at the start and figures out how to get to the end. That sequence is easy; it adds a whole number.</p>
-
+</code></pre><p>That’s the integers from 1 to 5. The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> looks at the start and figures out how to get to the end. That sequence is easy; it adds a whole number.</p>
 <p>You can make an exclusive endpoint (but not an exclusive startpoint). This <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> is the integers from 1 to 4:</p>
-
 <p>这是从 1 到 5 的整数。 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 查看开始并找出如何到达终点。这个序列很简单;它增加了一个整数。</p>
-
 <p>你可以创建一个独占端点（但不是一个独占的起点）。此 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 是 1 到 4 的整数：</p>
-
 <pre><code>my $exclusive-sequence := 1 ...^ 5;
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> can’t count down, but a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> can. This one subtracts whole numbers:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> can’t count down, but a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> can. This one subtracts whole numbers:</p>
 <p><a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 不能倒数，但是 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 可以。这一个减去整数：</p>
-
 <pre><code>my $countdown-sequence := 5 ... 1;
-</code></pre>
-
-<p>The same thing works for letters:</p>
-
+</code></pre><p>The same thing works for letters:</p>
 <p>同样的事情适用于字母：</p>
-
 <pre><code>my $alphabet-sequence := 'a' ... 'z';
-</code></pre>
-
-<p>You can tell the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> how to determine the next element. You can specify more than one item for the start to give it the pattern:</p>
-
+</code></pre><p>You can tell the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> how to determine the next element. You can specify more than one item for the start to give it the pattern:</p>
 <p>你可以告诉 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 如何确定下一个元素。你可以为开头指定多个项目以为其指定模式：</p>
-
 <pre><code>my $s := 0, 1, 2 ... 256; # 257 numbers, 0 .. 256
-</code></pre>
-
-<p>This is the series of whole numbers from 0 to 256. That’s the easiest pattern there. But add a 4 after the 2 and it’s a different series. Now it’s the powers of 2:</p>
-
+</code></pre><p>This is the series of whole numbers from 0 to 256. That’s the easiest pattern there. But add a 4 after the 2 and it’s a different series. Now it’s the powers of 2:</p>
 <p>这是一系列从 0 到 256 的整数。这是最简单的模式。但是在 2 之后添加 4，这是一个不同的系列。现在它是 2 的幂：</p>
-
 <pre><code>my $s := 0, 1, 2, 4 ... 256; # powers of 2
 say $s; # (0 1 2 4 8 16 32 64 128 256)
-</code></pre>
-
-<p>The <code>...</code> can figure out arithmetic or geometric series. But it gets better. If you have a more complicated series you can give it a rule to make the next item. That rule can be a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> that grabs the previous argument and transforms it. Here it adds 0.1 to the previous element until it gets to 1.8. You couldn’t do this with a <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>:</p>
-
+</code></pre><p>The <code>...</code> can figure out arithmetic or geometric series. But it gets better. If you have a more complicated series you can give it a rule to make the next item. That rule can be a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> that grabs the previous argument and transforms it. Here it adds 0.1 to the previous element until it gets to 1.8. You couldn’t do this with a <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>:</p>
 <p><code>...</code> 可以算出算术或几何系列。但它变得更好。如果你有一个更复杂的系列，你可以给它一个规则来制作下一个项。该规则可以是一个阻止前一个参数并对其进行转换的块。这里它将前一个元素加 0.1，直到达到 1.8。你无法使用 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a> 执行此操作：</p>
-
 <pre><code>my $s := 1, { $^a + 0.1 } ... 1.8;
 say $s; # (1 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8)
-</code></pre>
-
-<p>If you have more than one positional parameter in your <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> it looks farther back in the series. Here are the Fibonacci numbers up to 21:</p>
-
+</code></pre><p>If you have more than one positional parameter in your <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> it looks farther back in the series. Here are the Fibonacci numbers up to 21:</p>
 <p>如果你的 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 中有多个位置参数，它会在系列中看起来更远。以下是最多 21 的斐波那契数字：</p>
-
 <pre><code>my $s := 1, 1, { $^a + $^b } ... 21;
 say $s; # (1 1 2 3 5 8 13 21)
-</code></pre>
-
-<p>The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> only ends when it creates an item that is exactly equal to the endpoint. If you change that to <code>20</code> you get an infinite series and your program hangs while it creates every element so it can count them:</p>
-
+</code></pre><p>The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> only ends when it creates an item that is exactly equal to the endpoint. If you change that to <code>20</code> you get an infinite series and your program hangs while it creates every element so it can count them:</p>
 <p><a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 仅在创建与端点完全相同的项目时结束。如果将其更改为 <code>20</code>，则会得到一个无限系列，并且程序会在创建每个元素时挂起，以便计算它们：</p>
-
 <pre><code>my $s := 1, 1, { $^a + $^b } ... 20;
 say $s.elems;  # never gets an answer but keeps trying
-</code></pre>
-
-<p>Instead of a literal endpoint you can give it a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> stops when the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> evaluates to <code>True</code> (but keeps the element that makes it <code>True</code>):</p>
-
+</code></pre><p>Instead of a literal endpoint you can give it a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> stops when the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> evaluates to <code>True</code> (but keeps the element that makes it <code>True</code>):</p>
 <p>而不是字面端点，你可以给它一个<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>。当<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>计算为 <code>True</code> 时，<a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 停止（但保持使其为 <code>True</code> 的元素）：</p>
-
 <pre><code>my $s := 1, 1, { $^a + $^b } ... { $^a &gt; 20 };
 say $s.elems; # (1 1 2 3 5 8 13 21)
-</code></pre>
-
-<p>Those <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>s are unwieldy, but you know that you can shorten them with <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>s. Do the endpoint first:</p>
-
+</code></pre><p>Those <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>s are unwieldy, but you know that you can shorten them with <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>s. Do the endpoint first:</p>
 <p>那些 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 很笨重，但你知道你可以用 <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> 缩短它们。首先执行端点：</p>
-
 <pre><code>my $s := 1, 1, { $^a + $^b } ... * &gt; 20;
-</code></pre>
-
-<p>You can reduce the first <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> with two <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>s. That <a href="https://docs.raku.org/type/WhateverCode.html"><code>WhateverCode</code></a> sees two <code>*</code>s and knows it needs two elements:</p>
-
+</code></pre><p>You can reduce the first <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> with two <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>s. That <a href="https://docs.raku.org/type/WhateverCode.html"><code>WhateverCode</code></a> sees two <code>*</code>s and knows it needs two elements:</p>
 <p>你可以使用两个 <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> 减少第一个 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>。 <a href="https://docs.raku.org/type/WhateverCode.html"><code>WhateverCode</code></a> 看到两个 <code>*</code> 并知道它需要两个元素：</p>
-
 <pre><code>my $s := 1, 1, * + * ... * &gt; 20;
-</code></pre>
-
-<p>That stops the Fibonacci numbers at 21. What if you wanted all of the Fibonacci numbers? The <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> by itself can be the endpoint and in that context it is never <code>True</code>; this series never ends:</p>
-
+</code></pre><p>That stops the Fibonacci numbers at 21. What if you wanted all of the Fibonacci numbers? The <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> by itself can be the endpoint and in that context it is never <code>True</code>; this series never ends:</p>
 <p>这会阻止斐波那契数字为 21.若你想要所有斐波那契数字怎么办？ <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> 本身可以是端点，在这种情况下它永远不会是真的;这个系列永远不会结束</p>
-
 <pre><code>my $s := 1, 1, * + * ... *;
-</code></pre>
-
-<p>This is one of the reasons <code>.gist</code> exists. It gives a summary of the object. It knows that this is an infinite <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> so it doesn’t try to represent it:</p>
-
+</code></pre><p>This is one of the reasons <code>.gist</code> exists. It gives a summary of the object. It knows that this is an infinite <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> so it doesn’t try to represent it:</p>
 <p>这是其中一个原因 <code>.gist</code> 存在。它给出了对象的摘要。它知道这是一个无限的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 所以它不会试图表示它：</p>
-
 <pre><code>put $s.gist; # (...)
 say $s;      # (...), .gist implicitly
-</code></pre>
-
-<p>That’s it. That’s the heart of <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. It can produce an infinite number of values but it doesn’t do it immediately. It knows the pattern to get to the next one.</p>
-
+</code></pre><p>That’s it. That’s the heart of <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. It can produce an infinite number of values but it doesn’t do it immediately. It knows the pattern to get to the next one.</p>
 <p>Recall that a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> doesn’t remember all the values. Once it goes through them it doesn’t store them or regenerate them. In this example it reverses the list and exhausts the series. That’s all in the first <code>put</code>. There’s nothing left for the second <code>put</code>:</p>
-
 <p>而已。这是 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 的核心。它可以产生无限数量的值，但它不会立即执行。它知道进入下一个模式的模式。</p>
-
 <p>回想一下 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 不记得所有的值。一旦它通过它们就不会存储它们或重新生成它们。在此示例中，它会反转列表并耗尽系列。这是第一次投入。第二次放置没有任何东西：</p>
-
 <pre><code>my $s := 1 ... 5;
 
 put $s.reverse; # (5 4 3 2 1)
 put $s;         # Error
-</code></pre>
-
-<p>You get this error:</p>
-
+</code></pre><p>You get this error:</p>
 <p>你收到这个错误：</p>
-
 <pre><code>This Seq has already been iterated, and its values consumed
 (you might solve this by adding .cache on usages of the Seq, or
 by assigning the Seq into an array)
-</code></pre>
-
-<p>The error tells you what to do. You can call <code>.cache</code> on a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> to force it to remember the values, even if this will eat up all of your memory:</p>
-
+</code></pre><p>The error tells you what to do. You can call <code>.cache</code> on a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> to force it to remember the values, even if this will eat up all of your memory:</p>
 <p>该错误告诉你该怎么做。你可以在 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 上调用 <code>.cache</code> 来强制它记住这些值，即使这会占用你所有的内存：</p>
-
 <pre><code>my $s := 1 ... 5;
 put $s.cache.reverse; # 5 4 3 2 1
 put $s;               # 1 2 3 4 5
-</code></pre>
-
-<p>Should you need to treat a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> as a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, coerce it with <code>@</code>. This generates all of its values:</p>
-
+</code></pre><p>Should you need to treat a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> as a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, coerce it with <code>@</code>. This generates all of its values:</p>
 <p>如果你需要将 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 视为<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>，请使用 <code>@</code> 强制它。这会生成所有值：</p>
-
 <pre><code>my $s = ( 1 ... 5 );
 put $s.^name; # Seq
 
 my $list-from-s = @$s;
 put $list-from-s.^name; #List
-</code></pre>
-
-<p>Most of the time a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> will act like a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, but sometimes you need to give some hints.</p>
-
+</code></pre><p>Most of the time a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> will act like a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, but sometimes you need to give some hints.</p>
 <p>大多数情况下，<a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 会像 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 一样，但有时你需要提供一些提示。</p>
-
 <h2 id="gathering-values">Gathering Values</h2>
-
 <p>The previous <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>s could easily compute their next values based on the ones that came before. That’s not always the case. A <code>gather</code> with a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> returns a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. When you want the next value the <code>gather</code> runs the code. A <code>take</code> produces a value. Here’s the same thing as <code>1 ... 5</code> using <code>gather</code>:</p>
-
 <p>之前的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 可以根据之前的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 轻松计算下一个值。情况并非总是如此。带有块的聚集返回 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>。当你想要下一个值时，聚集会运行代码。拍摄会产生一个价值。这与使用 <code>gather</code> 的 <code>1 ... 5</code> 相同：</p>
-
 <pre><code>my $seq := gather {
     state $previous = 0;
 
@@ -1068,97 +680,53 @@ put $list-from-s.^name; #List
     }
 
 say $seq;
-</code></pre>
-
-<p>Each time the code encounters a <code>take</code> it produces a value, then waits until the next time something asks for a value. The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> stops when the code gets to the end of the <code>gather</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. In this example, the <code>while</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>runs once for each access to the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>.</p>
-
+</code></pre><p>Each time the code encounters a <code>take</code> it produces a value, then waits until the next time something asks for a value. The <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> stops when the code gets to the end of the <code>gather</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. In this example, the <code>while</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>runs once for each access to the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>.</p>
 <p>You don’t need the braces for the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> if the statement fits on one line. This is an infinite <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>:</p>
-
 <p>每次代码遇到一个 <code>take</code> 它产生一个值，然后等到下一次有东西要求一个值。当代码到达 <code>gather</code></p>
-
 <p><a href="https://docs.raku.org/type/Block.html"><code>块</code></a>的末尾时， <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 停止。在这个例子中，<code>while</code>  <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 每次访问  <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 一次。</p>
-
 <p>如果语句适合一行，则不需要<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>的大括号。这是一个无限的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>：</p>
-
 <pre><code>my $seq := gather take $++ while 1;
-</code></pre>
-
-<p>Those are easily done with the tools you already had. What about a random <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> of random values? This <code>gather</code> keeps choosing one value from <code>@array</code>, forever:</p>
-
+</code></pre><p>Those are easily done with the tools you already had. What about a random <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> of random values? This <code>gather</code> keeps choosing one value from <code>@array</code>, forever:</p>
 <p>使用你已有的工具可以轻松完成这些工作。随机值的随机 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 怎么样？这个 <code>gather</code> 永远从 <code>@array</code> 中选择一个值：</p>
-
 <pre><code>my @array = &lt;red green blue purple orange&gt;;
 my $seq := gather take @array.pick(1) while 1;
-</code></pre>
-
-<p>Here’s a <code>gather</code> that provides only the lines of input with <code>eq</code> in them. It doesn’t have to wait for all of the input to start producing values. And since the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> controls access to the lines, you don’t need to use or store them right away:</p>
-
+</code></pre><p>Here’s a <code>gather</code> that provides only the lines of input with <code>eq</code> in them. It doesn’t have to wait for all of the input to start producing values. And since the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> controls access to the lines, you don’t need to use or store them right away:</p>
 <p>这是一个 <code>gather</code>，它只提供带有 <code>eq</code> 的输入行。它不必等待所有输入开始生成值。由于 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 控制对行的访问，因此你无需立即使用或存储它们：</p>
-
 <pre><code>my $seq := gather for lines() { next unless /eq/; take $_ };
 
 for $seq -&gt; $item {
     put &quot;Got: $item&quot;;
     }
-</code></pre>
-
-<p>You can store these in a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> without being eager:</p>
-
+</code></pre><p>You can store these in a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> without being eager:</p>
 <p>你可以将它们存储在一个 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 而不是急切的：</p>
-
 <pre><code>my @seq = lazy gather for lines() { next unless /eq/; take $_ };
 
 for @seq -&gt; $item {
     put &quot;Got: $item&quot;;
     }
-</code></pre>
-
-<p>It doesn’t matter how you create the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. Once you have it you can use it and pass it around like any other sequence.</p>
-
+</code></pre><p>It doesn’t matter how you create the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. Once you have it you can use it and pass it around like any other sequence.</p>
 <p>EXERCISE 6.6Use <code>gather</code> and <code>take</code> to produce an infinite cycle of alternating values from an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> of color names. When you get to the end of the array, go back to the beginning and start again.</p>
-
 <p>你如何创建 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 并不重要。一旦你拥有它，你可以使用它并像任何其他序列一样传递它。</p>
-
 <p>练习6.6 使用 <code>gather</code> 和 <code>take</code> 从颜色名称数组中产生无限循环的交替值。当你到达数组的末尾时，回到开头并重新开始。</p>
-
 <h1 id="single-element-access">Single-Element Access</h1>
-
 <p>You can extract a particular element by its position in the object, whether that’s a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>, or other type of <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> thingy. Each position has an <code>index</code> that’s a positive integer (including 0). To get the element, append <code>[</code><em>POSITION</em><code>]</code> to your thingy:</p>
-
 <p>你可以通过它在对象中的位置来提取特定元素，无论是 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 还是其他类型的 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> thingy。每个位置都有一个正整数（包括0）的索引。要获取元素，请将[POSITION]附加到你的东西：</p>
-
 <pre><code>my $butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
 my $first-butterfly = $butterfly-genus[0];
 put &quot;The first element is $first-butterfly&quot;;
-</code></pre>
-
-<p><code>[</code><em>POSITION</em><code>]</code>is a postcircumfix operator. Operators are actually methods (<a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch12.html#camelia-classes">Chapter 12</a>), so you can use the method dot between the object and the <code>[</code><em>POSITION</em><code>]</code> (although you mostly won’t):</p>
-
+</code></pre><p><code>[</code><em>POSITION</em><code>]</code>is a postcircumfix operator. Operators are actually methods (<a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch12.html#camelia-classes">Chapter 12</a>), so you can use the method dot between the object and the <code>[</code><em>POSITION</em><code>]</code> (although you mostly won’t):</p>
 <p><code>[</code>POSITION]是一个 postcircumfix 运算符。操作符实际上是方法（第12章），因此你可以使用对象和<code>[</code> POSITION <code>]</code> 之间的方法点（尽管你通常不会）：</p>
-
 <pre><code>my $first-butterfly = $butterfly-genus.[0];
-</code></pre>
-
-<p>You can interpolate either form in double-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s:</p>
-
+</code></pre><p>You can interpolate either form in double-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s:</p>
 <p>你可以在双引号<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中插入任一形式：</p>
-
 <pre><code>put &quot;The first butterfly is $butterfly-genus[0]&quot;;
 put &quot;The first butterfly is $butterfly-genus.[0]&quot;;
-</code></pre>
-
-<p>Since the index counts from zero the last position is one less than the number of elements. The <code>.end</code> methodknows that position:</p>
-
+</code></pre><p>Since the index counts from zero the last position is one less than the number of elements. The <code>.end</code> methodknows that position:</p>
 <p>由于索引从零开始计数，因此最后一个位置比元素数少一个。 <code>.end</code> 方法知道该位置：</p>
-
 <pre><code>my $end = $butterfly-genus.end;               # 2
 my $last-butterfly = $butterfly-genus[$end];  # Junonia
-</code></pre>
-
-<p>If the thingy happens to be a lazy list you’ll get an error trying to find its end element; you can check if it is with <code>.is-lazy</code> and perhaps do something different in that case:</p>
-
+</code></pre><p>If the thingy happens to be a lazy list you’ll get an error trying to find its end element; you can check if it is with <code>.is-lazy</code> and perhaps do something different in that case:</p>
 <p>如果thingy恰好是一个懒惰的列表，你会在尝试找到它的结束元素时遇到错误;你可以检查它是否与 <code>.is-lazy</code> 一起，并且可能在这种情况下做一些不同的事情：</p>
-
 <pre><code>my $butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
 $butterfly-genus = (1 ... * );
 put do if $butterfly-genus.is-lazy { 'Lazy list!' }
@@ -1166,152 +734,74 @@ put do if $butterfly-genus.is-lazy { 'Lazy list!' }
             my $end = $butterfly-genus.end;
             $butterfly-genus[$end]
             }
-</code></pre>
-
-<p>If you specify a position less than <code>0</code> you get an error. If you try to do it with a literal value the error message tells you that you’ve carried a habit over from a different language:</p>
-
+</code></pre><p>If you specify a position less than <code>0</code> you get an error. If you try to do it with a literal value the error message tells you that you’ve carried a habit over from a different language:</p>
 <p>如果指定小于 <code>0</code> 的位置，则会出现错误。如果你尝试使用文字值来执行此操作，则错误消息会告诉你，你已经习惯使用其他语言：</p>
-
 <pre><code>$butterfly-genus[-1];  # fine in Perl 5, but error in Raku!
-</code></pre>
-
-<p>The error message tells you to use <code>*-1</code> instead, which you’ll read more about in just a moment:</p>
-
+</code></pre><p>The error message tells you to use <code>*-1</code> instead, which you’ll read more about in just a moment:</p>
 <p>错误消息告诉你使用 <code>*-1</code> 代替，你将在稍后阅读更多信息：</p>
-
 <pre><code>Unsupported use of a negative -1 subscript to index from the end;
 in Raku please use a function such as *-1
-</code></pre>
-
-<p>But if you’ve put that index in a variable, perhaps as the result of poor math, you get a different error:</p>
-
+</code></pre><p>But if you’ve put that index in a variable, perhaps as the result of poor math, you get a different error:</p>
 <p>但是如果你把这个索引放在变量中，也许是因为数学不好，你会得到一个不同的错误：</p>
-
 <pre><code>my $end = -1;
 $butterfly-genus[$i];
-</code></pre>
-
-<p>This time it tells you that you are out of bounds:</p>
-
+</code></pre><p>This time it tells you that you are out of bounds:</p>
 <p>这次它告诉你你已经出界了：</p>
-
 <pre><code>Index out of range. Is: -1, should be in 0..^Inf
-</code></pre>
-
-<p>This doesn’t work the same way on the other side. If you try to access an element beyond the last one, you get back <code>Nil</code> with no error message:</p>
-
+</code></pre><p>This doesn’t work the same way on the other side. If you try to access an element beyond the last one, you get back <code>Nil</code> with no error message:</p>
 <p>这在另一方面不起作用。如果你尝试访问超出最后一个元素的元素，则会返回 <code>Nil</code> 而不显示任何错误消息：</p>
-
 <pre><code>my $end = $butterfly-genus.end;
 $butterfly-genus[$end + 1];  # Nil!
-</code></pre>
-
-<p>Curiously, though, you can’t use <code>Nil</code> to tell if you specified a wrong position because <code>Nil</code> can be an element of a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>Curiously, though, you can’t use <code>Nil</code> to tell if you specified a wrong position because <code>Nil</code> can be an element of a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p>但奇怪的是，你不能使用 <code>Nil</code> 来判断你是否指定了错误的位置，因为 <code>Nil</code> 可以是 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 的一个元素：</p>
-
 <pre><code>my $has-nil = ( 'Hamadryas', Nil, 'Junonia', Nil );
 my $butterfly = $has-nil.[3]; # works, but still Nil!
-</code></pre>
-
-<p>You can also put almost any code you like inside the square brackets. It should evaluate to an <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a>, but if it doesn’t the operator will try to convert it to one. You can skip the <code>$end</code> variable you’ve used so far and use<code>.end</code> directly:</p>
-
+</code></pre><p>You can also put almost any code you like inside the square brackets. It should evaluate to an <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a>, but if it doesn’t the operator will try to convert it to one. You can skip the <code>$end</code> variable you’ve used so far and use<code>.end</code> directly:</p>
 <p>你也可以将几乎任何你喜欢的代码放在方括号内。它应该评估为 <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a>，但如果不是，则运算符将尝试将其转换为1。你可以跳过你到目前为止使用的 <code>$end</code> 变量并直接使用 <code>.end</code>：</p>
-
 <pre><code>my $last-butterfly = $butterfly-genus[$butterfly-genus.end];
-</code></pre>
-
-<p>If you wanted the next-to-last element, you could subtract one:</p>
-
+</code></pre><p>If you wanted the next-to-last element, you could subtract one:</p>
 <p>如果你想要倒数第二个元素，你可以减去一个：</p>
-
 <pre><code>my $next-to-last = $butterfly-genus[$butterfly-genus.end - 1];
-</code></pre>
-
-<p>This way of counting from the end is quite tedious though, so there’s a shorter way to do it. A <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> starinside the <code>[]</code> is the number of elements in the list (not the last index!). That <code>*</code> is one greater than the last position. Subtract <code>1</code> from <code>*</code> to get the index for the last element:</p>
-
-<p>这种从末尾计算的方式相当繁琐，所以有一个更短的方法来做到这一点。 <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>，[]是列表中元素的数量（不是最后一个索引！）。那个*比最后一个位置大一个。从*中减去1以获取最后一个元素的索引：</p>
-
+</code></pre><p>This way of counting from the end is quite tedious though, so there’s a shorter way to do it. A <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> starinside the <code>[]</code> is the number of elements in the list (not the last index!). That <code>*</code> is one greater than the last position. Subtract <code>1</code> from <code>*</code> to get the index for the last element:</p>
+<p>这种从末尾计算的方式相当繁琐，所以有一个更短的方法来做到这一点。 <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>，[]是列表中元素的数量（不是最后一个索引！）。那个<em>比最后一个位置大一个。从</em>中减去1以获取最后一个元素的索引：</p>
 <pre><code>my $last-butterfly = $butterfly-genus[*-1];
-</code></pre>
-
-<p>To get the next-to-last element, subtract one more:</p>
-
+</code></pre><p>To get the next-to-last element, subtract one more:</p>
 <p>要获得倒数第二个元素，再减去一个：</p>
-
 <pre><code>my $next-to-last = $butterfly-genus[*-2];
-</code></pre>
-
-<p>If you subtract more than the number of elements, you’ll get <code>Nil</code> (rather than an out-of-index error like you would without the <code>*</code>).</p>
-
+</code></pre><p>If you subtract more than the number of elements, you’ll get <code>Nil</code> (rather than an out-of-index error like you would without the <code>*</code>).</p>
 <p>If you have a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> it will create whatever items it needs to get to the one that you ask for. The triangle numbers add the index of the element to the previous number to get the next number in the series. If you want the fifth one ask for that index:</p>
-
 <p>如果你减去超过元素的数量，你将得到 <code>Nil</code> （而不是像你没有 <code>*</code> 那样的索引之外的错误）。</p>
-
 <p>如果你有一个 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>，它将创建你需要的任何物品到你要求的那个。三角形数字将元素的索引添加到前一个数字，以获得系列中的下一个数字。如果你想要第五个请求该索引：</p>
-
 <pre><code>my $triangle := 0, { ++$ + $^a } ... *;
 say $triangle[4];
-</code></pre>
-
-<p>EXERCISE 6.7The squares of numbers is the sequence where you add <em>2n–1</em> to the previous value. <em>n</em> is the position in the sequence. Use the sequence operator <code>...</code> to compute the square of 25.</p>
-
+</code></pre><p>EXERCISE 6.7The squares of numbers is the sequence where you add <em>2n–1</em> to the previous value. <em>n</em> is the position in the sequence. Use the sequence operator <code>...</code> to compute the square of 25.</p>
 <p>练习6.7 数字的平方是将 2n-1加到前一个值的序列。 n 是序列中的位置。使用序列运算符 <code>...</code> 来计算 25 的平方。</p>
-
 <h2 id="changing-a-single-element">Changing a Single Element</h2>
-
 <p>If your <a href="https://docs.raku.org/type/List.html"><code>List</code></a> element is a container you can change its value. Previously you used an anonymous scalar container as a placeholder in one of your lists:</p>
-
 <p>如果<a href="https://docs.raku.org/type/List.html"><code>List</code></a>元素是容器，则可以更改其值。以前，你使用匿名标量容器作为其中一个列表中的占位符：</p>
-
 <pre><code>my $butterflies = ( $, 'Sostrata', 'Junonia' );
 say $butterflies; # ((Any) perlicus Sostrata Junonia)
-</code></pre>
-
-<p>You can’t change the container, but you can change the value that’s in the container:</p>
-
+</code></pre><p>You can’t change the container, but you can change the value that’s in the container:</p>
 <p>你无法更改容器，但可以更改容器中的值：</p>
-
 <pre><code>$butterflies.[0] = 'Hamadryas';
 say $butterflies; # (Hamadryas Sostrata Junonia)
-</code></pre>
-
-<p>If you try to change an item that is not a container you get an error:</p>
-
+</code></pre><p>If you try to change an item that is not a container you get an error:</p>
 <p>如果你尝试更改不是容器的项目，则会收到错误消息：</p>
-
 <pre><code>$butterflies.[1] = 'Ixias';
-</code></pre>
-
-<p>The error tells you that the element there is something that you cannot change:</p>
-
+</code></pre><p>The error tells you that the element there is something that you cannot change:</p>
 <p>该错误告诉你该元素有一些你无法更改的内容：</p>
-
 <pre><code>Cannot modify an immutable Str (...)
-</code></pre>
-
-<h2 id="multiple-element-access">Multiple-Element Access</h2>
-
+</code></pre><h2 id="multiple-element-access">Multiple-Element Access</h2>
 <p>You can access multiple elements at the same time. A slice specifies more than one index in the brackets:</p>
-
 <p>你可以同时访问多个元素。切片在括号中指定多个索引：</p>
-
 <pre><code>my $butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
 my ( $first, $last ) = $butterfly-genus[0, *-1];
 put &quot;First: $first Last: $last&quot;;
-</code></pre>
-
-<p>Notice that you can declare multiple variables at the same time by putting them in parentheses after the <code>my</code>. Since that’s not a subroutine call you still need a space after <code>my</code>. The output shows the first and last elements:</p>
-
+</code></pre><p>Notice that you can declare multiple variables at the same time by putting them in parentheses after the <code>my</code>. Since that’s not a subroutine call you still need a space after <code>my</code>. The output shows the first and last elements:</p>
 <p>请注意，你可以通过将多个变量放在 <code>my</code> 之后的括号中来同时声明多个变量。因为这不是一个子程序调用，你仍需要一个空格。输出显示第一个和最后一个元素：</p>
-
 <pre><code>First: Hamadryas Last: Junonia
-</code></pre>
-
-<p>The indices can come from a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>. If you’ve stored that in a scalar variable you have to coerce or <em>flatten</em> it:</p>
-
+</code></pre><p>The indices can come from a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>. If you’ve stored that in a scalar variable you have to coerce or <em>flatten</em> it:</p>
 <p>指数可以来自一个  <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>。如果你将它存储在标量变量中，你必须强制或压扁它：</p>
-
 <pre><code>put $butterfly-genus[ 1 .. *-1 ];    # Sostrata Junonia
 
 my $indices = ( 0, 2 );
@@ -1320,98 +810,50 @@ put $butterfly-genus[ |$indices ];  # Hamadryas Junonia
 
 my @positions = 1, 2;
 put $butterfly-genus[ @positions ]; # Sostrata Junonia
-</code></pre>
-
-<p>Assigning to multiple elements works the same way inside the brackets. However, the elements must be mutable. If they aren’t containers you won’t be able to change them:</p>
-
+</code></pre><p>Assigning to multiple elements works the same way inside the brackets. However, the elements must be mutable. If they aren’t containers you won’t be able to change them:</p>
 <p>分配给多个元素在括号内的工作方式相同。但是，元素必须是可变的。如果它们不是容器，你将无法更改它们：</p>
-
 <pre><code>my $butterfly-genus = ( $, $, $ );
 $butterfly-genus[ 1 ] = 'Hamadryas';
 $butterfly-genus[ 0, *-1 ] = &lt;Gargina Trina&gt;;
 put $butterfly-genus;
-</code></pre>
-
-<p>You can fix that by using an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>, which you’re about to read more about. The <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> automatically containerizes its elements:</p>
-
+</code></pre><p>You can fix that by using an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>, which you’re about to read more about. The <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> automatically containerizes its elements:</p>
 <p>你可以通过使用一个<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>来修复它，你将要阅读更多。 <a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>自动容纳其元素：</p>
-
 <pre><code>my @butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
 @butterfly-genus[ 0, *-1 ] = &lt;Gargina Trina&gt;;
 put @butterfly-genus;
-</code></pre>
-
-<h1 id="arrays">Arrays</h1>
-
+</code></pre><h1 id="arrays">Arrays</h1>
 <p>You can’t change a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. Once constructed it is what it is and keeps the same number of elements. You can’t add or remove any elements. Unless the item is a container, each <a href="https://docs.raku.org/type/List.html"><code>List</code></a> item’s value is fixed.</p>
-
 <p><a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>s are different. They containerize every item so that you can change any of them, and the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> itself is a container. You could start with the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> class to make an object:</p>
-
 <p>你无法更改<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。一旦构造它就是它的原因并保持相同数量的元素。你无法添加或删除任何元素。除非该项是容器，否则每个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>项的值都是固定的。</p>
-
 <p><a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>是不同的。它们将每个项目包含在内，以便你可以更改它们中的任何项目，而<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>本身就是一个容器。你可以从<a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>类开始创建一个对象：</p>
-
 <pre><code>my $butterfly-genus = Array.new: 'Hamadryas', 'Sostrata', 'Junonia';
-</code></pre>
-
-<p>You’ll probably never see that, though. Instead, you can use square brackets to make an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. Each item in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> becomes a container even if it didn’t start as one:</p>
-
+</code></pre><p>You’ll probably never see that, though. Instead, you can use square brackets to make an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. Each item in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> becomes a container even if it didn’t start as one:</p>
 <p>但是你可能永远都看不到。相反，你可以使用方括号来制作<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>。 <a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>中的每个项目都成为一个容器，即使它没有以一个方式启动：</p>
-
 <pre><code>my $butterfly-genus = ['Hamadryas', 'Sostrata', 'Junonia'];
-</code></pre>
-
-<p>Since every item is a container you can change any value by assigning to it through a single-element access:</p>
-
+</code></pre><p>Since every item is a container you can change any value by assigning to it through a single-element access:</p>
 <p>由于每个项目都是容器，因此你可以通过单元素访问权限分配任何值：</p>
-
 <pre><code>$butterfly-genus.[1] = 'Paruparo';
 say $butterflies; # [Hamadryas Paruparo Junonia]
-</code></pre>
-
-<p>This new behavior gets its own sigil, the <code>@</code> (which looks a bit like an <em>a</em> for <em>Array</em>). When you assign a listy thing to an <code>@</code> variable you get an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
-
+</code></pre><p>This new behavior gets its own sigil, the <code>@</code> (which looks a bit like an <em>a</em> for <em>Array</em>). When you assign a listy thing to an <code>@</code> variable you get an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
 <p>这个新行为得到了自己的印记，<code>@</code> （看起来有点像一个数组）。当你为 <code>@</code> 变量分配一个listy的东西时，你得到一个数组：</p>
-
 <pre><code>my @butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
 put @butterfly-genus.^name;  # Array
-</code></pre>
-
-<p>The <code>=</code> here is the list assignment operator you met earlier. Since you have an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> on the left side of the operator the <code>=</code> knows it’s the list variety. That one is lower precedence than the comma, so you can leave off the grouping parentheses you’ve been using so far:</p>
-
+</code></pre><p>The <code>=</code> here is the list assignment operator you met earlier. Since you have an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> on the left side of the operator the <code>=</code> knows it’s the list variety. That one is lower precedence than the comma, so you can leave off the grouping parentheses you’ve been using so far:</p>
 <p>这里的 <code>=</code> 是你之前遇到的列表赋值运算符。由于运算符左侧有一个数组，因此 <code>=</code> 知道它是列表种类。那个优先级低于逗号，所以你可以不用你到目前为止使用的分组括号：</p>
-
 <pre><code>my @butterfly-genus = 1, 2, 3;
-</code></pre>
-
-<p>EXERCISE 6.8You’ve already used an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that you haven’t seen. <code>@*ARGS</code> is the collection of <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s that you’ve specified on the command line. Output each element on its own line.</p>
-
+</code></pre><p>EXERCISE 6.8You’ve already used an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that you haven’t seen. <code>@*ARGS</code> is the collection of <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s that you’ve specified on the command line. Output each element on its own line.</p>
 <p>练习6.8 你已经使用过一个你没见过的<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>。 <code>@*ARGS</code> 是你在命令行中指定的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>集合。输出每个元素在自己的行上。</p>
-
 <h2 id="constructing-an-array">Constructing an Array</h2>
-
 <p>There’s a hidden list assignment here that makes this possible. In its expanded form there are a couple of steps. Greatly simplified, the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> sets up a scalar container for the number of items it will hold and binds to that:</p>
-
 <p>这里有一个隐藏的列表分配，这使得这成为可能。在其扩展形式中，有几个步骤。大大简化了，<a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> 为它将保持并绑定到的项目数量设置了一个标量容器：</p>
-
 <pre><code>my @butterfly-genus := ( $, $, $ ); # binding
-</code></pre>
-
-<p>Then it assigns the items in the incoming list to the containers in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
-
+</code></pre><p>Then it assigns the items in the incoming list to the containers in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
 <p>然后它将传入列表中的项目分配给 <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> 中的容器：</p>
-
 <pre><code>@butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
-</code></pre>
-
-<p>You don’t need to do any of this yourself because it happens automatically when you assign to an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> (the <code>@</code>variable). <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> items are always containers, and the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> itself is a container.</p>
-
+</code></pre><p>You don’t need to do any of this yourself because it happens automatically when you assign to an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> (the <code>@</code>variable). <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> items are always containers, and the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> itself is a container.</p>
 <p>The square brackets construct an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> (and it’s the square brackets that index <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>s). You can assign to a scalar or <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> variable:</p>
-
 <p>你不需要自己执行任何操作，因为它在你分配给数组（<code>@variable</code> ）时会自动发生。数组项始终是容器，<a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>本身是容器。</p>
-
 <p>方括号构造一个数组（它是索引数组的方括号）。你可以分配标量或数组变量：</p>
-
 <pre><code>my $array = [ &lt;Hamadryas Sostrata Junonia&gt; ];
 put $array.^name;      # Array
 put $array.elems;      # 3
@@ -1421,147 +863,85 @@ my @array = [ &lt;Hamadryas Sostrata Junonia&gt; ];
 put @array.^name;      # Array
 put @array.elems;      # 3
 put @array.join: '|';  # Hamadryas|Sostrata|Junonia
-</code></pre>
-
-<p>If you are going to assign to <code>@array</code> you don’t need the brackets, though. This is the same thing:</p>
-
+</code></pre><p>If you are going to assign to <code>@array</code> you don’t need the brackets, though. This is the same thing:</p>
 <p>但是，如果要分配给 <code>@array</code>，则不需要括号。这是一回事：</p>
-
 <pre><code>my @array = &lt;Hamadryas Sostrata Junonia&gt;;
 put @array.^name;      # Array
 put @array.elems;      # 3
-</code></pre>
-
-<p>The brackets are handier when you want to skip the variable. You would do this for temporary data structures or subroutine arguments. You’ll see more of those as you go on.</p>
-
+</code></pre><p>The brackets are handier when you want to skip the variable. You would do this for temporary data structures or subroutine arguments. You’ll see more of those as you go on.</p>
 <p>如果要跳过变量，括号更方便。你可以为临时数据结构或子例程参数执行此操作。随着你的继续，你会看到更多这些。</p>
-
 <h2 id="interpolating-arrays">Interpolating Arrays</h2>
-
 <p>A double-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> can interpolate single or multiple elements of a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> or even all the elements. Use the brackets to select the elements that you want:</p>
-
 <p>双引号<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>可以插入<a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>的单个或多个元素甚至所有元素。使用括号选择所需的元素：</p>
-
 <pre><code>my $butterflies = &lt;Hamadryas Sostrata Junonia&gt;;
 put &quot;The first butterfly is $butterflies[0]&quot;;
 put &quot;The last butterfly is $butterflies[*-1]&quot;;
 put &quot;Both of those are $butterflies[0,*-1]&quot;;
 put &quot;All the butterflies are $butterflies[]&quot;;
-</code></pre>
-
-<p>When it interpolates multiple elements it inserts a space between the elements:</p>
-
+</code></pre><p>When it interpolates multiple elements it inserts a space between the elements:</p>
 <p>当它插入多个元素时，它会在元素之间插入一个空格：</p>
-
 <pre><code>The first butterfly is Hamadryas
 The last butterfly is Junonia
 Both of those are Hamadryas Junonia
 All the butterflies are Hamadryas Sostrata Junonia
-</code></pre>
-
-<p>You can interpolate <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>s too:</p>
-
+</code></pre><p>You can interpolate <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>s too:</p>
 <p>你也可以插入 <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>：</p>
-
 <pre><code>my $range = 7 .. 13;
 put &quot;The first is $range[0]&quot;;    # The first is 7
 put &quot;The last is $range[*-1]&quot;;   # The last is 13
 put &quot;All are $range&quot;;            # All are 7 8 9 10 11 12 13
-</code></pre>
-
-<p>The other <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s behave similarly based on how they generate their elements.</p>
-
+</code></pre><p>The other <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s behave similarly based on how they generate their elements.</p>
 <p>其他 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 基于它们如何生成元素的行为类似。</p>
-
 <h2 id="array-operations">Array Operations</h2>
-
 <p>Since the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> is a container you can change it. Unlike with a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, you can add and remove items. The <code>.shift</code> method removes the first item from the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> and gives it back to you. That item is no longer in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
-
 <p>由于 <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> 是容器，你可以更改它。与 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 不同，你可以添加和删除项目。 <code>.shift</code> 方法从数组中删除第一个项目并将其返回给你。该项不再在数组中：</p>
-
 <pre><code>my @butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
 my $first-item = @butterfly-genus.shift;
 say @butterfly-genus;  # [Sostrata Junonia]
 say $first-item;       # Hamadryas
-</code></pre>
-
-<p>If the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> is empty you get a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>, but you won’t learn about those until <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch07.html#camelia-failures">Chapter 7</a>. You don’t get an immediate error; the error shows up when you try to use it later:</p>
-
+</code></pre><p>If the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> is empty you get a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>, but you won’t learn about those until <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch07.html#camelia-failures">Chapter 7</a>. You don’t get an immediate error; the error shows up when you try to use it later:</p>
 <p>如果<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>为空，则会出现 <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>，但在第7章之前你将不会了解这些故障。你没有立即收到错误;稍后尝试使用时会出现错误：</p>
-
 <pre><code>my @array = Empty;
 my $element = @array.shift;
 put $element.^name;  # Failure (soft exception)
-</code></pre>
-
-<p>That error is <code>False</code> but won’t complain when it’s in a conditional:</p>
-
+</code></pre><p>That error is <code>False</code> but won’t complain when it’s in a conditional:</p>
 <p>该错误是 <code>False</code> 的，但是当它处于条件状态时不会抱怨：</p>
-
 <pre><code>while my $element = @array.shift { put $element }
-</code></pre>
-
-<p>The <code>.pop</code> method removes the last item:</p>
-
+</code></pre><p>The <code>.pop</code> method removes the last item:</p>
 <p><code>.pop</code> 方法删除最后一项：</p>
-
 <pre><code>my @butterfly-genus = &lt;Hamadryas Sostrata Junonia&gt;;
 my $first-item = @butterfly-genus.pop;
 say @butterfly-genus;  # [Hamadryas Sostrata]
 say $first-item;       # Junonia
-</code></pre>
-
-<p>To add one or more items to the front of the list, use <code>.unshift</code>. One top-level item becomes one element in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
-
+</code></pre><p>To add one or more items to the front of the list, use <code>.unshift</code>. One top-level item becomes one element in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
 <p>要将一个或多个项添加到列表的前面，请使用 <code>.unshift</code>。一个顶级项目成为数组中的一个元素：</p>
-
 <pre><code>my @butterfly-genus = Empty;
 @butterfly-genus.unshift: &lt;Hamadryas Sostrata&gt;;
 say @butterfly-genus;  # [Hamadryas Sostrata]
-</code></pre>
-
-<p><code>.push</code> adds a list of items to the end of the list:</p>
-
+</code></pre><p><code>.push</code> adds a list of items to the end of the list:</p>
 <p><code>.push</code>将一个项列表添加到列表的末尾：</p>
-
 <pre><code>@butterfly-genus.push: &lt;Junonia&gt;;
 say @butterfly-genus;  # [Hamadryas Sostrata Junonia]
-</code></pre>
-
-<p>With <code>.splice</code> you can add elements to or remove them from anywhere in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. It takes a starting index, a length, and the items to remove from the list. It gives you the elements it removed:</p>
-
+</code></pre><p>With <code>.splice</code> you can add elements to or remove them from anywhere in the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. It takes a starting index, a length, and the items to remove from the list. It gives you the elements it removed:</p>
 <p>使用 <code>.splice</code>，你可以在<a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>中的任何位置添加元素或从中删除元素。它需要一个起始索引，一个长度以及要从列表中删除的项目。它为你提供了删除的元素：</p>
-
 <pre><code>my @butterfly-genus = 1 .. 10;
 my @removed = @butterfly-genus.splice: 3, 4;
 say @removed;          # [4 5 6 7]
 say @butterfly-genus;  # [1 2 3 8 9 10]
-</code></pre>
-
-<p>You can give <code>.splice</code> items to replace those that you removed:</p>
-
+</code></pre><p>You can give <code>.splice</code> items to replace those that you removed:</p>
 <p>你可以提供 <code>.splice</code> 项目来替换你删除的项目：</p>
-
 <pre><code>my @butterfly-genus = 1 .. 10;
 my @removed = @butterfly-genus.splice: 5, 2, &lt;a b c&gt;;
 say @removed;          # [6 7]
 say @butterfly-genus;  # [1 2 3 4 5 a b c 8 9 10]
-</code></pre>
-
-<p>If the length is 0 you don’t remove anything, but you can still insert items. You get an empty <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> back:</p>
-
+</code></pre><p>If the length is 0 you don’t remove anything, but you can still insert items. You get an empty <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> back:</p>
 <p>如果长度为 0，则不会删除任何内容，但仍可以插入项目。你得到一个空<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>：</p>
-
 <pre><code>my @butterfly-genus = 'a' .. 'f';
 my @removed = @butterfly-genus.splice: 5, 0, &lt;X Y Z&gt;;
 say @removed;          # []
 say @butterfly-genus;  # [a b c d e X Y Z f]
-</code></pre>
-
-<p>Each of these <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> methods have routine versions:</p>
-
+</code></pre><p>Each of these <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> methods have routine versions:</p>
 <p>这些<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>方法中的每一个都有例程版本：</p>
-
 <pre><code>my $first = shift @butterfly-genus;
 my $last  = pop @butterfly-genus;
 
@@ -1569,278 +949,157 @@ unshift @butterfly-genus, &lt;Hamadryas Sostrata&gt;;
 push @butterfly-genus, &lt;Junonia&gt;
 
 splice @butterfly-genus, $start-pos, $length, @elements;
-</code></pre>
-
-<p>EXERCISE 6.9Start with an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that holds the letters from <em>a</em> to <em>f</em>. Use the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> operators to move those elements to a new <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that will have the same elements in reverse order.</p>
-
+</code></pre><p>EXERCISE 6.9Start with an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that holds the letters from <em>a</em> to <em>f</em>. Use the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> operators to move those elements to a new <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that will have the same elements in reverse order.</p>
 <p>EXERCISE 6.10Start with the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that holds the letters from <em>a</em> to <em>f</em>. Use only <code>.splice</code> to make these changes: remove the first element, remove the last element, add a capital <em>A</em> to the front of the list, and add a capital <em>F</em> to the end of the list.</p>
-
 <p>练习6.9 启动一个包含从 a 到 f 的字母的<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>。使用<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>运算符将这些元素移动到一个新的<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>，它将以相反的顺序具有相同的元素。</p>
-
 <p>EXERCISE 6.10 从包含 a 到 f 的字母的<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>开始。仅使用 <code>.splice</code> 进行这些更改：删除第一个元素，删除最后一个元素，将大写 A 添加到列表的前面，然后将大写字母 F 添加到列表的末尾。</p>
-
 <h2 id="lists-of-lists">Lists of Lists</h2>
-
 <p>A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> can be an element of another <a href="https://docs.raku.org/type/List.html"><code>List</code></a> (or <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>). Depending on your previous language experience your reaction to this idea will be either “Of course!” or “This is so wrong!”</p>
-
 <p>The <code>.permutations</code> method produces a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> of sublists where each one represents a unique ordering of all the elements of the original:</p>
-
 <p><a href="https://docs.raku.org/type/List.html"><code>List</code></a> 可以是另一个 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>（或 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>）的元素。根据你之前的语言经验，你对此想法的反应将是“当然！”或“这是错误的！”</p>
-
 <p><code>.permutations</code> 方法生成一个 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 的子列表，其中每个子列表代表原始元素的唯一排序：</p>
-
 <pre><code>my $list = ( 1, 2, 3 );
 say $list.permutations;
 put &quot;There are {$list.permutations.elems} elements&quot;;
-</code></pre>
-
-<p>The output shows a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s where each element is another <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>The output shows a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s where each element is another <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p>输出显示<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>，其中每个元素是另一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>：</p>
-
 <pre><code>((1 2 3) (1 3 2) (2 1 3) (2 3 1) (3 1 2) (3 2 1))
 There are 6 elements
-</code></pre>
-
-<p>You can make these directly. This <a href="https://docs.raku.org/type/List.html"><code>List</code></a> has two elements, both of which are <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s:</p>
-
+</code></pre><p>You can make these directly. This <a href="https://docs.raku.org/type/List.html"><code>List</code></a> has two elements, both of which are <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s:</p>
 <p>你可以直接制作这些。此<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>有两个元素，两个元素都是<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>：</p>
-
 <pre><code>my $list = ( &lt;a b&gt;, &lt;1 2&gt; );
 put $list.elems;             # 2
 say $list;                   # ((a b) (1 2))
-</code></pre>
-
-<p>You can explicitly create the sublists with parentheses:</p>
-
+</code></pre><p>You can explicitly create the sublists with parentheses:</p>
 <p>你可以使用括号显式创建子列表：</p>
-
 <pre><code>my $list = ( 1, 2, ('a', 'b') );
 put $list.elems;  # 3
 say $list;        # (1 2 (a b))
-</code></pre>
-
-<p>You can separate sublists with semicolons. Elements between <code>;</code> end up in the same sublist, although sublists of a single element are just that element:</p>
-
+</code></pre><p>You can separate sublists with semicolons. Elements between <code>;</code> end up in the same sublist, although sublists of a single element are just that element:</p>
 <p>你可以使用分号分隔子列表。<code>;</code> 之间的元素最终在同一个子列表中，尽管单个元素的子列表只是该元素：</p>
-
 <pre><code>my $list = ( 1; 'Hamadryas'; 'a', 'b' );
 put $list.elems;       # 3
 say $list;             # (1 2 (a b))
 put $list.[0].^name;   # Int
 put $list.[1].^name;   # Str
 put $list.[*-1].^name; # List
-</code></pre>
-
-<h2 id="flattening-lists">Flattening Lists</h2>
-
+</code></pre><h2 id="flattening-lists">Flattening Lists</h2>
 <p>You may be more comfortable with flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s, if you want a bunch of elements with no structure. <code>.flat</code> extracts all the elements of the sublist and makes it a single-level <em>simple list</em>. The flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> created here has four elements instead of three:</p>
-
 <p>如果你想要一堆没有结构的元素，你可能会更喜欢平面<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。 <code>.flat</code> 提取子列表的所有元素，并使其成为单级简单列表。这里创建的平面<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>有四个元素而不是三个：</p>
-
 <pre><code>my $list = ( 1, 2, ('a', 'b') );
 put $list.elems;  # 3
 
 my $flat = $list.flat;
 put $flat.elems;  # 4
 say $flat;        # (1 2 a b)
-</code></pre>
-
-<p>This works all the way down into sublists of sublists (of sublists…). Here, the last element is a sublist that has a sublist. The flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> ends up with six elements:</p>
-
+</code></pre><p>This works all the way down into sublists of sublists (of sublists…). Here, the last element is a sublist that has a sublist. The flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> ends up with six elements:</p>
 <p>这一直有效地进入子列表（子列表&hellip;&hellip;）的子列表中。这里，最后一个元素是一个具有子列表的子列表。平面<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>最终有六个元素：</p>
-
 <pre><code>my $list = ( 1, 2, ('a', 'b', ('X', 'Z') ) );
 put $list.elems;  # 3
 
 my $flat = $list.flat;
 put $flat.elems;  # 6
 say $flat;        # (1 2 a b X Z)
-</code></pre>
-
-<p>Sometimes you don’t want a sublist to flatten. In that case you can itemize it by putting a <code>$</code> in front of the parentheses. An itemized element resists flattening:</p>
-
+</code></pre><p>Sometimes you don’t want a sublist to flatten. In that case you can itemize it by putting a <code>$</code> in front of the parentheses. An itemized element resists flattening:</p>
 <p>有时你不希望子列表变平。在这种情况下，你可以通过在圆括号前加一个 <code>$</code> 来项化它。项化的元素抵制展平：</p>
-
 <pre><code>my $list = ( 1, 2, ('a', 'b', $('X', 'Z') ) );
 put $list.elems;  # 3
 
 my $flat = $list.flat;
 put $flat.elems;  # 5
 say $flat;        # (1 2 a b (X Z))
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> held in a scalar variable is already itemized and does not flatten:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/List.html"><code>List</code></a> held in a scalar variable is already itemized and does not flatten:</p>
 <p>标量变量中保存的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>已项化，并未展平：</p>
-
 <pre><code>my $butterfly-genus = ('Hamadryas', 'Sostrata', 'Junonia');
 
 my $list = ( 1, 2, ('a', 'b', $butterfly-genus ) );
 my $flat = $list.flat;
 say $flat;        # (1 2 a b (Hamadryas Sostrata Junonia))
-</code></pre>
-
-<p>Then what do you do to un-itemize something? You can use the prefix <code>|</code> to flatten it. This decontainerizes thethingy:</p>
-
+</code></pre><p>Then what do you do to un-itemize something? You can use the prefix <code>|</code> to flatten it. This decontainerizes thethingy:</p>
 <p>那么你怎么做才能不项化一些事情呢？你可以使用前缀 <code>|</code> 压扁它。这使得这些东西解容器化了：</p>
-
 <pre><code>my $butterfly-genus = ('Hamadryas', 'Sostrata', 'Junonia');
 
 my $list = ( 1, 2, ('a', 'b', |$butterfly-genus ) );
 my $flat = $list.flat;
 put $flat.elems;  # 7
 say $flat;        # (1 2 a b Hamadryas Sostrata Junonia)
-</code></pre>
-
-<p>The <code>|</code> takes certain types (<a href="https://docs.raku.org/type/Capture.html"><code>Capture</code></a>, <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>, <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>, and <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>) and flattens them. You’ll see more of this in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch11.html#camelia-subroutines">Chapter 11</a>. It actually creates a <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>, which is a type of <a href="https://docs.raku.org/type/List.html"><code>List</code></a> that automatically flattens into an outer list. You could coerce your <a href="https://docs.raku.org/type/List.html"><code>List</code></a> with <code>.Slip</code> to get the same thing:</p>
-
+</code></pre><p>The <code>|</code> takes certain types (<a href="https://docs.raku.org/type/Capture.html"><code>Capture</code></a>, <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>, <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>, and <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>) and flattens them. You’ll see more of this in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch11.html#camelia-subroutines">Chapter 11</a>. It actually creates a <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>, which is a type of <a href="https://docs.raku.org/type/List.html"><code>List</code></a> that automatically flattens into an outer list. You could coerce your <a href="https://docs.raku.org/type/List.html"><code>List</code></a> with <code>.Slip</code> to get the same thing:</p>
 <p><code>|</code> 接收某些类型（<a href="https://docs.raku.org/type/Capture.html"><code>Capture</code></a>，<a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>, <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>, and <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>并展平它们。你将在第11章中看到更多内容。它实际上创建了一个 <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>，它是一种 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>，可以自动展平到外部列表中。你可以使用 <code>.Slip</code> 强制你的 <a href="https://docs.raku.org/type/List.html"><code>List</code></a> 来获得相同的东西：</p>
-
 <pre><code>my $list = ( 1, 2, ('a', 'b', $butterfly-genus.Slip ) );
-</code></pre>
-
-<p>Now the elements in <code>$butterfly-genus</code> are at the same level as the other elements in its sublist:</p>
-
+</code></pre><p>Now the elements in <code>$butterfly-genus</code> are at the same level as the other elements in its sublist:</p>
 <p>现在 <code>$butterfly-genus</code> 中的元素与其子列表中的其他元素处于同一级别：</p>
-
 <pre><code>(1 2 (a b Hamadryas Sostrata Junonia))
-</code></pre>
-
-<p>The <code>slip</code> routine does the same thing:</p>
-
+</code></pre><p>The <code>slip</code> routine does the same thing:</p>
 <p><code>slip</code> 例程做同样的事情：</p>
-
 <pre><code>my $list = ( 1, 2, ('a', 'b', slip $butterfly-genus ) );
-</code></pre>
-
-<p>These <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>s will be handy later in this chapter.</p>
-
+</code></pre><p>These <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>s will be handy later in this chapter.</p>
 <p>这些<a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>将在本章后面方便使用。</p>
-
 <h2 id="interesting-sublists">Interesting Sublists</h2>
-
 <p>Here’s something quite useful. The <code>.rotor</code> method breaks up a flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> into a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s where each sublist has the number of elements you specify. You can get five sublists of length 2:</p>
-
 <p>这儿有一些非常有用的东西。 <code>.rotor</code> 方法将平面<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>拆分为<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>，其中每个子列表都包含你指定的元素数。你可以获得 5 个长度为 2 的子列表：</p>
-
 <pre><code>my $list = 1 .. 10;
 my $sublists = $list.rotor: 2;
 say $sublists;        # ((1 2) (3 4) (5 6) (7 8) (9 10))
-</code></pre>
-
-<p>This is especially nice to iterate over multiple items at the same time. It grabs the number of items that you specify and supplies them as a single <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>This is especially nice to iterate over multiple items at the same time. It grabs the number of items that you specify and supplies them as a single <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p>这对于同时迭代多个项尤其有用。它会抓取你指定的项数并将它们作为单个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>提供：</p>
-
 <pre><code>my $list = 1 .. 10;
 for $list.rotor: 3 {
     .say
 }
-</code></pre>
-
-<p>By default it only grabs exactly the number you specify. If there aren’t enough elements it doesn’t give you a partial <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This output is missing <code>10</code>:</p>
-
+</code></pre><p>By default it only grabs exactly the number you specify. If there aren’t enough elements it doesn’t give you a partial <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This output is missing <code>10</code>:</p>
 <p>默认情况下，它只捕获你指定的数字。如果没有足够的元素，它不会给你一个部分<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。此输出没有 <code>10</code>：</p>
-
 <pre><code>(1 2 3)
 (4 5 6)
 (7 8 9)
-</code></pre>
-
-<p>If you want a short sublist at the end, the <code>:partial</code> adverb will do that:</p>
-
+</code></pre><p>If you want a short sublist at the end, the <code>:partial</code> adverb will do that:</p>
 <p>如果你想在结尾处有一个简短的子列表，那么 <code>:partial</code> 副词将会这样做：</p>
-
 <pre><code>my $list = 1 .. 10;
 for $list.rotor: 3, :partial {
     .say
 }
-</code></pre>
-
-<p>Now there’s a short list in the last iteration:</p>
-
+</code></pre><p>Now there’s a short list in the last iteration:</p>
 <p>现在在最后一次迭代中有一个短的列表：</p>
-
 <pre><code>(1 2 3)
 (4 5 6)
 (7 8 9)
 (10)
-</code></pre>
-
-<p>EXERCISE 6.11Use <code>lines</code> and <code>.rotor</code> to read chunks of three lines from input. Output the middle line in each chunk.</p>
-
+</code></pre><p>EXERCISE 6.11Use <code>lines</code> and <code>.rotor</code> to read chunks of three lines from input. Output the middle line in each chunk.</p>
 <p>练习6.11 使用 <code>lines</code> 和 <code>.rotor</code> 从输入中读取三行的块。输出每个块的中间行。</p>
-
 <h1 id="combining-lists">Combining Lists</h1>
-
 <p>Making and manipulating <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s is only the first level of your programming skill. Raku has several facilities to manage, combine, and process multiple <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> things together.</p>
-
 <p>制作和操作 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 只是编程技巧的第一级。 Raku 有几个工具来管理，组合和处理多个 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 事物。</p>
-
 <h2 id="the-zip-operator-z">The Zip Operator, Z</h2>
-
 <p>The <code>Z</code> operator takes elements from the same positions in the lists you provide and creates sublists from them:</p>
-
 <p><code>Z</code> 运算符从你提供的列表中的相同位置获取元素，并从中创建子列表：</p>
-
 <pre><code>say &lt;1 2 3&gt; Z &lt;a b c&gt;;  # ((1 a) (2 b) (3 c))
-</code></pre>
-
-<p>When it reaches the end of the shortest list, it stops. It doesn’t matter which list is shorter:</p>
-
+</code></pre><p>When it reaches the end of the shortest list, it stops. It doesn’t matter which list is shorter:</p>
 <p>当它到达最短列表的末尾时，它会停止。哪个列表更短并不重要：</p>
-
 <pre><code>say &lt;1 2 3&gt; Z &lt;a b&gt;;  # ((1 a) (2 b))
 
 say &lt;1 2&gt; Z &lt;a b c&gt;;  # ((1 a) (2 b))
-</code></pre>
-
-<p>The <code>zip</code> routine does the same thing:</p>
-
+</code></pre><p>The <code>zip</code> routine does the same thing:</p>
 <p><code>zip</code> 例程做同样的事情：</p>
-
 <pre><code>say zip( &lt;1 2 3&gt;, &lt;a b&gt; );  # ((1 a) (2 b))
-</code></pre>
-
-<p>This one gives the same output because <code>$letters</code> doesn’t have enough elements to make more sublists:</p>
-
+</code></pre><p>This one gives the same output because <code>$letters</code> doesn’t have enough elements to make more sublists:</p>
 <p>这个给出相同的输出，因为 <code>$letters</code> 没有足够的元素来制作更多的子列表：</p>
-
 <pre><code>my $numbers = ( 1 .. 10 );
 my $letters = ( 'a' .. 'c' );
 
 say @$numbers Z @$letters; # ((1 a) (2 b) (3 c))
-</code></pre>
-
-<p>You can do it with more than two lists:</p>
-
+</code></pre><p>You can do it with more than two lists:</p>
 <p>你可以使用两个以上的列表：</p>
-
 <pre><code>my $numbers = ( 1 .. 3 );
 my $letters = ( 'a' .. 'c' );
 my $animals = &lt; 🐈 🐇 🐀 &gt;; # cat rabbit rat
 say @$numbers Z @$letters Z @$animals;
-</code></pre>
-
-<p>Each sublist has three elements:</p>
-
+</code></pre><p>Each sublist has three elements:</p>
 <p>每个子列表都有三个元素：</p>
-
 <pre><code>((1 a 🐈)(2 b 🐇)(3 c 🐀))
-</code></pre>
-
-<p><code>zip</code> does the same thing as <code>Z</code>:</p>
-
+</code></pre><p><code>zip</code> does the same thing as <code>Z</code>:</p>
 <p><code>zip</code>和 <code>Z</code> 做同样的事情：</p>
-
 <pre><code>say zip @$numbers, @$letters, @$animals;
-</code></pre>
-
-<p>You can use it with <code>for</code>:</p>
-
+</code></pre><p>You can use it with <code>for</code>:</p>
 <p>你可以将它和 <code>for</code> 一块使用：</p>
-
 <pre><code>for zip @$numbers, @$letters, @$animals {
     .say;
 }
@@ -1849,80 +1108,46 @@ say @$numbers Z @$letters Z @$animals;
 (1 a 🐈)
 (2 b 🐇)
 (3 c 🐀)
-</code></pre>
-
-<p>EXERCISE 6.12Use the <code>Z</code> operator to make an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s that pair each letter with its position in the alphabet.</p>
-
+</code></pre><p>EXERCISE 6.12Use the <code>Z</code> operator to make an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s that pair each letter with its position in the alphabet.</p>
 <p>练习6.12 使用 <code>Z</code> 运算符创建一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>，将每个字母与其在字母表中的位置配对。</p>
-
 <h2 id="the-cross-operator-x">The Cross Operator, X</h2>
-
 <p>The <code>X</code> cross operator combines every element of one <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> with every element of another:</p>
-
 <p><code>X</code> 交叉运算符将一个 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 的每个元素与另一个 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 的每个元素组合在一起：</p>
-
 <pre><code>my @letters = &lt;A B C&gt;;
 my @digits  = 1, 2, 3;
 
 my @crossed = @letters X @digits;
 say @crossed;
-</code></pre>
-
-<p>The output shows that every letter was paired with every number:</p>
-
+</code></pre><p>The output shows that every letter was paired with every number:</p>
 <p>输出显示每个字母都与每个数字配对：</p>
-
 <pre><code>[(A 1) (A 2) (A 3) (B 1) (B 2) (B 3) (C 1) (C 2) (C 3)]
-</code></pre>
-
-<p>EXERCISE 6.13 A deck of 52 playing cards has four suits, ♣ ♡ ♠ ♢, each with 13 cards, 2 to 10, jack, queen, king, and ace. Use the cross operator to make a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s that represents each card. Output the list of cards so all the cards of one suit show up on the same line.</p>
-
+</code></pre><p>EXERCISE 6.13 A deck of 52 playing cards has four suits, ♣ ♡ ♠ ♢, each with 13 cards, 2 to 10, jack, queen, king, and ace. Use the cross operator to make a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s that represents each card. Output the list of cards so all the cards of one suit show up on the same line.</p>
 <p>练习6.13 一副 52 张的扑克牌有四套花色，♣♡♠♢，每套有 13 张纸牌，2 到 10，J，Q，K，小王和大王。使用交叉运算符创建代表每张纸牌的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。输出纸牌的列表，以便一套花色的所有纸牌显示在同一条线上。</p>
-
 <h2 id="the-hyperoperators">The Hyperoperators</h2>
-
 <p>Instead of combining <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s, you can operate on pairs of them to create a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of the results. The hyperoperators can do that. Surround the <code>+</code> operator with <code>&lt;&lt;&gt;&gt;</code>. This numerically adds the first element of <code>@right</code> to the first element of <code>@left</code>. The result of that addition becomes the first element of the result. This happens for the second elements, then the third, and so on:</p>
-
 <p>你可以对其中的一对进行操作，而不是组合 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>，以创建结果<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。 hyperoperators 可以做到这一点。使用 <code>&lt;&lt;&gt;&gt;</code> 包围 <code>+</code> 运算符。这在数字上将 <code>@right</code> 的第一个元素加到 <code>@left</code> 的第一个元素中。相加的结果成为结果的第一个元素。这发生在第二个元素上，然后是第三个元素上，依此类推：</p>
-
 <pre><code>my @right = 1, 2, 3;
 my @left  = 5, 9, 4;
 
 say @left &lt;&lt;+&gt;&gt; @right;  # [6 11 7]
-</code></pre>
-
-<p>Pick a different operator and follow the same process. The concatenation operator joins the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> versions of each element:</p>
-
+</code></pre><p>Pick a different operator and follow the same process. The concatenation operator joins the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> versions of each element:</p>
 <p>选择一个不同的运算符并按照相同的过程。连接运算符连接每个元素的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>版本：</p>
-
 <pre><code>my @right = 1, 2, 3;
 my @left  = 5, 9, 4;
 
 say @left &lt;&lt;~&gt;&gt; @right;  # [51 92 43]
-</code></pre>
-
-<p>If one of the sides has fewer elements the <code>&lt;&lt;&gt;&gt;</code> hyper recycles elements from the shorter one. It doesn’t matter which side the shorter list is on. Here, <code>@left</code> has fewer elements. When it’s time to operate on the third elements the hyper starts at the beginning of <code>@left</code> again to reuse <code>11</code>:</p>
-
+</code></pre><p>If one of the sides has fewer elements the <code>&lt;&lt;&gt;&gt;</code> hyper recycles elements from the shorter one. It doesn’t matter which side the shorter list is on. Here, <code>@left</code> has fewer elements. When it’s time to operate on the third elements the hyper starts at the beginning of <code>@left</code> again to reuse <code>11</code>:</p>
 <p>如果其中一边具有较少的元素，则 <code>&lt;&lt;&gt;&gt;</code>  hyper 会从较短的元素中循环该元素。短列表的哪一方无关紧要。在这里，<code>@left</code> 有更少的元素。当是时候对第三个元素进行操作时，hyper 会在 <code>@left</code> 的开头再次开始重用 <code>11</code>：</p>
-
 <pre><code>my @right =  3,  5, 8;
 my @left  = 11, 13;
 
 say @left &lt;&lt;+&gt;&gt; @right;  # [14 18 19]
 say @right &lt;&lt;+&gt;&gt; @left;  # [14 18 19]
-</code></pre>
-
-<p>Point the angle brackets toward the inside to insist that both sides have the same number of elements. You’ll get an error when the sizes don’t match:</p>
-
+</code></pre><p>Point the angle brackets toward the inside to insist that both sides have the same number of elements. You’ll get an error when the sizes don’t match:</p>
 <p>将尖括号指向内侧以确保两侧具有相同数量的元素。当大小不匹配时，你会收到错误：</p>
-
 <pre><code>say @left &gt;&gt;+&lt;&lt; @right;  # Error!
-</code></pre>
-
-<p>Another option is to allow one side to be smaller than the other but to not recycle elements. If both sets of angle brackets point away from the shorter side then the hyper does not reuse elements from the shorter side:</p>
-
+</code></pre><p>Another option is to allow one side to be smaller than the other but to not recycle elements. If both sets of angle brackets point away from the shorter side then the hyper does not reuse elements from the shorter side:</p>
 <p>另一种选择是允许一侧比另一侧小但不循环元素。如果两组尖括号都指向较短的一侧，那么 hyper 不会重用短边的元素：</p>
-
 <pre><code>my @long  =  3,  5, 8;
 my @short = 11, 13;
 
@@ -1931,12 +1156,8 @@ say @long  &gt;&gt;+&gt;&gt; @short;   # [14 18 19]
 
 say @short &lt;&lt;+&lt;&lt; @long;    # [14 18 19]
 say @long  &lt;&lt;+&lt;&lt; @short;   # [14 18]    no recycling
-</code></pre>
-
-<p>Instead of the double angle brackets you can use the fancier <code>»«</code> versions:</p>
-
+</code></pre><p>Instead of the double angle brackets you can use the fancier <code>»«</code> versions:</p>
 <p>你可以使用更漂亮的 <code>»«</code> 版本代替双角括号：</p>
-
 <pre><code>my @long  =  3,  5, 8;
 my @short = 11, 13;
 
@@ -1948,65 +1169,32 @@ say @long   »+» @short;   # [14 18 19]
 
 say @short  «+« @long;    # [14 18 19]
 say @long   «+« @short;   # [14 18]  no recycling
-</code></pre>
-
-<h2 id="the-reduction-operator">The Reduction Operator</h2>
-
+</code></pre><h2 id="the-reduction-operator">The Reduction Operator</h2>
 <p>The reduction operator is a bit different from <code>Z</code>, <code>X</code>, or the hyperoperators. It turns a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> into a single value by operating on two elements at a time to turn them into one element.</p>
-
 <p>The prefix <code>[]</code> is the reduction operator. On the inside you put a binary operator. It applies that operator to the first two elements of its <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> to get a single value. It replaces those two values with the result; this makes the input one element shorter. It keeps doing this until there’s one element left. That’s the final value.</p>
-
 <p>Here’s a quick way to sum some numbers:</p>
-
 <p>简化运算符与 <code>Z</code>，<code>X</code> 或超运算符略有不同。它通过一次操作两个元素将 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 转换为单个值，将它们转换为单个值。</p>
-
 <p>前缀 <code>[]</code> 是简化运算符。在里面你放了一个二元运算符。它将该运算符应用于其 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 的前两个元素以获取单个值。它用结果替换这两个值;这使得输入一个元素更短。它一直这样做，直到剩下一个元素。这是最终值。</p>
-
 <p>这是一个快速的方法来合计一些数字：</p>
-
 <pre><code>my $sum = [+] 1 .. 10;  # 55
-</code></pre>
-
-<p>This is the same as this expression if you write out the steps:</p>
-
+</code></pre><p>This is the same as this expression if you write out the steps:</p>
 <p>如果你写出以下步骤，则与此表达式相同：</p>
-
 <pre><code>(((((((((1 + 2) + 3) + 4) + 5) + 6) + 7) + 8) + 9) + 10)
-</code></pre>
-
-<p>And to do a factorial:</p>
-
+</code></pre><p>And to do a factorial:</p>
 <p>计算阶乘：</p>
-
 <pre><code>my $factorial = [*] 1 .. 10;  # 3628800
-</code></pre>
-
-<p>Are all the values <code>True</code>? Apply the <code>&amp;&amp;</code> to the first two elements and replace them with the result until there’s one element left. At the end use the <code>?</code> ( or <code>.so</code>) to coerce the result to a Boolean:</p>
-
+</code></pre><p>Are all the values <code>True</code>? Apply the <code>&amp;&amp;</code> to the first two elements and replace them with the result until there’s one element left. At the end use the <code>?</code> ( or <code>.so</code>) to coerce the result to a Boolean:</p>
 <p>所有的值都是 <code>True</code> 吗？将 <code>&amp;&amp;</code> 应用于前两个元素并将其替换为结果，直到剩下一个元素。最后使用 <code>?</code>  （或 <code>.so</code> ）将结果强制转换为布尔值：</p>
-
 <pre><code>my $condition = ?( [&amp;&amp;] 1 .. 10 );  # True
 my $condition = ?( [&amp;&amp;] ^10 );      # False
-</code></pre>
-
-<p>There’s a binary <code>max</code> operator too:</p>
-
+</code></pre><p>There’s a binary <code>max</code> operator too:</p>
 <p>还有一个二元的 <code>max</code> 运算符：</p>
-
 <pre><code>my $max = 1 max 137; # 137;
-</code></pre>
-
-<p>You can put that inside the brackets. This makes one pass through the elements to discover the largest numeric value:</p>
-
+</code></pre><p>You can put that inside the brackets. This makes one pass through the elements to discover the largest numeric value:</p>
 <p>你可以把它放在方括号内。这使得一个遍历元素以发现最大的数值：</p>
-
 <pre><code>my $max = [max] @numbers
-</code></pre>
-
-<p>If you want to use your own subroutine, use an extra set of braces and the <code>&amp;</code> sigil to make it look like an operator:</p>
-
+</code></pre><p>If you want to use your own subroutine, use an extra set of braces and the <code>&amp;</code> sigil to make it look like an operator:</p>
 <p>如果你想使用自己的子程序，请使用额外的方括号和 <code>&amp;</code> sigil使其看起来像一个运算符：</p>
-
 <pre><code>sub longest {
     $^a.chars &gt; $^b.chars ?? $^a !! $^b;
 }
@@ -2015,270 +1203,131 @@ my $longest =
     [[&amp;longest]] &lt;Hamadryas Rhamma Asterocampa Tanaecia&gt;;
 
 put &quot;Longest is $longest&quot;; # Longest is Asterocampa
-</code></pre>
-
-<p>That trick works to convert a subroutine to a binary operator:</p>
-
+</code></pre><p>That trick works to convert a subroutine to a binary operator:</p>
 <p>该技巧可以将子例程转换为二元运算符：</p>
-
 <pre><code>$first [&amp;longest] $second
-</code></pre>
-
-<h1 id="filtering-lists">Filtering Lists</h1>
-
+</code></pre><h1 id="filtering-lists">Filtering Lists</h1>
 <p>The <code>.grep</code> method filters a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> to get the elements that satisfy your condition. Any element that satisfies the condition becomes part of the new <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>:</p>
-
 <p><code>.grep</code> 方法过滤 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 以获取满足条件的元素。满足条件的任何元素都将成为新 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 的一部分：</p>
-
 <pre><code>my $evens = (0..10).grep: * %% 2;  # (0 2 4 6 8 10)
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> works too. The current element shows up in <code>$_</code>:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> works too. The current element shows up in <code>$_</code>:</p>
 <p><a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 也有效。当前元素出现在 <code>$_</code>中：</p>
-
 <pre><code>my $evens = (0..10).grep: { $_ %% 2 };  # (0 2 4 6 8 10)
-</code></pre>
-
-<p>If your condition is only a type <code>.grep</code> smart matches the current element against that type:</p>
-
+</code></pre><p>If your condition is only a type <code>.grep</code> smart matches the current element against that type:</p>
 <p>如果你的条件只是一种类型 <code>.grep</code>  将当前元素与该类型智能匹配：</p>
-
 <pre><code>my $allomorphs = &lt;137 2i 3/4 a b&gt;;
 my $int-strs = $allomorphs.grep: IntStr;      # (137)
 my $rat-strs = $allomorphs.grep: RatStr;      # (3/4)
 my $img-strs = $allomorphs.grep: ComplexStr;  # (2i)
 my $strs     = $allomorphs.grep:  Str;        # (a b)
-</code></pre>
-
-<p>Remember that a smart match against a type includes matching anything that type is based on. Trying to get all the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s finds everything since the <code>&lt;&gt;</code> creates allomorphs and every element matches <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>Remember that a smart match against a type includes matching anything that type is based on. Trying to get all the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s finds everything since the <code>&lt;&gt;</code> creates allomorphs and every element matches <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>请记住，针对类型的智能匹配包括匹配基于类型的任何内容。试图得到所有的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>会找出所有的东西，因为 <code>&lt;&gt;</code> 创建了同质异形并且每个元素都匹配<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>my $everything = $allomorphs.grep: Str; # (1 2i 3/4 a b)
-</code></pre>
-
-<p>The <code>.does</code> method checks if the element has a role. Here, you want the elements that <em>don’t</em> do that role—if it can be a number, you don’t want it:</p>
-
+</code></pre><p>The <code>.does</code> method checks if the element has a role. Here, you want the elements that <em>don’t</em> do that role—if it can be a number, you don’t want it:</p>
 <p><code>.does</code> 方法检查元素是否具有角色。在这里，你需要该元素不执行该角色 - 如果它可以是数字，则你不需要它：</p>
-
 <pre><code>my $just-str = $allomorphs.grep: { ! .does(Numeric) };  # (a b)
-</code></pre>
-
-<p>You can specify some adverbs with <code>.grep</code>. The <code>:v</code> adverb (for “values”) gives the same list you get without it:</p>
-
+</code></pre><p>You can specify some adverbs with <code>.grep</code>. The <code>:v</code> adverb (for “values”) gives the same list you get without it:</p>
 <p>你可以使用 <code>.grep</code> 指定一些副词。 <code>:v</code> 副词（对于“值”）给出了没有它的相同列表：</p>
-
 <pre><code>my $int-strs = $allomorphs.grep: IntStr, :v;  # same thing
-</code></pre>
-
-<p>The <code>:k</code> adverb (for key) gives the positions of the matching elements. This returns <code>1</code> because that’s the index of the matching element:</p>
-
+</code></pre><p>The <code>:k</code> adverb (for key) gives the positions of the matching elements. This returns <code>1</code> because that’s the index of the matching element:</p>
 <p><code>:k</code> 副词（用于键）给出匹配元素的位置。这返回 <code>1</code>，因为这是匹配元素的索引：</p>
-
 <pre><code>my $int-strs = $allomorphs.grep: ComplexStr, :k;  # (1)
-</code></pre>
-
-<p>You can get both the key and the value with <code>:kv</code>. You get a flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> in key-value order:</p>
-
+</code></pre><p>You can get both the key and the value with <code>:kv</code>. You get a flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> in key-value order:</p>
 <p>你可以使用 <code>:kv</code> 获取键和值。你可以按键值顺序获得一个平面<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>：</p>
-
 <pre><code>my $int-strs = $allomorphs.grep: RatStr, :kv;  # (2 3/4)
-</code></pre>
-
-<p>If multiple elements match you get a longer <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. The even positions are still keys:</p>
-
+</code></pre><p>If multiple elements match you get a longer <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. The even positions are still keys:</p>
 <p>如果多个元素匹配，则获得更长的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>。偶数位置仍是键：</p>
-
 <pre><code>$allomorphs.grep: { ! .does(Numeric) }, :kv;  # (3 a 4 b)
-</code></pre>
-
-<p>There’s also a routine form of <code>grep</code>. The <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> comes after the matcher:</p>
-
+</code></pre><p>There’s also a routine form of <code>grep</code>. The <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> comes after the matcher:</p>
 <p>还有一种例程形式的 <code>grep</code>。<a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 在匹配器之后：</p>
-
 <pre><code>my $matched = grep IntStr, @$allomorphs;
-</code></pre>
-
-<h1 id="transforming-a-list">Transforming a List</h1>
-
+</code></pre><h1 id="transforming-a-list">Transforming a List</h1>
 <p><code>.map</code> creates a new <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> based on an existing one by creating zero or more elements from each input element. Here’s an example that returns a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> of squares. <code>.map</code> can take a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> or <a href="https://docs.raku.org/type/WhateverCode.html"><code>WhateverCode</code></a> (although that’s a lot of <code>*</code>s):</p>
-
 <p><code>.map</code>通过从每个输入元素创建零个或多个元素，基于现有的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 创建新的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>。这是一个返回平方的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 的示例。 <code>.map</code> 可以接收一个 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 或 <a href="https://docs.raku.org/type/WhateverCode.html"><code>WhateverCode</code></a>（虽然那有很多 <code>*</code> 号 ）：</p>
-
 <pre><code>my $squares = (1..5).map: { $_ ** 2 }; # (0 1 4 9 16 25)
 my $squares = (1..5).map: * ** 2;
-</code></pre>
-
-<p>There’s a routine version of <code>map</code> that does the same :</p>
-
+</code></pre><p>There’s a routine version of <code>map</code> that does the same :</p>
 <p>有一个例程版本的 <code>map</code> 做同样的事情：</p>
-
 <pre><code>my $even-squares = map { $_ ** 2 }, @(1..5);
-</code></pre>
-
-<p>Perhaps you want to lowercase everything:</p>
-
+</code></pre><p>Perhaps you want to lowercase everything:</p>
 <p>也许你想要将字符串都变成小写：</p>
-
 <pre><code>my $lowered = $words.map: *.lc;
-</code></pre>
-
-<p>You might return no output elements, but you can’t merely return the empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a> because it will show up as an element in the new <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. In this example the <code>|()</code> indicates an empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a> slipped into the bigger <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>You might return no output elements, but you can’t merely return the empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a> because it will show up as an element in the new <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>. In this example the <code>|()</code> indicates an empty <a href="https://docs.raku.org/type/List.html"><code>List</code></a> slipped into the bigger <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p>你可能不返回任何输出元素，但你不能仅返回空<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>，因为它将显示为新<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>中的元素。在这个例子中，<code>|()</code> 表示一个空<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>滑入更大的<a href="https://docs.raku.org/type/List.html">列表</a>：</p>
-
 <pre><code>my $even-squares = (0..9).map: { $_ %% 2 ?? $_**2 !! |()  }; # (0 4 16 36 64)
-</code></pre>
-
-<p>You can use these methods together. This selects the even numbers then squares them:</p>
-
+</code></pre><p>You can use these methods together. This selects the even numbers then squares them:</p>
 <p>你可以一起使用这些方法。这将选择偶数然后将它们平方：</p>
-
 <pre><code>my $squares = $allomorphs
     .grep( { ! .does(Numeric) } )
     .map(  { $_ %% 2 ?? $_**2 !! |()  } );
-</code></pre>
-
-<h1 id="sorting-lists">Sorting Lists</h1>
-
+</code></pre><h1 id="sorting-lists">Sorting Lists</h1>
 <p>Often you want a list in some order. Perhaps that’s increasing numerical or alphabetic order, by the length of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s, or anything else that makes sense for you. You can do this with <code>.sort</code>:</p>
-
 <p>通常你想要一个按顺序排列的列表。也许以数字递增或字母顺序，按<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的长度，或任何其他对你有意义的顺序。你可以使用 <code>.sort</code> 执行此操作：</p>
-
 <pre><code>my $sorted = ( 7, 5, 9, 3, 2 ).sort;   # (2 3 5 7 9)
 
 my $sorted = &lt;p e r l 6&gt;.sort;         # (6 e l p r)
-</code></pre>
-
-<p>By default, <code>.sort</code> compares each pair of elements with <code>cmp</code>. If the two elements are numbers, it compares them as numbers. If it thinks they are <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s, it compares them as such. Here’s a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> comparison that may surprise you the first time you see it (and annoy you hereafter):</p>
-
+</code></pre><p>By default, <code>.sort</code> compares each pair of elements with <code>cmp</code>. If the two elements are numbers, it compares them as numbers. If it thinks they are <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s, it compares them as such. Here’s a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> comparison that may surprise you the first time you see it (and annoy you hereafter):</p>
 <p>默认情况下，<code>.sort</code> 用  <code>cmp</code> 比较每对元素。如果这两个元素是数字，则将它们作为数字进行比较。如果它认为它们是<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>，那么就比较它们。这是一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>比较，你可能会在第一次看到它时感到惊讶（并在此后惹恼你）：</p>
-
 <pre><code>my $sorted = qw/1 11 10 101/.sort;     # (1 10 101 11)
-</code></pre>
-
-<p>What happened? Since you constructed the list with <code>qw</code>, you got a list of <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> objects. These compare character by character, so the text <code>101</code> is “less than” the text <code>11</code>. This isn’t dictionary sorting, though. Try it with upper- and lowercase letters:</p>
-
+</code></pre><p>What happened? Since you constructed the list with <code>qw</code>, you got a list of <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> objects. These compare character by character, so the text <code>101</code> is “less than” the text <code>11</code>. This isn’t dictionary sorting, though. Try it with upper- and lowercase letters:</p>
 <p>发生了什么？由于你使用 <code>qw</code> 构建了列表，因此你获得了<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>对象的列表。这些字符逐字符比较，因此文本<code>101</code> “小于”文本 <code>11</code>。但这不是字典排序。尝试用大写和小写字母：</p>
-
 <pre><code>my $sorted = qw/a A b B c C/.sort;
-</code></pre>
-
-<p>Did you get what you expected? Some of you probably guessed incorrectly. The lowercase code points come after the uppercase ones, for they are greater:</p>
-
+</code></pre><p>Did you get what you expected? Some of you probably guessed incorrectly. The lowercase code points come after the uppercase ones, for they are greater:</p>
 <p>你得到了你的期望吗？你们中的一些人可能猜错了。小写代码点位于大写代码之后，因为它们更大：</p>
-
 <pre><code>(A B C a b c)
-</code></pre>
-
-<p><code>cmp</code> sorts by the code number in the Universal Character Set (UCS). If you are used to ASCII, the code number is the same thing. Above ASCII, you may not get what you expect.</p>
-
-<p><code>cmp</code>按通用字符集（UCS）中的代码编号排序。如果你习惯使用 ASCII，则代码编号是相同的东西。在 ASCII 之上，你可能无法得到你期望的结果。</p>
-
+</code></pre><p><code>cmp</code> sorts by the code number in the Universal Character Set (UCS). If you are used to ASCII, the code number is the same thing. Above ASCII, you may not get what you expect.</p>
+<p><code>cmp </code>按通用字符集（UCS）中的代码编号排序。如果你习惯使用 ASCII，则代码编号是相同的东西。在 ASCII 之上，你可能无法得到你期望的结果。</p>
 <h6 id="note-2">NOTE</h6>
-
 <p>There is a <code>.collate</code> method that can handle Unicode collation for language-specific sorting, but it’s experimental.</p>
-
 <p>You can tell <code>.sort</code> how to compare the elements. For dictionary order (so case does not matter), you have to do a bit more work. The <code>.sort</code> method can take a routine that decides how to sort. Start with the default <code>.sort</code>fully written out with its comparison:</p>
-
 <p>有一种 <code>.collate</code> 方法可以处理特定于语言的排序的 Unicode 排序规则，但它是实验性的。</p>
-
 <p>你可以告诉 <code>.sort</code> 如何比较元素。对于字典顺序（所以大小写无关紧要），你必须做更多的工作。 <code>.sort</code> 方法可以采用一个例程来决定如何排序。从默认的 <code>.sort</code> 完整写出来与其比较开始：</p>
-
 <pre><code>my $sorted = qw/a A b B c C/.sort: { $^a cmp $^b }
-</code></pre>
-
-<p>You can also write that with two <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>s so you don’t have to type the braces. This is the same thing:</p>
-
+</code></pre><p>You can also write that with two <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a>s so you don’t have to type the braces. This is the same thing:</p>
 <p>你也可以使用两个 <a href="https://docs.raku.org/type/Whatever.html"><code>Whatever</code></a> 来编写它，这样你就不必键入花括号。这是一样的：</p>
-
 <pre><code>my $sorted = qw/a A b B c C/.sort: * cmp *
-</code></pre>
-
-<p>If you want to compare them case insensitively, you can call the <code>.fc</code> method to do a proper case folding:</p>
-
+</code></pre><p>If you want to compare them case insensitively, you can call the <code>.fc</code> method to do a proper case folding:</p>
 <p>如果你想不区分大小写的比较它们，你可以调用 <code>.fc</code> 方法进行正确的大小写折叠：</p>
-
 <pre><code>my $sorted = qw/a A b B c C/.sort: *.fc cmp *.fc
-</code></pre>
-
-<p>Now you get the order that ignores case:</p>
-
+</code></pre><p>Now you get the order that ignores case:</p>
 <p>现在你得到忽略大小写的顺序：</p>
-
 <pre><code>(A a B b C c)
-</code></pre>
-
-<p>However, if you want to make the same transformation on both elements, you don’t need to write it twice; <code>.sort</code> will figure it out. It saves the result and reuses it for all comparisons. This means that Raku has a builtinSchwartzian transform (a Perl 5 idiom for a cached-key sort)!</p>
-
+</code></pre><p>However, if you want to make the same transformation on both elements, you don’t need to write it twice; <code>.sort</code> will figure it out. It saves the result and reuses it for all comparisons. This means that Raku has a builtinSchwartzian transform (a Perl 5 idiom for a cached-key sort)!</p>
 <p>但是，如果要对两个元素进行相同的转换，则不需要将其写两次; <code>.sort</code> 会弄清楚的。它保存结果并重复使用它进行所有比较。这意味着 Raku 具有内置的 Schwartzian 变换（用于缓存按键排序的 Perl 5 惯用法）！</p>
-
 <pre><code>my $sorted = qw/a A b B c C/.sort: *.fc;
-</code></pre>
-
-<p>There’s a problem with <code>cmp</code>, though. The order of elements you get depends on the type and order of elements in your input:</p>
-
+</code></pre><p>There’s a problem with <code>cmp</code>, though. The order of elements you get depends on the type and order of elements in your input:</p>
 <p>但是 <code>cmp</code> 存在问题。你获得的元素的顺序取决于输入中元素的类型和顺序：</p>
-
 <pre><code>for ^5 {
     my @numbers = (1, 2, 11, '21', 111, 213, '7', 77).pick: *;
     say @numbers.sort;
 }
-</code></pre>
-
-<p>The <code>.pick</code> method randomly chooses from the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> the number of elements you specify. The <code>*</code> translates to the number of elements in the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. The effect is a shuffled <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of the same elements. Some of these are <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a>s and some are <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. Depending on which element shows up where, they sort differently:</p>
-
+</code></pre><p>The <code>.pick</code> method randomly chooses from the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> the number of elements you specify. The <code>*</code> translates to the number of elements in the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. The effect is a shuffled <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of the same elements. Some of these are <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a>s and some are <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. Depending on which element shows up where, they sort differently:</p>
 <p><code>.pick</code> 方法从<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>中随机选择你指定的元素数。 <code>*</code> 转换为<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>中的元素数。效果是相同元素的混乱列表。其中一些是<a href="https://docs.raku.org/type/Int.html"><code>整数</code></a>，一些是<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。根据哪个元素显示在哪里，它们的排序方式不同：</p>
-
 <pre><code>(1 2 11 111 21 77 213 7)
 (1 2 11 111 21 213 7 77)
 (1 2 11 21 77 111 213 7)
 (1 2 11 111 21 7 77 213)
 (1 2 11 21 77 111 213 7)
-</code></pre>
-
-<p>Use <code>leg</code> (*l*ess-*e*qual-*g*reater) if you want to order these by their <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> values every time:</p>
-
+</code></pre><p>Use <code>leg</code> (<em>l</em>ess-<em>e</em>qual-<em>g</em>reater) if you want to order these by their <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> values every time:</p>
 <p>如果你希望每次按<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>值排序，请使用 <code>leg</code>（小于等于大于）：</p>
-
 <pre><code>say @numbers.sort: * leg *;
-</code></pre>
-
-<p>If you want numbers, use <code>&lt;=&gt;</code>:</p>
-
+</code></pre><p>If you want numbers, use <code>&lt;=&gt;</code>:</p>
 <p>如果你想按数字值排序，请使用 <code>&lt;=&gt;</code>：</p>
-
 <pre><code>say @numbers.sort: * &lt;=&gt; *;
-</code></pre>
-
-<p>Alternatively, you can coerce the input to the type you want:</p>
-
+</code></pre><p>Alternatively, you can coerce the input to the type you want:</p>
 <p>或者，你可以将输入强制转换为所需的类型：</p>
-
 <pre><code>say @numbers.sort: +*;  # numbers
 
 say @numbers.sort: ~*;  # strings
-</code></pre>
-
-<p>Finally, there’s a routine version of <code>.sort</code>. It has a single-argument form that takes a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> and a two-argument form that takes a sort routine and a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>Finally, there’s a routine version of <code>.sort</code>. It has a single-argument form that takes a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> and a two-argument form that takes a sort routine and a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p>最后，还有 <code>.sort</code> 的例程版本。它有一个单参数形式，它接受一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>和一个带有排序例程和<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的双参数形式：</p>
-
 <pre><code>my $sorted = sort $list;
 my $sorted = sort *.fc, $list;
-</code></pre>
-
-<p>EXERCISE 6.14Represent a deck of cards as a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s. Create five poker hands of five cards from that. Output the cards in ascending order of their ranks.</p>
-
+</code></pre><p>EXERCISE 6.14Represent a deck of cards as a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s. Create five poker hands of five cards from that. Output the cards in ascending order of their ranks.</p>
 <p>练习6.14将一副牌作为<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>。从中创建五手五张牌。按名次的升序输出卡片。</p>
-
 <h1 id="sorting-on-multiple-comparisons">Sorting on Multiple Comparisons</h1>
-
 <p>You can use a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> to create more complicated comparisons, comparing two things that are the same in one regard in another way. When two people’s lasts names are the same, you can sort by the first name. If you sort these with the default <code>.sort</code> you probably won’t get what you want:</p>
-
 <p>你可以使用<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>来创建更复杂的比较，以另一种方式比较两个在一个方面相同的事物。当两个人的姓名相同时，你可以按名字排序。如果你使用默认的 <code>.sort</code> 对它们进行排序，你可能无法获得所需内容：</p>
-
 <pre><code>my @butterflies = (
     &lt;John Smith&gt;,
     &lt;Jane Smith&gt;,
@@ -2290,73 +1339,45 @@ my $sorted = sort *.fc, $list;
 my @sorted = @butterflies.sort;
 
 put @sorted.join: &quot;\n&quot;;
-</code></pre>
-
-<p>This comes out in alphabetical order, if you consider the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to be the combination of the sublist elements as a single <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>This comes out in alphabetical order, if you consider the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to be the combination of the sublist elements as a single <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>如果你认为<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>是子列表元素组合为单个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>，则按字母顺序排列：</p>
-
 <pre><code>Jane Smith
 Jim Schmidt
 John Doe
 John Smith
 Jon Smithers
-</code></pre>
-
-<p>Change the sort to work only on the second element of each sublist:</p>
-
+</code></pre><p>Change the sort to work only on the second element of each sublist:</p>
 <p>将排序更改为仅适用于每个子列表的第二个元素：</p>
-
 <pre><code>my @sorted = @butterflies.sort: *.[1];
 
 put @sorted.join: &quot;\n&quot;;
-</code></pre>
-
-<p>The last names sort in alphabetical order now, but the first names show up out of order (though that may depend on the ordering of your input):</p>
-
+</code></pre><p>The last names sort in alphabetical order now, but the first names show up out of order (though that may depend on the ordering of your input):</p>
 <p>姓氏现在按字母顺序排序，但名字显示不按顺序排列（尽管这可能取决于输入的顺序）：</p>
-
 <pre><code>John Doe
 Jim Schmidt
 John Smith
 Jane Smith
 Jon Smithers
-</code></pre>
-
-<p>A more complex comparison can fix that. In each sublist, compare the last names to each other. If they are the same, add another comparison with the logical <code>or</code>:</p>
-
+</code></pre><p>A more complex comparison can fix that. In each sublist, compare the last names to each other. If they are the same, add another comparison with the logical <code>or</code>:</p>
 <p>更复杂的比较可以解决这个问题。在每个子列表中，将姓氏相互比较。如果它们相同，则添加另一个与逻辑 <code>or</code> 的比较：</p>
-
 <pre><code>my @sorted = @butterflies.sort: {
     $^a.[1] leg $^b.[1]  # last name
         or
     $^a.[0] leg $^b.[0]  # first name
     };
-</code></pre>
-
-<p>When it compares the sublists for <code>(John Smith)</code> and <code>(Jane Smith)</code> it tries the last names and finds that they are the same. It then sorts on the first names and produces the result that you probably want:</p>
-
+</code></pre><p>When it compares the sublists for <code>(John Smith)</code> and <code>(Jane Smith)</code> it tries the last names and finds that they are the same. It then sorts on the first names and produces the result that you probably want:</p>
 <p>当它比较（<code>John Smith</code>）和（<code>Jane Smith</code>）的子列表时，它会尝试姓氏并发现它们是相同的。然后它对名字进行排序并产生你可能想要的结果：</p>
-
 <pre><code>John Doe
 Jim Schmidt
 Jane Smith
 John Smith
 Jon Smithers
-</code></pre>
-
-<p>EXERCISE 6.15 Create a deck of cards and create five hands of five cards each. In each hand sort the cards by their rank. If the ranks are the same sort them by their suits.</p>
-
+</code></pre><p>EXERCISE 6.15 Create a deck of cards and create five hands of five cards each. In each hand sort the cards by their rank. If the ranks are the same sort them by their suits.</p>
 <p>练习6.15 创建一副牌并创建五手五张牌。每手按照等级对牌进行排序。如果排名与他们的花色相同。</p>
-
 <h1 id="summary">Summary</h1>
-
 <p>The <a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, and <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> types are <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s, and the <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> type can fake it when it needs to. This allows some amazing lazy features where you don’t have to do anything until you actually need it. Not only that, but with a little practice you won’t even need to think about it.</p>
-
 <p>Once you have your data structures, you have some powerful ways to combine them to make much more complex data structures. Some of these may be daunting at first. Don’t ignore them. You’ll find that your programming career will be easier with judiciously chosen structures that are easy to manipulate.</p>
-
 <p><a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Range.html"><code>Range</code></a>, 和 <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> 类型是 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>，<a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 类型可以在需要时伪造它。这允许一些惊人的惰性功能，你不需要做任何事情，直到你真正需要它。不仅如此，通过一些练习，你甚至不需要考虑它。</p>
-
 <p>拥有数据结构后，你可以通过一些强大的方法将它们组合在一起，从而构建更复杂的数据结构。其中一些可能一开始令人生畏。不要忽视它们。你会发现，通过易于操作的明智选择的结构，你的编程生涯将变得更加容易。</p>
 
 
@@ -2449,7 +1470,7 @@ Jon Smithers
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

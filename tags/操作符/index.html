@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/%E6%93%8D%E4%BD%9C%E7%AC%A6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/%E6%93%8D%E4%BD%9C%E7%AC%A6/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -228,8 +228,8 @@ if (!doNotTrack) {
 &hellip; 右侧的第一个值是序列的端点或界限，这是序列操作符 &hellip; 从左侧生成的。
 一旦我们知道了序列的边界，左侧的列表会一项一项地被求值，并且普通数字或字符串值被无差异地传递（在右侧边界允许的程度内）如果序列中的任何值匹配到边界值，序列会终止，包括那个最后的边界值在内。要排除边界值，使用 &hellip;^ 代替。
 在内部，这两种形式用于检测匿名的循环是否会终止，而循环返回序列中的值。假设下一个候选的值存储在 $x 中，并且右侧序列中的第一个值存储在 $limit 中，这两个操作符各自实现为：
-... last($x) if $x ~~ $limit; ...^ last if $x ~~ $limit;  如果边界是 * ,序列就没有界限。如果边界是一个闭包，它会在当前候选对象中进行布尔真值求值，并且序列会一直继续只要闭包返回false。如果边界是一个含有一个或无限参数的闭包，
-my $lim = 0; 1,2,3 ...^ * &gt; $lim # returns (), since 1 &gt; 0  这个操作符如果只能把左边的值原样返回就太乏味了。它的强大来自于能从旧值生成新值。你可以，例如，使用一个存在的生成器产生一个无穷列表：
+... last($x) if $x ~~ $limit;...^ last if $x ~~ $limit;如果边界是 * ,序列就没有界限。如果边界是一个闭包，它会在当前候选对象中进行布尔真值求值，并且序列会一直继续只要闭包返回false。如果边界是一个含有一个或无限参数的闭包，
+my $lim = 0;1,2,3 ...^ * &gt; $lim # returns (), since 1 &gt; 0 这个操作符如果只能把左边的值原样返回就太乏味了。它的强大来自于能从旧值生成新值。你可以，例如，使用一个存在的生成器产生一个无穷列表：
                   <a href="https://ohmysummer.github.io/post/2016-05-02-raku%E4%B8%AD%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%BA%8C/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -261,7 +261,7 @@ my $lim = 0; 1,2,3 ...^ * &gt; $lim # returns (), since 1 &gt; 0  这个操作�
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 9 minutes (1746 words)
+  <i class="fa fa-clock-o"></i> 9 minutes (1747 words)
   
   
 </span>
@@ -272,12 +272,12 @@ my $lim = 0; 1,2,3 ...^ * &gt; $lim # returns (), since 1 &gt; 0  这个操作�
                   范围和范围迭代器语法 .. 范围操作符有各种在两端带有 ^符号的变体以表明把那个端点排除在范围之外。 它总会产生一个 Range 对象。 Range 对象是不可变的， 主要用于匹配间隔。
 1..2 是从1到2包含端点的间隔， 而 1^..^2 不包含端点但是匹配任何在它俩之间的实数。
 对于不同类型的数字参数， 范围会被强制为更宽的类型，所以：
-1 .. 1.5  被看作为：
-1.0 .. 1.5  这些强制由 multi 签名定义。（其它类型可能有不同的强制策略。）特别要说明的是， 使用 Range 作为末端是非法的：
-0 ..^ 10 # 0 .. 9 0 .. ^10 # ERROR  如果范围右侧是非数字类型， 那么右侧的参数被强转为数字， 然后按上面那样使用。
+1 .. 1.5被看作为：
+1.0 .. 1.5这些强制由 multi 签名定义。（其它类型可能有不同的强制策略。）特别要说明的是， 使用 Range 作为末端是非法的：
+0 ..^ 10 # 0 .. 9 0 .. ^10 # ERROR 如果范围右侧是非数字类型， 那么右侧的参数被强转为数字， 然后按上面那样使用。
 因此，第二个参数中的 Array 类型会被假定用作数字， 如果左侧的参数是数字的话：
-0 ..^ @x # okay 0 ..^ +@x # same thing  对于字符串也类似：
-0 .. '1.5' # okay 0 .
+0 ..^ @x # okay 0 ..^ +@x # same thing 对于字符串也类似：
+0 .. &#39;1.5&#39; # okay 0 .
                   <a href="https://ohmysummer.github.io/post/2016-03-23-raku%E4%B8%AD%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%B8%89/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -321,7 +321,7 @@ my $lim = 0; 1,2,3 ...^ * &gt; $lim # returns (), since 1 &gt; 0  这个操作�
 S03-operators/precedence.t lines 5–200
 Raku 拥有和 Perl 5 同等数量的优先级级别，但是它们散布在不同的地方。这儿，我们列出了从最紧凑到最松散的级别，每一级别还有几个例子：
 最高优先级到最低优先级：
-A Level Examples = ===== ======== N Terms 42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbose @$array L Method postfix .meth .+ .? .* .() .[] .{} .&lt;&gt; .«» .:: .= .^ .: N Autoincrement ++ -- R Exponentiation ** L Symbolic unary ! + - ~ ? | || +^ ~^ ?^ ^ L Multiplicative * / % %% +&amp; +&lt; +&gt; ~&amp; ~&lt; ~&gt; ?
+A Level Examples= ===== ========N Terms 42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbose @$arrayL Method postfix .meth .+ .? .* .() .[] .{} .&lt;&gt; .«» .:: .= .^ .:N Autoincrement ++ --R Exponentiation **L Symbolic unary ! + - ~ ? | || +^ ~^ ?^ ^L Multiplicative * / % %% +&amp; +&lt; +&gt; ~&amp; ~&lt; ~&gt; ?
                   <a href="https://ohmysummer.github.io/post/2015-08-31-raku%E4%B8%AD%E7%9A%84%E6%93%8D%E4%BD%9C%E7%AC%A6%E4%B8%80/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -362,7 +362,7 @@ A Level Examples = ===== ======== N Terms 42 3.14 &quot;eek&quot; qq[&quot;foo&q
               <div class="post-entry">
                 
                   操作符 操作符优先级 在像 1 + 2 * 3 这样的表达式中， 2 * 3 被首先计算， 因为中缀操作符 * 的优先级比 + 的优先级高。下面的表中总结了 Perl 6 中 的优先级级别， 从最牢固到最松散：
-A Level Examples N Terms 42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbose @$array L 方法后缀 .meth .+ .? .* .() .[] .{} .&lt;&gt; .«» .:: .= .^ .: N 自增 ++ -- R 求幂 ** L Symbolic unary ! + - ~ ? | || +^ ~^ ?
+A	Level	ExamplesN	Terms	42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbose @$arrayL	方法后缀	.meth .+ .? .* .() .[] .{} .&lt;&gt; .«» .:: .= .^ .:N	自增	++ --R	求幂	**L	Symbolic unary	! + - ~ ? | || +^ ~^ ?^ ^L	乘法	* / % %% +&amp; +&lt; +&gt; ~&amp; ~&lt; ~&gt; ?
                   <a href="https://ohmysummer.github.io/post/2015-03-16-%E6%93%8D%E4%BD%9C%E7%AC%A6/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -413,7 +413,7 @@ A Level Examples N Terms 42 3.14 &quot;eek&quot; qq[&quot;foo&quot;] $x :!verbos
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

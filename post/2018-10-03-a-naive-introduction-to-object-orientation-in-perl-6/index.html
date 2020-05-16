@@ -33,7 +33,7 @@ Homework:1:50:25 Homework:2:50:25 Exam:1:75:50  您的任务是创建一个名�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-10-03-a-naive-introduction-to-object-orientation-in-perl-6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -240,95 +240,61 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="序言">序言</h1>
-
+        <h1 id="序言">序言</h1>
 <h2 id="介绍">介绍</h2>
-
 <p>本教程最多只关注 Raku 中的面向对象编程(OOP)的基本知识。因此，对语句/表达式、变量、条件、循环、子例程(函数)等有一个基本的了解是很重要的，如果不在 Raku 中，至少在另一种编程语言中是这样的。此外，您至少应该对类、属性和方法有一般的了解。作为对 Raku 的介绍，我强烈推荐 <a href="https://rakuintro.com/">Raku introduction</a>。下一步是 Raku 文档。</p>
-
 <p>确保你已经设置好了 Raku 编译器。如果你还没有设置好，请看<a href="https://raku.org/getting-started/">这里</a>。
 从这里开始，你可能会厌倦代词“我们”，但它的使用是经过深思熟虑的。这是一个教程，希望你能跟上。所以，是的，我们在一起工作，你应该做好准备。顺便说一下，本教程是冗长的，这是故意的，但也是手把手教程的副产品。</p>
-
 <h2 id="问题陈述">问题陈述</h2>
-
 <p>我们将从现实生活中的问题开始，并尝试以面向对象的方式对其进行建模。问题陈述如下:
 在她的数学101课程中，一位教授记录了三个作业(2个作业和1个考试)的分数，按照学生交作业的顺序:</p>
-
 <pre><code>Bill Jones:1:35
 Sara Tims:2:45
 Sara Tims:1:39
 Bill Jones:1:42
 Bill Jones:E1:72
 </code></pre>
-
 <p>在一个名为 MATH-101 的简单文本文件中。您可以假设有更多的学生，而这只是数据文件的一个代表性块。在这个文件中，每行记录学生的姓名、作业编号(作业编号为1,2，第一次考试为E1)和学生获得的原始分数。
 教授使用另一个扩展名为 .std 的文件存储她课程的学生名单:</p>
-
 <pre><code>Bill Jones
 Ana Smith
 Sara Tims
 Frank Horza
 </code></pre>
-
 <p>除了 MATH-101，这位教授还教其他课程，并设计了一个扩展名为 .cfg 的配置文件来存储给定课程的配置格式。她这样做的目的是在她的其他课程中也使用它。配置文件格式指定了作业的类型、作业编号、作业的总分以及作业对最终课程成绩的贡献。她的数学101课程的 .cfg 文件如下:</p>
-
 <pre><code>Homework:1:50:25
 Homework:2:50:25
 Exam:1:75:50
 </code></pre>
-
 <p>您的任务是创建一个名为 report.p6 的程序。该程序生成一个报告，其中列出了班级中每个学生的姓名、每次作业的分数和最终成绩。该程序应该假设具有扩展名 .cgf 和 .std 的文件在执行该程序的目录中可用。另一方面，包含学生成绩的文件必须通过命令行传递给程序。为了简单起见，您可以假设每个文件都是根据课程命名的。对于她的数学101课程，教授会有以下的文件: MATH-101, MATH-101.std 和 MATH-101.cfg，还有脚本 report.p6。</p>
-
 <h2 id="分析">分析</h2>
-
 <p>如果我们看问题陈述，我们可以把所有的东西分成三类:课程，学生和作业。就目前而言，每个类别都可以被视为具有状态和行为的类。我们将从最简单的类别，作业类别，到最一般的类别，课程类别。为了做到这一点，我们首先学习 Raku 中类的定义。</p>
-
 <h1 id="raku-类">Raku 类</h1>
-
 <h2 id="类定义">类定义</h2>
-
 <p>在 Raku 中，类是用 class 关键字定义的，通常后面跟着类名（通常以首字母大写形式）。</p>
-
-<pre><code class="language-raku">class Name-of-class {
+<pre><code class="language-raku" data-lang="raku">class Name-of-class {
 
 }
-</code></pre>
-
-<h2 id="属性定义">属性定义</h2>
-
+</code></pre><h2 id="属性定义">属性定义</h2>
 <p>所有的 Raku 属性默认都是私有的，这意味着它们只能在类中访问。属性是使用 <code>has</code> 关键字和 <code>!</code> twigil 定义的。</p>
-
-<pre><code class="language-raku">class Name-of-class {
+<pre><code class="language-raku" data-lang="raku">class Name-of-class {
     has $!attribute-name;
 }
-</code></pre>
-
-<p>属性也可以使用 <code>.</code> twigil。这个 twigil 声明，应该生成一个以属性命名的只读访问器方法:</p>
-
-<pre><code class="language-raku">class Name-of-class {
+</code></pre><p>属性也可以使用 <code>.</code> twigil。这个 twigil 声明，应该生成一个以属性命名的只读访问器方法:</p>
+<pre><code class="language-raku" data-lang="raku">class Name-of-class {
     has $.attribute-name; # $!attribute-name + attribute-name()
 }
-</code></pre>
-
-<p>这等价于:</p>
-
-<pre><code class="language-raku">class Name-of-class {
+</code></pre><p>这等价于:</p>
+<pre><code class="language-raku" data-lang="raku">class Name-of-class {
     has $!attribute-name;
     
     method attribute-name { 
         return $!attribute-name;
     }
 }
-</code></pre>
-
-<p>生成的访问器方法是只读的，因为属性默认是只读的(从类的外部)。为了允许通过访问器方法修改属性，必须向属性添加 <code>is rw</code> 特质。其他特质也可以用于属性。有关特质的更多信息，请参阅文档。</p>
-
+</code></pre><p>生成的访问器方法是只读的，因为属性默认是只读的(从类的外部)。为了允许通过访问器方法修改属性，必须向属性添加 <code>is rw</code> 特质。其他特质也可以用于属性。有关特质的更多信息，请参阅文档。</p>
 <h1 id="作业类">作业类</h1>
-
 <p>让我们从详细描述 <code>Assignment</code> 类所需的属性开始:</p>
-
 <ul>
 <li><code>type</code>——作业的类型(作业或考试)。</li>
 <li><code>number</code>——作业编号(1,2等)。</li>
@@ -338,18 +304,13 @@ Exam:1:75:50
 <li><code>adjusted-score</code>——基于 <code>score</code>，<code>raw</code> 和 <code>contrib</code> 属性的格式化的分数。</li>
 <li><code>config</code>——一个包含课程配置文件的散列。</li>
 </ul>
-
 <p>关于 <code>config</code> 哈希，每个赋值的信息将存储在一个数组中，这个数组将根据每个赋值(作业或考试)在数组中的赋值号进行索引。由于没有零赋值，这个槽将用于存储已处理的赋值总数。MATH-101.cfg 的 <code>config</code> 散列是这样的:</p>
-
-<pre><code class="language-raku">%(
+<pre><code class="language-raku" data-lang="raku">%(
     Homework =&gt; [ {total =&gt; 2}, (50, 25), (50, 25) ],
     Exam =&gt; [ {total =&gt; 1}, (75, 50) ],
 )
-</code></pre>
-
-<p>这导致了下面的类:</p>
-
-<pre><code class="language-raku">class Assignment {
+</code></pre><p>这导致了下面的类:</p>
+<pre><code class="language-raku" data-lang="raku">class Assignment {
     # attributes with a read-only accessor
     has $.type;
     has $.number;
@@ -362,11 +323,8 @@ Exam:1:75:50
     has $!contrib;
     has $!adjusted-score;
 }
-</code></pre>
-
-<p>为了创建 <code>Assignment</code> 类的实例并初始化它，我们将命名参数传递给 Raku 提供的默认的 <code>new</code> 构造函数方法，并由所有类继承:</p>
-
-<pre><code class="language-raku"># create a new instance object and initialize its attributes. 
+</code></pre><p>为了创建 <code>Assignment</code> 类的实例并初始化它，我们将命名参数传递给 Raku 提供的默认的 <code>new</code> 构造函数方法，并由所有类继承:</p>
+<pre><code class="language-raku" data-lang="raku"># create a new instance object and initialize its attributes. 
 # The new constructor is called on Assignment, the type object of 
 # the class Assignment.
 my $assign01 = Assignment.new(
@@ -384,15 +342,11 @@ my $assign01 = Assignment.new(
 say $assign01.type();     # OUTPUT: 'Homework'
 say $assign01.number();   # OUTPUT: 2
 say $assign01.score();    # OUTPUT: 45
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p><strong>注意</strong>: 如果属性是用 <code>!</code> twigil 定义的，那么不能使用 <code>new</code> 构造函数方法来初始化它。正如前面提到的，这是由于属性是私有的，这意味着它不能从类外部访问，甚至不能通过<code>new</code> 构造函数访问。但是，这个默认行为可以用 <code>BUILD</code> 子方法重写。有关 <code>BUILD</code> 子方法的更多信息，请参阅<a href="https://docs.raku.org/language/objects#Object_Construction">文档</a>。</p>
 </blockquote>
-
 <p>我们已经知道赋值的类型总是字符串，数字总是整数，调整后的分数是 rational 等等，所以我们也可以相应地键入属性:</p>
-
-<pre><code class="language-raku">class Assignment {
+<pre><code class="language-raku" data-lang="raku">class Assignment {
     has Str $.type;
     has Int $.number;
     has $.score;
@@ -402,43 +356,29 @@ say $assign01.score();    # OUTPUT: 45
     has $!contrib;
     has Rat $!adjusted-score;
 }
-</code></pre>
-
-<p>有关类型的更多信息，请参阅<a href="https://docs.raku.org/language/typesystem">文档</a>。
+</code></pre><p>有关类型的更多信息，请参阅<a href="https://docs.raku.org/language/typesystem">文档</a>。
 <code>Assignment</code> 类的行为在很大程度上取决于每个学生的数据，但我们对 <code>Student</code> 类的结构还一无所知。出于这个原因，我们将继续学习 <code>Student</code> 类，稍后再回到这个话题。</p>
-
 <h1 id="student-类">Student 类</h1>
-
 <p>与 <code>Assignment</code> 类类似，让我们从详细描述 <code>Assignment</code> 类将具有的属性开始:</p>
-
 <ul>
 <li><code>name</code>——表示学生名字的字符串。</li>
 <li><code>assign-num</code>——作业的数量(一个整数)。</li>
 <li><code>assignments</code>——我们希望将作业分成不同的类型(作业或考试)，所以我们将使用哈希。每个键将指向它们各自的赋值对象的数组。</li>
 <li><code>config</code>——在 <code>Assignment</code> 类中描述的课程的配置文件。</li>
 </ul>
-
 <p>这导致了下面的类:</p>
-
-<pre><code class="language-raku">class Student {
+<pre><code class="language-raku" data-lang="raku">class Student {
     has Str $.name;
     has Int $!assign-num = 0;
     has %!assignments;
     has %.config;
 }
-</code></pre>
-
-<p>我们应该能够将作业附加到 <code>Student</code> 类的一个实例中，并从中获得作业、考试等等。这些行为表示类的行为，并通过使用方法来实现。</p>
-
+</code></pre><p>我们应该能够将作业附加到 <code>Student</code> 类的一个实例中，并从中获得作业、考试等等。这些行为表示类的行为，并通过使用方法来实现。</p>
 <h2 id="公共和私有方法">公共和私有方法</h2>
-
 <p>正如在 <a href="https://rakuintro.com/#_methods">Raku 介绍</a>中所述，“方法是对象的子例程，就像子例程一样，它们是打包一组功能的方法，它们接受参数，具有签名，可以定义为 <code>multi</code>。”</p>
-
 <p>Raku 方法是使用 <code>method</code> 关键字定义的，它是在 invocant 上使用点(<code>.</code>)调用的。默认情况下，所有方法都是公共的。但是，方法可以通过在名称前面加上感叹号(<code>!</code>)来定义为私有的。在这种情况下，使用感叹号而不是点来调用它们。</p>
-
 <p>有了这些知识，我们现在将向 <code>Student</code> 类添加一个 <code>add-assignment</code> 方法。这个方法需要作业的编号(1、2、3等，或者E1、E2等)和收到的分数。不会提供作业的类别，但我们可以使用编号来确定:</p>
-
-<pre><code class="language-raku">class Student {
+<pre><code class="language-raku" data-lang="raku">class Student {
     # same attributes as before.
 
     method add-assignment( $number is copy, $score ) {
@@ -472,11 +412,8 @@ say $assign01.score();    # OUTPUT: 45
     }
     
 }
-</code></pre>
-
-<p>为了展示私有方法的创建，我们将在 <code>add-assignment</code> 方法中把创建 <code>Assignment</code> 对象外包给一个名为 <code>create-assignment</code> 的私有方法，该方法返回一个 <code>Assignment</code> 对象:</p>
-
-<pre><code class="language-raku">class Student {
+</code></pre><p>为了展示私有方法的创建，我们将在 <code>add-assignment</code> 方法中把创建 <code>Assignment</code> 对象外包给一个名为 <code>create-assignment</code> 的私有方法，该方法返回一个 <code>Assignment</code> 对象:</p>
+<pre><code class="language-raku" data-lang="raku">class Student {
     # same as before
     
     # notice the ! twigil before the method's name.
@@ -499,24 +436,24 @@ say $assign01.score();    # OUTPUT: 45
     }
        
 } 
-</code></pre>
-
-<p>正如您可能已经注意到的，<code>self</code> 关键字用于调用 <code>add-assignment</code> 方法中的 <code>create-assignment</code> 方法。<code>self</code> 是绑定到 invocant 的特殊变量，在方法内部可用。此变量可用于调用程序上的进一步方法。其内部方法调用如下:</p>
-
+</code></pre><p>正如您可能已经注意到的，<code>self</code> 关键字用于调用 <code>add-assignment</code> 方法中的 <code>create-assignment</code> 方法。<code>self</code> 是绑定到 invocant 的特殊变量，在方法内部可用。此变量可用于调用程序上的进一步方法。其内部方法调用如下:</p>
 <ul>
-<li><code>self!method($arg)</code> 用于私有方法。</li>
-
-<li><p><code>self.method($arg)</code> 用于公共方法。 <code>$.method($arg)</code> 是它的快捷形式。注意，方法参数(位置和命名)的冒号语法只支持在使用 <code>self</code> 时调用方法，而不支持快捷形式。所以:</p></li>
-
-<li><p>self.method: arg1, arg2&hellip; is supported.</p></li>
-
-<li><p>$.method: arg1, arg2&hellip; is not supported.</p></li>
+<li>
+<p><code>self!method($arg)</code> 用于私有方法。</p>
+</li>
+<li>
+<p><code>self.method($arg)</code> 用于公共方法。 <code>$.method($arg)</code> 是它的快捷形式。注意，方法参数(位置和命名)的冒号语法只支持在使用 <code>self</code> 时调用方法，而不支持快捷形式。所以:</p>
+</li>
+<li>
+<p>self.method: arg1, arg2&hellip; is supported.</p>
+</li>
+<li>
+<p>$.method: arg1, arg2&hellip; is not supported.</p>
+</li>
 </ul>
-
 <p>方法的签名总是传递 <code>self</code> 作为它的第一个参数。但是，我们可以通过提供第一个参数和一个冒号来为方法指定一个显式调用者。此参数将充当方法的调用方，并允许方法引用显式调用的对象。
 例如:</p>
-
-<pre><code class="language-raku">class Person {
+<pre><code class="language-raku" data-lang="raku">class Person {
     has $.name = 'John';    # attributes can be set to default values.
     
     # here self refers to the object, albeit implicitly.
@@ -534,16 +471,11 @@ say $assign01.score();    # OUTPUT: 45
 
 Person.new.introduce();      # OUTPUT: Hi, my name's John!
 Person.new.alt-introduce();  # OUTPUT: Hi, my name's John!
-</code></pre>
-
-<h2 id="tweak-子方法">TWEAK 子方法</h2>
-
-<p>我们回到 <code>Assignment</code> 类。目前，类的使用者可以在创建 <code>Assignment</code> 对象时传递他们想要的任何东西。出于这个原因，我们可能想检查作业类型和作业编号是否已知。我们可能要做的另一件事是修改 <code>raw</code> 属性和 <code>contrib</code> 属性，它们的值依赖于来自配置文件的数据。同样的情况也适用于 <code>adjusted-score</code> 属性，其值取决于 <code>raw</code> 属性、<code>contrib</code> 属性和 <code>score</code> 属性。</p>
-
+</code></pre><h2 id="tweak-子方法">TWEAK 子方法</h2>
+<p>我们回到 <code>Assignment</code> 类。目前，类的使用者可以在创建 <code>Assignment</code> 对象时传递他们想要的任何东西。出于这个原因，我们可能想检查作业类型和作业编号是否已知。我们可能要做的另一件事是修改 <code>raw</code> 属性和 <code>contrib</code> 属性，它们的值依赖于来自配置文件的数据。同样的情况也适用于 <code> adjusted-score</code> 属性，其值取决于 <code>raw</code> 属性、<code>contrib</code> 属性和 <code>score</code> 属性。</p>
 <p>Raku 提供了一种通过 <code>TWEAK</code> 子方法检查对象构造后的内容或修改属性的简单方法。简单地说，子方法是不被子类继承的方法。查看<a href="https://docs.raku.org/language/objects#Object_construction">文档</a>以获得关于 <code>TWEAK</code> 子方法的更多信息。
 让我们在 <code>Assignment</code> 类中添加 <code>TWEAK</code> 子方法:</p>
-
-<pre><code class="language-raku">class Assignment {
+<pre><code class="language-raku" data-lang="raku">class Assignment {
     # same attributes as before.
  
     # use submethod keyword, instead of method.
@@ -573,24 +505,14 @@ Person.new.alt-introduce();  # OUTPUT: Hi, my name's John!
     }
     
 }
-</code></pre>
-
-<h2 id="完成-assignment-和-student-类">完成 ASSIGNMENT 和 STUDENT 类</h2>
-
+</code></pre><h2 id="完成-assignment-和-student-类">完成 ASSIGNMENT 和 STUDENT 类</h2>
 <h2 id="assignment-类">ASSIGNMENT 类</h2>
-
 <p>我们想为特定的作业打印一个报告，因此我们将添加一个 <code>formatted-score</code> 方法，它将返回调整后的分数，并将一个 <code>print-report</code> 方法返回给 <code>Assignment</code> 类。<code>print-report</code> 方法应打印以下格式的作业报告:</p>
-
 <pre><code>type number: Raw = score/raw : Adjusted = adjusted-score/contrib-final
-</code></pre>
-
-<p>例子:</p>
-
+</code></pre><p>例子:</p>
 <pre><code>Homework 1: Raw = 42/50 : Adjusted = 8.40/10
 Exam 1: Raw = 70/75 : Adjusted = 8.40/10
-</code></pre>
-
-<pre><code class="language-raku">class Assignment {
+</code></pre><pre><code class="language-raku" data-lang="raku">class Assignment {
     # same code as before
    
     method formatted-score {
@@ -603,19 +525,13 @@ Exam 1: Raw = 70/75 : Adjusted = 8.40/10
     }
   
 }
-</code></pre>
-
-<h2 id="student-类-1">STUDENT 类</h2>
-
+</code></pre><h2 id="student-类-1">STUDENT 类</h2>
 <p>现在，我们将添加 <code>get-home-works</code> 和 <code>get-exams</code> 方法，这些方法将返回 <code>Assignment</code> 对象列表。我们还将为打印学生报告添加 <code>print-report</code> 方法。此方法应以下列格式打印学生报告:</p>
-
 <pre><code>student:
     type number: Raw = score/raw : Adjusted = adjusted-score/100 
     ...
     Final Course Grade: final-total/100
-</code></pre>
-
-<pre><code class="language-raku">class Student {
+</code></pre><pre><code class="language-raku" data-lang="raku">class Student {
     # same code as before
    
     # we use the grep() function to discard possibly empty 
@@ -673,27 +589,18 @@ Exam 1: Raw = 70/75 : Adjusted = 8.40/10
     }
     
 }
-</code></pre>
-
-<h1 id="course-类">Course 类</h1>
-
+</code></pre><h1 id="course-类">Course 类</h1>
 <p><code>Course</code> 类有以下属性:</p>
-
 <p><code>course</code>——表示课程名称的字符串。
 <code>students</code>——学生和 <code>Students</code> 对象的哈希。
 <code>number</code>——这个课程的学生人数。</p>
-
 <p>这是带有其属性的类:</p>
-
-<pre><code class="language-raku">class Course {
+<pre><code class="language-raku" data-lang="raku">class Course {
     has Str $.course;
     has Int $.number;
     has %!students of Student; # specifying the type of the hash's values.
 }
-</code></pre>
-
-<p>关于方法，我们需要以下几点:</p>
-
+</code></pre><p>关于方法，我们需要以下几点:</p>
 <ul>
 <li><code>configure-course</code>——使用当前目录中的 <code>.cfg</code>(配置)和 <code>.std</code> (学生列表)文件来配置课程。</li>
 <li><code>student</code>——接受一个学生的名字，并返回一个 <code>Student</code> 对象，前提是它存在。在该类的内部使用所以定义为私有的。</li>
@@ -701,8 +608,7 @@ Exam 1: Raw = 70/75 : Adjusted = 8.40/10
 <li><code>add-student-record</code>——接受一个学生记录(例如，<code>Bill Jones:1:45</code>)，为那个学生查找 <code>Student</code> 对象并添加一个作业。</li>
 <li><code>print-report</code>——打印整个类的报告。</li>
 </ul>
-
-<pre><code class="language-raku">class Course {
+<pre><code class="language-raku" data-lang="raku">class Course {
     # same code as before
     
     method configure-course {
@@ -779,13 +685,9 @@ Exam 1: Raw = 70/75 : Adjusted = 8.40/10
     }
 
 }
-</code></pre>
-
-<h2 id="自定义构造函数">自定义构造函数</h2>
-
+</code></pre><h2 id="自定义构造函数">自定义构造函数</h2>
 <p>我们希望使用反映所创建内容的构造函数方法，而不是使用 <code>new</code> 构造函数从特定的类创建对象。例如，<code>Course</code> 类的 <code>create-course</code> 构造函数。我们还希望使用位置参数，而不是在 <code>new</code> 构造函数中使用命名参数。在 Raku 中创建构造函数相当容易;只需要创建一个方法并返回 <em>blessed</em> 后的参数:</p>
-
-<pre><code class="language-raku">class Course {
+<pre><code class="language-raku" data-lang="raku">class Course {
     # same code as before
 
     method create-course( $course ) {
@@ -802,23 +704,14 @@ my $class01 = Course.new( course =&gt; 'GEO-102' );
 
 # We can also create a Course instance like this now:
 my $class02 = Course.create-course( 'Math-101' );
-</code></pre>
-
-<p>我们不只是写 <code>return self.bless($course)</code>，因为 <code>bless</code> 方法需要一组命名参数来为每个属性提供初始值。正如前面提到的，私有属性实际上是私有的，因此对于用<code>!</code> twigil 定义的属性这还不够。为此，必须使用 <code>BUILD</code> 子方法，<code>bless</code> 方法调用这个全新的对象。有关 <code>BUILD</code> 子方法的更多信息，请参阅<a href="https://docs.raku.org/language/objects#Submethods">子方法</a>和<a href="https://docs.raku.org/language/classtut#Constructors">构造函数</a>。</p>
-
+</code></pre><p>我们不只是写 <code>return self.bless($course)</code>，因为 <code>bless</code> 方法需要一组命名参数来为每个属性提供初始值。正如前面提到的，私有属性实际上是私有的，因此对于用<code>!</code> twigil 定义的属性这还不够。为此，必须使用 <code>BUILD</code> 子方法，<code>bless</code> 方法调用这个全新的对象。有关 <code>BUILD</code> 子方法的更多信息，请参阅<a href="https://docs.raku.org/language/objects#Submethods">子方法</a>和<a href="https://docs.raku.org/language/classtut#Constructors">构造函数</a>。</p>
 <h2 id="实例和类属性">实例和类属性</h2>
-
 <p>我们已经讨论了实例属性，只是没有将它们标识为实例属性。<strong>实例属性</strong>是一个类的特定实例所拥有的属性，这意味着同一个类的两个不同的对象实例是不同的。例如，前几节中的实例 <code>$class01</code> 和 <code>$class02</code> 都具有相同的实例属性(<code>course</code>、<code>number</code> 等)，但是值不同。在 Raku 中，任何用关键字 <code>has</code> 声明的属性都是一个实例属性。</p>
-
 <p>另一方面，<strong>类属性</strong>是属于类本身而不是它的对象的属性。与实例属性不同，类属性由类的所有实例共享。</p>
-
 <p>在 Raku 中，类属性是使用关键字 <code>my</code> 或 <code>our</code>(而不是 <code>has</code>)来声明的，这取决于作用域(例如，<code>my $class-var;</code>)。与实例属性类似，用 <code>.</code> twigil 生成一个访问器方法(例如，<code>my $.class-var;</code>)的类属性。有关类属性的更多信息，请参阅<a href="https://docs.raku.org/language/classtut#Static_fields?">文档</a>。</p>
-
 <p>我们还没有看到类属性，但是我们现在要创建一个。例如，我们想知道我们实例化的课程的数量。为此，我们可以在 <code>Course</code> 类中创建一个类属性，它跟踪实例化的 <code>Course</code> 对象的数量。</p>
-
 <p>每当创建新对象时这个类属性必须更新，因此我们必须修改默认的 <code>new</code> 和 <code>create-course</code> 构造函数:</p>
-
-<pre><code class="language-raku">class Course { 
+<pre><code class="language-raku" data-lang="raku">class Course { 
     # other attributes.
     
     my Int $.course-count = 0; # class attribute with read-only accessor
@@ -850,19 +743,12 @@ for 1..5 {
 # accessing the class attribute's value by calling 
 # its accessor method on the class itself.
 say Course.course-count();  # OUTPUT: 10
-</code></pre>
-
-<h2 id="实例方法和类方法">实例方法和类方法</h2>
-
+</code></pre><h2 id="实例方法和类方法">实例方法和类方法</h2>
 <p><strong>实例方法</strong>需要在其上调用对象实例。它通常以 <code>$object.instance-method()</code> 的形式表示。例如，<code>print-report()</code> 是 <code>Course</code> 类的一个实例方法，需要调用该类的一个实例(例如，<code>$class.print-report()</code>)。</p>
-
 <p>另一方面，<strong>类方法</strong>作为一个整体属于类，因此它不需要类的实例。它通常用 <code>class.class-method()</code> 表示。例如，<code>new</code> 构造函数是直接在类上调用的类方法，而不是类的实例。</p>
-
-<p>前面我们提到，显式调用者可以传递给方法。除了显式地引用对象外，方法签名中提供的调用者还允许通过使用类型约束将方法定义为实例方法或类方法。特殊变量 <code>::?CLASS</code> 可用于在编译时提供类名，并结合 <code>:U</code> (如 <code>::?CLASS:U</code>)用于类方法，或 <code>:D</code>(如 <code>::?CLASS:D</code>)用于实例方法。顺便说一下，在 Raku 行话中，<code>:U</code> 和 <code>:D</code> 被称为 *smileys*。</p>
-
+<p>前面我们提到，显式调用者可以传递给方法。除了显式地引用对象外，方法签名中提供的调用者还允许通过使用类型约束将方法定义为实例方法或类方法。特殊变量 <code>::?CLASS</code> 可用于在编译时提供类名，并结合 <code>:U</code> (如 <code>::?CLASS:U</code>)用于类方法，或 <code>:D</code>(如 <code>::?CLASS:D</code>)用于实例方法。顺便说一下，在 Raku 行话中，<code>:U</code> 和 <code>:D</code> 被称为 <em>smileys</em>。</p>
 <p><code>create-course</code> 方法打算仅作为类方法使用，但是，到目前为止，没有任何东西阻止它在实例中使用。为了避免这种情况，我们可以在 invocant 上使用带有 <code>:U</code> 类型修饰符的特殊变量 <code>?::CLASS</code>，这会导致方法主动拒绝对实例的调用，并且只允许通过type 对象进行调用。</p>
-
-<pre><code class="language-raku">class Course {
+<pre><code class="language-raku" data-lang="raku">class Course {
     # other attributes 
  
     method create-course( ::?CLASS:U: $course ) {
@@ -897,13 +783,9 @@ $phys.create-course('LING-202'); # OUTPUT: Type check failed in binding to
                                  # parameter '$course'; expected Course but 
                                  # got Str (&quot;Phys-302&quot;)
 
-</code></pre>
-
-<h2 id="使用-course-类">使用 COURSE 类</h2>
-
+</code></pre><h2 id="使用-course-类">使用 COURSE 类</h2>
 <p>假设我们有 <code>MATH-101.cfg</code>(课程设置)，<code>MATH-101.std</code>(学生名单)和 <code>MATH-101</code>(学生记录)有了问题陈述中提供的信息，我们可以使用 <code>Course</code> 类(与 <code>Student</code> 和 <code>Assignment</code> 在同一个文件中)，如下:</p>
-
-<pre><code class="language-raku"># For now, we'll specify the course name manually.
+<pre><code class="language-raku" data-lang="raku"># For now, we'll specify the course name manually.
 my $class = Course.new( course =&gt; 'MATH-101' );
     
 # set up the course. Remember that the script assumes 
@@ -921,10 +803,7 @@ for $data.IO.lines -&gt; $line {
 
 # print course report.
 $class.print-report();
-</code></pre>
-
-<p>运行该程序之后，它打印出：</p>
-
+</code></pre><p>运行该程序之后，它打印出：</p>
 <pre><code>Class report: course = MATH-101, students = 4
 Frank Horza: 
 	No records for this student.
@@ -940,13 +819,9 @@ Sara Tims:
 	Homework 1: Raw = 39/50 : Adjusted = 19.50/25
 	Homework 2: Raw = 45/50 : Adjusted = 22.50/25
 	* Incomplete Record *
-</code></pre>
-
-<h2 id="完成程序">完成程序</h2>
-
+</code></pre><h2 id="完成程序">完成程序</h2>
 <p>您可能注意到，在创建 <code>Course</code> 实例之后，我们必须调用 <code>configure-course</code>。每次创建一个 <code>Course</code> 实例后都要这样做，这样我们就可以添加一个 <code>TWEAK</code> 方法来执行这个任务:</p>
-
-<pre><code class="language-raku">class Course {
+<pre><code class="language-raku" data-lang="raku">class Course {
     # same code as before
 
     submethod TWEAK($course:) {
@@ -956,13 +831,9 @@ Sara Tims:
     
     # same code as before
 }
-</code></pre>
-
-<p>问题陈述说明程序应该通过命令行接收学生的成绩。Raku 使命令行参数解析非常容易，我们只需要定义一个 <code>MAIN</code> 子例程来获取一个位置参数，即以包含学生成绩的课程命名的文件。要了解关于 <code>MAIN</code> 子例程的更多信息，请阅读<a href="https://uzluisf.gitlab.io/posts/command-line-raku/">本文</a>或<a href="https://docs.raku.org/language/functions#sub_MAIN">参考文档</a>。</p>
-
+</code></pre><p>问题陈述说明程序应该通过命令行接收学生的成绩。Raku 使命令行参数解析非常容易，我们只需要定义一个 <code>MAIN</code> 子例程来获取一个位置参数，即以包含学生成绩的课程命名的文件。要了解关于 <code>MAIN</code> 子例程的更多信息，请阅读<a href="https://uzluisf.gitlab.io/posts/command-line-raku/">本文</a>或<a href="https://docs.raku.org/language/functions#sub_MAIN">参考文档</a>。</p>
 <p>让我们创建一个 <code>report.p6</code> 文件，其中也存储了 <code>Assignment</code>, <code>Student</code> 和 <code>Course</code> 类:</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 # assume the Assignment, Student, and Course class are here.
 
@@ -977,30 +848,17 @@ sub MAIN( $course ) {
     # printing the class report.
     $class.print-report();
 }
-</code></pre>
-
-<p>假设这样:</p>
-
+</code></pre><p>假设这样:</p>
 <pre><code>$ ls
 MATH-101  MATH-101.cfg  MATH-101.std  report.p6
-</code></pre>
-
-<p>然后:</p>
-
+</code></pre><p>然后:</p>
 <pre><code>$ raku report.p6 MATH-101
-</code></pre>
-
-<p>应该打印出报告。</p>
-
+</code></pre><p>应该打印出报告。</p>
 <h1 id="继承">继承</h1>
-
 <p>我们已经完成了问题陈述所提出的任务，但是我们将在这里讨论的主题在OOP范例中非常重要。<code>Student</code> 类有一个属性，用于存储学生已经注册的课程。现在，让我们假设我们想为兼职学生创建一个 <code>PTStudent</code> 类，它限制了一个学生可以注册的课程数量。考虑到兼职学生肯定是学生，我们可能会被诱使将 <code>Student</code> 类中的代码复制到 <code>PTStudent</code> 中，然后添加必要的约束。虽然技术上很好，但是代码的重复被认为是次优的、容易出错的和概念上有缺陷的工作。相反，我们可以使用一种称为<strong>继承</strong>的机制。</p>
-
 <p>简单地说，继承允许从现有类派生一个新类(带有修改)。这意味着您不必创建完整的新类来复制现有类的部分。在这个过程中，继承的类是<strong>父类</strong>的<strong>孩子</strong>(或子类)。</p>
-
 <p>在 Raku 中，<code>is</code> 关键字定义了继承。</p>
-
-<pre><code class="language-raku"># Assume Student is defined here.
+<pre><code class="language-raku" data-lang="raku"># Assume Student is defined here.
 
 class PTStudent is Student {
     # new attributes particular to PTStudent.
@@ -1030,19 +888,12 @@ $student2.courses.join(' ');       # OUTPUT: 'BIO-101 GEO-101 PHY-102'
         
 $student2.add-course( 'ENG-220' ); # (error) OUTPUT: Number of courses exceeds 
                                    # limit of 3.
-</code></pre>
-
-<p><code>PTStudent</code> 类继承了其父类 <code>Student</code> 的属性和方法。除此之外，我们还为它添加了两个新属性和一个新方法。</p>
-
+</code></pre><p><code>PTStudent</code> 类继承了其父类 <code>Student</code> 的属性和方法。除此之外，我们还为它添加了两个新属性和一个新方法。</p>
 <p>如果我们愿意，我们可以重新定义从 <code>Student</code> 类继承的方法。这个概念被称为<strong>覆盖</strong>，它允许为父类和子类提供每个类的通用方法实现。</p>
-
 <p>除了单继承之外，Raku 中还可以有多重继承(一次从多个类继承)。查看<a href="https://docs.raku.org/language/classtut#Multiple_inheritance">文档</a>以获得关于它的更多信息。</p>
-
 <h1 id="角色">角色</h1>
-
 <p>与类类似，角色携带状态和行为。然而，与类不同，角色是用来描述对象行为的特定组件的。在 Raku 中，角色是用 <code>role</code> 关键字定义的，并使用 <code>does</code> 特质(与用于继承的 <code>is</code> 相反)应用于类或对象。</p>
-
-<pre><code class="language-raku"># Assume Student is defined here
+<pre><code class="language-raku" data-lang="raku"># Assume Student is defined here
 
 role course-limitation {
 	has @.courses;
@@ -1072,18 +923,11 @@ say $student2.courses.join(' ');   # OUTPUT: 'MATH-101 GEO-101 PHY-102'
         
 $student2.add-course( 'ENG-220' ); # (error) OUTPUT: Number of courses exceeds 
                                    # limit of 3.
-</code></pre>
-
-<p>我们已经演示了角色是如何工作的，但这并没有展示它们的完整画面。例如，就像多重继承一样，角色可以在一个类中多次实现(例如，<code>class Name does role1 does role2 does ...</code>)。但是，与多重继承不同的是，如果多个角色的应用程序出现冲突，则会抛出编译时错误。对于多重继承，冲突不会被认为是错误，而是会在运行时解决。</p>
-
+</code></pre><p>我们已经演示了角色是如何工作的，但这并没有展示它们的完整画面。例如，就像多重继承一样，角色可以在一个类中多次实现(例如，<code>class Name does role1 does role2 does ...</code>)。但是，与多重继承不同的是，如果多个角色的应用程序出现冲突，则会抛出编译时错误。对于多重继承，冲突不会被认为是错误，而是会在运行时解决。</p>
 <p>简而言之，角色可以被认为是继承的另一种选择; 程序员不是通过子类化来扩展类层次结构，而是使用为类的行为提供补充行为的角色来组成类。</p>
-
 <h1 id="内省">内省</h1>
-
 <p><strong>内省</strong> 是一个对象能够收集关于自身和其他对象的信息的过程，如类型、方法、属性等。</p>
-
 <p>在 Raku 中，内省可以通过以下结构得到促进:</p>
-
 <ul>
 <li><code>.WHAT</code>——返回与对象关联的类型对象。</li>
 <li><code>.perl</code>——返回一个字符串，该字符串可以作为 Raku 代码执行。</li>
@@ -1093,12 +937,9 @@ $student2.add-course( 'ENG-220' ); # (error) OUTPUT: Number of courses exceeds
 <li><code>^parents</code>——返回对象的父类。</li>
 <li><code>~~</code> 是智能匹配操作符。如果对象是由正在进行比较的类或其任何它的继承类创建的，则计算为 <code>True</code>。</li>
 </ul>
-
 <p><code>.^</code> 语法是元方法调用。使用这种语法而不是单个点表示对其元类的方法调用，元类是管理所有类的属性的类。事实上, <code>obj.^meth</code> 相当于<code>obj.HOW.meth(obj)</code>, 其中 <code>meth</code> 是一个特定的方法。</p>
-
 <p>使用上一节中的对象 <code>$student2</code>:</p>
-
-<pre><code class="language-raku">say $student2.WHAT;         # OUTPUT: (PTStudent)
+<pre><code class="language-raku" data-lang="raku">say $student2.WHAT;         # OUTPUT: (PTStudent)
 say $student2.perl;         # OUTPUT: PTStudent.new(name =&gt; &quot;Tim Polaz&quot;, 
                             #         config =&gt; {}, courses =&gt; [])
 say $student2.^name;        # OUTPUT: PTStudent
@@ -1113,46 +954,34 @@ say $student2.^parents;     # OUTPUT: ((Student))
 say $student2 ~~ PTStudent; # True
 say $student2 ~~ Student;   # True
 say $student2 ~~ Str;       # False
-</code></pre>
-
-<p>如您所见，通过内省，您可以从类的实例中学到很多东西。</p>
-
+</code></pre><p>如您所见，通过内省，您可以从类的实例中学到很多东西。</p>
 <p>内省并不仅限于程序员定义的类。内省是 Raku 的核心，它是一个非常有用的工具，可以帮助您了解内置类型，并从整体上了解该语言。</p>
-
 <h1 id="结论">结论</h1>
-
 <p>在这篇文章中，我们学习了如何定义类、私有和公共属性以及私有和公共方法。我们还学习了如何创建自定义构造函数，并将其调用限制在类或类的实例中。此外，我们还简要讨论了如何通过继承和 Raku 中的角色来促进代码重用。最后，我们讨论了内省的过程，以及如何以最简单的形式学习对象。</p>
-
 <p>关于 <code>report.p6</code>，我们局限于问题陈述，但是程序的用户可以从额外的功能中获益。例如，可以修改程序，为单个学生提供交互式查询，以便学生从命令行查找。此外，该程序可以读取多个课程，然后查询它们，检索并打印一个特定学生的记录。</p>
-
 <p>下面我链接了我们在这里创建的程序和实现前面提到的额外功能的程序。希望这整个教程是有益的和有用的。</p>
-
 <p>链接:</p>
-
 <ul>
 <li>整个 report.p6</li>
 <li><code>report.p6</code> 有额外的功能。我还添加了一个简单的函数来给课程名称上色，以便更好地将它们与其他文本区分开来。对于一些课程文件，输出结果如下:</li>
 </ul>
-
-<p><img src="https://i.imgur.com/3BVTxB0.jpg" alt="img" /></p>
-
+<p><img src="https://i.imgur.com/3BVTxB0.jpg" alt="img"></p>
 <h1 id="资源">资源</h1>
-
 <ul>
 <li>Raku Introduction</li>
 <li>Raku Documentation
-
 <ul>
 <li>Classes and objects</li>
 <li>Object orientation</li>
-</ul></li>
+</ul>
+</li>
 <li>Raku Advent Calendar
-
 <ul>
 <li>The humble type object</li>
 <li>Classes, attributes, methods and more</li>
 <li>Introspection</li>
-</ul></li>
+</ul>
+</li>
 <li>Basic OO in Raku (slides)</li>
 <li>Let’s build an object</li>
 <li>Think Raku</li>
@@ -1249,7 +1078,7 @@ say $student2 ~~ Str;       # False
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

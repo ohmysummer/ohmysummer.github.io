@@ -9,9 +9,9 @@
   <meta property="og:title" content="解析命令行输出" />
   <meta name="twitter:title" content="解析命令行输出" />
   <meta name="description" content="哦, 列, 你在哪里? 当 ramiroencinas 给 Raku 的生态系统增加 FileSystem::Capacity::VolumesInfo模块的时候, 我说他没有添加 macOS 支持。而当我尝试为这个模块贡献源代码时我才发现知道一丢丢 Raku 的特性就能节省很多时间。 FileSystem::Capacity::VolumesInfo 这个模块所做的就是解析 df 命令的输出, 它看起来长这样:
-$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.">
+$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.local./Data 1951417392 1837064992 114352400 95% /Volumes/Data /dev/disk5s2 1951081480 1836761848 114319632 95% /Volumes/Time Machine Backups bbkr@localhost:/Users/bbkr/foo 123 1219749248 341555644 877937604 29% /Volumes/osxfuse (如果你看到了折行的或者截断的输出请在这儿核对一下原始数据)">
   <meta property="og:description" content="哦, 列, 你在哪里? 当 ramiroencinas 给 Raku 的生态系统增加 FileSystem::Capacity::VolumesInfo模块的时候, 我说他没有添加 macOS 支持。而当我尝试为这个模块贡献源代码时我才发现知道一丢丢 Raku 的特性就能节省很多时间。 FileSystem::Capacity::VolumesInfo 这个模块所做的就是解析 df 命令的输出, 它看起来长这样:
-$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.">
+$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.local./Data 1951417392 1837064992 114352400 95% /Volumes/Data /dev/disk5s2 1951081480 1836761848 114319632 95% /Volumes/Time Machine Backups bbkr@localhost:/Users/bbkr/foo 123 1219749248 341555644 877937604 29% /Volumes/osxfuse (如果你看到了折行的或者截断的输出请在这儿核对一下原始数据)">
   <meta name="twitter:description" content="哦, 列, 你在哪里? 当 ramiroencinas 给 Raku 的生态系统增加 FileSystem::Capacity::VolumesInfo模块的时候, 我说他没有添加 macOS 支持。而当我尝试为这个模块贡献源代码时我才发现知道一丢丢 Raku 的特性就能节省很多时间。 FileSystem::Capacity::VolumesInfo 这个模块所做的就是解析 df 命令的输出,  …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -22,7 +22,7 @@ $ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-27-%E8%A7%A3%E6%9E%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BE%93%E5%87%BA/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -229,12 +229,8 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h3 id="哦-列-你在哪里">哦, 列, 你在哪里?</h3>
-
+        <h3 id="哦-列-你在哪里">哦, 列, 你在哪里?</h3>
 <p>当 <a href="https://github.com/ramiroencinas">ramiroencinas</a> 给 Raku 的生态系统增加 <a href="https://github.com/ramiroencinas/raku-FileSystem-Capacity">FileSystem::Capacity::VolumesInfo</a>模块的时候, 我说他没有添加 macOS 支持。而当我尝试为这个模块贡献源代码时我才发现知道一丢丢 Raku 的特性就能节省很多时间。 <code>FileSystem::Capacity::VolumesInfo</code> 这个模块所做的就是解析 <code>df</code> 命令的输出, 它看起来长这样:</p>
-
 <pre><code>$ df -k -P
 Filesystem                                  1024-blocks       Used Available Capacity  Mounted on
 /dev/disk3                                   1219749248  341555644 877937604    29%    /
@@ -246,31 +242,20 @@ map -fstab                                            0          0         0   1
 //Pawel%20Pabian@biala-skrzynka.local./Data  1951417392 1837064992 114352400    95%    /Volumes/Data
 /dev/disk5s2                                 1951081480 1836761848 114319632    95%    /Volumes/Time Machine Backups
 bbkr@localhost:/Users/bbkr/foo 123           1219749248  341555644 877937604    29%    /Volumes/osxfuse
-</code></pre>
-
-<p>(如果你看到了折行的或者截断的输出请在这儿核对一下原始数据)</p>
-
+</code></pre><p>(如果你看到了折行的或者截断的输出请在这儿核对一下原始数据)</p>
 <p>虽然这对人类来说看起来不错, 但是对于解析器来说十一个棘手的任务。</p>
-
 <ul>
 <li>列的宽度是动态的 - 所以每列的值不能使用带有硬编码位置的子字符串来提取。</li>
 <li>列和列之间是通过空白分割的, 空白被填充到列与列之间, 并且它们的值也能包含空白 - 所以不能通过空白使用 split 函数来提取值。</li>
 <li>文件系统的名字拥有不同的转义模式。</li>
 <li>有些列是左对齐的, 有些列是右对齐的, 有一列是居中对齐的。</li>
 </ul>
-
 <p>所以让我们来使用 Raku 中的特性来处理这混杂的东西。</p>
-
 <h3 id="捕获命令行输出">捕获命令行输出</h3>
-
-<pre><code class="language-raku">my ($header, @volumes) = run('df', '-k', '-P', :out).out.lines;
-</code></pre>
-
-<p>方法 <code>run</code> 执行 shell 命令并返回 <a href="https://docs.raku.org/type/Proc">Proc</a>对象。方法 <code>out</code> 创建一个 <a href="https://docs.raku.org/type/IO$COLON$COLONPipe">管道</a>对象以接收 shell 命令的输出。方法 <code>lines</code> 把该输出按行分割, 第一行保存到 <code>$header</code> 变量中, 剩下的行保存到 <code>@volumes</code> 数组中。</p>
-
+<pre><code class="language-raku" data-lang="raku">my ($header, @volumes) = run('df', '-k', '-P', :out).out.lines;
+</code></pre><p>方法 <code>run</code> 执行 shell 命令并返回 <a href="https://docs.raku.org/type/Proc">Proc</a>对象。方法 <code>out</code> 创建一个 <a href="https://docs.raku.org/type/IO$COLON$COLONPipe">管道</a>对象以接收 shell 命令的输出。方法 <code>lines</code> 把该输出按行分割, 第一行保存到 <code>$header</code> 变量中, 剩下的行保存到 <code>@volumes</code> 数组中。</p>
 <h3 id="解析-header">解析 header</h3>
-
-<pre><code class="language-raku">my $parsed_header = $header ~~ /^
+<pre><code class="language-raku" data-lang="raku">my $parsed_header = $header ~~ /^
     ('Filesystem')
     \s+
     ('1024-blocks')
@@ -283,47 +268,30 @@ bbkr@localhost:/Users/bbkr/foo 123           1219749248  341555644 877937604    
     \s+
     ('Mounted on')
 $/;
-</code></pre>
-
-<p>我们这样做是因为匹配对象保存了每个捕获, 并且每个捕获都知道它所匹配的开始位置和结束位置, 举个例子:</p>
-
-<pre><code class="language-raku">say $parsed_header[1].Str;
+</code></pre><p>我们这样做是因为匹配对象保存了每个捕获, 并且每个捕获都知道它所匹配的开始位置和结束位置, 举个例子:</p>
+<pre><code class="language-raku" data-lang="raku">say $parsed_header[1].Str;
 say $parsed_header[1].from;
 say $parsed_header[1].to;
-</code></pre>
-
-<p>会返回:</p>
-
+</code></pre><p>会返回:</p>
 <pre><code>1024-blocks
 44
 55
-</code></pre>
-
-<p>那会在动态列宽问题上帮助我们很多!</p>
-
+</code></pre><p>那会在动态列宽问题上帮助我们很多!</p>
 <h3 id="提取每行的值">提取每行的值</h3>
-
 <p>首先我们必须要查看 FileSystem 和 1024-blocks 这两列之间的边界。因为 FileSystem 是左对齐的而 1024-blocks 是右对齐的, 所以两列中的数据都占据那些 headers 之间的空白, 举个例子:</p>
-
 <pre><code>Filesystem                      1024-blocks
 /dev/someverybigdisk        111111111111111
 me@host:/some directory 123    222222222222
          |                      |
          |&lt;----- possible -----&gt;|
          |&lt;--- border space ---&gt;|
-</code></pre>
-
-<p>我们不能简单地按空白分割。但是我们知道 1024-blocks 这一列在哪里结束, 所以结束在和 1024-blocks 同一位置的那个数字就是我们的容量大小(volume size)。要提取它, 我们可以使用另外一个有用的 Raku 特性 - 正则表达式位置锚点(<a href="https://design.raku.org/S05.html#Positional_matching%2C_fixed_width_types">regexp position anchor</a>)。</p>
-
-<pre><code class="language-raku">for @volumes -&gt; $volume {
+</code></pre><p>我们不能简单地按空白分割。但是我们知道 1024-blocks 这一列在哪里结束, 所以结束在和 1024-blocks 同一位置的那个数字就是我们的容量大小(volume size)。要提取它, 我们可以使用另外一个有用的 Raku 特性 - 正则表达式位置锚点(<a href="https://design.raku.org/S05.html#Positional_matching%2C_fixed_width_types">regexp position anchor</a>)。</p>
+<pre><code class="language-raku" data-lang="raku">for @volumes -&gt; $volume {
     $volume ~~ / (\d+) &lt;.at($parsed_header[1].to)&gt; /;
     say 'Volume size is ' ~ $/[0] ~ 'KB';
 }
-</code></pre>
-
-<p>它查找对齐于 header 末端位置的数字序列。每个其它的列都能使用这个花招来提取, 如果我们知道那个数据准线的话。</p>
-
-<pre><code class="language-raku">$volume ~~ /
+</code></pre><p>它查找对齐于 header 末端位置的数字序列。每个其它的列都能使用这个花招来提取, 如果我们知道那个数据准线的话。</p>
+<pre><code class="language-raku" data-lang="raku">$volume ~~ /
     # first column is not used by module, skip it
     \s+
 
@@ -352,10 +320,7 @@ me@host:/some directory 123    222222222222
     # Mounted on, 左对齐
     &lt;.at($parsed_header[5].from)&gt;(.*)
 $/;
-</code></pre>
-
-<h3 id="益处">益处!</h3>
-
+</code></pre><h3 id="益处">益处!</h3>
 <p>通过在正则表达式中使用 header 名字的位置和位置锚点我们在 macOS 上得到了防炸的 df 解析器, 它能工作在普通的磁盘, 随身存储器, NFS / AFS / FUSE 共享, 古怪的目录名和不同的转义模式中。</p>
 
 
@@ -452,7 +417,7 @@ $/;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

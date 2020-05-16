@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-20-%E7%AC%AC%E4%BA%8C%E5%8D%81%E7%AB%A0.-%E9%AB%98%E7%BA%A7%E8%AF%9D%E9%A2%98/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,49 +231,26 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第二十章-高级话题">第二十章. 高级话题</h1>
-
 <p>In such a short book I don’t have enough pages to show you everything that you can do. This chapter is a brief survey of some of the features I would have liked to explain in more detail. You now know these exist and you can investigate them further on your own.</p>
-
 <p>在这么短的书中，我没有足够的页面向你展示你可以做的一切。本章简要介绍了一些我希望更详细解释的功能。你现在知道这些存在，你可以自己进一步研究它们。</p>
-
 <h1 id="单行">单行</h1>
-
 <p>You can run <em>raku</em> one-liners. These are programs that you compose completely on the command line. The <code>-e</code>switch takes an argument that is the program:</p>
-
 <p>你可以运行 raku 单行。这些完全是你在命令行上编写的程序。 <code>-e</code> 开关接受一个参数，即程序：</p>
-
 <pre><code>% raku -e 'put &quot;Hello Raku&quot;'
 Hello Raku
-</code></pre>
-
-<p>The <code>-n</code> switch runs the program once for each line of input. The current line is in <code>$_</code>. This one uppercases and outputs the line:</p>
-
+</code></pre><p>The <code>-n</code> switch runs the program once for each line of input. The current line is in <code>$_</code>. This one uppercases and outputs the line:</p>
 <p><code>-n</code> 开关为每行输入运行一次程序。当前行是 <code>$_</code>。这个单行大写一行并输出该行：</p>
-
 <pre><code>% raku -n -e '.uc.put' *.pod
-</code></pre>
-
-<p>You can load a module with <code>-M</code>:</p>
-
+</code></pre><p>You can load a module with <code>-M</code>:</p>
 <p>你可以使用 <code>-M</code> 加载模块：</p>
-
 <pre><code>% raku -MMath::Constants -e 'put α'
 0.0072973525664
-</code></pre>
-
-<h1 id="declarator-block-comments">Declarator Block Comments</h1>
-
+</code></pre><h1 id="declarator-block-comments">Declarator Block Comments</h1>
 <p>The parser doesn’t discard all comments. It remembers special comments and attaches them to the subroutine. <code>#|</code> comments attach themselves to the subroutine after them and <code>#=</code> comments attach themselves to the subroutine before them. These comments are available through the <code>.WHY</code> meta-method:</p>
-
 <p>解析器不会丢弃所有的注释。它会记住特殊注释并将它们附加到子例程中。 <code>#|</code> 注释将它们附加到它们之后的子例程中，并且 <code>#=</code> 注释将它们自身附加到它们之前的子例程中。这些注释可通过 <code>.WHY</code> 元方法获得：</p>
-
 <pre><code>#| Hamadryas is a sort of butterfly
 class Hamadryas {
 
@@ -285,88 +262,53 @@ class Hamadryas {
 
 Hamadryas.WHY.put;
 Hamadryas.^find_method('flap').WHY.put;
-</code></pre>
-
-<p>The output is the combination of all the comments attached to that subroutine:</p>
-
+</code></pre><p>The output is the combination of all the comments attached to that subroutine:</p>
 <p>输出是附加到该子例程的所有注释的组合：</p>
-
 <pre><code>Hamadryas is a sort of butterfly
 Flap makes the butterfly go
-</code></pre>
-
-<p>This is the sort of thing that’s handy in an integrated development environment to grab a description of the thing you are trying to use. It’s also useful when you are debugging something—that is, it’s useful if the developer documented their code.</p>
-
+</code></pre><p>This is the sort of thing that’s handy in an integrated development environment to grab a description of the thing you are trying to use. It’s also useful when you are debugging something—that is, it’s useful if the developer documented their code.</p>
 <p>在集成开发环境中，这种方法很方便，可以获取你尝试使用的内容的描述。当你调试某些内容时，它也很有用 - 也就是说，如果开发人员记录了他们的代码，那么它很有用。</p>
-
 <h1 id="feed-operators">Feed Operators</h1>
-
 <p>The feed operators decide which way information flows. Here’s a list-processing pipeline that has a <code>.grep</code>, a <code>.sort</code>, and finally a <code>.map</code>. What they do doesn’t matter as much as their order:</p>
-
 <p>feed 操作符决定信息的流向。这是一个列表处理管道，它有一个 <code>.grep</code>，一个 <code>.sort</code>，最后一个 <code>.map</code>。他们所做的事与顺序无关紧要：</p>
-
 <pre><code>my @array = @some-array
     .grep( *.chars &gt; 5 )
     .sort( *.fc )
     .map( *.uc )
     ;
-</code></pre>
-
-<p>The final step is farthest away from the assignment. You might not like that. The leftward feed operator allows you to write this in a way where the data flows in one direction. This flows bottom to top into the new variable:</p>
-
+</code></pre><p>The final step is farthest away from the assignment. You might not like that. The leftward feed operator allows you to write this in a way where the data flows in one direction. This flows bottom to top into the new variable:</p>
 <p>最后一步是离赋值最远的。你可能不喜欢那样。向左的 feed 操作符允许你以数据在一个方向上流动的方式编写代码。下面这个从底部到顶部流入新到变量：</p>
-
 <pre><code>my @array &lt;==
     map(  *.uc         ) &lt;==
     sort( *.fc         ) &lt;==
     grep( *.chars &gt; 5  ) &lt;==
     @some-array
     ;
-</code></pre>
-
-<p>Notice that the assignment operator disappeared because the feed operator took care of that.</p>
-
+</code></pre><p>Notice that the assignment operator disappeared because the feed operator took care of that.</p>
 <p>请注意，赋值运算符已消失，因为 feed 运算符负责处理了。</p>
-
 <p>The rightward feed operator goes the other way. The new variable is at the end this time. This is the same thing in the other direction:</p>
-
 <p>向右的 feed 操作符走另一条路。这次这个新变量在最后。在另一方向上也是如此：</p>
-
 <pre><code>@some-array
     ==&gt; grep( *.chars &gt; 5  )
     ==&gt; sort( *.fc         )
     ==&gt; map(  *.uc         )
     ==&gt; my @array;
-</code></pre>
-
-<h1 id="destructuring-signatures">Destructuring Signatures</h1>
-
+</code></pre><h1 id="destructuring-signatures">Destructuring Signatures</h1>
 <p>You can group parameters with square brackets to create a subsignature. Inside the <code>[]</code> you can break down the aggregate into a smaller signature:</p>
-
 <p>你可以使用方括号对参数进行分组以创建子签名。在 <code>[]</code>内部，你可以将总体分解为较小的签名：</p>
-
 <pre><code>sub show-the-arguments ( $i, [$j, *@args] ) {  # slurpy
     put &quot;The arguments are i: $i j: $j and @args[]&quot;;
     }
 
 my @a = ( 3, 7, 5 );
 show-the-arguments( 1, @a );
-</code></pre>
-
-<p>With that, <code>$i</code> gets the first parameter and the <code>[]</code> gets the rest. The <code>[]</code> destructures the remaining arguments into <code>$j</code> and <code>@args</code>.</p>
-
+</code></pre><p>With that, <code>$i</code> gets the first parameter and the <code>[]</code> gets the rest. The <code>[]</code> destructures the remaining arguments into <code>$j</code> and <code>@args</code>.</p>
 <p>有了它，<code>$i</code> 获得第一个参数，<code>[]</code> 获得其余参数。 <code>[]</code> 将剩余的参数解构为 <code>$j</code> 和 <code>@args</code>。</p>
-
 <h1 id="defining-your-own-operators">Defining Your Own Operators</h1>
-
 <p>You can create new operators. Almost all of the things that we call “operators” are methods.</p>
-
 <p>The <code>↑</code> and <code>↑↑</code> represent Knuth arrows. These are higher levels of exponentiation:</p>
-
 <p>你可以创建新的运算符。几乎所有我们称之为“运算符”的东西都是方法。</p>
-
 <p><code>↑</code> 和 <code>↑↑</code> 代表高德纳箭头。这些是更高的取幂水平：</p>
-
 <pre><code>multi infix:&lt;↑&gt; ( Int:D \n, Int:D \m  --&gt; Int:D )
     is equiv(&amp;infix:&lt;**&gt;)
     is assoc&lt;right&gt;
@@ -382,31 +324,19 @@ multi infix:&lt;↑↑&gt; ( \n, \m ) { [↑] n xx m }
 
 put 2↑3;  # 2 ** 3 = 8
 put 2↑↑3; # 2 ** 2 ** 2 = 2 ** 4 = 16
-</code></pre>
-
-<p>Notice that the definitions allow you to set traits for precedence and associativity. As with other subroutines these are lexically scoped, so they won’t affect other parts of your program.</p>
-
+</code></pre><p>Notice that the definitions allow you to set traits for precedence and associativity. As with other subroutines these are lexically scoped, so they won’t affect other parts of your program.</p>
 <p>请注意，这些定义允许你设置优先级和关联性的特征。与其他子例程一样，它们是词法作用域的，因此它们不会影响程序的其他部分。</p>
-
 <h1 id="perl-5-patterns">Perl 5 Patterns</h1>
-
 <p>If you like Perl 5 patterns better, or already have some good ones that you’d like to reuse, you can do that. The <code>:Perl5</code> adverb tells the match operator to interpret the pattern as a Perl 5 regular expression:</p>
-
 <p>如果你更喜欢 Perl 5 模式，或者已经有一些你想要重用的好模式，你可以这样做。 <code>:Perl5</code> 副词告诉匹配操作符将模式解释为 Perl 5 正则表达式：</p>
-
 <pre><code>my $file = ...;
 for $file.IO.lines {
     next unless m:Perl5/\A\s+#/;  # no quoting the # in Perl 5
     .put;
     }
-</code></pre>
-
-<h1 id="shaped-arrays">Shaped Arrays</h1>
-
+</code></pre><h1 id="shaped-arrays">Shaped Arrays</h1>
 <p>Want a multidimensional matrix? You can create a shaped array that knows how wide it is in any dimension. Use the <code>;</code> to separate the dimensions:</p>
-
 <p>想要一个多维矩阵？你可以创建一个定形数组，知道它在任何维度上的宽度。使用  <code>;</code> 分开维度：</p>
-
 <pre><code>my @array[2;2];
 say @array; # [[(Any) (Any)] [(Any) (Any)]]
 
@@ -418,91 +348,47 @@ my $m = 1;
 
 @array[$n;$m] = 'Borbo';
 say @array; # [[(Any) Borbo] [Hamadryas (Any)]]
-</code></pre>
-
-<p>You can extend this to higher dimensions:</p>
-
+</code></pre><p>You can extend this to higher dimensions:</p>
 <p>你可以将此扩展到更高的维度：</p>
-
 <pre><code>my @array[2;2;3];
-</code></pre>
-
-<p>The <code>:shape</code> adverb can describe the size in each dimension:</p>
-
+</code></pre><p>The <code>:shape</code> adverb can describe the size in each dimension:</p>
 <p><code>:shape</code> 副词可以描述每个维度的大小：</p>
-
 <pre><code>my @array = Array.new: :shape(3,3);
-</code></pre>
-
-<p>Once you set the limits in each dimension the size is fixed. This means that you can create fixed-size one-dimensional arrays. You won’t be able to use operaters that increase or decrease the number of elements:</p>
-
+</code></pre><p>Once you set the limits in each dimension the size is fixed. This means that you can create fixed-size one-dimensional arrays. You won’t be able to use operaters that increase or decrease the number of elements:</p>
 <p>在每个维度中设置限制后，大小就固定了。这意味着你可以创建固定大小的一维数组。你将无法使用增加或减少元素数量的操作符：</p>
-
 <pre><code>my @array[5];
-</code></pre>
-
-<h1 id="typed-containers">Typed Containers</h1>
-
+</code></pre><h1 id="typed-containers">Typed Containers</h1>
 <p>The container types (<a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>, <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>, and so on) can limit their elements to a particular type. There are a few ways that you can constrain these. Consider this example:</p>
-
 <p>容器类型（<a href="https://docs.raku.org/type/List.html"><code>List</code></a>, <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>, <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>等）可以将其元素限制为特定类型。有几种方法可以约束这些。考虑这个例子：</p>
-
 <pre><code>my Int @array = 1, 2, 3;
 @array.push: 'Hamadryas';
-</code></pre>
-
-<p>Since a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is not an <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a> the <code>.push</code> fails:</p>
-
+</code></pre><p>Since a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is not an <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a> the <code>.push</code> fails:</p>
 <p>由于<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>不是<a href="https://docs.raku.org/type/Int.html"><code>Int</code></a>，因此 <code>.push</code> 失败：</p>
-
 <pre><code>Type check failed in assignment to @array
-</code></pre>
-
-<p>That form types the <code>@array</code> variable. The type is actually <code>Array[Int]</code>. You can also bind to the object you construct directly:</p>
-
+</code></pre><p>That form types the <code>@array</code> variable. The type is actually <code>Array[Int]</code>. You can also bind to the object you construct directly:</p>
 <p>该形式键入 <code>@array</code> 变量。该类型实际上是 <code>Array [Int]</code>。你还可以绑定到直接构造的对象：</p>
-
 <pre><code>my @array := Array[Int].new: 1, 3, 7;
-</code></pre>
-
-<p>You can create <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>es with objects for keys and many other interesting constraints.</p>
-
+</code></pre><p>You can create <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>es with objects for keys and many other interesting constraints.</p>
 <p>你可以使用对象创建<a href="https://docs.raku.org/type/Hash.html"><code>散列</code></a>以及许多其他有趣的约束。</p>
-
 <h1 id="nativecall">NativeCall</h1>
-
 <p>There’s a builtin foreign function interface named <code>NativeCall</code>. You use the <code>is native</code> trait to specify the external library. This one connects your program to the argumentless <code>flap</code> routine in <em>libbutterfly</em>:</p>
-
 <p>有一个名为 <code>NativeCall</code> 的内置外部函数接口。你使用 <code>is native</code>  trait 指定外部库。这个程序将你的程序连接到 <code>libbutterfly</code> 中的无参数 <code>flap</code> 例程：</p>
-
 <pre><code>use NativeCall;
 sub flap() is native('butterfly') { * }
-</code></pre>
-
-<p>There are ways to tell <code>NativeCall</code> how to translate data structures to “native” types and the other way around.</p>
-
+</code></pre><p>There are ways to tell <code>NativeCall</code> how to translate data structures to “native” types and the other way around.</p>
 <p>有办法告诉 <code>NativeCall</code> 如何将数据结构转换为“原生”类型，反之亦然。</p>
-
 <h1 id="the-with-topicalizer">The with Topicalizer</h1>
-
 <p>The <code>with</code> keyword sets the topic. In the postfix form you can use it so you don’t have to repeat a long variable name:</p>
-
 <p><code>with</code> 关键字设置主题。你可以在后缀形式中使用它，以使你不必重复长变量名称：</p>
-
 <pre><code>put &quot;$_ has {.chars}&quot; with $some-very-long-name;
-</code></pre>
-
-<p>There’s a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> form that’s similar to <code>if-elsif-else</code> but sets the topic to the result of the condition. Instead of looking for <code>True</code> or <code>False</code> it tests for definedness. In each of these the topic inside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> is the result of the respective <code>.index</code>:</p>
-
+</code></pre><p>There’s a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> form that’s similar to <code>if-elsif-else</code> but sets the topic to the result of the condition. Instead of looking for <code>True</code> or <code>False</code> it tests for definedness. In each of these the topic inside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> is the result of the respective <code>.index</code>:</p>
 <p>有一个与 <code>if-elsif-else</code> 类似的 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 形式，但将主题设置为条件的结果。它不是寻找 <code>True</code> 或 <code>False</code>，而是测试定义。 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 里的每个这样的主题是相应的 <code>.index</code> 的结果：</p>
-
 <pre><code>my $s = 'Hamadryas';
 
   with $s.index: 'a' { $s.substr( $_, 2 ).put }
 orwith $s.index: 'm' { put 'Found m' }
 orwith $s.index: 'H' { fail &quot;Why is there an H at $_?&quot;  }
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -593,7 +479,7 @@ orwith $s.index: 'H' { fail &quot;Why is there an H at $_?&quot;  }
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

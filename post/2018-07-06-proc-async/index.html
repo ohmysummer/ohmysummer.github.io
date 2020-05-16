@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-06-proc-async/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,16 +231,10 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<pre><code class="language-raku">class Proc::Async {}
-</code></pre>
-
-<p><strong>注意:</strong> 目前只有 Rakudo 的 MoarVM 后端实现了 <code>[Proc::Async](https://docs.raku.org/type/Proc::Async)</code>。</p>
-
+        <pre><code class="language-raku" data-lang="raku">class Proc::Async {}
+</code></pre><p><strong>注意:</strong> 目前只有 Rakudo 的 MoarVM 后端实现了 <code>[Proc::Async](https://docs.raku.org/type/Proc::Async)</code>。</p>
 <p><code>Proc::Async</code> 允许你异步地运行外部命令, 捕获标准输出和错误句柄，并可选择地写入到它的标准输入中。</p>
-
-<pre><code class="language-raku">my $file = 'foo'.IO;
+<pre><code class="language-raku" data-lang="raku">my $file = 'foo'.IO;
 spurt $file, &quot;and\nCamelia\n♡\nme\n&quot;;
 
 my $proc = Proc::Async.new: :w, 'tac', '--', $file, '-';
@@ -284,10 +278,7 @@ react {
 }
 
 say ‘Program finished’;
-</code></pre>
-
-<p>上面的示例产生以下输出：</p>
-
+</code></pre><p>上面的示例产生以下输出：</p>
 <pre><code>line: me
 line: ♡
 line: Camelia
@@ -297,11 +288,8 @@ line: ♥
 line: I
 Proc finished. Exit code: 0
 Program finished
-</code></pre>
-
-<p>或者, 你可以在不使用 <a href="https://docs.raku.org/language/concurrency#index-entry-react">react</a> 块的情况下使用 <code>Proc::Async</code>:</p>
-
-<pre><code class="language-raku"># command with arguments 
+</code></pre><p>或者, 你可以在不使用 <a href="https://docs.raku.org/language/concurrency#index-entry-react">react</a> 块的情况下使用 <code>Proc::Async</code>:</p>
+<pre><code class="language-raku" data-lang="raku"># command with arguments 
 my $proc = Proc::Async.new('echo', 'foo', 'bar');
  
 # subscribe to new output from out and err handles: 
@@ -314,258 +302,135 @@ my $promise = $proc.start;
 # wait for the external program to terminate 
 await $promise;
 say &quot;Done.&quot;;
-</code></pre>
-
-<p>这产生了下面的输出:</p>
-
+</code></pre><p>这产生了下面的输出:</p>
 <pre><code>Starting...
 Output: foo bar
 Done.
-</code></pre>
-
-<p>打开外部程序进行写入的示例:</p>
-
-<pre><code class="language-raku">use v6;
+</code></pre><p>打开外部程序进行写入的示例:</p>
+<pre><code class="language-raku" data-lang="raku">use v6;
 my $prog = Proc::Async.new(:w, 'hexdump', '-C');
 my $promise = $prog.start;
 await $prog.write(Buf.new(12, 42));
 $prog.close-stdin;
 await $promise;
-</code></pre>
-
-<p>管道几个命令的例子, 例如 <code>echo &quot;Hello, world&quot; | cat -n</code>:</p>
-
-<pre><code class="language-raku">use v6;
+</code></pre><p>管道几个命令的例子, 例如 <code>echo &quot;Hello, world&quot; | cat -n</code>:</p>
+<pre><code class="language-raku" data-lang="raku">use v6;
 my $proc-echo = Proc::Async.new: 'echo', 'Hello, world';
 my $proc-cat = Proc::Async.new: 'cat', '-n';
 $proc-cat.bind-stdin: $proc-echo.stdout;
 await $proc-echo.start, $proc-cat.start;
-</code></pre>
-
-<h2 id="方法">方法</h2>
-
+</code></pre><h2 id="方法">方法</h2>
 <h3 id="new-方法">new 方法</h3>
-
-<pre><code class="language-raku">multi method new(*@ ($path, *@args), :$w, :$enc, :$translate-nl --&gt; Proc::Async:D)
+<pre><code class="language-raku" data-lang="raku">multi method new(*@ ($path, *@args), :$w, :$enc, :$translate-nl --&gt; Proc::Async:D)
 multi method new(   :$path, :@args,  :$w, :$enc, :$translate-nl --&gt; Proc::Async:D)
-</code></pre>
-
-<p>使用外部程序名或路径 <code>$path</code> 和命令行参数 <code>@args</code> 创建一个新的 <code>Proc::Async</code> 对象。</p>
-
+</code></pre><p>使用外部程序名或路径 <code>$path</code> 和命令行参数 <code>@args</code> 创建一个新的 <code>Proc::Async</code> 对象。</p>
 <p>如果 <code>:w</code> 传递给 <code>new</code>，则打开一个到外部程序的标准输入流（stdin）的管道，你可以用 <code>write</code> 和 <code>say</code> 来写入。</p>
-
 <p><code>:enc</code> 指定流的<a href="https://docs.raku.org/type/IO::Handle#method_encoding">编码</a>（仍然可以在各个方法中重写），默认为 <code>utf8</code>。</p>
-
 <p>如果 <code>:translate-nl</code> 设置为 <code>True</code>（默认值），则特定于操作系统的换行终止符（例如 Windows 上的 <code>\r\n</code>）将自动转换为 <code>\n</code>。</p>
-
 <h3 id="stdout-方法">stdout 方法</h3>
-
-<pre><code class="language-raku">method stdout(Proc::Async:D: :$bin --&gt; Supply:D)
-</code></pre>
-
-<p>返回外部程序标准输出流的 <a href="https://docs.raku.org/type/Supply">Supply</a>。如果 <code>:bin</code> 被传递，则标准输出以二进制形式作为 <a href="https://docs.raku.org/type/Blob">Blob</a> 传递，否则它被解释为 UTF-8，解码并作为 <a href="https://docs.raku.org/type/Str">Str</a> 传递。</p>
-
-<pre><code class="language-raku">my $proc = Proc::Async.new(:r, 'echo', 'Raku');
+<pre><code class="language-raku" data-lang="raku">method stdout(Proc::Async:D: :$bin --&gt; Supply:D)
+</code></pre><p>返回外部程序标准输出流的 <a href="https://docs.raku.org/type/Supply">Supply</a>。如果 <code>:bin</code> 被传递，则标准输出以二进制形式作为 <a href="https://docs.raku.org/type/Blob">Blob</a> 传递，否则它被解释为 UTF-8，解码并作为 <a href="https://docs.raku.org/type/Str">Str</a> 传递。</p>
+<pre><code class="language-raku" data-lang="raku">my $proc = Proc::Async.new(:r, 'echo', 'Raku');
 $proc.stdout.tap( -&gt; $str {
     say &quot;Got output '$str' from the external program&quot;;
 });
 my $promise = $proc.start;
 await $promise;
-</code></pre>
-
-<p>在调用 <a href="https://docs.raku.org/type/Proc::Async#method_start">start</a> 方法之前，必须调用 <code>stdout</code>。否则抛出类 <a href="https://docs.raku.org/type/X::Proc::Async::TapBeforeSpawn">X::Proc::Async::TapBeforeSpawn</a> 的异常。</p>
-
+</code></pre><p>在调用 <a href="https://docs.raku.org/type/Proc::Async#method_start">start</a> 方法之前，必须调用 <code>stdout</code>。否则抛出类 <a href="https://docs.raku.org/type/X::Proc::Async::TapBeforeSpawn">X::Proc::Async::TapBeforeSpawn</a> 的异常。</p>
 <p>如果未调用 <code>stdout</code>，则根本不捕获外部程序的标准输出。</p>
-
 <p>请注意，你无法在同一对象上使用和不使用 <code>:bin</code> 调用 <code>stdout</code>;如果你尝试，它将抛出 <a href="https://docs.raku.org/type/X::Proc::Async::CharsOrBytes">X::Proc::Async::CharsOrBytes</a>类型的异常。</p>
-
 <p>使用 <a href="https://docs.raku.org/type/Proc::Async#method_Supply">.Supply</a> 用于合并的 STDOUT 和 STDERR。</p>
-
 <h3 id="stderr-方法">stderr 方法</h3>
-
-<pre><code class="language-raku">method stderr(Proc::Async:D: :$bin --&gt; Supply:D)
-</code></pre>
-
-<p>返回外部程序标准错误流的 <a href="https://docs.raku.org/type/Supply">Supply</a>。如果 <code>:bin</code> 被传递，则标准错误以二进制形式作为 <a href="https://docs.raku.org/type/Blob">Blob</a> 传递，否则它被解释为 UTF-8，解码并作为 <a href="https://docs.raku.org/type/Str">Str</a> 传递。</p>
-
-<pre><code class="language-raku">my $proc = Proc::Async.new(:r, 'echo', 'Raku');
+<pre><code class="language-raku" data-lang="raku">method stderr(Proc::Async:D: :$bin --&gt; Supply:D)
+</code></pre><p>返回外部程序标准错误流的 <a href="https://docs.raku.org/type/Supply">Supply</a>。如果 <code>:bin</code> 被传递，则标准错误以二进制形式作为 <a href="https://docs.raku.org/type/Blob">Blob</a> 传递，否则它被解释为 UTF-8，解码并作为 <a href="https://docs.raku.org/type/Str">Str</a> 传递。</p>
+<pre><code class="language-raku" data-lang="raku">my $proc = Proc::Async.new(:r, 'echo', 'Raku');
 $proc.stderr.tap( -&gt; $str {
     say &quot;Got error '$str' from the external program&quot;;
 });
 my $promise = $proc.start;
 await $promise;
-</code></pre>
-
-<p>在调用 <a href="https://docs.raku.org/type/Proc::Async#method_start">start</a>方法之前，必须调用 <code>stderr</code>。否则抛出类 <a href="https://docs.raku.org/type/X::Proc::Async::TapBeforeSpawn">X::Proc::Async::TapBeforeSpawn</a> 的异常。</p>
-
+</code></pre><p>在调用 <a href="https://docs.raku.org/type/Proc::Async#method_start">start</a>方法之前，必须调用 <code>stderr</code>。否则抛出类 <a href="https://docs.raku.org/type/X::Proc::Async::TapBeforeSpawn">X::Proc::Async::TapBeforeSpawn</a> 的异常。</p>
 <p>如果未调用 <code>stderr</code>，则根本不捕获外部程序的标准错误流。</p>
-
 <p>请注意，你无法在同一对象上使用和不使用 <code>:bin</code> 调用 <code>stderr</code>;如果你尝试，它将抛出 <a href="https://docs.raku.org/type/X::Proc::Async::CharsOrBytes">X::Proc::Async::CharsOrBytes</a> 类型的异常。</p>
-
 <p>使用 <a href="https://docs.raku.org/type/Proc::Async#method_Supply">.Supply</a> 用于合并的 STDOUT 和 STDERR。</p>
-
 <h3 id="bind-stdout-方法">bind-stdout 方法</h3>
-
-<pre><code class="language-raku">method bind-stdout(IO::Handle:D $handle)
-</code></pre>
-
-<p>将目标进程的 STDOUT 重定向到句柄（必须打开）。如果 STDOUT 被关闭，将抛出 <a href="https://docs.raku.org/type/$SOLIDUStype$SOLIDUSx$SOLIDUSproc$SOLIDUSasync$SOLIDUSBindOrUse">X::Proc::Async::BindOrUse</a>。</p>
-
-<pre><code class="language-raku">my $p = Proc::Async.new(&quot;ls&quot;, :out);
+<pre><code class="language-raku" data-lang="raku">method bind-stdout(IO::Handle:D $handle)
+</code></pre><p>将目标进程的 STDOUT 重定向到句柄（必须打开）。如果 STDOUT 被关闭，将抛出 <a href="https://docs.raku.org/type/$SOLIDUStype$SOLIDUSx$SOLIDUSproc$SOLIDUSasync$SOLIDUSBindOrUse">X::Proc::Async::BindOrUse</a>。</p>
+<pre><code class="language-raku" data-lang="raku">my $p = Proc::Async.new(&quot;ls&quot;, :out);
 my $h = &quot;ls.out&quot;.IO.open(:w);
 $p.bind-stdout($h);
 $p.start;
-</code></pre>
-
-<p>该程序将 <code>ls</code> shell 命令的输出传递给名为 <code>ls.out</code> 的文件，我们打开该文件进行读取。</p>
-
+</code></pre><p>该程序将 <code>ls</code> shell 命令的输出传递给名为 <code>ls.out</code> 的文件，我们打开该文件进行读取。</p>
 <h3 id="bind-stderr-方法">bind-stderr 方法</h3>
-
-<pre><code class="language-raku">method bind-stderr(IO::Handle:D $handle)
-</code></pre>
-
-<p>将目标进程的 STDERR 重定向到句柄（必须打开）。如果 STDERR 关闭，将抛出 <a href="https://docs.raku.org/type/$SOLIDUStype$SOLIDUSx$SOLIDUSproc$SOLIDUSasync$SOLIDUSBindOrUse">X::Proc::Async::BindOrUse</a>。</p>
-
-<pre><code class="language-raku">my $p = Proc::Async.new(&quot;ls&quot;, &quot;--foo&quot;, :err);
+<pre><code class="language-raku" data-lang="raku">method bind-stderr(IO::Handle:D $handle)
+</code></pre><p>将目标进程的 STDERR 重定向到句柄（必须打开）。如果 STDERR 关闭，将抛出 <a href="https://docs.raku.org/type/$SOLIDUStype$SOLIDUSx$SOLIDUSproc$SOLIDUSasync$SOLIDUSBindOrUse">X::Proc::Async::BindOrUse</a>。</p>
+<pre><code class="language-raku" data-lang="raku">my $p = Proc::Async.new(&quot;ls&quot;, &quot;--foo&quot;, :err);
 my $h = &quot;ls.err&quot;.IO.open(:w);
 $p.bind-stderr($h);
 $p.start;
-</code></pre>
-
-<h3 id="w-方法">w 方法</h3>
-
-<pre><code class="language-raku">method start(Proc::Async:D: :$scheduler = $*SCHEDULER, :$*CWD --&gt; Promise:D)
-</code></pre>
-
-<p>开始产生外部程序。返回一个 <a href="https://docs.raku.org/type/Promise">Promise</a>，一旦外部程序退出，它将与 <a href="https://docs.raku.org/type/Proc">Proc</a> 对象一起保存，如果程序无法启动，它将被破坏。</p>
-
+</code></pre><h3 id="w-方法">w 方法</h3>
+<pre><code class="language-raku" data-lang="raku">method start(Proc::Async:D: :$scheduler = $*SCHEDULER, :$*CWD --&gt; Promise:D)
+</code></pre><p>开始产生外部程序。返回一个 <a href="https://docs.raku.org/type/Promise">Promise</a>，一旦外部程序退出，它将与 <a href="https://docs.raku.org/type/Proc">Proc</a> 对象一起保存，如果程序无法启动，它将被破坏。</p>
 <p>如果在之前已调用它的 Proc::Async 对象上调用 <code>start</code>，则抛出类型 <a href="https://docs.raku.org/type/X::Proc::Async::AlreadyStarted">X::Proc::Async::AlreadyStarted</a>的异常。</p>
-
 <p>注意：如果您希望 <code>await</code> Promise 并丢弃其结果，请使用</p>
-
-<pre><code class="language-raku">try await $p.start;
-</code></pre>
-
-<p>如果程序以非零状态退出，则抛出，因为 <code>Proc</code> 返回时，Promise 抛出时抛出，在这种情况下它将在 <code>try</code> 之外沉没。为了避免这种情况，请将其自己沉入 <code>try</code> 中：</p>
-
-<pre><code class="language-raku">try sink await $p.start;
-</code></pre>
-
-<h3 id="started-方法">started 方法</h3>
-
-<pre><code class="language-raku">method started(Proc::Async:D: --&gt; Bool:D)
-</code></pre>
-
-<p>在 <code>.start</code> 已经被调用之前调用则返回 <code>False</code>, 否则返回 <code>True</code>。</p>
-
+<pre><code class="language-raku" data-lang="raku">try await $p.start;
+</code></pre><p>如果程序以非零状态退出，则抛出，因为 <code>Proc</code> 返回时，Promise 抛出时抛出，在这种情况下它将在 <code>try</code> 之外沉没。为了避免这种情况，请将其自己沉入 <code>try</code> 中：</p>
+<pre><code class="language-raku" data-lang="raku">try sink await $p.start;
+</code></pre><h3 id="started-方法">started 方法</h3>
+<pre><code class="language-raku" data-lang="raku">method started(Proc::Async:D: --&gt; Bool:D)
+</code></pre><p>在 <code>.start</code> 已经被调用之前调用则返回 <code>False</code>, 否则返回 <code>True</code>。</p>
 <h3 id="ready-方法">ready 方法</h3>
-
-<pre><code class="language-raku">method ready(Proc::Asnyc:D: --&gt; Promise:D)
-</code></pre>
-
-<p>一旦进程成功启动则返回一个 kept 状态的 的 <a href="https://docs.raku.org/type/Promise">Promise</a>。如果程序无法启动，则 <a href="https://docs.raku.org/type/Promise">Promise</a> 将被破坏。</p>
-
+<pre><code class="language-raku" data-lang="raku">method ready(Proc::Asnyc:D: --&gt; Promise:D)
+</code></pre><p>一旦进程成功启动则返回一个 kept 状态的 的 <a href="https://docs.raku.org/type/Promise">Promise</a>。如果程序无法启动，则 <a href="https://docs.raku.org/type/Promise">Promise</a> 将被破坏。</p>
 <p><strong>特定于实现的注释</strong>：从 Rakudo 2018.04开始，返回的 promise 将保存进程 ID（PID）。</p>
-
 <h3 id="pid-方法">pid 方法</h3>
-
-<pre><code class="language-raku">method pid(Proc::Async:D: --&gt; Promise:D)
-</code></pre>
-
-<p>相当于 <a href="https://docs.raku.org/routine/ready">ready</a>。</p>
-
+<pre><code class="language-raku" data-lang="raku">method pid(Proc::Async:D: --&gt; Promise:D)
+</code></pre><p>相当于 <a href="https://docs.raku.org/routine/ready">ready</a>。</p>
 <p>一旦进程成功启动则返回一个 kept 状态的 的 <a href="https://docs.raku.org/type/Promise">Promise</a>。如果程序无法启动，则 <a href="https://docs.raku.org/type/Promise">Promise</a> 将被破坏。返回的 promise 将保存进程id（PID）。</p>
-
 <p><strong>特定于实现的说明</strong>：从 Rakudo 2018.04 开始提供。</p>
-
 <h3 id="path-方法">path 方法</h3>
-
-<pre><code class="language-raku">method path(Proc::Async:D:)
-</code></pre>
-
-<p>返回作为第一个参数传递给 <code>new</code> 方法的外部程序的名称和/或路径。</p>
-
+<pre><code class="language-raku" data-lang="raku">method path(Proc::Async:D:)
+</code></pre><p>返回作为第一个参数传递给 <code>new</code> 方法的外部程序的名称和/或路径。</p>
 <h3 id="args-方法">args 方法</h3>
-
-<pre><code class="language-raku">method args(Proc::Async:D: --&gt; Positional:D)
-</code></pre>
-
-<p>返回传递给 <code>new</code> 方法的外部程序的命令行参数。</p>
-
+<pre><code class="language-raku" data-lang="raku">method args(Proc::Async:D: --&gt; Positional:D)
+</code></pre><p>返回传递给 <code>new</code> 方法的外部程序的命令行参数。</p>
 <h3 id="write-方法">write 方法</h3>
-
-<pre><code class="language-raku">method write(Proc::Async:D: Blob:D $b, :$scheduler = $*SCHEDULER --&gt; Promise:D)
-</code></pre>
-
-<p>将 <code>$b</code> 中的二进制数据写入外部程序的标准输入流。</p>
-
+<pre><code class="language-raku" data-lang="raku">method write(Proc::Async:D: Blob:D $b, :$scheduler = $*SCHEDULER --&gt; Promise:D)
+</code></pre><p>将 <code>$b</code> 中的二进制数据写入外部程序的标准输入流。</p>
 <p>返回一个 <a href="https://docs.raku.org/type/Promise">Promise</a>，一旦数据完全落在外部程序的输入缓冲区中，它将被保留。</p>
-
 <p>必须创建 <code>Proc::Async</code> 对象以进行写入（使用 <code>Proc::Async.new(:w, $path, @args)</code>)。否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::OpenForWriting">X::Proc::Async::OpenForWriting</a> 异常。</p>
-
 <p>必须在调用方法 write 之前调用 <code>start</code>，否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::MustBeStarted">X::Proc::Async::MustBeStarted</a> 异常。</p>
-
 <h3 id="print-方法">print 方法</h3>
-
-<pre><code class="language-raku">method print(Proc::Async:D: Str(Any) $str, :$scheduler = $*SCHEDULER)
-</code></pre>
-
-<p>将 <code>$str</code> 中的文本数据写入外部程序的标准输入流，将其编码为 UTF-8。</p>
-
+<pre><code class="language-raku" data-lang="raku">method print(Proc::Async:D: Str(Any) $str, :$scheduler = $*SCHEDULER)
+</code></pre><p>将 <code>$str</code> 中的文本数据写入外部程序的标准输入流，将其编码为 UTF-8。</p>
 <p>返回一个 <a href="https://docs.raku.org/type/Promise">Promise</a>，一旦数据完全落在外部程序的输入缓冲区中，它将被保留。</p>
-
 <p>必须创建 <code>Proc::Async</code> 对象以进行写入（使用 <code>Proc::Async.new(:w, $path, @args)</code>)。否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::OpenForWriting">X::Proc::Async::OpenForWriting</a> 异常。</p>
-
 <p>必须在调用方法 print 之前调用 <code>start</code>，否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::MustBeStarted"> X::Proc::Async::MustBeStarted</a> 异常。</p>
-
 <h3 id="say-方法">say 方法</h3>
-
-<pre><code class="language-raku">method say(Proc::Async:D: $output, :$scheduler = $*SCHEDULER)
-</code></pre>
-
-<p>在 <code>$output</code> 上调用方法 <code>gist</code>，添加换行符，将其编码为 UTF-8，并将其发送到外部程序的标准输入流，将其编码为 UTF-8。</p>
-
+<pre><code class="language-raku" data-lang="raku">method say(Proc::Async:D: $output, :$scheduler = $*SCHEDULER)
+</code></pre><p>在 <code>$output</code> 上调用方法 <code>gist</code>，添加换行符，将其编码为 UTF-8，并将其发送到外部程序的标准输入流，将其编码为 UTF-8。</p>
 <p>返回一个 <a href="https://docs.raku.org/type/Promise">Promise</a>，一旦数据完全落在外部程序的输入缓冲区中，它将被保留。</p>
-
 <p>必须创建 <code>Proc::Async</code> 对象以进行写入（使用 <code>Proc::Async.new(:w, $path, @args</code>）。否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::OpenForWriting">X::Proc::Async::OpenForWriting </a> 异常。</p>
-
 <p>必须在调用 <code>say</code> 方法之前调用 <code>start</code>，否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::MustBeStarted"> X::Proc::Async::MustBeStarted</a> 异常。</p>
-
 <h3 id="supply-方法">Supply 方法</h3>
-
-<pre><code class="language-raku">multi method Supply(Proc::Async:D: :$bin!)
+<pre><code class="language-raku" data-lang="raku">multi method Supply(Proc::Async:D: :$bin!)
 multi method Supply(Proc::Async:D: :$enc, :$translate-nl)
-</code></pre>
-
-<p>返回合并的 <a href="https://docs.raku.org/routine/stdout">stdout</a> 和 <a href="https://docs.raku.org/routine/stderr">stderr</a> 流的 <a href="https://docs.raku.org/type/Supply">Supply</a>。如果提供了 <code>:$bin</code> 命名参数，则 <code>Supply</code> 将为二进制，生成 <a href="https://docs.raku.org/type/Buf">Buf</a> 对象，否则，它将处于字符模式，生成 <a href="https://docs.raku.org/type/Str">Str</a> 对象并且 <code>:$enc</code> 命名参数可以指定要使用的编码。 <code>:$translate-nl</code> 选项指定是否应转换新的行结尾以匹配当前操作系统使用的那些（例如，Windows上的 <code>\r\n</code>）。</p>
-
-<pre><code class="language-raku">react {
+</code></pre><p>返回合并的 <a href="https://docs.raku.org/routine/stdout">stdout</a> 和 <a href="https://docs.raku.org/routine/stderr">stderr</a> 流的 <a href="https://docs.raku.org/type/Supply">Supply</a>。如果提供了 <code>:$bin</code> 命名参数，则 <code>Supply</code> 将为二进制，生成 <a href="https://docs.raku.org/type/Buf">Buf</a> 对象，否则，它将处于字符模式，生成 <a href="https://docs.raku.org/type/Str">Str</a> 对象并且 <code>:$enc</code> 命名参数可以指定要使用的编码。 <code>:$translate-nl</code> 选项指定是否应转换新的行结尾以匹配当前操作系统使用的那些（例如，Windows上的 <code>\r\n</code>）。</p>
+<pre><code class="language-raku" data-lang="raku">react {
     with Proc::Async.new: «&quot;$*EXECUTABLE&quot; -e 'say 42; note 100'» {
         whenever .Supply { .print } # OUTPUT: «42␤100␤» 
         whenever .start  {}
     }
 }
-</code></pre>
-
-<p>创建二进制和非二进制 <a href="https://docs.raku.org/type/Proc::Async#method_Supply">.Supply</a> 是一个错误。同时使用 <a href="https://docs.raku.org/type/Proc::Async#method_Supply">.Supply</a> 和 <a href="https://docs.raku.org/routine/stderr">stderr</a> 或 <a href="https://docs.raku.org/routine/stdout">stdout</a> supplies 也是错误的。</p>
-
+</code></pre><p>创建二进制和非二进制 <a href="https://docs.raku.org/type/Proc::Async#method_Supply">.Supply</a> 是一个错误。同时使用 <a href="https://docs.raku.org/type/Proc::Async#method_Supply">.Supply</a> 和 <a href="https://docs.raku.org/routine/stderr">stderr</a> 或 <a href="https://docs.raku.org/routine/stdout">stdout</a> supplies 也是错误的。</p>
 <h3 id="close-stdin-方法">close-stdin 方法</h3>
-
-<pre><code class="language-raku">method close-stdin(Proc::Async:D:)
-</code></pre>
-
-<p>关闭外部程序的标准输入流。从 STDIN 读取的程序通常仅在其输入流关闭时终止。因此，如果等待方法启动的承诺挂起（对于为写入而打开的程序），它可能是一个被遗忘的 <code>close-stdin</code>。</p>
-
+<pre><code class="language-raku" data-lang="raku">method close-stdin(Proc::Async:D:)
+</code></pre><p>关闭外部程序的标准输入流。从 STDIN 读取的程序通常仅在其输入流关闭时终止。因此，如果等待方法启动的承诺挂起（对于为写入而打开的程序），它可能是一个被遗忘的 <code>close-stdin</code>。</p>
 <p>必须创建 <code>Proc::Async</code> 对象以进行写入（使用<code>Proc::Async.new(:w, $path, @args)</code>）。否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::OpenForWriting">X::Proc::Async::OpenForWriting</a> 异常。</p>
-
 <p>必须在调用方法 <code>close-stdin</code> 之前调用 <code>start</code>，否则抛出 <a href="https://docs.raku.org/type/X::Proc::Async::MustBeStarted">X::Proc::Async::MustBeStarted</a> 异常。</p>
-
 <h3 id="kill-方法">kill 方法</h3>
-
-<pre><code class="language-raku">method kill(Proc::Async:D: $signal = &quot;HUP&quot;)
-</code></pre>
-
-<p>向正在运行的程序发送信号。信号可以是信号名称（&rdquo;KILL&rdquo; 或 &ldquo;SIGKILL&rdquo;），整数（9）或 <code>Signal</code> enum 的元素（Signal::SIGKILL）。</p>
+<pre><code class="language-raku" data-lang="raku">method kill(Proc::Async:D: $signal = &quot;HUP&quot;)
+</code></pre><p>向正在运行的程序发送信号。信号可以是信号名称（&ldquo;KILL&rdquo; 或 &ldquo;SIGKILL&rdquo;），整数（9）或 <code>Signal</code> enum 的元素（Signal::SIGKILL）。</p>
 
 
         
@@ -657,7 +522,7 @@ multi method Supply(Proc::Async:D: :$enc, :$translate-nl)
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

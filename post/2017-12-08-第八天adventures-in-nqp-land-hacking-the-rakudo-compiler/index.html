@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-08-%E7%AC%AC%E5%85%AB%E5%A4%A9adventures-in-nqp-land-hacking-the-rakudo-compiler/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,174 +231,102 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="day-8-adventures-in-nqp-land-hacking-the-rakudo-compiler-https-rakuadvent-wordpress-com-2017-12-08-day-8-adventures-in-nqp-land-hacking-the-rakudo-compiler"><a href="https://rakuadvent.wordpress.com/2017/12/08/day-8-adventures-in-nqp-land-hacking-the-rakudo-compiler">Day 8 – Adventures in NQP Land: Hacking the Rakudo Compiler</a>/</h1>
-
+        <h1 id="day-8--adventures-in-nqp-land-hacking-the-rakudo-compilerhttpsrakuadventwordpresscom20171208day-8-adventures-in-nqp-land-hacking-the-rakudo-compiler"><a href="https://rakuadvent.wordpress.com/2017/12/08/day-8-adventures-in-nqp-land-hacking-the-rakudo-compiler">Day 8 – Adventures in NQP Land: Hacking the Rakudo Compiler</a>/</h1>
 <p>对旧圣诞节经典“圣诞节十二天”的道歉，我给你一个 Raku 版本的第一行：</p>
-
 <p>在圣诞节的第一天，我真正的爱给了 pod 树上的 Perl 表格&hellip;&hellip;</p>
-
 <p>但是我得到的表格不是很漂亮！</p>
-
 <h2 id="背景">背景</h2>
-
 <p>我与 Raku 的第一次真正联系是在 2015 年春天，当时我决定检查它的状态，发现它已经准备好迎接黄金时段。在获得了该语言的一些经验之后，我开始在我可以提供帮助的地方贡献文档。我对文档的第一个贡献是清理其中没有很好呈现的表格。在我对本地主机上的 pod 表进行实验期间，我尝试了下表格：</p>
-
 <pre><code>=begin table
 -r0c0  r0c1
 =end table
-</code></pre>
-
-<p>这导致 Raku 抛出一个丑陋的, LTA（非常搓）的异常消息：</p>
-
+</code></pre><p>这导致 Raku 抛出一个丑陋的, LTA（非常搓）的异常消息：</p>
 <pre><code>&quot;===SORRY!=== Cannot iterate object with P6opaque representation&quot;
-</code></pre>
-
-<p>我解决了这个问题，但它让我感觉不爽，所以我开始调查 pod 和 tables 的内部。这导致我在 <a href="https://github.com/rakudo/rakudo/blob/master/src/Raku/Pod.nqp">github.com/rakudo/src/Raku/Pod.nqp</a> 中发现了问题的根源。</p>
-
+</code></pre><p>我解决了这个问题，但它让我感觉不爽，所以我开始调查 pod 和 tables 的内部。这导致我在 <a href="https://github.com/rakudo/rakudo/blob/master/src/Raku/Pod.nqp">github.com/rakudo/src/Raku/Pod.nqp</a> 中发现了问题的根源。</p>
 <p>事实上，许多 pod 表格问题的真正问题最终都出现在该文件中。</p>
-
 <h2 id="not-quite-perl-nqp">Not Quite Perl (NQP)</h2>
-
 <p>nqp 是用于构建 Rakudo Raku 编译器的中间语言。它的 git 仓库在<a href="https://github.com/raku/nqp">这里</a>。本文的其余部分是关于修改 rakudo 编译器中的 nqp 代码，其仓库地址在<a href="https://github.com/rakudo/rakudo">这里</a>。 Rakudo 在<a href="http://rakudo.org/">这里</a>也有一个网站。</p>
-
 <p>在走得太远之前，我首先阅读有关 Rakudo 和 NQP 的可用信息：</p>
-
 <ul>
 <li>Jonathan Worthington’s (JWs) 的幻灯片课程 <a href="http://edumentab.github.io/rakudo-and-nqp-internals-course/">Rakudo and NQP Internals</a></li>
 <li><a href="https://github.com/raku/nqp/blob/master/docs/ops.markdown">NQP opcodes</a></li>
 <li><a href="https://github.com/raku/nqp/blob/master/docs/built-ins.md">NQP built-in routines</a></li>
 </ul>
-
 <p>然后我开始通过编写和运行一些这样的小型 nqp 文件来练习nqp编码（文件 “hello.nqp”）：</p>
-
-<pre><code class="language-nqp">say(&quot;Hello, world!&quot;);
-</code></pre>
-
-<p>当它被执行时，会给出预期的结果：</p>
-
-<pre><code class="language-shell">$ nqp hello.nqp
+<pre><code class="language-nqp" data-lang="nqp">say(&quot;Hello, world!&quot;);
+</code></pre><p>当它被执行时，会给出预期的结果：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ nqp hello.nqp
 Hello, world!
-</code></pre>
-
-<p>请注意，<code>say()</code> 是不需要 <code>nqp::</code> 前缀的少数 nqp opcodes 之一。</p>
-
+</code></pre></div><p>请注意，<code>say()</code> 是不需要 <code>nqp::</code> 前缀的少数 nqp opcodes 之一。</p>
 <h2 id="进入战壕">进入战壕</h2>
-
 <p><code>rakudo/src/Raku/Pod.nqp</code> 文件中包含的 <code>Raku::Pod</code> 类的用途是将 pod grammar 匹配并将它们转换为 <code>rakudo/src/core/Pod.pm</code> 中的 Raku pod 类定义，供 Raku 领地上的渲染者进一步处理。对于表格，表示以 Raku 文档设计中描述的任何合法 pod 格式表示的内容概要 S26，Raku 测试套件规范和 Raku 文档必须转换为 Raku <strong>Pod::Block::Table</strong> 类如文件 <a href="https://github.com/rakudo/rakudo/blob/master/src/core/Pod.pm">rakudo/src/core/Pod.pm</a> 中所述，使用此格式的对象:</p>
-
 <pre><code>configuration information
 a header line with N cells
 M content lines, each with N cells
-</code></pre>
-
-<p>我希望 nqp 表格 pod 处理功能非常强大，能够自动修复某些格式问题（给作者一个警告），或者抛出一个异常（优雅）并提供问题的详细信息，以便作者修复 pod 输入。</p>
-
+</code></pre><p>我希望 nqp 表格 pod 处理功能非常强大，能够自动修复某些格式问题（给作者一个警告），或者抛出一个异常（优雅）并提供问题的详细信息，以便作者修复 pod 输入。</p>
 <h2 id="工作区和工具">工作区和工具</h2>
-
 <p>我需要两个克隆版本库：rakudo 和 roast。我还需要在 github 上复刻那些相同的git 仓库，所以我可以为我的更改创建 pull 请求（PR）。我在 CPAN 模块 <a href="https://metacpan.org/pod/distribution/App-GitGot/bin/got">App::GitGot</a> 中找到了非常方便的 Perl 5 工具。使用 <em>got</em> 允许我轻松设置所有四个仓库。 （请注意，got 得要求其目标 repo 不存在于所需的本地目录或用户的github 帐户中。）配置完成后，我去了一个合适的目录以包含两个 repos 并执行以下操作：</p>
-
 <pre><code>got fork https://github.com/rakudo/rakudo.git
 got fork https://github.com/raku/roast.git
-</code></pre>
-
-<p>这导致了一个子目录rakudo和 roast 包含克隆仓库和 rakudo 和 roast github 帐户上的新复刻。在 rakudo 目录中，可以看到用于轻松创建 PR 的默认设置：</p>
-
-<pre><code class="language-shell">$ git remote -v
-origin  git@github.com:tbrowder/rakudo.git (fetch)
-origin  git@github.com:tbrowder/rakudo.git (push)
-upstream    https://github.com/rakudo/rakudo.git (fetch)
-upstream    https://github.com/rakudo/rakudo.git (push)
-</code></pre>
-
-<p>在 roast 仓库中有类似的结果。</p>
-
+</code></pre><p>这导致了一个子目录rakudo和 roast 包含克隆仓库和 rakudo 和 roast github 帐户上的新复刻。在 rakudo 目录中，可以看到用于轻松创建 PR 的默认设置：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ git remote -v
+origin  git@github.com:tbrowder/rakudo.git <span class="o">(</span>fetch<span class="o">)</span>
+origin  git@github.com:tbrowder/rakudo.git <span class="o">(</span>push<span class="o">)</span>
+upstream    https://github.com/rakudo/rakudo.git <span class="o">(</span>fetch<span class="o">)</span>
+upstream    https://github.com/rakudo/rakudo.git <span class="o">(</span>push<span class="o">)</span>
+</code></pre></div><p>在 roast 仓库中有类似的结果。</p>
 <p>接下来，我将 roast 仓库作为 rakudo 的子目录（“rakudo/t/spec”）重命名，所以它作为本地 rakudo 的一个子集。</p>
-
 <p>最后，我创建了几个 bash 脚本，以便于在本地 repo 目录中配置 rakudo 进行安装，设置环境并运行测试：</p>
-
 <ul>
 <li>rakudo-local-config.sh</li>
 <li>run-table-tests.sh</li>
 <li>set-rakudo-envvars.sh</li>
 </ul>
-
 <p>（请参阅 <a href="https://github.com/tbrowder/nqp-tools">https://github.com/tbrowder/nqp-tools</a> 上提到的所有脚本。）</p>
-
 <p>要完成本地工作环境，您需要安装一些本地模块，以便您必须更改路径并安装 zef 安装程序的本地副本。在 rakudo 目录中执行以下步骤（来自 <a href="https://rakuadvent.wordpress.com/mentions/zoffix/">@Zoffix</a> 的建议）：</p>
-
-<pre><code class="language-shell">git clone https://github.com/ugexe/zef
-export PATH=`pwd`/install/bin:$PATH
-cd zef; raku -Ilib bin/zef install .
-cd ..
-export PATH=`pwd`/install/share/raku/site/bin:$PATH
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">git clone https://github.com/ugexe/zef
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/install/bin:<span class="nv">$PATH</span>
+<span class="nb">cd</span> zef<span class="p">;</span> raku -Ilib bin/zef install .
+<span class="nb">cd</span> ..
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>/install/share/raku/site/bin:<span class="nv">$PATH</span>
 zef install Inline::Perl5
-</code></pre>
-
-<p>然后安装您需要的其他模块，例如:</p>
-
-<pre><code class="language-shell">zef install Debugger::UI::CommandLine
+</code></pre></div><p>然后安装您需要的其他模块，例如:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">zef install Debugger::UI::CommandLine
 zef install Grammar::Debugger
-</code></pre>
-
-<h2 id="hacking">Hacking</h2>
-
+</code></pre></div><h2 id="hacking">Hacking</h2>
 <p>现在开始黑客入侵。准备好构建时，执行：</p>
-
-<pre><code class="language-shell">make
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">make
 make install
-</code></pre>
-
-<p><code>make install</code> 步骤非常关键，否则，在我们设置的本地环境中，将不会找到新的 Raku 可执行文件。</p>
-
+</code></pre></div><p><code>make install</code> 步骤非常关键，否则，在我们设置的本地环境中，将不会找到新的 Raku 可执行文件。</p>
 <p>调试于我来说很费力，每次重建需要大约三分钟。调试器（raku-debug-m）会非常有用，但我无法安装所需的 <code>Debbugger::UI::CommandLine</code> 模块，因此它可以被本地安装的 <code>raku-debug-m</code> 识别。我使用的主要方法是插入print 语句，并使用 raku 的 <code>--ll-exception</code> 选项。值得注意的是，这位作者是一位 Raku 新手，犯了很多错误，并且并不总是记得修复，因此有了这篇文章。 （注意我可能会使用调试工具，但在我开始的时候，我没有要求帮助，也没有提供上面提供的建议。）</p>
-
 <h2 id="测试">测试</h2>
-
 <p>不言而喻，一个好的 PR 将包括对变化的测试。我总是创建一个与我的 rakudo 分支同名的 roast 分支。然后我提交了两个 PR，我指的是 rakudo PR 中的 toast PR，反之亦然。我注意到 toast PR，它需要伴生 rakudo PR 通过所有测试。</p>
-
 <p>见参考文献5 了解更多有关专门测试脚本的详细信息，以进行欺骗和其他深奥测试事宜。</p>
-
 <h2 id="文档">文档</h2>
-
 <p>我尝试将我的修复程序保留在最新的 <a href="https://docs.raku.org/language/tables">Raku pod 表格文档</a>中。</p>
-
 <h2 id="nqp-经验教训">NQP 经验教训</h2>
-
 <ul>
 <li>LTA 错误消息是生活中的事实，例如，“无法调用此对象&hellip;”，这可能是由很多事情造成的，包括拼写错误的标识符（提交 NQP 问题，早期报告可能不会很快修复）。</li>
 <li>确保所有 nqp 操作码都有 <code>nqp::</code> 前缀（除了少数内置函数）</li>
 <li>在 nqp 专用沙箱中练习新代码。</li>
 </ul>
-
 <h2 id="成功">成功！</h2>
-
 <p>现在我已经接受并合并了两个主要的Raku POD（和 toast）PR，并且我正在研究一个更“容易”的，我将在本周完成。 这些 PR 是：</p>
-
 <p>1.Rakudo PR＃1240
 这个 <a href="https://github.com/rakudo/rakudo/pull/1240">Rakudo PR</a>  为 RT＃124403，＃128221，＃132341，＃13248和＃129862提供了修复程序。它伴随着 toast <a href="https://github.com/raku/roast/pull/353">PR＃353</a>。</p>
-
 <p>这个 PR 允许上面的问题表格被正确渲染。它还添加了有问题的表的警告，添加了 Rakudo 环境变量RAKUDO_POD6_TABLE_DEBUG 以帮助用户调试表（请参阅文档，<a href="https://docs.raku.org/programs/00-running#Environment_Variables">用户调试</a>），并允许具有空列的短行正确呈现。</p>
-
 <p>2.Rakudo PR＃1287
 这个 <a href="https://github.com/rakudo/rakudo/pull/1287">Rakudo PR</a> 为 Rakudo repo 问题＃1282提供了一个解决方案。它伴随着 roast <a href="https://github.com/raku/roast/pull/361">PR＃361</a>。 （请注意，roast PR＃361 尚未合并。）</p>
-
-<p>这个 PR 允许表格视觉列分隔符（&rsquo;|&lsquo;）和（&rsquo;+&lsquo;）作为单元格数据通过在 pod 源中转义它们。</p>
-
+<p>这个 PR 允许表格视觉列分隔符（&lsquo;|&rsquo;）和（&lsquo;+&rsquo;）作为单元格数据通过在 pod 源中转义它们。</p>
 <h2 id="总结">总结</h2>
-
 <ul>
 <li>Raku pod相对于Perl 5来说是一个很大的改进，但它还没有完全实现。</li>
 <li>在 Rakudo Perl的内部工作是有益的（并且很有趣），但是准备让你的手变脏！</li>
 <li>Raku 社区是一个很好的团队。</li>
 <li>我喜欢 Rakudo Raku。</li>
 </ul>
-
 <p>圣诞快乐，Hacking 快乐！</p>
-
 <h2 id="参考">参考</h2>
-
 <ol>
 <li>JWs Raku debugger <a href="https://rakuadvent.wordpress.com/2012/12/05/a-perl-6-debugger/">Advent article</a></li>
 <li>JWs Rakudo debugger module <a href="https://github.com/jnthn/rakudo-debugger">Debugger::UI::CommandLine</a></li>
@@ -408,19 +336,14 @@ make install
 <li><a href="https://help.github.com/categories/collaborating-with-issues-and-pull-requests/">Github guide to pull requests (PRs)</a></li>
 <li><a href="https://docs.raku.org/">Raku documentation (<em>docs</em>)</a></li>
 </ol>
-
 <h2 id="附录">附录</h2>
-
 <p>POD 工具</p>
-
 <ul>
 <li>raku –doc=MODULE # where ‘MODULE’ is ‘HTML’, ‘Text’, 或其它合适的模块</li>
 <li>p6doc</li>
 <li>raku –ll-exception</li>
 </ul>
-
 <h2 id="主要的-raku-pod-渲染器">主要的 Raku POD 渲染器</h2>
-
 <ul>
 <li>Pod::To::Text (part of the rakudo core)</li>
 <li><a href="https://github.com/raku/Pod-To-HTML">Pod::To::HTML</a></li>
@@ -516,7 +439,7 @@ make install
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

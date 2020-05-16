@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-05-06-dateish/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,227 +231,110 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<pre><code class="language-raku">role Dateish { ... }
-</code></pre>
-
-<p><a href="https://docs.raku.org/type/Date">Date</a> 和 <a href="https://docs.raku.org/type/DateTime">DateTime</a> 都支持访问 year, month 和 day-of-month 以及相关的函数，例如计算星期几。</p>
-
+        <pre><code class="language-raku" data-lang="raku">role Dateish { ... }
+</code></pre><p><a href="https://docs.raku.org/type/Date">Date</a> 和 <a href="https://docs.raku.org/type/DateTime">DateTime</a> 都支持访问 year, month 和 day-of-month 以及相关的函数，例如计算星期几。</p>
 <h1 id="方法">方法</h1>
-
 <h2 id="year-方法">year 方法</h2>
-
 <p>定义为：</p>
-
-<pre><code class="language-raku">method year(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回日期的月份(1..12)。</p>
-
-<pre><code class="language-raku">say Date.new('2015-12-31').month;                                  # OUTPUT: «12» 
+<pre><code class="language-raku" data-lang="raku">method year(Date:D: --&gt; Int:D)
+</code></pre><p>返回日期的月份(1..12)。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new('2015-12-31').month;                                  # OUTPUT: «12» 
 say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).month; # OUTPUT: «12» 
-</code></pre>
-
-<h2 id="day-方法">day 方法</h2>
-
+</code></pre><h2 id="day-方法">day 方法</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method day(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回日期中月份的天(1..31)。</p>
-
-<pre><code class="language-raku">say Date.new('2015-12-31').day;                                  # OUTPUT: «31» 
+<pre><code class="language-raku" data-lang="raku">method day(Date:D: --&gt; Int:D)
+</code></pre><p>返回日期中月份的天(1..31)。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new('2015-12-31').day;                                  # OUTPUT: «31» 
 say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).day; # OUTPUT: «24» 
-</code></pre>
-
-<h2 id="formatter-方法">formatter 方法</h2>
-
+</code></pre><h2 id="formatter-方法">formatter 方法</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method formatter(Dateish:D:)
-</code></pre>
-
-<p>返回用于转换为<a href="https://docs.raku.org/type/Str">Str</a>的格式化函数。如果在对象构造时没有提供，则使用默认的格式化程序。在这种情况下，该方法将返回一个 Callable 类型的对象。</p>
-
+<pre><code class="language-raku" data-lang="raku">method formatter(Dateish:D:)
+</code></pre><p>返回用于转换为<a href="https://docs.raku.org/type/Str">Str</a>的格式化函数。如果在对象构造时没有提供，则使用默认的格式化程序。在这种情况下，该方法将返回一个 Callable 类型的对象。</p>
 <p>格式化函数由 <a href="https://docs.raku.org/type/DateTime#method_Str">DateTime 方法 Str</a> 以 invocant 作为唯一参数来调用。</p>
-
-<pre><code class="language-raku">my $dt = Date.new('2015-12-31');  # (no formatter specified) 
+<pre><code class="language-raku" data-lang="raku">my $dt = Date.new('2015-12-31');  # (no formatter specified) 
 say $dt.formatter.^name;          # OUTPUT: «Callable» 
 my $us-format = sub ($self) { sprintf &quot;%02d/%02d/%04d&quot;, .month, .day, .year given $self; };
 $dt = Date.new('2015-12-31', formatter =&gt; $us-format);
 say $dt.formatter.^name;          # OUTPUT: «Sub» 
 say $dt;                          # OUTPUT: «12/31/2015» 
-</code></pre>
-
-<h2 id="is-leap-year">is-leap-year</h2>
-
+</code></pre><h2 id="is-leap-year">is-leap-year</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method is-leap-year(--&gt; Bool:D)
-</code></pre>
-
-<p>如果 Dateish 对象的年份是闰年，则返回 <code>True</code>。</p>
-
-<pre><code class="language-raku">say DateTime.new(:year&lt;2016&gt;).is-leap-year; # OUTPUT: «True» 
+<pre><code class="language-raku" data-lang="raku">method is-leap-year(--&gt; Bool:D)
+</code></pre><p>如果 Dateish 对象的年份是闰年，则返回 <code>True</code>。</p>
+<pre><code class="language-raku" data-lang="raku">say DateTime.new(:year&lt;2016&gt;).is-leap-year; # OUTPUT: «True» 
 say Date.new(&quot;1900-01-01&quot;).is-leap-year;    # OUTPUT: «False» 
-</code></pre>
-
-<h2 id="day-of-month">day-of-month</h2>
-
+</code></pre><h2 id="day-of-month">day-of-month</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method day-of-month(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回日期的月份的一天（1..31）。与 <code>day</code> 方法同义。</p>
-
-<pre><code class="language-raku">say Date.new('2015-12-31').day-of-month;                                  # OUTPUT: «31» 
+<pre><code class="language-raku" data-lang="raku">method day-of-month(Date:D: --&gt; Int:D)
+</code></pre><p>返回日期的月份的一天（1..31）。与 <code>day</code> 方法同义。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new('2015-12-31').day-of-month;                                  # OUTPUT: «31» 
 say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).day-of-month; # OUTPUT: «24» 
-</code></pre>
-
-<h2 id="day-of-week-方法">day-of-week 方法</h2>
-
+</code></pre><h2 id="day-of-week-方法">day-of-week 方法</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method day-of-week(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回星期几，其中 1 表示星期一，2 表示星期二，7 表示星期日。</p>
-
-<pre><code class="language-raku">say Date.new('2015-12-31').day-of-week;                                  # OUTPUT: «4» 
+<pre><code class="language-raku" data-lang="raku">method day-of-week(Date:D: --&gt; Int:D)
+</code></pre><p>返回星期几，其中 1 表示星期一，2 表示星期二，7 表示星期日。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new('2015-12-31').day-of-week;                                  # OUTPUT: «4» 
 say DateTime.new(date =&gt; Date.new('2015-12-24'), hour =&gt; 1).day-of-week; # OUTPUT: «4» 
-</code></pre>
-
-<h2 id="day-of-year">day-of-year</h2>
-
+</code></pre><h2 id="day-of-year">day-of-year</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method day-of-year(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回一年中的某一天(1..366)。</p>
-
-<pre><code class="language-raku">say Date.new('2015-12-31').day-of-year;                                  # OUTPUT: «365» 
+<pre><code class="language-raku" data-lang="raku">method day-of-year(Date:D: --&gt; Int:D)
+</code></pre><p>返回一年中的某一天(1..366)。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new('2015-12-31').day-of-year;                                  # OUTPUT: «365» 
 say DateTime.new(date =&gt; Date.new('2015-03-24'), hour =&gt; 1).day-of-year; # OUTPUT: «83» 
-</code></pre>
-
-<h2 id="days-in-month">days-in-month</h2>
-
+</code></pre><h2 id="days-in-month">days-in-month</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method days-in-month(Dateish:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回 Dateish 对象表示的月份中的天数：</p>
-
-<pre><code class="language-raku">say Date.new(&quot;2016-01-02&quot;).days-in-month;                # OUTPUT: «31» 
+<pre><code class="language-raku" data-lang="raku">method days-in-month(Dateish:D: --&gt; Int:D)
+</code></pre><p>返回 Dateish 对象表示的月份中的天数：</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new(&quot;2016-01-02&quot;).days-in-month;                # OUTPUT: «31» 
 say DateTime.new(:year&lt;10000&gt;, :month&lt;2&gt;).days-in-month; # OUTPUT: «29» 
-</code></pre>
-
-<h2 id="week-方法">week 方法</h2>
-
+</code></pre><h2 id="week-方法">week 方法</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method week()
-</code></pre>
-
-<p>返回两个整数的列表：年份和星期编号。这是因为在一年的开始或结束时，本周实际上可能属于另一年。</p>
-
-<pre><code class="language-raku">my ($year, $week) = Date.new(&quot;2014-12-31&quot;).week;
+<pre><code class="language-raku" data-lang="raku">method week()
+</code></pre><p>返回两个整数的列表：年份和星期编号。这是因为在一年的开始或结束时，本周实际上可能属于另一年。</p>
+<pre><code class="language-raku" data-lang="raku">my ($year, $week) = Date.new(&quot;2014-12-31&quot;).week;
 say $year;                       # OUTPUT: «2015» 
 say $week;                       # OUTPUT: «1» 
 say Date.new('2015-01-31').week; # OUTPUT: «(2015 5)» 
-</code></pre>
-
-<h2 id="week-number">week-number</h2>
-
+</code></pre><h2 id="week-number">week-number</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method week-number(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回调用者指定日期的星期编号（1..53）。一年的第一周由 ISO 定义为包含一月第四天的一周。因此，1月初的日期通常在上一年的最后一周结束，同样，12月的最后几天可能会落在第二年的第一周中。</p>
-
-<pre><code class="language-raku">say Date.new(&quot;2014-12-31&quot;).week-number;   # 1  (first week of 2015) 
+<pre><code class="language-raku" data-lang="raku">method week-number(Date:D: --&gt; Int:D)
+</code></pre><p>返回调用者指定日期的星期编号（1..53）。一年的第一周由 ISO 定义为包含一月第四天的一周。因此，1月初的日期通常在上一年的最后一周结束，同样，12月的最后几天可能会落在第二年的第一周中。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new(&quot;2014-12-31&quot;).week-number;   # 1  (first week of 2015) 
 say Date.new(&quot;2016-01-02&quot;).week-number;   # 53 (last week of 2015) 
-</code></pre>
-
-<h2 id="week-year">week-year</h2>
-
+</code></pre><h2 id="week-year">week-year</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method week-year(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回调用者指定日期的星期年份。通常 <code>week-year</code> 等于 <code>Date.year</code>。但请注意，1月初的日期通常在上一年的最后一周结束，同样，12月的最后几天可能会落在明年的第一周。</p>
-
-<pre><code class="language-raku">say Date.new(&quot;2015-11-15&quot;).week-year;   # 2015 
+<pre><code class="language-raku" data-lang="raku">method week-year(Date:D: --&gt; Int:D)
+</code></pre><p>返回调用者指定日期的星期年份。通常 <code>week-year</code> 等于 <code>Date.year</code>。但请注意，1月初的日期通常在上一年的最后一周结束，同样，12月的最后几天可能会落在明年的第一周。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new(&quot;2015-11-15&quot;).week-year;   # 2015 
 say Date.new(&quot;2014-12-31&quot;).week-year;   # 2015 (date belongs to the first week of 2015) 
 say Date.new(&quot;2016-01-02&quot;).week-year;   # 2015 (date belongs to the last week of 2015) 
-</code></pre>
-
-<h2 id="weekday-of-month">weekday-of-month</h2>
-
+</code></pre><h2 id="weekday-of-month">weekday-of-month</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method weekday-of-month(Date:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回一个数字（1..5），表示在该月份到目前为止发生的特定星期几的次数，该日期包括在内。</p>
-
-<pre><code class="language-raku">say Date.new(&quot;2003-06-09&quot;).weekday-of-month;  # 2  (second Monday of the month) 
-</code></pre>
-
-<h2 id="yyyy-mm-dd-方法">yyyy-mm-dd 方法</h2>
-
+<pre><code class="language-raku" data-lang="raku">method weekday-of-month(Date:D: --&gt; Int:D)
+</code></pre><p>返回一个数字（1..5），表示在该月份到目前为止发生的特定星期几的次数，该日期包括在内。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new(&quot;2003-06-09&quot;).weekday-of-month;  # 2  (second Monday of the month) 
+</code></pre><h2 id="yyyy-mm-dd-方法">yyyy-mm-dd 方法</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method yyyy-mm-dd(Date:D: --&gt; Str:D)
-</code></pre>
-
-<p>以 <code>YYYY-MM-DD</code> 格式(<a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>)返回日期。</p>
-
-<pre><code class="language-raku">say Date.new(&quot;2015-11-15&quot;).yyyy-mm-dd;   # OUTPUT: «2015-11-15» 
+<pre><code class="language-raku" data-lang="raku">method yyyy-mm-dd(Date:D: --&gt; Str:D)
+</code></pre><p>以 <code>YYYY-MM-DD</code> 格式(<a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a>)返回日期。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new(&quot;2015-11-15&quot;).yyyy-mm-dd;   # OUTPUT: «2015-11-15» 
 say DateTime.new(1470853583).yyyy-mm-dd; # OUTPUT: «2016-08-10» 
-</code></pre>
-
-<h2 id="daycount-方法">daycount 方法</h2>
-
+</code></pre><h2 id="daycount-方法">daycount 方法</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method daycount(Dateish:D: --&gt; Int:D)
-</code></pre>
-
-<p>返回从 1858 年 11 月 17 纪元日至调用者当天的天数。通过这种方法返回的日数是 MJD，即<a href="https://en.wikipedia.org/wiki/Julian_day">修正的朱利安日</a>，其通常由天文学家，神学家，科学家和其他人使用。 MJD 公约旨在促进简化的时间顺序计算。</p>
-
-<pre><code class="language-raku">say Date.new('1995-09-27').daycount;    # OUTPUT: «49987» 
-</code></pre>
-
-<h2 id="io-方法">IO 方法</h2>
-
+<pre><code class="language-raku" data-lang="raku">method daycount(Dateish:D: --&gt; Int:D)
+</code></pre><p>返回从 1858 年 11 月 17 纪元日至调用者当天的天数。通过这种方法返回的日数是 MJD，即<a href="https://en.wikipedia.org/wiki/Julian_day">修正的朱利安日</a>，其通常由天文学家，神学家，科学家和其他人使用。 MJD 公约旨在促进简化的时间顺序计算。</p>
+<pre><code class="language-raku" data-lang="raku">say Date.new('1995-09-27').daycount;    # OUTPUT: «49987» 
+</code></pre><h2 id="io-方法">IO 方法</h2>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method IO(Dateish:D: --&gt; IO::Path:D)
-</code></pre>
-
-<p>返回表示 Dateish 对象的字符串化值的 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 对象：</p>
-
-<pre><code class="language-raku">Date.today.IO.say;   # OUTPUT: «&quot;2016-10-03&quot;.IO␤» 
+<pre><code class="language-raku" data-lang="raku">method IO(Dateish:D: --&gt; IO::Path:D)
+</code></pre><p>返回表示 Dateish 对象的字符串化值的 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 对象：</p>
+<pre><code class="language-raku" data-lang="raku">Date.today.IO.say;   # OUTPUT: «&quot;2016-10-03&quot;.IO␤» 
 DateTime.now.IO.say; # OUTPUT: «&quot;2016-10-03T11:14:47.977994-04:00&quot;.IO␤» 
-</code></pre>
-
-<p>可移植性注意：某些操作系统（例如Windows）不允许在文件名中使用冒号( <code>:</code> )，这些冒号会出现在从<a href="https://docs.raku.org/type/DateTime">DateTime</a> 对象创建的 <code>IO::Path</code> 中。</p>
-
+</code></pre><p>可移植性注意：某些操作系统（例如Windows）不允许在文件名中使用冒号( <code>:</code> )，这些冒号会出现在从<a href="https://docs.raku.org/type/DateTime">DateTime</a> 对象创建的 <code>IO::Path</code> 中。</p>
 <h2 id="类型图">类型图</h2>
-
 <p>Dateish 的类型关系为</p>
-
-<p><img src="https://docs.raku.org/images/type-graph-Dateish.svg" alt="img" /></p>
-
+<p><img src="https://docs.raku.org/images/type-graph-Dateish.svg" alt="img"></p>
 <p>底层实现代码为：</p>
-
 <p><a href="https://github.com/rakudo/rakudo/blob/master/src/core/Dateish.pm6">https://github.com/rakudo/rakudo/blob/master/src/core/Dateish.pm6</a></p>
 
 
@@ -544,7 +427,7 @@ DateTime.now.IO.say; # OUTPUT: «&quot;2016-10-03T11:14:47.977994-04:00&quot;.IO
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

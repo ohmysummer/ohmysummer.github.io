@@ -10,12 +10,12 @@
   <meta name="twitter:title" content="Cro Http Test" />
   <meta name="description" content="Cro::HTTP::Test 原则上可以通过使用 Cro::HTTP::Server托管应用程序, 使用 Cro::HTTP::Client向其发出请求, 并使用标准 Test 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：
  为发出测试请求和检查结果提供更方便的 API 跳过网络并将 Cro::TCP 对象从客户端管道传递到服务器管道, 反之亦然  基本示例 给定模块 MyService::Routes, 如下所示：
-sub routes() is export { route { get -&gt; { content &#39;text/plain&#39;, &#39;Nothing to see here&#39;; } post -&gt; &#39;add&#39; { request-body &#39;application-json&#39; =&gt; -&gt; (:$x!, :$y!) { content &#39;application/json&#39;, { :result($x &#43; $y) }; } } } }  我们可以像这样编写测试：
-use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#39;/&#39;), status =&gt; 200, content-type =&gt; &#39;text/plain&#39;, body =&gt; /nothing/; test-given &#39;/add&#39;, { test post(json =&gt; { :x(37), :y(5) }), status =&gt; 200, json =&gt; { :result(42) }; test post(json =&gt; { :x(37) }), status =&gt; 400; test get(json =&gt; { :x(37) }), status =&gt; 405; } } done-testing;  设置要测试的服务 test-service 函数有两个候选者。">
+sub routes() is export { route { get -&gt; { content &#39;text/plain&#39;, &#39;Nothing to see here&#39;; } post -&gt; &#39;add&#39; { request-body &#39;application-json&#39; =&gt; -&gt; (:$x!, :$y!) { content &#39;application/json&#39;, { :result($x &#43; $y) }; } } } } 我们可以像这样编写测试：
+use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#39;/&#39;), status =&gt; 200, content-type =&gt; &#39;text/plain&#39;, body =&gt; /nothing/; test-given &#39;/add&#39;, { test post(json =&gt; { :x(37), :y(5) }), status =&gt; 200, json =&gt; { :result(42) }; test post(json =&gt; { :x(37) }), status =&gt; 400; test get(json =&gt; { :x(37) }), status =&gt; 405; } } done-testing; 设置要测试的服务 test-service 函数有两个候选者。">
   <meta property="og:description" content="Cro::HTTP::Test 原则上可以通过使用 Cro::HTTP::Server托管应用程序, 使用 Cro::HTTP::Client向其发出请求, 并使用标准 Test 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：
  为发出测试请求和检查结果提供更方便的 API 跳过网络并将 Cro::TCP 对象从客户端管道传递到服务器管道, 反之亦然  基本示例 给定模块 MyService::Routes, 如下所示：
-sub routes() is export { route { get -&gt; { content &#39;text/plain&#39;, &#39;Nothing to see here&#39;; } post -&gt; &#39;add&#39; { request-body &#39;application-json&#39; =&gt; -&gt; (:$x!, :$y!) { content &#39;application/json&#39;, { :result($x &#43; $y) }; } } } }  我们可以像这样编写测试：
-use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#39;/&#39;), status =&gt; 200, content-type =&gt; &#39;text/plain&#39;, body =&gt; /nothing/; test-given &#39;/add&#39;, { test post(json =&gt; { :x(37), :y(5) }), status =&gt; 200, json =&gt; { :result(42) }; test post(json =&gt; { :x(37) }), status =&gt; 400; test get(json =&gt; { :x(37) }), status =&gt; 405; } } done-testing;  设置要测试的服务 test-service 函数有两个候选者。">
+sub routes() is export { route { get -&gt; { content &#39;text/plain&#39;, &#39;Nothing to see here&#39;; } post -&gt; &#39;add&#39; { request-body &#39;application-json&#39; =&gt; -&gt; (:$x!, :$y!) { content &#39;application/json&#39;, { :result($x &#43; $y) }; } } } } 我们可以像这样编写测试：
+use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#39;/&#39;), status =&gt; 200, content-type =&gt; &#39;text/plain&#39;, body =&gt; /nothing/; test-given &#39;/add&#39;, { test post(json =&gt; { :x(37), :y(5) }), status =&gt; 200, json =&gt; { :result(42) }; test post(json =&gt; { :x(37) }), status =&gt; 400; test get(json =&gt; { :x(37) }), status =&gt; 405; } } done-testing; 设置要测试的服务 test-service 函数有两个候选者。">
   <meta name="twitter:description" content="Cro::HTTP::Test 原则上可以通过使用 Cro::HTTP::Server托管应用程序, 使用 Cro::HTTP::Client向其发出请求, 并使用标准 Test 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：
  为发出测试请求和检查结果提供更方便的 API 跳过网络并将 Cro::TCP 对象从客户端管道传递到服务器管 …">
   <meta name="author" content="焉知非鱼"/>
@@ -27,7 +27,7 @@ use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-14-cro-http-test/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -234,22 +234,15 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="cro-http-test">Cro::HTTP::Test</h2>
-
+        <h2 id="crohttptest">Cro::HTTP::Test</h2>
 <p>原则上可以通过使用 <a href="https://cro.services/docs/reference/cro-http-server">Cro::HTTP::Server</a>托管应用程序, 使用 <a href="https://cro.services/docs/reference/cro-http-client">Cro::HTTP::Client</a>向其发出请求, 并使用标准 <code>Test</code> 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：</p>
-
 <ul>
 <li>为发出测试请求和检查结果提供更方便的 API</li>
 <li>跳过网络并将 <code>Cro::TCP</code> 对象从客户端管道传递到服务器管道, 反之亦然</li>
 </ul>
-
 <h2 id="基本示例">基本示例</h2>
-
 <p>给定模块 <code>MyService::Routes</code>, 如下所示：</p>
-
-<pre><code class="language-raku">sub routes() is export {
+<pre><code class="language-raku" data-lang="raku">sub routes() is export {
     route {
         get -&gt; {
             content 'text/plain', 'Nothing to see here';
@@ -261,11 +254,8 @@ if (!doNotTrack) {
         }
     }
 }
-</code></pre>
-
-<p>我们可以像这样编写测试：</p>
-
-<pre><code class="language-raku">use Cro::HTTP::Test;
+</code></pre><p>我们可以像这样编写测试：</p>
+<pre><code class="language-raku" data-lang="raku">use Cro::HTTP::Test;
 use MyService::Routes;
 
 test-service routes(), {
@@ -288,105 +278,59 @@ test-service routes(), {
 }
 
 done-testing;
-</code></pre>
-
-<h2 id="设置要测试的服务">设置要测试的服务</h2>
-
+</code></pre><h2 id="设置要测试的服务">设置要测试的服务</h2>
 <p><code>test-service</code> 函数有两个候选者。</p>
-
 <p><code>test-service</code>(<code>Cro::Transform, &amp;tests, :$fake-auth, :$http)</code> 候选者针对提供的 HTTP 应用程序运行测试, 该应用程序可以是任何使用 <a href="https://cro.services/docs/reference/cro-http-request">Cro::HTTP::Request</a> 的 <code>Cro::Transform</code> 并生成 <a href="https://cro.services/docs/reference/cro-http-response">Cro::HTTP::Response</a>。使用 <a href="https://cro.services/docs/reference/cro-http-router">Cro::HTTP::Router</a> 编写的应用程序执行此操作。也可以使用 <code>Cro.compose</code> 将（可能模拟的）中间件放在适当的位置。可选的 <code>:$fake-auth</code> 参数, 如果传递, 将添加一个中间件, 将请求的 <code>auth</code> 设置为指定的对象。这对于模拟用户或会话以及测试授权非常有用。 http 参数指定运行测试的 HTTP 版本。由于我们在测试中控制客户端和服务器端, 因此不允许设置 <code>:http&lt;1.1 2&gt;</code>。默认值为 <code>:http&lt;2&gt;</code>。</p>
-
 <p><code>test-service($uri, &amp;tests)</code> 候选者针对指定的基 URI 运行测试, 通过 <a href="https://cro.services/docs/reference/cro-http-client">Cro::HTTP::Client</a> 连接到它。这使得可以使用 <a href="https://cro.services/docs/reference/cro-http-test">Cro::HTTP::Test</a> 为使用除 Cro 之外的其他东西构建的服务编写测试。</p>
-
 <p>所有其他命名参数都作为 <a href="https://cro.services/docs/reference/cro-http-client">Cro::HTTP::Client</a> 构造函数参数传递。</p>
-
 <h2 id="写测试">写测试</h2>
-
 <p><code>test</code> 函数用于传递给 <code>test-service</code> 的块内部。它期望传递一个表示测试请求的位置参数，并命名参数，指示响应的预期属性。</p>
-
 <p>通过调用 <code>get</code>，<code>put</code>，<code>post</code>，<code>delete</code>，<code>head</code> 或 <code>patch</code> 之一来指定请求。还有其他 HTTP 的 <code>request($method, ...)</code>（事实上，<code>get</code> 只会调用 <code>request('GET', ...)</code>）。这些函数接受提供相对 URI 的可选位置参数，如果提供该 URI 将附加到当前有效基 URI。 <code>:$json</code> 命名参数被特殊处理，扩展为 <code>{content-type =&gt;'application/json', body =&gt; $json}</code>。所有其他命名参数将传递给 Cro::HTTP::Client 的 request 方法，从而使所有 HTTP 客户端的功能都可用。</p>
-
 <p><code>test</code> 函数的命名参数构成检查。它们主要遵循 <a href="https://cro.services/docs/reference/cro-http-response">Cro::HTTP::Response</a> 对象上的方法名称。可用的检查如下。</p>
-
 <h3 id="status">status</h3>
-
 <p>Smartmatches 响应检查的响应的 <code>status</code> 属性。虽然整数（例如 <code>status =&gt; 200</code>）将是最常见的，但也可能是诸如 <code>status =&gt; * &lt;400</code> 之类的事情（例如，不是错误）。</p>
-
 <h3 id="content-type">content-type</h3>
-
-<p>检查内容类型是否相同。如果传递了一个字符串，它会将其解析为媒体类型，并检查类型和子类型是否与响应的类型匹配。如果字符串中有任何额外参数（例如字符集），则还将在接收的媒体类型中检查这些参数。如果接收的媒体类型具有未提及的额外参数，则将忽略这些参数。因此，检查content-type =&gt;&lsquo;text / plain&rsquo;匹配text / plain;响应中的charset = utf8。</p>
-
+<p>检查内容类型是否相同。如果传递了一个字符串，它会将其解析为媒体类型，并检查类型和子类型是否与响应的类型匹配。如果字符串中有任何额外参数（例如字符集），则还将在接收的媒体类型中检查这些参数。如果接收的媒体类型具有未提及的额外参数，则将忽略这些参数。因此，检查content-type =&gt;'text / plain'匹配text / plain;响应中的charset = utf8。</p>
 <p>对于更细粒度的控制，传递一个块，它将传递一个Cro :: MediaType的实例，并期望返回一些测试通过的truthy。</p>
-
 <h3 id="header-或-headers">header 或 headers</h3>
-
 <p>将哈希映射头名称转换为头值，或者执行相同的Pair列表。如果标题存在且标题的值与值相匹配，则测试通过。仅在关注标题存在时使用*，但不希望检查其值。响应中的所有其他标头都将被忽略（即，额外的标头被认为是正常的）。</p>
-
-<pre><code class="language-raku">headers =&gt; {
+<pre><code class="language-raku" data-lang="raku">headers =&gt; {
         Strict-Transport-Security =&gt; *,
         Cache-Control =&gt; /public/
     }
-</code></pre>
-
-<p>为了进一步控制，传递一个块，它将接收一个Pair列表，每个块代表一个头。它的返回值应该是测试通过的真相。</p>
-
+</code></pre><p>为了进一步控制，传递一个块，它将接收一个Pair列表，每个块代表一个头。它的返回值应该是测试通过的真相。</p>
 <h3 id="body-text">body-text</h3>
-
 <p>获得响应的正文 - 并将其与提供的值进行智能匹配。字符串，正则表达式或代码对象都可能有用。</p>
-
-<pre><code class="language-raku">body-text =&gt; /:i success/
-</code></pre>
-
-<p>如果测试的内容类型且测试失败，则将跳过正文测试。</p>
-
+<pre><code class="language-raku" data-lang="raku">body-text =&gt; /:i success/
+</code></pre><p>如果测试的内容类型且测试失败，则将跳过正文测试。</p>
 <h3 id="body-blob">body-blob</h3>
-
 <p>获得响应的body-blob并将其与提供的值进行智能匹配</p>
-
-<pre><code class="language-raku">body-blob =&gt; *.bytes &gt; 128
-</code></pre>
-
-<p>如果测试的内容类型且测试失败，则将跳过正文测试。</p>
-
+<pre><code class="language-raku" data-lang="raku">body-blob =&gt; *.bytes &gt; 128
+</code></pre><p>如果测试的内容类型且测试失败，则将跳过正文测试。</p>
 <h3 id="body">body</h3>
-
 <p>获得响应的主体并将其与提供的值进行智能匹配。请注意，body属性根据响应的内容类型决定要生成的内容，从而选择适当的主体解析器。因此，建议将其与内容类型一起使用（将始终在正文之前进行测试，如果失败则跳过正文测试）。</p>
-
 <h3 id="json">json</h3>
-
-<p>对于JSON响应的常见情况，这是一个方便的捷径。它实现了content-type =&gt; {。type eq&rsquo;application&rsquo;&amp;&amp; .subtype-name eq&rsquo;json&rsquo;|| .suffix eq&rsquo;json&rsquo;}（也就是说，它接受application / json或类似application / vnd.foobar + json的东西）。</p>
-
+<p>对于JSON响应的常见情况，这是一个方便的捷径。它实现了content-type =&gt; {。type eq&rsquo;application&rsquo;&amp;&amp; .subtype-name eq&rsquo;json'|| .suffix eq&rsquo;json&rsquo;}（也就是说，它接受application / json或类似application / vnd.foobar + json的东西）。</p>
 <p>如果传递了代码值，那么将使用反序列化的JSON主体调用代码，并且应该返回一个truthy值以供测试通过。否则，将使用is-deep测试例程来检查收到的JSON的结构是否符合预期。</p>
-
 <h3 id="many-tests-with-one-uri-set-of-headers-etc">Many tests with one URI, set of headers, etc.</h3>
-
 <p>重复测试的相同细节可能会很繁琐。例如，通常希望针对相同的URI编写许多测试，每次都将其传递给不同的主体或使用不同的请求方法。测试给定的功能有多种形式。它可以与URI和块一起使用：</p>
-
-<pre><code class="language-raku">test-given '/add', {
+<pre><code class="language-raku" data-lang="raku">test-given '/add', {
     test post(json =&gt; { :x(37), :y(5) }),
         status =&gt; 200,
         json =&gt; { :result(42) };
     test post(json =&gt; { :x(37) }),
         status =&gt; 400;
 }
-</code></pre>
-
-<p>在这种情况下，测试将全部针对附加到当前有效URI的URI执行，该URI在测试服务块中是被测试服务的基URI。如果各个测试用例也具有URI，则也会附加它。可以嵌套测试给定的块，并且每个块都附加其URI段，从而建立新的当前有效URI。</p>
-
+</code></pre><p>在这种情况下，测试将全部针对附加到当前有效URI的URI执行，该URI在测试服务块中是被测试服务的基URI。如果各个测试用例也具有URI，则也会附加它。可以嵌套测试给定的块，并且每个块都附加其URI段，从而建立新的当前有效URI。</p>
 <p>也可以将命名参数传递给test-given，这些参数将用作请求参数，传递给Cro :: HTTP :: Client。请注意，为get或request指定的任何命名参数都将覆盖在给定测试中指定的参数。</p>
-
-<pre><code class="language-raku">test-given '/add', header =&gt; { X-Precision =&gt; '15' } {
+<pre><code class="language-raku" data-lang="raku">test-given '/add', header =&gt; { X-Precision =&gt; '15' } {
+    ...
+}
+</code></pre><p>第二种形式不需要相对URI，而只需要选项：</p>
+<pre><code class="language-raku" data-lang="raku">test-given header =&gt; { X-Precision =&gt; '15' } {
     ...
 }
 </code></pre>
-
-<p>第二种形式不需要相对URI，而只需要选项：</p>
-
-<pre><code class="language-raku">test-given header =&gt; { X-Precision =&gt; '15' } {
-    ...
-}
-</code></pre>
-
 
         
           <div class="blog-tags">
@@ -477,7 +421,7 @@ done-testing;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

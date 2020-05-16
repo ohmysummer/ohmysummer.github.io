@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-20-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%A4%A9-%E5%AE%8F%E7%9A%84%E8%BF%9B%E9%98%B6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,25 +231,15 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="day-20-advancements-in-macrotechnologies-https-rakuadvent-wordpress-com-2017-12-20-day-20-advancements-in-macrotechnologies"><a href="https://rakuadvent.wordpress.com/2017/12/20/day-20-advancements-in-macrotechnologies/">Day 20: Advancements in Macrotechnologies</a></h1>
-
+        <h1 id="day-20-advancements-in-macrotechnologieshttpsrakuadventwordpresscom20171220day-20-advancements-in-macrotechnologies"><a href="https://rakuadvent.wordpress.com/2017/12/20/day-20-advancements-in-macrotechnologies/">Day 20: Advancements in Macrotechnologies</a></h1>
 <p>你好！</p>
-
 <p>请允许我，在出现日历的这一天，一个小切线。我不会直接谈论一个很酷的熟练的Raku特性。相反，我会打开一个小窗口，讨论可能会发生什么 - 希望在某些时候！</p>
-
 <p>如果你像我一样，在Rakudo上继续了几年的进步，你在版本中经常看到这一点：&gt;一些不太有效的功能包括：&gt;  - 高级宏</p>
-
 <p>那么，这究竟意味着什么？ Raku确实有宏，但它们目前的限制超出了人们通常想要做的。这并不是说它们目前是无用的，它们仍然是有用的，从前几年出现的其他帖子到OO :: Monitor使用宏来提前报告拼写错误。</p>
-
 <p>输入007. 007是“具有宏观许可的小型实验语言”。这是什么意思？！这是一种用于对宏进行调试和实验的语言，因此当他们被集成到Raku中时，他们的设计就已经准备好并经过战斗测试。</p>
-
 <p>那么，它有什么？ 007试图模仿Raku的“强大”部分，因此我们不会为完全不同的语言设计宏。这意味着阶段，中缀操作员，（MOP和正则表达式的要点）。</p>
-
 <p>它是什么样子的？ 007的核心就是喜欢Raku.然而，它的确存在一些问题。让我们来看看你想写的最重要的片段：FizzBu​​zz。注意：此博客帖子中的所有代码片段都是可执行的007代码，而不是Raku代码。</p>
-
-<pre><code class="language-raku">my n = 1;
+<pre><code class="language-raku" data-lang="raku">my n = 1;
 while n &lt;= 100 {
     if n %% 15 {
         say(&quot;FizzBuzz&quot;);
@@ -265,11 +255,8 @@ while n &lt;= 100 {
     }
     n = n + 1;
 }
-</code></pre>
-
-<p>什么？你不在乎吗？很明显，我确实答应过你的宏。我们将看看一个简单的宏“name”，它返回最后一个索引对象的名称。</p>
-
-<pre><code class="language-raku">macro name(expr) {
+</code></pre><p>什么？你不在乎吗？很明显，我确实答应过你的宏。我们将看看一个简单的宏“name”，它返回最后一个索引对象的名称。</p>
+<pre><code class="language-raku" data-lang="raku">macro name(expr) {
     if expr ~~ Q::Postfix::Property {
         expr = expr.property;
     }
@@ -291,30 +278,20 @@ my info = {
 say(name(info));           # info
 say(name(info.foo));       # foo
 say(name(info.bar.baz));   # baz
-</code></pre>
-
-<p>所以，你可能会在这里“WAT”。你是对的 - 这个要点缺少一些解释。宏的一个最重要的功能是访问AST（抽象语法树）。宏需要能够混淆代码的结构（如Lisp），而不是代码文本（如C）。 Q ::类型是代表程序形状的标准化类型。他们并不特别需要表示编译器/解释器如何考虑代码，但他们需要保持稳定，因为我们正在编写我们的代码 - 我们的宏 - 针对这种内省API。</p>
-
+</code></pre><p>所以，你可能会在这里“WAT”。你是对的 - 这个要点缺少一些解释。宏的一个最重要的功能是访问AST（抽象语法树）。宏需要能够混淆代码的结构（如Lisp），而不是代码文本（如C）。 Q ::类型是代表程序形状的标准化类型。他们并不特别需要表示编译器/解释器如何考虑代码，但他们需要保持稳定，因为我们正在编写我们的代码 - 我们的宏 - 针对这种内省API。</p>
 <p>在这个代码示例中，我们使用了两种Q类型：表示点访问的Q :: Postfix :: Property和表示标识符的Q :: Identifier。首先，我们检查我们是否有财产。如果是这种情况，我们提取点右侧的内容（记住，a.b.c是（a.b）.c）。然后我们检查我们是否结束了一个标识符（而不是一个数字），并打印出来。这是例如我们如何才能实现C＃的操作符名称，而不必为语言添加任何内容！</p>
-
 <p>几天前，masak ++发布了一篇名为“三年过去”的博客文章，标志着007的第三个生日。虽然有些地区仍然非常粗糙，但它看起来越来越像一种可用的语言，日复一日。</p>
-
 <p>接下来我们要看的是正在解析的实现。下面是它的外观：（这个例子适用于PR，但是现在使用特殊外壳）：</p>
-
-<pre><code class="language-raku">macro statement:() is parsed(/&quot;whoa!&quot;/) {
+<pre><code class="language-raku" data-lang="raku">macro statement:() is parsed(/&quot;whoa!&quot;/) {
     return quasi @ Q::Statement {
         say(&quot;whoa!&quot;);
     }
 };
 
 whoa!;
-</code></pre>
-
-<p>这也可能是我们希望他们在Raku中看起来&hellip;&hellip;或者不是？讨论仍在进行中！鼓励你加入自行车&hellip;&hellip;讨论:-)。这种语言还很年轻，需要大量的丰富功能，以及它的高级功能和简单功能。</p>
-
-<p>在我向你提供大量的元乐趣之前，这里是007想要达到目前坐落在分支中的一个里程碑：实现infix：<ff>作为库的一部分（如果你不确定，Raku文档如果在这里适用），而不是语言的一部分。代码在这里！</p>
-
-<pre><code class="language-raku"># our infix macro takes a lhs (left hand side) and a rhs (right hand side).
+</code></pre><p>这也可能是我们希望他们在Raku中看起来&hellip;&hellip;或者不是？讨论仍在进行中！鼓励你加入自行车&hellip;&hellip;讨论:-)。这种语言还很年轻，需要大量的丰富功能，以及它的高级功能和简单功能。</p>
+<p>在我向你提供大量的元乐趣之前，这里是007想要达到目前坐落在分支中的一个里程碑：实现infix：<!-- raw HTML omitted -->作为库的一部分（如果你不确定，Raku文档如果在这里适用），而不是语言的一部分。代码在这里！</p>
+<pre><code class="language-raku" data-lang="raku"># our infix macro takes a lhs (left hand side) and a rhs (right hand side).
 macro infix:&lt;ff&gt;(lhs, rhs) is tighter(infix:&lt;=&gt;) {
     my active = False; # our current value when starting
     return quasi {
@@ -338,9 +315,7 @@ for values -&gt; v {
         say(&quot;x&quot;);
     }
 }
-</code></pre>
-
-<p>这就是今天！如果您需要更多，请随时查看教程或示例文件夹。如果你想了解意愿，我们也有路线图。</p>
+</code></pre><p>这就是今天！如果您需要更多，请随时查看教程或示例文件夹。如果你想了解意愿，我们也有路线图。</p>
 
 
         
@@ -432,7 +407,7 @@ for values -&gt; v {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

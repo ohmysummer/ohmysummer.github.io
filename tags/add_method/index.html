@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Add_method</title>
-  <meta property="og:title" content="Add_method" />
-  <meta name="twitter:title" content="Add_method" />
+  <title>add_method</title>
+  <meta property="og:title" content="add_method" />
+  <meta name="twitter:title" content="add_method" />
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/add_method/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/add_method/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -184,7 +184,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#Add_method</h1>
+              <h1>#add_method</h1>
               <hr class="small">
             </div>
           </div>
@@ -225,9 +225,9 @@ if (!doNotTrack) {
                 
                   How do you add a method to an existing class in Raku? Raku 中怎么为已存在的类添加方法?
 Int 类有一个方法叫做 is-prime, 我想为 Int类型添加其它的方法。
-class MyInt is Int { method is-even () returns Bool:D { return False if self % 2; return True; } } my $n = MyInt.new(138); say $n.is-even;  通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
-method add_method(Metamodel::MethodContainer: $obj, $name, $code)  这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
-Int.^add_method( 'is-even', method () returns Bool:D { return False if self % 2; return True; } ); say 137.
+class MyInt is Int {method is-even () returns Bool:D {return False if self % 2;return True;}}my $n = MyInt.new(138);say $n.is-even;通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
+method add_method(Metamodel::MethodContainer: $obj, $name, $code)这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
+Int.^add_method( 'is-even', method () returns Bool:D {return False if self % 2;return True;} );say 137.
                   <a href="https://ohmysummer.github.io/post/2015-11-11-%E5%9C%A8raku%E4%B8%AD%E6%80%8E%E4%B9%88%E4%B8%BA%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E7%B1%BB%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -269,9 +269,9 @@ Int.^add_method( 'is-even', method () returns Bool:D { return False if self % 2;
                 
                   Sneaky methods
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
-my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
-src/core/Bool.pm 32: Bool.^add_method('pred', my method pred() { Bool::False }); 33: Bool.^add_method('succ', my method succ() { Bool::True }); 35: Bool.^add_method('enums', my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
-&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say; # output # (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .
+my method foo(SomeClass:D:) { self }明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
+src/core/Bool.pm32: Bool.^add_method('pred', my method pred() { Bool::False });33: Bool.^add_method('succ', my method succ() { Bool::True });35: Bool.^add_method('enums', my method enums() { self.^enum_values });这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
+&lt;a b c&gt;.&amp;(my method ::(List:D) { dd self; self } ).say;# output# (&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)# (a b c)没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .
                   <a href="https://ohmysummer.github.io/post/2015-05-01-sneaky-methods/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -322,7 +322,7 @@ src/core/Bool.pm 32: Bool.^add_method('pred', my method pred() { Bool::False });
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

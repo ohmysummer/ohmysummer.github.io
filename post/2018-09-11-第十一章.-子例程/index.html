@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-11-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0.-%E5%AD%90%E4%BE%8B%E7%A8%8B/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 28 minutes (5858 words)
+  <i class="fa fa-clock-o"></i> 28 minutes (5863 words)
   
   
 </span>
@@ -231,24 +231,14 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第十一章-子例程">第十一章. 子例程</h1>
-
 <p>Now it’s time for more sophisticated subroutines. You were introduced to them in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch05.html#camelia-blocks">Chapter 5</a> but you only saw enough to support the upcoming chapters. Now that you’ve seen <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>s and <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>es, there’s much more you can do with subroutine signatures.</p>
-
 <p>现在是更复杂的子例程的时候了。你在第五章见过它们了，但你只看到足以支持即将到来的章节。现在你已经看过<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a> 和 <a href="https://docs.raku.org/type/Hash.html"><code>哈希</code></a>，你可以用子例程签名做更多的事情。</p>
-
 <h1 id="a-basic-subroutine">A Basic Subroutine</h1>
-
 <p>When you run a subroutine you get some sort of result: the last evaluated expression. That’s the return value. This sets basic routines apart from the simpler <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>s you saw in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch05.html#camelia-blocks">Chapter 5</a>. A <a href="https://docs.raku.org/type/Routine.html"><code>Routine</code></a> knows how to send a value back to the code that called it. This subroutine returns a different <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> if the argument is odd or even:</p>
-
 <p>当您运行子例程时，您会得到某种结果：最后被计算的表达式。这是返回值。这将基础子例程和你在第五章中看到的更简单的 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 区分开。<a href="https://docs.raku.org/type/Routine.html"><code>例程</code></a>知道如何将值发送回调用它的代码。如果参数为奇数或偶数，则此子例程返回不同的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>sub odd-or-even {
     if ( @_[0] %% 2 ) { 'Even' }
     else              { 'Odd'  }
@@ -256,12 +246,8 @@ if (!doNotTrack) {
 
 odd-or-even( 2 );    # Even
 odd-or-even( 137 );  # Odd
-</code></pre>
-
-<p>Without a signature the arguments show up in <code>@_</code>. Each subroutine has its own version of that variable so it doesn’t conflict with any other subroutine’s <code>@_</code>. This code calls one subroutine that calls another. <code>top-call</code>shows its <code>@_</code> before and after <code>show-args</code>:</p>
-
+</code></pre><p>Without a signature the arguments show up in <code>@_</code>. Each subroutine has its own version of that variable so it doesn’t conflict with any other subroutine’s <code>@_</code>. This code calls one subroutine that calls another. <code>top-call</code>shows its <code>@_</code> before and after <code>show-args</code>:</p>
 <p>如果没有签名，则参数会出现在 <code>@_</code>中。每个子例程都有自己的变量版本，因此它不会与任何其它子例程的<code>@_</code> 冲突。此代码调用一个调用另一个子例程的子例程。 <code>top-callshows</code> 显示 <code>show-args</code> 之前和之后的 <code>@_</code>：</p>
-
 <pre><code>top-call( &lt;Hamadryas perlicus&gt; );
 
 sub show-args { say @_ }
@@ -270,43 +256,26 @@ sub top-call {
     show-args( &lt;a b c&gt; );
     put &quot;Top: @_[]&quot;;
     }
-</code></pre>
-
-<p>Even though both use <code>@_</code> they are separate. The <code>@_</code> in <code>top-call</code> isn’t disturbed by <code>show-args</code>:</p>
-
+</code></pre><p>Even though both use <code>@_</code> they are separate. The <code>@_</code> in <code>top-call</code> isn’t disturbed by <code>show-args</code>:</p>
 <p>尽管两者都使用 <code>@_</code>，但它们是分开的。 <code>top-call</code> 中的 <code>@_</code> 不受 <code>show-args</code> 的干扰：</p>
-
 <pre><code>Top: Hamadryas perlicus
 [a b c]
 Top: Hamadryas perlicus
-</code></pre>
-
-<p>The subroutine definition is lexically scoped. If you need it for only part of the code you can hide it in a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. Outside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> that subroutine is not visible:</p>
-
+</code></pre><p>The subroutine definition is lexically scoped. If you need it for only part of the code you can hide it in a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. Outside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> that subroutine is not visible:</p>
 <p>子例程定义是词法范围的。如果只需要部分代码，则可以将其隐藏在 Block 中。在 Block 之外，子例程不可见：</p>
-
 <pre><code>{
 put odd-or-even( 137 );
 sub odd-or-even { ... } # only defined in this block
 }
 
 put odd-or-even( 37 );  # undeclared routine!
-</code></pre>
-
-<h2 id="额外的参数">额外的参数</h2>
-
+</code></pre><h2 id="额外的参数">额外的参数</h2>
 <p>What does <code>odd-or-even</code> accept, though? The parameter is an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> but you only use the first element. These calls still work without warnings or errors:</p>
-
 <p>但是 <code>odd-or-even</code> 接受了什么？参数是一个数组，但您只使用第一个元素。这些调用仍然有效，没有警告或错误：</p>
-
 <pre><code>put odd-or-even( 2, 47        );  # Even
 put odd-or-even( 137, 'Hello' );  # Odd
-</code></pre>
-
-<p>This isn’t necessarily wrong. It depends on what you are trying to do. Maybe you specifically want as many arguments as the caller decides to send:</p>
-
+</code></pre><p>This isn’t necessarily wrong. It depends on what you are trying to do. Maybe you specifically want as many arguments as the caller decides to send:</p>
 <p>这不一定是错的。这取决于你想要做什么。也许你特别想要调用者决定发送尽可能多的参数：</p>
-
 <pre><code>sub plus-minus {
     [-]
     @_
@@ -315,90 +284,50 @@ put odd-or-even( 137, 'Hello' );  # Odd
     }
 
 put plus-minus( 9,1,2,3 );
-</code></pre>
-
-<p>With the signatures you’ll see later in the chapter you’ll be able to control this to get the situation that you want.</p>
-
+</code></pre><p>With the signatures you’ll see later in the chapter you’ll be able to control this to get the situation that you want.</p>
 <p>使用您将在本章后面看到的签名，您将能够控制它以获得您想要的情况。</p>
-
 <h2 id="显式返回">显式返回</h2>
-
 <p>You can explicitly return from anywhere in a subroutine with <code>return</code>. This distinguishes a subroutine from the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>s you used in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch05.html#camelia-blocks">Chapter 5</a>. This version is the same thing but with an explicit <code>return</code>:</p>
-
 <p>您可以使用 <code>return</code> 从子例程中的任何位置显式返回。这将子例程与您在第五章中使用的 Block 区分开来。这个版本是相同的，但具有明确的返回：</p>
-
 <pre><code>sub odd-or-even ( $n ) {
     if ( $n %% 2 ) { return 'Even' }
     else           { return 'Odd'  }
     }
-</code></pre>
-
-<p>Call this with extra arguments and you get an error:</p>
-
+</code></pre><p>Call this with extra arguments and you get an error:</p>
 <p>使用额外的参数调用此方法会出现错误：</p>
-
 <pre><code>put odd-or-even( 2, 47 );  # Error
-</code></pre>
-
-<p>The message tells you the argument list does not match the signature:</p>
-
+</code></pre><p>The message tells you the argument list does not match the signature:</p>
 <p>该消息告诉您参数列表与签名不匹配：</p>
-
 <pre><code>Calling odd-or-even(Int, Int) will never work with declared signature ($n)
-</code></pre>
-
-<p>You could write this differently. <code>do</code> converts the entire <code>if</code> structure into something that evaluates to its last evaluated expression. Return the value of the <code>do</code> instead of repeating the <code>return</code>:</p>
-
+</code></pre><p>You could write this differently. <code>do</code> converts the entire <code>if</code> structure into something that evaluates to its last evaluated expression. Return the value of the <code>do</code> instead of repeating the <code>return</code>:</p>
 <p>你可以用不同的方式写出来。<code>do</code> 将整个 <code>if</code> 结构转换为计算其最后计算的表达式的内容。返回 <code>do</code> 的值而不是重复 <code>return</code>：</p>
-
 <pre><code>sub odd-or-even ( $n ) {
     return do {
         if ( $n %% 2 ) { 'Even' }
         else           { 'Odd'  }
         }
     }
-</code></pre>
-
-<p>The conditional operator is the same thing expressed differently:</p>
-
+</code></pre><p>The conditional operator is the same thing expressed differently:</p>
 <p>条件运算符是同样的东西，它以不同的方式表达：</p>
-
 <pre><code>sub odd-or-even ( $n ) {
     return $n %% 2 ?? 'Even' !! 'Odd'
     }
-</code></pre>
-
-<p>Another way to do the same thing is to have a default return value but return sooner for other situations:</p>
-
+</code></pre><p>Another way to do the same thing is to have a default return value but return sooner for other situations:</p>
 <p>另一种做同样事情的方法是使用默认返回值，但在其他情况下更快返回：</p>
-
 <pre><code>sub odd-or-even ( $n ) {
     return 'Even' if $n %% 2;
     'Odd';
     }
-</code></pre>
-
-<p>Or back to where you started with an implicit return:</p>
-
+</code></pre><p>Or back to where you started with an implicit return:</p>
 <p>或者回到你开始的隐式返回：</p>
-
 <pre><code>sub odd-or-even ( $n ) { $n %% 2 ?? 'Even' !! 'Odd' }
-</code></pre>
-
-<p>These techniques are more appealing in more complex situations that I’m not going to show here. No matter which of these serves your situation, they all do the same thing: they send a value back to the code that called it.</p>
-
+</code></pre><p>These techniques are more appealing in more complex situations that I’m not going to show here. No matter which of these serves your situation, they all do the same thing: they send a value back to the code that called it.</p>
 <p>这些技术在更复杂的情况下更具吸引力，我不会在这里展示。无论哪种情况适合您的情况，它们都会做同样的事情：它们将值发送回调用它的代码。</p>
-
 <p>EXERCISE 11.1Create a subroutine that returns the least common multiple of two integers. Use that in a program that takes two integers from the command line. The particulars of this exercise are very simple but it’s the structure of the subroutine definitions that matter.</p>
-
 <p>练习11.1创建一个返回两个整数的最小公倍数的子程序。在从命令行获取两个整数的程序中使用它。这个练习的细节非常简单，但重要的是子程序定义的结构。</p>
-
 <h1 id="递归">递归</h1>
-
 <p>Subroutines can call themselves; this is called recursion. The classic example is Fibonacci numbers, where the next number in the series is the sum of the preceding two given that the first two numbers are 0 and 1:</p>
-
 <p>子程序可以调用自己;这称为递归。典型的例子是 Fibonacci 数，其中系列中的下一个数字是前两个的总和，前两个数字是 0 和 1：</p>
-
 <pre><code>sub fibonacci ( $n ) {
     return 0 if $n == 0;  # special case of n = 0
     return 1 if $n == 1;
@@ -406,408 +335,221 @@ put plus-minus( 9,1,2,3 );
     }
 
 say fibonacci( 10 );  # 55
-</code></pre>
-
-<p>When you call this subroutine with the value of <code>10</code> it calls itself twice to get the values for <code>9</code> and <code>8</code>. When it calls itself for <code>9</code>, it creates two more calls for <code>8</code> and <code>7</code>. It keeps creating more and more calls to itself until the arguments are <code>0</code> or <code>1</code>. It can then return a value one level up, working its way back to where it started.</p>
-
+</code></pre><p>When you call this subroutine with the value of <code>10</code> it calls itself twice to get the values for <code>9</code> and <code>8</code>. When it calls itself for <code>9</code>, it creates two more calls for <code>8</code> and <code>7</code>. It keeps creating more and more calls to itself until the arguments are <code>0</code> or <code>1</code>. It can then return a value one level up, working its way back to where it started.</p>
 <p>当您使用值 <code>10</code> 调用此子例程时，它会调用自身两次以获取 <code>9</code> 和 <code>8</code> 的值。当它自己调用 <code>9</code> 时，它会为 <code>8</code> 和 <code>7</code> 创建两个以上的调用。它会不断创建对自身的调用，直到参数为 <code>0</code> 或 <code>1</code>.然后它可以返回一个级别的值，然后返回到它开始的位置。</p>
-
 <p>A Raku subroutine knows what it is inside its own <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. The variable <code>&amp;?ROUTINE</code> is the same subroutine object. You don’t have to know the current subroutine’s name. This is the same thing:</p>
-
 <p>Raku 子程序知道它自己的 Block 内部是什么。变量<code>&amp;?ROUTINE</code>是相同的子程序对象。您不必知道当前子例程的名称。这是同样的东西：</p>
-
 <pre><code>sub fibonacci ( $n ) {
     return 0 if $n == 0;
     return 1 if $n == 1;
     return &amp;?ROUTINE( $n - 1 ) + &amp;?ROUTINE( $n - 2 );
     }
-</code></pre>
-
-<p>This is only slightly better. You’ll read more about this later when you encounter <code>multi</code> subroutines.</p>
-
+</code></pre><p>This is only slightly better. You’ll read more about this later when you encounter <code>multi</code> subroutines.</p>
 <p>这稍微好一点。当您遇到 <code>multi</code> 子程序时，您将在以后阅读更多相关信息。</p>
-
-<p>EXERCISE 11.2Another favorite example of recursion is the factorial function. Start with a positive whole number and multiply it by all the strictly positive numbers that come before it. The factorial of 6 would be 6*5*4*3*2*1. Implement this as a recursive function. Once you’ve done that, implement it in the amazingly simple Raku fashion. How big a number can you get your program to produce?</p>
-
+<p>EXERCISE 11.2Another favorite example of recursion is the factorial function. Start with a positive whole number and multiply it by all the strictly positive numbers that come before it. The factorial of 6 would be 6<em>5</em>4<em>3</em>2*1. Implement this as a recursive function. Once you’ve done that, implement it in the amazingly simple Raku fashion. How big a number can you get your program to produce?</p>
 <p>练习11.2递归的另一个例子是阶乘函数。从正整数开始，然后乘以前面的所有严格正数。阶乘为6将为65432 * 1。将其实现为递归函数。完成后，以非常简单的Raku方式实现它。你的程序可以产生多大的数字？</p>
-
 <h2 id="迭代而不是递归">迭代而不是递归</h2>
-
 <p>You can turn many recursive solutions into iterative ones. Instead of repeatedly calling subroutines with all the overhead they entail (each call sets up a new scope, defines new variables, and so on), rearrange things so you don’t need a subroutine.</p>
-
 <p>您可以将许多递归解决方案转换为迭代解决方案。而不是重复调用子程序，它们需要所有开销（每个调用设置一个新的作用域，定义新的变量，等等），重新排列事物，这样你就不需要子程序了。</p>
-
 <p>The factorial case is easy. The reduction operator does that for you:</p>
-
 <p>阶乘这个情况很容易。规约运算符为您执行此操作：</p>
-
 <pre><code>my $factorial = [*] 1 .. $n;
-</code></pre>
-
-<h6 id="注意">注意</h6>
-
+</code></pre><h6 id="注意">注意</h6>
 <p>The operators are actually methods, so you don’t actually avoid calling something.</p>
-
 <p>运算符实际上是方法，所以你实际上避免不了调用某些东西。</p>
-
 <p>The Fibonacci case is easy too when you use a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>:</p>
-
 <p>使用 <code>Seq</code> 时，Fibonacci 案例也很简单：</p>
-
 <pre><code>my $fibonacci := 1, 1, * + * ... *;
 put &quot;Fib(5) is &quot;, $fibonacci[5];
-</code></pre>
-
-<p>You can make a queue of things to work on. With a queue you can add items anywhere you like. Instead of processing the next thingy immediately you can put it at the end of the queue. When it’s time to process the next thingy you can take it from the beginning, end, or middle. You can add as many elements as you want:</p>
-
+</code></pre><p>You can make a queue of things to work on. With a queue you can add items anywhere you like. Instead of processing the next thingy immediately you can put it at the end of the queue. When it’s time to process the next thingy you can take it from the beginning, end, or middle. You can add as many elements as you want:</p>
 <p>您可以创建一个可以处理的事物队列。使用队列，您可以在任何地方添加项目。不要立即处理下一个东西，而是将它放在队列的末尾。当处理下一件事时，你可以从开始，结束或中间开始。您可以根据需要添加任意数量的元素：</p>
-
 <pre><code>my @queue = ( ... );
 while @queue {
     my $thingy = @queue.shift; # or .pop
     ... # generate more items to process
     @queue.append: @additional-items; # or .push or .unshift
     }
-</code></pre>
-
-<h1 id="在库中存储子程序">在库中存储子程序</h1>
-
+</code></pre><h1 id="在库中存储子程序">在库中存储子程序</h1>
 <p>Start with a simple subroutine to choose a random integer between two integers (including the endpoints). Use <code>.rand</code> and coerce the result with <code>.Int</code>, then shift the result into the right range:</p>
-
 <p>从一个简单的子程序开始，选择两个整数（包括端点）之间的随机整数。使用 <code>.rand</code> 并使用 <code>.Int</code> 强制结果，然后将结果移动到正确的范围：</p>
-
 <pre><code>sub random-between ( $i, $j ) {
     ( $j - $i ).rand.Int + $i;
     }
 
 say random-between( -10, -3 );
-</code></pre>
-
-<p>You might need to convince yourself that works. Your program gets its job done, so you don’t think about it again. Then you write a different program doing something similar and you want to use that subroutine again. You do what many people don’t want to admit to: you cut and paste the subroutine into a different program. Again, it works. Or does it?</p>
-
+</code></pre><p>You might need to convince yourself that works. Your program gets its job done, so you don’t think about it again. Then you write a different program doing something similar and you want to use that subroutine again. You do what many people don’t want to admit to: you cut and paste the subroutine into a different program. Again, it works. Or does it?</p>
 <p>你可能需要说服自己有所作为。你的程序完成了它的工作，所以你不要再考虑它了。然后你编写一个不同的程序做类似的事情，你想再次使用该子程序。你做了许多人不愿意承认的事情：你将子程序剪切并粘贴到另一个程序中。再次，它的工作原理。或者是吗？</p>
-
 <p>Did you really get a number between <code>$i</code> and <code>$j</code> inclusively?</p>
-
 <p>你真的得到了$ i和$ j之间的数字吗？</p>
-
 <p>EXERCISE 11.3What’s the maximum number that <code>random-between</code> produces for any <code>$i</code> and <code>$j</code>? Write a program that figures it out by running <code>random-between</code> repeatedly to see the actual range of results.</p>
-
 <p>练习11.3任意$ i和$ j之间随机产生的最大数量是多少？编写一个程序，通过反复运行随机查看结果的实际范围来计算出来。</p>
-
 <p>Once you’ve done that exercise you know that <code>random-between</code> didn’t ever select the second endpoint as one of the random values. If you had copied it into other programs it would have been wrong in several places. There’s a way to fix that.</p>
-
 <p>一旦你完成了这个练习，你就知道随机中断之间并没有选择第二个端点作为随机值之一。如果你把它复制到其他程序中，它会在几个地方出错。有办法解决这个问题。</p>
-
 <p>To use the same subroutine in several programs you can define it once in a library. That’s a separate file that you can import into your program.</p>
-
 <p>要在多个程序中使用相同的子程序，可以在库中定义一次。这是一个单独的文件，您可以导入到您的程序中。</p>
-
 <p>Move <code>random-between</code> to a new file that has the <em>.pm</em> or <em>.pm6</em> extension:</p>
-
 <p>随机移动到具有.pm或.pm6扩展名的新文件：</p>
-
 <pre><code># MyRandLibrary.pm6
 sub random-between ( $i, $j ) {
     ( $j - $i ).rand.Int + $i;
     }
-</code></pre>
-
-<p>In your original program import your library with <code>use</code>. Set <code>lib</code> as you saw in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch10.html#camelia-using_modules">Chapter 10</a>:</p>
-
+</code></pre><p>In your original program import your library with <code>use</code>. Set <code>lib</code> as you saw in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch10.html#camelia-using_modules">Chapter 10</a>:</p>
 <p>在您的原始程序中导入您的库使用。按照第10章中的说明设置lib：</p>
-
 <pre><code># random-between.p6
 use lib &lt;.&gt;
 use MyRandLibrary;
 say random-between( -10, -3 );
-</code></pre>
-
-<p>Your program finds your library but now you get a different error:</p>
-
+</code></pre><p>Your program finds your library but now you get a different error:</p>
 <p>您的程序找到了您的库，但现在您收到了另一个错误：</p>
-
 <pre><code>% raku random-between.p6
 ===SORRY!=== Error while compiling ...
 Undeclared routine:
     random-between used at line ...
-</code></pre>
-
-<h2 id="导出子程序">导出子程序</h2>
-
+</code></pre><h2 id="导出子程序">导出子程序</h2>
 <p>Subroutines are lexically scoped by default, so they can’t be seen outside their files. If you want another file to use them you need to export those subroutines. The <code>is export</code> trait does that and comes right after the signature:</p>
-
 <p>默认情况下，子例程在词法上是作用域的，因此不能在文件外看到它们。如果您想要使用其他文件，则需要导出这些子例程。出口特征是这样做的，并在签名后立即出现：</p>
-
 <pre><code># MyRandLibrary.pm6
 sub random-between ( $i, $j ) is export {
     ( $j - $i ).rand.Int + $i;
     }
-</code></pre>
-
-<p>Your program now finds the library, imports the subroutine, and produces a number between your endpoints:</p>
-
+</code></pre><p>Your program now finds the library, imports the subroutine, and produces a number between your endpoints:</p>
 <p>您的程序现在找到库，导入子例程，并在端点之间生成一个数字：</p>
-
 <pre><code>% raku random-between.p6
 11
-</code></pre>
-
-<p>EXERCISE 11.4Create the library that exports the <code>random-between</code> subroutine and use it in a program to get a random number between the two command-line arguments. What happens when the first argument is greater than the second? What happens if one of the arguments is not a number?</p>
-
+</code></pre><p>EXERCISE 11.4Create the library that exports the <code>random-between</code> subroutine and use it in a program to get a random number between the two command-line arguments. What happens when the first argument is greater than the second? What happens if one of the arguments is not a number?</p>
 <p>练习11.4创建导出random-between子例程的库，并在程序中使用它来获取两个命令行参数之间的随机数。当第一个参数大于第二个参数时会发生什么？如果其中一个参数不是数字，会发生什么？</p>
-
 <h1 id="位置参数">位置参数</h1>
-
 <p>There are two types of parameters. The first are the positional parameters that you’ve seen already in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch05.html#camelia-blocks">Chapter 5</a>. These parameters handle the arguments by their order in the argument list. We’ll look at them in a bit more detail here. You’ll see the other sort, named parameters, later in this chapter.</p>
-
 <p>有两种类型的参数。第一个是您在第5章中已经看到的位置参数。这些参数按参数列表中的顺序处理参数。我们将在这里详细介绍它们。您将在本章后面看到另一种命名参数。</p>
-
 <p>With no explicit signature the arguments show up in the array <code>@_</code>. Each subroutine gets its own <code>@_</code> so it doesn’t conflict with that for any other subroutine. So, if you write this:</p>
-
-<p>没有明确的签名，参数显示在数组@_中。每个子程序都有自己的@_，因此它不会与任何其他子程序冲突。所以，如果你这样写：</p>
-
+<p>没有明确的签名，参数显示在数组@<em>中。每个子程序都有自己的@</em>，因此它不会与任何其他子程序冲突。所以，如果你这样写：</p>
 <pre><code>sub show-the-arguments {
     put &quot;The arguments are: &quot;, @_.gist;
     }
 
 show-the-arguments( 1, 3, 7 );
-</code></pre>
-
-<p>You get:</p>
-
+</code></pre><p>You get:</p>
 <p>你得到：</p>
-
 <pre><code>The arguments are: [1 3 7]
-</code></pre>
-
-<p>Using <code>@_</code> inside the subroutine automatically adds the implicit signature. But it’s not as simple as an explicit <code>@_</code>parameter by itself. This signature expects a single <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> argument:</p>
-
+</code></pre><p>Using <code>@_</code> inside the subroutine automatically adds the implicit signature. But it’s not as simple as an explicit <code>@_</code>parameter by itself. This signature expects a single <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> argument:</p>
 <p>在子例程中使用@_会自动添加隐式签名。但它本身并不像显式的@_parameter那么简单。此签名需要一个Positional参数：</p>
-
 <pre><code>sub show-the-arguments ( @_ ) { # Single Positional argument
     put &quot;The arguments are: &quot;, @_.gist;
     }
-</code></pre>
-
-<p>Calling it with multiple arguments is a compile-time error:</p>
-
+</code></pre><p>Calling it with multiple arguments is a compile-time error:</p>
 <p>使用多个参数调用它是编译时错误：</p>
-
 <pre><code>show-the-arguments( 1, 3, 7 );   # Won't compile
-</code></pre>
-
-<p>The <code>( @_ )</code> signature wants a single argument that’s some sort of <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> (not necessarily an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>):</p>
-
+</code></pre><p>The <code>( @_ )</code> signature wants a single argument that’s some sort of <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> (not necessarily an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>):</p>
 <p>（@_）签名需要一个参数，它是某种Positional（不一定是数组）：</p>
-
 <pre><code>show-the-arguments( [ 1, 3, 7 ] );   # Single argument
-</code></pre>
-
-<h2 id="slurpy-parameters-吞噬参数">Slurpy Parameters 吞噬参数</h2>
-
+</code></pre><h2 id="slurpy-parameters-吞噬参数">Slurpy Parameters 吞噬参数</h2>
 <p>A slurpy parameter gets all of the remaining arguments into a single <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. Prefix the array parameter with a <code>*</code>. This is the same as the version with no explicit signature:</p>
-
 <p>一个slurpy参数将所有剩余的参数都放入一个Array中。使用*前缀数组参数。这与没有显式签名的版本相同：</p>
-
 <pre><code>sub show-the-arguments ( *@_ ) {  # slurpy
     put &quot;The arguments are: &quot;, @_.gist;
     }
 
 show-the-arguments( 1, 3, 7 );
-</code></pre>
-
-<p>The output shows the three numbers:</p>
-
+</code></pre><p>The output shows the three numbers:</p>
 <p>输出显示三个数字：</p>
-
 <pre><code>The arguments are: [1 3 7]
-</code></pre>
-
-<p>There’s not much special about <code>@_</code>. You can use your own variable name instead:</p>
-
+</code></pre><p>There’s not much special about <code>@_</code>. You can use your own variable name instead:</p>
 <p>@_没什么特别之处。您可以使用自己的变量名称：</p>
-
 <pre><code>sub show-the-arguments ( *@args ) {  # slurpy
     put &quot;The arguments are: &quot;, @args.gist;
     }
-</code></pre>
-
-<p>Try it with something slightly different now. Include a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> as one of the arguments:</p>
-
+</code></pre><p>Try it with something slightly different now. Include a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> as one of the arguments:</p>
 <p>现在尝试使用略有不同的东西。包含List作为参数之一：</p>
-
 <pre><code>sub show-the-arguments ( *@args ) {  # slurpy
     put &quot;The arguments are: &quot;, @args.gist;
     }
 
 show-the-arguments( 1, 3, ( 7, 6, 5 ) );
-</code></pre>
-
-<p>Did you expect this output? It’s a flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> with no structure:</p>
-
+</code></pre><p>Did you expect this output? It’s a flat <a href="https://docs.raku.org/type/List.html"><code>List</code></a> with no structure:</p>
 <p>你有没有期待这个输出？这是一个没有结构的平面列表：</p>
-
 <pre><code>The arguments are: [1 3 7 6 5]
-</code></pre>
-
-<p>This isn’t a problem with formatting the data; the slurpy parameter flattens the data. Try it again with another level:</p>
-
+</code></pre><p>This isn’t a problem with formatting the data; the slurpy parameter flattens the data. Try it again with another level:</p>
 <p>这不是格式化数据的问题; slurpy参数使数据变平。再试一次另一个级别：</p>
-
 <pre><code>show-the-arguments( 1, 3, ( 7, (6, 5) ) );
-</code></pre>
-
-<p>You get the same output with no structure:</p>
-
+</code></pre><p>You get the same output with no structure:</p>
 <p>你得到相同的输出，没有结构：</p>
-
 <pre><code>The arguments are: [1 3 7 6 5]
-</code></pre>
-
-<p>The slurpy parameter only flattens objects that you can iterate. If you itemize one of the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s that item is no longer iterable. Items resist flattening:</p>
-
+</code></pre><p>The slurpy parameter only flattens objects that you can iterate. If you itemize one of the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s that item is no longer iterable. Items resist flattening:</p>
 <p>slurpy参数仅展平您可以迭代的对象。如果您列出其中一个列表，则该项目不再可迭代。物品抗压扁：</p>
-
 <pre><code>show-the-arguments( 1, 3, ( 7, $(6, 5) ) );
-</code></pre>
-
-<p>The output is a bit different:</p>
-
+</code></pre><p>The output is a bit different:</p>
 <p>输出有点不同：</p>
-
 <pre><code>The arguments are: [1, 3, 7, (6, 5)]
-</code></pre>
-
-<p>How about this one?</p>
-
+</code></pre><p>How about this one?</p>
 <p>这个怎么样？</p>
-
 <pre><code>show-the-arguments( [ 1, 3, ( 7, $(6, 5) ) ] );
-</code></pre>
-
-<p>Instead of a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> you have an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. Remember that an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> already itemizes each of its elements. The <code>( 7, $(6, 5) )</code> is itemized because it’s an element of an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
-
+</code></pre><p>Instead of a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> you have an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. Remember that an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> already itemizes each of its elements. The <code>( 7, $(6, 5) )</code> is itemized because it’s an element of an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>:</p>
 <p>而不是List你有一个数组。请记住，数组已经逐项列出了每个元素。 （7，$（6,5））是逐项列出的，因为它是数组的一个元素：</p>
-
 <pre><code>The arguments are: [1, 3, (7, $(6, 5))]
-</code></pre>
-
-<p>Use a <code>**</code> in front of the parameter if you don’t want this automatic flattening:</p>
-
+</code></pre><p>Use a <code>**</code> in front of the parameter if you don’t want this automatic flattening:</p>
 <p>如果您不希望这种自动展平，请在参数前面使用 <code>**</code>：</p>
-
 <pre><code>sub show-nonflat-arguments ( **@args ) {  # nonflattening slurpy
     put &quot;The nonflat arguments are: &quot;, @args.gist;
     }
 
 show-nonflat-arguments( [ 1, 3, ( 7, $(6, 5) ) ] );
-</code></pre>
-
-<p>This output has a double set of square brackets around the data. The single argument is the inner <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> and the entire argument list is the outer one:</p>
-
+</code></pre><p>This output has a double set of square brackets around the data. The single argument is the inner <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> and the entire argument list is the outer one:</p>
 <p>此输出在数据周围有一组双方括号。单个参数是内部数组，整个参数列表是外部数据：</p>
-
 <pre><code>The nonflat arguments are: [[1 3 (7 (6 5))]]
-</code></pre>
-
-<p>EXERCISE 11.5Create a subroutine that outputs its argument count and shows each argument on a separate line. Try it with these argument lists:<code>1, 3, 7 1, 3, ( 7, 6, 5 ) 1, 3, ( 7, $(6, 5) ) [ 1, 3, ( 7, $(6, 5) ) ]</code></p>
-
+</code></pre><p>EXERCISE 11.5Create a subroutine that outputs its argument count and shows each argument on a separate line. Try it with these argument lists:<code>1, 3, 7 1, 3, ( 7, 6, 5 ) 1, 3, ( 7, $(6, 5) ) [ 1, 3, ( 7, $(6, 5) ) ]</code></p>
 <p>练习11.5创建一个子程序，输出其参数计数并在一个单独的行上显示每个参数。尝试使用这些参数列表：<code>1,3,7 1,3,3（7,6,5）1,3，（7，$（6,5））[1,3，（7，$（6， 5））]</code></p>
-
 <h2 id="have-it-both-ways">Have It Both Ways</h2>
-
 <p>What if you want both flattening and nonflattening at the same time? If there’s one argument, you want to flatten that. If there’s more than one argument you want to leave that <a href="https://docs.raku.org/type/List.html"><code>List</code></a> alone. Use a <code>+</code> in front of a parameter to use the single argument rule:</p>
-
 <p>如果你想要同时展平和不展平怎么办？如果有一个论点，你想要弄平。如果有多个参数，您希望单独保留该列表。在参数前面使用+来使用单个参数规则：</p>
-
 <pre><code>sub show-plus-arguments ( +@args ) {  # single argument rule
     put &quot;There are {@args.elems} arguments&quot;;
     put &quot;The nonflat arguments are: &quot;, @args.gist;
     }
-</code></pre>
-
-<p>If you pass one argument that argument is flattened into <code>@args</code>. With more than one argument you don’t get flattening:</p>
-
+</code></pre><p>If you pass one argument that argument is flattened into <code>@args</code>. With more than one argument you don’t get flattening:</p>
 <p>如果你传递一个参数，将参数展平为@args。如果有多个参数，你就不会变平：</p>
-
 <pre><code>my @a = (1,3,7);
 
 show-plus-arguments( @a );    # flattened
 show-plus-arguments( @a, 5 ); # not flattened
-</code></pre>
-
-<p>The output shows the difference. In your first call to <code>show-plus-arguments</code> it looks like you have single <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> argument. By the time it gets inside the subroutine that <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> has been flattened into three <code>Int</code>arguments:</p>
-
+</code></pre><p>The output shows the difference. In your first call to <code>show-plus-arguments</code> it looks like you have single <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> argument. By the time it gets inside the subroutine that <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> has been flattened into three <code>Int</code>arguments:</p>
 <p>输出显示差异。在第一次调用show-plus-arguments时，看起来你有单个Array参数。当它进入子程序时，Array已被展平为三个Intarguments：</p>
-
 <pre><code>There are 3 arguments
 The nonflat arguments are: [1 3 7]
 There are 2 arguments
 The nonflat arguments are: [[1 3 7] 5]
-</code></pre>
-
-<p>Your second call has the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> along with <code>5</code>. With more than one argument you don’t get flattening and the argument list has an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> argument and an <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a> argument.</p>
-
+</code></pre><p>Your second call has the <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> along with <code>5</code>. With more than one argument you don’t get flattening and the argument list has an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> argument and an <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a> argument.</p>
 <p>你的第二个调用有数组和5.有多个参数你没有变平，参数列表有一个Array参数和一个Int参数。</p>
-
 <h2 id="combining-slurpies">Combining Slurpies</h2>
-
 <p>You can have only one slurpy <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> parameter, since it will take up the rest of the positional arguments. However, you can have positional parameters before a slurpy parameter:</p>
-
 <p>您可以只有一个slurpy Array参数，因为它将占用其余的位置参数。但是，您可以在slurpy参数之前获得位置参数：</p>
-
 <pre><code>sub show-the-arguments ( $i, $j, *@args ) {  # slurpy
     put &quot;The arguments are i: $i j: $j and @args[]&quot;;
     }
 
 show-the-arguments( 1, 3, 7, 5 );
-</code></pre>
-
-<p>The first two arguments fill in <code>$i</code> and <code>$j</code> and anything left over goes into <code>@args</code>:</p>
-
+</code></pre><p>The first two arguments fill in <code>$i</code> and <code>$j</code> and anything left over goes into <code>@args</code>:</p>
 <p>前两个参数填写$ i和$ j，剩下的任何内容都会输入@args：</p>
-
 <pre><code>The arguments are i: 1 j: 3 and 7 5
-</code></pre>
-
-<p>What if you put all but one of the arguments into an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>?</p>
-
+</code></pre><p>What if you put all but one of the arguments into an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>?</p>
 <p>如果将除一个参数之外的所有参数放入数组中该怎么办？</p>
-
 <pre><code>my @a = ( 3, 7, 5 );
 show-the-arguments( 1, @a );
-</code></pre>
-
-<p>Now the output shows that <code>$j</code> has an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> value and <code>@args</code> has nothing:</p>
-
+</code></pre><p>Now the output shows that <code>$j</code> has an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> value and <code>@args</code> has nothing:</p>
 <p>现在输出显示$ j有一个Array值而@args什么都没有：</p>
-
 <pre><code>The arguments are i: 1 j: 3 7 5 and
-</code></pre>
-
-<p>EXERCISE 11.6Create a library that provides a <code>head</code> and a <code>tail</code> function that each take a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> parameter. Make your <code>head</code>function return the first item in the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> and your <code>tail</code> function return everything else. Do not change the original <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. If you’re used to Lisp you might call these <code>car</code> and <code>cdr</code>:<code>use lib &lt;.&gt;; use HeadsTails;  my @a = &lt;1 3 5 7 11 13&gt;;  say head( @a );  # 1 say tail( @a );  # [ 3 5 7 11 13 ]</code></p>
-
-<p>练习11.6创建一个提供head和tail函数的库，每个函数都有一个List参数。让你的headfunction返回List中的第一项，你的tail函数返回其他所有内容。请勿更改原始列表。如果您习惯使用Lisp，可以将这些汽车和cdr称为：使用lib &lt;。&gt;;使用HeadsTails;我的@a = <1 3 5 7 11 13>;说头（@a）; ＃1说尾巴（@a）; ＃[3 5 7 11 13]</p>
-
+</code></pre><p>EXERCISE 11.6Create a library that provides a <code>head</code> and a <code>tail</code> function that each take a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> parameter. Make your <code>head</code>function return the first item in the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> and your <code>tail</code> function return everything else. Do not change the original <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. If you’re used to Lisp you might call these <code>car</code> and <code>cdr</code>:<code>use lib &lt;.&gt;; use HeadsTails;  my @a = &lt;1 3 5 7 11 13&gt;;  say head( @a );  # 1 say tail( @a );  # [ 3 5 7 11 13 ]</code></p>
+<p>练习11.6创建一个提供head和tail函数的库，每个函数都有一个List参数。让你的headfunction返回List中的第一项，你的tail函数返回其他所有内容。请勿更改原始列表。如果您习惯使用Lisp，可以将这些汽车和cdr称为：使用lib &lt;。&gt;;使用HeadsTails;我的@a = &lt;1 3 5 7 11 13&gt;;说头（@a）; ＃1说尾巴（@a）; ＃[3 5 7 11 13]</p>
 <h2 id="optional-and-default-arguments">Optional and Default Arguments</h2>
-
 <p>By default all positional parameters require arguments. A question mark, <code>?</code>, after a parameter marks it as optional so that you don’t need to supply an argument. This subroutine takes one or two arguments:</p>
-
 <p>默认情况下，所有位置参数都需要参问号？后面的参数将其标记为可选，这样您就不需要提供参数。该子例程需要一个或两个参数：</p>
-
 <pre><code>sub one-or-two ( $a, $b? ) {
     put $b.defined ?? &quot;Got $a and $b&quot; !! &quot;Got $a&quot;;
     }
 
 one-or-two( 'Hamadryas' );
 one-or-two( 'Hamadryas', 'perlicus' );
-</code></pre>
-
-<p>If you have an optional argument you probably want a default value. Assign to a parameter to give it a default value. That assignment occurs only when you don’t supply an argument:</p>
-
+</code></pre><p>If you have an optional argument you probably want a default value. Assign to a parameter to give it a default value. That assignment occurs only when you don’t supply an argument:</p>
 <p>如果您有可选参数，则可能需要默认值。分配给参数以为其提供默认值。只有在您不提供参数时才会发生该分配：</p>
-
 <pre><code>sub one-or-two ( $a, $b = 137 ) {
     put $b.defined ?? &quot;Got $a and $b&quot; !! &quot;Got $a&quot;;
     }
@@ -816,59 +558,34 @@ one-or-two( 19 );                      # one number
 one-or-two( 'Hamadryas', 'perlicus' ); # two strings
 one-or-two( &lt;Hamadryas perlicus&gt; );    # one array
 one-or-two( |&lt;Hamadryas perlicus&gt; );   # flattened array
-</code></pre>
-
-<p>The output shows that the arguments fill in the parameters differently each time:</p>
-
+</code></pre><p>The output shows that the arguments fill in the parameters differently each time:</p>
 <p>输出显示参数每次填充参数的方式不同：</p>
-
 <pre><code>Got 19 and 137
 Got Hamadryas and perlicus
 Got Hamadryas perlicus and 137
 Got Hamadryas and perlicus
-</code></pre>
-
-<p>You can’t have required positional parameters after an optional one:</p>
-
+</code></pre><p>You can’t have required positional parameters after an optional one:</p>
 <p>在可选项之后，您不能拥有所需的位置参数：</p>
-
 <pre><code>sub one-or-two ( $a?, $b ) {
     put $b.defined ?? &quot;Got $a and $b&quot; !! &quot;Got $a&quot;;
     }
-</code></pre>
-
-<p>That’s a compile-time error:</p>
-
+</code></pre><p>That’s a compile-time error:</p>
 <p>这是一个编译时错误：</p>
-
 <pre><code>Error while compiling
 Cannot put required parameter $b after optional parameters
-</code></pre>
-
-<h2 id="parameter-traits">Parameter Traits</h2>
-
+</code></pre><h2 id="parameter-traits">Parameter Traits</h2>
 <p>The parameter variables are filled in with read-only aliases to the original data. You see the same values but you can’t change them. This subroutine tries to add one to its value:</p>
-
 <p>参数变量用原始数据的只读别名填充。您看到相同的值但无法更改它们。此子例程尝试在其值中添加一个：</p>
-
 <pre><code>sub increment ( $a ) { $a++ }
 
 my $a = 137;
 put increment( $a );
-</code></pre>
-
-<p>This doesn’t work because you can’t change the parameter variable:</p>
-
+</code></pre><p>This doesn’t work because you can’t change the parameter variable:</p>
 <p>这不起作用，因为您无法更改参数变量：</p>
-
 <pre><code>Cannot resolve caller postfix:&lt;++&gt;(Int); the following candidates
 match the type but require mutable arguments:
-</code></pre>
-
-<p>The read-only alias is the default. You can change that by applying traits to the parameters. Apply the <code>is copy</code>trait to get a mutable value that’s separate from the original argument. You can change it without changing the original value:</p>
-
+</code></pre><p>The read-only alias is the default. You can change that by applying traits to the parameters. Apply the <code>is copy</code>trait to get a mutable value that’s separate from the original argument. You can change it without changing the original value:</p>
 <p>只读别名是默认值。您可以通过将特征应用于参数来更改它。应用is copytrait以获取与原始参数分开的可变值。您可以在不更改原始值的情况下进行更改：</p>
-
 <pre><code>sub mutable-copy ( $a is copy ) { $a++; put &quot;Inside: $a&quot; }
 
 my $a = 137;
@@ -876,21 +593,13 @@ my $a = 137;
 put &quot;Before: $a&quot;;
 mutable-copy( $a );
 put &quot;After: $a&quot;;
-</code></pre>
-
-<p>The output shows that the original variable’s value did not change:</p>
-
+</code></pre><p>The output shows that the original variable’s value did not change:</p>
 <p>输出显示原始变量的值未更改：</p>
-
 <pre><code>Before: 137
 Inside: 138
 After: 137
-</code></pre>
-
-<p>Use the <code>is rw</code> trait to change the original value. If the argument is a writable container you can change the value. If the value is not some sort of container you’ll get an error:</p>
-
+</code></pre><p>Use the <code>is rw</code> trait to change the original value. If the argument is a writable container you can change the value. If the value is not some sort of container you’ll get an error:</p>
 <p>使用is rw trait更改原始值。如果参数是可写容器，则可以更改该值。如果该值不是某种容器，则会出现错误：</p>
-
 <pre><code>sub read-write ( $a is rw ) { $a++ }
 
 my $a  = 137;
@@ -901,21 +610,12 @@ read-write( $a );  # writable so okay
 read-write( $b );  # literal,  not mutable - ERROR!
 read-write( c );   # constant, not mutable - ERROR!
 read-write( 5 );   # literal,  not mutable - ERROR!
-</code></pre>
-
-<h2 id="参数约束">参数约束</h2>
-
+</code></pre><h2 id="参数约束">参数约束</h2>
 <p>You can constrain a parameter to a particular type. You already saw some of this in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch05.html#camelia-blocks">Chapter 5</a>:</p>
-
 <p>您可以将参数约束为特定类型。您已经在第5章中看到了一些内容：</p>
-
 <pre><code>sub do-something ( Int:D $n ) { ... }
-</code></pre>
-
-<p>The sigils impose their own constraints. An <code>@</code> accepts something that is a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>, the <code>%</code> accepts something that does <a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>, and the <code>&amp;</code> accepts something that does <a href="https://docs.raku.org/type/Callable.html"><code>Callable</code></a>:</p>
-
+</code></pre><p>The sigils impose their own constraints. An <code>@</code> accepts something that is a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>, the <code>%</code> accepts something that does <a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>, and the <code>&amp;</code> accepts something that does <a href="https://docs.raku.org/type/Callable.html"><code>Callable</code></a>:</p>
 <p>这些印记强加了自己的约束。 @接受一个定位的东西，％接受一个做关联的东西，而接受一些做Callable的东西：</p>
-
 <pre><code>sub wants-pos   ( @array ) { put &quot;Got a positional: @array[]&quot; }
 sub wants-assoc ( %hash )  { put &quot;Got an associative: {%hash.gist}&quot; }
 sub wants-code  ( &amp;code )  { put &quot;Got code&quot; }
@@ -923,56 +623,35 @@ sub wants-code  ( &amp;code )  { put &quot;Got code&quot; }
 wants-pos( &lt;a b c&gt; );
 wants-assoc( Map.new: 'a' =&gt; 1 );
 wants-code( { put &quot;Mini code&quot; } );
-</code></pre>
-
-<p>These won’t work because they don’t supply the right types of arguments:</p>
-
+</code></pre><p>These won’t work because they don’t supply the right types of arguments:</p>
 <p>这些不起作用，因为它们不提供正确类型的参数：</p>
-
 <pre><code>wants-pos( %hash );
 wants-assoc( &lt;x y z&gt; );
 wants-code( 1 );
-</code></pre>
-
-<p>Additionally, something that accepts a code block can specify its own signature that must match the argument’s signature. Put the desired signature after the parameter variable:</p>
-
+</code></pre><p>Additionally, something that accepts a code block can specify its own signature that must match the argument’s signature. Put the desired signature after the parameter variable:</p>
 <p>此外，接受代码块的东西可以指定自己的签名，该签名必须与参数的签名匹配。在参数变量后面放置所需的签名：</p>
-
 <pre><code>sub one-arg  ( &amp;code:( $a ), $A )         { &amp;code.($A) }
 sub two-args ( &amp;code:( $a, $b ), $A, $B ) { &amp;code.($A, $B) }
 
 one-arg( { put &quot;Got $^a&quot; }, 'Hamadryas' );
 
 two-args( { put &quot;Got $^a and $^b&quot; }, 'Hamadryas', 'perlicus' );
-</code></pre>
-
-<h1 id="same-name-different-signature">Same Name, Different Signature</h1>
-
+</code></pre><h1 id="same-name-different-signature">Same Name, Different Signature</h1>
 <p>You can define the same subroutine name twice by giving it different signatures. Each of these is a candidate. A dispatcher decides which candidate to call based on your arguments. There are several things the dispatcher considers, in this order:</p>
-
 <p>您可以通过为其指定不同的签名来定义相同的子例程名称两次。这些都是候选人。调度员根据您的参数决定调用哪个候选者。调度员按以下顺序考虑以下几点：</p>
-
 <ol>
 <li>Literal value</li>
 <li>Number of arguments (arity)</li>
 <li>Types of arguments</li>
 <li>Other constraints</li>
 </ol>
-
 <p>To define candidates, declare the subroutine with <code>multi</code>. And since <code>multi</code> works on a subroutine by default (you’ll see methods in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch12.html#camelia-classes">Chapter 12</a>), you can leave off the <code>sub</code>:</p>
-
 <p>要定义候选项，请使用multi声明子例程。并且由于默认情况下多个工作在子程序上（您将在第12章中看到方法），您可以不使用子工具：</p>
-
 <pre><code>multi sub some-subroutine { ... }
 multi some-subroutine { ... }
-</code></pre>
-
-<h2 id="literal-value-parameters">Literal Value Parameters</h2>
-
+</code></pre><h2 id="literal-value-parameters">Literal Value Parameters</h2>
 <p>You can also make a signature that has a literal value. These <code>multi</code>s are selected when the argument value is the same as the literal parameter:</p>
-
 <p>您还可以创建具有文字值的签名。当参数值与文字参数相同时，选择这些multis：</p>
-
 <pre><code>multi something (  1 ) { put &quot;Got a one&quot; }
 multi something (  0 ) { put &quot;Got a zero&quot; }
 multi something ( $a ) { put &quot;Got something else&quot; }
@@ -980,21 +659,13 @@ multi something ( $a ) { put &quot;Got something else&quot; }
 something(   1 );
 something(   0 );
 something( 137 );
-</code></pre>
-
-<p>The literal value parameters decide the appropriate subroutine for the first two cases:</p>
-
+</code></pre><p>The literal value parameters decide the appropriate subroutine for the first two cases:</p>
 <p>文字值参数决定前两种情况的相应子例程：</p>
-
 <pre><code>Got a one
 Got a zero
 Got something else
-</code></pre>
-
-<p>What if you wanted a <a href="https://docs.raku.org/type/Rat.html"><code>Rat</code></a> as one of the literal values? Put the value inside <code>&lt;&gt;</code> so the compiler doesn’t think the <code>/</code> is the start of a regex (<a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1">Chapter 15</a>):</p>
-
+</code></pre><p>What if you wanted a <a href="https://docs.raku.org/type/Rat.html"><code>Rat</code></a> as one of the literal values? Put the value inside <code>&lt;&gt;</code> so the compiler doesn’t think the <code>/</code> is the start of a regex (<a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1">Chapter 15</a>):</p>
 <p>如果您想将鼠作为字面值之一，该怎么办？将值放在&lt;&gt;中，这样编译器就不会认为/是正则表达式的开头（第15章）：</p>
-
 <pre><code>multi something ( 1 )       { put &quot;Got a one&quot; }
 multi something ( 0 )       { put &quot;Got a zero&quot; }
 multi something ( &lt;1/137&gt; ) { put &quot;Got something fine&quot; }
@@ -1004,23 +675,15 @@ something( 1 );
 something( 0 );
 something( 1/137 );
 something( 'Hello' );
-</code></pre>
-
-<p>Think about the previous Fibonacci example:</p>
-
+</code></pre><p>Think about the previous Fibonacci example:</p>
 <p>想想之前的Fibonacci示例：</p>
-
 <pre><code>sub fibonacci ( $n ) {
     return 0 if $n == 0;
     return 1 if $n == 1;
     return &amp;?ROUTINE( $n - 1 ) + &amp;?ROUTINE( $n - 2 );
     }
-</code></pre>
-
-<p>That implementation has two special cases for <code>0</code> and <code>1</code>. You have to provide special code to handle those. You can move those special cases away from the main idea by giving each case its own <code>multi</code>:</p>
-
+</code></pre><p>That implementation has two special cases for <code>0</code> and <code>1</code>. You have to provide special code to handle those. You can move those special cases away from the main idea by giving each case its own <code>multi</code>:</p>
 <p>该实现有两个特殊情况0和1.您必须提供特殊代码来处理这些。您可以通过为每个案例提供自己的多个来移动这些特殊情况远离主要想法：</p>
-
 <pre><code>multi fibonacci ( 0 ) { 0 }
 multi fibonacci ( 1 ) { 1 }
 
@@ -1031,305 +694,171 @@ multi fibonacci ( $n ) {
 put fibonacci(0);
 put fibonacci(1);
 put fibonacci(5);
-</code></pre>
-
-<p>Notice that you can’t use <code>&amp;?ROUTINE</code> because <code>$n-1</code> might not be handled by the same subroutine.</p>
-
+</code></pre><p>Notice that you can’t use <code>&amp;?ROUTINE</code> because <code>$n-1</code> might not be handled by the same subroutine.</p>
 <p>请注意，您不能使用＆？ROUTINE，因为$ n-1可能无法由同一子例程处理。</p>
-
 <h2 id="number-of-arguments">Number of Arguments</h2>
-
 <p>Declare the <code>sub</code> with <code>multi</code>. One candidate takes a single positional argument and the other candidate takes two positional arguments:</p>
-
 <p>用multi声明sub。一个候选者采用单个位置参数，另一个候选者采用两个位置参数：</p>
-
 <pre><code>multi subsomething ( $a     ) { put &quot;One argument&quot;; }
 multi subsomething ( $a, $b ) { put &quot;Two arguments&quot;; }
 
 something( 1 );
 something( 1, 3 );
 # something();
-</code></pre>
-
-<p>The output shows that you called two different subroutines:</p>
-
+</code></pre><p>The output shows that you called two different subroutines:</p>
 <p>输出显示您调用了两个不同的子例程：</p>
-
 <pre><code>One argument
 Two arguments
-</code></pre>
-
-<p>Uncomment the call with no arguments, and you’ll get a compile-time error. The compiler knows no signatures can match:</p>
-
+</code></pre><p>Uncomment the call with no arguments, and you’ll get a compile-time error. The compiler knows no signatures can match:</p>
 <p>取消注释没有参数的调用，你将得到一个编译时错误。编译器知道没有签名可以匹配：</p>
-
 <pre><code>Calling something() will never work with any of these multi signatures:
     ($a)
     ($a, $b)
-</code></pre>
-
-<p>You can shorten the <code>multi sub</code> to simply <code>multi</code> since that implies <code>sub</code>:</p>
-
+</code></pre><p>You can shorten the <code>multi sub</code> to simply <code>multi</code> since that implies <code>sub</code>:</p>
 <p>你可以将multi sub简化为multi，因为这意味着sub：</p>
-
 <pre><code>multi something ( $a     ) { put &quot;One argument&quot;;  }
 multi something ( $a, $b ) { put &quot;Two arguments&quot;; }
-</code></pre>
-
-<p>This sort of dispatch depends on *arity*—the number of arguments that you supply. This means that the compiler also knows when you try to define subroutines with the same arity, like this:</p>
-
+</code></pre><p>This sort of dispatch depends on <em>arity</em>—the number of arguments that you supply. This means that the compiler also knows when you try to define subroutines with the same arity, like this:</p>
 <p>这种调度取决于arity  - 您提供的参数数量。这意味着编译器也知道您何时尝试使用相同的arity定义子例程，如下所示：</p>
-
 <pre><code>multi something ( $a ) { put &quot;One argument&quot;; }
 multi something ( $b ) { put &quot;Also one arguments&quot;; } # Error
-</code></pre>
-
-<p>This is also a runtime error because the dispatcher can’t choose one candidate over the other (and it won’t run all of them):</p>
-
+</code></pre><p>This is also a runtime error because the dispatcher can’t choose one candidate over the other (and it won’t run all of them):</p>
 <p>这也是一个运行时错误，因为调度程序不能选择一个候选项而不是另一个候选项（它不会运行所有这些候选项）：</p>
-
 <pre><code>Ambiguous call to 'something'; these signatures all match:
 :($a)
 :($b)
-</code></pre>
-
-<h2 id="parameter-types">Parameter Types</h2>
-
+</code></pre><h2 id="parameter-types">Parameter Types</h2>
 <p>You can also choose amongst <code>multi</code>s by parameter type. These each take the same number of arguments but distinguish them by type:</p>
-
 <p>您还可以通过参数类型在multis中进行选择。这些参数都采用相同数量的参数，但按类型区分：</p>
-
 <pre><code>multi something ( Int:D $a ) { put &quot;Int argument&quot;;  }
 multi something ( Str:D $a ) { put &quot;Str arguments&quot;; }
 
 something( 137 );
 something( 'Hamadryas' );
-</code></pre>
-
-<p>These call different subroutines because the argument types are different:</p>
-
+</code></pre><p>These call different subroutines because the argument types are different:</p>
 <p>这些调用不同的子例程，因为参数类型不同：</p>
-
 <pre><code>Int argument
 Str arguments
-</code></pre>
-
-<p>You might have the different subroutines take the same type. In those cases you can select the right one by a custom constraint. The dispatcher chooses the most specific one:</p>
-
+</code></pre><p>You might have the different subroutines take the same type. In those cases you can select the right one by a custom constraint. The dispatcher chooses the most specific one:</p>
 <p>您可能有不同的子例程采用相同的类型。在这些情况下，您可以通过自定义约束选择正确的约束。调度员选择最具体的一个：</p>
-
 <pre><code>multi something ( Int:D $a ) { put &quot;Odd arguments&quot;; }
 multi something ( Int:D $a where * %% 2 ) { put &quot;Even argument&quot; }
 
 something( 137 );
 something( 538 );
-</code></pre>
-
-<p>Notice that this works regardless of the order in which you define the subroutines:</p>
-
+</code></pre><p>Notice that this works regardless of the order in which you define the subroutines:</p>
 <p>请注意，无论您定义子例程的顺序如何，这都有效：</p>
-
 <pre><code>Odd arguments
 Even arguments
-</code></pre>
-
-<p>In the next example the first subroutine constrains its parameter to numbers that are odd. The second subroutine constrains its parameter to numbers greater than 5. These both have one parameter and they both have a <code>where</code>clause, so the dispatcher chooses the first one it encounters:</p>
-
+</code></pre><p>In the next example the first subroutine constrains its parameter to numbers that are odd. The second subroutine constrains its parameter to numbers greater than 5. These both have one parameter and they both have a <code>where</code>clause, so the dispatcher chooses the first one it encounters:</p>
 <p>在下一个示例中，第一个子例程将其参数约束为奇数。第二个子例程将其参数约束为大于5的数字。这两个参数都有一个参数，它们都有一个whereclause，所以调度程序选择它遇到的第一个参数：</p>
-
 <pre><code>multi sub something ( Int:D $a where * % 2 ) { put &quot;Odd number&quot; }
 multi sub something ( Int:D $a where * &gt; 5 ) { put &quot;Greater than 5&quot; }
 
 something( 137 );
-</code></pre>
-
-<p>The argument satisfies either signature. The output shows that the first subroutine ran:</p>
-
+</code></pre><p>The argument satisfies either signature. The output shows that the first subroutine ran:</p>
 <p>该论点满足任一签名。输出显示第一个子例程运行：</p>
-
 <pre><code>Odd number
-</code></pre>
-
-<p>Reverse the order of definition:</p>
-
+</code></pre><p>Reverse the order of definition:</p>
 <p>颠倒定义的顺序：</p>
-
 <pre><code>multi sub something ( Int:D $a where * &gt; 5 ) { put &quot;Greater than 5&quot; }
 multi sub something ( Int:D $a where * % 2 ) { put &quot;Odd number&quot; }
 
 something( 137 );
-</code></pre>
-
-<p>The first defined subroutine still runs even though it’s a different definition:</p>
-
+</code></pre><p>The first defined subroutine still runs even though it’s a different definition:</p>
 <p>第一个定义的子例程仍然运行，即使它是一个不同的定义：</p>
-
 <pre><code>Greater than 5
-</code></pre>
-
-<p>What if you do <em>not</em> want multiple definitions with the same name? Declare one of the subroutines without<code>multi</code>:</p>
-
+</code></pre><p>What if you do <em>not</em> want multiple definitions with the same name? Declare one of the subroutines without<code>multi</code>:</p>
 <p>如果您不希望使用相同名称的多个定义，该怎么办？声明一个没有多个子程序的子程序：</p>
-
 <pre><code>sub something ( Int $a ) { put &quot;Odd arguments&quot; }
 
 multi something ( Int $a where * %% 2 ) { # redefinition!
     put &quot;Even argument&quot;;
     }
-</code></pre>
-
-<p>You get a compile-time error asking if you meant that to be a <code>multi sub</code>:</p>
-
+</code></pre><p>You get a compile-time error asking if you meant that to be a <code>multi sub</code>:</p>
 <p>你得到一个编译时错误，询问你是否认为这是一个多子：</p>
-
 <pre><code>===SORRY!=== Error while compiling
 Redeclaration of routine 'something' (did you mean to declare a multi-sub?)
-</code></pre>
-
-<h1 id="named-parameters">Named Parameters</h1>
-
+</code></pre><h1 id="named-parameters">Named Parameters</h1>
 <p>Named parameters do not depend on their position in the parameter or argument lists. By default they are optional. You can specify them anywhere in the arguments and in any order. These are often used to set options for a routine or method.</p>
-
 <p>命名参数不依赖于它们在参数或参数列表中的位置。默认情况下，它们是可选的您可以在参数中的任何位置以任何顺序指定它们。这些通常用于设置例程或方法的选项。</p>
-
 <p>Specify named parameters with a colon before the parameter variable. In the signature, use the unquoted parameter variable name, the fat arrow, and the value that you want to supply. The order of the names or values does not matter:</p>
-
 <p>在参数变量之前使用冒号指定命名参数。在签名中，使用不带引号的参数变量名称，胖箭头和要提供的值。名称或值的顺序无关紧要：</p>
-
 <pre><code>sub add ( Int:D :$a, Int:D :$b ) {
     $a + $b;
     }
 
 put add( a =&gt; 1,  b =&gt; 36 );  # 37
 put add( b =&gt; 36, a =&gt; 1  );  # Same thing
-</code></pre>
-
-<p>For this to work you cannot quote the keys or use variables as the keys. This call is actually two <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> objects treated as positional parameters:</p>
-
+</code></pre><p>For this to work you cannot quote the keys or use variables as the keys. This call is actually two <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> objects treated as positional parameters:</p>
 <p>为此，您无法引用键或使用变量作为键。这个调用实际上是两个被视为位置参数的Pair对象：</p>
-
 <pre><code>put add( 'a' =&gt; 1,  'b' =&gt; 36 );     # Will not work!
 put add( $keya =&gt; 1, $keyb =&gt; 36 );  # Will not work!
-</code></pre>
-
-<p>More often you’ll use the adverb syntax. With values that are positive integers you can specify the value first and the name after it:</p>
-
+</code></pre><p>More often you’ll use the adverb syntax. With values that are positive integers you can specify the value first and the name after it:</p>
 <p>更常见的是，您将使用副词语法。对于正整数值，您可以先指定值，然后指定其后的名称：</p>
-
 <pre><code>put add( :a(1), :b(36) );  # 37
 put add( :36b, :1a );      # 37
-</code></pre>
-
-<p>Default values and other constraints work the same as they do with positional parameters:</p>
-
+</code></pre><p>Default values and other constraints work the same as they do with positional parameters:</p>
 <p>默认值和其他约束与位置参数的作用相同：</p>
-
 <pre><code>sub add ( Int:D :$a = 0, Int:D :$b = 0 ) {
     $a + $b;
     }
 
 put add();       # 0
 put add( :36b ); # 36
-</code></pre>
-
-<p>You don’t have to use the same names for the arguments and the parameter variables. In complicated code in <code>power-of</code> you might not want to retype <code>$base</code> or <code>$power</code> every time. The subroutine still uses the long names for the interface but the implementation can use the short names:</p>
-
+</code></pre><p>You don’t have to use the same names for the arguments and the parameter variables. In complicated code in <code>power-of</code> you might not want to retype <code>$base</code> or <code>$power</code> every time. The subroutine still uses the long names for the interface but the implementation can use the short names:</p>
 <p>您不必对参数和参数变量使用相同的名称。在功能复杂的代码中，您可能不希望每次都重新键入$ base或$ power。子例程仍然使用接口的长名称，但实现可以使用短名称：</p>
-
 <pre><code>sub power-of ( Int:D :power($n) = 0, Int:D :base($a) ) {
     $a ** $n
     }
 
 put power-of( base =&gt; 2, power =&gt; 5 ); # 32
-</code></pre>
-
-<p>So far these named parameters have all taken values. Without any other constraints and no argument value, a named parameter is a Boolean. The adverb form with no value (and no constraint) gets <code>True</code> (because that’s what <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s do):</p>
-
+</code></pre><p>So far these named parameters have all taken values. Without any other constraints and no argument value, a named parameter is a Boolean. The adverb form with no value (and no constraint) gets <code>True</code> (because that’s what <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s do):</p>
 <p>到目前为止，这些命名参数都采用了值。没有任何其他约束和参数值，命名参数是布尔值。没有值（并且没有约束）的副词形式为True（因为这就是Pairs所做的）：</p>
-
 <pre><code>sub any-args ( :$state ) { say $state  }
 any-args( :state );  #  True
-</code></pre>
-
-<p>A <code>!</code> in front of the adverb name makes it a <code>False</code> value:</p>
-
+</code></pre><p>A <code>!</code> in front of the adverb name makes it a <code>False</code> value:</p>
 <p>一个 ！在副词名称前面使其成为一个假值：</p>
-
 <pre><code>any-args( :!state );  #  False
-</code></pre>
-
-<h2 id="required-named-parameters">Required Named Parameters</h2>
-
+</code></pre><h2 id="required-named-parameters">Required Named Parameters</h2>
 <p>A positional parameter is required simply because it exists, and you have to mark it as optional to make it such. That’s reversed with named parameters, which are optional unless you say otherwise. The parameters get their default values if you don’t specify them:</p>
-
 <p>仅需要位置参数因为它存在，并且您必须将其标记为可选，以使其成为可能。这与命名参数相反，除非您另有说明，否则这些参数是可选的。如果您不指定参数，参数将获得其默认值：</p>
-
 <pre><code>sub not-required ( :$option ) { say $option; }
 
 not-required();            # (Any)
 not-required( :option  );  # True
 not-required( :!option );  # False
 not-required( :5option );  # 5
-</code></pre>
-
-<p>To make <code>option</code> mandatory put a <code>!</code> after it in the signature (this is not the same as <code>!</code> before an argument):</p>
-
+</code></pre><p>To make <code>option</code> mandatory put a <code>!</code> after it in the signature (this is not the same as <code>!</code> before an argument):</p>
 <p>要强制选择放一个！在签名之后（这与参数之前的！不一样）：</p>
-
 <pre><code>sub not-required ( :$option! ) { say $option; }
 
 not-required();            # Error!
-</code></pre>
-
-<p>The error tells you that you forgot an argument:</p>
-
+</code></pre><p>The error tells you that you forgot an argument:</p>
 <p>该错误告诉您忘记了一个参数：</p>
-
 <pre><code>Required named parameter 'option' not passed
-</code></pre>
-
-<h2 id="named-parameters-for-free">Named Parameters for Free</h2>
-
+</code></pre><h2 id="named-parameters-for-free">Named Parameters for Free</h2>
 <p>Rather than define every named parameter, you can accept all of them. Don’t specify any in your parameters and they all show up in <code>%_</code>. This is the equivalent of <code>@_</code> but for named parameters. Each routine gets its own version of this variable:</p>
-
 <p>您可以接受所有参数，而不是定义每个命名参数。不要在参数中指定任何参数，它们都显示在％_中。这相当于@_但是对于命名参数。每个例程都有自己的变量版本：</p>
-
 <pre><code>sub any-args { say %_ }
 any-args( genus =&gt; 'Hamadryas' );
 any-args( genus =&gt; 'Hamadryas', species =&gt; 'perlicus' );
-</code></pre>
-
-<p>You didn’t define either <code>:genus</code> or <code>:species</code> but they show up in <code>%_</code>:</p>
-
+</code></pre><p>You didn’t define either <code>:genus</code> or <code>:species</code> but they show up in <code>%_</code>:</p>
 <p>你没有定义：genus或：species但是它们出现在％_中：</p>
-
 <pre><code>{genus =&gt; Hamadryas}
 {genus =&gt; Hamadryas, species =&gt; perlicus}
-</code></pre>
-
-<p>A slurpy <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> does the same thing:</p>
-
+</code></pre><p>A slurpy <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> does the same thing:</p>
 <p>一个邋H的哈希做同样的事情：</p>
-
 <pre><code>sub any-args ( *%args ) { say %args }
 any-args( genus =&gt; 'Hamadryas' );
 any-args( genus =&gt; 'Hamadryas', species =&gt; 'perlicus' );
-</code></pre>
-
-<p>That’s how that implicit <code>%_</code> worked. When you use it in a subroutine you automatically get a slurpy for it in the signature:</p>
-
+</code></pre><p>That’s how that implicit <code>%_</code> worked. When you use it in a subroutine you automatically get a slurpy for it in the signature:</p>
 <p>这就是隐含的％_的工作方式。当您在子例程中使用它时，您会在签名中自动获取它：</p>
-
 <pre><code>sub any-args { say %_ }
 sub any-args ( *%_ ) { say %_ }
-</code></pre>
-
-<h2 id="mixed-parameters">Mixed Parameters</h2>
-
+</code></pre><h2 id="mixed-parameters">Mixed Parameters</h2>
 <p>You can mix positional and named parameters. If you use <code>@_</code> and <code>%_</code> in the code they are both in the implicit signature:</p>
-
-<p>您可以混合位置和命名参数。如果在代码中使用@_和％_，则它们都在隐式签名中：</p>
-
+<p>您可以混合位置和命名参数。如果在代码中使用@<em>和％</em>，则它们都在隐式签名中：</p>
 <pre><code>sub any-args {
     put '@_ =&gt; ', @_.gist;
     put '%_ =&gt; ', %_.gist;
@@ -1339,81 +868,44 @@ any-args( 'Hamadryas', 137, :status, :color('Purple') );
 
 @_ =&gt; [Hamadryas 137]
 %_ =&gt; {color =&gt; Purple, status =&gt; True}
-</code></pre>
-
-<p>You can mix in the named parameters in any order that you like. The positional parameters have to be in the right order but named parameters can come between them:</p>
-
+</code></pre><p>You can mix in the named parameters in any order that you like. The positional parameters have to be in the right order but named parameters can come between them:</p>
 <p>您可以按您喜欢的任何顺序混合命名参数。位置参数必须是正确的顺序，但命名参数可以介于它们之间：</p>
-
 <pre><code>any-args( :color('Purple'), 'Hamadryas', :status, 137  );
-</code></pre>
-
-<p>It’s the same if you name the parameters yourself:</p>
-
+</code></pre><p>It’s the same if you name the parameters yourself:</p>
 <p>如果您自己命名参数，则相同：</p>
-
 <pre><code>sub any-args ( *@args, *%named ) {
     put '@args =&gt; ', @args.gist;
     put '%named =&gt; ', %named.gist;
     }
 
 any-args( :color('Purple'), 'Hamadryas', :status, 137  );
-</code></pre>
-
-<h1 id="return-types">Return Types</h1>
-
+</code></pre><h1 id="return-types">Return Types</h1>
 <p>You can constrain the return values of subroutines. If you try to return a value that doesn’t fit the restriction you get a runtime <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>. Specify the type after the signature with a <code>--&gt;</code>. You want this subroutine to return a defined <a href="https://docs.raku.org/type/Int.html"><code>Int</code></a>:</p>
-
 <p>您可以约束子例程的返回值。如果您尝试返回不符合限制的值，则会获得运行时异常。使用 - &gt;指定签名后的类型。您希望此子例程返回已定义的Int：</p>
-
 <pre><code>sub returns-an-int ( Int:D $a, Int:D $b --&gt; Int:D ) { $a + $b }
 
 put returns-an-int( 1, 3 );
-</code></pre>
-
-<p>That works:</p>
-
+</code></pre><p>That works:</p>
 <p>这样可行：</p>
-
 <pre><code>4
-</code></pre>
-
-<p>But what if you make a mistake where you return a <code>Str</code>?</p>
-
+</code></pre><p>But what if you make a mistake where you return a <code>Str</code>?</p>
 <p>但是，如果你在返回Str时犯了错误怎么办？</p>
-
 <pre><code>sub returns-an-int ( Int:D $a, Int:D $b --&gt; Int:D ) { ($a + $b).Str }
 
 put returns-an-int( 1, 3 );
-</code></pre>
-
-<p>At runtime you get an error because the types do not match:</p>
-
+</code></pre><p>At runtime you get an error because the types do not match:</p>
 <p>在运行时，您会收到错误，因为类型不匹配：</p>
-
 <pre><code>Type check failed for return value; expected Int but got Str (&quot;4&quot;)
-</code></pre>
-
-<p>An alternate way is to note it with <code>returns</code> (with an <code>s</code> at the end) outside of the signature’s parentheses:</p>
-
+</code></pre><p>An alternate way is to note it with <code>returns</code> (with an <code>s</code> at the end) outside of the signature’s parentheses:</p>
 <p>另一种方法是在签名的括号外面用返回（在末尾有一个s）注意它：</p>
-
 <pre><code>sub returns-an-int ( Int $a, Int $b ) returns Int { $a + $b }
-</code></pre>
-
-<p>You might also see these forms that do the same thing:</p>
-
+</code></pre><p>You might also see these forms that do the same thing:</p>
 <p>您可能还会看到这些表单执行相同的操作：</p>
-
 <pre><code>sub returns-an-int ( Int $a, Int $b ) of Int { $a + $b }
 
 my Int sub returns-an-int ( Int $a, Int $b ) { $a + $b }
-</code></pre>
-
-<p>No matter which way you define the return type you can always return either <code>Nil</code> or a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> object (usually to signal that something went wrong). All of these calls “succeed” even though some of them don’t return a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>No matter which way you define the return type you can always return either <code>Nil</code> or a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> object (usually to signal that something went wrong). All of these calls “succeed” even though some of them don’t return a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>无论您以何种方式定义返回类型，都可以始终返回Nil或Failure对象（通常表示出现问题）。所有这些调用都“成功”，即使其中一些不返回Str：</p>
-
 <pre><code>sub does-not-work ( Int:D $a --&gt; Str ) {
     return Nil if $a == 37;
     fail 'Is not a fine number' unless $a == 137;
@@ -1423,12 +915,8 @@ my Int sub returns-an-int ( Int $a, Int $b ) { $a + $b }
 put does-not-work(  37 ).^name;   # Nil
 put does-not-work( 137 ).^name;   # Str
 put does-not-work( 538 ).^name;   # Failure
-</code></pre>
-
-<p>You can’t make complex checks in the constraint, but you can define a subset that does these. Here’s one that returns either a <a href="https://docs.raku.org/type/Rat.html"><code>Rat</code></a> or, if you try to divide by zero, an <code>Inf</code>:</p>
-
+</code></pre><p>You can’t make complex checks in the constraint, but you can define a subset that does these. Here’s one that returns either a <a href="https://docs.raku.org/type/Rat.html"><code>Rat</code></a> or, if you try to divide by zero, an <code>Inf</code>:</p>
 <p>您不能在约束中进行复杂检查，但可以定义执行这些检查的子集。这里有一个返回Rat或者，如果你试图除以零，一个Inf：</p>
-
 <pre><code>subset RatInf where Rat:D | Inf;
 
 sub divide ( Int:D $a, Int:D $b --&gt; RatInf ) {
@@ -1438,14 +926,9 @@ sub divide ( Int:D $a, Int:D $b --&gt; RatInf ) {
 
 put divide( 1, 3 );  # &lt;1/3&gt;
 put divide( 1, 0 );  # Inf
-</code></pre>
-
-<p>That <code>Rat:D | Inf</code> is a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>. You’ll see those in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions">Chapter 14</a>.</p>
-
+</code></pre><p>That <code>Rat:D | Inf</code> is a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>. You’ll see those in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions">Chapter 14</a>.</p>
 <h1 id="summary">Summary</h1>
-
 <p>Much of the work of ensuring your program does the right things can be done with the judicious use of constraints on the inputs and outputs of subroutines. With a little planning these features will catch the cases that you did not expect and that shouldn’t show up in your program. Once they’ve been found you can work your way through the code to find them even sooner—and the sooner you find them, the easier your debugging life should be.</p>
-
 <p>确保您的程序做正确的事情的大部分工作可以通过明智地使用子程序的输入和输出的约束来完成。通过一些计划，这些功能将捕获您不期望的并且不应该出现在您的程序中的情况。一旦找到它们，您就可以通过代码更快地找到它们 - 并且越早找到它们，您的调试生活就越容易。</p>
 
 
@@ -1538,7 +1021,7 @@ put divide( 1, 0 );  # Inf
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

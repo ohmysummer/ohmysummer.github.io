@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-20-raku%E4%B8%AD%E7%9A%84%E5%91%BD%E9%A2%98%E7%BB%84%E5%90%88/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,35 +231,22 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>来临是一个激动人心的时刻，是一个期待的时刻。不仅对我们人类而言 - 正是精灵变得最具创造力的时候。今天，我想在圣诞节压力下休闲一些时间来报道礼品包装领域正在开展的一些开创性工作。即使你没有预料到任何消息，这份报告仍然可以帮助你改进你的技术，因为 - 我不必提醒你 - 圣诞节快到了。</p>
-
+        <p>来临是一个激动人心的时刻，是一个期待的时刻。不仅对我们人类而言 - 正是精灵变得最具创造力的时候。今天，我想在圣诞节压力下休闲一些时间来报道礼品包装领域正在开展的一些开创性工作。即使你没有预料到任何消息，这份报告仍然可以帮助你改进你的技术，因为 - 我不必提醒你 - 圣诞节快到了。</p>
 <p>你知道哪个小孩子最喜欢吗？大礼物。因此，Northpole的现有扩大研究实验室的任务是寻找实用的方法来扩大礼物。现在，“大”可能意味着多种事物。我承认，第6单元弯曲的意思了一点，但他们的工作是迄今为止最有趣的：他们增加了<strong>音量</strong>的礼物，通过增加的礼品盒的尺寸。</p>
-
 <p>“你如何包装6维礼物？”是管理层提出的有效问题。就好像天才击中了UX精灵的回应：«只需将它包裹起来，从每个三维视角看起来都像是一个正常的礼物»（他们实际上从<a href="https://gaussoids.de/">高斯</a>中学到了一个技巧，但谁也不想被视为天才偶尔？）。管理层感到满意，资金安全，数学精灵喜欢UX精灵提出的复杂性降低 - 只是制造技术还没有到那里生产那些高维盒子。因此他们决定在Raku中进行编程，因为在等待技术赶上100年语言时，最好使用什么？</p>
-
 <p>“让我们开始工作，”他们说，并且他们得到了工作。</p>
-
 <h1 id="你如何以数学方式包装礼物">你如何以数学方式包装礼物？</h1>
-
 <p>我在实验室逗留期间真正带回家的是，只有很多社会可接受或物理上可能的方式来包装礼物。首先，你需要一个礼物，然后一个盒子。你必须把礼品包装在盒子周围。这些步骤非常自然，精灵认为这是理所当然的。对于他们来说，“礼物”是礼品包装盒内的礼物。“包装”的挑战，以及将包装工与艺术大师分开的关键点，就是<strong>丝带</strong>和<strong>蝴蝶结</strong>发挥作用。你认为这应该够容易吗？好吧，再想一想！</p>
-
 <h2 id="一个立方体卡罗尔">一个立方体卡罗尔</h2>
-
 <p>此设置中的礼物由<a href="https://en.wikipedia.org/wiki/Hypercube">n维立方体</a>建模，或简称为“n立方体”。n-cube是一个非常好的东西，因为它的所有面都是较小尺寸的立方体。计算机科学家喜欢它，因为它的顶点实际上只是长度为n 的<code>0</code>s和<code>1</code>s的串。在这里，我们关心n立方体的二维面或“正方形”。通常的三维立方体有六个正方形，正如你从骰子中所知道的那样。</p>
-
 <p>精灵采取的方法将这些方块视为变量并分配给它们</p>
-
 <ul>
 <li><strong>没有</strong>如果的礼品盒，这部分上有唯一的礼品包装，因为我们同意需要，</li>
 <li><strong>色带</strong>，如果有两端礼品丝带运行，或</li>
 <li><strong>弓</strong>如果在立方体的这一侧弓或循环。</li>
 </ul>
-
 <p>是时候看一些代码了：</p>
-
-<pre><code class="language-raku">#|« A square on the n-cube with wrapping.
+<pre><code class="language-raku" data-lang="raku">#|« A square on the n-cube with wrapping.
 In the n-cube there are 3*(n choose 2)*2**(n-2) WrapSquare variables,
 one for every square and every kind of value that can be assigned to it.
 »
@@ -272,13 +259,9 @@ class WrapSquare is Cube::Face does Propositional::Variable {
 
     # ...
 }
-</code></pre>
-
-<p>此片段告诉您这<code>WrapSquare</code>是多维数据集的一个面，其中<code>Cube::Face</code>该类实现了我们期望从多维数据集表面执行的大部分功能。它也是一种变量，并且具有一个<code>$.kind</code>属性，该属性将保存字符串<code>□</code>，<code>■</code>或者<code>![🎀](https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/1f380.svg)</code>，取决于为该正方形分配了哪个值（<strong>没有</strong>，<strong>功能区</strong>或<strong>弓形</strong>）。</p>
-
+</code></pre><p>此片段告诉您这<code>WrapSquare</code>是多维数据集的一个面，其中<code>Cube::Face</code>该类实现了我们期望从多维数据集表面执行的大部分功能。它也是一种变量，并且具有一个<code>$.kind</code>属性，该属性将保存字符串<code>□</code>，<code>■</code>或者<code>![🎀](https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/1f380.svg)</code>，取决于为该正方形分配了哪个值（<strong>没有</strong>，<strong>功能区</strong>或<strong>弓形</strong>）。</p>
 <p>有一些整洁的运算符:</p>
-
-<pre><code class="language-raku">multi prefix: (Str $s) {
+<pre><code class="language-raku" data-lang="raku">multi prefix: (Str $s) {
     WrapSquare.new: :kind&lt;□&gt;,
         Cube::Face.from-word($s)
 }
@@ -292,29 +275,17 @@ multi prefix: (Str $s) {
     WrapSquare.new: :kind&lt;🎀&gt;,
         Cube::Face.from-word($s)
 }
-</code></pre>
-
-<p>这让你<code>WrapSquare</code>通过写作来制作<code>■&lt;0**010&gt;</code>。该字符串<code>0**010</code>指定6维立方体中的正方形：让其中的<code>*</code>符号为通配符，它们在<code>0</code>和之间变化<code>1</code>。然后你得到四个二进制字符串<code>000010</code>，<code>001010</code>，<code>010010</code>和<code>011010</code>。回想一下，长度为n（这里n = 6）的二进制字符串是n-cube的顶点，这四个碰巧绑定了它的二维面。这些<code>WrapSquare</code>文字将在以后全部出现。</p>
-
+</code></pre><p>这让你<code>WrapSquare</code>通过写作来制作<code>■&lt;0**010&gt;</code>。该字符串<code>0**010</code>指定6维立方体中的正方形：让其中的<code>*</code>符号为通配符，它们在<code>0</code>和之间变化<code>1</code>。然后你得到四个二进制字符串<code>000010</code>，<code>001010</code>，<code>010010</code>和<code>011010</code>。回想一下，长度为n（这里n = 6）的二进制字符串是n-cube的顶点，这四个碰巧绑定了它的二维面。这些<code>WrapSquare</code>文字将在以后全部出现。</p>
 <p>经过所有这些解释后<code>WrapSquare</code>，我几乎可以听到你心中想要满足的痒：“为什么会这样<code>WrapSquare</code> <code>Variable</code> <code>Propositional</code>？”</p>
-
 <h2 id="sat-a-clause的令人满意的故事">SAT-a-Clause的令人满意的故事</h2>
-
 <p>回想一下UX精灵的建议是：«只需将其包裹起来，从每个三维视角看起来都像一个正常的礼物»。虽然这听起来非常简单，但它会产生一个非常复杂的问题。</p>
-
 <p>“有多少种方式来包装n维礼物？”可能是精灵们问自己的第一个问题。UX精灵要我们做的是选择一个合适的三维包装，其中精灵已经是专家，对于n立方体表面上的每个三维立方体，<strong>但是</strong>所有这些三维包装都适合在高维立方体。n立方体有½n⋅（n-1）⋅2ⁿ-2平方但是通过选择3d包裹，你可以选择½n⋅（n-1）⋅（n-2）⋅2ⁿ-2平方，这是（n -2）你有变量的选择次数。原因是3立方体在n立方体中彼此共享正方形，就像在3维中一样，骰子的侧面具有共同的立方体边缘。</p>
-
 <p>UX精灵创建的问题是为n-cube上的3-cube选择3d包装，只要它们具有公共方形，它们就彼此兼容。但这真的有多糟糕？在尺寸4中，您有24个正方形，因此3²= 282,429,536,481种选择包装的方式。如果您是随机进行的，那么您找到UX认可包装的机会甚至不是0.0000007％。正如我们将要看到的那样，正好有1848个正确的包装。</p>
-
 <p>“我们怎么可能探索这样一个巨大的空间？” - 精灵们感到震惊。直到他们发现SAT求解器。<code>SAT</code>指的是<a href="https://en.wikipedia.org/wiki/Propositional_calculus">命题</a> <a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem">满足性问题</a>，决定使用布尔变量和运算的公式是否具有使公式成立的赋值，“满足”它的任务。</p>
-
 <p>事实证明，礼品包装可以变成这种可满足性问题的一个例子。为简单起见，精灵决定为n-cube的每个方块分配三个布尔变量。他们主张这个广场是否装饰有□，■或🎀。这些变量中的一个必须是真的。然后，他们编码要求，每个3立方体必须包含一个适当的3d包装，并且所选择的包装在n立方体中兼容为命题公式。他们把这个公式的成分称为<em>giftoid公理</em> - 包装高维礼品的规则。</p>
-
 <p>有些求解器比找到一个令人满意的任务更进一步（或确定找不到一个任务的不可能性）：他们可以返回这些任务的确切数量，甚至可以列出所有这些任务。正是精灵需要的东西，幸运的是，Raku可以使用命题演算和SAT求解器。</p>
-
 <p>SAT求解器的输入是<a href="https://en.wikipedia.org/wiki/Conjunctive_normal_form">Conjunctive Normal Form中</a>的布尔公式。该<code>Propositional</code>模块有一个特别好的实现，虽然我可能有偏见：</p>
-
-<pre><code class="language-raku">method NNF {
+<pre><code class="language-raku" data-lang="raku">method NNF {
     self.rewrite(
         (  ^:p ⇔ ^:q ) =&gt; { ($:p ⇒  $:q) ∧ ($:q ⇒ $:p) },
         (  ^:p ⇒ ^:q ) =&gt; { ¬$:p ∨  $:q },
@@ -332,82 +303,54 @@ method CNF {
     )
     andthen .squish
 }
-</code></pre>
-
-<p>该<code>CNF</code>方法首先将公式转换为中间形式，称为<a href="https://en.wikipedia.org/wiki/Negation_normal_form">否定范式</a>，然后将其转换为CNF。这两种方法都使用模块的中心齿轮之一，该<code>rewrite</code>方法。顾名思义，它重写了一个基于规则的公式，这些规则作为成对给出，例如<code>(^:p ⇔ ^:q ) =&gt; { ($:p ⇒ $:q) ∧ ($:q ⇒ $:p) }</code>。关键是一个公式对象，这里只是<code>⇔</code>两个变量的等价，<code>^:p</code>并且<code>^:q</code>在整个公式内是模式匹配的。“限量印记”，在变量前面表明上的两侧发现子式<code>⇔</code>操作应当<strong>帽</strong>捕获的原始内部<a href="https://docs.raku.org/language/variables#index-entry-%24%3A">命名参数</a> <code>p</code>和<code>q</code>它们被传递到对fatarrow右侧的代码块，以确定<code>⇔</code>表达式的替换是什么。在这种情况下，等价被两个含义所取代 - 这个重写规则实现了定义<code>⇔</code>。上面的下一条规则实现了<code>⇒</code>。的定义。实际上，如果你想要一个NNF，必须消除这两个符号。</p>
-
+</code></pre><p>该<code>CNF</code>方法首先将公式转换为中间形式，称为<a href="https://en.wikipedia.org/wiki/Negation_normal_form">否定范式</a>，然后将其转换为CNF。这两种方法都使用模块的中心齿轮之一，该<code>rewrite</code>方法。顾名思义，它重写了一个基于规则的公式，这些规则作为成对给出，例如<code>(^:p ⇔ ^:q ) =&gt; { ($:p ⇒ $:q) ∧ ($:q ⇒ $:p) }</code>。关键是一个公式对象，这里只是<code>⇔</code>两个变量的等价，<code>^:p</code>并且<code>^:q</code>在整个公式内是模式匹配的。“限量印记”，在变量前面表明上的两侧发现子式<code>⇔</code>操作应当<strong>帽</strong>捕获的原始内部<a href="https://docs.raku.org/language/variables#index-entry-%24%3A">命名参数</a> <code>p</code>和<code>q</code>它们被传递到对fatarrow右侧的代码块，以确定<code>⇔</code>表达式的替换是什么。在这种情况下，等价被两个含义所取代 - 这个重写规则实现了定义<code>⇔</code>。上面的下一条规则实现了<code>⇒</code>。的定义。实际上，如果你想要一个NNF，必须消除这两个符号。</p>
 <p>重写引擎执行所有列出的重写，直到找不到更多匹配项。现在，逻辑学家会告诉你，如果你这样做，你会将任何命题公式变成CNF。这应该足够内部。让我们公理化礼物吧！</p>
-
 <h2 id="比你想知道的3d礼品包装更多">比你想知道的3D礼品包装更多</h2>
-
 <p>看到所有的高级成分落到实处，每个人都兴奋不已，我不得不停下来问：«基本情况怎么样？你如何包装3D礼物？»。问这个精灵和他们的眼睛开始发光。这是他们的第二天性，甚至是研究精灵。这些是每个精灵在学校学到的规则：</p>
-
 <ul>
-<li><strong>只是包装：</strong>没有丝带或蝴蝶结的礼物是好的，但永远不要忘记礼品包装，</li>
-<li><strong>胶合弓：</strong>它可以有一个单面粘在一边，没有色带，</li>
-<li><strong>色带：</strong>如果你使用色带，你必须把它包在盒子周围的“腰带”上，</li>
-<li><strong>蝴蝶结腰带：</strong>你可以将蝴蝶结融入蝴蝶结腰带，</li>
-<li><strong>一个弓：</strong>你可能只使用一个弓或没有，</li>
-<li><strong>消歧：</strong>如果所有方面都有缎带，就必须有弓。</li>
+<li>**只是包装：**没有丝带或蝴蝶结的礼物是好的，但永远不要忘记礼品包装，</li>
+<li>**胶合弓：**它可以有一个单面粘在一边，没有色带，</li>
+<li>**色带：**如果你使用色带，你必须把它包在盒子周围的“腰带”上，</li>
+<li>**蝴蝶结腰带：**你可以将蝴蝶结融入蝴蝶结腰带，</li>
+<li>**一个弓：**你可能只使用一个弓或没有，</li>
+<li>**消歧：**如果所有方面都有缎带，就必须有弓。</li>
 </ul>
-
 <p>最后一个公理与其他公理不同。它不是小学包装表的一部分，后来被致力于高维包装的精灵们发现。（也许有一天会进入课程？）在谈论色带时，“立方体的方块”公式是一种简化，因为有两种方法可以将色带垂直或水平地包裹在立方体的给定方格中。在只有一条皮带的情况下，带状皮带公制用于定义色带的方向。类似地，实际上有三种方法可以围绕立方体包裹色带，这样所有方法都会导致每个边都被色带触摸，即每种方式都可以从三个方向中挑选出两个带。因此，立方体的这种“包裹”是模糊的，必须禁止。</p>
-
 <p>该<code>Propositional</code>包可以采取不将任何对象<code>Propositional::Variable</code>作为式中的变量的作用。如上所示，通常的逻辑连接符被重载，因此您可以在Raku程序中编写公式，就像在纸上一样。仅要求变量角色是一个重要的设计决策，并具有一些巧妙的含义。例如，重写捕获<code>^:p</code>我们之前看到的，也是<code>Propositional::Variable</code>在智能匹配时特别表现的对象。</p>
-
-<p>在精灵的情况下，<code>Variable</code>是<code>WrapSquare</code>类和允许任意对象作为变量的另一个优点显示自己：任意变量可以有任意方法或操作符作用于它们。精灵用它来完成另一个*复杂性的减少*。他们只需要对3立方体的<strong>一个角</strong>进行公理化，然后使用3立方体的<a href="https://en.wikipedia.org/wiki/Hyperoctahedral_group">对称组进行处理</a>。这个群体动作将公理化的角落移动到立方体的<strong>每个</strong>角落，因此连接该动作的轨道给出了3d礼品包装的完全公理化。现在我们同意这听起来很棒，让我们看看它是如何在Raku中完成的。（*注意：*公理化涉及<a href="https://en.wikipedia.org/wiki/Logical_connective">逻辑连接词</a>你可能想要熟悉并遵循上面人类可读的公理。）</p>
-
+<p>在精灵的情况下，<code>Variable</code>是<code>WrapSquare</code>类和允许任意对象作为变量的另一个优点显示自己：任意变量可以有任意方法或操作符作用于它们。精灵用它来完成另一个<em>复杂性的减少</em>。他们只需要对3立方体的<strong>一个角</strong>进行公理化，然后使用3立方体的<a href="https://en.wikipedia.org/wiki/Hyperoctahedral_group">对称组进行处理</a>。这个群体动作将公理化的角落移动到立方体的<strong>每个</strong>角落，因此连接该动作的轨道给出了3d礼品包装的完全公理化。现在我们同意这听起来很棒，让我们看看它是如何在Raku中完成的。（*注意：*公理化涉及<a href="https://en.wikipedia.org/wiki/Logical_connective">逻辑连接词</a>你可能想要熟悉并遵循上面人类可读的公理。）</p>
 <pre><code>multi axioms ($n = 3) {
     my \φ = .CNF with [∧] gather {
         take □&lt;**0&gt; ∨ ■&lt;**0&gt; ∨ 🎀&lt;**0&gt;;
         take □&lt;**0&gt; ⇒ ¬(■&lt;**0&gt; ∨ 🎀&lt;**0&gt;);
         take ■&lt;**0&gt; ⇒ ¬(□&lt;**0&gt; ∨ 🎀&lt;**0&gt;);
         take 🎀&lt;**0&gt; ⇒ ¬(□&lt;**0&gt; ∨ ■&lt;**0&gt;);
-</code></pre>
-
-<p>我们选择二维面<code>**0</code>作为公理化的特定角落。有三个关联布尔变量，即<code>□&lt;**0&gt;</code>，<code>■&lt;**0&gt;</code>和<code>![🎀](https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/1f380.svg)&lt;**0&gt;</code>（方便，他们也可以被称为是在Raku的代码，这要归功于我们的<code>WrapSquare</code>构造函数运算符）。要具有明确定义的包装，必须至少设置这三个变量中的一个。</p>
-
-<p>公理说必须设置三个变量*中的至少*一个。下一个公理规则如果碰巧是活跃的（意味着广场上只有礼品包装），那么（）它也不能（）是真的，或者（）也被设置。任何令人满意的任务，即SAT求解器将为我们找到的最终公式将实现这个公理，因为我们采取了一个大的AND超过块。</p>
-
+</code></pre><p>我们选择二维面<code>**0</code>作为公理化的特定角落。有三个关联布尔变量，即<code>□&lt;**0&gt;</code>，<code>■&lt;**0&gt;</code>和<code>![🎀](https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/1f380.svg)&lt;**0&gt;</code>（方便，他们也可以被称为是在Raku的代码，这要归功于我们的<code>WrapSquare</code>构造函数运算符）。要具有明确定义的包装，必须至少设置这三个变量中的一个。</p>
+<p>公理说必须设置三个变量<em>中的至少</em>一个。下一个公理规则如果碰巧是活跃的（意味着广场上只有礼品包装），那么（）它也不能（）是真的，或者（）也被设置。任何令人满意的任务，即SAT求解器将为我们找到的最终公式将实现这个公理，因为我们采取了一个大的AND超过块。</p>
 <p>您被邀请将其他公式追溯到包装表：</p>
-
-<pre><code class="language-raku">        take ■&lt;**0&gt; ⇒ (■&lt;**1&gt; ∨ 🎀&lt;**1&gt;);
+<pre><code class="language-raku" data-lang="raku">        take ■&lt;**0&gt; ⇒ (■&lt;**1&gt; ∨ 🎀&lt;**1&gt;);
         take (■&lt;**0&gt; ∧ ■&lt;**1&gt;) ⇒ (■&lt;*0*&gt; ∨ 🎀&lt;*0*&gt; ∨ ■&lt;0**&gt; ∨ 🎀&lt;0**&gt;);
         take (🎀&lt;**0&gt; ∧ ■&lt;**1&gt;) ⇒ (■&lt;*0*&gt; ∨ ■&lt;0**&gt;);
         take (🎀&lt;**0&gt; ∧ (■&lt;*0*&gt; ∨ ■&lt;0**&gt;)) ⇒ ■&lt;**1&gt;;
         take 🎀&lt;**0&gt; ⇒ ¬(🎀&lt;**1&gt; ∨ 🎀&lt;*0*&gt; ∨ 🎀&lt;*1*&gt; ∨ 🎀&lt;0**&gt; ∨ 🎀&lt;1**&gt;);
     }
-</code></pre>
-
-<p>现在我们对3立方体的一个角进行了公理化，我们采用了超八面体组。这可以通过所谓的二元性的组合来实现，该二元性是<code>&amp;postfix:&lt;°&gt;</code>操作者实现的<code>Cube::Face</code>，并且<code>&amp;infix:&lt;⤩&gt;</code>操作者存在的立方体的轴的排列。</p>
-
-<pre><code class="language-raku">    my \ψ = φ.rewrite(:1ce,
+</code></pre><p>现在我们对3立方体的一个角进行了公理化，我们采用了超八面体组。这可以通过所谓的二元性的组合来实现，该二元性是<code>&amp;postfix:&lt;°&gt;</code>操作者实现的<code>Cube::Face</code>，并且<code>&amp;infix:&lt;⤩&gt;</code>操作者存在的立方体的轴的排列。</p>
+<pre><code class="language-raku" data-lang="raku">    my \ψ = φ.rewrite(:1ce,
         (^:s(WrapSquare)) =&gt; { $:s° }
     );
     return [∧] gather for (1,2,3).permutations -&gt; \π {
         take (φ ∧ ψ).rewrite(:1ce,
             (^:s(WrapSquare)) =&gt; { $:s ⤩ π }
         );
-</code></pre>
-
-<p>这个<code>rewrite</code>方法再次闪耀在这里。捕获变量可以使用smartmatcher进行约束，例如类型<code>WrapSquare</code>。它们只匹配并捕获匹配约束的内容。因此，上述重写规则仅对公式中的变量起作用，并且它们只执行它<code>:1ce</code>- 因为否则重写引擎会一遍又一遍地重写相同的变量，因为它们在每次迭代中都会重新匹配。</p>
-
+</code></pre><p>这个<code>rewrite</code>方法再次闪耀在这里。捕获变量可以使用smartmatcher进行约束，例如类型<code>WrapSquare</code>。它们只匹配并捕获匹配约束的内容。因此，上述重写规则仅对公式中的变量起作用，并且它们只执行它<code>:1ce</code>- 因为否则重写引擎会一遍又一遍地重写相同的变量，因为它们在每次迭代中都会重新匹配。</p>
 <p>你注意到了什么吗？看起来精灵们忘记了消歧公理。但是 - 它没有被遗忘。它已经是对称的，不必参与上面的对称化过程。如果确实如此，就会不必要地重复。它来了：</p>
-
-<pre><code class="language-raku">        LAST take ¬(■&lt;**0&gt; ∧ ■&lt;**1&gt; ∧ ■&lt;*0*&gt; ∧ ■&lt;*1*&gt; ∧ ■&lt;0**&gt; ∧ ■&lt;1**&gt;);
+<pre><code class="language-raku" data-lang="raku">        LAST take ¬(■&lt;**0&gt; ∧ ■&lt;**1&gt; ∧ ■&lt;*0*&gt; ∧ ■&lt;*1*&gt; ∧ ■&lt;0**&gt; ∧ ■&lt;1**&gt;);
     }
 }
-</code></pre>
-
-<p>最后，三维礼品包装公理是完整的。精灵们兴高采烈地跳舞。</p>
-
+</code></pre><p>最后，三维礼品包装公理是完整的。精灵们兴高采烈地跳舞。</p>
 <h1 id="把它包起来">把它包起来</h1>
-
 <p>让我们总结一下。为了包装更高维度的礼物，我们将三维礼物包裹起来并将包装拼凑在一起。为了使三维包裹物公理化，在其一个角落周围进行公理化并转动立方体并重复该过程就足够了，因此立方体的每个角落都是一个公理化的角落。这给出了描述所有正确包装的布尔公式。</p>
-
 <p>但是，嘿，我们还没完成！giftoids和SAT求解器在哪里？为了使n-giftoids公理化，上面构造的3立方公理化必须在n立方体的每个3面复制。另一个<code>Cube::Face</code>操作员出现在这里，再次出现在<code>rewrite</code>。它将一个正方形嵌入到n立方体的三个面中，正如我们所需要的：</p>
-
-<pre><code class="language-raku">multi axioms ($n where * &gt; 3) {
+<pre><code class="language-raku" data-lang="raku">multi axioms ($n where * &gt; 3) {
     my \Φ = axioms;
     [∧] gather for Faces($n, 3) -&gt; \Δ {
         take Φ.rewrite(:1ce,
@@ -415,24 +358,16 @@ method CNF {
         )
     }
 }
-</code></pre>
-
-<p>使用SAT工具<code>Propositional</code>，我们现在可以获得3-4G和5-Giftoids的实数：</p>
-
-<pre><code class="language-raku">say count-sat Giftoid::axioms(3), :now
+</code></pre><p>使用SAT工具<code>Propositional</code>，我们现在可以获得3-4G和5-Giftoids的实数：</p>
+<pre><code class="language-raku" data-lang="raku">say count-sat Giftoid::axioms(3), :now
 #= OUTPUT: 28
 say count-sat(Giftoid::axioms(3), :now)
 #= OUTPUT: 1848
 say  count-sat(Giftoid::axioms(3), :now)
 #= OUTPUT: 58213276
-</code></pre>
-
-<p>为了感受SAT求解者所做的惊人工作，考虑到它<code>28</code>在729种可能性中找到了3-giftoids 的数量，<code>1848</code>在282429536481种可能性中找到了4-giftoids的数量，以及可能<code>58213276</code>总共为147808829414345923316083210206383297601可能性的5-giftoids。</p>
-
+</code></pre><p>为了感受SAT求解者所做的惊人工作，考虑到它<code>28</code>在729种可能性中找到了3-giftoids 的数量，<code>1848</code>在282429536481种可能性中找到了4-giftoids的数量，以及可能<code>58213276</code>总共为147808829414345923316083210206383297601可能性的5-giftoids。</p>
 <p>当你自己尝试上面的代码示例时，你应该知道的是SAT求解器，特别是计数器，是非常需要内存的。5-giftoid计数需要5:14处理器分钟，笔记本电脑上有4 GiB RAM，不是没有交换，但它可以在笔记本电脑上完成！大多数求解器允许限制时间和内存使用，但Raku模块中尚未实现求解器配置。</p>
-
 <p>绝对可行的是获得一个3-giftoids列表，其中3-cube的所有六个方块的赋值按特定顺序列出：</p>
-
 <pre><code>.put for all-sat(Giftoid::axioms).map({ Giftoid.new: n =&gt; 3, deco =&gt; $_ })
 #=« OUTPUT:
 ■■■🎀■■
@@ -449,11 +384,8 @@ say  count-sat(Giftoid::axioms(3), :now)
 ■■□□🎀■
 ...
 »
-</code></pre>
-
-<p>或者确定固定维度的giftoids中的平均弓箭数，尽管你不会对这些弓箭走得太远：</p>
-
-<pre><code class="language-raku">sub mean-bows ($n) {
+</code></pre><p>或者确定固定维度的giftoids中的平均弓箭数，尽管你不会对这些弓箭走得太远：</p>
+<pre><code class="language-raku" data-lang="raku">sub mean-bows ($n) {
     my ($sum, $count);
     all-sat(Giftoid::axioms($n)).map({
         $sum += +.keys.grep(*.kind eq &lt;🎀&gt;);
@@ -466,10 +398,7 @@ say mean-bows(3);
 #= OUTPUT: 0.857143
 say mean-bows(4);
 #= OUTPUT: 2.766234
-</code></pre>
-
-<p>预算精灵谨慎地提出一个问题：«如果你任意增加giftoids的维度，这是否意味着保持有限？毕竟，弓是最昂贵的&hellip;&hellip;»</p>
-
+</code></pre><p>预算精灵谨慎地提出一个问题：«如果你任意增加giftoids的维度，这是否意味着保持有限？毕竟，弓是最昂贵的&hellip;&hellip;»</p>
 <p>我会让你在假期里思考这个问题。快乐的包装。</p>
 
 
@@ -562,7 +491,7 @@ say mean-bows(4);
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

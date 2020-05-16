@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-07-command-line-arguments-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,35 +231,27 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<ul>
+        <ul>
 <li>MAIN 子例程</li>
 <li>命名参数和位置参数
-
 <ul>
 <li>命名参数</li>
 <li>位置参数</li>
 <li>Multi dispatch</li>
 <li>组合命名参数和位置参数</li>
-</ul></li>
+</ul>
+</li>
 <li>可选参数和必选参数</li>
 <li>别名或备用命名参数</li>
 <li>USAGE 子例程</li>
 </ul>
-
 <h2 id="sub-main">Sub MAIN</h2>
-
 <p>在 Raku 中，命令行参数的解析是使用 <code>MAIN</code> 子例程完成的，MAIN 子例程是一个特殊的子例程，它根据签名解析命令行参数。与其他子程序一样，您可以使用命名参数和位置参数，可选（和必需）参数，multiple dispatch 等。
 通过定义 <code>MAIN</code> 子例程，编译器会自动生成 USAGE 子例程。可以修改此子例程以返回自定义的 usage 信息。所有的命令行参数也可以在特殊变量 <code>@*ARGS</code> 中使用，它可以在 <code>MAIN</code> 处理之前进行更改。</p>
-
 <h2 id="命名参数和位置参数">命名参数和位置参数</h2>
-
 <p><strong>命名参数</strong></p>
-
 <p>我们从一个简单的程序开始（保存为 <code>prog.p6</code>）:</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 sub MAIN(
     Str :$name = 'John', 
@@ -269,30 +261,20 @@ sub MAIN(
     my $formatted-name = &quot;$name.tc() $last-name.tc()&quot;;
     say $formatted-name;
 }
-</code></pre>
-
-<p>在这个 MAIN 子程序中，我们创建了两个命名参数，<code>$name</code> 和 <code>$last-name</code>，带有类型约束（<code>Str</code>），方法是在子例程的签名给每个变量添加 <code>:</code>。这些参数还具有默认值，这是通过为参数赋值来实现的。在这种情况下，我们将 <code>$name</code> 设置为默认值 &lsquo;John&rsquo;，将 <code>$last-name</code> 设置为 &lsquo;Doe&rsquo;。如果执行 <code>prog.p6</code> 时命令行参数与 <code>MAIN</code> 签名匹配，则会打印出格式化的全名：</p>
-
-<pre><code class="language-raku">$ raku prog.p6
+</code></pre><p>在这个 MAIN 子程序中，我们创建了两个命名参数，<code>$name</code> 和 <code>$last-name</code>，带有类型约束（<code>Str</code>），方法是在子例程的签名给每个变量添加 <code>:</code>。这些参数还具有默认值，这是通过为参数赋值来实现的。在这种情况下，我们将 <code>$name</code> 设置为默认值 &lsquo;John&rsquo;，将 <code>$last-name</code> 设置为 &lsquo;Doe&rsquo;。如果执行 <code>prog.p6</code> 时命令行参数与 <code>MAIN</code> 签名匹配，则会打印出格式化的全名：</p>
+<pre><code class="language-raku" data-lang="raku">$ raku prog.p6
 John Doe
 $ raku prog.p6 --name='carl' --last-name='sagan'
 Carl Sagan
 $ raku prog.p6 --last-name='sagan' --name='carl'
 Carl Sagan
-</code></pre>
-
-<p>如您所见，命名参数可以按您想要的任意顺序传递。
+</code></pre><p>如您所见，命名参数可以按您想要的任意顺序传递。
 如果没有匹配 <code>MAIN</code> 签名，那么我们会收到一条 usage 信息：</p>
-
-<pre><code class="language-raku">$ p6 prog.p6 --name='Carl' --last-name='Sagan' --career='astronomer'
+<pre><code class="language-raku" data-lang="raku">$ p6 prog.p6 --name='Carl' --last-name='Sagan' --career='astronomer'
 prog.p6 [--name=&lt;Str&gt;] [--last-name=&lt;Str&gt;]
-</code></pre>
-
-<h2 id="位置参数">位置参数</h2>
-
+</code></pre><h2 id="位置参数">位置参数</h2>
 <p>如果我们想要使用位置参数，我们可以重新定义子例程的签名以仅解析位置参数。与之前的版本一样，我们将拥有参数的默认值，但这些参数现在是位置的，必须按签名定义的顺序提供：</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 sub MAIN(
     Str $name = 'John',       # No colon(:) in the variable 
@@ -302,28 +284,18 @@ sub MAIN(
     my $formatted-name = &quot;$name.tc() $last-name.tc()&quot;;
     say $formatted-name;
 }
-</code></pre>
-
-<p>使用匹配的签名执行 <code>prog.p6</code> 将打印以下输出：</p>
-
-<pre><code class="language-raku">$ raku prog.p6
+</code></pre><p>使用匹配的签名执行 <code>prog.p6</code> 将打印以下输出：</p>
+<pre><code class="language-raku" data-lang="raku">$ raku prog.p6
 John Doe
 
 $ raku prog.p6 carl sagan
 Carl Sagan
-</code></pre>
-
-<p>没有一个，它给我们以下 usage 信息：</p>
-
-<pre><code class="language-raku">$ raku prog.p6 carl sagan astronomer
+</code></pre><p>没有一个，它给我们以下 usage 信息：</p>
+<pre><code class="language-raku" data-lang="raku">$ raku prog.p6 carl sagan astronomer
 prog.p6 [&lt;name&gt;] [&lt;last-name&gt;]
-</code></pre>
-
-<h2 id="multiple-dispatch">multiple dispatch</h2>
-
+</code></pre><h2 id="multiple-dispatch">multiple dispatch</h2>
 <p>我们可能更喜欢在我们的小程序中使用命名参数和位置参数。正如我们之前提到的，我们可以使用 multiple dispatch（具有相同名称但具有不同签名的多个子例程）来声明具有其自己的签名的多个 <code>MAIN</code> 子例程。为此，每个候选者都使用 <code>multi</code> 关键字而不是 <code>sub</code> 来声明：</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 multi MAIN(
     Str :$name = 'John', 
@@ -342,32 +314,22 @@ multi MAIN(
     my $formatted-name = &quot;$name.tc() $last-name.tc()&quot;;
     say $formatted-name;
 }
-</code></pre>
-
-<p>两个 <code>MAIN</code> 子例程看起来非常相似，但它们具有不同的签名，这些签名描述了预期的命令行参数。
+</code></pre><p>两个 <code>MAIN</code> 子例程看起来非常相似，但它们具有不同的签名，这些签名描述了预期的命令行参数。
 如果我们使用与任何 <code>MAIN</code> 签名匹配的命令行参数执行 <code>prog.p6</code>，我们将获得格式化的全名：</p>
-
-<pre><code class="language-raku">$ p6 prog.p6 --name='ada' --last-name='lovelace'
+<pre><code class="language-raku" data-lang="raku">$ p6 prog.p6 --name='ada' --last-name='lovelace'
 Ada Lovelace
 
 $ p6 prog.p6 marcus aurelius
 Marcus Aurelius
-</code></pre>
-
-<p>如果没有匹配的签名，我们将获得一个有用的 usage 信息，详细说明 <code>MAIN</code> 子例程的可能签名：</p>
-
-<pre><code class="language-raku">$ p6 prog.p6 --name='Ada' --last-name='Lovelace' --title='Ms'
+</code></pre><p>如果没有匹配的签名，我们将获得一个有用的 usage 信息，详细说明 <code>MAIN</code> 子例程的可能签名：</p>
+<pre><code class="language-raku" data-lang="raku">$ p6 prog.p6 --name='Ada' --last-name='Lovelace' --title='Ms'
 Usage:
   prog.p6 [--name=&lt;Str&gt;] [--last-name=&lt;Str&gt;] 
   prog.p6 [&lt;name&gt;] [&lt;last-name&gt;] 
-</code></pre>
-
-<h2 id="组合命名参数和位置参数">组合命名参数和位置参数</h2>
-
+</code></pre><h2 id="组合命名参数和位置参数">组合命名参数和位置参数</h2>
 <p>在我们的例子中定义不同的签名来处理不同的命令行参数，命名参数和位置参数在我们的例子中是很好的。但是，如果您想在单个 <code>MAIN</code> 签名中混合命名参数和位置参数，该怎么办？尽管必须在命名参数之前定义位置参数，但这可以非常容易地完成。
 让我们通过向第一个 <code>multi</code> 子例程添加位置参数来更新我们的简单程序 <code>prog.p6</code> 的最新迭代：</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 multi MAIN(
     Str $title = 'Mr',      # Our positional parameter defined before named ones
@@ -388,21 +350,14 @@ multi MAIN(
     my $formatted-name = &quot;$title.tc() $name.tc() $last-name.tc()&quot;;
     say $formatted-name;
 }
-</code></pre>
-
-<h2 id="可选参数和必选参数">可选参数和必选参数</h2>
-
+</code></pre><h2 id="可选参数和必选参数">可选参数和必选参数</h2>
 <p><strong>默认情况下，命名参数是可选的</strong>。尽管如此，可以通过在相应的词法变量后面附加一个 <code>!</code> 来标记它们。例如，<code>MAIN( :$first, :$second, :$operator ){ ... }</code> 如果没有一些命令行参数但是 <code>MAIN( :$first!, :$second!, :$operator! ){ ... }</code> 假设现在需要参数并且调用者必须传递必要的参数，$ operator！）{&hellip;}会这样做。</p>
-
 <p>另一方面，默认情况下需要位置参数，但可以通过将相应的词汇变量附加 <code>?</code> 来将其标记为可选。例如，如果在没有命令行参数但是 <code>MAIN( $first, $second, $operator ){ ... }</code> 的情况下调用MAIN（$ first，$ second，$ operator）{&hellip;}将打印一条用法消息不会因为参数现在是可选的。
-通过设置默认值，也可以将位置参数定义为可选，例如我们如何使用$MAIN和$ MAIN中的$ last-name（$ title，$ name =&lsquo;John&rsquo;，$ last-name =&lsquo;Doe&rsquo;）{.. 。}。</p>
-
+通过设置默认值，也可以将位置参数定义为可选，例如我们如何使用$MAIN和$ MAIN中的$ last-name（$ title，$ name ='John&rsquo;，$ last-name ='Doe&rsquo;）{.. 。}。</p>
 <h2 id="别名或备用命名参数">别名或备用命名参数</h2>
-
 <p>命名参数及其别名通过使用冒号对语法（:)提供。冒号的存在：将决定我们是否正在创建一个新的命名参数。
 让我们修改prog.p6中的第一个多数来包含一些别名：</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 multi MAIN(
     Str $title = 'Mr',
@@ -419,36 +374,27 @@ multi MAIN(
 }
 
 ...
-</code></pre>
-
-<p>这个MAIN定义了两种别名：
+</code></pre><p>这个MAIN定义了两种别名：
 ：last-name（$ surname）只将传递给命令行参数&ndash;last-name的内容别名为变量$ surname（注意缺少:)。这意味着$ surname将只是别名变量的名称，它不会创建新的命名参数：</p>
-
-<pre><code class="language-raku">$ p6 prog.p6 --name='alan' --last-name='turing' -p
+<pre><code class="language-raku" data-lang="raku">$ p6 prog.p6 --name='alan' --last-name='turing' -p
 Alan Turing
 
 $ p6 prog.p6 --name='alan' --surname='turing'
 Usage:
   pos-named.p6 [--name=&lt;Str&gt;] [--last-name=&lt;Str&gt;] [-p|--print] [&lt;title&gt;]
-</code></pre>
-
-<ul>
+</code></pre><ul>
 <li>：$ print不仅是别名变量的名称，还会是一个新的命名参数，旁边：p：</li>
 </ul>
-
-<pre><code class="language-raku">$ p6 prog.p6 --name='alan' --last-name='turing'
+<pre><code class="language-raku" data-lang="raku">$ p6 prog.p6 --name='alan' --last-name='turing'
 
 $ p6 prog.p6 --name='alan' --last-name='turing' -p
 Alan Turing
 
 $ p6 prog.p6 --name='alan' --last-name='turing' -print
 Alan Turing
-</code></pre>
-
-<p>您可能已经注意到，如果我们要打印人员的格式化全名，则必须现在指定标志-p（或-print）。这是因为Bool类型使$ print成为二进制标志，如果不存在则为False。如果被调用，则标志为True，这使得我们可以执行简单的if * print {&hellip;}语句。
+</code></pre><p>您可能已经注意到，如果我们要打印人员的格式化全名，则必须现在指定标志-p（或-print）。这是因为Bool类型使$ print成为二进制标志，如果不存在则为False。如果被调用，则标志为True，这使得我们可以执行简单的if * print {&hellip;}语句。
 使用别名是为参数创建长格式和短格式选项名称的简便方法。我们可以进一步修改prog.p6中的第一个multi，以便为&ndash;name和&ndash;last-name提供一个简短的表单选项名称：</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 multi MAIN(
     Str $title = 'Mr',
@@ -464,38 +410,25 @@ multi MAIN(
     }
 }
 ...
-</code></pre>
-
-<p>通过使用不同的表单选项执行prog.p6，我们得到：</p>
-
-<pre><code class="language-raku">p6 prog.p6 --name='alan' --last-name='turing' -print
+</code></pre><p>通过使用不同的表单选项执行prog.p6，我们得到：</p>
+<pre><code class="language-raku" data-lang="raku">p6 prog.p6 --name='alan' --last-name='turing' -print
 Mr. Alan Turing
 
 p6 prog.p6 -n='grace' -l='hopper' -p 'Ms'
 Ms. Grace Hopper
-</code></pre>
-
-<p>如果没有匹配的签名，我们会收到以下用法消息：</p>
-
-<pre><code class="language-raku">p6 prog.p6 -n='alan' -l='turing' -p --career='mathematician'
+</code></pre><p>如果没有匹配的签名，我们会收到以下用法消息：</p>
+<pre><code class="language-raku" data-lang="raku">p6 prog.p6 -n='alan' -l='turing' -p --career='mathematician'
 Usage:
   prog.p6 [-n|--name=&lt;Str&gt;] [-l|--last-name=&lt;Str&gt;] [-p|--print] [&lt;title&gt;] 
   prog.p6 [&lt;title&gt;] [&lt;name&gt;] [&lt;last-name&gt;]
-</code></pre>
-
-<h2 id="sub-usage">Sub USAGE</h2>
-
+</code></pre><h2 id="sub-usage">Sub USAGE</h2>
 <p>如果没有匹配的签名，我们的小程序prog.p6的最新版本将打印以下用法消息：</p>
-
-<pre><code class="language-raku">Usage:
+<pre><code class="language-raku" data-lang="raku">Usage:
   prog.p6 [-n|--name=&lt;Str&gt;] [-l|--last-name=&lt;Str&gt;] [-p|--print] [&lt;title&gt;] 
   prog.p6 &lt;title&gt; [&lt;name&gt;] [&lt;last-name&gt;] 
-</code></pre>
-
-<p>这是由于在MAIN子程序没有提供匹配的签名时自动调用USAGE子程序。如果没有找到这样的子例程，编译器将输出默认生成的使用消息，这意味着我们可以定义它以提供更详细的（如果我们想要的话！）用法消息。
+</code></pre><p>这是由于在MAIN子程序没有提供匹配的签名时自动调用USAGE子程序。如果没有找到这样的子例程，编译器将输出默认生成的使用消息，这意味着我们可以定义它以提供更详细的（如果我们想要的话！）用法消息。
 这是带有修改的USAGE子的prog.p6：</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 multi MAIN(
     Str $title = 'Mr',
@@ -543,11 +476,8 @@ optional arguments:
     {$*PROGRAM-NAME} 'leonhard' 'euler'
 END
 }
-</code></pre>
-
-<p>注意在使用消息中提到-h（和&ndash;help）标志，我们不需要显式定义它们，因为它们是自动生成的。如果我们现在使用&ndash;help（或-h）标志执行prog.p6或不提供匹配的签名，我们将获得新的用法消息：</p>
-
-<pre><code class="language-raku">Usage:
+</code></pre><p>注意在使用消息中提到-h（和&ndash;help）标志，我们不需要显式定义它们，因为它们是自动生成的。如果我们现在使用&ndash;help（或-h）标志执行prog.p6或不提供匹配的签名，我们将获得新的用法消息：</p>
+<pre><code class="language-raku" data-lang="raku">Usage:
   prog.p6 [-n|--name=&lt;Str&gt;] [-l|--last-name=&lt;Str&gt;] [-p|--print] [&lt;title&gt;] 
   prog.p6 [&lt;title&gt;] [&lt;name&gt;] [&lt;last-name&gt;] 
 
@@ -564,14 +494,9 @@ optional arguments:
    prog.p6 --name='richard' --last-name='feynman' -p
    prog.p6 --name='sophie' --last-name='germain' -p 'Ms'
    prog.p6 'leonhard' 'euler'
-</code></pre>
-
-<h2 id="结论">结论</h2>
-
+</code></pre><h2 id="结论">结论</h2>
 <p>这当然只是对MAIN和USAGE子程序的肤浅看法。就像在Raku中一样，总有比眼睛更多的东西。例如，如果您希望将命名参数放在命令行中的任何位置（即使在位置参数之后），您可以修改散列％* SUB-MAIN-OPTS以允许此行为。如果您想了解更多细节，我在下面提供了一些有用的链接。</p>
-
 <p><strong>也可以看看</strong>:</p>
-
 <ul>
 <li><a href="https://docs.raku.org/language/functions">有关子例程，块，签名，返回值，MAIN 子例程等的更多信息</a></li>
 <li><a href="https://rakuadvent.wordpress.com/2010/12/02/day-2-interacting-with-the-command-line-with-main-subs/">使用 MAIN subs 与命令行交互</a></li>
@@ -671,7 +596,7 @@ optional arguments:
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

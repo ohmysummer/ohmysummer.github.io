@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-03-jmp2it/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -232,18 +232,12 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p><a href="https://github.com/nige123/jmp.nigelhamilton.com">jmp</a>是一个Raku驱动的命令行程序，我每天都使用它来浏览成堆的Perl并快速跳转到我的$EDITOR。 我尝试在编码时保持<a href="https://rakuadvent.wordpress.com/2015/12/20/perl-6-christmas-have-an-appropriate-amount-of-fun/">流状态</a>，并且能够快速搜索文件然后直接跳转到编辑器中。</p>
-
 <p><strong>jmp</strong> 是一个简单的基于终端的前端到您最喜欢的代码搜索工具（例如，rgrep，ag，ack，git grep等）。 它会显示一个搜索结果列表，您可以在跳转到编辑文件之前快速浏览（例如，vim，nano，<a href="https://commaide.com/">comma</a>等）。</p>
-
 <p>它的工作原理如下：</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/11/jmp2-final.gif?w=600&amp;zoom=2" alt="img" /></p>
-
+<p><img src="https://rakuadvent.files.wordpress.com/2018/11/jmp2-final.gif?w=600&amp;zoom=2" alt="img"></p>
 <p>最近我重构了 <strong>jmp</strong>，以便在 <a href="https://github.com/ab5tract/Terminal-Print">Terminal::Print</a> 模块的帮助下改进用户界面。 Terminal::Print 提供了一个方便的二维网格，用于在终端屏幕上绘图。 还有一个用于异步处理用户输入的模块。</p>
-
 <p>这是 <strong>jmp</strong> 代码，只要用户按下某个键，它就会响应：</p>
-
-<pre><code class="language-raku">my $in-supply = decoded-input-supply;
+<pre><code class="language-raku" data-lang="raku">my $in-supply = decoded-input-supply;
 my $timer     = Supply.interval(1).map: { Tick };
 my $supplies  = Supply.merge($in-supply, $timer);
 
@@ -264,26 +258,16 @@ react {
         }
     }
 }
-</code></pre>
-
-<p>此代码设置用户输入事件的异步 supply，并且只要事件触发（例如，用户按下PageUp），它就会做出反应。 但是如果用户一次按下很多键会发生什么？ 如何以有序的方式更新终端屏幕？</p>
-
+</code></pre><p>此代码设置用户输入事件的异步 supply，并且只要事件触发（例如，用户按下PageUp），它就会做出反应。 但是如果用户一次按下很多键会发生什么？ 如何以有序的方式更新终端屏幕？</p>
 <p>由于 Jonathan Worthington的 <a href="https://github.com/jnthn/oo-monitors">OO::Monitors</a> 模块和 <strong>monitor</strong> 关键字，解决方案在 <a href="https://github.com/ab5tract/Terminal-Print/blob/master/lib/Terminal/Print/Grid.pm6">Terminal::Print::Grid</a> 中找到。 这确保了一次只有一个线程可以在 grid 对象的方法中：</p>
-
-<pre><code class="language-raku">use OO::Monitors;
+<pre><code class="language-raku" data-lang="raku">use OO::Monitors;
 unit monitor Terminal::Print::Grid;
-</code></pre>
-
-<p>制作自己的 Raku 驱动的命令行工具是学习该语言的好方法。 如果您需要终端接口，请查看 <a href="https://github.com/ab5tract/Terminal-Print">Terminal::Print</a>。 为了加速命令行工具，将代码放在模块中是一个很好的技巧，因此Raku可以预编译它以加快启动时间（例如，<a href="https://github.com/nige123/jmp.nigelhamilton.com/blob/master/lib/JMP/CLI.pm">CLI.pm</a>）。</p>
-
+</code></pre><p>制作自己的 Raku 驱动的命令行工具是学习该语言的好方法。 如果您需要终端接口，请查看 <a href="https://github.com/ab5tract/Terminal-Print">Terminal::Print</a>。 为了加速命令行工具，将代码放在模块中是一个很好的技巧，因此Raku可以预编译它以加快启动时间（例如，<a href="https://github.com/nige123/jmp.nigelhamilton.com/blob/master/lib/JMP/CLI.pm">CLI.pm</a>）。</p>
 <p>要安装jmp的第2版，首先安装<a href="https://raku.org/downloads/">Raku</a>，然后使用<a href="https://github.com/ugexe/zef">zef</a> Raku模块管理器来安装它：</p>
-
-<pre><code class="language-shell">shell&gt; zef install jmp   # or zef upgrade jmp
-shell&gt; jmp config        # set up jmp to use your tools
-shell&gt; jmp find sub MAIN # find files containing &quot;sub MAIN&quot; 
-</code></pre>
-
-<p>随着我们越来越接近圣诞节，请留意更多的命令行工具会被打开。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">shell&gt; zef install jmp   <span class="c1"># or zef upgrade jmp</span>
+shell&gt; jmp config        <span class="c1"># set up jmp to use your tools</span>
+shell&gt; jmp find sub MAIN <span class="c1"># find files containing &#34;sub MAIN&#34;</span> 
+</code></pre></div><p>随着我们越来越接近圣诞节，请留意更多的命令行工具会被打开。</p>
 
 
         
@@ -375,7 +359,7 @@ shell&gt; jmp find sub MAIN # find files containing &quot;sub MAIN&quot;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

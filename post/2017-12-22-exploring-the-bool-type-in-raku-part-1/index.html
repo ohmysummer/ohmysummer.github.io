@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-22-exploring-the-bool-type-in-raku-part-1/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,19 +231,12 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>今天，我们将使用 GitHub 上提供的 Rakudo 源代码挖掘 <a href="https://github.com/rakudo/rakudo/blob/master/src/core/Bool.pm">Bool 类型</a>的内部。</p>
-
+        <p>今天，我们将使用 GitHub 上提供的 Rakudo 源代码挖掘 <a href="https://github.com/rakudo/rakudo/blob/master/src/core/Bool.pm">Bool 类型</a>的内部。</p>
 <p>Raku 是用 Raku 和 NQP（Not Quite Raku）语言编写的，这使得阅读源代码变得相对容易。当然，有很多东西不容易理解，或者没有反映在 Raku 语言的公开文档中。到目前为止，您都无法在 <a href="http://allperlbooks.com/tag/raku.0">Raku 书籍</a>中找到深入的细节。无论如何，对 Raku 有一些中级的理解，这仍然是可能的。</p>
-
 <p>好的，回到 <code>src/core/Bool.pm</code> 文件。它以一些 BEGIN phasers 开始，它为 Bool 类添加了一些方法和 multi 方法。下一次我们将讨论元模型和类构造的细节。今天，对我们来说更有趣的是 Bool 类的方法在做什么。</p>
-
 <h2 id="gist-和-perl">gist 和 perl</h2>
-
 <p><code>gist</code> 和 <code>perl</code> 方法返回对象的字符串表示形式：当变量被字符串化时隐式调用 <code>gist</code>，<code>perl</code> 应该直接调用。它适用于 Raku 中的任何对象，但这种行为当然应该定义在某处。他们在这里：</p>
-
-<pre><code class="language-raku">Bool.^add_method('gist', my proto method gist(|) {*});
+<pre><code class="language-raku" data-lang="raku">Bool.^add_method('gist', my proto method gist(|) {*});
 Bool.^add_multi_method('gist', my multi method gist(Bool:D:) { 
     self ?? 'True' !! 'False'
 });
@@ -258,39 +251,24 @@ Bool.^add_multi_method('perl', my multi method perl(Bool:D:) {
 Bool.^add_multi_method('perl', my multi method perl(Bool:U:) {
     'Bool' 
 });
-</code></pre>
-
-<p>试试以下简单程序中的方法：</p>
-
-<pre><code class="language-raku">my Bool $b = True;
+</code></pre><p>试试以下简单程序中的方法：</p>
+<pre><code class="language-raku" data-lang="raku">my Bool $b = True;
 say $b;      # True
 say &quot;[$b]&quot;;  # [True]
 $b.perl.say; # Bool::True
-</code></pre>
-
-<p>正如你所看到的，<code>True</code> 字符串由 <code>gist</code> 方法返回，而 <code>perl</code> 方法返回 <code>Bool::True</code>。</p>
-
+</code></pre><p>正如你所看到的，<code>True</code> 字符串由 <code>gist</code> 方法返回，而 <code>perl</code> 方法返回 <code>Bool::True</code>。</p>
 <p>这两种方法都是 multi 方法，在上面的例子中，使用了定义了参数的版本。如果您查看签名，您将看到方法指定参数的方式不同：<code>Bool:D:</code>或<code>Bool:U:</code>。字母 D 和 U 分别代表定义(defined)和未定义(undefined)。第一个冒号为该类型添加了一个属性，而第二个冒号表明该参数实际上是一个调用者。</p>
-
 <p>因此，不同版本的方法会根据它们是在定义的还是未定义的布尔变量上调用而被触发。为了演示其他两种变体的行为，只需从代码中删除初始化程序部分即可</p>
-
-<pre><code class="language-raku">my Bool $b;
+<pre><code class="language-raku" data-lang="raku">my Bool $b;
 say $b;      # (Bool)
 $b.perl.say; # Bool
-</code></pre>
-
-<p>由于变量 <code>$b</code> 有一个类型，Raku 知道它应该调用方法的对象的类型。然后将它分派给带有 <code>(Bool:U:)</code> 签名的版本，因为该变量尚未定义。</p>
-
+</code></pre><p>由于变量 <code>$b</code> 有一个类型，Raku 知道它应该调用方法的对象的类型。然后将它分派给带有 <code>(Bool:U:)</code> 签名的版本，因为该变量尚未定义。</p>
 <p>例如，当一个未定义的变量出现在字符串中时，例如 <code>say &quot;[$b]&quot;</code>，则不会调用 gist 方法。相反，您会收到错误消息。</p>
-
-<pre><code class="language-raku">Use of uninitialized value $b of type Bool in string context.
+<pre><code class="language-raku" data-lang="raku">Use of uninitialized value $b of type Bool in string context.
 Methods .^name, .perl, .gist, or .say can be used to stringify it to something meaningful.
  in block  at bool-2.pl line 3
 []
-</code></pre>
-
-<p>错误消息说 Perl 知道变量是什么类型，但拒绝调用字符串化方法。</p>
-
+</code></pre><p>错误消息说 Perl 知道变量是什么类型，但拒绝调用字符串化方法。</p>
 <p>今天就到这儿了。下一次，我们将看看为 <code>Bool</code> 数据类型定义的其他方法。</p>
 
 
@@ -383,7 +361,7 @@ Methods .^name, .perl, .gist, or .say can be used to stringify it to something m
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

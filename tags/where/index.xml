@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Where on Raku Programming</title>
+    <title>where on Raku Programming</title>
     <link>https://ohmysummer.github.io/tags/where/</link>
-    <description>Recent content in Where on Raku Programming</description>
+    <description>Recent content in where on Raku Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 31 Dec 2016 23:14:12 +0000</lastBuildDate>
@@ -29,7 +29,7 @@ my package EXPORT::DEFAULT { ... subset Pos of Numeric where * &amp;gt; 0; subse
       
       <guid>https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/</guid>
       <description>当我尝试把选项聚合到一个模块中时我无意中发现了一个常见问题的简洁解决办法。我想拥有一个子例程作为吞噬具名参数、做一些检查、并且要么返回 True 以满足那个 where 从句, 要么死掉并抛出一个合适的错误信息的 where 从句。 那很简单但是不彻底。那个 where 从句没有提供它所检查的参数的名字, 这需要拥有一个合适的错误信息。我们来简化下代码。
-sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {}  子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Raku 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
+sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {} 子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Raku 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
 如你所见 checker 接收一组冒号对(colon-pairs)。剩下的问题我们能提供给我们可能要输出的异常，特别的附加信息。如果我们希望该参数是可选的，避免奇怪的语法。我们可以有一个可选的位置，但我们就不能在checker中混合位置和具名参数。存储该值将是微不足道，因为返回的匿名子例程可以具有闭包变量。我们只需要填充它。幸运的是，子返回作为引用返回，然后由那个 where 从句调用。我们可以偷偷加进另一个呼叫，只要我们大家别忘了把代码引用返回给匿名子例程(sub)。
 返回引用给同一个对象是通过链式方法调用完成的。通常情况下，当事情在 Raku 的领地上变得复杂时，我们就混入一个 role 好了。然后，我们有了一个可以返回自身的方法。
 use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$closure-variable, $value-from-where-clause]; $value-from-where-clause == $i or die &amp;quot;bad value $value-from-where-clause for $closure-variable&amp;quot; } but role :: { method side-channel($second-value){ $closure-variable = $second-value; self } } } sub f($a where g(42).</description>
@@ -44,7 +44,7 @@ use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$
       <description>Subset 子集 Subset 可用于声明某一类型的子集。
 输入一个密码， 要求密码必须满足如下条件：
 1、 至少 8 位 2、 必须包含大写字母、小写字母 和 数字
-use v6; subset Length8 of Str where *.chars &amp;lt; 8; subset UpCase of Str where none(&#39;A&#39;..&#39;Z&#39;) ∈ *.comb.Set; subset LowerCase of Str where none(&#39;a&#39;..&#39;z&#39;) ∈ *.comb.Set; subset IntNumber of Str where none(&#39;0&#39;..&#39;9&#39;) ∈ *.comb.Set; my $guess = prompt(&#39;Enter your password:&#39;); given $guess { when Length8 { say &#39;密码长度必须为 8 位 以上&#39;; proceed } when UpCase { say &#39;密码必须包括大写字母&#39;; proceed } when LowerCase { say &#39;密码必须包含小写字母&#39;; proceed } when IntNumber { say &#39;密码必须包含数字&#39;; } }  该程序具有可扩展性， 要增加一种密码验证， 只有添加一个 subset 就好了，然后在 given/When 里面增加一个处理。</description>
+use v6;subset Length8 of Str where *.chars &amp;lt; 8;subset UpCase of Str where none(&#39;A&#39;..&#39;Z&#39;) ∈ *.comb.Set;subset LowerCase of Str where none(&#39;a&#39;..&#39;z&#39;) ∈ *.comb.Set;subset IntNumber of Str where none(&#39;0&#39;..&#39;9&#39;) ∈ *.comb.Set;my $guess = prompt(&#39;Enter your password:&#39;);given $guess {when Length8 { say &#39;密码长度必须为 8 位 以上&#39;; proceed }when UpCase { say &#39;密码必须包括大写字母&#39;; proceed }when LowerCase { say &#39;密码必须包含小写字母&#39;; proceed }when IntNumber { say &#39;密码必须包含数字&#39;; } }该程序具有可扩展性， 要增加一种密码验证， 只有添加一个 subset 就好了，然后在 given/When 里面增加一个处理。</description>
     </item>
     
     <item>
@@ -54,8 +54,8 @@ use v6; subset Length8 of Str where *.chars &amp;lt; 8; subset UpCase of Str whe
       
       <guid>https://ohmysummer.github.io/post/2015-03-15-when%E5%92%8Cwhere/</guid>
       <description>When 可以用在主题化($_)的语句中 Perl 里面有个特殊的变量叫 $_, 即主题化变量, the variable in question.
-&amp;gt; for (&#39;Swift&#39;, &#39;PHP&#39;, &#39;Python&#39;, &#39;Perl&#39;) -&amp;gt; $item { say $item when $item ~~ /^P/ } PHP Python Perl  &amp;gt; for (12, 24, 56, 42) {.say when *&amp;gt;40 } 56 42  而 where 用于对类型进行约束.
-&amp;gt; for (&#39;Swift&#39;, &#39;PHP&#39;, &#39;Python&#39;, &#39;Perl&#39;, 42) -&amp;gt; $item where $item ~~ Str {say $item} Swift PHP Python Perl Constraint type check failed for parameter &#39;$item&#39;  未完待续.</description>
+&amp;gt; for (&#39;Swift&#39;, &#39;PHP&#39;, &#39;Python&#39;, &#39;Perl&#39;) -&amp;gt; $item { say $item when $item ~~ /^P/ } PHP Python Perl &amp;gt; for (12, 24, 56, 42) {.say when *&amp;gt;40 }5642而 where 用于对类型进行约束.
+&amp;gt; for (&#39;Swift&#39;, &#39;PHP&#39;, &#39;Python&#39;, &#39;Perl&#39;, 42) -&amp;gt; $item where $item ~~ Str {say $item} Swift PHP Python Perl Constraint type check failed for parameter &#39;$item&#39; 未完待续.</description>
     </item>
     
   </channel>

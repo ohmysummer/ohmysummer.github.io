@@ -9,11 +9,11 @@
   <meta property="og:title" content="在 Raku 中为自定义的类添加下标(subscripts)" />
   <meta name="twitter:title" content="在 Raku 中为自定义的类添加下标(subscripts)" />
   <meta name="description" content="为自定义的类添加下标(subscripts) 假如你定义了一个类，你想把类的实例用作散列那样，可以索引其中的元素， 那么你需要让你得自定义遵守 Associative 接口，并重写 AT-KEY 、EXISTS-KEY 、DELETE-KEY 、push 等跟散列有关的方法:
-use v6; class HTTPHeader { ... } class HTTPHeader does Associative { has %!fields handles &lt;self.AT-KEY self.EXISTS-KEY self.DELETE-KEY self.push list kv keys values&gt;; method Str { say self.hash.fmt; } multi method EXISTS-KEY ($key) { %!fields{normalize-key $key}:exists } multi method DELETE-KEY ($key) { %!fields{normalize-key $key}:delete } multi method push (*@_) { %!fields.push: @_ } sub normalize-key ($key) { $key.subst(/\w&#43;/, *.tc, :g) } # titileCase 驼峰式的键 method AT-KEY (::?">
+use v6;class HTTPHeader { ... }class HTTPHeader does Associative {has %!fields handles &lt;self.AT-KEY self.EXISTS-KEY self.DELETE-KEY self.push list kv keys values&gt;;method Str { say self.hash.fmt; }multi method EXISTS-KEY ($key) { %!fields{normalize-key $key}:exists }multi method DELETE-KEY ($key) { %!fields{normalize-key $key}:delete }multi method push (*@_) { %!fields.push: @_ }sub normalize-key ($key) { $key.subst(/\w&#43;/, *.tc, :g) } # titileCase 驼峰式的键method AT-KEY (::?">
   <meta property="og:description" content="为自定义的类添加下标(subscripts) 假如你定义了一个类，你想把类的实例用作散列那样，可以索引其中的元素， 那么你需要让你得自定义遵守 Associative 接口，并重写 AT-KEY 、EXISTS-KEY 、DELETE-KEY 、push 等跟散列有关的方法:
-use v6; class HTTPHeader { ... } class HTTPHeader does Associative { has %!fields handles &lt;self.AT-KEY self.EXISTS-KEY self.DELETE-KEY self.push list kv keys values&gt;; method Str { say self.hash.fmt; } multi method EXISTS-KEY ($key) { %!fields{normalize-key $key}:exists } multi method DELETE-KEY ($key) { %!fields{normalize-key $key}:delete } multi method push (*@_) { %!fields.push: @_ } sub normalize-key ($key) { $key.subst(/\w&#43;/, *.tc, :g) } # titileCase 驼峰式的键 method AT-KEY (::?">
+use v6;class HTTPHeader { ... }class HTTPHeader does Associative {has %!fields handles &lt;self.AT-KEY self.EXISTS-KEY self.DELETE-KEY self.push list kv keys values&gt;;method Str { say self.hash.fmt; }multi method EXISTS-KEY ($key) { %!fields{normalize-key $key}:exists }multi method DELETE-KEY ($key) { %!fields{normalize-key $key}:delete }multi method push (*@_) { %!fields.push: @_ }sub normalize-key ($key) { $key.subst(/\w&#43;/, *.tc, :g) } # titileCase 驼峰式的键method AT-KEY (::?">
   <meta name="twitter:description" content="为自定义的类添加下标(subscripts) 假如你定义了一个类，你想把类的实例用作散列那样，可以索引其中的元素， 那么你需要让你得自定义遵守 Associative 接口，并重写 AT-KEY 、EXISTS-KEY 、DELETE-KEY 、push 等跟散列有关的方法:
-use v6; class HTTPHeader { ... } class HTTPHeader does …">
+use v6;class HTTPHeader { ... }class HTTPHeader does …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -23,7 +23,7 @@ use v6; class HTTPHeader { ... } class HTTPHeader does …">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2015-08-18-%E5%9C%A8raku%E4%B8%AD%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E7%B1%BB%E6%B7%BB%E5%8A%A0%E4%B8%8B%E6%A0%87subscripts/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -230,14 +230,10 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h3 id="为自定义的类添加下标-subscripts">为自定义的类添加下标(subscripts)</h3>
-
+        <h3 id="为自定义的类添加下标subscripts">为自定义的类添加下标(subscripts)</h3>
 <p>假如你定义了一个类，你想把类的实例用作散列那样，可以索引其中的元素， 那么你需要让你得自定义遵守 Associative 接口，并重写
 <code>AT-KEY</code> 、<code>EXISTS-KEY</code> 、<code>DELETE-KEY</code> 、<code>push</code> 等跟散列有关的方法:</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 class HTTPHeader { ... }
 
@@ -284,46 +280,30 @@ say $header.hash.fmt;
 
 say $header&lt;Accept-Language&gt;.values;
 say $header&lt;Accept-Charset&gt;;
-</code></pre>
-
-<p>输出：</p>
-
+</code></pre><p>输出：</p>
 <pre><code>(HTTPHeader)
 
-Accept  text/plain
-Accept-Charset  utf-8
-Accept-Encoding gzip
-Accept-Language en fr
+Accept	text/plain
+Accept-Charset	utf-8
+Accept-Encoding	gzip
+Accept-Language	en fr
 
 (en fr)
 utf-8
-</code></pre>
-
-<p>同样，你也可以使用数组下标，只要你重写相应地方法。</p>
-
+</code></pre><p>同样，你也可以使用数组下标，只要你重写相应地方法。</p>
 <p>关于为自定义的类添加下标这个问题， stackoverflow 上的回答是不需要在 handles 后面所跟的方法中添加 <code>self</code>。 他的解释如下:</p>
-
-<h2 id="为自定义的类添加下标-subscripts-http-stackoverflow-com-questions-36773986-how-to-add-subscripts-to-my-custom-class-in-perl-6"><a href="http://stackoverflow.com/questions/36773986/how-to-add-subscripts-to-my-custom-class-in-perl-6">为自定义的类添加下标(subscripts)</a></h2>
-
+<h2 id="为自定义的类添加下标subscriptshttpstackoverflowcomquestions36773986how-to-add-subscripts-to-my-custom-class-in-perl-6"><a href="http://stackoverflow.com/questions/36773986/how-to-add-subscripts-to-my-custom-class-in-perl-6">为自定义的类添加下标(subscripts)</a></h2>
 <p>在自定义类上实现关联式下标(associative subscripting)。</p>
-
 <h3 id="通过代理实现">通过代理实现</h3>
-
 <p>Raku 通过在实现了集合类型的对象身上调用良定义的方法来实现关联式下标和位置下标（对于内置类型）。通过在 <code>%!fields</code> 属性后面添加 <code>handles</code> 特性(trait)， 你就把这些方法调用传递给了 <code>%!fields</code> &ndash; 它作为一个散列，会知道怎么来处理那些方法。</p>
-
 <h3 id="灵活的键">灵活的键</h3>
-
 <blockquote>
 <p>However, HTTP header field names are supposed to be case-insensitive (and preferred in camel-case). We can accommodate this by taking the *-KEY and push methods out of the handles list, and implementing them separately&hellip;</p>
 </blockquote>
-
 <p>把所有的键处理方法代理给内部的散列意味着你的键得到了散列那样的插值 &ndash; 意味着它们将是大小写无关的因为散列的键是大小写无关的。为了避免那，你把所有跟键有关的方法从 <em>handles</em> 子句中拿出并自己实现那些方法。在例子中，键在被索引到 <code>%!fields</code> 让键变成大小写无关之前先进行了键的「标准化」。</p>
-
 <h3 id="灵活的值">灵活的值</h3>
-
 <p>例子中的最后一部分展示了当值存入到散列那样的容器中时你如何控制值的插值。到目前为止，通过赋值给这个自定义容器的实例提供的值要么是一个字符串，要么是一个字符串的数组。额外的控制是通过移除定义在灵活的键中的  <strong>AT-KEY</strong> 方法来达成的并提供一个 <strong><a href="https://doc.raku.org/type/Proxy">Proxy</a></strong> 对象来代替它。如果你给容器赋值，那么代理人对象的 <strong>STORE</strong> 方法会被调用并且那个方法会扫描所提供的字符串值中的 <code>&quot;, &quot;</code>（注意空格是必要的）。如果找到会接收那个字符串值作为几个字符串值的说明书。</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 class HTTPHeader { ... }
 
@@ -370,22 +350,17 @@ say $header.hash.fmt;
 
 say $header&lt;Accept-Language&gt;.values;
 say $header&lt;Accept-Charset&gt;;
-</code></pre>
-
-<p>输出：</p>
-
+</code></pre><p>输出：</p>
 <pre><code>(HTTPHeader)
 
-Accept  text/plain
-Accept-Charset  utf-8
-Accept-Encoding gzip
-Accept-Language en fr
+Accept	text/plain
+Accept-Charset	utf-8
+Accept-Encoding	gzip
+Accept-Language	en fr
 
 (en fr)
 utf-8
-</code></pre>
-
-<p>同样，你也可以使用数组下标，只要你重写相应地方法。</p>
+</code></pre><p>同样，你也可以使用数组下标，只要你重写相应地方法。</p>
 
 
         
@@ -481,7 +456,7 @@ utf-8
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

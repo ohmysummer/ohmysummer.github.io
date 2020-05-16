@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-11-typed-hashes-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,18 +231,11 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="typed-hashes-in-raku-https-raku-online-2018-04-08-74-keys-values-etc-of-hashes-in-perl-6"><a href="https://raku.online/2018/04/08/74-keys-values-etc-of-hashes-in-perl-6/">Typed hashes in Raku</a></h1>
-
+        <h1 id="typed-hashes-in-rakuhttpsrakuonline2018040874-keys-values-etc-of-hashes-in-perl-6"><a href="https://raku.online/2018/04/08/74-keys-values-etc-of-hashes-in-perl-6/">Typed hashes in Raku</a></h1>
 <p>在 Raku 中, 你可以通过指定变量的类型来限制变量容器的内容, 例如：</p>
-
-<pre><code class="language-raku">my Int $i;
-</code></pre>
-
-<p>标量变量中只有一个值。你可以将该概念扩展到数组, 并让其元素仅保存整数, 如下例所示：</p>
-
-<pre><code class="language-raku">&gt; my Int @i;
+<pre><code class="language-raku" data-lang="raku">my Int $i;
+</code></pre><p>标量变量中只有一个值。你可以将该概念扩展到数组, 并让其元素仅保存整数, 如下例所示：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; my Int @i;
 []
 
 &gt; @i.push(42);
@@ -252,53 +245,32 @@ if (!doNotTrack) {
 Type check failed in assignment to @i;
 expected Int but got Str (&quot;Hello&quot;)
   in block &lt;unit&gt; at &lt;unknown file&gt; line 1
-</code></pre>
-
-<p>哈希中保存的是 pairs, 所以你可以同时指定键和值的类型。语法和上面的例子并无不同。</p>
-
+</code></pre><p>哈希中保存的是 pairs, 所以你可以同时指定键和值的类型。语法和上面的例子并无不同。</p>
 <p>首先, 让我们声明值的类型：</p>
-
-<pre><code class="language-raku">my Str %s;
-</code></pre>
-
-<p>现在, 可以将字符串作为哈希的值：</p>
-
-<pre><code class="language-raku">&gt; %s&lt;Hello&gt; = 'World'
+<pre><code class="language-raku" data-lang="raku">my Str %s;
+</code></pre><p>现在, 可以将字符串作为哈希的值：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; %s&lt;Hello&gt; = 'World'
 World
 
 &gt; %s&lt;42&gt; = 'Fourty-two'
 Fourty-two
-</code></pre>
-
-<p>但这个哈希不能保存整数:</p>
-
-<pre><code class="language-raku">&gt; %s&lt;x&gt; = 100
+</code></pre><p>但这个哈希不能保存整数:</p>
+<pre><code class="language-raku" data-lang="raku">&gt; %s&lt;x&gt; = 100
 Type check failed in assignment to %s;
 expected Str but got Int (100)
   in block &lt;unit&gt; at &lt;unknown file&gt; line 1
-</code></pre>
-
-<p>（顺便提一下, 在 <code>%s&lt;42&gt;</code> 的情况下, 键是一个字符串。）</p>
-
+</code></pre><p>（顺便提一下, 在 <code>%s&lt;42&gt;</code> 的情况下, 键是一个字符串。）</p>
 <p>要指定第二个维度的类型, 即散列键的类型, 请在花括号中指定键的类型:</p>
-
-<pre><code class="language-raku">my %r{Rat};
-</code></pre>
-
-<p>这个变量也被称为<em>对象散列</em>(object hash)。</p>
-
+<pre><code class="language-raku" data-lang="raku">my %r{Rat};
+</code></pre><p>这个变量也被称为<em>对象散列</em>(object hash)。</p>
 <p>有了这个, Perl 允许使用 <code>Rat</code> 类型作为键：</p>
-
-<pre><code class="language-raku">&gt; %r&lt;22/7&gt; = pi
+<pre><code class="language-raku" data-lang="raku">&gt; %r&lt;22/7&gt; = pi
 3.14159265358979
 
 &gt; %r
 {22/7 =&gt; 3.14159265358979}
-</code></pre>
-
-<p>尝试使用整数或字符串作为键则会失败, 例如:</p>
-
-<pre><code class="language-raku">&gt; %r&lt;Hello&gt; = 1
+</code></pre><p>尝试使用整数或字符串作为键则会失败, 例如:</p>
+<pre><code class="language-raku" data-lang="raku">&gt; %r&lt;Hello&gt; = 1
 Type check failed in binding to parameter 'key';
 expected Rat but got Str (&quot;Hello&quot;)
   in block &lt;unit&gt; at &lt;unknown file&gt; line 1
@@ -307,16 +279,10 @@ expected Rat but got Str (&quot;Hello&quot;)
 Type check failed in binding to parameter 'key';
 expected Rat but got Int (23)
   in block &lt;unit&gt; at &lt;unknown file&gt; line 1
-</code></pre>
-
-<p>最后, 你可以同时指定键和值的类型：</p>
-
-<pre><code class="language-raku">my Str %m{Int};
-</code></pre>
-
-<p>此变量可用于将月份编号转换为月份名称, 但反过来不行:</p>
-
-<pre><code class="language-raku">&gt; %m{3} = 'March'
+</code></pre><p>最后, 你可以同时指定键和值的类型：</p>
+<pre><code class="language-raku" data-lang="raku">my Str %m{Int};
+</code></pre><p>此变量可用于将月份编号转换为月份名称, 但反过来不行:</p>
+<pre><code class="language-raku" data-lang="raku">&gt; %m{3} = 'March'
 March
 
 &gt; %m&lt;March&gt; = 3
@@ -324,7 +290,6 @@ Type check failed in binding to parameter 'key';
 expected Int but got Str (&quot;March&quot;)
   in block &lt;unit&gt; at &lt;unknown file&gt; line 1
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -415,7 +380,7 @@ expected Int but got Str (&quot;March&quot;)
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

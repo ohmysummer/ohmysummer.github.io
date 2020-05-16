@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/grammar/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/grammar/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -332,7 +332,7 @@ grammar My::Gram { ..methods 'n stuff.
                 
                   如何使用 Grammar 分割一个有规律的文本文件? 首先这个文本有规律, 但是却是多行的。 我想将这样的文档分为独立的. 比如下面这个例子, 我想将他们分成3个独立的文本, 每个文本包含: [时间] Title 以及下面的 content lines. 实际的文件会有上千个, 最终输出的文本的名字是按照括号里面的时间来。
 sample.txt
-[28/04/2015 12:32] Title1 content line 1 content line 2 content line 3 content line 4 content line 5 balabala balabala [28/04/2015 12:16] Title2 content line 6 balabala content line 7 [27/04/2015 17:30] ​Title3 content line 8 content line 9 content line 10  下面是解析：
+[28/04/2015 12:32] Title1 content line 1 content line 2 content line 3 content line 4 content line 5 balabala balabala [28/04/2015 12:16] Title2 content line 6 balabala content line 7 [27/04/2015 17:30] ​Title3 content line 8 content line 9 content line 10 下面是解析：
 use Grammar::Tracer; # 开启 Grammar 调试有助于排错 grammar StructedText { token TOP { ^ &lt;entry&gt;+ $ } token entry { &lt;head&gt; \s* # 每一项有一个标题 &lt;line&gt;+ \s* # 每个标题下面有很多行 } token head { '[' &lt;datetime&gt; ']' \s+ &lt;title&gt; } token datetime { &lt;filedate&gt; \s+ &lt;filetime&gt; } token filedate { [\d+]+ % '/' } token filetime { [\d+]+ % ':' } token title { \N+ } token line { [ &lt;!
                   <a href="https://ohmysummer.github.io/post/2016-11-01-raku-grammar%E4%B9%8B%E5%88%86%E5%89%B2%E7%BB%93%E6%9E%84%E5%8C%96%E6%96%87%E6%9C%AC/" class="post-read-more">[Read More]</a>
                 
@@ -371,13 +371,14 @@ use Grammar::Tracer; # 开启 Grammar 调试有助于排错 grammar StructedText
               </p>
               <div class="post-entry">
                 
-                  Ten Things You Need To Know about Raku Jeffrey Goff, Evozon Systems LLC OSCON London 2016 https://github.com/drforr http://theperlfisher.blogspot.ro  资源  raku.org (obviously) docs.raku.org - Online documentation modules.raku.org - CPAN Lite
- rakudo.org - Where to get the latest
- https://github.com/tadzik/rakudobrew - Perlbrew for Raku
- https://github.com/tadzik/panda/ - Module installer
- irc://irc.freenode.org/raku - #raku on IRC.freenode.org
- http://rosettacode.org/wiki/Category:Perl_6 - Sample source
-  要闻  干净, 一次性的可解析的文法 对用户友好的错误信息 友好的 Unicode 对初学者有帮助的符号 Math that works 函数签名 用正则表达式引导 OO with a type lattice built on a Metaprogramming model 自定义运算符 内置并发  一次性文法 my @doctor = { :first('Christopher'), :last('Eccleston'), years =&gt; 1 }, { :first('David'), :last('Tennant'), years =&gt; 4 }, { :first('Matt'), :last('Smith'), years =&gt; 4 }, { :first('Peter'), :last('Capaldi'), years =&gt; 3 }; say 'First New Who Doctor: ', @doctor[0]{'first'}, ' ', @doctor[0]&lt;last&gt;; say &quot;Average run: &quot; ~ @doctor.
+                  Ten Things You Need To Know about Raku Jeffrey Goff, Evozon Systems LLC OSCON London 2016 https://github.com/drforr http://theperlfisher.blogspot.ro 资源   raku.org (obviously)
+  docs.raku.org - Online documentation
+  modules.raku.org - CPAN Lite
+  rakudo.org - Where to get the latest
+  https://github.com/tadzik/rakudobrew - Perlbrew for Raku
+  https://github.com/tadzik/panda/ - Module installer
+  irc://irc.freenode.org/raku - #raku on IRC.freenode.org
+  http://rosettacode.org/wiki/Category:Perl_6 - Sample source
                   <a href="https://ohmysummer.github.io/post/2016-10-22-%E5%85%B3%E4%BA%8Eraku%E4%BD%A0%E8%A6%81%E7%9F%A5%E9%81%93%E7%9A%8410%E4%BB%B6%E4%BA%8B/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -422,7 +423,7 @@ use Grammar::Tracer; # 开启 Grammar 调试有助于排错 grammar StructedText
               <div class="post-entry">
                 
                   哦, 列, 你在哪里? 当 ramiroencinas 给 Raku 的生态系统增加 FileSystem::Capacity::VolumesInfo模块的时候, 我说他没有添加 macOS 支持。而当我尝试为这个模块贡献源代码时我才发现知道一丢丢 Raku 的特性就能节省很多时间。 FileSystem::Capacity::VolumesInfo 这个模块所做的就是解析 df 命令的输出, 它看起来长这样:
-$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.
+$ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 1219749248 341555644 877937604 29% / devfs 343 343 0 100% /dev /dev/disk1s4 133638140 101950628 31687512 77% /Volumes/Untitled map -hosts 0 0 0 100% /net map auto_home 0 0 0 100% /home map -fstab 0 0 0 100% /Network/Servers //Pawel%20Pabian@biala-skrzynka.local./Data 1951417392 1837064992 114352400 95% /Volumes/Data /dev/disk5s2 1951081480 1836761848 114319632 95% /Volumes/Time Machine Backups bbkr@localhost:/Users/bbkr/foo 123 1219749248 341555644 877937604 29% /Volumes/osxfuse (如果你看到了折行的或者截断的输出请在这儿核对一下原始数据)
                   <a href="https://ohmysummer.github.io/post/2016-09-27-%E8%A7%A3%E6%9E%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%BE%93%E5%87%BA/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -466,7 +467,7 @@ $ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 
                 
                   检查 module 的名字是否 遵循 Raku 的命名规范。模块的名字可以是使用 2 个冒号分割的标识符, 例如 File::Compare 。标识符必须以字母字符 (a-z) 或下划线开头， 后面跟着 0 个 或多个字母数字字符。但是并没有那么简单, 有些模块的名字只有一个标识符而没有冒号，例如 Bailador ， 而其它模块可能有多个标识符和 :: 组成。这看起来正符合 grammar 的胃口！
 定义 grammar Raku Grammars 是由 regexes 构建的。 我需要 2 个 regexes： 一个用于匹配标识符, 一个用于匹配双冒号分隔符。对于标识符 regex， 我使用：
-&lt;[A..Za..z_]&gt; # begins with letter or underscore &lt;[A..Za..z0..9]&gt; ** 0..* # zero or more alpanumeric  Raku 中，字符类是使用 &lt;[ ... ]&gt; 来定义的， 范围是使用 范围操作符 .. 代替了短划线 -. 量词使用 ** 0.
+&lt;[A..Za..z_]&gt; # begins with letter or underscore&lt;[A..Za..z0..9]&gt; ** 0..* # zero or more alpanumericRaku 中，字符类是使用 &lt;[ ... ]&gt; 来定义的， 范围是使用 范围操作符 .. 代替了短划线 -. 量词使用 ** 0..* 代替了 {0,}
                   <a href="https://ohmysummer.github.io/post/2016-05-14-%E5%A6%82%E4%BD%95%E5%9C%A8raku%E4%B8%AD%E5%88%9B%E5%BB%BAgrammar/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -508,9 +509,10 @@ $ df -k -P Filesystem 1024-blocks Used Available Capacity Mounted on /dev/disk3 
                 
                   Raku 核心骇客: 词法的胡言乱语
 喜欢修复 Raku 编译器中的 bug? 这儿有一个great grammar bugglet: 当 „” 引号用在引起的用空白分割的单词列表构造器中时看起来好像不能工作:
-say „hello world”; .say for qww&lt;„hello world”&gt;; .say for qww&lt;&quot;hello world&quot;&gt;; # OUTPUT: # hello world # „hello # world” # hello world  ” 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 hello world。看起来像是一个待修复的有趣的 bug! 我们进去看看。
+say „hello world”;.say for qww&lt;„hello world”&gt;;.say for qww&lt;&quot;hello world&quot;&gt;;# OUTPUT:# hello world# „hello# world”# hello world” 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 hello world。看起来像是一个待修复的有趣的 bug! 我们进去看看。
 你怎样拼写它? 事实上这段代码没能正确解析表明这是一个 grammar bug。大部分的 grammar 住在 src/Raku/Grammar.nqp中, 但是在我们的手变脏之前, 让我们来解决我们应该查看什么。
 二进制 raku 有一个 --target 命令行参数来接收其中之一的编译步骤并且会导致那个步骤的输出被产生出来。那儿有哪些步骤? 根据你正使用的后端它们也会有所不同, 但是你可以仅仅运行 raku --stagestats -e '' 把它们都打印出来:
+zoffix@leliana:~$ raku --stagestats -e ''Stage start : 0.
                   <a href="https://ohmysummer.github.io/post/2016-01-01-raku-%E6%A0%B8%E5%BF%83%E9%AA%87%E5%AE%A2-%E8%AF%8D%E6%B3%95%E7%9A%84%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -548,9 +550,9 @@ say „hello world”; .say for qww&lt;„hello world”&gt;; .say for qww&lt;&q
               </p>
               <div class="post-entry">
                 
-                  ## A Mutable Grammar For Raku Rules Rules 就像 perl5的 regexes，并且更好。它们像子例程和方法那样申明，并且还能调用其它 rules
+                  ## A Mutable Grammar For Raku Rules  Rules 就像 perl5的 regexes，并且更好。它们像子例程和方法那样申明，并且还能调用其它 rules
 下面是一个解析 Raku 基本变量名的例子：
-grammar Raku { # among other stuff: # token alpha 是一个预定义好的 rule token identifier { &lt;alpha&gt; \w+ } # 匹配一个全限定名标识符 # [ ... ] 是非捕获组 token name { &lt;identifier&gt; [ '::' &lt;identifier&gt; ] * } # .. | .. 是分支. 最长匹配胜出. token sigil { '$' | '@' | '&amp;' | '%' | '::' } # &lt;rule&gt; 调用命名 rule, 隐式地锚定在当前位置 token variable { &lt;sigil&gt; &lt;name&gt; } }  Grammars Grammar 跟类很像，含有 rules 而不是 methods。 grammars 是 rules 的集合并支持继承。
+grammar Raku { # among other stuff:# token alpha 是一个预定义好的 ruletoken identifier { &lt;alpha&gt; \w+ } # 匹配一个全限定名标识符# [ ... ] 是非捕获组token name { &lt;identifier&gt; [ '::' &lt;identifier&gt; ] * }# .. | .. 是分支. 最长匹配胜出.token sigil { '$' | '@' | '&amp;' | '%' | '::' } # &lt;rule&gt; 调用命名 rule, 隐式地锚定在当前位置token variable { &lt;sigil&gt; &lt;name&gt; }} Grammars  Grammar 跟类很像，含有 rules 而不是 methods。 grammars 是 rules 的集合并支持继承。
                   <a href="https://ohmysummer.github.io/post/2015-11-16-raku%E4%B8%AD%E7%9A%84%E5%8F%AF%E5%8F%98grammar/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -582,7 +584,7 @@ grammar Raku { # among other stuff: # token alpha 是一个预定义好的 rule 
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 8 minutes (1683 words)
+  <i class="fa fa-clock-o"></i> 8 minutes (1682 words)
   
   
 </span>
@@ -593,9 +595,9 @@ grammar Raku { # among other stuff: # token alpha 是一个预定义好的 rule 
                   「原文链接」
 如果你是正则表达式新人(至少当它们用于 Raku 中时), 那我建议你从这个系列的第一部分开始。那些掌握了一定正则表达式的人可以跳过上周的文章。现在, 继续演示!
 上周轶事 我们开始开发一个接收诸如
-var a = 3; console.log(&quot;Hey, did you konw a = &quot; + a + &quot;?&quot;);  Javascript 表达式的 Raku 编译器, 并把这段代码转换为 Rakudo Perl 那样的编译器能运行的 Raku 代码。在我们开始之前, 想想转换后的 Raku 代码看起来是什么样的可能会是个好主意。如果你已经知道了 Perl 5, 那么你应该熟悉这样的代码。
-my $a = 3; say &quot;Hey, did you konw a = &quot; ~ $a ~ &quot;?&quot;;  我们将需要确保我们的正则表达式捕获到了 Javascript 的要素。如果你还记得上一次, 我们使用这样一组正则表达式来捕获我们的文本:
-my rule Number { \d+ }; my rule Variable { \w+ }; my rule String { '&quot;' &lt;-[&quot; ]&gt;+ '&quot;' }; my rule Assignment-Expression { var &lt;Variable&gt; '=' &lt;Number&gt; }; my rule Function-Call { console '.
+var a = 3; console.log(&#34;Hey, did you konw a = &#34; + a + &#34;?&#34;);Javascript 表达式的 Raku 编译器, 并把这段代码转换为 Rakudo Perl 那样的编译器能运行的 Raku 代码。在我们开始之前, 想想转换后的 Raku 代码看起来是什么样的可能会是个好主意。如果你已经知道了 Perl 5, 那么你应该熟悉这样的代码。
+my $a = 3;say &#34;Hey, did you konw a = &#34; ~ $a ~ &#34;?&#34;;我们将需要确保我们的正则表达式捕获到了 Javascript 的要素。如果你还记得上一次, 我们使用这样一组正则表达式来捕获我们的文本:
+my rule Number { \d+ };my rule Variable { \w+ };my rule String { '&quot;' &lt;-[&quot; ]&gt;+ '&quot;' };my rule Assignment-Expression { var &lt;Variable&gt; '=' &lt;Number&gt; };my rule Function-Call { console '.
                   <a href="https://ohmysummer.github.io/post/2015-10-29-%E4%BB%8E%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%B0grammar/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -627,7 +629,7 @@ my rule Number { \d+ }; my rule Variable { \w+ }; my rule String { '&quot;' &lt;
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (1009 words)
+  <i class="fa fa-clock-o"></i> 5 minutes (1007 words)
   
   
 </span>
@@ -638,7 +640,7 @@ my rule Number { \d+ }; my rule Variable { \w+ }; my rule String { '&quot;' &lt;
                   reddit 上使用 Raku 处理日期
 描述 下面的日期, 有些使用了 M D Y 格式, 有些使用了 Y M D 格式, 还使用了任意分隔符! 请把这些散乱的文本解析成合适的 ISO 8601 (YYYY-MM-DD) 格式化日期。
 假设只有以 4 个数字开头的日期使用 Y M D 格式, 其它的使用 M D Y 格式。
-输入样本 2/13/15 1-31-10 5 10 2015 2012 3 17 2001-01-01 2008/01/07  输出样本 2015-02-13 2010-01-31 2015-05-10 2012-03-17 2001-01-01 2008-01-07  扩展挑战 [中级] 使用 2014-12-24 作为相对日期的基准。
+输入样本 2/13/151-31-105 10 20152012 3 172001-01-012008/01/07输出样本 2015-02-132010-01-312015-05-102012-03-172001-01-012008-01-07扩展挑战 [中级] 使用 2014-12-24 作为相对日期的基准。
 当添加 days(天数) 时, 要考虑到每月会有不同的天数, 忽略闰年。
 当添加月和年时, 使用整个 units, 以至于:
 one month before october 10 is september 10
@@ -683,7 +685,7 @@ one month before october 10 is september 10
                 
                   一个 Grammar 解析复杂文本的例子。
 一个 Grammar 调了很久, 先分解下：
- 解析[ ] 里面的数据：  use v6; use Grammar::Debugger; grammar Lines { token TOP { ^ &lt;line&gt;+ $ } token line { \[ &lt;student&gt;+ % &lt;semicolon&gt; \] \n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！ } token student { &lt;myname&gt;+ % &lt;comma&gt; # 分隔符也可以是一个 subrule } token myname { &lt;[A..Za..z-]&gt;+ # 字符类的写法 &lt;[...]&gt; } token comma { ',' \s+ # 逗号, 分号 不能裸露出现在 token 中 } token semicolon { ';' \s+ } } my $parse = Lines.
+ 解析[ ] 里面的数据：  use v6;use Grammar::Debugger;grammar Lines {token TOP {^ &lt;line&gt;+ $}token line {\[&lt;student&gt;+ % &lt;semicolon&gt;\]\n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！}token student {&lt;myname&gt;+ % &lt;comma&gt; # 分隔符也可以是一个 subrule}token myname {&lt;[A..Za..z-]&gt;+ # 字符类的写法 &lt;[...]&gt;}token comma {',' \s+ # 逗号, 分号 不能裸露出现在 token 中}token semicolon {';' \s+}}my $parse = Lines.
                   <a href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -723,9 +725,10 @@ one month before october 10 is september 10
               </p>
               <div class="post-entry">
                 
-                  现在你可能已经习惯了 Raku 中到处出现的前缀&rdquo;meta&rdquo;。Metaclasses, Metaobjects, Metaoperators, 还有迷一般的 Meta-Object 协议。听起来一点也不可怕, 你都见过了不是吗？今天, 在 Raku Advent Calendar 上, 我们将进行完全的 meta 化(full meta)。我们将拥有能解析 grammars 的 grammars, 然后生成将用于解析 grammars 的 grammars。
+                  现在你可能已经习惯了 Raku 中到处出现的前缀&quot;meta&rdquo;。Metaclasses, Metaobjects, Metaoperators, 还有迷一般的 Meta-Object 协议。听起来一点也不可怕, 你都见过了不是吗？今天, 在 Raku Advent Calendar 上, 我们将进行完全的 meta 化(full meta)。我们将拥有能解析 grammars 的 grammars, 然后生成将用于解析 grammars 的 grammars。
 Grammars 无疑是 Raku 的杀手级功能。我们拥有了正则表达式曾经没有的东西: 可读性、可组合性当然还有解析 Raku 自身的能力。— 如果这不能展示它的强大, 那我不知道什么能够!
-为预定义好的 grammars(例如以 Bachus-Naur 形式)写解析器总是有点无趣, 几乎和复制粘贴一样。如果你曾经坐下来重头开始写一个解析器(或者期间温习一遍那本优秀的&rdquo;让我们构建一个编译器&rdquo;图书), 你可能会意识到模式是如此相似:从你的 grammar 中拿出单个 rule, 为它写一个子例程, 让它调用(可能是递归的)其它类似的为其它 grmmars rules 定义的子例程, 清洗, 重复。现在我们有了Raku Grammars! 在这个新世界中, 我们不必为每个 token 写上子例程来完成工作了。 现在我们写 grammar 类, 里面放上 *tokens*、*rules*、regexes 标志。在标志里写正则表达式(或代码)并引用(可能是递归的) Raku gramamr 中的其它标志。如果你曾经使用过这些东西, 你肯定会意识到 Raku 中的 gramamrs 是多么的方便。
+为预定义好的 grammars(例如以 Bachus-Naur 形式)写解析器总是有点无趣, 几乎和复制粘贴一样。如果你曾经坐下来重头开始写一个解析器(或者期间温习一遍那本优秀的&quot;让我们构建一个编译器&quot;图书), 你可能会意识到模式是如此相似:从你的 grammar 中拿出单个 rule, 为它写一个子例程, 让它调用(可能是递归的)其它类似的为其它 grmmars rules 定义的子例程, 清洗, 重复。现在我们有了Raku Grammars! 在这个新世界中, 我们不必为每个 token 写上子例程来完成工作了。 现在我们写 grammar 类, 里面放上 tokens、rules、regexes 标志。在标志里写正则表达式(或代码)并引用(可能是递归的) Raku gramamr 中的其它标志。如果你曾经使用过这些东西, 你肯定会意识到 Raku 中的 gramamrs 是多么的方便。
+但是假如我们已经有了一个 grammar, 例如之前提到过的 BNF?
                   <a href="https://ohmysummer.github.io/post/2015-04-15-grammars-generating-grammars/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -776,7 +779,7 @@ Grammars 无疑是 Raku 的杀手级功能。我们拥有了正则表达式曾�
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

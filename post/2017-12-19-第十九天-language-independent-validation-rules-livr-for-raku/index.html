@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-19-%E7%AC%AC%E5%8D%81%E4%B9%9D%E5%A4%A9-language-independent-validation-rules-livr-for-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,22 +231,15 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="language-independent-validation-rules-livr-for-raku-https-rakuadvent-wordpress-com-2017-12-19-day-19-language-independent-validation-rules-livr-for-raku"><a href="https://rakuadvent.wordpress.com/2017/12/19/day-19-language-independent-validation-rules-livr-for-raku/">Language Independent Validation Rules (LIVR) for Raku</a></h1>
-
+        <h1 id="language-independent-validation-rules-livr-for-rakuhttpsrakuadventwordpresscom20171219day-19-language-independent-validation-rules-livr-for-raku"><a href="https://rakuadvent.wordpress.com/2017/12/19/day-19-language-independent-validation-rules-livr-for-raku/">Language Independent Validation Rules (LIVR) for Raku</a></h1>
 <p>我刚刚将 LIVR <a href="https://modules.raku.org/dist/LIVR:cpan:KOORCHIK">移植</a>到了 Raku。在 Raku 中编写代码非常有趣。而且，LIVR 的测试套件让我能够在 Raku 的 Email::Valid 模块中发现 bug，而在 Rakudo 中则发现另一个 bug。更有趣的是，不仅仅实现了一个模块，而且还帮助其他开发人员进行了一些测试:)</p>
-
 <p>什么是 LIVR？ LIVR 代表“语言独立验证规则”。所以，它就像 “<a href="https://mustache.github.io/">Mustache</a>” ，但在验证的世界。所以，LIVR 由以下几部分组成：</p>
-
 <ul>
 <li><a href="http://livr-spec.org/">LIVR规范</a></li>
 <li><a href="http://livr-spec.org/introduction/implementations.html">针对不同语言的实现</a></li>
 <li><a href="https://github.com/koorchik/LIVR/tree/master/test_suite">通用测试套件</a>，用于检查实现是否正常工作。</li>
 </ul>
-
 <p>LIVR 有如下语言的实现：</p>
-
 <ul>
 <li><a href="https://github.com/koorchik/Validator-LIVR">Perl 5 (LIVR 2.0)</a> available at <a href="https://metacpan.org/pod/Validator::LIVR">CPAN</a>, 维护者 <a href="https://github.com/koorchik">@koorchik</a></li>
 <li><a href="https://github.com/koorchik/raku-livr">Raku (LIVR 2.0)</a> available at <a href="https://modules.raku.org/dist/LIVR:cpan:KOORCHIK">CPAN</a>, 维护者 <a href="https://github.com/koorchik">@koorchik</a></li>
@@ -258,23 +251,14 @@ if (!doNotTrack) {
 <li><a href="https://github.com/vlbaluk/java-validator-livr">Java (LIVR 2.0)</a>, 维护者 <a href="https://github.com/vlbaluk">@vlbaluk</a></li>
 <li><a href="https://github.com/maktwin/ruby-validator-livr">Ruby (LIVR 0.4, previous version)</a> at <a href="https://rubygems.org/gems/livr">rubygems</a>, 维护者 <a href="https://github.com/maktwin">@maktwin</a></li>
 </ul>
-
 <p>我会在这里给你一个关于LIVE的简短介绍，但是对于细节，我强烈推荐阅读这篇文章 <a href="http://blog.webbylab.com/language-independent-validation-rules-library/">“LIVR – Data Validation Without Any Issues”</a></p>
-
 <h2 id="livr-介绍">LIVR 介绍</h2>
-
 <p>数据验证是一项非常普遍的任务。我确信每个开发者都会一次又一次面对它。尤其是，当您开发Web应用程序时，这一点很重要。这是一条通用规则 - 绝对不要相信用户的输入。看起来，如果任务如此普遍，应该有大量的图库。是的，但它是很难找到一个理想的。有些库做了太多事情（如 HTML 表单生成等），其他库很难扩展，有些没有分层数据支持等。</p>
-
 <p>而且，如果您是一名 Web 开发人员，则可能需要在服务器和客户端上进行相同的验证。</p>
-
 <p>在 WebbyLab 中，我们主要使用 3 种编程语言 -  Perl，JavaScript，PHP。因此，对我们来说，重用跨语言的类似验证方法是理想的选择。</p>
-
 <p>因此，决定创建一个可以跨不同语言工作的通用验证器。</p>
-
 <h3 id="验证器要求">验证器要求</h3>
-
 <p>在尝试了大量的验证库之后，我们对我们想要解决的问题有了一些想法。以下是验证器的要求：</p>
-
 <ul>
 <li>规则是声明式并独立于语言的。因此，验证规则只是一个数据结构，而不是方法调用等。您可以对其进行转换，在对其他数据结构进行更改时进行更改</li>
 <li>每个字段的任何数量的规则</li>
@@ -288,13 +272,9 @@ if (!doNotTrack) {
 <li>多用途（用户输入验证，配置验证等）</li>
 <li>Unicode 支持</li>
 </ul>
-
 <h3 id="livr规范">LIVR规范</h3>
-
 <p>由于该任务设置为独立于编程语言（某种胡须/句柄的东西）创建验证器，但在数据验证领域内，我们从规范的组成开始。</p>
-
 <p>规范的目标是：</p>
-
 <ul>
 <li>标准化数据描述格式。</li>
 <li>描述每个实现必须支持的最小验证规则集。</li>
@@ -303,23 +283,14 @@ if (!doNotTrack) {
 <li>具有一组测试数据，可以检查实现是否符合规范。</li>
 <li>基本思想是验证规则的描述必须看起来像数据方案，并且尽可能与数据类似，但是使用规则而不是值。</li>
 </ul>
-
 <p>该规范可在 <a href="http://livr-spec.org/">http://livr-spec.org/</a> 获得。</p>
-
 <p>这是基本的介绍。更多细节在我上面提到的文章中。</p>
-
 <h2 id="livr和raku">LIVR和Raku</h2>
-
 <p>让我们玩得开心，玩一段代码。我将通过几个例子，并在每个例子后提供一些内部细节。所有示例的源代码都可以在 <a href="https://github.com/koorchik/raku-livr-advent-calendar-post/tree/master/examples">GitHub</a> 上找到</p>
-
 <p>首先，从 CPAN 安装 Raku 的 LIVR 模块</p>
-
-<pre><code class="language-raku">zef install LIVR
-</code></pre>
-
-<p><strong>示例1：注册数据验证</strong></p>
-
-<pre><code class="language-raku">use LIVR;
+<pre><code class="language-raku" data-lang="raku">zef install LIVR
+</code></pre><p><strong>示例1：注册数据验证</strong></p>
+<pre><code class="language-raku" data-lang="raku">use LIVR;
 
 # Automatically trim all values before validation
 LIVR::Validator.default-auto-trim(True);
@@ -350,50 +321,30 @@ if my $valid-data = $validator.validate($user-data) {
     my $errors = $validator.errors();
     $errors.say;
 }
-</code></pre>
-
-<p><strong>那么，如何理解规则？</strong></p>
-
+</code></pre><p><strong>那么，如何理解规则？</strong></p>
 <p>这个想法很简单。每条规则都是一个散列. key  - 验证规则的名称。value - 一个参数数组。</p>
-
 <p>例如：</p>
-
-<pre><code class="language-raku">{ 
+<pre><code class="language-raku" data-lang="raku">{ 
     name  =&gt; { required =&gt; [] },
     phone =&gt; { max_length =&gt; [10] }
 }
-</code></pre>
-
-<p>但如果只有一个参数，则可以使用较短的形式：</p>
-
-<pre><code class="language-raku">{ 
+</code></pre><p>但如果只有一个参数，则可以使用较短的形式：</p>
+<pre><code class="language-raku" data-lang="raku">{ 
     phone =&gt; { max_length =&gt; 10 }
 }
-</code></pre>
-
-<p>如果没有参数，则可以将规则的名称作为字符串传递：</p>
-
-<pre><code class="language-raku">{ 
+</code></pre><p>如果没有参数，则可以将规则的名称作为字符串传递：</p>
+<pre><code class="language-raku" data-lang="raku">{ 
     name =&gt; 'required'
 }
-</code></pre>
-
-<p>您可以在数组中给字段传递一个规则列表：</p>
-
-<pre><code class="language-raku">{ 
+</code></pre><p>您可以在数组中给字段传递一个规则列表：</p>
+<pre><code class="language-raku" data-lang="raku">{ 
     name =&gt; [ 'required', { max_length =&gt; 10 } ]
 }
-</code></pre>
-
-<p>在这种情况下，规则将陆续应用。因此，在这个例子中，首先，“required” 规则将被应用，“max_length” 之后，并且只有当 “required” 成功通过时。</p>
-
+</code></pre><p>在这种情况下，规则将陆续应用。因此，在这个例子中，首先，“required” 规则将被应用，“max_length” 之后，并且只有当 “required” 成功通过时。</p>
 <p>这里是 <a href="http://livr-spec.org/validation-rules/how-it-works.html">LIVR 规范的细节</a>。</p>
-
 <p>你可以在<a href="http://livr-spec.org/validation-rules.html">这里</a>找到标准规则的列表。</p>
-
 <p>例2：分层数据结构的验证</p>
-
-<pre><code class="language-raku">use LIVR;
+<pre><code class="language-raku" data-lang="raku">use LIVR;
 
 my $validator = LIVR::Validator.new(livr-rules =&gt; {
     name  =&gt; 'required',
@@ -421,20 +372,15 @@ if my $valid-data = $validator.validate($user-data) {
     my $errors = $validator.errors();
     $errors.say;
 }
-</code></pre>
-
-<p><strong>这个例子中有趣的是什么？</strong></p>
-
+</code></pre><p><strong>这个例子中有趣的是什么？</strong></p>
 <ul>
 <li>模式（验证规则）形状与数据形状非常相似。例如，读取比 JSON Schema 容易得多。</li>
 <li>看起来 “nested_object” 是一种特殊的语法，但它不是。验证器在 “required”，“nested_object”，“max_length” 之间没有任何区别。所以，核心非常小，您可以轻松地使用自定义规则引入新功能。</li>
 <li>通常你想重用复杂的验证规则，比如 “address”，并且可以使用别名来完成。</li>
 <li>您将收到分层错误消息。例如，如果您错过 city 和 name，错误对象将显示 <code>{name =&gt;'REQUIRED'，address =&gt; {city =&gt;'REQUIRED'}}</code></li>
 </ul>
-
 <h3 id="别名">别名</h3>
-
-<pre><code class="language-raku">use LIVR;
+<pre><code class="language-raku" data-lang="raku">use LIVR;
 
 LIVR::Validator.register-aliased-default-rule({
     name  =&gt; 'short_address', # names of the rule
@@ -468,11 +414,8 @@ if my $valid-data = $validator.validate($user-data) {
     my $errors = $validator.errors();
     $errors.say;
 }
-</code></pre>
-
-<p>如果你愿意，你可以只为你的验证器实例注册别名：</p>
-
-<pre><code class="language-raku">use LIVR;
+</code></pre><p>如果你愿意，你可以只为你的验证器实例注册别名：</p>
+<pre><code class="language-raku" data-lang="raku">use LIVR;
 
 my $validator = LIVR::Validator.new(livr-rules =&gt; {
     password =&gt; ['required', 'strong_password']
@@ -483,11 +426,8 @@ $validator.register-aliased-rule({
     rules =&gt; {min_length =&gt; 6},
     error =&gt; 'WEAK_PASSWORD'
 });
-</code></pre>
-
-<p><strong>示例3：数据修改，流水线</strong>
+</code></pre><p><strong>示例3：数据修改，流水线</strong>
 有规则可以做数据修改。以下是他们的列表：</p>
-
 <ul>
 <li>trim</li>
 <li>to_lc</li>
@@ -496,12 +436,9 @@ $validator.register-aliased-rule({
 <li>leave_only</li>
 <li>default</li>
 </ul>
-
 <p>你可以在这里<a href="http://livr-spec.org/validation-rules/modifiers.html">阅读细节</a>。</p>
-
 <p>用这种方法，你可以创建某种管道。</p>
-
-<pre><code class="language-raku">use LIVR;
+<pre><code class="language-raku" data-lang="raku">use LIVR;
 
 my $validator = LIVR::Validator.new(livr-rules =&gt; {
     email =&gt; [ 'trim', 'required', 'email', 'to_lc' ]
@@ -511,27 +448,18 @@ my $input-data = { email =&gt; ' EMail@Gmail.COM ' };
 my $output-data = $validator.validate($input-data);
 
 $output-data.say;
-</code></pre>
-
-<p><strong>这里重要的是什么？</strong></p>
-
+</code></pre><p><strong>这里重要的是什么？</strong></p>
 <ul>
 <li>正如我之前提到的，对于验证器来说，任何规则都没有区别。它以同样的方式处理 “trim”，“default”，“required”，“nested_object”。</li>
 <li>规则一个接一个地应用。规则的输出将被传递给下一个规则的输入。这就像一个 bash 管道 <code>echo ' EMail@Gmail.COM ' | trim | required | email | to_lc</code></li>
 <li><code>$input-data</code> <strong>永远不会</strong>改变 <code>$output-data</code> 是验证后使用的数据。</li>
 </ul>
-
 <p><strong>示例4：自定义规则</strong></p>
-
 <p>您可以使用别名作为自定义规则，但有时这还不够。编写自己的自定义规则绝对没问题。你可以用自定义规则做几乎所有事情。</p>
-
 <p>通常，我们在每个项目中都有 1-5 个自定义规则。此外，您可以将自定义规则组织为单独的可重用模块（甚至可以将其上传到 CPAN）。</p>
-
 <p><strong>那么，如何为 LIVR 编写自定义规则？</strong></p>
-
-<p>这里是&rsquo;strong_password&rsquo;的例子：</p>
-
-<pre><code class="language-raku">use LIVR;
+<p>这里是&rsquo;strong_password'的例子：</p>
+<pre><code class="language-raku" data-lang="raku">use LIVR;
 
 my $validator = LIVR::Validator.new(livr-rules =&gt; {
     password =&gt; ['required', 'strong_password']
@@ -560,10 +488,7 @@ $validator.register-rules( 'strong_password' =&gt;  sub (@rule-args, %builders) 
         return;
     };
 });
-</code></pre>
-
-<p>查看更多示例的现有规则实现:</p>
-
+</code></pre><p>查看更多示例的现有规则实现:</p>
 <ul>
 <li><a href="https://github.com/koorchik/raku-livr/blob/master/lib/LIVR/Rules/Common.pm6">Common rules</a></li>
 <li><a href="https://github.com/koorchik/raku-livr/blob/master/lib/LIVR/Rules/Numeric.pm6">Numeric rules</a></li>
@@ -572,11 +497,8 @@ $validator.register-rules( 'strong_password' =&gt;  sub (@rule-args, %builders) 
 <li><a href="https://github.com/koorchik/raku-livr/blob/master/lib/LIVR/Rules/Modifiers.pm6">Modifiers rules</a></li>
 <li><a href="https://github.com/koorchik/raku-livr/blob/master/lib/LIVR/Rules/Meta.pm6">Meta rules</a></li>
 </ul>
-
 <p><strong>示例5：Web 应用程序</strong></p>
-
 <p>LIVR 适用于 REST API。通常，很多 REST API 在返回可理解的错误方面存在问题。如果您的 API 用户将收到 HTTP 错误 500，它不会帮助他。更好的时候，他会得到类似的错误:</p>
-
 <pre><code>{
     &quot;name&quot;: &quot;REQUIRED&quot;,
     &quot;phone&quot;: &quot;TOO_LONG&quot;,
@@ -585,34 +507,22 @@ $validator.register-rules( 'strong_password' =&gt;  sub (@rule-args, %builders) 
         &quot;zip&quot;: &quot;NOT_POSITIVE_INTEGER&quot;
     }
 }
-</code></pre>
-
-<p>而不仅仅是“服务器错误”。</p>
-
+</code></pre><p>而不仅仅是“服务器错误”。</p>
 <p>所以，让我们试着做一个带有两个端点的小型 Web 服务：</p>
-
 <ul>
 <li>GET /notes -&gt; get list of notes</li>
 <li>POST /notes -&gt; create a note</li>
 </ul>
-
 <p>您需要为其安装 Bailador：</p>
-
-<pre><code class="language-raku">zef install Bailador
-</code></pre>
-
-<p>我们来创建一些服务。我更喜欢带有 “run”模板方法的服务中的 “Command”模式。</p>
-
+<pre><code class="language-raku" data-lang="raku">zef install Bailador
+</code></pre><p>我们来创建一些服务。我更喜欢带有 “run”模板方法的服务中的 “Command”模式。</p>
 <p>我们将有 2 项服务：</p>
-
 <ul>
 <li>Service::Notes::Create</li>
 <li>Service::Notes::List</li>
 </ul>
-
 <p>服务使用示例：</p>
-
-<pre><code class="language-raku">my %CONTEXT = (storage =&gt; my @STORAGE);
+<pre><code class="language-raku" data-lang="raku">my %CONTEXT = (storage =&gt; my @STORAGE);
 
 my %note = title =&gt; 'Note1', text =&gt; 'Note text';
 
@@ -623,13 +533,9 @@ my $new-note = Service::Notes::Create.new(
 my $list = Service::Notes::Create.new( 
     context =&gt; %CONTEXT 
 ).run({});
-</code></pre>
-
-<p>有了上下文，你可以注入任何依赖关系。 “run” 方法接受用户传递的数据。</p>
-
+</code></pre><p>有了上下文，你可以注入任何依赖关系。 “run” 方法接受用户传递的数据。</p>
 <p>以下是创建笔记服务的源代码：</p>
-
-<pre><code class="language-raku">use Service::Base;
+<pre><code class="language-raku" data-lang="raku">use Service::Base;
 my $LAST_ID = 0;
 class Service::Notes::Create is Service::Base {
     has %.validation-rules = (
@@ -644,11 +550,8 @@ class Service::Notes::Create is Service::Base {
         return %note;
     }
 }
-</code></pre>
-
-<p>和 Service::Base 类：</p>
-
-<pre><code class="language-raku">use LIVR;
+</code></pre><p>和 Service::Base 类：</p>
+<pre><code class="language-raku" data-lang="raku">use LIVR;
 LIVR::Validator.default-auto-trim(True);
 
 class Service::Base {
@@ -673,10 +576,7 @@ class Service::Base {
         }
     }
 }
-</code></pre>
-
-<p>“run” 方法保证所有过程都被保留：</p>
-
+</code></pre><p>“run” 方法保证所有过程都被保留：</p>
 <ul>
 <li>数据已经过验证。</li>
 <li>“execute” 仅在验证后才会调用。</li>
@@ -685,31 +585,16 @@ class Service::Base {
 <li>在调用“execute”之前可以检查权限。</li>
 <li>可以执行额外的工作，如缓存验证器对象等。</li>
 </ul>
-
 <p>这是<a href="https://github.com/koorchik/raku-livr-advent-calendar-post/tree/master/examples/example5-restapi">完整的工作示例</a>。</p>
-
 <p>运行应用程序：</p>
-
-<pre><code class="language-raku">raku app.pl6
-</code></pre>
-
-<p>创建一个 note：</p>
-
-<pre><code class="language-raku">curl -H &quot;Content-Type: application/json&quot; -X POST -d '{&quot;title&quot;:&quot;New Note&quot;,&quot;text&quot;:&quot;Some text here&quot;}' http://localhost:3000/notes
-</code></pre>
-
-<p>检查验证：</p>
-
-<pre><code class="language-raku">curl -H &quot;Content-Type: application/json&quot; -X POST -d '{&quot;title&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;}' http://localhost:3000/notes
-</code></pre>
-
-<p>获取notes列表：</p>
-
-<pre><code class="language-raku">curl http://localhost:3000/notes
-</code></pre>
-
-<h2 id="livr-链接">LIVR 链接</h2>
-
+<pre><code class="language-raku" data-lang="raku">raku app.pl6
+</code></pre><p>创建一个 note：</p>
+<pre><code class="language-raku" data-lang="raku">curl -H &quot;Content-Type: application/json&quot; -X POST -d '{&quot;title&quot;:&quot;New Note&quot;,&quot;text&quot;:&quot;Some text here&quot;}' http://localhost:3000/notes
+</code></pre><p>检查验证：</p>
+<pre><code class="language-raku" data-lang="raku">curl -H &quot;Content-Type: application/json&quot; -X POST -d '{&quot;title&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;}' http://localhost:3000/notes
+</code></pre><p>获取notes列表：</p>
+<pre><code class="language-raku" data-lang="raku">curl http://localhost:3000/notes
+</code></pre><h2 id="livr-链接">LIVR 链接</h2>
 <ul>
 <li><a href="https://github.com/koorchik/raku-livr-advent-calendar-post/tree/master/examples">The source code of all examples</a></li>
 <li>文章 <a href="http://blog.webbylab.com/language-independent-validation-rules-library/">“LIVR – Data Validation Without Any Issues”</a></li>
@@ -718,7 +603,6 @@ class Service::Base {
 <li>你可以在线玩 <a href="http://webbylab.github.io/livr-playground/">LIVR Playground</a></li>
 <li>你可以在线玩 <a href="http://livr-multi-playground.webbylab.com/">LIVR Multi-Language Playground</a></li>
 </ul>
-
 <p>我希望你会喜欢 LIVR。我会很感激任何反馈。</p>
 
 
@@ -811,7 +695,7 @@ class Service::Base {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

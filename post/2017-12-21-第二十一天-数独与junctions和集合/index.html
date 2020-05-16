@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-21-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%80%E5%A4%A9-%E6%95%B0%E7%8B%AC%E4%B8%8Ejunctions%E5%92%8C%E9%9B%86%E5%90%88/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,18 +231,12 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="day-21-sudoku-with-junctions-and-sets-https-rakuadvent-wordpress-com-2017-12-21-day-21-sudoku-with-junctions-and-sets"><a href="https://rakuadvent.wordpress.com/2017/12/21/day-21-sudoku-with-junctions-and-sets/">Day 21 – Sudoku with Junctions and Sets</a></h1>
-
+        <h1 id="day-21--sudoku-with-junctions-and-setshttpsrakuadventwordpresscom20171221day-21-sudoku-with-junctions-and-sets"><a href="https://rakuadvent.wordpress.com/2017/12/21/day-21-sudoku-with-junctions-and-sets/">Day 21 – Sudoku with Junctions and Sets</a></h1>
 <p>Raku 中有许多核心元素为您提供强大的工具，以简洁而强大的方式完成任务。其中两个是具有许多特征的联结和集合，但也是截然不同的。为了演示这些功能，我将介绍如何将它们用于一个简单的问题，Sudoku拼图。</p>
-
 <p>数独：进修
 所以对于那些不知道数独谜题的人来说，它是一个9乘9的网格，它提供了一些填充了数字1-9的单元格。目标是填充数字在1和9之间的所有单元格，所以没有任何行，列或子广场具有多于一个的数字。</p>
-
 <p>有几种方法来表示一个数独谜题，我个人最喜欢的是 9×9 嵌套数组，例如：</p>
-
-<pre><code class="language-raku">my @game = [
+<pre><code class="language-raku" data-lang="raku">my @game = [
     [4,0,0,0,0,0,0,0,0],
     [0,9,0,3,4,6,0,5,0],
     [5,8,0,0,9,0,0,0,6],
@@ -253,40 +247,24 @@ if (!doNotTrack) {
     [0,5,0,9,3,2,0,8,0],
     [0,0,0,0,0,0,0,0,1]
 ];
-</code></pre>
-
-<p>在这种情况下，没有赋值的单元格被赋值为0，这样所有的单元格都有一个赋值给它们的整数值。使用这种格式要记住的主要事情是你需要使用@game [$ y] [$ x]而不是@game [$ x] [$ y]来引用单元格，</p>
-
-<h2 id="junctions-量子逻辑测试">Junctions：量子逻辑测试</h2>
-
+</code></pre><p>在这种情况下，没有赋值的单元格被赋值为0，这样所有的单元格都有一个赋值给它们的整数值。使用这种格式要记住的主要事情是你需要使用@game [$ y] [$ x]而不是@game [$ x] [$ y]来引用单元格，</p>
+<h2 id="junctions量子逻辑测试">Junctions：量子逻辑测试</h2>
 <p>在 Raku 中使用 Junction 的最简单方法之一是逻辑测试。 Junction可以表示您想要测试的值的选择。例如 ：</p>
-
-<pre><code class="language-raku">if ( 5 &lt; 1|10 &lt; 2 ) { say &quot;Spooky&quot; } else { say &quot;Boo&quot; }
+<pre><code class="language-raku" data-lang="raku">if ( 5 &lt; 1|10 &lt; 2 ) { say &quot;Spooky&quot; } else { say &quot;Boo&quot; }
 Spooky
-</code></pre>
-
-<p>因此，这不仅证明了操作符链（经验丰富的程序员可能已经看起来很困惑），而且对于5 &lt;10和1 &lt;2，任何连接点（1 | 10）的计算结果都为True。这样，连接点可以非常已经很强大了，当你为它们分配一个变量容器时，它变得非常有趣。</p>
-
+</code></pre><p>因此，这不仅证明了操作符链（经验丰富的程序员可能已经看起来很困惑），而且对于5 &lt;10和1 &lt;2，任何连接点（1 | 10）的计算结果都为True。这样，连接点可以非常已经很强大了，当你为它们分配一个变量容器时，它变得非常有趣。</p>
 <p>我们希望能够在我们的数独游戏中做出的一个测试就是看它是否已满。我的意思是每个单元格的赋值都大于0.完整的拼图可能无法正确完成，但每个单元格都有一个猜测。另一种方法是，没有任何单元格的值为0.因此，我们可以定义一个Junction并将其存储在一个标量变量中，我们可以在任何时候测试它以查看拼图是否已满。</p>
-
-<pre><code class="language-raku">my $full-test = none( (^9 X ^9).map(-&gt; ($x,$y) { 
+<pre><code class="language-raku" data-lang="raku">my $full-test = none( (^9 X ^9).map(-&gt; ($x,$y) { 
     @game[$y][$x];
 } ) );
 say so $full-test == 0;
 False
-</code></pre>
-
-<p>在这种情况下，游戏中仍然有0个数字，因此看看$ full-test是否等于0，结果为False。请注意，如果没有将结果强制转换为布尔值，只有当所有这些值都为False时，才会得到等于0的单元格的细分。</p>
-
+</code></pre><p>在这种情况下，游戏中仍然有0个数字，因此看看$ full-test是否等于0，结果为False。请注意，如果没有将结果强制转换为布尔值，只有当所有这些值都为False时，才会得到等于0的单元格的细分。</p>
 <p>还要注意使用^ 9和X运算符来生成0到8的两个范围，然后使用这两个9个字符的列表的叉积来列出所有可能的X，Y坐标的列表。这就是这种强大的简单性，这是我喜欢Raku的原因之一。但我离题了。</p>
-
 <p>这种方法的优点是，一旦你定义了Junction，你就不需要修改它。如果您更改存储在数组中的值，那么连接将会查看新的值（注意，这仅适用于更新单个单元格，如果用新的数组替换整个子数组，您将打破连接点）。</p>
-
 <p>所以这是一个简单的使用连接点，因此存储一个可以重复使用的多变量测试。但是当你意识到连接点中的值本身就是连接点时，它会变得更有趣。</p>
-
 <p>让我们看看更复杂的测试，如果拼图中的每一行，每列和每个数字中只有一个，则拼图就完成了。为了做这个测试，我们需要三个帮助函数。</p>
-
-<pre><code class="language-raku">subset Index of Int where 0 &lt;= * &lt;= 8; 
+<pre><code class="language-raku" data-lang="raku">subset Index of Int where 0 &lt;= * &lt;= 8; 
 sub row( Index $y ) {
     return (^9).map( { ( $_, $y ) } ); 
 } 
@@ -305,13 +283,9 @@ multi sub square( Index $x, Index $y ) {
         ( $tx + $dx, $ty + $dy ) 
     } );
 }
-</code></pre>
-
-<p>因此，我们在这里定义一个索引作为0到8之间的值，然后定义我们的子索引来返回一个列表列表，其中子列表是一对X和Y索引。请注意，我们的平方函数可以接受一个或两个位置参数。在单个参数中，我们定义了0在左上角然后从左到右，8是右下角的子广场。两个参数版本给出了给定单元格（包括它自己）的正方形单元格列表。</p>
-
+</code></pre><p>因此，我们在这里定义一个索引作为0到8之间的值，然后定义我们的子索引来返回一个列表列表，其中子列表是一对X和Y索引。请注意，我们的平方函数可以接受一个或两个位置参数。在单个参数中，我们定义了0在左上角然后从左到右，8是右下角的子广场。两个参数版本给出了给定单元格（包括它自己）的正方形单元格列表。</p>
 <p>所以在这些地方我们可以为每一行，列和方块定义我们的一个（）列表。一旦我们拥有了它们，我们就可以将它们放入一个全部（）连接点。</p>
-
-<pre><code class="language-raku">my $complete-all = all(
+<pre><code class="language-raku" data-lang="raku">my $complete-all = all(
      (^9).map(
         {
             |(
@@ -328,21 +302,13 @@ multi sub square( Index $x, Index $y ) {
         }
     )
 );
-</code></pre>
-
-<p>一旦我们进行了测试，看看这个难题是否完整，那就很简单了。</p>
-
-<pre><code class="language-raku">say [&amp;&amp;] (1..9).map( so $complete-all == * );
+</code></pre><p>一旦我们进行了测试，看看这个难题是否完整，那就很简单了。</p>
+<pre><code class="language-raku" data-lang="raku">say [&amp;&amp;] (1..9).map( so $complete-all == * );
 False
-</code></pre>
-
-<p>在这里，我们测试1到9的每个可能的单元格值，对于交叉点，在每种情况下，如果所有的一个（）连接仅包含一个值，则这将为真。然后，我们使用[]缩减元运算符来链接这些结果以给出最终的真/假值（如果所有结果均为真，否则为真）。再次，这个测试可以在您向单元格添加值时重新使用，并且只有在拼图完成且正确时才会返回True。</p>
-
+</code></pre><p>在这里，我们测试1到9的每个可能的单元格值，对于交叉点，在每种情况下，如果所有的一个（）连接仅包含一个值，则这将为真。然后，我们使用[]缩减元运算符来链接这些结果以给出最终的真/假值（如果所有结果均为真，否则为真）。再次，这个测试可以在您向单元格添加值时重新使用，并且只有在拼图完成且正确时才会返回True。</p>
 <p>我们再一次将复杂的测试归结为一行代码。我们的$ complete-all变量需要定义一次，然后在会话的其余部分有效。</p>
-
 <p>这种嵌套联结测试可以达到很多级别，最后一个例子是如果我们想测试当前的难题是否有效。我的意思是它没有完成，但它没有任何重复的数字和行，列或方块。我们可以再次为此创建一个Junction，对于每一行，每列或每个方块，如果其中一个或没有一个单元格设置为每个可能的值，则它是有效的。因此，我们创建的Junction类似于$ complete-全部。</p>
-
-<pre><code class="language-raku">$valid-all = all(
+<pre><code class="language-raku" data-lang="raku">$valid-all = all(
     (^9).map(
         {
             |(
@@ -374,23 +340,14 @@ False
         }
     )
 );
-</code></pre>
-
-<p>有效性测试与完整性测试基本相同。</p>
-
-<pre><code class="language-raku">say [&amp;&amp;] (1..9).map( so $valid-all == * );
+</code></pre><p>有效性测试与完整性测试基本相同。</p>
+<pre><code class="language-raku" data-lang="raku">say [&amp;&amp;] (1..9).map( so $valid-all == * );
 True
-</code></pre>
-
-<p>除了在这种情况下我们的谜题是有效的，所以我们得到一个真实的结果。</p>
-
-<h2 id="集合-对象的集合">集合：对象的集合</h2>
-
+</code></pre><p>除了在这种情况下我们的谜题是有效的，所以我们得到一个真实的结果。</p>
+<h2 id="集合对象的集合">集合：对象的集合</h2>
 <p>虽然结点对测试值很有用，但如果我们想尝试解决这个难题，它们就不那么有用。但是Raku有另一种类型的集合，可以派上用场。套装（及其相关类型的手袋和混合物）可让您收集物品，然后对其进行数学设定操作，以找出不同套装之间的互动方式。</p>
-
 <p>作为一个例子，我们将定义一个可能的函数，它返回给定单元格可能的值。如果单元格具有设置的值，我们将返回空列表。</p>
-
-<pre><code class="language-raku">sub possible( Index $x, Index $y, @game ) {
+<pre><code class="language-raku" data-lang="raku">sub possible( Index $x, Index $y, @game ) {
     return () if @game[$y][$x] &gt; 0;
 
     ( 
@@ -409,15 +366,10 @@ True
         )
     ).keys.sort;
  }
-</code></pre>
-
-<p>在这里，我们发现数字1到9与由给定单元格所在的行，列和平方值组成的集合之间的差异。我们使用grep忽略具有0值的单元格。 As Sets将他们的细节存储为无序的键/值对，我们得到这些键，然后对它们进行排序以保持一致性。请注意，这里我们使用的是运算符的ascii（ - ）版本，我们也可以使用Unicode版本。</p>
-
+</code></pre><p>在这里，我们发现数字1到9与由给定单元格所在的行，列和平方值组成的集合之间的差异。我们使用grep忽略具有0值的单元格。 As Sets将他们的细节存储为无序的键/值对，我们得到这些键，然后对它们进行排序以保持一致性。请注意，这里我们使用的是运算符的ascii（ - ）版本，我们也可以使用Unicode版本。</p>
 <p>我们可以将该集合定义为来自行，列和平方的每个结果的并集，并且结果将是相同的。在这种情况下，我们也使用square的两个参数版本。</p>
-
 <p>应该指出的是，这是可能值最简单的定义，没有附加的逻辑进行，但即使这个简单的结果，我们也可以做最简单的求解算法。如果是这种情况，我们会在网格中的每个单元格中循环，如果它有1个可能的值，我们可以将该值设置为该值。在这种情况下，我们将循环，获取要设置的单元列表，然后遍历列表并设置值。如果要设置的列表为空或拼图完成，则停止。</p>
-
-<pre><code class="language-raku">my @updates;
+<pre><code class="language-raku" data-lang="raku">my @updates;
 repeat {
     @updates = (^9 X ^9).map( -&gt; ($x,$y) { 
         ($x,$y) =&gt; possible($x,$y,@game) 
@@ -428,30 +380,17 @@ repeat {
     }
 } while ( @updates.elems &gt; 0 &amp;&amp; 
           ! [&amp;&amp;] (1..9).map( so $complete-all == * ) );
-</code></pre>
-
-<p>因此，我们列出了对的列表，其中关键是x，y坐标，值是可能的值。然后我们删除所有那些没有一个价值的东西。这一直持续到没有找到具有单个可能值的细胞或者谜题已完成为止。</p>
-
+</code></pre><p>因此，我们列出了对的列表，其中关键是x，y坐标，值是可能的值。然后我们删除所有那些没有一个价值的东西。这一直持续到没有找到具有单个可能值的细胞或者谜题已完成为止。</p>
 <p>找到解决方案的另一种方法是获得只出现在给定，行，列或方块的一组可能性中的值。例如，如果我们有以下可能性：</p>
-
-<pre><code class="language-raku">(1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
-</code></pre>
-
-<p>1和5只在每行出现一次。我们可以利用对称集合差分算子和算子链来得到它。</p>
-
-<pre><code class="language-raku">say (1,2,3) (^) (2,3,4) (^) () (^) () (^) (4,5) (^) () (^) () (^) (2,3,4) (^) ()
+<pre><code class="language-raku" data-lang="raku">(1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
+</code></pre><p>1和5只在每行出现一次。我们可以利用对称集合差分算子和算子链来得到它。</p>
+<pre><code class="language-raku" data-lang="raku">say (1,2,3) (^) (2,3,4) (^) () (^) () (^) (4,5) (^) () (^) () (^) (2,3,4) (^) ()
 set(1 5)
-</code></pre>
-
-<p>当然，在这种情况下，我们可以在列表中使用简化元运算符</p>
-
-<pre><code class="language-raku">say [(^)] (1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
+</code></pre><p>当然，在这种情况下，我们可以在列表中使用简化元运算符</p>
+<pre><code class="language-raku" data-lang="raku">say [(^)] (1,2,3),(2,3,4),(),(),(4,5),(),(),(2,3,4),()
 set(1 5)
-</code></pre>
-
-<p>所以在这种情况下，算法很简单（在这种情况下，我只是覆盖行，列和方形代码基本相同）。</p>
-
-<pre><code class="language-raku">my @updates;
+</code></pre><p>所以在这种情况下，算法很简单（在这种情况下，我只是覆盖行，列和方形代码基本相同）。</p>
+<pre><code class="language-raku" data-lang="raku">my @updates;
 for ^9 -&gt; $idx {
     my $only = [(^)] row($idx).map( -&gt; ( $x,$y ) { 
         possible($x,$y,@game) 
@@ -464,27 +403,16 @@ for ^9 -&gt; $idx {
         }
     }
 }
-</code></pre>
-
-<p>然后，我们可以遍历与上面类似的更新数组。结合这两种算法可以自己解决大量的数独难题并简化其他难题。</p>
-
+</code></pre><p>然后，我们可以遍历与上面类似的更新数组。结合这两种算法可以自己解决大量的数独难题并简化其他难题。</p>
 <p>请注意，我们必须进行两次传球，首先我们得到我们正在查找的数字，然后我们必须查看每一行并找出数字出现的位置。为此，我们使用（elem）运算符。集合也可以使用关联引用来引用，例如：</p>
-
-<pre><code class="language-raku">say set(1,5){1}
+<pre><code class="language-raku" data-lang="raku">say set(1,5){1}
 True
-</code></pre>
-
-<h2 id="关于对象的说明">关于对象的说明</h2>
-
+</code></pre><h2 id="关于对象的说明">关于对象的说明</h2>
 <p>因此，迄今为止所有的例子都使用了基本整数。但是没有任何东西阻止你在连接和集合中使用对象。有几件事要记住，虽然，集合使用===身份运算符进行测试。大多数对象都不能通过身份检查，除非你已经克隆了它们或者已经定义了WHICH方法以便能够进行比较。</p>
-
 <p>对于数独谜题，您可能需要创建一个CellValue类，用于存储该数字是否为谜题中的初始值之一。如果你这样做，尽管你需要覆盖WHICH并使其返回Cell的Integer值。只要你在这种情况下身体检查技术无效（两个不同的CellValues可能具有相同的值，但不会是同一个对象），那么你可以将它们放入集合中。</p>
-
 <p>我希望你已经发现了这个有趣的东西，Junctions和Sets是Raku的许多不同部分中的两个，它们可以帮助你轻松完成复杂的任务。如果您对代码感兴趣，可以使用以下基于对象的版本进行安装：</p>
-
-<pre><code class="language-raku">zef install Game::Sudoku
+<pre><code class="language-raku" data-lang="raku">zef install Game::Sudoku
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -577,7 +505,7 @@ True
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

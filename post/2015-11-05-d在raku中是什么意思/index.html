@@ -9,19 +9,21 @@
   <meta property="og:title" content="D 在 Raku 中是什么意思" />
   <meta name="twitter:title" content="D 在 Raku 中是什么意思" />
   <meta name="description" content="一个裸的 :D、:U、:T 或 :_ 是限制默认类型为定义、未定义、类型对象或任何对象的类型约束。所以
-class Con { method man(:U: :D $x) }  其签名等价于 (Con:U: Any:D $x)。
+class Con {method man(:U: :D $x)}其签名等价于 (Con:U: Any:D $x)。
 Con:U 是调用者, 在调用者后面加上一个冒号。要标记一个显式的调用者, 在它后面放上一个冒号就好了:
-method doit ($x: $a, $b, $c) { ... }  Abstract vs Concrete types 　对于任何有名字的类型, 某些其它子集类型可以自动地通过在类型的名字后面追加一个合适的状语来派生出来：
-Int:_ 允许定义或未定的 Int 值 Int:D 只允许有定义的(强制的)Int 值 Int:U 只允许未定义值(抽象或失败)Int 值 Int:T 允许Int只作为类型对象  即, 它们的意思有点像:
-Int:D Int:_ where DEFINITE($_) Int:U Int:_ where not(DEFINITE($_)) Int:T Int:U where none(Failure)  where DEFINITE 是一个布尔宏, 它说正处理的对象是否有一个合法的强制表示。(查看下面的自省) .">
+method doit ($x: $a, $b, $c) { ... }Abstract vs Concrete types 　对于任何有名字的类型, 某些其它子集类型可以自动地通过在类型的名字后面追加一个合适的状语来派生出来：
+Int:_ 允许定义或未定的 Int 值Int:D 只允许有定义的(强制的)Int 值Int:U 只允许未定义值(抽象或失败)Int 值Int:T 允许Int只作为类型对象即, 它们的意思有点像:
+Int:D Int:_ where DEFINITE($_)Int:U Int:_ where not(DEFINITE($_))Int:T Int:U where none(Failure)where DEFINITE 是一个布尔宏, 它说正处理的对象是否有一个合法的强制表示。(查看下面的自省) .
+在 Raku 中, Int 通常假定意为 Int:_, 除了调用者, 其中默认为 Int:D。 （默认的 new 方法有一个原型, 它的调用者是 :T, 所以所有的 new 方法都默认允许类型对象。）">
   <meta property="og:description" content="一个裸的 :D、:U、:T 或 :_ 是限制默认类型为定义、未定义、类型对象或任何对象的类型约束。所以
-class Con { method man(:U: :D $x) }  其签名等价于 (Con:U: Any:D $x)。
+class Con {method man(:U: :D $x)}其签名等价于 (Con:U: Any:D $x)。
 Con:U 是调用者, 在调用者后面加上一个冒号。要标记一个显式的调用者, 在它后面放上一个冒号就好了:
-method doit ($x: $a, $b, $c) { ... }  Abstract vs Concrete types 　对于任何有名字的类型, 某些其它子集类型可以自动地通过在类型的名字后面追加一个合适的状语来派生出来：
-Int:_ 允许定义或未定的 Int 值 Int:D 只允许有定义的(强制的)Int 值 Int:U 只允许未定义值(抽象或失败)Int 值 Int:T 允许Int只作为类型对象  即, 它们的意思有点像:
-Int:D Int:_ where DEFINITE($_) Int:U Int:_ where not(DEFINITE($_)) Int:T Int:U where none(Failure)  where DEFINITE 是一个布尔宏, 它说正处理的对象是否有一个合法的强制表示。(查看下面的自省) .">
+method doit ($x: $a, $b, $c) { ... }Abstract vs Concrete types 　对于任何有名字的类型, 某些其它子集类型可以自动地通过在类型的名字后面追加一个合适的状语来派生出来：
+Int:_ 允许定义或未定的 Int 值Int:D 只允许有定义的(强制的)Int 值Int:U 只允许未定义值(抽象或失败)Int 值Int:T 允许Int只作为类型对象即, 它们的意思有点像:
+Int:D Int:_ where DEFINITE($_)Int:U Int:_ where not(DEFINITE($_))Int:T Int:U where none(Failure)where DEFINITE 是一个布尔宏, 它说正处理的对象是否有一个合法的强制表示。(查看下面的自省) .
+在 Raku 中, Int 通常假定意为 Int:_, 除了调用者, 其中默认为 Int:D。 （默认的 new 方法有一个原型, 它的调用者是 :T, 所以所有的 new 方法都默认允许类型对象。）">
   <meta name="twitter:description" content="一个裸的 :D、:U、:T 或 :_ 是限制默认类型为定义、未定义、类型对象或任何对象的类型约束。所以
-class Con { method man(:U: :D $x) }  其签名等价于 (Con:U: Any:D $x)。
+class Con {method man(:U: :D $x)}其签名等价于 (Con:U: Any:D $x)。
 Con:U 是调用者, 在调用者后面加上一个冒号。要标记一个显式的调用者, 在它后面放上一个冒号就好了:
 method doit ($x: $a, $b, $c) { …">
   <meta name="author" content="焉知非鱼"/>
@@ -33,7 +35,7 @@ method doit ($x: $a, $b, $c) { …">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2015-11-05-d%E5%9C%A8raku%E4%B8%AD%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -240,63 +242,35 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>一个裸的 <strong>:D</strong>、<strong>:U</strong>、<strong>:T</strong> 或 <strong>:_</strong> 是限制默认类型为定义、未定义、类型对象或任何对象的类型约束。所以</p>
-
-<pre><code class="language-raku">class Con {
+        <p>一个裸的 <strong>:D</strong>、<strong>:U</strong>、<strong>:T</strong> 或 <strong>:_</strong> 是限制默认类型为定义、未定义、类型对象或任何对象的类型约束。所以</p>
+<pre><code class="language-raku" data-lang="raku">class Con {
     method man(:U: :D $x)
 }
-</code></pre>
-
-<p>其签名等价于  <code>(Con:U: Any:D $x)</code>。</p>
-
+</code></pre><p>其签名等价于  <code>(Con:U: Any:D $x)</code>。</p>
 <p>Con:U 是调用者, 在调用者后面加上一个冒号。要标记一个显式的调用者, 在它后面放上一个冒号就好了:</p>
-
-<pre><code class="language-raku">method doit ($x: $a, $b, $c) { ... }
-</code></pre>
-
-<h3 id="abstract-vs-concrete-types">Abstract vs Concrete types</h3>
-
+<pre><code class="language-raku" data-lang="raku">method doit ($x: $a, $b, $c) { ... }
+</code></pre><h3 id="abstract-vs-concrete-types">Abstract vs Concrete types</h3>
 <p>　
 对于任何有名字的类型, 某些其它子集类型可以自动地通过在类型的名字后面追加一个合适的状语来派生出来：</p>
-
 <pre><code>Int:_       允许定义或未定的 Int 值
 Int:D       只允许有定义的(强制的)Int 值
 Int:U       只允许未定义值(抽象或失败)Int 值
 Int:T       允许Int只作为类型对象
-</code></pre>
-
-<p>即, 它们的意思有点像:</p>
-
+</code></pre><p>即, 它们的意思有点像:</p>
 <pre><code>Int:D       Int:_ where DEFINITE($_)
 Int:U       Int:_ where not(DEFINITE($_))
 Int:T       Int:U where none(Failure)
-</code></pre>
-
-<p><code>where DEFINITE</code> 是一个布尔宏, 它说正处理的对象是否有一个合法的强制表示。(查看下面的自省) .</p>
-
+</code></pre><p><code>where DEFINITE</code> 是一个布尔宏, 它说正处理的对象是否有一个合法的强制表示。(查看下面的自省) .</p>
 <p>在 Raku 中, <strong>Int</strong> 通常假定意为 <code>Int:_</code>, 除了调用者, 其中默认为 <code>Int:D</code>。 （默认的 new 方法有一个原型, 它的调用者是 <code>:T</code>, 所以所有的 new 方法都默认允许类型对象。）</p>
-
 <p>这些默认可以通过各种编译指令在词法作用域中更改。</p>
-
-<pre><code class="language-raku">use parameters :D;
-</code></pre>
-
-<p>会让非调用者的参数默认为 <code>:D</code>。</p>
-
+<pre><code class="language-raku" data-lang="raku">use parameters :D;
+</code></pre><p>会让非调用者的参数默认为 <code>:D</code>。</p>
 <p>作为对比,</p>
-
-<pre><code class="language-raku">use variables :D;
-</code></pre>
-
-<p>会对用于变量声明中的类型做同样的事情。
+<pre><code class="language-raku" data-lang="raku">use variables :D;
+</code></pre><p>会对用于变量声明中的类型做同样的事情。
 在这样的词法作用域中, 你可以使用 <code>:_</code> 形式回到标准的行为。特别地, 因为调用者默认为定义的:</p>
-
-<pre><code class="language-raku">use invocant :_;
-</code></pre>
-
-<p>会让调用者允许任何类型的有定义的和未定义的调用者。</p>
+<pre><code class="language-raku" data-lang="raku">use invocant :_;
+</code></pre><p>会让调用者允许任何类型的有定义的和未定义的调用者。</p>
 
 
         
@@ -388,7 +362,7 @@ Int:T       Int:U where none(Failure)
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

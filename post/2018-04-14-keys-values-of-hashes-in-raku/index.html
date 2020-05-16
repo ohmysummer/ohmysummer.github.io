@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-14-keys-values-of-hashes-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,13 +231,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="raku-中散列的键和值-https-raku-online-2018-04-07-73-keys-values-etc-of-hashes-in-perl-6"><a href="https://raku.online/2018/04/07/73-keys-values-etc-of-hashes-in-perl-6/">Raku 中散列的键和值</a></h1>
-
+        <h1 id="raku-中散列的键和值httpsrakuonline2018040773-keys-values-etc-of-hashes-in-perl-6"><a href="https://raku.online/2018/04/07/73-keys-values-etc-of-hashes-in-perl-6/">Raku 中散列的键和值</a></h1>
 <p>今天，我们将看看 <a href="https://docs.raku.org/type/Hash">Hash</a> 类的几个返回散列所有键或值或同时返回键和值的方法:</p>
-
-<pre><code class="language-raku">&gt; my %h = H =&gt; 'Hydrogen', He =&gt; 'Helium', Li =&gt; 'Lithium';
+<pre><code class="language-raku" data-lang="raku">&gt; my %h = H =&gt; 'Hydrogen', He =&gt; 'Helium', Li =&gt; 'Lithium';
 {H =&gt; Hydrogen, He =&gt; Helium, Li =&gt; Lithium}
 
 &gt; %h.keys;
@@ -248,22 +244,16 @@ if (!doNotTrack) {
 
 &gt; %h.kv;
 (H Hydrogen Li Lithium He Helium)
-</code></pre>
-
-<p>虽然你可能想直接进入 <code>src/core/Hash.pm6</code> 文件来查看方法的定义，但你会一无所获。 <code>Hash</code> 类是 <code>Map</code> 的子类，所有这些方法都定义在 <code>src/core/Map.pm6</code> 文件中。获取键和值很简单:</p>
-
-<pre><code class="language-raku">multi method keys(Map:D:) {
+</code></pre><p>虽然你可能想直接进入 <code>src/core/Hash.pm6</code> 文件来查看方法的定义，但你会一无所获。 <code>Hash</code> 类是 <code>Map</code> 的子类，所有这些方法都定义在 <code>src/core/Map.pm6</code> 文件中。获取键和值很简单:</p>
+<pre><code class="language-raku" data-lang="raku">multi method keys(Map:D:) {
     Seq.new(Rakudo::Iterator.Mappy-keys(self))
 }
 
 multi method values(Map:D:) {
     Seq.new(Rakudo::Iterator.Mappy-values(self))
 }
-</code></pre>
-
-<p>对于 <code>kv</code> 方法, 需要多做点工作:</p>
-
-<pre><code class="language-raku">multi method kv(Map:D:) {
+</code></pre><p>对于 <code>kv</code> 方法, 需要多做点工作:</p>
+<pre><code class="language-raku" data-lang="raku">multi method kv(Map:D:) {
     Seq.new(class :: does Rakudo::Iterator::Mappy) {
         has int $!on-value;
 
@@ -278,20 +268,13 @@ multi method values(Map:D:) {
         }
     }.new(self)
 }
-</code></pre>
-
-<p>如您所见，该方法返回一个使用了一个实现了 <code>Rakudo::Iterator::Mappy</code> 角色的匿名类构建的序列。我们已经看到了这种方法与<a href="https://raku.online/2018/02/05/47-push-all-optimisation/">定义 <code>pull-one</code> 和 <code>push-all</code> 方法</a>是如何结合使用的。</p>
-
+</code></pre><p>如您所见，该方法返回一个使用了一个实现了 <code>Rakudo::Iterator::Mappy</code> 角色的匿名类构建的序列。我们已经看到了这种方法与<a href="https://raku.online/2018/02/05/47-push-all-optimisation/">定义 <code>pull-one</code> 和 <code>push-all</code> 方法</a>是如何结合使用的。</p>
 <p>让我们看看另一套方法，pairs 和 antipairs。其中之一简单明了：</p>
-
-<pre><code class="language-raku">multi method pairs(Map:D:) {
+<pre><code class="language-raku" data-lang="raku">multi method pairs(Map:D:) {
     Seq.new(self.iterator)
 }
-</code></pre>
-
-<p>另外一个使用了中间类:</p>
-
-<pre><code class="language-raku">multi method antipairs(Map:D:) {
+</code></pre><p>另外一个使用了中间类:</p>
+<pre><code class="language-raku" data-lang="raku">multi method antipairs(Map:D:) {
     Seq.new(class :: does Rakudo::Iterator::Mappy) {
         method pull-one() {
             ...
@@ -301,17 +284,13 @@ multi method values(Map:D:) {
         }
     }.new(self)
 }
-</code></pre>
-
-<p>两种方法都产生相同结构的结果:</p>
-
-<pre><code class="language-raku">&gt; %h.antipairs
+</code></pre><p>两种方法都产生相同结构的结果:</p>
+<pre><code class="language-raku" data-lang="raku">&gt; %h.antipairs
 (Hydrogen =&gt; H Lithium =&gt; Li Helium =&gt; He)
 
 &gt; %h.pairs
 (H =&gt; Hydrogen Li =&gt; Lithium He =&gt; Helium)
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -404,7 +383,7 @@ multi method values(Map:D:) {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

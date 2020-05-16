@@ -10,13 +10,13 @@
   <meta name="twitter:title" content="Going over the Bridge, part 2. Let’s get rid of it" />
   <meta name="description" content="今天，我们继续在 Rakudo Raku 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
 里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
-method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.">
+method sqrt() { self.Bridge.sqrt }method rand() { self.Bridge.rand }method sin() { self.Bridge.sin }method asin() { self.Bridge.asin }method cos() { self.Bridge.cos }method acos() { self.Bridge.acos }method tan() { self.Bridge.tan }method atan() { self.Bridge.atan }. . .method sec() { self.Bridge.sec }method asec() { self.Bridge.asec }method cosec() { self.Bridge.cosec }method acosec() { self.">
   <meta property="og:description" content="今天，我们继续在 Rakudo Raku 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
 里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
-method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { self.Bridge.sin } method asin() { self.Bridge.asin } method cos() { self.Bridge.cos } method acos() { self.Bridge.acos } method tan() { self.Bridge.tan } method atan() { self.Bridge.atan } . . . method sec() { self.Bridge.sec } method asec() { self.Bridge.asec } method cosec() { self.Bridge.cosec } method acosec() { self.">
+method sqrt() { self.Bridge.sqrt }method rand() { self.Bridge.rand }method sin() { self.Bridge.sin }method asin() { self.Bridge.asin }method cos() { self.Bridge.cos }method acos() { self.Bridge.acos }method tan() { self.Bridge.tan }method atan() { self.Bridge.atan }. . .method sec() { self.Bridge.sec }method asec() { self.Bridge.asec }method cosec() { self.Bridge.cosec }method acosec() { self.">
   <meta name="twitter:description" content="今天，我们继续在 Rakudo Raku 中使用 Bridge 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。
 里面有什么? 该方法的主要用途在 Real 角色中，该角色包含以下一组方法：
-method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin() { …">
+method sqrt() { self.Bridge.sqrt }method rand() { self.Bridge.rand }method sin() { …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -26,7 +26,7 @@ method sqrt() { self.Bridge.sqrt } method rand() { self.Bridge.rand } method sin
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-02-12-going-over-the-bridge-part-2/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -233,17 +233,11 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>今天，我们继续在 Rakudo Raku 中使用 <code>Bridge</code> 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。</p>
-
-<p><img src="https://inraku.files.wordpress.com/2018/02/bridge1.jpg" alt="img" /></p>
-
+        <p>今天，我们继续在 Rakudo Raku 中使用 <code>Bridge</code> 方法。昨天，我们在几个预定义的数据类型中看到了方法的定义。现在是时候看看如何使用该方法。</p>
+<p><img src="https://inraku.files.wordpress.com/2018/02/bridge1.jpg" alt="img"></p>
 <h2 id="里面有什么">里面有什么?</h2>
-
 <p>该方法的主要用途在 <code>Real</code> 角色中，该角色包含以下一组方法：</p>
-
-<pre><code class="language-raku">method sqrt() { self.Bridge.sqrt }
+<pre><code class="language-raku" data-lang="raku">method sqrt() { self.Bridge.sqrt }
 method rand() { self.Bridge.rand }
 method sin() { self.Bridge.sin }
 method asin() { self.Bridge.asin }
@@ -275,43 +269,30 @@ method ceiling() { self.Bridge.ceiling }
 . . .
 multi method log(Real:D: ) { self.Bridge.log }
 multi method exp(Real:D: ) { self.Bridge.exp }
-</code></pre>
-
-<p>有几个例程具有不同的模式，其中该方法被调用两次：一次用于获得所需的功能;其次是强制价值：</p>
-
-<pre><code class="language-raku">multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
+</code></pre><p>有几个例程具有不同的模式，其中该方法被调用两次：一次用于获得所需的功能;其次是强制价值：</p>
+<pre><code class="language-raku" data-lang="raku">multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
 multi method atan2(Cool $x = 1e0) { self.Bridge.atan2($x.Numeric.Bridge) }
 multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
 multi method atan2(Cool $x = 1e0) { self.Bridge.atan2($x.Numeric.Bridge) }
 multi method log(Real:D: Real $base) { self.Bridge.log($base.Bridge) }
 . . .
 multi sub atan2(Real \a, Real \b = 1e0) { a.Bridge.atan2(b.Bridge) }
-</code></pre>
-
-<p>正如你所看到的，<code>atan2</code> 函数被定义为方法和子例程。为了更多地混淆你，它有两个版本：</p>
-
-<pre><code class="language-raku">proto sub atan2($, $?) {*}
+</code></pre><p>正如你所看到的，<code>atan2</code> 函数被定义为方法和子例程。为了更多地混淆你，它有两个版本：</p>
+<pre><code class="language-raku" data-lang="raku">proto sub atan2($, $?) {*}
 multi sub atan2(Real \a, Real \b = 1e0) { a.Bridge.atan2(b.Bridge) }
 # should really be (Cool, Cool), and then (Cool, Real) and (Real, Cool)
 # candidates, but since Int both conforms to Cool and Real, we'd get lots
 # of ambiguous dispatches. So just go with (Any, Any) for now.
 multi sub atan2( \a, \b = 1e0) { a.Numeric.atan2(b.Numeric) }
-</code></pre>
-
-<p>最后，一些类型转换的方法：</p>
-
-<pre><code class="language-raku">method Bridge(Real:D:) { self.Num }
+</code></pre><p>最后，一些类型转换的方法：</p>
+<pre><code class="language-raku" data-lang="raku">method Bridge(Real:D:) { self.Num }
 method Int(Real:D:) { self.Bridge.Int }
 method Num(Real:D:) { self.Bridge.Num }
 multi method Str(Real:D:) { self.Bridge.Str }
 method Rat(Real:D: Real $epsilon = 1.0e-6) { self.Bridge.Rat($epsilon) }
-</code></pre>
-
-<p>注意 <code>Real</code> 角色的 <code>Bridge</code> 方法返回一个 <code>Num</code> 值。</p>
-
+</code></pre><p>注意 <code>Real</code> 角色的 <code>Bridge</code> 方法返回一个 <code>Num</code> 值。</p>
 <p>一些中缀方法也在使用该方法：</p>
-
-<pre><code class="language-raku">multi sub infix:&lt;+&gt;(Real \a, Real \b) { a.Bridge + b.Bridge }
+<pre><code class="language-raku" data-lang="raku">multi sub infix:&lt;+&gt;(Real \a, Real \b) { a.Bridge + b.Bridge }
 multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge }
 multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge }
 multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge }
@@ -326,31 +307,20 @@ multi sub infix:«&gt;»(Real \a, Real \b) { a.Bridge &gt; b.Bridge }
 multi sub infix:«&gt;=»(Real \a, Real \b) { a.Bridge &gt;= b.Bridge }
 multi sub infix:«≥» (Real \a, Real \b) { a.Bridge ≥ b.Bridge }
 multi sub prefix:&lt;-&gt;(Real:D \a) { -a.Bridge }
-</code></pre>
-
-<h2 id="追踪调用">追踪调用</h2>
-
+</code></pre><h2 id="追踪调用">追踪调用</h2>
 <p>要查看 <code>Bridge</code> 方法何时被调用，让我们做一些简单的实验。我添加了几个 <code>nqp::say</code> 调用并运行 REPL 控制台来调用不同类型变量的 <code>sin</code> 方法。</p>
-
 <p>使用 <code>Num</code> 数据类型时，会调用一个直接方法：</p>
-
-<pre><code class="language-raku">&gt; my Num $n = 1e1; 
+<pre><code class="language-raku" data-lang="raku">&gt; my Num $n = 1e1; 
 10
 &gt; $n.sin
 Num.sin
-</code></pre>
-
-<p>这个方法调用底层的 NQP 函数：</p>
-
-<pre><code class="language-raku">proto method sin(|) {*}
+</code></pre><p>这个方法调用底层的 NQP 函数：</p>
+<pre><code class="language-raku" data-lang="raku">proto method sin(|) {*}
 multi method sin(Num:D: ) {
     nqp::p6box_n(nqp::sin_n(nqp::unbox_n(self)));
 }
-</code></pre>
-
-<p>使用其他数据类型，您可以通过真实角色出行：</p>
-
-<pre><code class="language-raku">&gt; my Int $i = 1;
+</code></pre><p>使用其他数据类型，您可以通过真实角色出行：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; my Int $i = 1;
 1
 &gt; $i.sin
 Real.sin
@@ -361,28 +331,18 @@ Num.sin
 &gt; $r.sin
 Real.sin
 Num.sin
-</code></pre>
-
-<p>如果它们是从内置类型继承的，则可以使用与自己的类型相同的路径：</p>
-
-<pre><code class="language-raku">&gt; class MyInt is Int {}
+</code></pre><p>如果它们是从内置类型继承的，则可以使用与自己的类型相同的路径：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; class MyInt is Int {}
 &gt; my MyInt $mi = MyInt.new
 0
 &gt; $mi.sin
 Real.sin
 Num.sin
-</code></pre>
-
-<h2 id="摆脱它">摆脱它</h2>
-
+</code></pre><h2 id="摆脱它">摆脱它</h2>
 <p>我修改了所有使用 Rakudo 克隆方法的地方。大多数情况下，他们被直接调用 <code>Num</code> 方法替代。在一些地方，它会导致像 <code>$x.Num.Num</code> 这样的双重调用，当然这些调用也会减少。</p>
-
 <p>使用更新后的代码，所有来自 <code>Roast</code> 的测试都已通过。作为副作用，在某些情况下，速度增加了大约 3％：</p>
-
-<pre><code class="language-raku">./raku -e'for 1..10_000_000 {Int.new(1).sin}'
-</code></pre>
-
-<p>这是一个相当广泛的变化，而且还有一件事：当您在新创建的 <code>Real</code> 对象上调用该方法时，会导致无限循环。看起来数字数据类型的错误层次结构是主要原因，但我认为我们至少可以安全地移除 <code>Bridge</code> 方法。</p>
+<pre><code class="language-raku" data-lang="raku">./raku -e'for 1..10_000_000 {Int.new(1).sin}'
+</code></pre><p>这是一个相当广泛的变化，而且还有一件事：当您在新创建的 <code>Real</code> 对象上调用该方法时，会导致无限循环。看起来数字数据类型的错误层次结构是主要原因，但我认为我们至少可以安全地移除 <code>Bridge</code> 方法。</p>
 
 
         
@@ -474,7 +434,7 @@ Num.sin
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

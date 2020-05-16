@@ -10,13 +10,13 @@
   <meta name="twitter:title" content="Grammar 笔记" />
   <meta name="description" content="一个 Grammar 解析复杂文本的例子。
 一个 Grammar 调了很久, 先分解下：
- 解析[ ] 里面的数据：  use v6; use Grammar::Debugger; grammar Lines { token TOP { ^ &lt;line&gt;&#43; $ } token line { \[ &lt;student&gt;&#43; % &lt;semicolon&gt; \] \n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！ } token student { &lt;myname&gt;&#43; % &lt;comma&gt; # 分隔符也可以是一个 subrule } token myname { &lt;[A..Za..z-]&gt;&#43; # 字符类的写法 &lt;[...]&gt; } token comma { &#39;,&#39; \s&#43; # 逗号, 分号 不能裸露出现在 token 中 } token semicolon { &#39;;&#39; \s&#43; } } my $parse = Lines.">
+ 解析[ ] 里面的数据：  use v6;use Grammar::Debugger;grammar Lines {token TOP {^ &lt;line&gt;&#43; $}token line {\[&lt;student&gt;&#43; % &lt;semicolon&gt;\]\n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！}token student {&lt;myname&gt;&#43; % &lt;comma&gt; # 分隔符也可以是一个 subrule}token myname {&lt;[A..Za..z-]&gt;&#43; # 字符类的写法 &lt;[...]&gt;}token comma {&#39;,&#39; \s&#43; # 逗号, 分号 不能裸露出现在 token 中}token semicolon {&#39;;&#39; \s&#43;}}my $parse = Lines.">
   <meta property="og:description" content="一个 Grammar 解析复杂文本的例子。
 一个 Grammar 调了很久, 先分解下：
- 解析[ ] 里面的数据：  use v6; use Grammar::Debugger; grammar Lines { token TOP { ^ &lt;line&gt;&#43; $ } token line { \[ &lt;student&gt;&#43; % &lt;semicolon&gt; \] \n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！ } token student { &lt;myname&gt;&#43; % &lt;comma&gt; # 分隔符也可以是一个 subrule } token myname { &lt;[A..Za..z-]&gt;&#43; # 字符类的写法 &lt;[...]&gt; } token comma { &#39;,&#39; \s&#43; # 逗号, 分号 不能裸露出现在 token 中 } token semicolon { &#39;;&#39; \s&#43; } } my $parse = Lines.">
+ 解析[ ] 里面的数据：  use v6;use Grammar::Debugger;grammar Lines {token TOP {^ &lt;line&gt;&#43; $}token line {\[&lt;student&gt;&#43; % &lt;semicolon&gt;\]\n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！}token student {&lt;myname&gt;&#43; % &lt;comma&gt; # 分隔符也可以是一个 subrule}token myname {&lt;[A..Za..z-]&gt;&#43; # 字符类的写法 &lt;[...]&gt;}token comma {&#39;,&#39; \s&#43; # 逗号, 分号 不能裸露出现在 token 中}token semicolon {&#39;;&#39; \s&#43;}}my $parse = Lines.">
   <meta name="twitter:description" content="一个 Grammar 解析复杂文本的例子。
 一个 Grammar 调了很久, 先分解下：
- 解析[ ] 里面的数据：  use v6; use Grammar::Debugger; grammar Lines { token TOP { ^ &lt;line&gt;&#43; $ } token line { \[ &lt;student&gt;&#43; % &lt;semicolon&gt; \] \n #  …">
+ 解析[ ] 里面的数据：  use v6;use Grammar::Debugger;grammar Lines {token TOP {^ &lt;line&gt;&#43; $}token line {\[&lt;student&gt;&#43; % &lt;semicolon&gt;\]\n #  …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -26,7 +26,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -234,14 +234,11 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>一个 Grammar 解析复杂文本的例子。</p>
-
 <p>一个 Grammar 调了很久, 先分解下：</p>
-
 <ul>
 <li>解析<code>[ ]</code> 里面的数据：</li>
 </ul>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 use Grammar::Debugger;
 
 grammar Lines {
@@ -276,47 +273,40 @@ grammar Lines {
 
 my $parse = Lines.parsefile('test.txt');
 say $parse;
-</code></pre>
+</code></pre><p>test.txt 的内容如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">[</span><span class="n"></span><span class="n">Lue</span><span class="p">,</span> <span class="n"></span><span class="n">Fan</span><span class="p">]</span>
+<span class="p">[</span><span class="n"></span><span class="n">Lou</span><span class="p">,</span> <span class="n"></span><span class="n">Man</span><span class="o">-</span><span class="n"></span><span class="n">Li</span><span class="p">]</span>
+<span class="p">[</span><span class="n"></span><span class="n">Tian</span><span class="p">,</span> <span class="n"></span><span class="n">Mijie</span><span class="p">;</span> <span class="n"></span><span class="n">Zhou</span><span class="p">,</span> <span class="n"></span><span class="n">Lin</span><span class="p">;</span> <span class="n"></span><span class="n">Zou</span><span class="p">,</span> <span class="n"></span><span class="n">Xiao</span><span class="p">;</span> <span class="n"></span><span class="n">Zheng</span><span class="p">,</span> <span class="n"></span><span class="n">Qiaoji</span><span class="p">;</span> <span class="n"></span><span class="n">Luo</span><span class="p">,</span> <span class="n"></span><span class="n">Lingling</span><span class="p">;</span> <span class="n"></span><span class="n">Jiang</span><span class="p">,</span> <span class="n"></span><span class="n">Na</span><span class="p">;</span> <span class="n"></span><span class="n">Lin</span><span class="p">,</span> <span class="n"></span><span class="n">Dunmin</span><span class="p">]</span>
+</code></pre></div><p>下面的 Grammar 用于解析一个字符串, 由于 tokens 不能回溯, 所以当解析 <code>$str</code> 时使用了 Grammar 的继承, 重写了 university 这个 token:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Grammar::Debugger</span><span class="p">;</span>
 
-<p>test.txt 的内容如下：</p>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">string</span> <span class="o">=</span> <span class="s">&#34;[Wang, Zhiguo; Zhao, Zhiguo] Hangzhou Normal Univ, Ctr Cognit &amp; Brain Disorders, Hangzhou, Zhejiang, Peoples R China; [Wang, Zhiguo; Theeuwes, Jan] Vrije Univ Amsterdam, Dept Cognit Psychol, Amsterdam, Netherlands&#34;</span><span class="p">;</span>
 
-<pre><code class="language-perl">[Lue, Fan]
-[Lou, Man-Li]
-[Tian, Mijie; Zhou, Lin; Zou, Xiao; Zheng, Qiaoji; Luo, Lingling; Jiang, Na; Lin, Dunmin]
-</code></pre>
+<span class="n"></span><span class="n">grammar</span> <span class="n"></span><span class="nn">University::</span><span class="n"></span><span class="n">Grammar</span> <span class="p">{</span>
+    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">TOP</span>             <span class="p">{</span> <span class="o">^</span> <span class="sr">&lt;university&gt;</span> <span class="nv">$</span>             <span class="err">}</span>
+    <span class="nv">token</span> <span class="n"></span><span class="n">university</span>      <span class="p">{</span> <span class="p">[</span> <span class="sr">&lt;bracket&gt;</span> <span class="sr">&lt;info&gt;</span> <span class="p">]</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;</span><span class="err">;</span> <span class="err">&#39;</span> <span class="err">}</span>
+    <span class="nv">token</span> <span class="n"></span><span class="n">bracket</span>         <span class="p">{</span> <span class="s">&#39;[&#39;</span> <span class="sr">&lt;studentname&gt;</span>  <span class="s">&#39;] &#39;</span>      <span class="p">}</span>
+    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">studentname</span>     <span class="p">{</span> <span class="sr">&lt;stdname=.info&gt;</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;</span><span class="err">;</span> <span class="err">&#39;</span>      <span class="err">}</span>
+    <span class="nv">token</span> <span class="n"></span><span class="n">info</span>            <span class="p">{</span> <span class="sr">&lt;field&gt;</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;</span><span class="p">,</span> <span class="s">&#39;              }
+</span><span class="s">    token field           { &lt;-[,\]\[;\n]&gt;+               }
+</span><span class="s">}
+</span><span class="s">
+</span><span class="s"># grammar 像类一样可以继承, 里面的 token 可以被重写
+</span><span class="s">grammar MyUniversity  is University::Grammar {
+</span><span class="s">    token university      { &lt;info&gt;+ % &#39;</span><span class="p">;</span> <span class="err">&#39;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-<p>下面的 Grammar 用于解析一个字符串, 由于 tokens 不能回溯, 所以当解析 <code>$str</code> 时使用了 Grammar 的继承, 重写了 university 这个 token:</p>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">str</span> <span class="o">=</span> <span class="s">&#34;Zhejiang Univ, Coll Environm &amp; Resources Sci, Dept Resource Sci, Hangzhou 310029, Peoples R China; La Trobe Univ, Dept Agr Sci, Bundoora, Vic 3083, Australia; Hangzhou Normal Coll, Fac Life Sci, Hangzhou, Peoples R China&#34;</span><span class="p">;</span>
 
-<pre><code class="language-perl">use v6;
-use Grammar::Debugger;
+<span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="nn">University::</span><span class="n"></span><span class="n">Grammar</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">string</span><span class="p">)</span><span class="p">;</span>
+<span class="c1"># my $parsed = MyUniversity.parse($str);</span>
 
-my $string = &quot;[Wang, Zhiguo; Zhao, Zhiguo] Hangzhou Normal Univ, Ctr Cognit &amp; Brain Disorders, Hangzhou, Zhejiang, Peoples R China; [Wang, Zhiguo; Theeuwes, Jan] Vrije Univ Amsterdam, Dept Cognit Psychol, Amsterdam, Netherlands&quot;;
+<span class="k">for</span> <span class="nv">@</span><span class="err">(</span><span class="err">$</span><span class="nv">parsed</span><span class="sr">&lt;university&gt;</span><span class="sr">&lt;info&gt;</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">f</span> <span class="p">{</span>
+    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">f</span><span class="sr">&lt;field&gt;</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
+<span class="p">}</span>
 
-grammar University::Grammar {
-    token TOP             { ^ &lt;university&gt; $             }
-    token university      { [ &lt;bracket&gt; &lt;info&gt; ]+ % '; ' }
-    token bracket         { '[' &lt;studentname&gt;  '] '      }
-    token studentname     { &lt;stdname=.info&gt;+ % '; '      }
-    token info            { &lt;field&gt;+ % ', '              }
-    token field           { &lt;-[,\]\[;\n]&gt;+               }
-}
-
-# grammar 像类一样可以继承, 里面的 token 可以被重写
-grammar MyUniversity  is University::Grammar {
-    token university      { &lt;info&gt;+ % '; ' }
-}
-
-my $str = &quot;Zhejiang Univ, Coll Environm &amp; Resources Sci, Dept Resource Sci, Hangzhou 310029, Peoples R China; La Trobe Univ, Dept Agr Sci, Bundoora, Vic 3083, Australia; Hangzhou Normal Coll, Fac Life Sci, Hangzhou, Peoples R China&quot;;
-
-my $parsed = University::Grammar.parse($string);
-# my $parsed = MyUniversity.parse($str);
-
-for @($parsed&lt;university&gt;&lt;info&gt;) -&gt; $f {
-    say $f&lt;field&gt;[0];
-}
-
-</code></pre>
-
+</code></pre></div>
 
         
           <div class="blog-tags">
@@ -409,7 +399,7 @@ for @($parsed&lt;university&gt;&lt;info&gt;) -&gt; $f {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-09-%E7%AC%AC%E4%B9%9D%E7%AB%A0.-associatives/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,362 +231,186 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第九章-associatives">第九章. Associatives</h1>
-
 <p><a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a> 使用被称为键的任何名字索引到值。<a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>是无序的，因为键没有相对顺序。其他语言具有类似的数据类型，它们称为关联数组，字典，散列，映射或类似的东西。有几种类型的专用关联数据结构，你已经使用了其中的一些。</p>
-
 <h1 id="pairs">Pairs</h1>
-
 <p>A <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> has a single key and a value. You’ve already used these in their adverbial form, although you didn’t know they were <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s. Create a <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> through general object construction with the name and value as arguments:</p>
-
 <p><a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 具有单个键和值。你已经以他们的副词形式使用了这些，虽然你不知道他们是 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>。通过一般对象构造创建一个 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>，名称和值作为参数：</p>
-
 <pre><code>my $pair = Pair.new: 'Genus', 'Hamadryas';
-</code></pre>
-
-<p>The <code>=&gt;</code> is the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> constructor. You don’t have to quote the lefthand side because the <code>=&gt;</code> does that for you as long as it looks like a term:</p>
-
+</code></pre><p>The <code>=&gt;</code> is the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> constructor. You don’t have to quote the lefthand side because the <code>=&gt;</code> does that for you as long as it looks like a term:</p>
 <p><code>=&gt;</code> 是 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 构造函数。你不必将左侧用引号引起来，因为 <code>=&gt;</code> 为你做了，只要它看起来像一个项：</p>
-
 <pre><code>my $pair = Genus =&gt; 'Hamadryas';  # this works
 my $nope = ⛇    =&gt; 'Hamadryas';  # this doesn't
-</code></pre>
-
-<p>Any value can be a <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> value. Here’s a value that’s a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
-
+</code></pre><p>Any value can be a <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> value. Here’s a value that’s a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>:</p>
 <p><a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 的值可以是任意值。下面这个 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 的值是一个 <a href="https://docs.raku.org/type/List.html"><code>List</code></a>：</p>
-
 <pre><code>my $pair = Pair.new: 'Colors', &lt;blue black grey&gt;;
-</code></pre>
-
-<p>Combining <code>.new</code> and <code>=&gt;</code> probably doesn’t do what you want. Passing it a single <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> means that you are missing its value. The <code>.new</code> method thinks that the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> is the key and you forgot the value:</p>
-
+</code></pre><p>Combining <code>.new</code> and <code>=&gt;</code> probably doesn’t do what you want. Passing it a single <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> means that you are missing its value. The <code>.new</code> method thinks that the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> is the key and you forgot the value:</p>
 <p>结合 <code>.new</code> 和 <code>=&gt;</code> 可能不会做你想要的。给 <code>.new</code> 传递单个 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 就意味着你丢掉了值。 <code>.new</code> 方法认为 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 是键，而你忘记了值：</p>
-
 <pre><code>my $pair = Pair.new: 'Genus' =&gt; 'Hamadryas';  # WRONG!
-</code></pre>
-
-<h2 id="副词">副词</h2>
-
+</code></pre><h2 id="副词">副词</h2>
 <p>A more common syntax is the adverbial form that you have already seen with <code>Q</code> quoting. Start with a colon, add the unquoted name, and specify the value inside <code>&lt;&gt;</code> for allomorphic quoting or inside <code>()</code> where you quote the value yourself:</p>
-
 <p>更常见的语法是你在 <code>Q</code> 引用中已经看到的副词形式。从冒号开始，添加不带引号的名字，并在 <code>&lt;&gt;</code> 内指定用于异形引号的值，或在 <code>()</code> 中指定你自己用引号引起的值：</p>
-
 <pre><code>my $pair = :Genus&lt;Hamadryas&gt;;
 my $pair = :Genus('Hamadryas');
 
 my $genus = 'Hamadryas';
 my $pair  = :Genus($genus);
-</code></pre>
-
-<p>Without an explicit value an adverb has the value <code>True</code>:</p>
-
+</code></pre><p>Without an explicit value an adverb has the value <code>True</code>:</p>
 <p>如果没有显式的值，那么副词的值为 <code>True</code>：</p>
-
 <pre><code>my $pair = :name;  #  name =&gt; True
-</code></pre>
-
-<p>Using an adverb with <code>Q</code> with no value means you turn on that feature (everything else is <code>False</code> by default):</p>
-
+</code></pre><p>Using an adverb with <code>Q</code> with no value means you turn on that feature (everything else is <code>False</code> by default):</p>
 <p>使用不带值的 <code>Q</code> 的副词意味着你开启该功能（默认情况下其他所有内容都为 <code>False</code>）：</p>
-
 <pre><code>Q :double /The name is $butterfly/;
-</code></pre>
-
-<p>If you’d like it to be <code>False</code> instead, put a <code>!</code> in front of the key name:</p>
-
+</code></pre><p>If you’d like it to be <code>False</code> instead, put a <code>!</code> in front of the key name:</p>
 <p>如果你想要它是假的，那就放一个 <code>!</code> 在键名前面：</p>
-
 <pre><code>my $pair = :!name; #  name =&gt; False
-</code></pre>
-
-<p>You can create a <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> from a scalar variable. The identifier becomes the key and the value is the variable’s value. You’ll see more of this coming up:</p>
-
+</code></pre><p>You can create a <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> from a scalar variable. The identifier becomes the key and the value is the variable’s value. You’ll see more of this coming up:</p>
 <p>你可以从标量变量创建一个 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>。标识符成为键，值是变量的值。你会看到更多这样的事情：</p>
-
 <pre><code>my $Genus = 'Hamadryas';
 my $pair = :$Genus;   # same as 'Genus' =&gt; 'Hamadryas';
-</code></pre>
-
-<p>There’s also a tricky syntax that reverses a numeric value and alpha-headed text key. This is a bit prettier for adverbs representing positions, such as <code>1st</code>, <code>2nd</code>, <code>3rd</code>, and so on:</p>
-
+</code></pre><p>There’s also a tricky syntax that reverses a numeric value and alpha-headed text key. This is a bit prettier for adverbs representing positions, such as <code>1st</code>, <code>2nd</code>, <code>3rd</code>, and so on:</p>
 <p>还有一种棘手的语法可以反转数值和带字母的文本键。这对于代表位置的副词来说有点漂亮，比如 <code>1st</code>, <code>2nd</code>, <code>3rd</code>等等：</p>
-
 <pre><code>my $pair = :2nd; # same as nd =&gt; 2
-</code></pre>
-
-<p>The <code>.key</code> and <code>.value</code> methods extract those parts of the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>:</p>
-
+</code></pre><p>The <code>.key</code> and <code>.value</code> methods extract those parts of the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>:</p>
 <p><code>.key</code> 和 <code>.value</code> 方法提取 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 中的那些部分：</p>
-
 <pre><code>put &quot;{$p.key} =&gt; {$pair.value}\n&quot;;
-</code></pre>
-
-<p>The <code>.kv</code> method returns both as a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>:</p>
-
+</code></pre><p>The <code>.kv</code> method returns both as a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>:</p>
 <p><code>.kv</code> 方法作为 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 返回：</p>
-
 <pre><code>put join ' =&gt; ', $pair.kv;
-</code></pre>
-
-<p>EXERCISE 9.1Develop a subroutine that creates <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s for the numbers from 0 to 10. Given the argument <code>1</code>, it returns the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> <code>:1st</code>. Given <code>2</code>, it returns <code>:2nd</code>. Given <code>3</code>, it returns <code>:3rd</code>. For all other numbers, it uses <code>th</code> as the suffix.</p>
-
+</code></pre><p>EXERCISE 9.1Develop a subroutine that creates <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s for the numbers from 0 to 10. Given the argument <code>1</code>, it returns the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> <code>:1st</code>. Given <code>2</code>, it returns <code>:2nd</code>. Given <code>3</code>, it returns <code>:3rd</code>. For all other numbers, it uses <code>th</code> as the suffix.</p>
 <p>练习9.1 开发一个子例程，为 0 到 10 之间的数字创建 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>。给定参数 <code>1</code>，它返回 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> <code>:1st</code>。给定 <code>2</code>，它返回：<code>:2nd</code>。给定 <code>3</code>，它返回：<code>:3rd</code>。对于所有其他数字，它使用 <code>th</code> 作为后缀。</p>
-
 <h2 id="修改-pair">修改 Pair</h2>
-
 <p>You can’t change the key of a <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>. You’d have to make a new <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> to get a different key:</p>
-
 <p>你无法更改 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 的键。你必须创建一个新的 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 才能获得不同的键：</p>
-
 <pre><code>my $pair = 'Genus' =&gt; 'Hamadryas';
 $pair.key = 'Species';  # Nope!
-</code></pre>
-
-<p>If the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> value is a container you can change the value inside the container, but if you constructed it with a literal <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> there’s no container and you can’t change the value:</p>
-
+</code></pre><p>If the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> value is a container you can change the value inside the container, but if you constructed it with a literal <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> there’s no container and you can’t change the value:</p>
 <p>如果 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 的值是容器，则可以更改容器内的值，但如果使用文字<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>构造它，则没有容器，并且你无法更改值：</p>
-
 <pre><code>my $pair = 'Genus' =&gt; 'Hamadryas';
 $pair.value = 'Papillo'; # Nope!
-</code></pre>
-
-<p>You can assign to it if that value came from a variable storing a container:</p>
-
+</code></pre><p>You can assign to it if that value came from a variable storing a container:</p>
 <p>如果该值来自存储容器的变量，则可以为其分配：</p>
-
 <pre><code>my $name = 'Hamadryas';
 my $pair = 'Genus' =&gt; $name;
 $pair.value = 'Papillo';
-</code></pre>
-
-<p>Remember that not all variables are mutable. You may have bound to a value:</p>
-
+</code></pre><p>Remember that not all variables are mutable. You may have bound to a value:</p>
 <p>请记住，并非所有变量都是可变的。你可能已经绑定了一个值：</p>
-
 <pre><code>my $name := 'Hamadryas';  # bound directly to value, no container
 my $pair = 'Genus' =&gt; $name;
 $pair.value = 'Papillo';  # Nope! Still a fixed value
-</code></pre>
-
-<p>To ensure that you get a container, assign the value to an anonymous scalar. You don’t create a new named variable and you end up with a container:</p>
-
+</code></pre><p>To ensure that you get a container, assign the value to an anonymous scalar. You don’t create a new named variable and you end up with a container:</p>
 <p>要确保获得容器，请将值指定给匿名标量。你不创建新的命名变量，最终得到一个容器：</p>
-
 <pre><code>my $pair = 'Genus' =&gt; $ = $name;
 $pair.value = 'Papillo';  # Works!
-</code></pre>
-
-<p><code>.freeze</code> the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> to make the value immutable no matter how it came to you:</p>
-
+</code></pre><p><code>.freeze</code> the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> to make the value immutable no matter how it came to you:</p>
 <p>冻结(<code>.freeze</code>) <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 以使值不可变，无论它以怎样呈现给你：</p>
-
 <pre><code>my $name = 'Hamadryas';
 my $pair = 'Genus' =&gt; $name;
 $pair.freeze;
 $pair.value = 'Papillo';  # Nope!
-</code></pre>
-
-<p>There’s one last thing about <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s. You can line up the colon forms head-to-foot and it will create a list even though you don’t use commas:</p>
-
+</code></pre><p>There’s one last thing about <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s. You can line up the colon forms head-to-foot and it will create a list even though you don’t use commas:</p>
 <p><a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 的最后一件事。你可以将冒号形式从头到脚排列，即使你不使用逗号，它也会创建一个列表：</p>
-
 <pre><code>my $pairs = ( :1st:2nd:3rd:4th );
-</code></pre>
-
-<p>That’s the same as the form with commas:</p>
-
+</code></pre><p>That’s the same as the form with commas:</p>
 <p>这与逗号形式相同：</p>
-
 <pre><code>my $pairs = ( :1st, :2nd, :3rd, :4th );
-</code></pre>
-
-<p>You’ve already seen this with <code>Q</code>: you can turn on several features by lining up adverbs. The <code>:q:a:c</code> here arethree separate adverbs:</p>
-
+</code></pre><p>You’ve already seen this with <code>Q</code>: you can turn on several features by lining up adverbs. The <code>:q:a:c</code> here arethree separate adverbs:</p>
 <p>你已经在 <code>Q</code> 中看过这个：你可以通过排列副词来开启几个功能。 <code>:q:a:c</code> 这里有三个单独的副词：</p>
-
 <pre><code>Q :q:a:c /Single quoting @array[] interpolation {$name}/;
-</code></pre>
-
-<h1 id="maps">Maps</h1>
-
+</code></pre><h1 id="maps">Maps</h1>
 <p>A <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> is an immutable mapping of zero or more keys to values. You can look up the value if you know the key. Here’s a translation of color names to their RGB values. The <code>.new</code> method takes a list of <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s and their values:</p>
-
 <p><a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 是零或多个键与值的不可变映射。如果你知道键，则可以查找该值。这是颜色名到 RGB 值的转换。 <code>.new</code> 方法接收<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>及其值的列表：</p>
-
 <pre><code>my $color-name-to-rgb = Map.new:
     'red',    'FF0000',
     'green',  '00FF00',
     'blue',   '0000FF',
     ;
-</code></pre>
-
-<p>You can use the <em>fat arrow</em> to make a list of <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s:</p>
-
+</code></pre><p>You can use the <em>fat arrow</em> to make a list of <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s:</p>
 <p>你可以使用胖箭头来创建 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> 列表：</p>
-
 <pre><code>my $color-name-to-rgb = Map.new:
     'red'    =&gt; 'FF0000',
     'green'  =&gt; '00FF00',
     'blue'   =&gt; '0000FF',
     ;
-</code></pre>
-
-<p>Using the fat arrow notation with autoquoting won’t work; the method thinks these are named arguments instead of <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s for the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> and they are treated as options to the method instead of keys and values. This gives you a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> with no keys or values:</p>
-
+</code></pre><p>Using the fat arrow notation with autoquoting won’t work; the method thinks these are named arguments instead of <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s for the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> and they are treated as options to the method instead of keys and values. This gives you a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> with no keys or values:</p>
 <p>使用带有自动引用功能的胖箭头符号将不起作用;该方法认为这些是命名参数而不是映射的<a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>，它们被视为方法的选项而不是键和值。这为你提供了没有键或值的<a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>：</p>
-
 <pre><code># don't do this!
 my $color-name-to-rgb = Map.new:
     red    =&gt; 'FF0000',
     green  =&gt; '00FF00',
     blue   =&gt; '0000FF',
     ;
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> is fixed; you can’t change it once you’ve created it. This may be exactly what you want since it can keep something else from accidentally modifying it:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> is fixed; you can’t change it once you’ve created it. This may be exactly what you want since it can keep something else from accidentally modifying it:</p>
 <p><a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 是固定的;一旦你创建它就不能改变它。这可能正是你想要的，因为它可以防止其他东西意外修改它：</p>
-
 <pre><code>$color-name-to-rgb&lt;green&gt; = '22DD22'; # Error!
-</code></pre>
-
-<p>To look up one of the color codes you subscript the object. This is similar to <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s but uses different postcircumfix characters. Use the autoquoting <code>&lt;&gt;</code> or quote it yourself with <code>{}</code>:</p>
-
+</code></pre><p>To look up one of the color codes you subscript the object. This is similar to <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>s but uses different postcircumfix characters. Use the autoquoting <code>&lt;&gt;</code> or quote it yourself with <code>{}</code>:</p>
 <p>要查找其中一个颜色代码，你可以下标该对象。这与 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 类似，但使用不同的 postcircumfix 字符。使用autoquoting  <code>&lt;&gt;</code> 或使用 <code>{}</code> 自行引用：</p>
-
 <pre><code>put $color-name-to-rgb&lt;green&gt;;    # quoted key with allomorph
 put $color-name-to-rgb{'green'};  # quoted key
 put $color-name-to-rgb{$color};   # quoted key with interpolation
-</code></pre>
-
-<p>If you want to look up more than one key at a time, you can use a slice to get a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of values:</p>
-
+</code></pre><p>If you want to look up more than one key at a time, you can use a slice to get a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of values:</p>
 <p>如果要一次查找多个键，可以使用切片获取值<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>：</p>
-
 <pre><code>my @rgb = $color-name-to-rgb&lt;red green&gt;
-</code></pre>
-
-<h2 id="checking-keys">Checking Keys</h2>
-
+</code></pre><h2 id="checking-keys">Checking Keys</h2>
 <p>To check that a key exists before you try to use it, add the <code>:exists</code> adverb after the single-element access. This won’t create the key. You’ll get <code>True</code> if the key is in the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> and <code>False</code> otherwise:</p>
-
 <p>要在尝试使用键之前检查键是否存在，请在单元素访问后添加 <code>:exists</code> 副词。这不会创建键。如果键在 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 中，则为 <code>True</code>，否则为 <code>False</code>：</p>
-
 <pre><code>if $color-name-to-rgb{$color}:exists {
     $color-name-to-rgb{$color} = '22DD22';
 }
-</code></pre>
-
-<p>The <code>.keys</code> method returns a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> of keys:</p>
-
+</code></pre><p>The <code>.keys</code> method returns a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> of keys:</p>
 <p><code>.keys</code> 方法返回一个键的<a href="https://docs.raku.org/type/Seq.html"><code>序列</code></a>：</p>
-
 <pre><code>for $color-name-to-rgb.keys {
     put &quot;$^key =&gt; {$color-name-to-rgb{$^key}}&quot;;
 }
-</code></pre>
-
-<p>You do something similar to get only the values:</p>
-
+</code></pre><p>You do something similar to get only the values:</p>
 <p>你做类似的事情只得到值：</p>
-
 <pre><code>my @rgb-values = $color-name-to-rgb.values;
-</code></pre>
-
-<p>The <code>.kv</code> method returns a key and its value at the same time. This saves you some complexity inside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>:</p>
-
+</code></pre><p>The <code>.kv</code> method returns a key and its value at the same time. This saves you some complexity inside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>:</p>
 <p><code>.kv</code> 方法同时返回键及其值。这可以节省<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>内部的一些复杂性：</p>
-
 <pre><code>for $color-name-to-rgb.kv -&gt; $name, $rgb {
     put &quot;$name =&gt; $rgb&quot;;
 }
-</code></pre>
-
-<p>Placeholder values inside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> (but not a pointy <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>) can do most of the work for you:</p>
-
+</code></pre><p>Placeholder values inside the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> (but not a pointy <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>) can do most of the work for you:</p>
 <p><a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 中的占位符值（但不是尖头<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>）可以为你完成大部分工作：</p>
-
 <pre><code>for $color-name-to-rgb.kv {
     put &quot;$^k =&gt; $^v&quot;;
 }
-</code></pre>
-
-<h2 id="creating-from-a-positional">Creating from a Positional</h2>
-
+</code></pre><h2 id="creating-from-a-positional">Creating from a Positional</h2>
 <p>You can create a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> from a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> using <code>.map</code>. That returns a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> that you can use as arguments to <code>.new</code>. These create new values based on the original ones:</p>
-
 <p>你可以使用 <code>.map</code> 从 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 创建 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>。返回一个可以用作 <code>.new</code> 参数的 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>。这些基于原始值创建新值：</p>
-
 <pre><code>my $plus-one-seq =  (1..3).map: * + 1;
 my $double       = (^3).map: { $^a + $^a }
-</code></pre>
-
-<h6 id="注意">注意</h6>
-
+</code></pre><h6 id="注意">注意</h6>
 <p>Although the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> type and the <code>.map</code> method have the same name and do a similar job, one is an immutable object that provides the translation whereas the other is a method that transforms a <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> into a <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a>.</p>
-
 <p>虽然 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 类型和 <code>.map</code> 方法具有相同的名称并执行类似的工作，但是一个是提供转换的不可变对象，而另一个是将 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 转换为 <a href="https://docs.raku.org/type/Seq.html"><code>Seq</code></a> 的方法。</p>
-
 <p>Your <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> or thunk can take more than one parameter. Use two parameters to construct <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s:</p>
-
 <p>你的<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>或实形转换程序可以接受多个参数。使用两个参数构建<a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>：</p>
-
 <pre><code>my $pairs = (^3).map: { $^a =&gt; 1 }; # (0 =&gt; 1 1 =&gt; 1 2 =&gt; 1)
 my $pairs = (^3).map: * =&gt; 1;       # same thing
-</code></pre>
-
-<p>There’s also a routine form of <code>map</code> where the code comes first and the values come after it. There’s a required comma between them in either form:</p>
-
+</code></pre><p>There’s also a routine form of <code>map</code> where the code comes first and the values come after it. There’s a required comma between them in either form:</p>
 <p>还有一种例程形式的 <code>map</code>，其中代码先出现，值出现在代码之后。两种形式之间都有一个必需的逗号：</p>
-
 <pre><code>my $pairs = map { $^a =&gt; 1 }, ^3;
 my $pairs = map * =&gt; 1, ^3;
-</code></pre>
-
-<p>The result of the <code>.map</code> can go right into the arguments for <code>.new</code>:</p>
-
+</code></pre><p>The result of the <code>.map</code> can go right into the arguments for <code>.new</code>:</p>
 <p><code>.map</code> 的结果可以直接进入 <code>.new</code> 的参数：</p>
-
 <pre><code>my $map-thingy = Map.new: (^3).map: { $^a =&gt; 1 }
-</code></pre>
-
-<p>These examples work because you want to produce <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s. If you want to simply create multiple items for a larger list you need to create a <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a> so you don’t end up with a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s:</p>
-
+</code></pre><p>These examples work because you want to produce <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s. If you want to simply create multiple items for a larger list you need to create a <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a> so you don’t end up with a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> of <a href="https://docs.raku.org/type/List.html"><code>List</code></a>s:</p>
 <p>这些示例有效，因为你想要生成 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>。如果你只想为更大的列表创建多个项目，则需要创建一个 <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>，这样你就不会得到<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>的<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>：</p>
-
 <pre><code>my $list = map { $^a, $^a * 2 }, 1..3; # ((1 2) (2 4) (3 6))
 put $list.elems;  # 3
-</code></pre>
-
-<p>You can fix that with <code>slip</code>. This creates a <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a> object that automatically flattens into the structure that contains it:</p>
-
+</code></pre><p>You can fix that with <code>slip</code>. This creates a <a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a> object that automatically flattens into the structure that contains it:</p>
 <p>你可以用 <code>slip</code> 修复它。这将创建一个<a href="https://docs.raku.org/type/Slip.html"><code>Slip</code></a>对象，该对象会自动展平到包含它的结构中：</p>
-
 <pre><code>my $list = map { slip $^a, $^a * 2 }, 1..3; # (1 2 2 4 3 6)
 put $list.elems;  # 6
-</code></pre>
-
-<p>EXERCISE 9.2Rewrite the subroutine from the previous section using a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> to decide which <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> you should return. If a number is not in the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>, use <code>th</code>. Add a new rule that numbers ending in <code>5</code> (but not <code>15</code>) should get the suffix <code>ty</code> (like, <code>5ty</code>).</p>
-
+</code></pre><p>EXERCISE 9.2Rewrite the subroutine from the previous section using a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> to decide which <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> you should return. If a number is not in the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>, use <code>th</code>. Add a new rule that numbers ending in <code>5</code> (but not <code>15</code>) should get the suffix <code>ty</code> (like, <code>5ty</code>).</p>
 <p>练习9.2使用 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 重写上一节中的子程序，以决定应该返回哪一个 <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>。如果数字不在 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 中，请使用 <code>th</code>。添加一个新规则，以 <code>5</code> （但不是 <code>15</code>）结尾的数字应该得到后缀 <code>ty</code>（如，<code>5ty</code>）。</p>
-
 <h2 id="检查允许的值">检查允许的值</h2>
-
 <p>A common use for a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> is to look up permissible values. Perhaps you only allow certain inputs in your subroutines. You can make those the keys of a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>. If they are in the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> they are valid. If they aren’t, well, they aren’t.</p>
-
 <p><a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 的常见用途是查找允许的值。也许你只允许子程序中的某些输入。你可以把它们作为<a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>的键。如果他们在<a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 中他们是有效的。如果他们不是，那么，他们不是。</p>
-
 <p>Go through the list of colors and return the color names, which you’ll use as the keys, and some value (<code>1</code> is serviceable). You really want just the keys, so you can look them up later:</p>
-
 <p>浏览颜色列表并返回颜色名称（你将用作键）和一些值（1可用）。你真的只想要键，所以你可以稍后查看它们：</p>
-
 <pre><code>my @permissable_colors = &lt;red green blue&gt;;
 my $permissable_colors =
     Map.new: @permissable_colors.map: * =&gt; 1;
@@ -602,121 +426,71 @@ loop {
         put &quot;$color is an invalid color&quot;;
         }
     }
-</code></pre>
-
-<p>This sort of data structure makes the lookup time the same no matter how many keys you have. Consider what you’d have to do with just the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This <code>scan-array</code> subroutine checks each element of the array until it finds a match:</p>
-
+</code></pre><p>This sort of data structure makes the lookup time the same no matter how many keys you have. Consider what you’d have to do with just the <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. This <code>scan-array</code> subroutine checks each element of the array until it finds a match:</p>
 <p>无论你拥有多少个键，这种数据结构都会使查找时间保持不变。考虑一下你只需要列表。此扫描数组子例程检查数组的每个元素，直到找到匹配项：</p>
-
 <pre><code>sub scan-array ( $list, $item ) {
     for @$list {
         return True if $^element eq $item;
         }
     return False;
     }
-</code></pre>
-
-<p>You might shorten your search by using <code>.first</code> to stop when it finds an appropriate element. At worst this checks every element every time:</p>
-
+</code></pre><p>You might shorten your search by using <code>.first</code> to stop when it finds an appropriate element. At worst this checks every element every time:</p>
 <p>你可以使用 <code>.first</code> 缩短搜索范围，以便在找到合适的元素时停止搜索。在最坏的情况下，每次检查每个元素：</p>
-
 <pre><code>sub first-array ( Array $array, $item ) {
     $array.first( * eq $item ).Bool;
     }
-</code></pre>
-
-<p>EXERCISE 9.3Use the <code>.map</code> technique to construct a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> from numbers between 1 and 10 (inclusively) to their squares. Create a loop to prompt for a number. If the number is in the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>, print its square.</p>
-
+</code></pre><p>EXERCISE 9.3Use the <code>.map</code> technique to construct a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> from numbers between 1 and 10 (inclusively) to their squares. Create a loop to prompt for a number. If the number is in the <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>, print its square.</p>
 <p>练习9.3使用 <code>.map</code> 技术从1到10之间的数字（包括）构造一个<a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>到它们的正方形。创建一个循环以提示输入数字。如果数字在<a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>中，则打印其正方形。</p>
-
 <h1 id="hashes">Hashes</h1>
-
 <p>The <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> is like a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> but mutable. You can add or delete keys and update values. This is the <a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>type you’ll probably use the most. Create a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> through its object constructor:</p>
-
 <p><a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>就像 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a>，但却是可变的。你可以添加或删除键并更新值。这是你可能最常使用的关联类型。通过其对象构造函数创建一个<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>：</p>
-
 <pre><code>my $color-name-to-rgb = Hash.new:
     'red',    'FF0000',
     'green',  '00FF00',
     'blue',   '0000FF',
     ;
-</code></pre>
-
-<p>That’s a bit tedious. You can enclose the key-value list in <code>%()</code> instead:</p>
-
+</code></pre><p>That’s a bit tedious. You can enclose the key-value list in <code>%()</code> instead:</p>
 <p>这有点乏味。你可以将键值列表括在 <code>%()</code> 中：</p>
-
 <pre><code>my $color-name-to-rgb = %(  # Still makes a Hash
     'red',    'FF0000',
     'green',  '00FF00',
     'blue',   '0000FF',
     );
-</code></pre>
-
-<p>Curly braces also work, but this is a discouraged form. With the fat arrow there are <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s inside the braces so the parser thinks this is a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
-
+</code></pre><p>Curly braces also work, but this is a discouraged form. With the fat arrow there are <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>s inside the braces so the parser thinks this is a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
 <p>花括号也有效，但这是一种沮丧的形式。使用胖箭头，在大括号内有<a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>，所以解析器认为这是一个<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>：</p>
-
 <pre><code>my $color-name-to-rgb = {  # Still makes a Hash
     'red'   =&gt; 'FF0000',
     'green' =&gt; '00FF00',
     'blue'  =&gt; '0000FF',
     };
-</code></pre>
-
-<p>If the parser doesn’t get enough hints about the contents of the braces, you might end up with a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> instead of a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
-
+</code></pre><p>If the parser doesn’t get enough hints about the contents of the braces, you might end up with a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> instead of a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
 <p>如果解析器没有获得关于花括号内容的足够提示，那么最终可能会使用<a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>而不是<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>：</p>
-
 <pre><code>my $color-name-to-rgb = {  # This is a Block!
     'red',   'FF0000',
     'green', '00FF00',
     'blue',  '0000FF',
     };
-</code></pre>
-
-<p>There’s a special sigil for <a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>. If you use the <code>%</code> sigil you can assign a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> to create your <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
-
+</code></pre><p>There’s a special sigil for <a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>. If you use the <code>%</code> sigil you can assign a <a href="https://docs.raku.org/type/List.html"><code>List</code></a> to create your <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
 <p><a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a> 有一个特殊的印记。如果你使用 <code>%</code> sigil，你可以指定一个<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>来创建你的<a href="https://docs.raku.org/type/Hash.html"><code>哈希</code></a>：</p>
-
 <pre><code>my %color-name-to-rgb =
     'red',    'FF0000',
     'green',  '00FF00',
     'blue',   '0000FF'
     ;
-</code></pre>
-
-<p>Perhaps you don’t like your definition of blue. You can assign a new value to it. Notice that the sigil does not change for the single-element access:</p>
-
+</code></pre><p>Perhaps you don’t like your definition of blue. You can assign a new value to it. Notice that the sigil does not change for the single-element access:</p>
 <p>也许你不喜欢你对蓝色的定义。你可以为其重新赋值。请注意，单元素访问的sigil不会更改：</p>
-
 <pre><code>%color&lt;blue&gt; = '0000AA';  # a bit darker
-</code></pre>
-
-<p>You can remove a key with the <code>:delete</code> adverb. It returns the value of the just-deleted key:</p>
-
+</code></pre><p>You can remove a key with the <code>:delete</code> adverb. It returns the value of the just-deleted key:</p>
 <p>你可以使用 <code>:delete</code> 副词删除键。它返回刚刚删除的键的值：</p>
-
 <pre><code>my $rgb = %color&lt;blue&gt;:delete
-</code></pre>
-
-<p>You can add new colors by assigning to the key that you want:</p>
-
+</code></pre><p>You can add new colors by assigning to the key that you want:</p>
 <p>你可以通过分配所需的键来添加新颜色：</p>
-
 <pre><code>%color&lt;mauve&gt; = 'E0B0FF';
-</code></pre>
-
-<p>EXERCISE 9.4Update your ordinal suffix program to use a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>. That’s the easy part. Once you’ve got that working, use your <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> to cache values so you don’t have to compute their result again.</p>
-
+</code></pre><p>EXERCISE 9.4Update your ordinal suffix program to use a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>. That’s the easy part. Once you’ve got that working, use your <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> to cache values so you don’t have to compute their result again.</p>
 <p>练习9.4 更新你的序数后缀程序以使用<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>。这很容易。一旦起效了，使用你的<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>缓存值，这样你就不必再次计算他们的结果。</p>
-
 <h2 id="accumulating-with-a-hash">Accumulating with a Hash</h2>
-
 <p>Counting is another common use for a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>. The key is the thing you want to count and its value is the number of times you’ve encountered it. First, you need something to count. Here’s a program that simulates rolling some dice:</p>
-
 <p>计数是<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>的另一种常见用法。键是你想要计算的东西，它的值是你遇到它的次数。首先，你需要一些东西来计算。这是一个模拟滚动骰子的程序：</p>
-
 <pre><code>sub MAIN ( $die-count = 2, $sides = 6, $rolls = 137 ) {
     my $die_sides = 6;
 
@@ -726,12 +500,8 @@ loop {
         put &quot;($roll) is $sum&quot;;
     }
 }
-</code></pre>
-
-<p>The <code>.roll</code> method picks an element from your <a href="https://docs.raku.org/type/List.html"><code>List</code></a> the number of times you specify. Each time it picks an element is independent of other times, so it might repeat some values. This produces output that shows the individual die values and the sum of the values:</p>
-
+</code></pre><p>The <code>.roll</code> method picks an element from your <a href="https://docs.raku.org/type/List.html"><code>List</code></a> the number of times you specify. Each time it picks an element is independent of other times, so it might repeat some values. This produces output that shows the individual die values and the sum of the values:</p>
 <p><code>.roll</code> 方法从<a href="https://docs.raku.org/type/List.html"><code>List</code></a>中选择一个元素指定的次数。每次拾取元素都与其他时间无关，因此它可能会重复某些值。这会生成输出，显示各个芯片值和值的总和：</p>
-
 <pre><code>(3 4) is 7
 (4 1) is 5
 (6 4) is 10
@@ -739,12 +509,8 @@ loop {
 (6 6) is 12
 (1 4) is 5
 (5 6) is 11
-</code></pre>
-
-<p>Now you have several things to count. Start by counting the sums. Inside that <code>for</code>, use the sum as the <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> key and the number of times you encounter it as the value:</p>
-
+</code></pre><p>Now you have several things to count. Start by counting the sums. Inside that <code>for</code>, use the sum as the <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> key and the number of times you encounter it as the value:</p>
 <p>现在你需要考虑几件事。首先计算总和。在 <code>for</code> 里面，使用 sum 作为 <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> 键以及你遇到它的次数作为值：</p>
-
 <pre><code>sub MAIN ( $die-count = 2, $sides = 6, $rolls = 137 ) {
     my $die_sides = 6;
 
@@ -762,12 +528,8 @@ loop {
         put &quot;$^a: %sums{$^a}&quot;
         }
     }
-</code></pre>
-
-<p>Now you get a dice sum frequency report:</p>
-
+</code></pre><p>Now you get a dice sum frequency report:</p>
 <p>现在你得到一个骰子和的频率报告：</p>
-
 <pre><code>7: 27
 8: 25
 5: 19
@@ -779,12 +541,8 @@ loop {
 3: 7
 2: 3
 12: 3
-</code></pre>
-
-<p>If you are motivated enough, you can compare those values to the probabilities for perfect dice. But there’s another interesting thing you can count—the rolls themselves. If you use <code>$roll</code> as the key it stringifies it. You can then count the unique stringifications. Sort the results so equivalent rolls such as <code>(1 6)</code> and <code>(6 1)</code> become the same key:</p>
-
+</code></pre><p>If you are motivated enough, you can compare those values to the probabilities for perfect dice. But there’s another interesting thing you can count—the rolls themselves. If you use <code>$roll</code> as the key it stringifies it. You can then count the unique stringifications. Sort the results so equivalent rolls such as <code>(1 6)</code> and <code>(6 1)</code> become the same key:</p>
 <p>如果你有足够的动力，你可以将这些值与完美骰子的概率进行比较。但是你可以计算另一个有趣的事情 - rolls 本身。如果你使用 <code>$roll</code> 作为键，则将其字符串化。然后，你可以计算唯一的字符串。对结果进行排序，使等效的卷（如<code>(1 6)</code> 和 <code>(6 1)</code>）成为相同的键：</p>
-
 <pre><code>sub MAIN ( $die-count = 2, $sides = 6, $rolls = 137 ) {
     my $die_sides = 6;
 
@@ -801,12 +559,8 @@ loop {
         put &quot;$^a: %sums{$^a}&quot;
         }
     }
-</code></pre>
-
-<p>Now you get a sorted list of your dice rolls:</p>
-
+</code></pre><p>Now you get a sorted list of your dice rolls:</p>
 <p>现在你得到一个你的骰子卷的排序列表：</p>
-
 <pre><code>3 4: 15
 1 4: 11
 1 2: 10
@@ -814,18 +568,11 @@ loop {
 3 5: 9
 3 6: 9
 2 3: 8
-</code></pre>
-
-<p>EXERCISE 9.5Create a program to count the occurrences of words in a file and output the words sorted by their count. Store each lowercased word as the key in a hash and increment its value every time you see it. Don’t worry about punctuation or other characters; you’ll learn how to deal with those later. What happens if two words have the same count?</p>
-
+</code></pre><p>EXERCISE 9.5Create a program to count the occurrences of words in a file and output the words sorted by their count. Store each lowercased word as the key in a hash and increment its value every time you see it. Don’t worry about punctuation or other characters; you’ll learn how to deal with those later. What happens if two words have the same count?</p>
 <p>练习9.5 创建一个程序来计算文件中单词的出现次数，并输出按其计数排序的单词。将每个小写单词作为键存储在哈希中，并在每次看到它时增加其值。不要担心标点符号或其他字符;你将学习如何在以后处理这些问题。如果两个单词的计数相同，会发生什么？</p>
-
 <h1 id="multilevel-hashes">Multilevel Hashes</h1>
-
 <p>Hash values can be almost anything, including another <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> or <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>. Here’s an example with a couple of <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>es that count the number of butterflies in the <em>Hamadryas</em> and <em>Danaus</em> genera:</p>
-
 <p>散列值几乎可以是任何值，包括另一个散列或数组。这是一个有几个哈希数的例子，它们计算了哈马德里亚斯和丹那属的蝴蝶数量：</p>
-
 <pre><code>my %Hamadryas = map { slip $_, 0 }, &lt;
     februa
     honorina
@@ -836,62 +583,34 @@ my %Danaus = map { slip $_, 0 }, &lt;
     gilippus
     melanippus
     &gt;;
-</code></pre>
-
-<p>But you want to contain all of that in one big <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>, so you construct that. The <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> value is another <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
-
+</code></pre><p>But you want to contain all of that in one big <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>, so you construct that. The <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> value is another <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>:</p>
 <p>但是你想在一个大<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>中包含所有这些，所以你构建它。哈希值是另一个哈希：</p>
-
 <pre><code>my %butterflies = (
     'Hamadryas' =&gt; %Hamadryas,
     'Danaus'    =&gt; %Danaus,
     );
 
 say %butterflies;
-</code></pre>
-
-<p>The <code>%butterflies</code> data structure looks like this (using the discouraged braces form):</p>
-
+</code></pre><p>The <code>%butterflies</code> data structure looks like this (using the discouraged braces form):</p>
 <p><code>%butterflies</code> 数据结构看起来像这样（使用不鼓励的花括号形式）：</p>
-
 <pre><code>{Danaus =&gt; {gilippus =&gt; 0, melanippus =&gt; 0},
 Hamadryas =&gt; {februa =&gt; 0, honorina =&gt; 0, velutina =&gt; 0}}
-</code></pre>
-
-<p>Suppose you want to see the count for <em>Danaus melanippus</em>. You have to look in the top-level <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> to get the value for <code>Danaus</code>, then take that value and look at its <code>melanippus</code> keys:</p>
-
+</code></pre><p>Suppose you want to see the count for <em>Danaus melanippus</em>. You have to look in the top-level <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> to get the value for <code>Danaus</code>, then take that value and look at its <code>melanippus</code> keys:</p>
 <p>假设你想看看Danaus melanippus的数量。你必须查看顶级Hash以获取Danaus的值，然后获取该值并查看其melanippus键：</p>
-
 <pre><code>my $genus = %butterflies&lt;Danaus&gt;;
 my $count = $genus&lt;melanippus&gt;;
-</code></pre>
-
-<p>That’s too much work. Line up the subscripts in one expression:</p>
-
+</code></pre><p>That’s too much work. Line up the subscripts in one expression:</p>
 <p>那工作太多了。在一个表达式中排列下标：</p>
-
 <pre><code>put &quot;Count is  %butterflies&lt;Danaus&gt;&lt;melanippus&gt;&quot;;
-</code></pre>
-
-<p>When you want to count a particular butterfly, you can do that:</p>
-
+</code></pre><p>When you want to count a particular butterfly, you can do that:</p>
 <p>当你想要计算一只特定的蝴蝶时，你可以这样做：</p>
-
 <pre><code>%butterflies&lt;Danaus&gt;&lt;melanippus&gt;++;
-</code></pre>
-
-<p>EXERCISE 9.6Read the lines from the butterfly census file (from <a href="https://www.learningraku.com/downloads/"><em>https://www.learningraku.com/downloads/</em></a>) and break each line into a genus and species. Count each combination of genus and species. Report your results.</p>
-
-<p>练习9.6 读取蝴蝶人口普查文件中的行（来自<a href="https://www.learningraku.com/downloads/），并将每行划分为属和种。计算属和物种的每个组合。报告你的结果。">https://www.learningraku.com/downloads/），并将每行划分为属和种。计算属和物种的每个组合。报告你的结果。</a></p>
-
+</code></pre><p>EXERCISE 9.6Read the lines from the butterfly census file (from <a href="https://www.learningraku.com/downloads/"><em>https://www.learningraku.com/downloads/</em></a>) and break each line into a genus and species. Count each combination of genus and species. Report your results.</p>
+<p>练习9.6 读取蝴蝶人口普查文件中的行（来自https://www.learningraku.com/downloads/），并将每行划分为属和种。计算属和物种的每个组合。报告你的结果。</p>
 <p>EXERCISE 9.7Modify the previous exercise to write the genus and species counts to a file. Each line of the file should have the genus, species, and count separated by a tab. You’ll need this file for an exercise in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1">Chapter 15</a>.</p>
-
 <p>练习9.7 修改上一个练习，将属和种类计数写入文件。文件的每一行都应具有由制表符分隔的属，种和计数。你将需要此文件进行第15章的练习。</p>
-
 <h1 id="总结">总结</h1>
-
 <p><a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>s let you quickly get from a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to another value. There are several types that facilitate this. At the lowest level is the <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> of one key and one value. A <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> fixes those once created (much like a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>), while a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> is more flexible (much like an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a>). These will probably be some of the most useful and hard-working data structures that you’ll encounter.</p>
-
 <p><a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>让你快速从<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>到另一个值。有几种类型可以促进这一点。最低级别是一对一键和一个值。 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 修复了曾经创建的（很像<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>），而<a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>更灵活（很像数组）。这些可能是你将遇到的一些最有用和最勤奋的数据结构。</p>
 
 
@@ -984,7 +703,7 @@ my $count = $genus&lt;melanippus&gt;;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Callwith on Raku Programming</title>
+    <title>callwith on Raku Programming</title>
     <link>https://ohmysummer.github.io/tags/callwith/</link>
-    <description>Recent content in Callwith on Raku Programming</description>
+    <description>Recent content in callwith on Raku Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sun, 02 Apr 2017 14:24:24 +0200</lastBuildDate>
@@ -18,9 +18,9 @@
       
       <guid>https://ohmysummer.github.io/post/2017-04-02-dispath%E8%A7%A3%E5%AF%86/</guid>
       <description>Raku 的一个很好的特性是 multi-dispatch, 即多重分派。它允许你在函数, 方法或 Grammar token 中使用相同的名字并让它们所处理的数据的类型来决定执行哪一个。下面是一个 factorial postfix 操作符, 用两个 multies 来实现:
-multi postfix:&amp;lt;!&amp;gt; (0) { 1 } multi postfix:&amp;lt;!&amp;gt; (UInt \n) { n × samewith n − 1 } say 5! # OUTPUT: 120  虽然 multi-dispatch 的主题很明显并且它还有一些说明文档, 我今天想讲的是 7 个特殊的子例程, 让你能够行走在 dispatch 迷宫中。它们是 nextwith, nextsame, samewith, callwith, callsame, nextcallee 和 lastcall.
+multi postfix:&amp;lt;!&amp;gt; (0) { 1 } multi postfix:&amp;lt;!&amp;gt; (UInt \n) { n × samewith n − 1 } say 5! # OUTPUT: 120 虽然 multi-dispatch 的主题很明显并且它还有一些说明文档, 我今天想讲的是 7 个特殊的子例程, 让你能够行走在 dispatch 迷宫中。它们是 nextwith, nextsame, samewith, callwith, callsame, nextcallee 和 lastcall.
 设立实验室 Multies 从最窄到最广的候选者进行排序，并且当一个 multi 被调用时，绑定器尝试找到一个匹配并调用第一个匹配的候选者。 有时，您可能希望调用或简单地移动到链中的下一个匹配候选者，可选地使用不同的参数。 为了观察这些操作的效果，我们将使用以下设置：
-class Wide { } class Middle is Wide { } class Narrow is Middle { } multi foo (Narrow $v) { say &#39;Narrow &#39;, $v; &#39;from Narrow&#39; } multi foo (Middle $v) { say &#39;Middle &#39;, $v; &#39;from Middle&#39; } multi foo (Wide $v) { say &#39;Wide &#39;, $v; &#39;from Wide&#39; } foo Narrow; # OUTPUT: Narrow (Narrow) foo Middle; # OUTPUT: Middle (Middle) foo Wide; # OUTPUT: Wide (Wide)  我们有三个类，每个类都继承自前一个类，所以我们的 Narrow 类 可以适应 Middle 和 Wide multi 候选者; Middle 也可以适应 Wide，但不能适应 Narrow; 而 Narrow 既不适用于 Middle，也不适用于 Narrow。请记住，Raku 中的所有类也都是 Any 类型，因此也适用于任何接受 Any 的候选者。</description>
+class Wide { } class Middle is Wide { } class Narrow is Middle { } multi foo (Narrow $v) { say &#39;Narrow &#39;, $v; &#39;from Narrow&#39; } multi foo (Middle $v) { say &#39;Middle &#39;, $v; &#39;from Middle&#39; } multi foo (Wide $v) { say &#39;Wide &#39;, $v; &#39;from Wide&#39; } foo Narrow; # OUTPUT: Narrow (Narrow) foo Middle; # OUTPUT: Middle (Middle) foo Wide; # OUTPUT: Wide (Wide) 我们有三个类，每个类都继承自前一个类，所以我们的 Narrow 类 可以适应 Middle 和 Wide multi 候选者; Middle 也可以适应 Wide，但不能适应 Narrow; 而 Narrow 既不适用于 Middle，也不适用于 Narrow。请记住，Raku 中的所有类也都是 Any 类型，因此也适用于任何接受 Any 的候选者。</description>
     </item>
     
   </channel>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Traps on Raku Programming</title>
@@ -21,10 +21,10 @@
 本文件旨在展示常见的误解，以避免它们。
 在编写 Raku 的过程中，我们付出了巨大的努力来消除语法中的瑕疵。然而，当你消灭一个瑕疵的时候，有时另一个会突然冒出来。所以我们花了很多时间去寻找最小数量的瑕疵或者试图把它们放在它们很少被看到的地方。正因为如此，Raku 的瑕疵出现在了不同的地方，而不是来自另一种语言时所期望的那样。
 变量和常量 常量在编译时计算 常量是在编译时计算的，所以如果在模块中使用它们，请记住，由于模块本身的预编译，它们的值将被冻结:
-# WRONG (most likely): unit module Something::Or::Other; constant $config-file = &amp;quot;config.txt&amp;quot;.IO.slurp;  $config-file 将在预编译时一次性被读入。config.txt 文件的更改不会在你再次启动脚本时重新加载;只有当模块被重新编译时才会重新加载。
+# WRONG (most likely): unit module Something::Or::Other; constant $config-file = &amp;quot;config.txt&amp;quot;.IO.slurp; $config-file 将在预编译时一次性被读入。config.txt 文件的更改不会在你再次启动脚本时重新加载;只有当模块被重新编译时才会重新加载。
 避免使用容器，而倾向于将值绑定到提供类似于常量行为的变量上，但允许更新值:
-# Good; file gets updated from &#39;config.txt&#39; file on each script run: unit module Something::Or::Other; my $config-file := &amp;quot;config.txt&amp;quot;.IO.slurp;  赋值为 Nil 产生不同的值, 通常是 Any 实际上，赋给 Nil 会将变量还原为其默认值。所以:
-my @a = 4, 8, 15, 16; @a[2] = Nil; say @a; # OUTPUT: «[4 8 (Any) 16]␤»  在本例中，Any 是 Array 元素的默认值。</description>
+# Good; file gets updated from &#39;config.txt&#39; file on each script run: unit module Something::Or::Other; my $config-file := &amp;quot;config.txt&amp;quot;.IO.slurp; 赋值为 Nil 产生不同的值, 通常是 Any 实际上，赋给 Nil 会将变量还原为其默认值。所以:
+my @a = 4, 8, 15, 16; @a[2] = Nil; say @a; # OUTPUT: «[4 8 (Any) 16]␤» 在本例中，Any 是 Array 元素的默认值。</description>
     </item>
     
   </channel>

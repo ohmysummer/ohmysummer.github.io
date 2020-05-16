@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-02-document-every-thing/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,37 +231,24 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="like-6-perls-in-a-pod-document-everything">Like 6 Perls in a Pod: document everything</h1>
-
+        <h1 id="like-6-perls-in-a-pod-document-everything">Like 6 Perls in a Pod: document everything</h1>
 <p>圣诞节即将到来，圣诞老人很沮丧。 他的收件箱被来自全国各地的男孩和女孩的来信塞爆了。</p>
-
 <p>但，</p>
-
 <p>这些信是写给圣诞老人的吗？ 是否通过签名正确识别了孩子，以便将礼物送给对的人而不是给其他可能不值得的人？ 他们是针对圣诞老人的，而不是那些冒名顶替者，复活节兔子，或者更糟糕的是，三个所谓的 - 我不知道为什么 - 来自东方的智者？ 最糟糕的是，他个人是否必须通过他的王室和神圣的自我来检查所有这些东西？</p>
-
 <p>没有。</p>
-
 <p>Raku 以下面的方式来救援：</p>
-
 <p><a href="https://docs.raku.org/syntax/Creating%20grammars">grammar</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">unit</span> <span class="n"></span><span class="n">grammar</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="p">;</span>
 
-<pre><code class="language-perl">unit grammar Santa-Letter;
-
-token TOP           { &lt;dear&gt; \v+ &lt;paragraph&gt; [\v+ &lt;paragraph&gt;]* \v+ &lt;signature&gt;\v*}
-token paragraph     { &lt;superword&gt;[ \h+ &lt;superword&gt;]+ }
-token superword     { &lt;word&gt; | &lt;enhanced-word&gt;       }
-token word          { \w+                            }
-token enhanced-word { &lt;word&gt; [\,|\.|\:]              }
-token dear          { Dear \h+ [S|s]anta [\,|\:]?    }
-token signature     { \h+ \w+ \h* \w*                }
-</code></pre>
-
-<p>该单位向圣诞老人宣布一封致敬的信，其后是一个或多个段落，最后是一个签名，其前面应有一个水平的空格，如 <code>\h</code> 所示。</p>
-
+<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">TOP</span>           <span class="p">{</span> <span class="sr">&lt;dear&gt;</span> <span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;paragraph&gt;</span> <span class="p">[</span><span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;paragraph&gt;</span><span class="p">]</span><span class="o">*</span> <span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;signature&gt;</span><span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">*</span><span class="p">}</span>
+<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">paragraph</span>     <span class="p">{</span> <span class="sr">&lt;superword&gt;</span><span class="p">[</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">+</span> <span class="sr">&lt;superword&gt;</span><span class="p">]</span><span class="o">+</span> <span class="p">}</span>
+<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">superword</span>     <span class="p">{</span> <span class="sr">&lt;word&gt;</span> <span class="o">|</span> <span class="sr">&lt;enhanced-word&gt;</span>       <span class="p">}</span>
+<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">word</span>          <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">+</span>                            <span class="p">}</span>
+<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">enhanced</span><span class="o">-</span><span class="n"></span><span class="n">word</span> <span class="p">{</span> <span class="sr">&lt;word&gt;</span> <span class="p">[</span><span class="o">\</span><span class="p">,</span><span class="o">|</span><span class="o">\</span><span class="o">.</span><span class="o">|</span><span class="o">\</span><span class="p">:</span><span class="p">]</span>              <span class="p">}</span>
+<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">dear</span>          <span class="p">{</span> <span class="n"></span><span class="n">Dear</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">+</span> <span class="p">[</span><span class="n"></span><span class="n">S</span><span class="o">|</span><span class="n"></span><span class="n">s</span><span class="p">]</span><span class="n"></span><span class="n">anta</span> <span class="p">[</span><span class="o">\</span><span class="p">,</span><span class="o">|</span><span class="o">\</span><span class="p">:</span><span class="p">]</span><span class="p">?</span>    <span class="p">}</span>
+<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">signature</span>     <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">+</span> <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">+</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">*</span> <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">*</span>                <span class="p">}</span>
+</code></pre></div><p>该单位向圣诞老人宣布一封致敬的信，其后是一个或多个段落，最后是一个签名，其前面应有一个水平的空格，如 <code>\h</code> 所示。</p>
 <p>像这样的信件：</p>
-
 <pre><code>Dear Santa:
 
 This year I have been a really good boy, I have been in all Squashathons.
@@ -269,106 +256,63 @@ This year I have been a really good boy, I have been in all Squashathons.
 So I want a plush Camelia studded with diamonds.
 
  JJ
-</code></pre>
+</code></pre><p>一个简单的脚本将使用该 grammar 并在单封信中获取签名：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="p">;</span>
 
-<p>一个简单的脚本将使用该 grammar 并在单封信中获取签名：</p>
-
-<pre><code class="language-perl">use Santa-Letter;
-
-sub MAIN ( Str $file = &quot;letter.txt&quot; ) {
-    my $letter =$file.IO.slurp;
-    my $parsed = Santa-Letter.parse($letter);
-    say $parsed&lt;signature&gt;.trim;
-}
-</code></pre>
-
-<p>这很好，很不错，但圣诞老人需要将这些数据与信件和索引一起提供给北极的CRM，同时他不得不与贸易战给他们造成严重破坏的供应商打交道&hellip;所以他叫上他最亲密的IT精灵，来跟他一起做事。</p>
-
+<span class="k">sub</span> <span class="nf">MAIN</span> <span class="p">( Str $file = &#34;letter.txt&#34; ) {</span>
+    <span class="k">my</span> <span class="nv">$</span><span class="nv">letter</span> <span class="o">=</span><span class="nv">$</span><span class="nv">file</span><span class="o">.</span><span class="n"></span><span class="n">IO</span><span class="o">.</span><span class="n"></span><span class="n">slurp</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">letter</span><span class="p">)</span><span class="p">;</span>
+    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n"></span><span class="n">trim</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>这很好，很不错，但圣诞老人需要将这些数据与信件和索引一起提供给北极的CRM，同时他不得不与贸易战给他们造成严重破坏的供应商打交道&hellip;所以他叫上他最亲密的IT精灵，来跟他一起做事。</p>
 <p>演讲结束后，IT精灵站在那里，他的耳朵在颤抖。</p>
-
 <p>“什么？”，圣诞老人咆哮道。 当然是以神圣的方式。</p>
-
 <p>耳朵的尖变红了，并伴随着颤抖的辐射热量，使小冰柱融化并落到地上。</p>
-
 <p>“你可以阅读消息来源，对吧？”</p>
-
 <p>鲁道夫被冰柱融化的噪音惊醒，因为那是他的超级能量之一，介入。</p>
-
-<h1 id="大多数人都可以阅读源代码-但每个人都可以阅读文档">大多数人都可以阅读源代码，但每个人都可以阅读文档。</h1>
-
+<h1 id="大多数人都可以阅读源代码但每个人都可以阅读文档">大多数人都可以阅读源代码，但每个人都可以阅读文档。</h1>
 <p>鲁道夫说。</p>
-
 <p>“而且每个人都应该写下这些文件”，他劝告道，他的头部前面有红色的鼻子。</p>
-
 <p>圣诞老人嘟嚷着，但最终检查了他的 Santa-Letter grammar 的主分支并开始着手研究它。 当然，使用 Pod 6</p>
-
 <h1 id="pod-6-stands-for-plain-old-documentation-for-raku">Pod 6 stands for “Plain Old documentation for Raku”</h1>
-
 <p>它（显然）不是首字母缩略词。 Pod6 是一个帮助 Raku 编码人员编写文档的 DSL。 它是一种标记语言，它使用 <code>=</code> 来启动命令和段落级标记。 我们会做到这一点，但目前，Santa 意识到最好的事情之一是它如何与 Raku 本身集成。 因此，他对检查程序进行了第二次迭代：</p>
-
-<pre><code class="language-perl">#| This reads a letter file
-sub MAIN ( Str $file = &quot;letter.txt&quot; ) {
-    my $letter =$file.IO.slurp;
-    my $parsed = Santa-Letter.parse($letter);
-    say $parsed&lt;signature&gt;.trim;
-}
-</code></pre>
-
-<p>在注释中有一个有趣的标志，<code>|</code>。 该标志将其与注释背后的代码联系起来。 在这种情况下，它是MAIN子例程。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1">#| This reads a letter file</span>
+<span class="k">sub</span> <span class="nf">MAIN</span> <span class="p">( Str $file = &#34;letter.txt&#34; ) {</span>
+    <span class="k">my</span> <span class="nv">$</span><span class="nv">letter</span> <span class="o">=</span><span class="nv">$</span><span class="nv">file</span><span class="o">.</span><span class="n"></span><span class="n">IO</span><span class="o">.</span><span class="n"></span><span class="n">slurp</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">letter</span><span class="p">)</span><span class="p">;</span>
+    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n"></span><span class="n">trim</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>在注释中有一个有趣的标志，<code>|</code>。 该标志将其与注释背后的代码联系起来。 在这种情况下，它是MAIN子例程。</p>
 <p>圣诞老人将该程序发布到了生产环境。 IT精灵试图运行该程序，</p>
-
-<pre><code class="language-shell">./get-signed.p6 --help
-</code></pre>
-
-<p>它得到了：</p>
-
-<pre><code class="language-shell">Usage:
-  ./get-signed.p6 [] -- This reads a letter file
-</code></pre>
-
-<p>“有文档比没有文档更好”，他想。 但这还不够。 他完全使用自由软件进入北极票务系统，并要求提供更多文档并将任务分配给圣诞老人。 圣诞老人大声抗议，但顺从了。</p>
-
-<pre><code class="language-perl">#|{ This reads a letter file in text format.
-With no arguments, it will read the C&lt;letter.txt&gt; file.
-}
-sub MAIN ( Str $file = &quot;letter.txt&quot; ) {
-    my $letter =$file.IO.slurp;
-    my $parsed = Santa-Letter.parse($letter);
-    say $parsed&lt;signature&gt;.trim;
-    say $=pod[0].perl;
-}
-</code></pre>
-
-<p>当使用 <code>--help</code> 调用时，这会打印相同的消息。 这是文档。 运行时:</p>
-
-<pre><code class="language-perl">raku --doc get-signed.p6
-</code></pre>
-
-<p>它打印了:</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">./get-signed.p6 --help
+</code></pre></div><p>它得到了：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">Usage:
+  ./get-signed.p6 <span class="o">[</span><span class="o">]</span> -- This reads a letter file
+</code></pre></div><p>“有文档比没有文档更好”，他想。 但这还不够。 他完全使用自由软件进入北极票务系统，并要求提供更多文档并将任务分配给圣诞老人。 圣诞老人大声抗议，但顺从了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1">#|{ This reads a letter file in text format.</span>
+<span class="n"></span><span class="n">With</span> <span class="k">no</span> <span class="nn">arguments</span><span class="p">,</span> <span class="n"></span><span class="n">it</span> <span class="n"></span><span class="n">will</span> <span class="nb">read</span> <span class="n"></span><span class="n">the</span> <span class="n"></span><span class="n">C</span><span class="sr">&lt;letter.txt&gt;</span> <span class="n"></span><span class="n">file</span><span class="o">.</span>
+<span class="p">}</span>
+<span class="k">sub</span> <span class="nf">MAIN</span> <span class="p">( Str $file = &#34;letter.txt&#34; ) {</span>
+    <span class="k">my</span> <span class="nv">$</span><span class="nv">letter</span> <span class="o">=</span><span class="nv">$</span><span class="nv">file</span><span class="o">.</span><span class="n"></span><span class="n">IO</span><span class="o">.</span><span class="n"></span><span class="n">slurp</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">letter</span><span class="p">)</span><span class="p">;</span>
+    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n"></span><span class="n">trim</span><span class="p">;</span>
+    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="err">=</span><span class="nv">pod</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>当使用 <code>--help</code> 调用时，这会打印相同的消息。 这是文档。 运行时:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">raku</span> <span class="o">-</span><span class="o">-</span><span class="n"></span><span class="n">doc</span> <span class="n"></span><span class="n">get</span><span class="o">-</span><span class="n"></span><span class="n">signed</span><span class="o">.</span><span class="n"></span><span class="n">p6</span>
+</code></pre></div><p>它打印了:</p>
 <pre><code>sub MAIN(
 	Str $file = &quot;letter.txt&quot;, 
 )
 This reads a letter file in text format. With no arguments, it will read the C file.
-</code></pre>
-
-<p>所以Raku理解注释和附加到它的代码，并自动打印两者。 记录例程就像这样简单。</p>
-
+</code></pre><p>所以Raku理解注释和附加到它的代码，并自动打印两者。 记录例程就像这样简单。</p>
 <p>此外，当在实际文件上运行时，最后一句被踢了，它打印出来：</p>
-
 <pre><code>Pod::Block::Declarator.new(WHEREFORE =&gt; sub MAIN (Str $file = &quot;letter.txt&quot;) { #`(Sub|81308800) ... }, config =&gt; {}, contents =&gt; [])
-</code></pre>
-
-<p>与其他语言中用于注释的其他DSL不同，例如Perl 5中的Markdown或Pod本身，Pod 6不仅是用于注释的DSL，它还是Raku本身的一部分，因此，它由Raku解析器解释，其内部结构可用于 <code>$=pod</code> 变量中的内省。 在这种情况下，注释是一个 <code>Pod::Block::Declarator</code>，该数据结构包含<code>WHEREFORE</code>键，其中包含声明的函数和注释。 但是，<code>contents</code>和<code>config</code>为空。 他们不应该这样做。</p>
-
+</code></pre><p>与其他语言中用于注释的其他DSL不同，例如Perl 5中的Markdown或Pod本身，Pod 6不仅是用于注释的DSL，它还是Raku本身的一部分，因此，它由Raku解析器解释，其内部结构可用于 <code>$=pod</code> 变量中的内省。 在这种情况下，注释是一个 <code>Pod::Block::Declarator</code>，该数据结构包含<code>WHEREFORE</code>键，其中包含声明的函数和注释。 但是，<code>contents</code>和<code>config</code>为空。 他们不应该这样做。</p>
 <p>更重要的是，注释中使用的一点点实际格式不起作用。 更不用说实际模块没有真正文档化。 现在是圣诞老人不高兴了。</p>
-
 <h1 id="给模块添加文档">给模块添加文档</h1>
-
 <p>在编写实际代码之前，编写文档可能是您应该做的第一件事。 文档适用于模块客户端，但首先，它是作者的指南，模块应该做什么以及应该如何做的路线图。 如上所述，使用Pod 6可以很容易地记录单个方法或例程; 但是，模块的大图片视图也很方便。 这里是<code>Santa-Letter</code>的Pod:</p>
-
-<pre><code class="language-pod">=begin pod
+<pre><code class="language-pod" data-lang="pod">=begin pod
 
 =head1 NAME
 
@@ -379,13 +323,10 @@ Santa-Letter - A grammar for letters to Santa for the L&lt;Raku Advent Calendar|
 Parses letters formatted nicely and written by all good kids in the world.
 
 =end pod
-</code></pre>
-
-<p>方便地放在文件的末尾，当用<code>raku -doc Santa-Letter.pm6</code>调用时，或简单地<code>raku --doc Santa-Letter</code>如果它
+</code></pre><p>方便地放在文件的末尾，当用<code>raku -doc Santa-Letter.pm6</code>调用时，或简单地<code>raku --doc Santa-Letter</code>如果它
 已安装，甚至<code>p6doc Santa-Letter</code>如果是<code>raku/doc</code>的
 在场，会写出类似的东西：</p>
-
-<pre><code class="language-pod">NAME
+<pre><code class="language-pod" data-lang="pod">NAME
 
 Santa-Letter - A grammar for letters to Santa for the Raku Advent
 Calendar
@@ -394,65 +335,36 @@ SYNOPSIS
 
 Parses letters formatted nicely and written by all good kids in the
 world.
-</code></pre>
-
-<p>但是你会注意到这种类型的输出已经消除了一段标记。 <code>L</code>创建链接，但显然只有在输出格式支持时才这样做。 那么让我们试试其中一个：</p>
-
-<pre><code class="language-shell">raku --doc=HTML Santa-Letter.pm6
-</code></pre>
-
-<p>将输出大量代码，其中包括以下行：</p>
-
+</code></pre><p>但是你会注意到这种类型的输出已经消除了一段标记。 <code>L</code>创建链接，但显然只有在输出格式支持时才这样做。 那么让我们试试其中一个：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">raku --doc<span class="o">=</span>HTML Santa-Letter.pm6
+</code></pre></div><p>将输出大量代码，其中包括以下行：</p>
 <blockquote>
 <p>Santa-Letter - A grammar for letters to Santa for the <a href="https://rakuadvent.wordpress.com/">Raku Advent Calendar</a></p>
 </blockquote>
-
 <p>清楚地显示链接的输出。</p>
-
 <p>事实上，此命令将使用 <code>Pod::To::HTML</code> 模块将 Pod 数据结构转换为 HTML。 使用任何其他东西将调用相应的模块，并且生态系统上有许多可用的<a href="https://modules.raku.org/search/?q=pod%3A%3Ato">模块</a>。 例如，<code>Pod::To::Pager</code> 将使用系统的分页使东西更美观。</p>
-
-<pre><code class="language-shell">raku --doc=Pager Santa-Letter.pm6 
-</code></pre>
-
-<p>会输出这个</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/12/pager.png" alt="img" /></p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">raku --doc<span class="o">=</span>Pager Santa-Letter.pm6 
+</code></pre></div><p>会输出这个</p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/pager.png" alt="img"></p>
 <p>此外，该文档遵循所有模块中使用的约定。 <code>NAME</code> 应描述名称和简短的 oneliner，告诉模块的内容，而 <code>SYNOPSIS</code> 包含更长的描述。 虽然这很好，但真正的文档应包含示例。</p>
-
-<pre><code class="language-pod">=begin code
+<pre><code class="language-pod" data-lang="pod">=begin code
 
 use Santa-Letter;
 
 say Santa-Letter.parse(&quot;Dear Santa\nAll I want for Christmas\nIs you\n Mariah&quot;);
 
 =end code
-</code></pre>
-
-<p>示例包含在代码块中，从Pod6的角度来看，它们是 <code>Pod::Block::Code</code>对象。 实际上，这是一件好事。 让我们将这一小段代码添加到我们的 grammar 中：</p>
-
-<pre><code class="language-perl">our $pod = $=pod[0];
-</code></pre>
-
-<p>Grammar 是类，它们具有类作用域的变量。 我们无法导出 <code>$=pod</code> 变量以避免与其他人发生冲突，但我们可以导出它，然后在我们的程序中使用它：</p>
-
-<pre><code class="language-perl">say $Santa-Letter::pod.perl;
-</code></pre>
-
-<p>或者，甚至更好， 安装 <code>Data::Dump</code> 并写下这样的东西:</p>
-
-<pre><code class="language-perl">say Dump( $Santa-Letter::pod, :indent(4), :3max-recursion );
-</code></pre>
-
-<p>它使用我们声明的 <code>pod</code> 类变量, 并且它是这样打印的:</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/12/structure.png" alt="img" /></p>
-
+</code></pre><p>示例包含在代码块中，从Pod6的角度来看，它们是 <code>Pod::Block::Code</code>对象。 实际上，这是一件好事。 让我们将这一小段代码添加到我们的 grammar 中：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">our</span> <span class="nv">$</span><span class="nv">pod</span> <span class="o">=</span> <span class="nv">$</span><span class="err">=</span><span class="nv">pod</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
+</code></pre></div><p>Grammar 是类，它们具有类作用域的变量。 我们无法导出 <code>$=pod</code> 变量以避免与其他人发生冲突，但我们可以导出它，然后在我们的程序中使用它：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">Santa</span><span class="o">-</span><span class="n"></span><span class="nn">Letter::</span><span class="n"></span><span class="n">pod</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>
+</code></pre></div><p>或者，甚至更好， 安装 <code>Data::Dump</code> 并写下这样的东西:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">Dump</span><span class="p">(</span> <span class="nv">$</span><span class="nv">Santa</span><span class="o">-</span><span class="n"></span><span class="nn">Letter::</span><span class="n"></span><span class="n">pod</span><span class="p">,</span> <span class="p">:</span><span class="n"></span><span class="n">indent</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="n"></span><span class="n">max</span><span class="o">-</span><span class="n"></span><span class="n">recursion</span> <span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>它使用我们声明的 <code>pod</code> 类变量, 并且它是这样打印的:</p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/structure.png" alt="img"></p>
 <p>这个树可以称为POM（Pod对象模型），除了与每个块一起使用的已知的 <code>name</code> 和 <code>config</code> 元数据外，还包括同一级别的Pod6块数组。 每个人都有通用属性和特定属性，例如标题中的级别。 无论如何，有趣的是我们作为示例使用的代码本身可以作为 <code>Pod::Block::Code</code> 对象的内容。</p>
-
 <p>圣诞老人想，“哼哼”。 我们可以做得更好。 我们真的可以检查包含的代码是否有效吗？ 我们可以！ 我们来扩展一下 <code>SYNOPSIS</code> 部分：</p>
-
-<pre><code class="language-pod">=head1 SYNOPSIS
+<pre><code class="language-pod" data-lang="pod">=head1 SYNOPSIS
 
 Parses letters formatted nicely and written by all good kids in the world.
 
@@ -476,34 +388,27 @@ say &quot;The letter signed by &quot;, Santa-Letter.parse($letter),
     &quot; has &quot;, Santa-Letter.parse($letter).elems, &quot; paragraphs&quot;;
     
 =end pod
-</code></pre>
-
-<p>代码可以在Pod中以不同方式表示。 第一个是已知的; 第二个使用缩进，即Markdown，来表示同一件事情。 我们也可以使用 <code>=for</code> 作为段落块，在这种情况下使用代码类型声明，并将继续直到下一个空白行。 这是一种不需要 <code>=end</code> 指令的缩写方式。 但是还有更多的东西：配置变量 <code>:notest :reason(&quot;Variable defined above&quot;)</code>。 这些配置变量是任意的，我们可以添加任意多个。 他们将转到块的 <code>config</code> 属性，我们可以使用它们。 这正是我们将在此脚本中处理代码示例的内容：</p>
-
-<pre><code class="language-perl">for $Santa-Letter::pod.contents -&gt; $block {
-    next if $block !~~ Pod::Block::Code;
-    if $block.config&lt;notest&gt; {
-        say &quot;→ Block\n\t&quot;~ $block.contents
-            ~ &quot;\n\t❈ Not tested since \'&quot; ~ $block.config&lt;reason&gt; ~ &quot;\'&quot;;
-    } else {
-        my $code = $block.contents.join(&quot;&quot;);
-        say &quot;→ Block\n\t&quot;~ $block.contents;
-        try {
-            EVAL $code;
-        }
-        if ( $! ) {
-            say &quot;\n\t✘ Produces error \&quot;$!\&quot;&quot;, &quot;\n&quot; xx 2;
-        } else {
-            say &quot;✔ is OK\n&quot;;
-        }
-    }
-}
-</code></pre>
-
-<p>正如我们在上面的结构中看到的那样，<code>contents</code>属性将包含一个第一级Pod块的数组，在我们的例子中包括我们想要求值的所有三个块（或者可能不包括）。 跳过非代码块（但也可以检查拼写）。 我们在这里做了两件有趣的事情：我们通过 <code>$block.config</code> 检查配置中的 <code>notest</code> 标志，如果是这种情况我们打印一些注释，但是如果它应该被测试，那么它是<code>EVAL</code>ed（我们需要使用<code>MONKEY-SEE-NO-EVAL</code> 指令。</p>
-
+</code></pre><p>代码可以在Pod中以不同方式表示。 第一个是已知的; 第二个使用缩进，即Markdown，来表示同一件事情。 我们也可以使用 <code>=for</code> 作为段落块，在这种情况下使用代码类型声明，并将继续直到下一个空白行。 这是一种不需要 <code>=end</code> 指令的缩写方式。 但是还有更多的东西：配置变量 <code>:notest :reason(&quot;Variable defined above&quot;)</code>。 这些配置变量是任意的，我们可以添加任意多个。 他们将转到块的 <code>config</code> 属性，我们可以使用它们。 这正是我们将在此脚本中处理代码示例的内容：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="nv">$</span><span class="nv">Santa</span><span class="o">-</span><span class="n"></span><span class="nn">Letter::</span><span class="n"></span><span class="n">pod</span><span class="o">.</span><span class="n"></span><span class="nn">contents</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">block</span> <span class="p">{</span>
+    <span class="k">next</span> <span class="k">if</span> <span class="nv">$</span><span class="nv">block</span> <span class="o">!~</span><span class="o">~</span> <span class="n"></span><span class="nn">Pod::Block::</span><span class="n"></span><span class="n">Code</span><span class="p">;</span>
+    <span class="k">if</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">config</span><span class="sr">&lt;notest&gt;</span> <span class="p">{</span>
+        <span class="n"></span><span class="n">say</span> <span class="s">&#34;→ Block\n\t&#34;</span><span class="o">~</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">contents</span>
+            <span class="o">~</span> <span class="s">&#34;\n\t❈ Not tested since \&#39;&#34;</span> <span class="o">~</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">config</span><span class="sr">&lt;reason&gt;</span> <span class="o">~</span> <span class="s">&#34;\&#39;&#34;</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">my</span> <span class="nv">$</span><span class="nv">code</span> <span class="o">=</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">contents</span><span class="o">.</span><span class="nb">join</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">)</span><span class="p">;</span>
+        <span class="n"></span><span class="n">say</span> <span class="s">&#34;→ Block\n\t&#34;</span><span class="o">~</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">contents</span><span class="p">;</span>
+        <span class="n"></span><span class="n">try</span> <span class="p">{</span>
+            <span class="n"></span><span class="n">EVAL</span> <span class="nv">$</span><span class="nv">code</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="vg">$!</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="n"></span><span class="n">say</span> <span class="s">&#34;\n\t✘ Produces error \&#34;$!\&#34;&#34;</span><span class="p">,</span> <span class="s">&#34;\n&#34;</span> <span class="n"></span><span class="n">xx</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n"></span><span class="n">say</span> <span class="s">&#34;✔ is OK\n&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>正如我们在上面的结构中看到的那样，<code>contents</code>属性将包含一个第一级Pod块的数组，在我们的例子中包括我们想要求值的所有三个块（或者可能不包括）。 跳过非代码块（但也可以检查拼写）。 我们在这里做了两件有趣的事情：我们通过 <code>$block.config</code> 检查配置中的 <code>notest</code> 标志，如果是这种情况我们打印一些注释，但是如果它应该被测试，那么它是<code>EVAL</code>ed（我们需要使用<code>MONKEY-SEE-NO-EVAL</code> 指令。</p>
 <p>圣诞老人在文档上运行它，瞧瞧！</p>
-
 <pre><code>→ Block
 	my $letter=&quot;Dear Santa,\nI have not been that good.\nJust a paper clip will do\n Donald&quot;
 say Santa-Letter.parse($letter)
@@ -511,12 +416,8 @@ say Santa-Letter.parse($letter)
 	✘ Produces error &quot;Two terms in a row across lines (missing semicolon or comma?)&quot;(
  
 )
-</code></pre>
-
-<p>他立刻感到高兴和谦卑。 一个简单的分号破坏了示例的质量。 它始终是分号。 他把分号放回到示例中，模块文档以快速的颜色通过了测试。</p>
-
+</code></pre><p>他立刻感到高兴和谦卑。 一个简单的分号破坏了示例的质量。 它始终是分号。 他把分号放回到示例中，模块文档以快速的颜色通过了测试。</p>
 <h1 id="回到生产">回到生产</h1>
-
 <p>提供了这个<a href="https://github.com/JJ/my-raku-examples/blob/master/grammars/Santa-Letter.pm6">文档模块</a>，IT精灵非常高兴，他的耳朵停止颤抖和发红。 他也可以给每个 token 编写文档，但足够了，至少他有一些例子可以让应用程序运行。 鲁道夫睡得很熟，现在他必须在信件接收微服务和客户关系宏服务之间建立桥梁。 他可能会使用 <a href="https://cro.services/">Cro</a>，但这是另一天的主题。</p>
 
 
@@ -609,7 +510,7 @@ say Santa-Letter.parse($letter)
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

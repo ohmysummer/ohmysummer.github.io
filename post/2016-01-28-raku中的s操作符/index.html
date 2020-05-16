@@ -12,14 +12,14 @@
 来自 Perl 5 背景的我， 第一次使用 Raku 的非破坏性替换操作符 S/// 的经历就像下面这样:
 进展会更好的。我不但会改善错误信息，而且会解释当前的所有事情。
 智能匹配 我有问题的原因是因为，看到外形相似的操作符，我就简单地把 Perl 5 中的绑定操作符(=~)转换为 Raku 中的智能匹配操作符(~~) 还期望它能正常工作。事实上我是异想天开。S/// 操作符没有文档，并且结合令人困惑的(那个时候)警告信息，这就是我痛苦的根源：
-my $orig = &#39;meowmix&#39;; my $new = $orig ~~ S/me/c/; say $new; # OUTPUT warning: # Smartmatch with S/// can never succeed  这个丑陋的警告说这儿的 ~~ 操作符是个错误的选择并且确实如此。~~ 操作符不是 Perl 5 的 =~ 操作符的等价物。~~ 智能操作符把它左边的东西起了个叫做 $_ 的别名，然后 ~~ 计算它右侧的东西，然后在右侧这个东西身上调用 .ACCEPTS($_) 方法。这就是所有的魔法。
+my $orig = &#39;meowmix&#39;;my $new = $orig ~~ S/me/c/;say $new;# OUTPUT warning:# Smartmatch with S/// can never succeed这个丑陋的警告说这儿的 ~~ 操作符是个错误的选择并且确实如此。~~ 操作符不是 Perl 5 的 =~ 操作符的等价物。~~ 智能操作符把它左边的东西起了个叫做 $_ 的别名，然后 ~~ 计算它右侧的东西，然后在右侧这个东西身上调用 .ACCEPTS($_) 方法。这就是所有的魔法。
 所以上面的例子实际上发生了:
  我们到达 S/// 的时候， $orig 被起了个叫做 $_ 的别名。 S/// 非破坏性地在 $_ 身上执行了替换并返回那个结果字符串。这是智能匹配将要操作的东西。 智能匹配，按照 Str 与 Str 相匹配的规则，会根据替换是否发生来给出 True 或 False（令人困惑的是，True 意味着没发生）  结果一路下来，我们并没有得到我们想要的：替换过的字符串。">
   <meta property="og:description" content="Raku: S/// 操作符 By Zoffix Znet
 来自 Perl 5 背景的我， 第一次使用 Raku 的非破坏性替换操作符 S/// 的经历就像下面这样:
 进展会更好的。我不但会改善错误信息，而且会解释当前的所有事情。
 智能匹配 我有问题的原因是因为，看到外形相似的操作符，我就简单地把 Perl 5 中的绑定操作符(=~)转换为 Raku 中的智能匹配操作符(~~) 还期望它能正常工作。事实上我是异想天开。S/// 操作符没有文档，并且结合令人困惑的(那个时候)警告信息，这就是我痛苦的根源：
-my $orig = &#39;meowmix&#39;; my $new = $orig ~~ S/me/c/; say $new; # OUTPUT warning: # Smartmatch with S/// can never succeed  这个丑陋的警告说这儿的 ~~ 操作符是个错误的选择并且确实如此。~~ 操作符不是 Perl 5 的 =~ 操作符的等价物。~~ 智能操作符把它左边的东西起了个叫做 $_ 的别名，然后 ~~ 计算它右侧的东西，然后在右侧这个东西身上调用 .ACCEPTS($_) 方法。这就是所有的魔法。
+my $orig = &#39;meowmix&#39;;my $new = $orig ~~ S/me/c/;say $new;# OUTPUT warning:# Smartmatch with S/// can never succeed这个丑陋的警告说这儿的 ~~ 操作符是个错误的选择并且确实如此。~~ 操作符不是 Perl 5 的 =~ 操作符的等价物。~~ 智能操作符把它左边的东西起了个叫做 $_ 的别名，然后 ~~ 计算它右侧的东西，然后在右侧这个东西身上调用 .ACCEPTS($_) 方法。这就是所有的魔法。
 所以上面的例子实际上发生了:
  我们到达 S/// 的时候， $orig 被起了个叫做 $_ 的别名。 S/// 非破坏性地在 $_ 身上执行了替换并返回那个结果字符串。这是智能匹配将要操作的东西。 智能匹配，按照 Str 与 Str 相匹配的规则，会根据替换是否发生来给出 True 或 False（令人困惑的是，True 意味着没发生）  结果一路下来，我们并没有得到我们想要的：替换过的字符串。">
   <meta name="twitter:description" content="Raku: S/// 操作符 By Zoffix Znet
@@ -35,7 +35,7 @@ my $orig = &#39;meowmix&#39;; my $new = $orig ~~ S/me/c/; say $new; # OUTPUT war
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-01-28-raku%E4%B8%AD%E7%9A%84s%E6%93%8D%E4%BD%9C%E7%AC%A6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -242,47 +242,30 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="raku-s-操作符-http-blogs-perl-org-users-zoffix-znet-2016-04-perl-6-the-s-operator-html"><a href="http://blogs.perl.org/users/zoffix_znet/2016/04/perl-6-the-s-operator.html">Raku: S/// 操作符</a></h1>
-
+        <h1 id="raku-s-操作符httpblogsperlorguserszoffix_znet201604perl-6-the-s-operatorhtml"><a href="http://blogs.perl.org/users/zoffix_znet/2016/04/perl-6-the-s-operator.html">Raku: S/// 操作符</a></h1>
 <p>By <a href="http://blogs.perl.org/users/zoffix_znet/">Zoffix Znet</a></p>
-
 <p>来自 Perl 5 背景的我， 第一次使用 Raku 的非破坏性替换操作符 <code>S///</code> 的经历就像下面这样:</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/326727-3a07abee4665adaf.gif?imageMogr2/auto-orient/strip" alt="img" /></p>
-
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-3a07abee4665adaf.gif?imageMogr2/auto-orient/strip" alt="img"></p>
 <p>进展会更好的。我不但会改善错误信息，而且会解释当前的所有事情。</p>
-
 <h2 id="智能匹配">智能匹配</h2>
-
 <p>我有问题的原因是因为，看到外形相似的操作符，我就简单地把 Perl 5 中的绑定操作符(<code>=~</code>)转换为 Raku 中的智能匹配操作符(<code>~~</code>) 还期望它能正常工作。事实上我是异想天开。<code>S///</code> 操作符没有文档，并且结合令人困惑的(那个时候)警告信息，这就是我痛苦的根源：</p>
-
-<pre><code class="language-raku">my $orig = 'meowmix';
+<pre><code class="language-raku" data-lang="raku">my $orig = 'meowmix';
 my $new  = $orig ~~ S/me/c/;
 say $new;
 
 # OUTPUT warning:
 # Smartmatch with S/// can never succeed
-</code></pre>
-
-<p>这个丑陋的警告说这儿的 <code>~~</code> 操作符是个错误的选择并且确实如此。<code>~~</code> 操作符不是 Perl 5 的 <code>=~</code> 操作符的等价物。<code>~~</code> 智能操作符把它左边的东西起了个叫做 <code>$_</code> 的别名，然后 <code>~~</code> 计算它右侧的东西，然后在右侧这个东西身上调用 <code>.ACCEPTS($_)</code> 方法。这就是所有的魔法。</p>
-
+</code></pre><p>这个丑陋的警告说这儿的 <code>~~</code> 操作符是个错误的选择并且确实如此。<code>~~</code> 操作符不是 Perl 5 的 <code>=~</code> 操作符的等价物。<code>~~</code> 智能操作符把它左边的东西起了个叫做 <code>$_</code> 的别名，然后 <code>~~</code> 计算它右侧的东西，然后在右侧这个东西身上调用 <code>.ACCEPTS($_)</code> 方法。这就是所有的魔法。</p>
 <p>所以上面的例子实际上发生了:</p>
-
 <ul>
 <li>我们到达 <code>S///</code> 的时候， <code>$orig</code> 被起了个叫做 <code>$_</code> 的别名。</li>
 <li><code>S///</code> 非破坏性地在 <code>$_</code> 身上执行了替换并返回那个结果字符串。这是智能匹配将要操作的东西。</li>
 <li>智能匹配，按照 Str 与 Str 相匹配的规则，会根据替换是否发生来给出 True 或 False（令人困惑的是，True 意味着没发生）</li>
 </ul>
-
 <p>结果一路下来，我们并没有得到我们想要的：替换过的字符串。</p>
-
 <h2 id="使用-given">使用 Given</h2>
-
 <p>既然我们知道了 <code>S///</code> 总是作用在 <code>$_</code> 上并且返回替换后的结果，很容易就想到几种方法把 <code>$_</code> 设置为我们原来的字符串并把 <code>S///</code> 的返回值收集回来，我们来看几个例子：</p>
-
-<pre><code class="language-raku">my $orig = 'meowmix';
+<pre><code class="language-raku" data-lang="raku">my $orig = 'meowmix';
 my $new  = S/me/c/ given $orig;
 say $orig;
 say $new;
@@ -297,17 +280,11 @@ say @new;
 # cowmix
 # [meow cow sow vow]
 # [wow wow wow wow]
-</code></pre>
-
-<p>第一个作用在单个值上。我们使用后置形式的 <em>given</em> 块儿，这让我们避免了花括号（你可以使用 <em>with</em> 代替 <em>given</em> 得到同样的结果）。<code>given $orig</code> 会给 <code>$orig</code> 起个叫做 <code>$_</code> 的别名。从输出来看，原字符串没有被更改。</p>
-
+</code></pre><p>第一个作用在单个值上。我们使用后置形式的 <em>given</em> 块儿，这让我们避免了花括号（你可以使用 <em>with</em> 代替 <em>given</em> 得到同样的结果）。<code>given $orig</code> 会给 <code>$orig</code> 起个叫做 <code>$_</code> 的别名。从输出来看，原字符串没有被更改。</p>
 <p>第二个例子作用在数组中的一堆字符串身上并且我们使用 <em>do</em> 关键字来执行常规的 <em>for</em> 循环(那种情况下，它把循环变量别名给 <code>$_</code> 了)并把结果赋值给 <code>@new</code> 数组。再次，输出显示原来的数组并没有发生改变。</p>
-
 <h2 id="副词">副词</h2>
-
 <p><code>S///</code> 操作符 &ndash; 就像 <code>s///</code> 操作符和某些方法一样 &ndash; 允许你使用正则表达式副词：</p>
-
-<pre><code class="language-raku">given 'Lörem Ipsum Dolor Sit Amet' {
+<pre><code class="language-raku" data-lang="raku">given 'Lörem Ipsum Dolor Sit Amet' {
     say S:g      /m/g/;  # Löreg Ipsug Dolor Sit Aget
     say S:i      /l/b/;  # börem Ipsum Dolor Sit Amet
     say S:ii     /l/b/;  # Börem Ipsum Dolor Sit Amet
@@ -317,10 +294,7 @@ say @new;
     say S:ss/Ipsum Dolor/Gipsum\nColor/; # Lörem Gipsum Color Sit Amet
     say S:g:ii:nth(2) /m/g/;             # Lörem Ipsug Dolor Sit Amet
 }
-</code></pre>
-
-<p>如你所见，它们以 <em>:foo</em> 的形式添加在操作符 <strong>S</strong> 这个部件的后面。你可以大大方方地使用空白符号并且几个副词可以同时使用。下面是它们的意义：</p>
-
+</code></pre><p>如你所见，它们以 <em>:foo</em> 的形式添加在操作符 <strong>S</strong> 这个部件的后面。你可以大大方方地使用空白符号并且几个副词可以同时使用。下面是它们的意义：</p>
 <ul>
 <li>:g —(长形式：<code>:global</code>)全局匹配：替换掉所有的出现</li>
 <li>:i —不区分大小写的匹配</li>
@@ -330,24 +304,17 @@ say @new;
 <li>:x(n) —至多替换 n 次（助记符: &lsquo;x&rsquo; 作为及时）</li>
 <li>:ss —(长形式：<code>samespace</code>)保留空白类型：空白字符的类型被保留，而不管替换字符串中使用的是什么空白字符。在上面的例子中，我们使用换行作为替换，但是原来的空白被保留了。</li>
 </ul>
-
 <h2 id="方法形式">方法形式</h2>
-
 <p><code>S///</code> 操作符很好，但是有时候有点笨拙。不要害怕， Raku 提供了 <code>.subst</code> 方法能满足你所有的替换需求并且消除你对 <code>.subst/.substr</code> 的困惑。下面来看例子：</p>
-
-<pre><code class="language-raku">say 'meowmix'.subst: 'me', 'c';
+<pre><code class="language-raku" data-lang="raku">say 'meowmix'.subst: 'me', 'c';
 say 'meowmix'.subst: /m./, 'c';
 
 # OUTPUT:
 # cowmix
 # cowmix
-</code></pre>
-
-<p>这个方法要么接收一个正则表达式要么接收一个普通的字符串作为它的第一个位置参数，它是要在调用者里面(&ldquo;meowmix&rdquo;)查找的东西。第二个参数是替换字符串。</p>
-
+</code></pre><p>这个方法要么接收一个正则表达式要么接收一个普通的字符串作为它的第一个位置参数，它是要在调用者里面(&ldquo;meowmix&rdquo;)查找的东西。第二个参数是替换字符串。</p>
 <p>通过简单地把它们列为具名 Bool 参数，你也可以使用副词。在 <code>S///</code> 形式中， 副词 <code>:ss</code> 和 <code>:ii</code> 分别表明 <code>:s</code>(使空白有意义) 的出现和  <code>:i</code>(不区分大小写的匹配) 的出现。在方法形式中，你必须把这些副词应用到正则表达式自身身上：</p>
-
-<pre><code class="language-raku">given 'Lorem Ipsum Dolor Sit Amet' {
+<pre><code class="language-raku" data-lang="raku">given 'Lorem Ipsum Dolor Sit Amet' {
     say .subst: /:i l/, 'b', :ii;
     say .subst: /:s Ipsum Dolor/, &quot;Gipsum\nColor&quot;, :ss;
 }
@@ -355,33 +322,21 @@ say 'meowmix'.subst: /m./, 'c';
 # OUTPUT:
 # Borem Ipsum Dolor Sit Amet
 # Lorem Gipsum Color Sit Amet
-</code></pre>
-
-<h2 id="方法形式的捕获">方法形式的捕获</h2>
-
+</code></pre><h2 id="方法形式的捕获">方法形式的捕获</h2>
 <p>捕获对于替换操作来说不陌生，所以我们来尝试捕获下方法调用形式的替换：</p>
-
-<pre><code class="language-raku">say 'meowmix'.subst: /me (.+)/, &quot;c$0&quot;;
+<pre><code class="language-raku" data-lang="raku">say 'meowmix'.subst: /me (.+)/, &quot;c$0&quot;;
 
 # OUTPUT:
 # Use of Nil in string context  in block &lt;unit&gt; at test.p6 line 1
 # c
-</code></pre>
-
-<p>不是我们要找的。我们的替换字符串构建在达到 <code>.subst</code> 方法之前，并且里面的 <code>$0</code> 变量实际上指向任何这个方法调用之前的东西，而不是 <code>.subst</code> 正则表达式中的捕获。所以我们怎么来修正它呢？</p>
-
+</code></pre><p>不是我们要找的。我们的替换字符串构建在达到 <code>.subst</code> 方法之前，并且里面的 <code>$0</code> 变量实际上指向任何这个方法调用之前的东西，而不是 <code>.subst</code> 正则表达式中的捕获。所以我们怎么来修正它呢？</p>
 <p><code>.subst</code> 方法的第二个参数也可以接受一个 <a href="http://docs.raku.org/type/Callable">Callable</a>。在它里面，你可以使用 <code>$0, $1, ... $n</code> 变量，直到你想要的编号，并从捕获中得到正确的值：</p>
-
-<pre><code class="language-raku">say 'meowmix'.subst: /me (.+)/, -&gt; { &quot;c$0&quot; };
+<pre><code class="language-raku" data-lang="raku">say 'meowmix'.subst: /me (.+)/, -&gt; { &quot;c$0&quot; };
 
 # OUTPUT:
 # cowmix
-</code></pre>
-
-<p>这里，我们为我们的 <strong>Callable</strong> 使用了尖号块儿，但是 <strong>WhateverCode</strong> 和子例程也有效。每次替换都会调用这个 Callable，并且把 <a href="http://docs.raku.org/type/Match">Match</a> 对象作为第一个位置参数传递给 Callable， 如果你需要访问它的话。</p>
-
+</code></pre><p>这里，我们为我们的 <strong>Callable</strong> 使用了尖号块儿，但是 <strong>WhateverCode</strong> 和子例程也有效。每次替换都会调用这个 Callable，并且把 <a href="http://docs.raku.org/type/Match">Match</a> 对象作为第一个位置参数传递给 Callable， 如果你需要访问它的话。</p>
 <h2 id="结论">结论</h2>
-
 <p><code>S///</code> 操作符在 Raku 中是 <code>s///</code> 操作符的战友，它不是修改原来的字符串，而是拷贝原来的字符串，修改，然后返回修改过的版本。这个操作符的使用方式跟 Perl 5 中的非破坏性替换操作符的使用方式不同。作为备选， 方法版本的 <code>.subst</code> 也能使用。 方法形式和操作符形式的替换都能接收一组副词以修改它们的行为，来满足你的需求。</p>
 
 
@@ -476,7 +431,7 @@ say 'meowmix'.subst: /m./, 'c';
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

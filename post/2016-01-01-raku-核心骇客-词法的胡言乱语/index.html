@@ -10,17 +10,19 @@
   <meta name="twitter:title" content="Raku 核心骇客--词法的胡言乱语" />
   <meta name="description" content="Raku 核心骇客: 词法的胡言乱语
 喜欢修复 Raku 编译器中的 bug? 这儿有一个great grammar bugglet: 当 „” 引号用在引起的用空白分割的单词列表构造器中时看起来好像不能工作:
-say „hello world”; .say for qww&lt;„hello world”&gt;; .say for qww&lt;&quot;hello world&quot;&gt;; # OUTPUT: # hello world # „hello # world” # hello world  ” 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 hello world。看起来像是一个待修复的有趣的 bug! 我们进去看看。
+say „hello world”;.say for qww&lt;„hello world”&gt;;.say for qww&lt;&quot;hello world&quot;&gt;;# OUTPUT:# hello world# „hello# world”# hello world” 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 hello world。看起来像是一个待修复的有趣的 bug! 我们进去看看。
 你怎样拼写它? 事实上这段代码没能正确解析表明这是一个 grammar bug。大部分的 grammar 住在 src/Raku/Grammar.nqp中, 但是在我们的手变脏之前, 让我们来解决我们应该查看什么。
-二进制 raku 有一个 --target 命令行参数来接收其中之一的编译步骤并且会导致那个步骤的输出被产生出来。那儿有哪些步骤? 根据你正使用的后端它们也会有所不同, 但是你可以仅仅运行 raku --stagestats -e &#39;&#39; 把它们都打印出来:">
+二进制 raku 有一个 --target 命令行参数来接收其中之一的编译步骤并且会导致那个步骤的输出被产生出来。那儿有哪些步骤? 根据你正使用的后端它们也会有所不同, 但是你可以仅仅运行 raku --stagestats -e &#39;&#39; 把它们都打印出来:
+zoffix@leliana:~$ raku --stagestats -e &#39;&#39;Stage start : 0.">
   <meta property="og:description" content="Raku 核心骇客: 词法的胡言乱语
 喜欢修复 Raku 编译器中的 bug? 这儿有一个great grammar bugglet: 当 „” 引号用在引起的用空白分割的单词列表构造器中时看起来好像不能工作:
-say „hello world”; .say for qww&lt;„hello world”&gt;; .say for qww&lt;&quot;hello world&quot;&gt;; # OUTPUT: # hello world # „hello # world” # hello world  ” 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 hello world。看起来像是一个待修复的有趣的 bug! 我们进去看看。
+say „hello world”;.say for qww&lt;„hello world”&gt;;.say for qww&lt;&quot;hello world&quot;&gt;;# OUTPUT:# hello world# „hello# world”# hello world” 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 hello world。看起来像是一个待修复的有趣的 bug! 我们进去看看。
 你怎样拼写它? 事实上这段代码没能正确解析表明这是一个 grammar bug。大部分的 grammar 住在 src/Raku/Grammar.nqp中, 但是在我们的手变脏之前, 让我们来解决我们应该查看什么。
-二进制 raku 有一个 --target 命令行参数来接收其中之一的编译步骤并且会导致那个步骤的输出被产生出来。那儿有哪些步骤? 根据你正使用的后端它们也会有所不同, 但是你可以仅仅运行 raku --stagestats -e &#39;&#39; 把它们都打印出来:">
+二进制 raku 有一个 --target 命令行参数来接收其中之一的编译步骤并且会导致那个步骤的输出被产生出来。那儿有哪些步骤? 根据你正使用的后端它们也会有所不同, 但是你可以仅仅运行 raku --stagestats -e &#39;&#39; 把它们都打印出来:
+zoffix@leliana:~$ raku --stagestats -e &#39;&#39;Stage start : 0.">
   <meta name="twitter:description" content="Raku 核心骇客: 词法的胡言乱语
 喜欢修复 Raku 编译器中的 bug? 这儿有一个great grammar bugglet: 当 „” 引号用在引起的用空白分割的单词列表构造器中时看起来好像不能工作:
-say „hello world”; .say for qww&lt;„hello world”&gt;; .say for qww&lt;&quot;hello …">
+say „hello world”;.say for qww&lt;„hello world”&gt;;.say for qww&lt;&quot;hello …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -30,7 +32,7 @@ say „hello world”; .say for qww&lt;„hello world”&gt;; .say for qww&lt;&q
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-01-01-raku-%E6%A0%B8%E5%BF%83%E9%AA%87%E5%AE%A2-%E8%AF%8D%E6%B3%95%E7%9A%84%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -237,13 +239,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p><a href="http://raku.party/post/Perl-6-Core-Hacking-Grammatical-Babble">Raku 核心骇客: 词法的胡言乱语</a></p>
-
+        <p><a href="http://raku.party/post/Perl-6-Core-Hacking-Grammatical-Babble">Raku 核心骇客: 词法的胡言乱语</a></p>
 <p>喜欢修复 Raku 编译器中的 bug? 这儿有一个<a href="https://rt.perl.org/Ticket/Display.html?id=128304">great grammar bugglet</a>: 当 <code>„”</code> 引号用在引起的用空白分割的单词列表构造器中时看起来好像不能工作:</p>
-
-<pre><code class="language-raku">say „hello world”;
+<pre><code class="language-raku" data-lang="raku">say „hello world”;
 .say for qww&lt;„hello world”&gt;;
 .say for qww&lt;&quot;hello world&quot;&gt;;
 
@@ -252,16 +250,10 @@ if (!doNotTrack) {
 # „hello
 # world”
 # hello world
-</code></pre>
-
-<p><code>”</code> 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 <code>hello world</code>。看起来像是一个待修复的有趣的 bug! 我们进去看看。</p>
-
+</code></pre><p><code>”</code> 引号不应该出现在输出中并且在输出中我们应该只有 3 行输出; 这 3 行输出都是 <code>hello world</code>。看起来像是一个待修复的有趣的 bug! 我们进去看看。</p>
 <h2 id="你怎样拼写它">你怎样拼写它?</h2>
-
 <p>事实上这段代码没能正确解析表明这是一个 grammar bug。大部分的 grammar 住在 <a href="https://github.com/rakudo/rakudo/blob/83b8b1a/src/Raku/Grammar.nqp">src/Raku/Grammar.nqp</a>中, 但是在我们的手变脏之前, 让我们来解决我们应该查看什么。</p>
-
 <p>二进制 <code>raku</code> 有一个 <code>--target</code> 命令行参数来接收其中之一的编译步骤并且会导致那个步骤的输出被产生出来。那儿有哪些步骤? 根据你正使用的后端它们也会有所不同, 但是你可以仅仅运行 <code>raku --stagestats -e ''</code> 把它们都打印出来:</p>
-
 <pre><code>zoffix@leliana:~$ raku --stagestats -e ''
 Stage start      :   0.000
 Stage parse      :   0.077
@@ -271,10 +263,7 @@ Stage optimize   :   0.001
 Stage mast       :   0.004
 Stage mbc        :   0.000
 Stage moar       :   0.000
-</code></pre>
-
-<p>Grammars 是关于解析的, 所以我们会查询 <code>parse</code> 目标(target)。至于要执行的代码, 我们会仅仅给它有问题的那块; 即 <code>qww&lt;&gt;</code>:</p>
-
+</code></pre><p>Grammars 是关于解析的, 所以我们会查询 <code>parse</code> 目标(target)。至于要执行的代码, 我们会仅仅给它有问题的那块; 即 <code>qww&lt;&gt;</code>:</p>
 <pre><code>zoffix@leliana:~$ raku --target=parse -e 'qww&lt;„hello world”&gt;'
 - statementlist: qww&lt;„hello world”&gt;
   - statement: 1 matches
@@ -287,12 +276,8 @@ Stage moar       :   0.000
             - nibble: „hello world”
           - quote_mod: ww
             - sym: ww
-</code></pre>
-
-<p>那很棒! 每一行前面都有能在 grammar 中找到的 token 的名字, 所以现在我们知道了在哪里查找问题。</p>
-
+</code></pre><p>那很棒! 每一行前面都有能在 grammar 中找到的 token 的名字, 所以现在我们知道了在哪里查找问题。</p>
 <p>我们还知道基本的引号能正确地工作, 所以我们也倾倒出它们的解析步骤, 来看看这两个输出之间是否有什么不同:</p>
-
 <pre><code>zoffix@leliana:~$ raku --target=parse -e 'qww&lt;&quot;hello world&quot;&gt;'
 - statementlist: qww&lt;&quot;hello world&quot;&gt;
   - statement: 1 matches
@@ -305,12 +290,8 @@ Stage moar       :   0.000
             - nibble: &quot;hello world&quot;
           - quote_mod: ww
             - sym: ww
-</code></pre>
-
-<p>那么&hellip; 好吧, 除了引号不同, 解析数完全一样。所以它看起来好像所有涉及的 tokens 都是相同的, 但是那些 tokens 所做的事情不同。</p>
-
+</code></pre><p>那么&hellip; 好吧, 除了引号不同, 解析数完全一样。所以它看起来好像所有涉及的 tokens 都是相同的, 但是那些 tokens 所做的事情不同。</p>
 <p>我们不必检查输出中我们看到的每个 tokens。<code>statementlist</code> 和 <code>statement</code> 是匹配普通语句的 tokens, <code>EXPR</code> 是占位符解析器, <code>value</code> 是它正操作的值中的一个。我们会忽略上面那些, 留给我们的是下面这样一个可疑的列表:</p>
-
 <pre><code>- quote: qww&lt;„hello world”&gt;
   - quibble: &lt;„hello world”&gt;
     - babble:
@@ -318,19 +299,12 @@ Stage moar       :   0.000
     - nibble: „hello world”
   - quote_mod: ww
     - sym: ww
-</code></pre>
-
-<p>让我们开始质问它们。</p>
-
+</code></pre><p>让我们开始质问它们。</p>
 <h2 id="到兔子洞里去">到兔子洞里去&hellip;</h2>
-
 <p>你自己搞一份本地的 <a href="https://github.com/rakudo/rakudo/">Rakudo 仓库</a>, 如果你已经有了一份,那么打开 <a href="https://github.com/rakudo/rakudo/blob/83b8b1a/src/Raku/Grammar.nqp">src/Raku/Grammar.nqp</a>, 然后放松点。</p>
-
 <p>我们会从树的顶部到底部跟随我们的 tokens, 所以我们首先需要找到的是 <code>token quote</code>, <code>rule quote</code>, <code>regex quote</code> 或 <code>method quote</code>; 以那个顺序搜索, 因为第一项很可能就是正确的东西。</p>
-
 <p>这种情况下, 它是一个 <a href="https://github.com/rakudo/rakudo/blob/83b8b1a/src/Raku/Grammar.nqp#L3555">token quote</a>, 它是一个 <a href="https://docs.raku.org/language/grammars#Protoregexes">proto regex</a>。我们的代码使用了它的 <code>q</code> 版本并且你还可以认出靠近它的 <code>qq</code> 和 <code>Q</code> 版本:</p>
-
-<pre><code class="language-raku">token quote:sym&lt;q&gt; {
+<pre><code class="language-raku" data-lang="raku">token quote:sym&lt;q&gt; {
     :my $qm;
     'q'
     [
@@ -357,21 +331,15 @@ token quote:sym&lt;Q&gt; {
     | {} &lt;.qok($/)&gt; &lt;quibble(%*LANG&lt;Quote&gt;)&gt;
     ]
 }
-</code></pre>
-
-<p>可以看到 <code>qq</code> 和 <code>Q</code> 的主体看起来像 <code>q</code>, 我们也来看看它们是否有我们要找的那个 bug:</p>
-
+</code></pre><p>可以看到 <code>qq</code> 和 <code>Q</code> 的主体看起来像 <code>q</code>, 我们也来看看它们是否有我们要找的那个 bug:</p>
 <pre><code>zoffix@leliana:~$ raku -e '.say for qqww&lt;„hello world”&gt;'
 „hello
 world”
 zoffix@leliana:~$ raku -e '.say for Qww&lt;„hello world”&gt;'
 „hello
 world
-</code></pre>
-
-<p>是的, 它们也存在, 所以 <code>token quote</code> 不可能是那个问题。我们来分解下  <code>token quote:sym&lt;q&gt;</code> 是做什么的, 来算出怎么进行到下一步; 它的备选之一没有被用在我们当前的代码中, 所以我会省略它:</p>
-
-<pre><code class="language-raku">token quote:sym&lt;q&gt; {
+</code></pre><p>是的, 它们也存在, 所以 <code>token quote</code> 不可能是那个问题。我们来分解下  <code>token quote:sym&lt;q&gt;</code> 是做什么的, 来算出怎么进行到下一步; 它的备选之一没有被用在我们当前的代码中, 所以我会省略它:</p>
+<pre><code class="language-raku" data-lang="raku">token quote:sym&lt;q&gt; {
     :my $qm;
     'q'
     [
@@ -380,13 +348,9 @@ world
     | # (this branch omited)
     ]
 }
-</code></pre>
-
-<p>在第二行中, 我们创建了一个变量, 然后匹配字面值 <code>q</code> 然后是 <code>quote_mod</code> token。那个是我们的 <code>--target=parse</code> 输出中的一部分并且如果你像我们找出 <code>quote</code> token 那样找出它, 你会注意到它是一个 proto regex, 即, 在那种情况下, 匹配我们代码的 <code>ww</code> 块。后面跟着的空 <code>{}</code> 块我们可以忽略(那是一个 bug 的替代方法可能在你读到这儿时已经被修复了)。目前为止, 我们已经匹配了我们代码的 <code>qww</code> 块。</p>
-
+</code></pre><p>在第二行中, 我们创建了一个变量, 然后匹配字面值 <code>q</code> 然后是 <code>quote_mod</code> token。那个是我们的 <code>--target=parse</code> 输出中的一部分并且如果你像我们找出 <code>quote</code> token 那样找出它, 你会注意到它是一个 proto regex, 即, 在那种情况下, 匹配我们代码的 <code>ww</code> 块。后面跟着的空 <code>{}</code> 块我们可以忽略(那是一个 bug 的替代方法可能在你读到这儿时已经被修复了)。目前为止, 我们已经匹配了我们代码的 <code>qww</code> 块。</p>
 <p>再往前走, 我们遇见了对 <code>qok</code> token 的调用, 当前的 <a href="https://docs.raku.org/type/Match">Match</a> 对象作为其参数。<code>&lt;.qok&gt;</code> 中的点号表明这是一个非捕获 token 匹配, 这就是它为什么它没有在我们的 <code>--target=parse</code> 输出中出现的原因。我们定位到那个 token 并看看它是关于什么的:</p>
-
-<pre><code class="language-raku">token qok($x) {
+<pre><code class="language-raku" data-lang="raku">token qok($x) {
     » &lt;![(]&gt;
     [
         &lt;?[:]&gt; || &lt;!{
@@ -396,15 +360,10 @@ world
     [ \s* '#' &lt;.panic: &quot;# not allowed as delimiter&quot;&gt; ]?
     &lt;.ws&gt;
 }
-</code></pre>
-
-<p>我的天呐! 这么多符号, 但是这个家伙很容易了: <code>»</code> 是一个<a href="https://docs.raku.org/language/regexes#%3C%3C_and_%3E%3E_,_left_and_right_word_boundary">右单词边界</a>后面不能跟着一个开圆括号(<code>&lt;![(]&gt;</code>), 再跟着一个备选分支(<code>[]</code>), 再跟着一个检查, 即我们不想尝试使用 <code>#</code> 号作为分割符(<code>[...]?</code>), 最后跟着一个 <a href="https://docs.raku.org/language/grammars#ws">&lt;.ws&gt;</a> token 吞噬各种各样的空白。</p>
-
+</code></pre><p>我的天呐! 这么多符号, 但是这个家伙很容易了: <code>»</code> 是一个<a href="https://docs.raku.org/language/regexes#%3C%3C_and_%3E%3E_,_left_and_right_word_boundary">右单词边界</a>后面不能跟着一个开圆括号(<code>&lt;![(]&gt;</code>), 再跟着一个备选分支(<code>[]</code>), 再跟着一个检查, 即我们不想尝试使用 <code>#</code> 号作为分割符(<code>[...]?</code>), 最后跟着一个 <a href="https://docs.raku.org/language/grammars#ws">&lt;.ws&gt;</a> token 吞噬各种各样的空白。</p>
 <p>在备选分支中, 我们使用了首个token匹配的 <code>||</code> 备选分支(和最长token匹配 <code>|</code> 相反), 并且首个 token 向前查看一个冒号 <code>&lt;?[:]&gt;</code>。 如果失败了, 我们就字符串化那个给定的参数(<code>~$x</code>)并且之后在 <a href="https://github.com/rakudo/rakudo/blob/83b8b1a/src/Raku/World.nqp">World对象</a> 身上调用 <code>is_name</code> 方法, 原样地传递带有前置 <code>&amp;</code> 符号的字符串化的参数。传递的 <code>~$x</code> 是目前为止我们的 <code>token quote:sym&lt;q&gt;</code> token 所匹配到的东西(并且那是字符串 <code>qww</code>)。<code>is_name</code> 方法仅仅检查那个给定的符号是否被定义还有根据那个返回值检查我们的 token 匹配会通过还是会失败。如果那个求值代码返回一个真值那么我们正在使用的  <code>&lt;!{ ... }&gt;</code> 结构就会失败。</p>
-
 <p>总而言之, 这个 token 所做的所有事情就是检查我们没有使用 <code>#</code> 作为分隔符并且没有尝试去调用一个方法或sub。房间的这个角落没有 bug 迹象。 让我们回到我们的 <code>token quote:sym&lt;q&gt;</code> 来查看下一步做什么:</p>
-
-<pre><code class="language-raku">token quote:sym&lt;q&gt; {
+<pre><code class="language-raku" data-lang="raku">token quote:sym&lt;q&gt; {
     :my $qm;
     'q'
     [
@@ -413,22 +372,13 @@ world
     | # (this branch omited)
     ]
 }
-</code></pre>
-
-<p>我们已经完成了 <code>&lt;.qok&gt;</code> 的检查, 所以下一步是 <code>{ $qm := $&lt;quote_mod&gt;.Str }</code>, 那仅仅把匹配到 <code>quote_mod</code> token 的字符串值存到 <code>$qm</code> 变量中。在我们的例子中, 那个值就是字符串 <code>ww</code>。</p>
-
+</code></pre><p>我们已经完成了 <code>&lt;.qok&gt;</code> 的检查, 所以下一步是 <code>{ $qm := $&lt;quote_mod&gt;.Str }</code>, 那仅仅把匹配到 <code>quote_mod</code> token 的字符串值存到 <code>$qm</code> 变量中。在我们的例子中, 那个值就是字符串 <code>ww</code>。</p>
 <p>下面跟着的是另外一个 token, 它在我们的 <code>--target=parse</code> s输出中出现过:</p>
-
-<pre><code class="language-raku">&lt;quibble(%*LANG&lt;Quote&gt;, 'q', $qm)&gt;
-</code></pre>
-
-<p>这里, 我们使用三个位置参数引用了那个 token: <a href="https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Raku/Grammar.nqp#L424">Quote language braid</a>, 字符串 <code>q</code> 和 我们保存在变量 <code>$qm</code> 中的字符串 <code>ww</code>。我想知道它是做什么的。那是我们的下一站。全力以赴!</p>
-
+<pre><code class="language-raku" data-lang="raku">&lt;quibble(%*LANG&lt;Quote&gt;, 'q', $qm)&gt;
+</code></pre><p>这里, 我们使用三个位置参数引用了那个 token: <a href="https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Raku/Grammar.nqp#L424">Quote language braid</a>, 字符串 <code>q</code> 和 我们保存在变量 <code>$qm</code> 中的字符串 <code>ww</code>。我想知道它是做什么的。那是我们的下一站。全力以赴!</p>
 <h2 id="nibble-quibble-babbling-nibbler">Nibble Quibble Babbling Nibbler</h2>
-
 <p>这里是完整的 <code>token quibble</code> 并且你马上可以发现我们不得不从开始往更深处挖掘, 因为第 5 行是另外一个 token 匹配:</p>
-
-<pre><code class="language-raku">token quibble($l, *@base_tweaks) {
+<pre><code class="language-raku" data-lang="raku">token quibble($l, *@base_tweaks) {
     :my $lang;
     :my $start;
     :my $stop;
@@ -469,11 +419,8 @@ world
         )
     }
 }
-</code></pre>
-
-<p>我们定义了 3 个变量然后引用了 <code>babble</code> token, 这个 babble 引用了和 <code>quibble</code> token 所引用的同样的参数。我们来以和查找所有之前的 tokens 同样的方式查找它并窥探它的内核。为了简洁, 我移除了大约一半<a href="https://github.com/rakudo/rakudo/blob/bc35922/src/Raku/Grammar.nqp#L111-L125">代码</a>:那部分是处理副词的, 目前我们不能在我们的代码中使用它。</p>
-
-<pre><code class="language-raku">token babble($l, @base_tweaks?) {
+</code></pre><p>我们定义了 3 个变量然后引用了 <code>babble</code> token, 这个 babble 引用了和 <code>quibble</code> token 所引用的同样的参数。我们来以和查找所有之前的 tokens 同样的方式查找它并窥探它的内核。为了简洁, 我移除了大约一半<a href="https://github.com/rakudo/rakudo/blob/bc35922/src/Raku/Grammar.nqp#L111-L125">代码</a>:那部分是处理副词的, 目前我们不能在我们的代码中使用它。</p>
+<pre><code class="language-raku" data-lang="raku">token babble($l, @base_tweaks?) {
     :my @extra_tweaks;
 
     # &lt;irrelevant portion redacted&gt;
@@ -491,42 +438,27 @@ world
         $&lt;B&gt;.'!make'([$lang, $start, $stop]);
     }
 }
-</code></pre>
-
-<p>我们通过把向前查看捕获到 <code>$&lt;B&gt;</code> 捕获中开始, 它用作更新当前的 Cursor 位置, 然后进入以执行那个代码块。我们把当前的 Cursor 存储在 <code>$c</code> 中, 然后在它身上调用 <code>.peek_delimiters</code> 方法。如果我们为了它在内置的 rakudo 目录中进行 <code>grep</code>, 我们会看到它被定义在 <a href="https://github.com/raku/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp#L200">NQP</a>中, 在 <a href="https://github.com/raku/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp#L200">nqp/src/HLL/Grammar.nqp</a>中, 但是在我们冲出去阅读它的代码之前, 注意它是怎样返回两个分隔符的。我们仅仅把它们打印出来好了?</p>
-
+</code></pre><p>我们通过把向前查看捕获到 <code>$&lt;B&gt;</code> 捕获中开始, 它用作更新当前的 Cursor 位置, 然后进入以执行那个代码块。我们把当前的 Cursor 存储在 <code>$c</code> 中, 然后在它身上调用 <code>.peek_delimiters</code> 方法。如果我们为了它在内置的 rakudo 目录中进行 <code>grep</code>, 我们会看到它被定义在 <a href="https://github.com/raku/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp#L200">NQP</a>中, 在 <a href="https://github.com/raku/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp#L200">nqp/src/HLL/Grammar.nqp</a>中, 但是在我们冲出去阅读它的代码之前, 注意它是怎样返回两个分隔符的。我们仅仅把它们打印出来好了?</p>
 <p><code>src/Raku/Grammar.nqp</code> 的 <code>.nqp</code> 后缀名表明我们正处在 NQP 的地盘儿, 所以我们不要使用 <a href="https://github.com/raku/nqp/blob/master/docs/ops.markdown">NQP ops</a>仅仅并且不是完全的 Raku 代码。通过把下面这一行代码添加到 <code>@delim</code> 被赋值给 <code>$start</code> 和 <code>$stop</code> 的地方, 我们能找出 <code>.peek_delimiters</code> 给我们的东西:</p>
-
-<pre><code class="language-raku">nqp::say(&quot;$sart $stop&quot;);
-</code></pre>
-
-<p>编译!</p>
-
+<pre><code class="language-raku" data-lang="raku">nqp::say(&quot;$sart $stop&quot;);
+</code></pre><p>编译!</p>
 <pre><code>$ perl Configure.pl --gen-moar --gen-nqp --backends=moar &amp;&amp;
   make &amp;&amp;
   make test &amp;&amp;
   make install
-</code></pre>
-
-<p>即使在编译期间, 通过吐出额外的东西, 我们的调试行已经给了我们所有那些分隔符是关于什么的启发。再次运行我们的有问题的代码:</p>
-
+</code></pre><p>即使在编译期间, 通过吐出额外的东西, 我们的调试行已经给了我们所有那些分隔符是关于什么的启发。再次运行我们的有问题的代码:</p>
 <pre><code>$ ./raku -e '.say for qww&lt;„hello world”&gt;;'
 &lt; &gt;
 hello world
-</code></pre>
-
-<p>打印出的分隔符是 <code>qww</code> 里的尖括号分隔符。我们对那些不感兴趣, 所以我们可以忽略 <code>.peek_delimiters</code> 并继续。再往上是 <code>.quote_lang</code> 方法。 它的名字里有一个&rdquo;引号&rdquo;而我们有一个关于引号的问题.. 听起来我们离真相越来越近了。我们来看看我们正传递给它的是什么参数:</p>
-
+</code></pre><p>打印出的分隔符是 <code>qww</code> 里的尖括号分隔符。我们对那些不感兴趣, 所以我们可以忽略 <code>.peek_delimiters</code> 并继续。再往上是 <code>.quote_lang</code> 方法。 它的名字里有一个&quot;引号&quot;而我们有一个关于引号的问题.. 听起来我们离真相越来越近了。我们来看看我们正传递给它的是什么参数:</p>
 <ul>
 <li><code>$1</code> — <a href="https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Raku/Grammar.nqp#L4752">Quote language braid</a></li>
 <li><code>$start</code> / <code>$stop</code> — 尖括号分隔符</li>
 <li><code>@base_tweaks</code> — 包含一个元素: 字符串 <code>ww</code></li>
 <li><code>@extra_tweaks</code> — 额外的副词, 这里我们没有, 所以这个数组是空的</li>
 </ul>
-
 <p>定位到 <code>method quote_lang</code>; 它仍然在 <a href="https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Raku/Grammar.nqp#L65">src/Raku/Grammar.nqp</a>文件中:</p>
-
-<pre><code class="language-raku">method quote_lang($l, $start, $stop, @base_tweaks?, @extra_tweaks?) {
+<pre><code class="language-raku" data-lang="raku">method quote_lang($l, $start, $stop, @base_tweaks?, @extra_tweaks?) {
     sub lang_key() {
         # &lt;body redacted&gt;
     }
@@ -540,11 +472,8 @@ hello world
         ?? %quote_lang_cache{$key}
         !! (%quote_lang_cache{$key} := con_lang());
 }
-</code></pre>
-
-<p>我们有两个词法子例程 <code>lang_key</code> 和 <code>con_lang</code>, 在它们下面我们把 <code>lang_key</code> 的输出存储到 <code>$key</code> 中, 在 <code>%quote_lang_cache</code> 中这个 <code>$key</code> 被用在整个缓存 dance 中, 所以我们可以忽略掉 <code>lang_key</code> sub 并直接进入 <code>con_lang</code>, 它被调用以生成我们的 <code>quote_lang</code> 方法的返回值:</p>
-
-<pre><code class="language-raku">sub con_lang() {
+</code></pre><p>我们有两个词法子例程 <code>lang_key</code> 和 <code>con_lang</code>, 在它们下面我们把 <code>lang_key</code> 的输出存储到 <code>$key</code> 中, 在 <code>%quote_lang_cache</code> 中这个 <code>$key</code> 被用在整个缓存 dance 中, 所以我们可以忽略掉 <code>lang_key</code> sub 并直接进入 <code>con_lang</code>, 它被调用以生成我们的 <code>quote_lang</code> 方法的返回值:</p>
+<pre><code class="language-raku" data-lang="raku">sub con_lang() {
     my $lang := $l.'!cursor_init'(self.orig(), :p(self.pos()), :shared(self.'!shared'()));
     for @base_tweaks {
         $lang := $lang.&quot;tweak_$_&quot;(1);
@@ -563,30 +492,20 @@ hello world
     $start ne $stop ?? $lang.balanced($start, $stop)
                     !! $lang.unbalanced($stop);
 }
-</code></pre>
-
-<p>在初始化 Cursor 位置之后, <code>$lang</code> 继续包含我们的 Quote 语言编织然后我们落进一个 <code>for</code> 循环来迭代 <code>@base_tweaks</code>, 对于里面的每一个元素, 我们都调用方法 <code>tweak_$_</code>, 给它传递一个真值 <code>1</code>。因为我们仅仅只有一个 base tweak, 这意味着我们正在Quote braid上调用方法 <code>tweak_ww</code>。我们来看看那个方法是关于什么的。</p>
-
+</code></pre><p>在初始化 Cursor 位置之后, <code>$lang</code> 继续包含我们的 Quote 语言编织然后我们落进一个 <code>for</code> 循环来迭代 <code>@base_tweaks</code>, 对于里面的每一个元素, 我们都调用方法 <code>tweak_$_</code>, 给它传递一个真值 <code>1</code>。因为我们仅仅只有一个 base tweak, 这意味着我们正在Quote braid上调用方法 <code>tweak_ww</code>。我们来看看那个方法是关于什么的。</p>
 <p>因为 Quote braid 被定义在同一个文件中, 仅仅搜索 <code>method tweak_ww</code> 好了:</p>
-
-<pre><code class="language-raku">method tweak_ww($v) {
+<pre><code class="language-raku" data-lang="raku">method tweak_ww($v) {
     $v ?? self.add-postproc(&quot;quotewords&quot;).apply_tweak(ww)
        !! self
 }
-</code></pre>
-
-<p>很好。我们给它的 <code>$v</code> 为真, 所以我们调用了 <code>.add-postproc</code> 然后调用 <code>.apply_tweak(ww)</code>。看一下那个方法的上面和下面, 我们看到 <code>.add-postproc</code> 也用在其它不含 bug 的引号中, 所以我们忽略它并直接跳到 <code>.apply_tweak</code>:</p>
-
-<pre><code class="language-raku">method apply_tweak($role) {
+</code></pre><p>很好。我们给它的 <code>$v</code> 为真, 所以我们调用了 <code>.add-postproc</code> 然后调用 <code>.apply_tweak(ww)</code>。看一下那个方法的上面和下面, 我们看到 <code>.add-postproc</code> 也用在其它不含 bug 的引号中, 所以我们忽略它并直接跳到 <code>.apply_tweak</code>:</p>
+<pre><code class="language-raku" data-lang="raku">method apply_tweak($role) {
     my $target := nqp::can(self, 'herelang') ?? self.herelang !! self;
     $target.HOW.mixin($target, $role);
     self
 }
-</code></pre>
-
-<p>啊哈! 它的参数是一个 role 并且它把该 role 混进来我们的 Quote braid 中。我们来看看那个 role 是关于什么的(再一次, 仅仅在文件中搜索 <a href="https://github.com/rakudo/rakudo/blob/94b09ab9280d39438f84cb467d4b3d3042b8f672/src/Raku/Grammar.nqp#L4846">role ww</a>, 或者仅仅向上滚动一点):</p>
-
-<pre><code class="language-raku">role ww {
+</code></pre><p>啊哈! 它的参数是一个 role 并且它把该 role 混进来我们的 Quote braid 中。我们来看看那个 role 是关于什么的(再一次, 仅仅在文件中搜索 <a href="https://github.com/rakudo/rakudo/blob/94b09ab9280d39438f84cb467d4b3d3042b8f672/src/Raku/Grammar.nqp#L4846">role ww</a>, 或者仅仅向上滚动一点):</p>
+<pre><code class="language-raku" data-lang="raku">role ww {
     token escape:sym&lt;' '&gt; {
         &lt;?[']&gt; &lt;quote=.LANG('MAIN','quote')&gt;
     }
@@ -606,92 +525,52 @@ hello world
         &lt;?[#]&gt; &lt;.LANG('MAIN', 'comment')&gt;
     }
 }
-</code></pre>
-
-<p>奥, 我的天呐!引号! 如果这个地方不是我们修复 bug 的地方, 那么我就是一个芭蕾舞女演员。 我们找到它了!</p>
-
+</code></pre><p>奥, 我的天呐!引号! 如果这个地方不是我们修复 bug 的地方, 那么我就是一个芭蕾舞女演员。 我们找到它了!</p>
 <p>我们定位到的 role 把进了某些 tokens 混合进了我们正使用的 Quote braid 中来解析 <code>qww</code> 的内容。我们带有 bug 的 <code>„”</code> 引号组合明显不在那个列表中。我们来把它添加进去!</p>
-
-<pre><code class="language-raku">token escape:sym&lt;„ ”&gt; {
+<pre><code class="language-raku" data-lang="raku">token escape:sym&lt;„ ”&gt; {
     &lt;?[„]&gt; &lt;quote=.LANG('MAIN','quote')&gt;
 }
-</code></pre>
-
-<p>编译! 运行我们带有 bug 的代码:</p>
-
-<pre><code class="language-raku">$ ./raku -e '.say for qww&lt;foo „hello world” bar&gt;'
+</code></pre><p>编译! 运行我们带有 bug 的代码:</p>
+<pre><code class="language-raku" data-lang="raku">$ ./raku -e '.say for qww&lt;foo „hello world” bar&gt;'
 foo
 bar
-</code></pre>
-
-<p>悲催! 好吧, 我们确实为引号处理找到了正确的地方, 但是我们让问题变得更加糟糕了。发生了什么?</p>
-
+</code></pre><p>悲催! 好吧, 我们确实为引号处理找到了正确的地方, 但是我们让问题变得更加糟糕了。发生了什么?</p>
 <h2 id="quotastic-inaction">Quotastic Inaction</h2>
-
 <p>我们新的 token 肯定解析了那个引号, 但是我们绝对没有给它添加 Actions 动作&hellip; 好吧, 对它起作用。 Action 类和 Grammars 相邻, 在 <code>src/Raku/Actions.nqp</code> 中。打开它并定位到匹配的方法那里; 比如 <a href="https://github.com/rakudo/rakudo/blob/94b09ab9280d39438f84cb467d4b3d3042b8f672/src/Raku/Actions.nqp#L9243">method escape:sym&lt;“ ”&gt;</a>。</p>
-
-<pre><code class="language-raku">method escape:sym&lt;' '&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
+<pre><code class="language-raku" data-lang="raku">method escape:sym&lt;' '&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
 method escape:sym&lt;&quot; &quot;&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
 method escape:sym&lt;‘ ’&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
 method escape:sym&lt;“ ”&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
-</code></pre>
-
-<p>并在列表中添加我们自己的版本:</p>
-
-<pre><code class="language-raku">method escape:sym&lt;„ ”&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
-</code></pre>
-
-<p>编译! 运行我们带有 bug 的代码:</p>
-
+</code></pre><p>并在列表中添加我们自己的版本:</p>
+<pre><code class="language-raku" data-lang="raku">method escape:sym&lt;„ ”&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
+</code></pre><p>编译! 运行我们带有 bug 的代码:</p>
 <pre><code>$ ./raku -e '.say for qww&lt;foo „hello world” bar&gt;'
 foo
 hello world
 bar
-</code></pre>
-
-<p>呼! 成功了! 不再有 bug 了。我们修复了那个 bug!</p>
-
+</code></pre><p>呼! 成功了! 不再有 bug 了。我们修复了那个 bug!</p>
 <p>但是, 等一下&hellip;</p>
-
 <h2 id="遗漏了-但是没有忘记">遗漏了, 但是没有忘记</h2>
-
 <p>看一下<a href="https://docs.raku.org/language/unicode_texas#Other_acceptable_single_codepoints">所有可能的奢华的引号的列表</a>。尽管我们的 bug 报告中仅仅提到了 <code>„”</code> 引号对儿, 但是 <code>‚‘</code> 和 <code>「」</code> 都不在我们的 <code>role ww</code> tokens 中。远远不止的是, 某些左/右引号, 当它们交换位置后, 在引起字符串的时候也刚好能工作, 所以它们也应该在 <code>qww</code> 中起效。然而, 添加一整串额外的 tokens 和一整串其它的 actions 方法是相当不精彩的。有没有更好的方法?</p>
-
 <p>我们仔细看看我们的 tokens:</p>
-
-<pre><code class="language-raku">token escape:sym&lt;“ ”&gt; {
+<pre><code class="language-raku" data-lang="raku">token escape:sym&lt;“ ”&gt; {
     &lt;?[“]&gt; &lt;quote=.LANG('MAIN','quote')&gt;
 }
-</code></pre>
-
-<p><code>sym&lt;“ ”&gt;</code> 我们可以把它省略了 — 这里它的功能仅仅是作为一个名字。我们留下的是一个向前查看的 <code>“</code> 引号还有 <code>&lt;quote=.LANG('MAIN','quote')&gt;</code>。所以我们可以向前查看所有的我们关心的开口引号并让 MAIN braid 接管所有的细节。</p>
-
+</code></pre><p><code>sym&lt;“ ”&gt;</code> 我们可以把它省略了 — 这里它的功能仅仅是作为一个名字。我们留下的是一个向前查看的 <code>“</code> 引号还有 <code>&lt;quote=.LANG('MAIN','quote')&gt;</code>。所以我们可以向前查看所有的我们关心的开口引号并让 MAIN braid 接管所有的细节。</p>
 <p>所以, 让我们用这个单个 token 替换掉所有的引号处理 tokens:</p>
-
-<pre><code class="language-raku">token escape:sym&lt;'&gt; {
+<pre><code class="language-raku" data-lang="raku">token escape:sym&lt;'&gt; {
     &lt;?[ ' &quot; ‘ ‚ ’ “ „ ” 「 ]&gt; &lt;quote=.LANG('MAIN','quote')&gt;
 }
-</code></pre>
-
-<p>并且使用下面这个单个 action 替换掉所有的匹配 actions 方法:</p>
-
-<pre><code class="language-raku">method escape:sym&lt;'&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
-</code></pre>
-
-<p>编译! 运行我们的带有某些引号变体的代码:</p>
-
+</code></pre><p>并且使用下面这个单个 action 替换掉所有的匹配 actions 方法:</p>
+<pre><code class="language-raku" data-lang="raku">method escape:sym&lt;'&gt;($/) { make mark_ww_atom($&lt;quote&gt;.ast); }
+</code></pre><p>编译! 运行我们的带有某些引号变体的代码:</p>
 <pre><code>$ ./raku -e '.say for qww&lt;„looks like” ‚we fixed‘ ｢this thing｣&gt;'
 looks like
 we fixed
 this thing
-</code></pre>
-
-<p>精彩! 我们不仅让所有的引号都能正常工作, 还设法清理的存在的 tokens 和 actions 方法。现在所有我们需要做的就是对我们的修复做测试并且我们已经准备提交了。</p>
-
+</code></pre><p>精彩! 我们不仅让所有的引号都能正常工作, 还设法清理的存在的 tokens 和 actions 方法。现在所有我们需要做的就是对我们的修复做测试并且我们已经准备提交了。</p>
 <h2 id="享用-bug-烤肉">享用 bug 烤肉</h2>
-
 <p><a href="https://github.com/raku/roast">Raku 官方测试套件 Roast</a> 是在 Rakudo 内建目录中的 <code>t/spec</code> 中，如果它不存在, 仅仅运行 <code>make spectest</code> 就好了并且在它把 roast 仓库克隆到 <code>t/spec</code> 中后就中止它。我们需要找到在哪里插入我们的测试而 <code>grep</code> 是干那件事的好朋友:</p>
-
 <pre><code>zoffix@VirtualBox:~/CPANPRC/rakudo/t/spec$ grep -R 'qww' .
 Binary file ./.git/objects/pack/pack-5bdee39f28283fef4b500859f5b288ea4eec20d7.pack matches
 ./S02-literals/allomorphic.t:    my @wordlist = qqww[1 2/3 4.5 6e7 8+9i] Z (IntStr, RatStr, RatStr, NumStr, ComplexStr);
@@ -705,40 +584,26 @@ Binary file ./.git/objects/pack/pack-5bdee39f28283fef4b500859f5b288ea4eec20d7.pa
 ./S02-literals/quoting.t:    is-deeply qww&lt;a a ‘b b’ ‚b b’ ’b b‘ ’b b‘ ’b b’ ‚b b‘ ‚b b’ “b b” „b b”
 ./S02-literals/quoting.t:    'fancy quotes in qww work just like regular quotes';
 ./integration/advent2014-day16.t:    for flat qww/ foo bar 'first second' / Z @a -&gt; $string, $result {
-</code></pre>
-
-<p>看起来 <code>S02-literals/quoting.t</code> 是它的一个好地方。打开那个文件, 在它的顶部, 通过我们添加的测试的数量来增加 <code>plan</code> 的数量 — 在这个例子中仅仅增加一条就好了。然后滚动到底部并创建一个 block 块, 前面添加一个注释, 并为我们正修复的 <a href="https://rt.perl.org/Ticket/Display.html?id=128304">bug 报告</a>引用那个 RT 标签数字。</p>
-
+</code></pre><p>看起来 <code>S02-literals/quoting.t</code> 是它的一个好地方。打开那个文件, 在它的顶部, 通过我们添加的测试的数量来增加 <code>plan</code> 的数量 — 在这个例子中仅仅增加一条就好了。然后滚动到底部并创建一个 block 块, 前面添加一个注释, 并为我们正修复的 <a href="https://rt.perl.org/Ticket/Display.html?id=128304">bug 报告</a>引用那个 RT 标签数字。</p>
 <p>在文件里面, 我们使用 <a href="https://docs.raku.org/language/testing#index-entry-is-deeply-is-deeply%28%24value%2C_%24expected%2C_%24description%3F%29">is-deeply</a> 测试函数, 它使用 <a href="https://docs.raku.org/routine/eqv">eqv 操作符</a>语义来做测试。我们会给它一个带有完整引号串的 <code>qww&lt;&gt;</code> 行并告诉它我们所期望返回的项目列表。还要写下测试描述:</p>
-
-<pre><code class="language-raku"># RT #128304
+<pre><code class="language-raku" data-lang="raku"># RT #128304
 {
     is-deeply qww&lt;a a ‘b b’ ‚b b’ ’b b‘ ’b b‘ ’b b’ ‚b b‘ ‚b b’ “b b” „b b”
             ”b b“ ”b b“ ”b b” „b b“ „b b” ｢b b｣ ｢b b｣&gt;,
         ('a', 'a', |('b b' xx 16)),
     'fancy quotes in qww work just like regular quotes';
 }
-</code></pre>
-
-<p>返回到 Rakudo checkout, 运行修改后的测试并保证它通过:</p>
-
+</code></pre><p>返回到 Rakudo checkout, 运行修改后的测试并保证它通过:</p>
 <pre><code>$ make t/spec/S02-literals/quoting.t
 # &lt;lots of output&gt;
 All tests successful.
 Files=1, Tests=185,  3 wallclock secs ( 0.03 usr  0.01 sys +  2.76 cusr  0.11 csys =  2.91 CPU)
 Result: PASS
-</code></pre>
-
-<p>漂亮。 提交测试 bug 修复好了并且把它们送走! 我们做到了!</p>
-
+</code></pre><p>漂亮。 提交测试 bug 修复好了并且把它们送走! 我们做到了!</p>
 <h2 id="结论">结论</h2>
-
 <p>当我们在修复 Raku 中的解析 bugs 的时候, 把程序减少到能重新产生那个 bug 的最小部分然后使用 <code>--target=parse</code> 命令行参数, 得到解析树的输出, 找到所匹配的那个 tokens。<code>statementlist</code></p>
-
 <p>然后, 在 <a href="https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Raku/Grammar.nqp">src/Raku/Grammar.nqp</a> 中跟随这些 tokens, 它也继承自 <a href="https://github.com/raku/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp">NQP 的 src/HLL/Grammar.nqp</a> 。 与位于 <a href="https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Raku/Actions.nqp">src/Raku/Actions.nqp</a> 中的 actions 类协作, 跟随着代码找出正在做什么并期望找出问题出现在什么位置。</p>
-
 <p>修复它。测试它。发布它。</p>
-
 <p>充满了乐趣。</p>
 
 
@@ -831,7 +696,7 @@ Result: PASS
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -29,7 +29,7 @@ Larry 语言再设计第一定律: 每个人都想要冒号 Larry 语言再设�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-24-raku%E4%B8%AD%E7%9A%84%E5%86%92%E5%8F%B7/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -236,20 +236,13 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="raku-colons">Raku Colons</h2>
-
+        <h2 id="raku-colons">Raku Colons</h2>
 <p>在 Raku 中到处都是冒号, 我搜集了你在 Raku 中使用<a href="https://thelackthereof.org/Raku_Colons">冒号</a>的所有方式。</p>
-
 <p>Larry 语言再设计第一定律: 每个人都想要冒号
 Larry 语言再设计第二定律: Larry 成为冒号</p>
-
 <p>这些都是主题的变体，尤其是“冒号对”语法主题。如果冒号的两种用法看起来不同，或者在不同的用法上下文中不同，即使它们在技术上是相同的，我更愿意说明这两种用法。</p>
-
 <h3 id="命名空间">命名空间</h3>
-
-<pre><code class="language-raku"># namespace
+<pre><code class="language-raku" data-lang="raku"># namespace
 package A::B { ... }
 class   A::B { ... }
 
@@ -273,11 +266,8 @@ class Who { method myname { say ::?CLASS } }
 
 # Treat package X as a hash
 say X::.keys;
-</code></pre>
-
-<h3 id="绑定">绑定</h3>
-
-<pre><code class="language-raku"># Binding
+</code></pre><h3 id="绑定">绑定</h3>
+<pre><code class="language-raku" data-lang="raku"># Binding
 my $y := $a;
 
 # Read-only binding
@@ -285,11 +275,8 @@ my $z ::= $y;
 
 # Container identify
 $y =:= $a; # True
-</code></pre>
-
-<h3 id="colon-pair-语法">Colon-Pair 语法</h3>
-
-<pre><code class="language-raku"># Colon-Pair syntax (often seen as adverbs)
+</code></pre><h3 id="colon-pair-语法">Colon-Pair 语法</h3>
+<pre><code class="language-raku" data-lang="raku"># Colon-Pair syntax (often seen as adverbs)
 my $x = 'cat';
 :foo(5)        # 'foo' =&gt; 5
 :foo('dog')    # 'foo' =&gt; 'dog'
@@ -328,41 +315,29 @@ my $a;
 sub b (:foo($a)! is rw) { $a = 42};
 b(:foo($a));
 say $a # 42
-</code></pre>
-
-<h3 id="类型">类型</h3>
-
-<pre><code class="language-raku"># T takes value's type
+</code></pre><h3 id="类型">类型</h3>
+<pre><code class="language-raku" data-lang="raku"># T takes value's type
 -&gt; Numeric ::T \x { say T }(42); # =&gt; (Int)
 
 # Type Smileys
 Int:D; # Defined Int
 Int:U; # Undefined Int
-</code></pre>
-
-<h3 id="signature">Signature</h3>
-
-<pre><code class="language-raku"># signature literal
+</code></pre><h3 id="signature">Signature</h3>
+<pre><code class="language-raku" data-lang="raku"># signature literal
 my $sig = :(Int $foo);
 
 # signature on Callable &amp;var, not yet implemented
 my &amp;f:(Str) = -&gt; Str {};
-</code></pre>
-
-<h3 id="operators-as-methods">Operators as Methods</h3>
-
-<pre><code class="language-raku">my $a = 1;
+</code></pre><h3 id="operators-as-methods">Operators as Methods</h3>
+<pre><code class="language-raku" data-lang="raku">my $a = 1;
 $a.infix:[&quot;+&quot;](3); # $a + 3
 $a.infix:&lt;+&gt;(3);   # $a + 3, but shorter with quote brackets
 $a.prefix:&lt;++&gt;;    # ++$a
 $a.postfix:&lt;++&gt;;   # ++$a
 $a.:&lt;++&gt;;          # Shorthand for prefix (no param)
 $a.:&lt;+&gt;(3);        # Shorthand for infix (param provided)
-</code></pre>
-
-<h3 id="regex">Regex</h3>
-
-<pre><code class="language-raku"># Regex adverb
+</code></pre><h3 id="regex">Regex</h3>
+<pre><code class="language-raku" data-lang="raku"># Regex adverb
 :i/a/  # Case insensitive, outside
 /:i a/ # Case insensitive, inside
 
@@ -379,11 +354,8 @@ my regex foo { :my $var; }
 
 # Unicode character classes
 say so &quot;a&quot; ~~ /&lt;[:Alpha]&gt;/
-</code></pre>
-
-<h3 id="misc">Misc</h3>
-
-<pre><code class="language-raku"># Quote adverb
+</code></pre><h3 id="misc">Misc</h3>
+<pre><code class="language-raku" data-lang="raku"># Quote adverb
 Q:w(word of the day); # :w adverb
 
 # Precedence dropper
@@ -423,9 +395,7 @@ sub MAIN ( :$filename ) { ... }
 # cmd --filename=file.txt
 # cmd :filename=file.txt
 # cmd :filename \# filename =&gt; true
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p>冒号真是令人惊叹! Awesome.</p>
 </blockquote>
 
@@ -519,7 +489,7 @@ sub MAIN ( :$filename ) { ... }
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

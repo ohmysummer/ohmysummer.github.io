@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-14-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0.-junctions-%E4%B8%8E%E9%9B%86%E5%90%88/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,42 +231,23 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第十四章-junctions-和集合">第十四章. Junctions 和集合</h1>
-
 <h1 id="junctions">Junctions</h1>
-
 <p>A <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is a combination of values that is mostly indistinguishable from a single value. They have their roots in the math of quantum mechanics. You may have heard of Schrödinger’s cat, who is both dead and alive at the same time—an analogy that physicist used to show how ridiculous this all is. Well, the joke was on him.</p>
-
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 是一组值，它们与单个值几乎无法区分。它们根植于于量子力学中的数学。你可能听说过薛定谔的猫，同一个时间它既死又活着 - 这个物理学家用来表示这一切是多么荒谬。那个笑话现在应在 Junction 身上了。</p>
-
 <h2 id="any">any</h2>
-
 <p>The first <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is the <code>any</code>. This “any” is lowercase and is not related to the type <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>. It creates a value that can act like, well, any of the ones you gave it:</p>
-
 <p>第一个  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 是 <code>any</code>。这个“any”是小写的，与 <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> 类型无关。它会创建一个值，就像你给它的任何一个一样：</p>
-
 <pre><code>my $first-junction = any( 1, 3, 7 );
-</code></pre>
-
-<p>You can make a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> from an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> or any other <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>:</p>
-
+</code></pre><p>You can make a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> from an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> or any other <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a>:</p>
 <p>您可以从<a href="https://docs.raku.org/type/Array.html">数组</a>或任何其他 <a href="https://docs.raku.org/type/Positional.html"><code>Positional</code></a> 创建一个  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>：</p>
-
 <pre><code>my $junction = any( @array   );   # Array
 my $junction = any( 1 ..  10 );   # Range
 my $junction = any( 1 ... 10 );   # Sequence
-</code></pre>
-
-<p>Now you have a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> of three values. It will only ever have three values. You can’t take one away or add one. There’s no interface to extract them or count them. You’re not supposed to know—or even care—which values are in there. In fact, <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is the only builtin type that does not inherit from <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>:</p>
-
+</code></pre><p>Now you have a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> of three values. It will only ever have three values. You can’t take one away or add one. There’s no interface to extract them or count them. You’re not supposed to know—or even care—which values are in there. In fact, <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is the only builtin type that does not inherit from <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>:</p>
 <p>现在你有一个三个值的  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。它只会有三个值。你不能拿走一个或添加一个。没有接口可以提取它们或计算它们。你不应该知道 - 甚至关心 - 那里有哪些观。事实上， <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 是唯一不从  <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> 继承的内置类型：</p>
-
 <pre><code>% raku
 To exit type 'exit' or '^D'
 &gt; my $first-junction = any( 1, 3, 7 );
@@ -275,110 +256,66 @@ any(1, 3, 7)
 Junction
 &gt; $first-junction.^mro
 ((Junction) (Mu))
-</code></pre>
-
-<p>These are quite handy in complex conditions. Consider the annoying code you’ve had to write to test if a value is one of three possible numbers:</p>
-
+</code></pre><p>These are quite handy in complex conditions. Consider the annoying code you’ve had to write to test if a value is one of three possible numbers:</p>
 <p>这些在复杂条件下非常方便。考虑一下你必须编写的令人讨厌的代码，以测试值是否是三个可能的数字之一：</p>
-
 <pre><code>my $n = any( 1, 3, 7 );
 
 if $n == 1 || $n == 3 || $n == 7 {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<p>Being clever with a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> doesn’t actually feel that much more clever:</p>
-
+</code></pre><p>Being clever with a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> doesn’t actually feel that much more clever:</p>
 <p>聪明的 <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> 实际上并没有感觉更聪明：</p>
-
 <pre><code>my Int %hash = map { $_ =&gt; True }, (1, 3, 7);
 if %hash{$n}:exists {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<p>Not only does the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> equal any of those values, but it also equals all of them. This looks like a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>that would never execute, but it does:</p>
-
+</code></pre><p>Not only does the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> equal any of those values, but it also equals all of them. This looks like a <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>that would never execute, but it does:</p>
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 不仅等于这些值中的任何一个，而且它也等于所有这些值。这看起来像一个永远不会执行的 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>，但它确实：</p>
-
 <pre><code>if $n == 1 &amp;&amp; $n == 3 &amp;&amp; $n == 7 {
     put &quot;n is all of those values&quot;;
     }
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is much closer to how you’d probably describe this in speech:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is much closer to how you’d probably describe this in speech:</p>
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 更接近你可能在演讲中描述的方式：</p>
-
 <pre><code>if $n == any( 1, 3, 7 ) {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<p>When you operate on a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> your code may distribute (autothread) that operation over all of its values to produce a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> of intermediate results. The first step might look like this:</p>
-
+</code></pre><p>When you operate on a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> your code may distribute (autothread) that operation over all of its values to produce a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> of intermediate results. The first step might look like this:</p>
 <p>当您在 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 上操作时，您的代码可以在其所有值上分配（自动读取）该操作，以产生中间结果的 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。第一步可能如下所示：</p>
-
 <pre><code>if any( 1 == $n, 3 == $n, 7 == $n ) {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<p>These evaluate to their Boolean values. If <code>$n</code> is <code>3</code> one of the comparisons is <code>True</code>:</p>
-
+</code></pre><p>These evaluate to their Boolean values. If <code>$n</code> is <code>3</code> one of the comparisons is <code>True</code>:</p>
 <p>这些求值为其布尔值。如果 <code>$n</code> 为 <code>3</code> ，则其中一个比较为 <code>True</code>：</p>
-
 <pre><code>my $n = 3;
 if any( False, True, False ) {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<p>Any <code>True</code> makes the entire junctive expression <code>True</code>:</p>
-
+</code></pre><p>Any <code>True</code> makes the entire junctive expression <code>True</code>:</p>
 <p>任何一个为 <code>True</code> 会使整个正则表达式为 <code>True</code>：</p>
-
 <pre><code>my $n = 3;
 if True {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<p>You don’t have to define the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> in the condition. It might already be in a variable and ready for use:</p>
-
+</code></pre><p>You don’t have to define the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> in the condition. It might already be in a variable and ready for use:</p>
 <p>您不必在条件中定义  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。它可能已经在变量中并且可以使用：</p>
-
 <pre><code>my $any = any( 1, 3, 7 );
 if $n == $any {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<p>Here’s the beauty of <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s—you don’t have to know that you are using one. Here’s an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that has some “normal” values and one that is a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>:</p>
-
+</code></pre><p>Here’s the beauty of <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s—you don’t have to know that you are using one. Here’s an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> that has some “normal” values and one that is a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>:</p>
 <p>这是  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 的美之所在 - 你不知不觉就在使用它。这是一个具有一些“正常”值的<a href="https://docs.raku.org/type/Array.html"><code>数组</code></a>，其中一个元素是 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>：</p>
-
 <pre><code>my @array = 5, any( 1, 7 ), 8, 9;
 for @array -&gt; $item {
     put &quot;$item was odd&quot; unless $item %% 2;
     }
-</code></pre>
-
-<p>The loop works with single “normal” values as well as <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s. Notice that the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> creates two lines of output. The stringification happened for each value:</p>
-
+</code></pre><p>The loop works with single “normal” values as well as <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s. Notice that the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> creates two lines of output. The stringification happened for each value:</p>
 <p>在这个循环中，单个“正常”值以及 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 都起作用。请注意，<a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 创建了两行输出。每个值都发生了字符串化：</p>
-
 <pre><code>5 was odd
 1 was odd
 7 was odd
 9 was odd
-</code></pre>
-
-<p>That multiple stringification could change in the future; it wasn’t this way when I started the book and it might change again. The <code>.gist</code> on <code>$item</code> prevents that:</p>
-
+</code></pre><p>That multiple stringification could change in the future; it wasn’t this way when I started the book and it might change again. The <code>.gist</code> on <code>$item</code> prevents that:</p>
 <p>多重字符串化可能会在未来发生变化; 当我开始写这本书时它不是这样的，它可能会再次改变。 <code>$item</code> 上的 <code>.gist</code> 可以防止多重字符串化：</p>
-
 <pre><code>my @array = 5, any( 1, 7 ), 8, 9;
 for @array -&gt; $item {
     put &quot;{$item.gist} was odd&quot; unless $item %% 2;
@@ -387,66 +324,37 @@ for @array -&gt; $item {
 5 was odd
 any(1, 7) was odd
 9 was odd
-</code></pre>
-
-<p>EXERCISE 14.1Make an <code>any</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> of the prime numbers between 1 and 10 (so, 2, 3, 5, and 7). Use that <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> to note which numbers from 1 to 10 are prime.</p>
-
+</code></pre><p>EXERCISE 14.1Make an <code>any</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> of the prime numbers between 1 and 10 (so, 2, 3, 5, and 7). Use that <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> to note which numbers from 1 to 10 are prime.</p>
 <p>练习14.1使用 1 到 10 之间的素数制作一个 <code>any</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>（因此，2,3,5和7）。使用该 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 来记录从1到10的哪些数字是素数。</p>
-
 <p>There’s a symbolic notation for <code>any</code>. The <code>|</code> between values creates a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>. It looks similar to the <code>||</code> for the logical OR operator but is not related:</p>
-
 <p><code>any</code> 有一个象征性的符号。 值之间的 <code>|</code> 创建一个 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。它看起来类似于 <code>||</code> 对于逻辑OR运算符但不相关：</p>
-
 <pre><code>my $n = 3;
 my $any = 1 | 3 | 7;
 if $n == $any {
     put &quot;n is one of those values&quot;;
     }
-</code></pre>
-
-<h6 id="note">NOTE</h6>
-
+</code></pre><h6 id="note">NOTE</h6>
 <p>Raku uses <code>|</code>, <code>&amp;</code>, and <code>^</code> to create <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s. You might be used to these as numeric bit operators in other languages. You’ll find those now are called <code>+|</code>, <code>+^</code>, and <code>+&amp;</code>. That leading <code>+</code> denotes the numeric flavor.</p>
-
 <p>Raku 使用 <code>|</code>，<code>＆</code> 和 <code>^</code> 来创建 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。您可能习惯使用其他语言中的数字位运算符。您会发现现在称为 <code>+|</code>，<code>+^</code> 和 <code>+&amp;</code> 。前导 <code>+</code> 表示数字风味。</p>
-
 <p>You can change <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s by affecting their values. Numerically adding to a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> adds to every value in it:</p>
-
 <p>您可以通过影响其值来更改 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。以数字方式添加到  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 会增加其中的每个值：</p>
-
 <pre><code>my $junction = any( 1, 3, 7 );
 $junction += 1;
 if $junction %% 2 {
     put &quot;{$junction.gist} is even&quot;;
     }
-</code></pre>
-
-<p>The output shows that you were able to add one to each of the values:</p>
-
+</code></pre><p>The output shows that you were able to add one to each of the values:</p>
 <p>输出显示您可以为每个值加一：</p>
-
 <pre><code>any(2, 4, 8) is even
-</code></pre>
-
-<p>This generally applies to all of the operations, and you can get quite creative with that. What if you add two <code>any</code><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s? Think about this for a minute before you read ahead to the output:</p>
-
+</code></pre><p>This generally applies to all of the operations, and you can get quite creative with that. What if you add two <code>any</code><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s? Think about this for a minute before you read ahead to the output:</p>
 <p>这通常适用于所有操作，您可以从中获得相当的创意。如果你将两个 <code>any</code>  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 相加会怎样？在继续读到输出之前，请考虑一分钟：</p>
-
 <pre><code>my $any-any = any( 6, 7 ) + any( 9, 11 )
 put &quot;Result is $any-any&quot;;
-</code></pre>
-
-<p>Now figure out what this means:</p>
-
+</code></pre><p>Now figure out what this means:</p>
 <p>现在弄清楚这意味着什么：</p>
-
 <pre><code>Result is any(any(15, 17), any(16, 18))
-</code></pre>
-
-<p>That’s an <code>any</code> of <code>any</code>s! Suppose you wanted to check if that value was less than <code>17</code>. This virtual series of steps finds the answer:</p>
-
+</code></pre><p>That’s an <code>any</code> of <code>any</code>s! Suppose you wanted to check if that value was less than <code>17</code>. This virtual series of steps finds the answer:</p>
 <p>这是一个里面含有 <code>any</code> 的 <code>any</code>。假设您要检查该值是否小于 <code>17</code>。此虚拟系列步骤可找到答案：</p>
-
 <pre><code>$any-any &lt; 17
 
 any( any(15, 17), any(16, 18) ) &lt; 17
@@ -460,28 +368,17 @@ any( any(True,False), any(True, False) )
 any( True, True )
 
 True
-</code></pre>
-
-<p>This has the same effect as <code>any( 15, 16, 17, 18 )</code> but with more steps involved. That’s a warning. If you aren’t careful you could have an explosion of <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s in there.</p>
-
+</code></pre><p>This has the same effect as <code>any( 15, 16, 17, 18 )</code> but with more steps involved. That’s a warning. If you aren’t careful you could have an explosion of <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s in there.</p>
 <p>这与任何 <code>any( 15, 16, 17, 18 )</code> 具有相同的效果，但涉及更多步骤。这是一个警告。如果你不小心，你可能会爆发 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。</p>
-
 <h2 id="all">all</h2>
-
 <p>An <code>all</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> requires that each of its values satisfy the condition or method you apply:</p>
-
 <p><code>all</code>  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 要求其每个值满足你应用的条件或方法：</p>
-
 <pre><code>my $all-of-u = all( &lt;Danaus Bicyclus Amauris&gt; );
 if $all-of-u.contains: 'u' {
     put &quot;Everyone has a u&quot;;
     }
-</code></pre>
-
-<p>Perhaps you want to check that all of the values are a particular type. In this example there’s a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> in <code>@mixed-types</code>:</p>
-
+</code></pre><p>Perhaps you want to check that all of the values are a particular type. In this example there’s a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> in <code>@mixed-types</code>:</p>
 <p>也许您想要检查所有值是否为特定类型。在这个例子中，<code>@mixed-types</code> 中有一个 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>：</p>
-
 <pre><code>my @mixed-types = &lt;1 2/3 4+8i Hello&gt;;
 if all(@mixed-types) ~~ Numeric {
     put &quot;Every value is a numeric thingy&quot;;
@@ -489,138 +386,76 @@ if all(@mixed-types) ~~ Numeric {
 else {
     put &quot;One of these things is not like the others&quot;;
     }
-</code></pre>
-
-<p>The <code>Hello</code> cannot become a number, so a smart match against <a href="https://docs.raku.org/type/Numeric.html"><code>Numeric</code></a> fails. The entire <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> evaluates to <code>False</code> because one of its values does.</p>
-
+</code></pre><p>The <code>Hello</code> cannot become a number, so a smart match against <a href="https://docs.raku.org/type/Numeric.html"><code>Numeric</code></a> fails. The entire <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> evaluates to <code>False</code> because one of its values does.</p>
 <p><code>Hello</code> 无法成为数字，因此与  <a href="https://docs.raku.org/type/Numeric.html"><code>Numeric</code></a> 的智能匹配失败。整个  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 的计算结果为 <code>False</code>，因为其值之一是 <code>False</code>。</p>
-
 <p>The <code>all</code> is much easier to read than almost anything else that might accomplish the task. Comparing the result of a <code>.grep</code> to the original number of elements in the source is too much typing:</p>
-
 <p><code>all</code> 都比其他任何可能完成任务的东西更容易阅读。将 <code>.grep</code> 的结果与源中元素的原始数量进行比较打字太多了：</p>
-
 <pre><code>if @mixed-types.grep( * !~~ Numeric ) == +@mixed-types {
     put &quot;One of these things is not a number&quot;;
     }
-</code></pre>
-
-<p>You can create an <code>all</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> with the <code>&amp;</code>:</p>
-
+</code></pre><p>You can create an <code>all</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> with the <code>&amp;</code>:</p>
 <p>您可以使用 <code>&amp;</code> 创建一个 <code>all</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>：</p>
-
 <pre><code>my $all-of-u = 'Danaus' &amp; 'Bicyclus' &amp; 'Amauris';
 if $all-of-u.contains: 'u' {
     put &quot;Everyone has a u&quot;;
     }
-</code></pre>
-
-<p>EXERCISE 14.2Using <code>all</code>, test if all the numbers you specify on the command line are prime.</p>
-
+</code></pre><p>EXERCISE 14.2Using <code>all</code>, test if all the numbers you specify on the command line are prime.</p>
 <p>练习14.2使用 <code>all</code>，测试你在命令行中指定的所有数字是否为素数。</p>
-
 <h2 id="one">one</h2>
-
 <p>The <code>one</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> allows only one of its values to satisfy its condition. If more than one would make the condition <code>True</code> the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> fails:</p>
-
 <p><code>one</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 只允许其中一个值满足其条件。如果不止一个条件为 <code>True</code>，则 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 失败：</p>
-
 <pre><code>put one( 1, 2, 3 ) %% 2 ??     # True
     &quot;Exactly one is even&quot;
         !!
     &quot;More (or less) than one is even&quot;;
-</code></pre>
-
-<p>If more than one thing in the <code>one</code> is <code>True</code>, then the entire <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is <code>False</code>:</p>
-
+</code></pre><p>If more than one thing in the <code>one</code> is <code>True</code>, then the entire <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is <code>False</code>:</p>
 <p>如果 <code>one</code> 中的多个是 <code>True</code>，则整个 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 为 <code>False</code>：</p>
-
 <pre><code>one( True, True, False ).so    # False;
-</code></pre>
-
-<p>You can create a <code>one</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> with the <code>^</code>:</p>
-
+</code></pre><p>You can create a <code>one</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> with the <code>^</code>:</p>
 <p>您可以使用 <code>^</code> 创建 <code>one</code><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>：</p>
-
 <pre><code>put ( 1 ^ 2 ^ 3 ) %% 2 ??      # True
     &quot;Exactly one is even&quot;
         !!
     &quot;More (or less) than one is even&quot;;
-</code></pre>
-
-<h2 id="none">none</h2>
-
+</code></pre><h2 id="none">none</h2>
 <p>The <code>none</code> <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> requires that all of the values cause its condition to be <code>False</code>. That means that everything should evaluate to <code>False</code>. There’s no symbolic operator version for this type:</p>
-
 <p><code>none</code>  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 要求所有值都导致其条件为 <code>False</code>。这意味着一切都应该计算为 <code>False</code>。该类型没有符号运算符版本：</p>
-
 <pre><code>put none( 1, 2, 3 ) %% 5 ??      True
     &quot;Exactly one is even&quot;
         !!
     &quot;More (or less) than one is even&quot;;
-</code></pre>
-
-<p>EXERCISE 14.3Use <code>none</code> to test if no numbers you specify on the command line are prime. Once you’ve done that, use <code>none</code>to test that some numbers in an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> are prime.</p>
-
+</code></pre><p>EXERCISE 14.3Use <code>none</code> to test if no numbers you specify on the command line are prime. Once you’ve done that, use <code>none</code>to test that some numbers in an <a href="https://docs.raku.org/type/Array.html"><code>Array</code></a> are prime.</p>
 <p>练习14.3如果您在命令行中指定的数字不是素数，则使用 <code>none</code> 来测试。完成后，使用 <code>none</code> 测试，数组中的某些数字是素数。</p>
-
 <h2 id="some-junctive-tricks">Some Junctive Tricks</h2>
-
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s aren’t designed for introspection and you aren’t supposed to care if the value is in a <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>. This isn’t too hard to work around, though.</p>
-
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 不是为内省而设计的，你不应该关心这个值是否在一个  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 中。不过，这并不难解决。</p>
-
 <p>You can apply an operation to each value with a hyperoperator (<a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch06.html#camelia-lists">Chapter 6</a>). This one adds one to each element:</p>
-
 <p>您可以使用超运算符对每个值应用操作（第6章）。这个为每个元素加一：</p>
-
 <pre><code>my $junction = any( 1, -3, 7 );
 say $junction »+« 1;
-</code></pre>
-
-<p>The new <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> has new values. You still aren’t supposed to know what these new values are, but something must know what they are to add one to them:</p>
-
+</code></pre><p>The new <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> has new values. You still aren’t supposed to know what these new values are, but something must know what they are to add one to them:</p>
 <p>新的  <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 有新的值。你仍然不应该知道这些新值是什么，但肯定知道它们加一之后是什么：</p>
-
 <pre><code>any(2, -2, 8)
-</code></pre>
-
-<p>The <code>»+«</code> surrounds the <code>+</code> because that’s an infix operator and expects arguments on either side of it. You can call a method (a postfix thing) on each item:</p>
-
+</code></pre><p>The <code>»+«</code> surrounds the <code>+</code> because that’s an infix operator and expects arguments on either side of it. You can call a method (a postfix thing) on each item:</p>
 <p><code>»+«</code> 包围着 <code>+</code>，因为这是一个中缀运算符，并期望它的任何一边都有参数。你可以在每一项上调用一个方法（一个后缀的东西）：</p>
-
 <pre><code>$junction&gt;&gt;.is-prime; # any((True), (False), (False))
-</code></pre>
-
-<p>That method could be <code>.take</code>, which adds the value to the list that <code>gather</code> makes. This means that the values can escape the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>:</p>
-
+</code></pre><p>That method could be <code>.take</code>, which adds the value to the list that <code>gather</code> makes. This means that the values can escape the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>:</p>
 <p>该方法可以是 <code>.take</code>，它将值添加到 <code>gather</code> 制作的列表中。这意味着值可以避开 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>：</p>
-
 <pre><code>my $junction = any( 1, -3, 7 );
 my @values = gather $junction».take;
 put &quot;Values are @values[]&quot;;
-</code></pre>
-
-<p>Don’t make a habit of this because it’s slightly naughty. You aren’t supposed to know how to do this.</p>
-
+</code></pre><p>Don’t make a habit of this because it’s slightly naughty. You aren’t supposed to know how to do this.</p>
 <p>不要养成这个习惯，因为它有点顽皮。你不应该知道如何做到这一点。</p>
-
 <p>A <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> is handy to allow a combination of types in a type constraint. Use the <code>subset</code> of the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>of both types as the constraint:</p>
-
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 可以方便地在类型约束中组合类型。使用两种类型的 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 的 <code>subset</code> 子集作为约束：</p>
-
 <pre><code>subset IntInf where Int | Inf;
 sub add ( IntInf $a, IntInf $b ) { $a + $b }
 
 put add( 1, 3 );   # 4
 put add( 1, Inf ); # Inf
-</code></pre>
-
-<p>EXERCISE 14.4Rewrite the number-guessing game from <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch02.html#camelia-guessing">Chapter 2</a> to have three secret numbers. This time the hints are a bit trickier. If any of the secret numbers are smaller than the guess, tell the person that one or some of them are smaller. Do the same with larger numbers. For a single guess, some numbers may be larger and others smaller. When the person has guessed all of the secret numbers, end the game. Is it easier to use <code>given-when</code> or <code>if</code>? Using all of the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> types may make this easier.</p>
-
+</code></pre><p>EXERCISE 14.4Rewrite the number-guessing game from <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch02.html#camelia-guessing">Chapter 2</a> to have three secret numbers. This time the hints are a bit trickier. If any of the secret numbers are smaller than the guess, tell the person that one or some of them are smaller. Do the same with larger numbers. For a single guess, some numbers may be larger and others smaller. When the person has guessed all of the secret numbers, end the game. Is it easier to use <code>given-when</code> or <code>if</code>? Using all of the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> types may make this easier.</p>
 <p>练习14.4 重写第2章的猜数游戏，得到三个秘密数字。这次提示有点棘手。如果任何一个秘密数字小于猜测的值，请告诉该人其中一个或一些较小。用更大的数字做同样的事情。对于单个猜测，一些数字可能更大而其他数字更小。当该人猜出所有秘密数字时，结束游戏。是否更容易使用 - <code>given-when</code> 或 <code>if</code>？使用所有 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> 类型可以使这更容易。</p>
-
 <p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions-TABLE-junctions">Table 14-1</a> provides a summary of <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s.</p>
-
 <table>
 <thead>
 <tr>
@@ -629,26 +464,22 @@ put add( 1, Inf ); # Inf
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>any</code></td>
 <td>|</td>
 <td>Any of the values will work.</td>
 </tr>
-
 <tr>
 <td><code>all</code></td>
 <td>&amp;</td>
 <td>All of the values must work.</td>
 </tr>
-
 <tr>
 <td><code>one</code></td>
 <td>^</td>
 <td>Exactly one of the values will work.</td>
 </tr>
-
 <tr>
 <td><code>none</code></td>
 <td></td>
@@ -656,132 +487,72 @@ put add( 1, Inf ); # Inf
 </tr>
 </tbody>
 </table>
-
 <h1 id="sets">Sets</h1>
-
 <p><a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s are another way to combine values. They aren’t like <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s, where several values can act like one value; they combine zero or more values as its own thingy that you can inspect. Each value can be in the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>only once (although there are weighted <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s I won’t write about), and once created the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> is fixed.</p>
-
 <p><a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> 是另一种组合值的方法。它们不像 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>，其中几个值可以像一个值一样;它们将零个或多个值组合为您可以检查的自己的东西。每个值都只可以在 <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> 中一次（虽然有加权集合我不会写），一旦创建了集合就固定了。</p>
-
 <h6 id="注意">注意</h6>
-
 <p>A <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> is a type of <a href="https://docs.raku.org/type/Associative.html"><code>Associative</code></a>, so many of the things you already know about those work on <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s.</p>
-
 <p>集合是一种<a href="https://docs.raku.org/type/Associative.html">关联</a>类型，因此您已经了解的很多关于<a href="https://docs.raku.org/type/Set.html">集合</a>的内容。</p>
-
 <p>You can create a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> with a routine or a coercer. Each thingy in the <a href="https://docs.raku.org/type/List.html"><code>List</code></a> is a member of the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>. These are the same:</p>
-
 <p>您可以使用例程或强制器创建<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>。 <a href="https://docs.raku.org/type/List.html"><code>列表</code></a>中的每个东西都是 <a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>成员。这些都是一样的：</p>
-
 <pre><code>set( 1, 2, 3 )
 (1, 2, 3).Set
-</code></pre>
-
-<p>You can store any combination or mixture of thingys, including type objects:</p>
-
+</code></pre><p>You can store any combination or mixture of thingys, including type objects:</p>
 <p>您可以存储任何组合或混合物，包括类型对象：</p>
-
 <pre><code>set( &lt;♠ ♣ ♥ ♦&gt; )
 set( Int, 3, Inf, 'Hamadryas', $(1,2,3) )
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> stores a thingy only once. It’s either in the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> or it isn’t, so it doesn’t need duplicates:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> stores a thingy only once. It’s either in the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> or it isn’t, so it doesn’t need duplicates:</p>
 <p><a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>只存储一次东西。它可以在<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>中，也可以不在，因此不需要重复：</p>
-
 <pre><code>put set( 1, 2, 3 ).elems;          # 3
 put set( 1, 2, 2, 3, 3, 3 ).elems; # 3
-</code></pre>
-
-<p>You can check that a value is in the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> with the <code>(elem)</code> operator:</p>
-
+</code></pre><p>You can check that a value is in the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> with the <code>(elem)</code> operator:</p>
 <p>您可以使用<code>(elem)</code>运算符检查<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>中的值：</p>
-
 <pre><code>my $set = &lt;♠ ♣ ♥ ♦&gt;.Set;
 put 'Number is in the set' if '♥' (elem) $set;
-</code></pre>
-
-<p>There’s also the fancy Unicode <code>∈</code> operator that tests if the thingy is in the set (or is a “member” of the set):</p>
-
+</code></pre><p>There’s also the fancy Unicode <code>∈</code> operator that tests if the thingy is in the set (or is a “member” of the set):</p>
 <p>还有花哨的 Unicode <code>∈</code> 运算符，它测试东西是否在集合中（或者是集合的“成员”）：</p>
-
 <pre><code>put 'Number is in the set' if '♥' ∈ $set;
-</code></pre>
-
-<p>These operators know that they need <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s, so they coerce what you give them:</p>
-
+</code></pre><p>These operators know that they need <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s, so they coerce what you give them:</p>
 <p>这些运算符知道他们需要<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>，所以他们强迫你给他们的东西：</p>
-
 <pre><code>put 'Number is in the set' if '♥' ∈ &lt;♠ ♣ ♥ ♦&gt;;
-</code></pre>
-
-<p>With that operator the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> is the second operand. The order of operands is reversed for the <code>(cont)</code> and <code>∋</code> operators. Now you test that a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> contains an element:</p>
-
+</code></pre><p>With that operator the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> is the second operand. The order of operands is reversed for the <code>(cont)</code> and <code>∋</code> operators. Now you test that a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> contains an element:</p>
 <p>使用该运算符，<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>是第二个操作数。对于<code>(cont)</code>和 <code>∋</code> 运算符，操作数的顺序是相反的。现在，你测试一个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>包含一个元素：</p>
-
 <pre><code>put 'Number is in the set' if $set (cont) '♥';
 put 'Number is in the set' if $set ∋ '♥';
-</code></pre>
-
-<p>You can test that a thingy is not a member of a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> by either prefacing the ASCII operator with a <code>!</code> or using the Unicode version with the line through it:</p>
-
+</code></pre><p>You can test that a thingy is not a member of a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> by either prefacing the ASCII operator with a <code>!</code> or using the Unicode version with the line through it:</p>
 <p>你可以通过在 ASCII 操作符前面添加一个 <code>!</code> 来测试一个东西不是一个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>的成员！或者使用带有直线穿过的Unicode 版本：</p>
-
 <pre><code>put 'Number is not in the set' if '♥' !(elem) $set;
 put 'Number is not in the set' if '♥' ∉ $set;
 put 'Number is not in the set' if $set !(cont) '♥';
 put 'Number is not in the set' if $set ∌ '♥';
-</code></pre>
-
-<p>You can compare <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s to other <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s. Another <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> that contains only some of the members is a subset. A “strict” or “proper” subset is one that is smaller than the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> and only contains elements of the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>. Another way to say that is a proper subset is always smaller. The <code>(&lt;)</code> (or <code>⊂</code>) operator does that with the opening of the angle toward the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>. The order of elements does not matter:</p>
-
+</code></pre><p>You can compare <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s to other <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s. Another <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> that contains only some of the members is a subset. A “strict” or “proper” subset is one that is smaller than the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> and only contains elements of the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>. Another way to say that is a proper subset is always smaller. The <code>(&lt;)</code> (or <code>⊂</code>) operator does that with the opening of the angle toward the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>. The order of elements does not matter:</p>
 <p>您可以将<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>与其他<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>进行比较。另一个仅包含部分成员的<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>是子集。 “严格”或“适当”子集是小于<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>的子集，仅包含<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>的元素。另一种说法是适当的子集总是更小。 <code>(&lt;)</code>（或 <code>⊂</code>）运算符通过朝向较大的<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>开放角度来执行此操作。元素的顺序无关紧要：</p>
-
 <pre><code>set( 1, 3  )    (&lt;) set( 1, 3, 7 );  # True
 set( 3, 1, 7 )  (&lt;) set( 1, 3  );    # False (not smaller)
 set( 5, 7 )     ⊂  set( 1, 3, 7 );   # False (5 not in set)
-</code></pre>
-
-<p>A <code>!</code> in front of the ASCII operator or a line through the Unicode operator negates the condition:</p>
-
+</code></pre><p>A <code>!</code> in front of the ASCII operator or a line through the Unicode operator negates the condition:</p>
 <p>ASCII 运算符前面的 <code>!</code> 或通过带有直线穿过的 Unicode 运算符否定条件：</p>
-
 <pre><code>set( 1, 3  )   !(&lt;)   set( 1, 3, 7 );  # False
 set( 3, 1, 7 ) !(&lt;)   set( 1, 3  );    # True
 set( 5, 7 )     ⊄    set( 1, 3, 7 );  # True
-</code></pre>
-
-<p>Use the <code>(&gt;=)</code> or <code>⊆</code> operators if you want to allow the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s to be the same size:</p>
-
+</code></pre><p>Use the <code>(&gt;=)</code> or <code>⊆</code> operators if you want to allow the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s to be the same size:</p>
 <p>如果要允许<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>具有相同的大小，请使用（<code>(&gt;=)</code> 或 <code>⊆</code> 运算符：</p>
-
 <pre><code>set( 1, 3  )   (&lt;=)  set( 1, 3, 7 );  # True
 set( 1, 3, 7 ) (&lt;=)  set( 1, 3, 7 );  # True
 set( 3, 1, 7 )  ⊆   set( 1, 3  );    # False (subset has 7)
-</code></pre>
-
-<p>Negate those in the same way:</p>
-
+</code></pre><p>Negate those in the same way:</p>
 <p>以同样的方式否定这些：</p>
-
 <pre><code>set( 1, 3  )   !(&lt;=)  set( 1, 3, 7 );  # False
 set( 1, 3, 7 ) !(&lt;=)  set( 1, 3, 7 );  # False
 set( 3, 1, 7 )   ⊈   set( 1, 3  );    # True
-</code></pre>
-
-<p>You can also have supersets. That’s just a matter of which one you allow to be the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>. So far you’ve seen examples where you expected the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> to be to the right of the operator. Flip those operators around so you expect the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> to be on the left:</p>
-
+</code></pre><p>You can also have supersets. That’s just a matter of which one you allow to be the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>. So far you’ve seen examples where you expected the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> to be to the right of the operator. Flip those operators around so you expect the larger <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> to be on the left:</p>
 <p>你也可以有超集。这只是一个你允许成为更大的<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>的问题。到目前为止，您已经看到过您希望较大的<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>位于运算符右侧的示例。翻转这些运算符，以便您希望较大的<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>位于左侧：</p>
-
 <pre><code>set( 3, 1, 7 )  (&gt;) set( 1, 3  );    # False (not smaller)
 set( 3, 1, 7 )  ⊃   set( 1, 3  );    # False (not smaller)
 
 set( 3, 1, 7 ) !(&gt;)   set( 1, 3  );    # True
 set( 3, 1, 7 )  ⊅    set( 1, 3  );    # True
-</code></pre>
-
-<p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions-TABLE-set-operations">Table 14-2</a> shows the rest of the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> operations.</p>
-
+</code></pre><p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions-TABLE-set-operations">Table 14-2</a> shows the rest of the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> operations.</p>
 <table>
 <thead>
 <tr>
@@ -791,7 +562,6 @@ set( 3, 1, 7 )  ⊅    set( 1, 3  );    # True
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>$a (elem) $set</code></td>
@@ -799,77 +569,66 @@ set( 3, 1, 7 )  ⊅    set( 1, 3  );    # True
 <td>U+2208</td>
 <td><code>$a</code> is a member of <code>$set</code></td>
 </tr>
-
 <tr>
 <td><code>$a !(elem) $set</code></td>
 <td>∉</td>
 <td>U+2209</td>
 <td><code>$a</code> is not a member of <code>$set</code></td>
 </tr>
-
 <tr>
 <td><code>$set (cont) $a</code></td>
 <td>∋</td>
 <td>U+220B</td>
 <td><code>$set</code> contains <code>$a</code></td>
 </tr>
-
 <tr>
 <td><code>$set !(cont) $a</code></td>
 <td>∌</td>
 <td>U+220C</td>
 <td><code>$set</code> does not contain <code>$a</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a (&lt;) $set-b</code></td>
 <td>⊂</td>
 <td>U+2282</td>
 <td><code>$set-a</code> is a proper subset of <code>$set-b</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a !(&lt;) $set-b!</code></td>
 <td>⊄</td>
 <td>U+2284</td>
 <td><code>$set-a</code> is not a proper subset of <code>$set-b</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a (&lt;=) $set-b!</code></td>
 <td>⊆</td>
 <td>U+2286</td>
 <td><code>$set-a</code> is the same or is a subset of <code>$set-b</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a !(&lt;=) $set-b!</code></td>
 <td>⊈</td>
 <td>U+2288</td>
 <td><code>$set-a</code> is not the same and isn’t a subset of <code>$set-b</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a (&gt;) $set-b!</code></td>
 <td>⊃</td>
 <td>U+2283</td>
 <td><code>$set-a</code> is a proper superset of <code>$set-b</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a !(&gt;) $set-b!</code></td>
 <td>⊅</td>
 <td>U+2285</td>
 <td><code>$set-a</code> is not a proper superset of <code>$set-b</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a (&gt;=) $set-b!</code></td>
 <td>⊇</td>
 <td>U+2287</td>
 <td><code>$set-a</code> is the same or is a superset of <code>$set-b</code></td>
 </tr>
-
 <tr>
 <td><code>$set-a !(&gt;=) $set-b!</code></td>
 <td>⊉</td>
@@ -878,47 +637,26 @@ set( 3, 1, 7 )  ⊅    set( 1, 3  );    # True
 </tr>
 </tbody>
 </table>
-
 <p>EXERCISE 14.5In <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch09.html#camelia-hashes">Chapter 9</a> you used a <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> to check allowed values. Do the same thing with a <a href="https://docs.raku.org/type/List.html"><code>List</code></a>. Prompt for some starting colors (perhaps all on one line that you break up into elements). Continue to prompt for colors and report if the color was one of the initial colors. Can you do this ignoring case?</p>
-
 <p>练习14.5 在第9章中，您使用了 <a href="https://docs.raku.org/type/Map.html"><code>Map</code></a> 来检查允许的值。用<a href="https://docs.raku.org/type/List.html"><code>列表</code></a>做同样的事情。提示一些起始颜色（可能在一行中分解为元素）。继续提示颜色并报告颜色是否为初始颜色之一。你能忽略这个案子吗？</p>
-
 <h2 id="set-operations">Set Operations</h2>
-
 <p>You can operate on two <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s to create new <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s. A union is a combination of two <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s. Each element still shows up only once:</p>
-
 <p>您可以操作两个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>来创建新<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>。并集是两个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>的组合。每个元素仍然只显示一次：</p>
-
 <pre><code>set(1,2) (|) set(3,7);  # set(1 2 3 7)
 set(1,2)  ∪  set(3,7);  # set(1 2 3 7)
-</code></pre>
-
-<p>The intersection makes the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> of the elements they have in common:</p>
-
+</code></pre><p>The intersection makes the <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> of the elements they have in common:</p>
 <p>交集制作一个它们共有的元素<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>：</p>
-
 <pre><code>set(1,3) (&amp;) set(3,7);  # set(3)
 set(1,2)  ∩  set(3,7);  # set()
-</code></pre>
-
-<p>The set difference creates a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> made up of the elements from the first <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> that aren’t in the second. The <code>∖</code>isn’t the ASCII backslash; it’s (U+2216 SET MINUS):</p>
-
+</code></pre><p>The set difference creates a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> made up of the elements from the first <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> that aren’t in the second. The <code>∖</code>isn’t the ASCII backslash; it’s (U+2216 SET MINUS):</p>
 <p>差集创建一个由第一个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>中不在第二个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>中的元素组成的<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>。 <code>∖</code> 不是 ASCII 反斜杠; 它是（U+2216 SET MINUS）：</p>
-
 <pre><code>set( &lt;a b&gt; ) (-) set( &lt;b c&gt; );  # set(a)
 set( &lt;A b&gt; )  ∖  set( &lt;x y&gt; );  # set(A b)
-</code></pre>
-
-<p>The symmetric set difference does a similar thing in both directions. It creates a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> containing all the elements of either <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> that don’t show up in the other:</p>
-
+</code></pre><p>The symmetric set difference does a similar thing in both directions. It creates a <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> containing all the elements of either <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> that don’t show up in the other:</p>
 <p>对称差集在两个方向上做类似的事情。它创建一个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>，其中包含任何<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>中未显示在另一个<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>中的所有元素：</p>
-
 <pre><code>set( &lt;a b&gt; ) (^) set( &lt;b c&gt; );  # set(a c)
 set( &lt;A b&gt; )  ⊖  set( &lt;x y&gt; );  # set(A b x y)
-</code></pre>
-
-<p>These operations are summarized in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions-TABLE-set-creators">Table 14-3</a>.</p>
-
+</code></pre><p>These operations are summarized in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch14.html#camelia-junctions-TABLE-set-creators">Table 14-3</a>.</p>
 <table>
 <thead>
 <tr>
@@ -928,7 +666,6 @@ set( &lt;A b&gt; )  ⊖  set( &lt;x y&gt; );  # set(A b x y)
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>(|)</td>
@@ -936,21 +673,18 @@ set( &lt;A b&gt; )  ⊖  set( &lt;x y&gt; );  # set(A b x y)
 <td>U+222A</td>
 <td>Union (combination)</td>
 </tr>
-
 <tr>
 <td>(&amp;)</td>
 <td>∩</td>
 <td>U+2229</td>
 <td>Intersection (overlap)</td>
 </tr>
-
 <tr>
 <td>(-)</td>
 <td>∖</td>
 <td>U+2216</td>
 <td>Set difference</td>
 </tr>
-
 <tr>
 <td>(^)</td>
 <td>⊖</td>
@@ -959,15 +693,10 @@ set( &lt;A b&gt; )  ⊖  set( &lt;x y&gt; );  # set(A b x y)
 </tr>
 </tbody>
 </table>
-
 <p>EXERCISE 14.6Create two <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s of 10 numbers between 1 and 50. Find their intersection and union.</p>
-
 <p>练习14.6在1到50之间创建两组10个数字。找到它们的交集和联合。</p>
-
 <h1 id="summary">Summary</h1>
-
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>s make several values pretend to be a single value, in such a way that you can’t tell which value it is or how many values there are. You create the <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a> in a way that makes the values all work together or separately. A <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a> also combines values but lets you look inside to see what those values are. You can combine <a href="https://docs.raku.org/type/Set.html"><code>Set</code></a>s in various ways to create new ones. This is handy to tell what’s in, out, or common.</p>
-
 <p><a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>使多个值假装成单个值，这样你就无法判断它是哪个值或者有多少个值。您可以通过使值全部一起或单独工作的方式创建 <a href="https://docs.raku.org/type/Junction.html"><code>Junction</code></a>。 <a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>还可以组合值，但是让您查看这些值是什么。您可以通过各种方式组合<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>来创建新的<a href="https://docs.raku.org/type/Set.html"><code>集合</code></a>。这可以很方便地分辨出进出的内容。</p>
 
 
@@ -1060,7 +789,7 @@ set( &lt;A b&gt; )  ⊖  set( &lt;x y&gt; );  # set(A b x y)
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

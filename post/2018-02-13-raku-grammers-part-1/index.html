@@ -13,13 +13,13 @@
 在本文中，我将通过几个例子来说明 grammar 的基础知识。所有必需的语言结构将在我们进行的时候进行解释。
 解析数字 在你开始思考用户可以使用不同格式的数字,包括负数，浮点数，科学记数法中的数字，特殊形式的数字（如C的长整数）之前，解析数字似乎是一项简单的任务。
 让我们从最简单的形式开始：一个数字作为数字序列。例如，1,42,123 或 1000. Raku 中的 grammar 是一种特殊的类，它有自己的关键字。grammar 的第一个 rule 必须（默认情况下）称为 TOP，以下是解析第一组数字的完整程序：
-grammar N { token TOP { &lt;digit&gt;&#43; } } for &lt;1 42 123 1000&gt; -&gt; $n { say N.">
+grammar N {token TOP {&lt;digit&gt;&#43;}}for &lt;1 42 123 1000&gt; -&gt; $n {say N.">
   <meta property="og:description" content="Raku Grammars, Part 1 Raku 语言内置了对 grammar 的支持。您可以将 grammars 视为众所周知的正则表达式和诸如 yacc 或 bison 等实用程序或更复杂的 grammar 工具（如ANTLR）的组合。所有这些 - 词法分析器，语法分析器和语义处理 - 通常是编译器的独立部分，在 Raku 中它们都是内置的，并且可以通过全新的 Raku 安装 进行开箱即用。
 要感受 grammar 的力量，Raku 自己的 grammar 就是用 Raku 庞大的 grammar 类 Raku::Grammar写成的就足以说明了。
 在本文中，我将通过几个例子来说明 grammar 的基础知识。所有必需的语言结构将在我们进行的时候进行解释。
 解析数字 在你开始思考用户可以使用不同格式的数字,包括负数，浮点数，科学记数法中的数字，特殊形式的数字（如C的长整数）之前，解析数字似乎是一项简单的任务。
 让我们从最简单的形式开始：一个数字作为数字序列。例如，1,42,123 或 1000. Raku 中的 grammar 是一种特殊的类，它有自己的关键字。grammar 的第一个 rule 必须（默认情况下）称为 TOP，以下是解析第一组数字的完整程序：
-grammar N { token TOP { &lt;digit&gt;&#43; } } for &lt;1 42 123 1000&gt; -&gt; $n { say N.">
+grammar N {token TOP {&lt;digit&gt;&#43;}}for &lt;1 42 123 1000&gt; -&gt; $n {say N.">
   <meta name="twitter:description" content="Raku Grammars, Part 1 Raku 语言内置了对 grammar 的支持。您可以将 grammars 视为众所周知的正则表达式和诸如 yacc 或 bison 等实用程序或更复杂的 grammar 工具（如ANTLR）的组合。所有这些 - 词法分析器，语法分析器和语义处理 - 通常是编译器的独立部分，在 Raku 中它们都是内置的，并且可以通过全新的 Raku 安装 进行开箱即 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -30,7 +30,7 @@ grammar N { token TOP { &lt;digit&gt;&#43; } } for &lt;1 42 123 1000&gt; -&gt; $
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-02-13-raku-grammers-part-1/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -237,23 +237,14 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="raku-grammars-part-1-https-www-perl-com-article-perl-6-grammers-part-1"><a href="https://www.perl.com/article/perl-6-grammers-part-1/">Raku Grammars, Part 1</a></h1>
-
+        <h1 id="raku-grammars-part-1httpswwwperlcomarticleperl-6-grammers-part-1"><a href="https://www.perl.com/article/perl-6-grammers-part-1/">Raku Grammars, Part 1</a></h1>
 <p>Raku 语言内置了对 <a href="https://docs.raku.org/language/grammars">grammar</a> 的支持。您可以将 grammars 视为众所周知的正则表达式和诸如 <code>yacc</code> 或 <code>bison</code> 等实用程序或更复杂的 grammar 工具（如ANTLR）的组合。所有这些 - 词法分析器，语法分析器和语义处理 - 通常是编译器的独立部分，在 Raku 中它们都是内置的，并且可以通过全新的 <a href="http://rakudo.org/how-to-get-rakudo/">Raku 安装</a> 进行开箱即用。</p>
-
 <p>要感受 grammar 的力量，Raku 自己的 grammar 就是用 Raku 庞大的 grammar 类 <a href="https://github.com/rakudo/rakudo/blob/master/src/Raku/Grammar.nqp">Raku::Grammar</a>写成的就足以说明了。</p>
-
 <p>在本文中，我将通过几个例子来说明 grammar 的基础知识。所有必需的语言结构将在我们进行的时候进行解释。</p>
-
 <h2 id="解析数字">解析数字</h2>
-
 <p>在你开始思考用户可以使用不同格式的数字,包括负数，浮点数，科学记数法中的数字，特殊形式的数字（如C的长整数）之前，解析数字似乎是一项简单的任务。</p>
-
 <p>让我们从最简单的形式开始：一个数字作为数字序列。例如，1,42,123 或 1000. Raku 中的 grammar 是一种特殊的类，它有自己的关键字。grammar 的第一个 rule 必须（默认情况下）称为 <code>TOP</code>，以下是解析第一组数字的完整程序：</p>
-
-<pre><code class="language-raku">grammar N {
+<pre><code class="language-raku" data-lang="raku">grammar N {
     token TOP {
         &lt;digit&gt;+
     }
@@ -262,60 +253,41 @@ if (!doNotTrack) {
 for &lt;1 42 123 1000&gt; -&gt; $n {
     say N.parse($n) ?? &quot;OK $n&quot; !! &quot;NOT OK $n&quot;;
 }
-</code></pre>
-
-<p>当调用 <code>N</code> grammar 的 <code>parse</code> 方法时，Perl 会尝试将给定的字符串与 <code>TOP</code> 方法进行匹配。在我们的例子中，这是一个 <code>token</code>，这意味着字符串不能在 token 的各个部分之间包含任何可选空格。 <code>TOP</code> 只在消耗整个字符串时才成功，因此不需要使用显式锚点 <code>^</code> 和 <code>$</code> 来绑定 token 的边缘。</p>
-
+</code></pre><p>当调用 <code>N</code> grammar 的 <code>parse</code> 方法时，Perl 会尝试将给定的字符串与 <code>TOP</code> 方法进行匹配。在我们的例子中，这是一个 <code>token</code>，这意味着字符串不能在 token 的各个部分之间包含任何可选空格。 <code>TOP</code> 只在消耗整个字符串时才成功，因此不需要使用显式锚点 <code>^</code> 和 <code>$</code> 来绑定 token 的边缘。</p>
 <p>与正则表达式一样，token 和 rule 可以包含其他 tokens，rules 或由其名称引用的正则表达式。在我们的第一个例子中，<code>TOP</code> token 需要与数字匹配的 <code>digit</code> 内置方法。 <code>+</code> 量词与标准的 Perl 5 正则表达式中的量词相同：它允许前一个原子重复一次或多次。</p>
-
 <p>我们简单的 grammar 到目前为止只能解析无符号整数。任何负数都不能被解析：</p>
-
 <pre><code>OK 1
 OK 42
 OK 123
 OK 1000
 NOT OK -3
-</code></pre>
-
-<p>让我们更新 grammar 并引入可选符号的 token，它可以是 <code>+</code> 或 <code>-</code>:</p>
-
-<pre><code class="language-raku">grammar N {
+</code></pre><p>让我们更新 grammar 并引入可选符号的 token，它可以是 <code>+</code> 或 <code>-</code>:</p>
+<pre><code class="language-raku" data-lang="raku">grammar N {
     token TOP {
         ['+' | '-']?
         &lt;digit&gt;+
     }
 }
-</code></pre>
-
-<p>在这里，方括号将两个选项组合在一起：<code>'+' | '-'</code>。<code>?</code> 量词要求只有一个这样的字符，或者没有。在 Raku 中，方括号只创建一个分组，但不捕获它的内容。还要注意，<code>+</code> 和 <code>-</code> 都被引号引住了，因为 Raku 将任何非字母数字字符视为特殊字符，除非它被引号引起来或被转义。</p>
-
+</code></pre><p>在这里，方括号将两个选项组合在一起：<code>'+' | '-'</code>。<code>?</code> 量词要求只有一个这样的字符，或者没有。在 Raku 中，方括号只创建一个分组，但不捕获它的内容。还要注意，<code>+</code> 和 <code>-</code> 都被引号引住了，因为 Raku 将任何非字母数字字符视为特殊字符，除非它被引号引起来或被转义。</p>
 <p>下一步是添加对浮点的支持。临时解决方案可以创建包含数字和 <code>.</code> 符号的字符类。但这是完全错误的，例如，带有两个点的字符串（如 <code>3..14</code>）通过此过滤器。所以，做点不一样的事情：</p>
-
-<pre><code class="language-raku">grammar N {
+<pre><code class="language-raku" data-lang="raku">grammar N {
     token TOP {
         ['+' | '-']?
         &lt;digit&gt;+
         ['.' &lt;digit&gt;+]?
     }
 }
-</code></pre>
-
-<p>该 grammar 现在允许包含一个可选的点和另一个数字序列，并且在数字是整数或包含明确的小数部分（例如 <code>3.14</code>）时可以很好地工作。对于其中一个部分丢失的那些数字，则失败：<code>3.</code> 或 <code>.14</code>。</p>
-
+</code></pre><p>该 grammar 现在允许包含一个可选的点和另一个数字序列，并且在数字是整数或包含明确的小数部分（例如 <code>3.14</code>）时可以很好地工作。对于其中一个部分丢失的那些数字，则失败：<code>3.</code> 或 <code>.14</code>。</p>
 <p>通过使用量词使得零件可选的尝试使得 grammar 变得难以阅读并且容易出错。例如，以下 token 匹配上述所有数字，还有单个 <code>.</code>:</p>
-
-<pre><code class="language-raku">grammar N {
+<pre><code class="language-raku" data-lang="raku">grammar N {
     token TOP {
         ['+' | '-']?
         &lt;digit&gt;*
         ['.' &lt;digit&gt;*]?
     }
 }
-</code></pre>
-
-<p>现在是时候引入更多的 token 了。将数字序列分解为单独的 token 并明确列出所有变体：</p>
-
-<pre><code class="language-raku">grammar N {
+</code></pre><p>现在是时候引入更多的 token 了。将数字序列分解为单独的 token 并明确列出所有变体：</p>
+<pre><code class="language-raku" data-lang="raku">grammar N {
     token TOP {
         &lt;sign&gt;?
         &lt;value&gt;
@@ -333,12 +305,8 @@ NOT OK -3
         | &lt;digits&gt;
     }
 }
-</code></pre>
-
-<p><code>value</code> token 封装了这些变体：它包含可接受数字的四种替代表示。垂直条 <code>|</code> 分割它们。为了统一起见，允许在第一个备选分支之前添加一个附加的竖线 <code>|</code>，以便所有这些都通过简单的 ASCII 艺术强调。</p>
-
+</code></pre><p><code>value</code> token 封装了这些变体：它包含可接受数字的四种替代表示。垂直条 <code>|</code> 分割它们。为了统一起见，允许在第一个备选分支之前添加一个附加的竖线 <code>|</code>，以便所有这些都通过简单的 ASCII 艺术强调。</p>
 <p>当前的 grammar 已经足够聪明以拒绝单个点号：</p>
-
 <pre><code>OK 1
 OK 42
 OK 123
@@ -348,11 +316,8 @@ OK 3.14
 OK 3.
 OK .14
 NOT OK .
-</code></pre>
-
-<p>最后一步是以科学记数法支持数字。增加另一个备选分支易如反掌：</p>
-
-<pre><code class="language-raku">grammar N {
+</code></pre><p>最后一步是以科学记数法支持数字。增加另一个备选分支易如反掌：</p>
+<pre><code class="language-raku" data-lang="raku">grammar N {
     token TOP {
         &lt;sign&gt;?
         [
@@ -376,36 +341,24 @@ NOT OK .
         | &lt;digits&gt;
     }
 }
-</code></pre>
-
-<p>用以下例子测试我们的 grammar：</p>
-
-<pre><code class="language-raku">for &lt;1 42 123 1000 -3
+</code></pre><p>用以下例子测试我们的 grammar：</p>
+<pre><code class="language-raku" data-lang="raku">for &lt;1 42 123 1000 -3
      3.14 3. .14 .
      -3.14 -3. -.14
      10E2 10e2 -10e2 -1.2e3 10e-3 -10e-3 -10.2e-33
     &gt; -&gt; $n {
     say N.parse($n) ?? &quot;OK $n&quot; !! &quot;NOT OK $n&quot;;
 }
-</code></pre>
-
-<p>一切正常。但在 Perl 中，数字中也允许有下划线! 有一个合适的语法，增加对此的支持是容易的; 应只修改 <code>digits</code> token：</p>
-
-<pre><code class="language-raku">token digits {
+</code></pre><p>一切正常。但在 Perl 中，数字中也允许有下划线! 有一个合适的语法，增加对此的支持是容易的; 应只修改 <code>digits</code> token：</p>
+<pre><code class="language-raku" data-lang="raku">token digits {
     &lt;digit&gt;+ ['_' &lt;digit&gt;+]?
 }
-</code></pre>
-
-<p>不遵循该 rule 的字符串仍然会被忽略：</p>
-
+</code></pre><p>不遵循该 rule 的字符串仍然会被忽略：</p>
 <pre><code>OK 100_000
 NOT OK _1
 NOT OK 1_
 NOT OK 1__0
-</code></pre>
-
-<h2 id="结论">结论</h2>
-
+</code></pre><h2 id="结论">结论</h2>
 <p>只需几个简单的步骤，我们就可以创建一个能够理解不同格式数字的 grammar。作为练习，您可以添加前缀 <code>0x</code>，<code>0b</code>，<code>0o</code>（十六进制，二进制和八进制）和后缀（如C中的 <code>1000L</code>）的支持。Grammars 只被用来检查数字格式的有效性，并且它们的能力并没有在那里结束。在 Raku 中，您可以将 <em>actions</em> 添加到 grammar 中; 这些是在相应的 rule 或 token 已成功匹配时执行的代码块。但那是另一天的故事。</p>
 
 
@@ -423,13 +376,9 @@ NOT OK 1__0
       
         <ul class="pager blog-pager">
           
-            <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-04-29-raku-from-haskell-nutshell/" data-toggle="tooltip" data-placement="top" title="Raku from Haskell - Nutshell">&larr; Previous Post</a>
-            </li>
-          
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2014-12-19-raku%E5%9C%A3%E8%AF%9E%E6%9C%88%E5%8E%86-2014/" data-toggle="tooltip" data-placement="top" title="Raku 圣诞月历-(2014)">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2017-04-29-raku-from-haskell-nutshell/" data-toggle="tooltip" data-placement="top" title="Raku from Haskell - Nutshell">Next Post &rarr;</a>
             </li>
           
         </ul>
@@ -498,7 +447,7 @@ NOT OK 1__0
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

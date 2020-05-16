@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-19-interactive-desktop-apps/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,58 +231,36 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>我是地下城与龙等角色扮演游戏的忠实粉丝。这些游戏中的大多数都有屏幕来帮助你隐藏你在运行游戏时所做的事情，并为你提供游戏中使用的一些图表，以减少书中的内容。</p>
-
+        <p>我是地下城与龙等角色扮演游戏的忠实粉丝。这些游戏中的大多数都有屏幕来帮助你隐藏你在运行游戏时所做的事情，并为你提供游戏中使用的一些图表，以减少书中的内容。</p>
 <p>我的游戏收藏很广泛而且我宁愿使用我的笔记本电脑不仅隐藏在后面并跟踪信息，而且我还可以自动化骰子和图表使用。虽然我可以用文本编辑器和命令行魔法拼凑一些东西，但我宁愿拥有一些时髦的桌面应用程序，我可以向人们展示。</p>
-
 <p>输入<a href="https://github.com/raku/gtk-simple">GTK::Simple</a>是Linux Gnome桌面使用的gtk3 UI库的包装器，但也可以在Windows和Mac上使用。该库通过Native Call 的强大功能为你提供了一个简单易用的界面，让你可以创建简单的桌面应用程序。</p>
-
 <h2 id="骰子滚动">骰子滚动</h2>
-
-<p>由于历史原因，角色扮演游戏大多数倾向于选择使用基于柏拉图固体的骰子。骰子的标准组合是4,6,8,10,12,20，并且通过组合2个10面骰子100的骰子。骰子可以多次滚动，用于写入的标准符号是“ x<strong>d</strong>y ”，其中 “*x*“ 是掷骰子的数量，”*y*“ 是掷骰子的大小。单个骰子在开始时跳过1，例如“roll a d6”意味着掷出六面骰子。</p>
-
+<p>由于历史原因，角色扮演游戏大多数倾向于选择使用基于柏拉图固体的骰子。骰子的标准组合是4,6,8,10,12,20，并且通过组合2个10面骰子100的骰子。骰子可以多次滚动，用于写入的标准符号是“ x<strong>d</strong>y ”，其中 “<em>x</em>“ 是掷骰子的数量，”<em>y</em>“ 是掷骰子的大小。单个骰子在开始时跳过1，例如“roll a d6”意味着掷出六面骰子。</p>
 <p>有趣的是，在 Raku 中制作 “<strong>d</strong>” 运算符非常简单：</p>
-
-<pre><code class="language-raku">sub infix: ( UInt $count, UInt $size ) { (1..$size).roll($count) }
+<pre><code class="language-raku" data-lang="raku">sub infix: ( UInt $count, UInt $size ) { (1..$size).roll($count) }
 sub prefix: ( UInt $size ) { 1 d $size }
-</code></pre>
-
-<p>请注意，你需要将数字与空格分开，并且 “<strong>d</strong>” 运算符或编译器会混淆。</p>
-
+</code></pre><p>请注意，你需要将数字与空格分开，并且 “<strong>d</strong>” 运算符或编译器会混淆。</p>
 <p>我想要的是一个骰子滚轮应用程序，它提供了选择滚动标准骰子组的选项。现在我不会看到一些游戏使用的不同骰子，或者修改滚动，很多游戏都使用这些骰子。我想看看每个掷骰子，因为这可能很重要，具体取决于系统。如果可能的话，我也想要总数。</p>
-
-<h2 id="简单的-gtk-simple">简单的 GTK::Simple</h2>
-
+<h2 id="简单的-gtksimple">简单的 GTK::Simple</h2>
 <p>GTK::Simple 的基本用法很简单。创建一个应用程序，添加内容，放入一些事件处理程序，然后离开。</p>
-
 <p>首先，我们创建我们的应用程序，如下所示：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="ch">#!/usr/bin/env raku</span>
 
-<pre><code class="language-perl">#!/usr/bin/env raku
+<span class="c1"># Get the GTK::Simple libraries</span>
+<span class="k">use</span> <span class="nn">GTK::Simple</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">GTK::Simple::App</span><span class="p">;</span>
 
-# Get the GTK::Simple libraries
-use GTK::Simple;
-use GTK::Simple::App;
+<span class="c1"># Create the main app</span>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">app</span> <span class="o">=</span> <span class="n"></span><span class="nn">GTK::Simple::</span><span class="n"></span><span class="n">App</span><span class="o">.</span><span class="k">new</span><span class="p">(</span> <span class="n"></span><span class="n">title</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#34;Dice Roller&#34;</span> <span class="p">)</span><span class="p">;</span>
 
-# Create the main app
-my $app = GTK::Simple::App.new( title =&gt; &quot;Dice Roller&quot; );
-
-# Start the app running
-$app.run;
-</code></pre>
-
-<p>但…。这不是很有趣：</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/12/empty.png?w=788" alt="空" /></p>
-
+<span class="c1"># Start the app running</span>
+<span class="nv">$</span><span class="nv">app</span><span class="o">.</span><span class="n"></span><span class="n">run</span><span class="p">;</span>
+</code></pre></div><p>但…。这不是很有趣：</p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/empty.png?w=788" alt="空"></p>
 <h2 id="网格布局">网格布局</h2>
-
 <p>要在应用程序中布局小部件，我们有各种选项，但建议使用的是网格。网格布局从左上角的0,0开始并根据需要延伸的小部件。</p>
-
 <p>正是在这一点上，我尝试构建一个应用程序，我打了一个墙。网格选项很好，我在下面的最后一个例子中使用它但是当我尝试的时候它没有按照我的预期工作。我仍然可以得到一个简单的网格，所以显示它的工作，但似乎需要更多的学习。无论如何这里是一个基本网格：</p>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 # Get the GTK::Simple libraries
 use GTK::Simple;
 use GTK::Simple::App;
@@ -304,19 +282,12 @@ $app.set-content(
 $app.border-width = 10;
 # Start the app
 $app.run;
-</code></pre>
-
-<p>这个产生：</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/12/grid-1.png?w=788" alt="格" /></p>
-
+</code></pre><p>这个产生：</p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/grid-1.png?w=788" alt="格"></p>
 <h2 id="交互">交互</h2>
-
 <p>这很整洁，但按钮还没有做任何事情。为此，我们需要事件处理程序。GUI应用程序需要事件驱动才能对用户操作做出反应，幸运的是 Raku 具有处理 Supplies 形式的事件的功能。每个按钮都有一个名为 clicked 的 supply，它可以附加一个 tap 处理程序。</p>
-
 <p>事件处理程序可以执行各种操作，包括操作其他UI对象。例如 ：</p>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 
 # Get the GTK::Simple libraries
 use GTK::Simple;
@@ -360,17 +331,11 @@ $b4.clicked.tap( { $app.exit } );
 $app.border-width = 10;
 # Start the app
 $app.run;
-</code></pre>
-
-<p>这使得：</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/12/buttons.png?w=788" alt="纽扣" /></p>
-
+</code></pre><p>这使得：</p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/buttons.png?w=788" alt="纽扣"></p>
 <h2 id="把它们放在一起">把它们放在一起</h2>
-
 <p>有了这个和另一个小部件，Label 给了我们一些文本，我们可以把骰子滚动应用程序放在一起：</p>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 
 # Get the GTK::Simple libraries
 use GTK::Simple;
@@ -437,16 +402,10 @@ $app.border-width = 10;
 
 # Start the app running
 $app.run;
-</code></pre>
-
-<p>看起来像（这里滚动3d6）：</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/12/dice-roller.png?w=788" alt="骰子辊" /></p>
-
+</code></pre><p>看起来像（这里滚动3d6）：</p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/dice-roller.png?w=788" alt="骰子辊"></p>
 <h2 id="最后的想法">最后的想法</h2>
-
 <p>考虑到我今天早上没有触及 GTK::Simple，我对我的最终结果非常满意。我认为我可以构建许多其他游戏工具。此外，我可能会参与模块本身的工作，尝试将更多的GTK功能添加到其中，并添加一些文档。</p>
-
 <p>尽管如此，使用 GTK::Simple 还是很容易使桌面应用程序在Raku中遇到特殊的问题，而且代码并不多。</p>
 
 
@@ -539,7 +498,7 @@ $app.run;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

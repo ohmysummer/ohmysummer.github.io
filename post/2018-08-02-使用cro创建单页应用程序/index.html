@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-02-%E4%BD%BF%E7%94%A8cro%E5%88%9B%E5%BB%BA%E5%8D%95%E9%A1%B5%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,38 +231,25 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="使用-cro-创建单页应用-http-mi-cro-services-docs-intro-spa-with-cro"><a href="http://mi.cro.services/docs/intro/spa-with-cro">使用 Cro 创建单页应用</a></h1>
-
+        <h1 id="使用-cro-创建单页应用httpmicroservicesdocsintrospa-with-cro"><a href="http://mi.cro.services/docs/intro/spa-with-cro">使用 Cro 创建单页应用</a></h1>
 <p>本教程将介绍如何使用 Cro 作为后端构建简单的单页应用程序。对于前端，我们将使用 webpack，ES6，React 和 Redux。你不需要事先了解这些信息，但如果您想在自己的应用程序中很好地使用它们，则需要进一步阅读。</p>
-
 <p><a href="https://github.com/croservices/sample-app-spa-react">代码</a>可以在这里获取。在教程的各个阶段，提交了当前的状态。仓库历史记录与教程完全匹配，因此你可以使用它来获取各步骤变更的概述，或者如果你试图通过从头开始构建这些东西，可以知道你错过了什么。</p>
-
 <h2 id="你需要什么">你需要什么</h2>
-
 <ul>
-<li>要安装 Cro (请参阅<a href="http://mi.cro.services/docs/intro/getstarted">本指南</a>获取相关帮助)<br /></li>
-<li>要安装 <code>npm</code> (即 Node.js 的包管理器, 我们要用它来获取需要的包来构建前端); 在基于 Debian 的 Linux 发行版上，只需 <code>sudo apt install npm</code>。<br /></li>
+<li>要安装 Cro (请参阅<a href="http://mi.cro.services/docs/intro/getstarted">本指南</a>获取相关帮助)</li>
+<li>要安装 <code>npm</code> (即 Node.js 的包管理器, 我们要用它来获取需要的包来构建前端); 在基于 Debian 的 Linux 发行版上，只需 <code>sudo apt install npm</code>。</li>
 </ul>
-
 <h2 id="我们要构建什么">我们要构建什么</h2>
-
 <p>所以我们正在举办美食节或者啤酒节。或者任何带有一堆我们可以尝试的东西的活动。但是&hellip;尝试什么？如果有这样一些应用程序就好了，人们可以留下他们关于什么火和什么不火的提示，我们可以实时看到他们。如果在去过的上一届啤酒节上有过这样的东西，我可能会幸免于那杯绿茶啤酒&hellip;&hellip;</p>
-
 <p>所以, 我们会制作一个单页应用程序以支持:</p>
-
 <ul>
-<li>提交新的提示 (POST 到后端)<br /></li>
-<li>现场发布最新提示 (通过网络套接字提供)<br /></li>
+<li>提交新的提示 (POST 到后端)</li>
+<li>现场发布最新提示 (通过网络套接字提供)</li>
 <li>能够同意或不同意某提示 (也是 POST)</li>
 <li>能够看到按照最愉快到最不愉快 (通过 GE T获取) 排序的提示列表</li>
 </ul>
-
 <h2 id="stubbing-后端">Stubbing 后端</h2>
-
 <p>给应用程序想一个有创意的名称。我叫它 &ldquo;tipsy&rdquo;。然后使用 <code>cro stub</code> 来存根 HTTP 应用程序。为了简单起见，我们将跳过 HTTPS（也就是HTTP/2.0），但会包含 Web 套接字支持。</p>
-
 <pre><code>$ cro stub http tipsy tipsy
 Stubbing a HTTP Service 'tipsy' in 'tipsy'...
 
@@ -272,24 +259,15 @@ Secure (HTTPS) (yes/no) [no]: n
 Support HTTP/1.1 (yes/no) [yes]: y
 Support HTTP/2.0 (yes/no) [no]: n
 Support Web Sockets (yes/no) [no]: y
-</code></pre>
-
-<p>这创建了一个叫 <code>tipsy</code> 的目录。现在让我们进到这个目录中并检查存根后端运行, 使用 <code>cro run</code>:</p>
-
+</code></pre><p>这创建了一个叫 <code>tipsy</code> 的目录。现在让我们进到这个目录中并检查存根后端运行, 使用 <code>cro run</code>:</p>
 <pre><code>$ cro run
 ▶ Starting tipsy (tipsy)
 🔌 Endpoint HTTP will be at http://localhost:20000/
 📓 tipsy Listening at http://localhost:20000
-</code></pre>
-
-<p>我们可以使用 <code>curl</code> 或通过在浏览器中访问它来检查它：</p>
-
+</code></pre><p>我们可以使用 <code>curl</code> 或通过在浏览器中访问它来检查它：</p>
 <pre><code>$ curl http://localhost:20000
 &lt;h1&gt; tipsy &lt;/h1&gt;
-</code></pre>
-
-<p>我喜欢在工作时定期提交。因此，我将创建一个 git 仓库，添加一个 <code>.gitignore</code> 文件 (忽略 Raku 预编译输出) 并提交 stub。</p>
-
+</code></pre><p>我喜欢在工作时定期提交。因此，我将创建一个 git 仓库，添加一个 <code>.gitignore</code> 文件 (忽略 Raku 预编译输出) 并提交 stub。</p>
 <pre><code>$ git init .
 Initialized empty Git repository in /home/jnthn/dev/cro/tipsy/.git/
 jnthn@lviv:~/dev/cro/tipsy$ echo '.precomp/' &gt; .gitignore
@@ -302,40 +280,25 @@ jnthn@lviv:~/dev/cro/tipsy$ git commit -m &quot;Stub tipsy backend&quot;
  create mode 100644 META6.json
  create mode 100644 lib/Routes.pm6
  create mode 100644 service.p6
-</code></pre>
-
-<h2 id="服务静态页面">服务静态页面</h2>
-
+</code></pre><h2 id="服务静态页面">服务静态页面</h2>
 <p>我们现在将调整我们的 Cro stub 应用程序以服务 HTML 页面。我们将创建一个 <code>static</code> 目录，其中是要服务的静态内容。</p>
-
 <pre><code>mkdir static
-</code></pre>
-
-<p>在那里，我们将把 <code>index.html</code> 放在下面的上下文中：</p>
-
-<pre><code class="language-html">&lt;html&gt;
-  &lt;head&gt;
-    &lt;title&gt;Tipsy&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Tipsy&lt;/h1&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<p>然后，我们编辑 <code>lib/Routes.pm6</code> 以使 <code>/</code> 路由服务此文件：</p>
-
-<pre><code class="language-raku">get -&gt; {
+</code></pre><p>在那里，我们将把 <code>index.html</code> 放在下面的上下文中：</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">html</span><span class="p"></span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">head</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p"></span><span class="p">&gt;</span>Tipsy<span class="p">&lt;</span><span class="p">/</span><span class="nt">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="p">/</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">h1</span><span class="p"></span><span class="p">&gt;</span>Tipsy<span class="p">&lt;</span><span class="p">/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="p">/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p>然后，我们编辑 <code>lib/Routes.pm6</code> 以使 <code>/</code> 路由服务此文件：</p>
+<pre><code class="language-raku" data-lang="raku">get -&gt; {
     static 'static/index.html'
 }
-</code></pre>
-
-<p>我们之前运行的 <code>cro run</code> 应该会自动重新启动服务。在浏览器中打开该文件，检查它是否被正被服务。</p>
-
+</code></pre><p>我们之前运行的 <code>cro run</code> 应该会自动重新启动服务。在浏览器中打开该文件，检查它是否被正被服务。</p>
 <h2 id="设置前端构建工具链">设置前端构建工具链</h2>
-
 <p>接下来，我们将设置前端。首先，我们将存储一个 <code>package.json</code> 文件，该文件将包含我们的开发和前端 JavaScript 依赖关系。我们使用 <code>npm init</code> 并提供一些答案：</p>
-
 <pre><code>$ npm init .
 This utility will walk you through creating a package.json file.
 It only covers the most common items, and tries to guess sensible defaults.
@@ -372,56 +335,36 @@ About to write to /home/jnthn/dev/cro/tipsy/package.json:
 
 
 Is this ok? (yes)
-</code></pre>
-
-<p>接下来，让我们安装 webpack 工具作为开发依赖：</p>
-
+</code></pre><p>接下来，让我们安装 webpack 工具作为开发依赖：</p>
 <pre><code>npm install --save-dev webpack webpack-cli
-</code></pre>
-
-<p>在运行的时候：我们来说说 webpack 是干什么的？它以各种方式提供帮助：</p>
-
+</code></pre><p>在运行的时候：我们来说说 webpack 是干什么的？它以各种方式提供帮助：</p>
 <ul>
-<li>它为我们从现代 JavaScript（具有诸如模块导入，lambda 表达式和 <code>let</code> 变量声明之类的便利功能）编译成适用于 Web 浏览器的 JavaScript 版本<br /></li>
-<li>它允许我们使用 JavaScript 模块，使用 <code>npm</code> 包管理器进行管理，并将它们连接成一个 JavaScript 文件<br /></li>
-<li>它也可以帮助 CSS 和图像资产<br /></li>
+<li>它为我们从现代 JavaScript（具有诸如模块导入，lambda 表达式和 <code>let</code> 变量声明之类的便利功能）编译成适用于 Web 浏览器的 JavaScript 版本</li>
+<li>它允许我们使用 JavaScript 模块，使用 <code>npm</code> 包管理器进行管理，并将它们连接成一个 JavaScript 文件</li>
+<li>它也可以帮助 CSS 和图像资产</li>
 </ul>
-
 <p>接下来，我们将在仓库的根目录中创建一个 <code>webpack.config.js</code>，其中包含以下内容：</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">)</span><span class="p">;</span>
 
-<pre><code class="language-js">const path = require('path');
-
-module.exports = {
-    entry: './frontend/index.js',
-    output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'static/js')
-    }
-};
-</code></pre>
-
-<p>这意味着它将采用 <code>frontend/index.js</code> 作为我们应用程序的 JavaScript 前端部分的根，并遵循它的所有依赖关系，并将它们构建到一个将写入 <code>static/js/bundle.js</code> 的包中。接下来，我们来创建这些位置。首先，让我们对输出位置进行存根(stub); <code>.gitignore</code> 既会忽略生成的输出又会确保目录存在（因为 git 不会跟踪空目录）。</p>
-
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">entry</span><span class="o">:</span> <span class="s1">&#39;./frontend/index.js&#39;</span><span class="p">,</span>
+    <span class="nx">output</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">filename</span><span class="o">:</span> <span class="s1">&#39;bundle.js&#39;</span><span class="p">,</span>
+        <span class="nx">path</span><span class="o">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">&#39;static/js&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>这意味着它将采用 <code>frontend/index.js</code> 作为我们应用程序的 JavaScript 前端部分的根，并遵循它的所有依赖关系，并将它们构建到一个将写入 <code>static/js/bundle.js</code> 的包中。接下来，我们来创建这些位置。首先，让我们对输出位置进行存根(stub); <code>.gitignore</code> 既会忽略生成的输出又会确保目录存在（因为 git 不会跟踪空目录）。</p>
 <pre><code>$ mkdir static/js
 $ echo '*' &gt; static/js/.gitignore
-</code></pre>
-
-<p>下面, 给 <code>frontend/index.js</code> 占个坑:</p>
-
+</code></pre><p>下面, 给 <code>frontend/index.js</code> 占个坑:</p>
 <pre><code>$ mkdir frontend
 $ echo 'document.write(&quot;Hello from JS&quot;)' &gt; frontend/index.js
-</code></pre>
-
-<p>现在，我们希望能够方便地从我们的本地安装中运行 webpack。一种方法是编辑 <code>package.json</code> 并向 <code>scripts</code> 部分添加一项：</p>
-
+</code></pre><p>现在，我们希望能够方便地从我们的本地安装中运行 webpack。一种方法是编辑 <code>package.json</code> 并向 <code>scripts</code> 部分添加一项：</p>
 <pre><code>&quot;scripts&quot;: {
     &quot;build&quot;: &quot;webpack&quot;,
     &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
   },
-</code></pre>
-
-<p>现在可以使用 <code>npm run build</code> 运行：</p>
-
+</code></pre><p>现在可以使用 <code>npm run build</code> 运行：</p>
 <pre><code>$ npm run build
 
 &gt; tipsy@1.0.0 build /home/jnthn/dev/cro/tipsy
@@ -433,26 +376,15 @@ Time: 125ms
     Asset    Size  Chunks             Chunk Names
 bundle.js  2.5 kB       0  [emitted]  main
    [0] ./frontend/index.js 32 bytes {0} [built]
-</code></pre>
-
-<h2 id="服务和使用-bundle">服务和使用 bundle</h2>
-
+</code></pre><h2 id="服务和使用-bundle">服务和使用 bundle</h2>
 <p>接下来，编辑 <code>static/index.html</code>，并在 <code>&lt;/body&gt;</code> 闭合标记之前添加：</p>
-
-<pre><code class="language-html">&lt;script src=&quot;js/bundle.js&quot;&gt;&lt;/script&gt;
-</code></pre>
-
-<p>最后，我们需要为 JavaScript 提供服务。编辑 <code>lib/Routes.pm6</code> 并添加一个像这样的新路由（这将服务 <code>static/js</code> 下的任何东西，如果我们需要，可以为将来的多个包做好准备）：</p>
-
-<pre><code class="language-raku">get -&gt; 'js', *@path {
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;js/bundle.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div><p>最后，我们需要为 JavaScript 提供服务。编辑 <code>lib/Routes.pm6</code> 并添加一个像这样的新路由（这将服务 <code>static/js</code> 下的任何东西，如果我们需要，可以为将来的多个包做好准备）：</p>
+<pre><code class="language-raku" data-lang="raku">get -&gt; 'js', *@path {
     static 'static/js', @path
 }
-</code></pre>
-
-<p>在浏览器中刷新，那么 <code>Hello from JS</code> 应该出现在页面上。</p>
-
+</code></pre><p>在浏览器中刷新，那么 <code>Hello from JS</code> 应该出现在页面上。</p>
 <p>最后但并非最不重要的是，我们需要忽略 <code>node_modules</code>，然后可以提交前端存根：</p>
-
 <pre><code>$ echo 'node_modules/' &gt;&gt; .gitignore
 $ git add .
 $ git commit -m &quot;Stub JavaScript application&quot;
@@ -462,31 +394,19 @@ $ git commit -m &quot;Stub JavaScript application&quot;
  create mode 100644 package.json
  create mode 100644 static/index.html
  create mode 100644 webpack.config.js
-</code></pre>
-
-<h2 id="开始构建后端">开始构建后端</h2>
-
+</code></pre><h2 id="开始构建后端">开始构建后端</h2>
 <p>为了简单起见，我们将构建一个内存模型。有各种各样的方法可以将它考虑在内，但要记住的关键是 Web 应用程序是一个并发系统，而 Cro 请求在线程池中处理。这意味着可以同时处理两个请求！</p>
-
 <p>为了处理这个问题，我们将使用 <code>OO::Monitors</code> 模块。监视器就像一个类，但它强制它的方法互相排斥 - 也就是说，一次只有一个线程可能在特定实例的方法内。因此，如果我们不泄露我们的内部状态（如果我们必须返回其中的一部分，则制作防御副本），监视对象内部的状态将受到保护。</p>
-
 <p>首先，让我们将 <code>OO::Monitors</code> 添加到我们的 <code>META6.json</code> depends 部分，以至于文件的一部分如下所示：</p>
-
 <pre><code>&quot;depends&quot;: [
     &quot;Cro::HTTP&quot;,
     &quot;Cro::WebSocket&quot;,
     &quot;OO::Monitors&quot;
   ],
-</code></pre>
-
-<p>为了确保你真的有这个模块可用，如果缺失, 请使用 <code>zef</code> 安装它:</p>
-
+</code></pre><p>为了确保你真的有这个模块可用，如果缺失, 请使用 <code>zef</code> 安装它:</p>
 <pre><code>$ zef install --deps-only .
-</code></pre>
-
-<p>我们将把业务逻辑放在一个单独的模块 <code>lib/Tipsy.pm6</code> 中，并在 <code>t/tipsy.t</code> 中为它写一些测试。首先，让我们为我们的业务/域逻辑存储 API：</p>
-
-<pre><code class="language-raku">use OO::Monitors;
+</code></pre><p>我们将把业务逻辑放在一个单独的模块 <code>lib/Tipsy.pm6</code> 中，并在 <code>t/tipsy.t</code> 中为它写一些测试。首先，让我们为我们的业务/域逻辑存储 API：</p>
+<pre><code class="language-raku" data-lang="raku">use OO::Monitors;
 
 class Tip {
     has Int $.id;
@@ -502,13 +422,9 @@ monitor Tipsy {
     method latest-tips(--&gt; Supply) { ... }
     method top-tips(--&gt; Supply) { ... }
 }
-</code></pre>
-
-<p>在这里，<code>Tip</code> 是一个不变的对象，代表一个提示以及同意和不同意的数量。 <code>Tipsy</code> 类有很多方法来实现各种操作。前三个是可变操作。接下来的 <code>atest-tips</code> 将是 Tip 对象的 <code>Supply</code>，每次添加新提示时都会发出提示对象。第一次点击时，我们将始终发出最新的 50 个提示。 <code>top-tips</code> 方法返回一个 Supply，每当排名发生变化时，它将发出前 50 个提示的排序列表。不要试图记住所有这些，我们会一次一个地回到他们身上。</p>
-
+</code></pre><p>在这里，<code>Tip</code> 是一个不变的对象，代表一个提示以及同意和不同意的数量。 <code>Tipsy</code> 类有很多方法来实现各种操作。前三个是可变操作。接下来的 <code>atest-tips</code> 将是 Tip 对象的 <code>Supply</code>，每次添加新提示时都会发出提示对象。第一次点击时，我们将始终发出最新的 50 个提示。 <code>top-tips</code> 方法返回一个 Supply，每当排名发生变化时，它将发出前 50 个提示的排序列表。不要试图记住所有这些，我们会一次一个地回到他们身上。</p>
 <p>接下来是让我们的路由可用。我们可以在 <code>Routes.pm6</code> 中创建实例，但这会让我们很难在独立于业务逻辑的情况下测试我们的路由。相反，我们将使 <code>Routes.pm6</code> 中的 stub 作为参数来使用业务逻辑对象的实例：</p>
-
-<pre><code class="language-raku">use Cro::HTTP::Router;
+<pre><code class="language-raku" data-lang="raku">use Cro::HTTP::Router;
 use Cro::HTTP::Router::WebSocket;
 use Tipsy;
 
@@ -519,15 +435,10 @@ sub routes(Tipsy $tipsy) is export {
         }
     ...
 }
-</code></pre>
-
-<p>然后通过以下方式将其设置在 <code>service.p6</code> 入口点：</p>
-
+</code></pre><p>然后通过以下方式将其设置在 <code>service.p6</code> 入口点：</p>
 <p>1.使用模块 2.制作一个实例</p>
-
 <p><code>service.p6</code> 文件最终会看起来像这样：</p>
-
-<pre><code class="language-raku">use Cro::HTTP::Log::File;
+<pre><code class="language-raku" data-lang="raku">use Cro::HTTP::Log::File;
 use Cro::HTTP::Server;
 use Routes;
 use Tipsy;
@@ -555,13 +466,9 @@ react {
         done;
     }
 }
-</code></pre>
-
-<h2 id="添加提示和最近的提示">添加提示和最近的提示</h2>
-
+</code></pre><h2 id="添加提示和最近的提示">添加提示和最近的提示</h2>
 <p>接下来，让我们编写测试以添加提示，并在最新提示中看到它。这里有 <code>t/tipsy.t</code>：</p>
-
-<pre><code class="language-raku">use Tipsy;
+<pre><code class="language-raku" data-lang="raku">use Tipsy;
 use Test;
 
 my $tipsy = Tipsy.new;
@@ -585,13 +492,9 @@ react {
 }
 
 done-testing;
-</code></pre>
-
-<p>第一部分测试我们可以添加两个提示，如果我们点击提供最新的提示，那么我们会立即给出这两个提示。第二部分涉及更多：它检查如果我们点击最新的提示Supply，然后添加一个新的提示，那么我们也会被告知这个新提示。</p>
-
+</code></pre><p>第一部分测试我们可以添加两个提示，如果我们点击提供最新的提示，那么我们会立即给出这两个提示。第二部分涉及更多：它检查如果我们点击最新的提示Supply，然后添加一个新的提示，那么我们也会被告知这个新提示。</p>
 <p>现在让他们通过！这是 <code>monitor</code> 中的实现：</p>
-
-<pre><code class="language-raku">monitor Tipsy {
+<pre><code class="language-raku" data-lang="raku">monitor Tipsy {
     has Int $!next-id = 1;
     has Tip %!tips-by-id{Int};
     has Supplier $!latest-tips = Supplier.new;
@@ -615,40 +518,24 @@ done-testing;
     
     # The other unimplemented methods go here
 }
-</code></pre>
-
-<p>我们保留一个ID的计数器，为每个提示分配自己的唯一ID。我们有一个哈希映射到Tip对象的ID。然后我们有一个供应商，当有新的提示时，我们将用它来通知任何感兴趣的团体。</p>
-
+</code></pre><p>我们保留一个ID的计数器，为每个提示分配自己的唯一ID。我们有一个哈希映射到Tip对象的ID。然后我们有一个供应商，当有新的提示时，我们将用它来通知任何感兴趣的团体。</p>
 <p>添加提示方法的前3行很简单，最后一行有点好奇：为什么要开始？答案是，使用耗材时，发件人支付分发消息的费用，但我们不希望将显示器 - 这会互相排斥 - 与所有这些工作挂钩。所以，我们开始异步分派通知。</p>
-
 <p>最新技巧的方法也需要小心。请记住，我们从监视器返回的内容不受互斥排除的保护。因此，我们应该在供应模块之外复制最新的现有技巧，而显示器正在保护％！tips-by-id。然后，当返回的供应块被挖掘时，我们订阅最新的技巧，然后发出每个最新的现有技巧。</p>
-
 <p>随着这些，我们的测试通过。进展！</p>
-
 <pre><code>$ git add .
 $ git commit -m &quot;Implement first part of business logic&quot;
 [master 6e352c6] Implement first part of business logic
  6 files changed, 70 insertions(+), 4 deletions(-)
  create mode 100644 lib/Tipsy.pm6
  create mode 100644 t/tipsy.t
-</code></pre>
-
-<h2 id="设置-reacts">设置 Reacts</h2>
-
+</code></pre><h2 id="设置-reacts">设置 Reacts</h2>
 <p>现在是时候回到前端了。我们将使用 React。 React 为我们提供了一个虚拟的DOM，我们可以在每次改变时重建它。然后将其与当前真实的 DOM 进行比较，并应用更改。这让我们以更实用的风格工作。 React 组件是使用 JSX 编写的，一种嵌入到 JavaScript 中的类 XML 语法。首先，我们需要设置编译。以下是新的开发依赖关系：</p>
-
 <pre><code>$ npm install --save-dev babel-loader babel-core babel-preset-es2015 babel-preset-react
-</code></pre>
-
-<p>接下来, 我们需要创建一个 <code>.babelrc</code> 文件, 假设要使用这个 react 预先装置 (Babel 是用于将现代 JavaScript 转换成浏览器兼容的 Javascript 的东西)。它应该只包含:</p>
-
+</code></pre><p>接下来, 我们需要创建一个 <code>.babelrc</code> 文件, 假设要使用这个 react 预先装置 (Babel 是用于将现代 JavaScript 转换成浏览器兼容的 Javascript 的东西)。它应该只包含:</p>
 <pre><code>{
   &quot;presets&quot; : [&quot;es2015&quot;,&quot;react&quot;]
 }
-</code></pre>
-
-<p>最后, <code>webpack.config.js</code> 需要更新才能使用它。更改后, 它看起来应该像下面这样:</p>
-
+</code></pre><p>最后, <code>webpack.config.js</code> 需要更新才能使用它。更改后, 它看起来应该像下面这样:</p>
 <pre><code>const path = require('path');
 
 module.exports = {
@@ -667,17 +554,10 @@ module.exports = {
         ]
     }
 };
-</code></pre>
-
-<p>尝试 <code>npm run build</code>。它应该存活下来，尽管我们还没有使用任何新的 React 支持。</p>
-
+</code></pre><p>尝试 <code>npm run build</code>。它应该存活下来，尽管我们还没有使用任何新的 React 支持。</p>
 <p>接下来构建工具链，是时候安装我们将用于前端的 React 模块。开始：</p>
-
 <pre><code>$ npm install --save react react-dom
-</code></pre>
-
-<p>通过这些，我们可以编辑我们的 <code>index.js</code> 文件，如下所示：</p>
-
+</code></pre><p>通过这些，我们可以编辑我们的 <code>index.js</code> 文件，如下所示：</p>
 <pre><code>import React from 'react';
 import {render} from 'react-dom';
 
@@ -695,21 +575,14 @@ And add a div tag with the ID app to our index.html:
     &lt;script src=&quot;js/bundle.js&quot;&gt;&lt;/script&gt;
   &lt;/body&gt;
 &lt;/html&gt;
-</code></pre>
-
-<p>再次运行 <code>npm run build</code>, 刷新, 它应该会打印出 Hello React!.</p>
-
+</code></pre><p>再次运行 <code>npm run build</code>, 刷新, 它应该会打印出 Hello React!.</p>
 <pre><code>$ git add .
 $ git commit -m &quot;Setup react&quot;
 [master 0ffa260] Setup react
  5 files changed, 27 insertions(+), 1 deletion(-)
  create mode 100644 .babelrc
-</code></pre>
-
-<h2 id="添加一些组件">添加一些组件</h2>
-
+</code></pre><h2 id="添加一些组件">添加一些组件</h2>
 <p>接下来，让我们再简单介绍一下 UI。用以下内容替换现有的 App 组件：</p>
-
 <pre><code>var SubmitTip = () =&gt; (
     &lt;div&gt;
         &lt;h2&gt;Got a tip?&lt;/h2&gt;
@@ -733,28 +606,17 @@ var App = () =&gt; (
         &lt;LatestTips /&gt;
     &lt;/div&gt;
 );
-</code></pre>
-
-<p>再运行一次 npm run build, refresh，它应该显示一些看起来很像人们期望的 UI。但是我们如何获取数据来填充 UI？当点击按钮时我们要做些什么？为此，我们将引入客户端难题的最后一部分：Redux。</p>
-
+</code></pre><p>再运行一次 npm run build, refresh，它应该显示一些看起来很像人们期望的 UI。但是我们如何获取数据来填充 UI？当点击按钮时我们要做些什么？为此，我们将引入客户端难题的最后一部分：Redux。</p>
 <h2 id="redux">Redux</h2>
-
 <p>Redux 在其网站上有一个很好的教程，我不会在这里尝试重复，但我会尝试总结一下 Redux 的作用。 React 为我们提供了一种在每次更改时渲染虚拟 DOM 的方法。为了使它有用，我们需要某种对象，其中包含应该呈现在 UI 上的当前状态。 Redux 是该状态的容器，它让我们使用 reducer 组织对它的更改。也就是说，我们永远不会真正更新状态，我们只是生成一个从当前状态派生的新状态，再加上一个动作。</p>
-
 <p>首先，让我们添加 redux 和相关的依赖项。</p>
-
 <pre><code>$ npm install --save redux redux-thunk react-redux
-</code></pre>
-
-<p>接下来，我们需要定义一些 action。action 对应于页面上的状态更改。我们现在只创建两个：</p>
-
+</code></pre><p>接下来，我们需要定义一些 action。action 对应于页面上的状态更改。我们现在只创建两个：</p>
 <ul>
 <li>CHANGE_TIP_TEXT - 当用户输入的提示文本发生变化时</li>
 <li>ADD_TIP - 当添加 Tip 的按钮被按下时</li>
 </ul>
-
 <p>在 frontend/actions.js 文件中, 我们这样做:</p>
-
 <pre><code>export const CHANGE_TIP_TEXT = 'CHANGE_TIP_TEXT';
 export const ADD_TIP = 'ADD_TIP';
 
@@ -764,27 +626,16 @@ export function changeTipText(text) {
 export function addTip() {
     return { type: ADD_TIP };
 }
-</code></pre>
-
-<p>常量是 actions 的名称，这些函数称为“action 创建者”：它们创建一个具有类型属性的对象，并且可选地创建一些数据。</p>
-
+</code></pre><p>常量是 actions 的名称，这些函数称为“action 创建者”：它们创建一个具有类型属性的对象，并且可选地创建一些数据。</p>
 <p>接下来，我们需要一个 reducer。 Reducers 采用当前状态，计算并返回一个新状态。他们永远不会改变状态，也不会做任何副作用（例如网络 I/O）。他们是纯粹的计算。到目前为止，我们的状态将非常简单：只是文本框的内容。</p>
-
 <p>当我们在 JavaScript 中使用即将推出的扩展运算符时，写 reducers 会更方便; 它是一个前缀 <code>...</code>，和 Raku 的前缀 <code>|</code> 操作符一样压平操作数。由于我们已经有了构建工具链，我们可以通过安装另一个语法转换来添加它：</p>
-
 <pre><code>npm install --save-dev babel-plugin-transform-object-rest-spread
-</code></pre>
-
-<p>并把它添加到我们的 .babelrc 文件中:</p>
-
+</code></pre><p>并把它添加到我们的 .babelrc 文件中:</p>
 <pre><code>{
     &quot;presets&quot; : [&quot;es2015&quot;,&quot;react&quot;],
     &quot;plugins&quot; : [&quot;transform-object-rest-spread&quot;]
 }
-</code></pre>
-
-<p>完成后，这是我们的 reducer，放在 frontend/reducer.js 文件中：</p>
-
+</code></pre><p>完成后，这是我们的 reducer，放在 frontend/reducer.js 文件中：</p>
 <pre><code>import * as ActionTypes from './actions';
 
 const initialState = {
@@ -800,29 +651,18 @@ export function tipsyReducer(state = initialState, action) {
             return state;
     }
 }
-</code></pre>
-
-<p>现在是时候把它连接到 React 了。整体流程将是：</p>
-
+</code></pre><p>现在是时候把它连接到 React 了。整体流程将是：</p>
 <ol>
 <li>UI 上发生了一些事情（文本已更改，按下了添加提示按钮）2。创建了一个 action 对象 3.它被传递到 reducer，它生成一个新状态 4.新状态转换为属性，然后用于构建 React 虚拟 DOM 5. React 负责将任何更新应用于真实DOM，从而反映我们的更改</li>
 </ol>
-
 <p>回到 frontend/index.js，我们将导入我们的 actions 和 reducer，以及 redux 和 react-redux 库中的一些东西：</p>
-
 <pre><code>import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
 import * as Actions from './actions';
 import { tipsyReducer } from './reducer';
-</code></pre>
-
-<p>接下来，我们将创建一个 Redux 存储，它包含 reducer 生成的最新版本的状态。我们通过将 reducer 传递给 createStore 来创建它：</p>
-
+</code></pre><p>接下来，我们将创建一个 Redux 存储，它包含 reducer 生成的最新版本的状态。我们通过将 reducer 传递给 createStore 来创建它：</p>
 <pre><code>let store = createStore(tipsyReducer);
-</code></pre>
-
-<p>接下来，我们需要将存储中的状态映射到 React 组件中可用属性，并生成一些也可以在这些属性中使用的函数，并调度 actions。</p>
-
+</code></pre><p>接下来，我们需要将存储中的状态映射到 React 组件中可用属性，并生成一些也可以在这些属性中使用的函数，并调度 actions。</p>
 <pre><code>function mapProps(state) {
     return state;
 }
@@ -832,22 +672,15 @@ function mapDispatch(dispatch) {
         onAddTip: text =&gt; dispatch(Actions.addTip())
     };
 }
-</code></pre>
-
-<p>有了这些，我们可以完成 Redux 与 React 的集成，如下所示：</p>
-
+</code></pre><p>有了这些，我们可以完成 Redux 与 React 的集成，如下所示：</p>
 <pre><code>let ConnectedApp = connect(mapProps, mapDispatch)(App);
 render(
     &lt;Provider store={store}&gt;
         &lt;ConnectedApp /&gt;
     &lt;/Provider&gt;,
     document.getElementById('app'));
-</code></pre>
-
-<p>connect 函数使来自存储中状态的属性可用于 App React 组件，并将其包装在 Provider 中使得存储中的状态可用以便实现。</p>
-
+</code></pre><p>connect 函数使来自存储中状态的属性可用于 App React 组件，并将其包装在 Provider 中使得存储中的状态可用以便实现。</p>
 <p>最后但同样重要的是，我们可以更新我们的组件：</p>
-
 <pre><code>var SubmitTip = props =&gt; (
     &lt;div&gt;
         &lt;h2&gt;Got a tip?&lt;/h2&gt;
@@ -868,12 +701,8 @@ var App = props =&gt; (
         &lt;LatestTips /&gt;
     &lt;/div&gt;
 );
-</code></pre>
-
-<p>在 npm run build 之后, 刷新浏览器，我们应该注意到在键入后点击 Add Tip 按钮将清除文本框。我们的 action 和 reducer 正在运行。唷！</p>
-
+</code></pre><p>在 npm run build 之后, 刷新浏览器，我们应该注意到在键入后点击 Add Tip 按钮将清除文本框。我们的 action 和 reducer 正在运行。唷！</p>
 <p>为了完整性，这里是这个阶段整个 frontend/index.js：</p>
-
 <pre><code>import React from 'react';
 import { render } from 'react-dom';
 import { createStore } from 'redux';
@@ -926,10 +755,7 @@ render(
         &lt;ConnectedApp /&gt;
     &lt;/Provider&gt;,
     document.getElementById('app'));
-</code></pre>
-
-<p>又到了提交的时间了。</p>
-
+</code></pre><p>又到了提交的时间了。</p>
 <pre><code>$ git add .
 $ git commit -m &quot;Wire up Redux&quot;
 [master 3478433] Wire up Redux
@@ -937,74 +763,39 @@ $ git commit -m &quot;Wire up Redux&quot;
  create mode 100644 frontend/actions.js
  rewrite frontend/index.js (81%)
  create mode 100644 frontend/reducer.js
-</code></pre>
-
-<h2 id="posting-到后端">POSTing 到后端</h2>
-
+</code></pre><h2 id="posting-到后端">POSTing 到后端</h2>
 <p>最后，是时候在前端添加一个提示调用后端了！我们需要做两件事：</p>
-
 <p>1.在 Cro 后端编写一个 POST 处理程序 2.找到一种方法让我们的 Redux action 结果在 POST 中</p>
-
 <p>首先是 Cro 部分。在 lib/Routes.pm6 中，我们添加以下路由实现：</p>
-
 <pre><code>post -&gt; 'tips' {
     request-body -&gt; (:$text) {
         $tipsy.add-tip($text);
         response.status = 204;
     }
 }
-</code></pre>
-
-<p>接下来，JavaScript 部分。问题是网络部分在哪里？我们的 reducer 应该是纯净的。答案是我们之前安装的 redux-thunk 模块，但尚未使用。这允许我们编写返回函数的 action 创建者。该函数将通过调度程序，并可以调用它来调度 action。通常，我们将在异步操作开始时调度一个 action，我们可以使用它在 UI 上指示，并在完成后再指示一个操作，因此我们可以再次指示操作在 UI 中完成。</p>
-
+</code></pre><p>接下来，JavaScript 部分。问题是网络部分在哪里？我们的 reducer 应该是纯净的。答案是我们之前安装的 redux-thunk 模块，但尚未使用。这允许我们编写返回函数的 action 创建者。该函数将通过调度程序，并可以调用它来调度 action。通常，我们将在异步操作开始时调度一个 action，我们可以使用它在 UI 上指示，并在完成后再指示一个操作，因此我们可以再次指示操作在 UI 中完成。</p>
 <p>首先，让我们设置 redux-thunk，这是一个中间件。回到 frontend/index.js，添加：</p>
-
 <pre><code>import thunkMiddleware from 'redux-thunk';
-</code></pre>
-
-<p>然后改变：</p>
-
+</code></pre><p>然后改变：</p>
 <pre><code>import { createStore } from 'redux';
-</code></pre>
-
-<p>还要再导入 applyMiddleware:</p>
-
+</code></pre><p>还要再导入 applyMiddleware:</p>
 <pre><code>import { createStore, applyMiddleware } from 'redux';
-</code></pre>
-
-<p>最后，更改：</p>
-
+</code></pre><p>最后，更改：</p>
 <pre><code>let store = createStore(tipsyReducer);
-</code></pre>
-
-<p>还要应用 the middleware:</p>
-
+</code></pre><p>还要应用 the middleware:</p>
 <pre><code>let store = createStore(tipsyReducer, applyMiddleware(thunkMiddleware));
-</code></pre>
-
-<p>下一步，在 frontend/actions.js 中, 我们将重构 add tip action 创建器函数作为 thunk action：</p>
-
+</code></pre><p>下一步，在 frontend/actions.js 中, 我们将重构 add tip action 创建器函数作为 thunk action：</p>
 <pre><code>export function addTip() {
     return dispatch =&gt; {
         dispatch({ type: ADD_TIP });
     };
 }
-</code></pre>
-
-<p>请注意，这还没有改变任何东西; build 它，行为应该是一样的。但是，现在我们已经完成了这项工作，我们可以看到在网络操作之后可以在回调中执行此调度。</p>
-
+</code></pre><p>请注意，这还没有改变任何东西; build 它，行为应该是一样的。但是，现在我们已经完成了这项工作，我们可以看到在网络操作之后可以在回调中执行此调度。</p>
 <p>当然有很多好方法可以处理 JavaScript 中的异步操作，如果你正在认真构建单页面应用程序，我强烈建议你考虑使用 promise 库。还有 Redux 中间件将与之集成。现在，我们将做最简单的事情：使用 jQuery 和回调。首先，让我们添加 jQuery 作为依赖：</p>
-
 <pre><code>$ npm install --save jquery
-</code></pre>
-
-<p>然后我们会在 frontend/actions.js 中导入它:</p>
-
+</code></pre><p>然后我们会在 frontend/actions.js 中导入它:</p>
 <pre><code>import $ from 'jquery';
-</code></pre>
-
-<p>并将 POST 发送到后端：</p>
-
+</code></pre><p>并将 POST 发送到后端：</p>
 <pre><code>export function addTip() {
     return (dispatch, getState) =&gt; {
         $.ajax({
@@ -1016,47 +807,27 @@ $ git commit -m &quot;Wire up Redux&quot;
         });
     };
 }
-</code></pre>
-
-<p>重新加载它，可能打开浏览器的开发工具（通常是F12），翻到“网络”选项卡，然后单击“添加提示”。一切顺利，您将观察到请求已经完成并且它产生了 204 响应。或者，你可能想停止运行，而是做一些 cro trace; 键入消息，再次单击“添加提示”，您应该看到请求主体在跟踪输出中转储。</p>
-
+</code></pre><p>重新加载它，可能打开浏览器的开发工具（通常是F12），翻到“网络”选项卡，然后单击“添加提示”。一切顺利，您将观察到请求已经完成并且它产生了 204 响应。或者，你可能想停止运行，而是做一些 cro trace; 键入消息，再次单击“添加提示”，您应该看到请求主体在跟踪输出中转储。</p>
 <pre><code>...
 65 63 74 69 6f 6e 3a 20 6b 65 65 70 2d 61 6c 69  ection: keep-ali
 76 65 0d 0a 0d 0a 7b 22 74 65 78 74 22 3a 22 74  ve....{&quot;text&quot;:&quot;t
 72 79 20 74 68 65 20 62 65 65 66 22 7d           ry the beef&quot;}
-</code></pre>
-
-<h2 id="the-latest-tips-websocket">The latest tips websocket</h2>
-
+</code></pre><h2 id="the-latest-tips-websocket">The latest tips websocket</h2>
 <p>我们可以通过各种方式编写 websocket，但我们将使用 redux-websocket-action。这允许我们通过 websocket 将 Redux 动作发送到客户端，这很简洁（尽管不幸的是，这意味着我们将后端与前端中此库的使用相结合，这值得一些质疑）。</p>
-
 <p>首先，让我们在前端安装库：</p>
-
 <pre><code>$ npm install --save redux-websocket-action
-</code></pre>
-
-<p>在 index.js 中，我们导入它：</p>
-
+</code></pre><p>在 index.js 中，我们导入它：</p>
 <pre><code>import WSAction from 'redux-websocket-action';
-</code></pre>
-
-<p>并设置它，像这样：</p>
-
+</code></pre><p>并设置它，像这样：</p>
 <pre><code>let host = window.location.host;
 let wsAction = new WSAction(store, 'ws://' + host + '/latest-tips', {
     retryCount:3,
     reconnectInterval: 3
 });
 wsAction.start();
-</code></pre>
-
-<p>在 frontend/actions.js 中，我们将添加一个动作类型（但没有动作创建功能，因为它将来自服务器）：</p>
-
+</code></pre><p>在 frontend/actions.js 中，我们将添加一个动作类型（但没有动作创建功能，因为它将来自服务器）：</p>
 <pre><code>export const LATEST_TIP = 'LATEST_TIP';
-</code></pre>
-
-<p>然后我们将更新我们的 reducer，将每个传入的提示添加到最新提示列表中，因此 frontend/reducer.js 最终为：</p>
-
+</code></pre><p>然后我们将更新我们的 reducer，将每个传入的提示添加到最新提示列表中，因此 frontend/reducer.js 最终为：</p>
 <pre><code>import * as ActionTypes from './actions';
 
 const initialState = {
@@ -1080,10 +851,7 @@ export function tipsyReducer(state = initialState, action) {
             return state;
     }
 }
-</code></pre>
-
-<p>然后更新 frontend/index.js 中的 React 组件以渲染最新提示：</p>
-
+</code></pre><p>然后更新 frontend/index.js 中的 React 组件以渲染最新提示：</p>
 <pre><code>var LatestTips = props =&gt; (
     &lt;div&gt;
         &lt;h2&gt;Latest Tips&lt;/h2&gt;
@@ -1101,12 +869,8 @@ var App = props =&gt; (
         &lt;LatestTips tips={props.latestTips} /&gt;
     &lt;/div&gt;
 );
-</code></pre>
-
-<p>应用程序更新只是为了将提示传递给 LatestTips 组件。然后，客户端添加完成。</p>
-
+</code></pre><p>应用程序更新只是为了将提示传递给 LatestTips 组件。然后，客户端添加完成。</p>
 <p>现在是后端，这只是 Routes.pm6 中的一个补充。我们清除了为我们生成的 websocket 存根，并将其替换为代码以从 Tipsy 业务逻辑对象获取最新提示，将事件转换为适当的 JSON，然后发出它们：</p>
-
 <pre><code>get -&gt; 'latest-tips' {
     web-socket -&gt; $incoming {
         supply whenever $tipsy.latest-tips -&gt; $tip {
@@ -1121,22 +885,13 @@ var App = props =&gt; (
         }
     }
 }
-</code></pre>
-
-<p>The outer hash is the &ldquo;envelope&rdquo; for redux-websocket-action, which tells it to pay attention to the message and dispatch its action property as a Redux action.</p>
-
+</code></pre><p>The outer hash is the &ldquo;envelope&rdquo; for redux-websocket-action, which tells it to pay attention to the message and dispatch its action property as a Redux action.</p>
 <p>Reload it in the browser. Add a tip. See it show up. Open a second tab with the application. You&rsquo;ll see it shows the first tip. Add a second tip. Flip back to the first tab, and you&rsquo;ll see that tip magically showed up there too. We&rsquo;re now successfully sharing out the tips over the web socket. Hurrah! That calls for a commit.</p>
-
 <p>外部哈希是 redux-websocket-action 的“信封”，它告诉它注意消息并将其 action 属性作为 Redux 动作发送。</p>
-
 <p>在浏览器中重新加载它。添加提示。看到它出现。使用该应用程序打开第二个选项卡。你会看到它显示第一个提示。添加第二个提示。翻回第一个标签，你会看到那个小费神奇地出现在那里。我们现在已成功通过 Web 套接字分享提示。欢呼！这需要提交一次。</p>
-
 <h2 id="agree-and-disagree">Agree and disagree</h2>
-
 <p>我们花了很多时间来设置客户端(client-side)的基础架构。现在它已经到位，但是，添加更多功能是一个更快的过程。让我们通过实现同意/不同意功能（链接让用户表示同意/不同意提示）来完善教程，并显示最头部的提示列表。</p>
-
 <p>让我们从后端开始，在业务逻辑对象中编写这些新功能的测试。我们将这些测试添加到 <code>t/tipsy.t</code>：</p>
-
 <pre><code>given $tipsy.latest-tips.head(3).list -&gt; @tips {
     $tipsy.agree(@tips[0].id) for ^3;
     $tipsy.agree(@tips[1].id) for ^4;
@@ -1153,20 +908,13 @@ given $tipsy.top-tips.head(1).list[0] {
 }
 throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
     'Correct exception on no such tip';
-</code></pre>
-
-<p>第一部分只是在提示上添加了一些 agreement 和 disagreement（最新的会拍在第一的位置）。接下来，我们使用 top-tips 供应并抓住它发出的第一个东西（或至少应该发出），这是我们点击 Supply 时的当前排序。它检查顺序是否正确。最终测试检查对于无法识别的 ID，我们抛出异常。</p>
-
+</code></pre><p>第一部分只是在提示上添加了一些 agreement 和 disagreement（最新的会拍在第一的位置）。接下来，我们使用 top-tips 供应并抓住它发出的第一个东西（或至少应该发出），这是我们点击 Supply 时的当前排序。它检查顺序是否正确。最终测试检查对于无法识别的 ID，我们抛出异常。</p>
 <p>这是新的异常类型：</p>
-
 <pre><code>class X::Tipsy::NoSuchId is Exception {
     has $.id;
     method message() { &quot;No tip with ID '$!id'&quot; }
 }
-</code></pre>
-
-<p>接下来，我们将给 Tip 类提供一些方法，这些方法生成 Tip 对象的新版本，同意或不同意更高一些（我们将这些实例保持不变，因为我们在监视器之外共享它们）：</p>
-
+</code></pre><p>接下来，我们将给 Tip 类提供一些方法，这些方法生成 Tip 对象的新版本，同意或不同意更高一些（我们将这些实例保持不变，因为我们在监视器之外共享它们）：</p>
 <pre><code>class Tip {
     has Int $.id is required;
     has Str $.tip is required;
@@ -1181,10 +929,7 @@ throws-like { $tipsy.agree(99999) }, X::Tipsy::NoSuchId,
         self.clone(disagreed =&gt; $!disagreed + 1)
     }
 }
-</code></pre>
-
-<p>同意和不同意的方法很容易：</p>
-
+</code></pre><p>同意和不同意的方法很容易：</p>
 <pre><code>method agree(Int $tip-id --&gt; Nil) {
     with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
         $tip-ref .= agree;
@@ -1202,10 +947,7 @@ method disagree(Int $tip-id --&gt; Nil) {
         X::Tipsy::NoSuchId.new(id =&gt; $tip-id).throw;
     }
 }
-</code></pre>
-
-<p>嗯，实际上这有点相似。让我们使用私有方法来解决它：</p>
-
+</code></pre><p>嗯，实际上这有点相似。让我们使用私有方法来解决它：</p>
 <pre><code>method agree(Int $tip-id --&gt; Nil) {
     self!with-tip: $tip-id, -&gt; $tip-ref is rw {
         $tip-ref .= agree;
@@ -1226,10 +968,7 @@ method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
         X::Tipsy::NoSuchId.new(id =&gt; $tip-id).throw;
     }
 }
-</code></pre>
-
-<p>最后，这是我们对 top-tips 方法的第一次尝试：</p>
-
+</code></pre><p>最后，这是我们对 top-tips 方法的第一次尝试：</p>
 <pre><code>method top-tips(--&gt; Supply) { 
     my @top-tips = %!tips-by-id.values
         .sort({ .disagreed - .agreed })
@@ -1238,10 +977,7 @@ method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
         emit @top-tips;
     }
 }
-</code></pre>
-
-<p>它通过了测试，然而&hellip;&hellip;缺少了一些东西。这意味着每当有新的提示或提示被同意或不同意时，会发出更新的排序提示列表。让我们为它添加一些测试：</p>
-
+</code></pre><p>它通过了测试，然而&hellip;&hellip;缺少了一些东西。这意味着每当有新的提示或提示被同意或不同意时，会发出更新的排序提示列表。让我们为它添加一些测试：</p>
 <pre><code>my $new-tip-id;
 react {
     whenever $tipsy.top-tips.skip(1).head(1) {
@@ -1266,15 +1002,9 @@ react {
     }
     $tipsy.agree($new-tip-id) for ^5;
 }
-</code></pre>
-
-<p>要进行此更新，我们需要一个我们可以发出的 Supplier，以表明对同意/不同意计数的更改。</p>
-
+</code></pre><p>要进行此更新，我们需要一个我们可以发出的 Supplier，以表明对同意/不同意计数的更改。</p>
 <pre><code>has Supplier $!tip-change = Supplier.new;
-</code></pre>
-
-<p>并在其上发射（在之前的因子分解后很容易）：</p>
-
+</code></pre><p>并在其上发射（在之前的因子分解后很容易）：</p>
 <pre><code>method !with-tip(Int $tip-id, &amp;operation --&gt; Nil) {
     with %!tips-by-id{$tip-id} -&gt; $tip-ref is rw {
         operation($tip-ref);
@@ -1284,10 +1014,7 @@ react {
         X::Tipsy::NoSuchId.new(id =&gt; $tip-id).throw;
     }
 }
-</code></pre>
-
-<p>最后，更新 top-tips 方法。我们有几种方法可以做到这一点，但确保我们安全的最简单方法是确保 Supply 保持其自身的本地状态，它可以保护（再次，请记住，因为 supply 块从中返回，并且超越，方法，它不会受到监视器的保护）。</p>
-
+</code></pre><p>最后，更新 top-tips 方法。我们有几种方法可以做到这一点，但确保我们安全的最简单方法是确保 Supply 保持其自身的本地状态，它可以保护（再次，请记住，因为 supply 块从中返回，并且超越，方法，它不会受到监视器的保护）。</p>
 <pre><code>method top-tips(--&gt; Supply) {
     my %initial-tips = %!tips-by-id;
     supply {
@@ -1302,10 +1029,7 @@ react {
         emit-latest-sorted;
     }
 }
-</code></pre>
-
-<p>完成后，是时候通过更新 lib/Routes.pm6 将此功能公开给外界。它的工作是将业务逻辑映射到 HTTP。我们唯一需要注意的是将 “no such ID” 的异常转换为适当的 HTTP 响应，即 404 Not Found。否则，我们会发回 500 内部服务器错误，这是错误的，因为客户端发送了一些伪造的 ID 不是服务器的错。开始：</p>
-
+</code></pre><p>完成后，是时候通过更新 lib/Routes.pm6 将此功能公开给外界。它的工作是将业务逻辑映射到 HTTP。我们唯一需要注意的是将 “no such ID” 的异常转换为适当的 HTTP 响应，即 404 Not Found。否则，我们会发回 500 内部服务器错误，这是错误的，因为客户端发送了一些伪造的 ID 不是服务器的错。开始：</p>
 <pre><code>post -&gt; 'tips', Int $id, 'agree' {
     $tipsy.agree($id);
     response.status = 204;
@@ -1325,10 +1049,7 @@ post -&gt; 'tips', Int $id, 'disagree' {
         }
     }
 }
-</code></pre>
-
-<p>后端的最后一步是将顶部提示映射到另一个 Web 套接字：</p>
-
+</code></pre><p>后端的最后一步是将顶部提示映射到另一个 Web 套接字：</p>
 <pre><code>get -&gt; 'top-tips' {
     web-socket -&gt; $incoming {
         supply whenever $tipsy.top-tips -&gt; @tips {
@@ -1349,10 +1070,7 @@ post -&gt; 'tips', Int $id, 'disagree' {
         }
     }
 }
-</code></pre>
-
-<p>现在到前端了。在 frontend/actions.js 中，我们将添加三个新的 action 类型常量：</p>
-
+</code></pre><p>现在到前端了。在 frontend/actions.js 中，我们将添加三个新的 action 类型常量：</p>
 <pre><code>export const UPDATE_TOP_TIPS = 'UPDATE_TOP_TIPS';
 export const AGREE = 'AGREE';
 export const DISAGREE = 'DISAGREE';
@@ -1376,28 +1094,19 @@ export function disagree(id) {
         });
     };
 }
-</code></pre>
-
-<p>在 reducer 中，我们将调整初始状态以获得一组空的 top 提示：</p>
-
+</code></pre><p>在 reducer 中，我们将调整初始状态以获得一组空的 top 提示：</p>
 <pre><code>const initialState = {
     tipText: '',
     latestTips: [],
     topTips: []
 };
-</code></pre>
-
-<p>然后添加一个额外的 case 语句来处理新的更新操作（我们不需要在同意/不同意的情况下做任何事情，尽管在真实的应用程序中我们想要给一些用户反馈他们的投票被计算在内）：</p>
-
+</code></pre><p>然后添加一个额外的 case 语句来处理新的更新操作（我们不需要在同意/不同意的情况下做任何事情，尽管在真实的应用程序中我们想要给一些用户反馈他们的投票被计算在内）：</p>
 <pre><code>case ActionTypes.UPDATE_TOP_TIPS:
     return {
         ...state,
         topTips: action.tips
     };
-</code></pre>
-
-<p>接下来我们需要连接第二个 Web 套接字。这只是 frontend/index.js 中的一点重构：</p>
-
+</code></pre><p>接下来我们需要连接第二个 Web 套接字。这只是 frontend/index.js 中的一点重构：</p>
 <pre><code>['latest-tips', 'top-tips'].forEach(endpoint =&gt; {
     let host = window.location.host;
     let wsAction = new WSAction(store, 'ws://' + host + '/' + endpoint, {
@@ -1406,10 +1115,7 @@ export function disagree(id) {
     });
     wsAction.start();
 });
-</code></pre>
-
-<p>接下来，我们将把调度更新到 props map，包括我们新的同意和不同意的 action：</p>
-
+</code></pre><p>接下来，我们将把调度更新到 props map，包括我们新的同意和不同意的 action：</p>
 <pre><code>function mapDispatch(dispatch) {
     return {
         onChangeTipText: text =&gt; dispatch(Actions.changeTipText(text)),
@@ -1418,20 +1124,14 @@ export function disagree(id) {
         onDisagree: id =&gt; dispatch(Actions.disagree(id)),
     };
 }
-</code></pre>
-
-<p>接下来，我们将向您展示一个组件的提示，我们可以在最新的提示和重要提示中重复使用，其中包括同意或不同意的链接：</p>
-
+</code></pre><p>接下来，我们将向您展示一个组件的提示，我们可以在最新的提示和重要提示中重复使用，其中包括同意或不同意的链接：</p>
 <pre><code>var Tip = props =&gt; (
     &lt;li&gt;
         {props.text} [&lt;a href=&quot;#&quot; onClick={() =&gt; props.onAgree(props.id)}&gt;Agree&lt;/a&gt;]
         [&lt;a href=&quot;#&quot; onClick={() =&gt; props.onDisagree(props.id)}&gt;Disagree&lt;/a&gt;]
     &lt;/li&gt;
 );
-</code></pre>
-
-<p>然后显示一个提示列表，标题为：</p>
-
+</code></pre><p>然后显示一个提示列表，标题为：</p>
 <pre><code>var TipList = props =&gt; (
     &lt;div&gt;
         &lt;h2&gt;{props.heading}&lt;/h2&gt;
@@ -1440,10 +1140,7 @@ export function disagree(id) {
         &lt;/ul&gt;
     &lt;/div&gt;
 );
-</code></pre>
-
-<p>最后，App 组件变为：</p>
-
+</code></pre><p>最后，App 组件变为：</p>
 <pre><code>var App = props =&gt; (
     &lt;div&gt;
         &lt;SubmitTip tipText={props.tipText}
@@ -1455,28 +1152,18 @@ export function disagree(id) {
             onAgree={props.onAgree} onDisagree={props.onDisagree} /&gt;
     &lt;/div&gt;
 );
-</code></pre>
-
-<p>我们终于得到它了。 npm run build，刷新，并给它一个旋转。在任一列表中单击同意或不同意最终会更改顶部提示列表中的排序顺序以反映投票。</p>
-
+</code></pre><p>我们终于得到它了。 npm run build，刷新，并给它一个旋转。在任一列表中单击同意或不同意最终会更改顶部提示列表中的排序顺序以反映投票。</p>
 <p>最后，我们完成了。</p>
-
 <pre><code>$ git commit -m &quot;Add agree/disagree feature&quot; .
 [master 5d792bc] Add agree/disagree feature
  6 files changed, 188 insertions(+), 18 deletions(-)
-</code></pre>
-
-<h2 id="summing-up">Summing up</h2>
-
+</code></pre><h2 id="summing-up">Summing up</h2>
 <p>在本教程中，我们从零到应用单页面应用程序。前端是使用 React 和 Redux 在现代 ES6 中编写的。使用 Cro，后端在 Raku 中。它们使用 HTTP 和 Web 套接字进行通信。并且两者都声明了它们的依赖关系，因此新开发人员的入门只是以下情况：</p>
-
 <pre><code>zef install --deps-only .
 npm install .
 npm run build
 cro run
-</code></pre>
-
-<p>再一次，代码可用于本教程中描述的提交历史记录。</p>
+</code></pre><p>再一次，代码可用于本教程中描述的提交历史记录。</p>
 
 
         
@@ -1568,7 +1255,7 @@ cro run
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

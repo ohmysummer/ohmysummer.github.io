@@ -10,22 +10,22 @@
   <meta name="twitter:title" content="Make" />
   <meta name="description" content="方法 make 的文档由以下类型组装而成：
 Match 类 来自于 Match
-make 方法 method make(Match:D: Mu $payload) sub make(Mu $payload)  将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
+make 方法 method make(Match:D: Mu $payload)sub make(Mu $payload)将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
 这通常用于 grammar 的 action 类方法中，其中一个方法存储一段数据，然后由另一个方法取回。这取决于你存储什么数据。它可以是树节点，计算结果或值的列表。
 sub 形式的 make 操作当前的 $/，这可能是一个简写：
-method my-action ($/) { make &quot;foo: $/&quot;; }  make 会把数据结构附加到各自的 Match 对象上, 随后通过 .made 方法取回。使用 Match.perl 方法可以看到, Match 里面有一个 made 属性：
-&gt; if &#39;abc&#39; ~~ /\w&#43;/ { $/.make: {&#39;a&#39; =&gt; &#39;bc&#39;, &#39;d&#39; =&gt; &#39;wsl&#39;}; say $/.">
+method my-action ($/) {make &quot;foo: $/&quot;;}make 会把数据结构附加到各自的 Match 对象上, 随后通过 .made 方法取回。使用 Match.perl 方法可以看到, Match 里面有一个 made 属性：
+&gt; if &#39;abc&#39; ~~ /\w&#43;/ { $/.make: {&#39;a&#39; =&gt; &#39;bc&#39;, &#39;d&#39; =&gt; &#39;wsl&#39;}; say $/.made }{a =&gt; bc, d =&gt; wsl}&gt; $/.">
   <meta property="og:description" content="方法 make 的文档由以下类型组装而成：
 Match 类 来自于 Match
-make 方法 method make(Match:D: Mu $payload) sub make(Mu $payload)  将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
+make 方法 method make(Match:D: Mu $payload)sub make(Mu $payload)将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
 这通常用于 grammar 的 action 类方法中，其中一个方法存储一段数据，然后由另一个方法取回。这取决于你存储什么数据。它可以是树节点，计算结果或值的列表。
 sub 形式的 make 操作当前的 $/，这可能是一个简写：
-method my-action ($/) { make &quot;foo: $/&quot;; }  make 会把数据结构附加到各自的 Match 对象上, 随后通过 .made 方法取回。使用 Match.perl 方法可以看到, Match 里面有一个 made 属性：
-&gt; if &#39;abc&#39; ~~ /\w&#43;/ { $/.make: {&#39;a&#39; =&gt; &#39;bc&#39;, &#39;d&#39; =&gt; &#39;wsl&#39;}; say $/.">
+method my-action ($/) {make &quot;foo: $/&quot;;}make 会把数据结构附加到各自的 Match 对象上, 随后通过 .made 方法取回。使用 Match.perl 方法可以看到, Match 里面有一个 made 属性：
+&gt; if &#39;abc&#39; ~~ /\w&#43;/ { $/.make: {&#39;a&#39; =&gt; &#39;bc&#39;, &#39;d&#39; =&gt; &#39;wsl&#39;}; say $/.made }{a =&gt; bc, d =&gt; wsl}&gt; $/.">
   <meta name="twitter:description" content="方法 make 的文档由以下类型组装而成：
 Match 类 来自于 Match
-make 方法 method make(Match:D: Mu $payload) sub make(Mu $payload)  将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
-这通常用于 grammar 的 action 类方法中，其中一个方法存储一 …">
+make 方法 method make(Match:D: Mu $payload)sub make(Mu $payload)将任意有效载荷(payload)存储到 Match 对象中，稍后可通过 .made / .ast 方法重新取回它。
+这通常用于 grammar 的 action 类方法中，其中一个方法存储一段 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -35,7 +35,7 @@ make 方法 method make(Match:D: Mu $payload) sub make(Mu $payload)  将任意�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-05-06-make/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -242,34 +242,20 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>方法 <code>make</code> 的文档由以下类型组装而成：</p>
-
+        <p>方法 <code>make</code> 的文档由以下类型组装而成：</p>
 <h2 id="match-类">Match 类</h2>
-
 <p>来自于 <a href="https://docs.raku.org/type/Match#method_make">Match</a></p>
-
 <h3 id="make-方法">make 方法</h3>
-
-<pre><code class="language-raku">method make(Match:D: Mu $payload)
+<pre><code class="language-raku" data-lang="raku">method make(Match:D: Mu $payload)
 sub make(Mu $payload)
-</code></pre>
-
-<p>将任意有效载荷(payload)存储到 <a href="https://docs.raku.org/type/Match">Match</a> 对象中，稍后可通过 <a href="https://docs.raku.org/routine/made">.made</a> / <a href="https://docs.raku.org/routine/ast">.ast</a> 方法重新取回它。</p>
-
+</code></pre><p>将任意有效载荷(payload)存储到 <a href="https://docs.raku.org/type/Match">Match</a> 对象中，稍后可通过 <a href="https://docs.raku.org/routine/made">.made</a> / <a href="https://docs.raku.org/routine/ast">.ast</a> 方法重新取回它。</p>
 <p>这通常用于 <a href="https://docs.raku.org/language/grammars">grammar</a> 的 action 类方法中，其中一个方法存储一段数据，然后由另一个方法取回。这取决于你存储什么数据。它可以是树节点，<a href="https://docs.raku.org/language/grammars#Protoregexes">计算结果</a>或值的列表。</p>
-
 <p>sub 形式的 make 操作当前的 <code>$/</code>，这可能是一个简写：</p>
-
-<pre><code class="language-raku">method my-action ($/) {
+<pre><code class="language-raku" data-lang="raku">method my-action ($/) {
     make &quot;foo: $/&quot;;
 }
-</code></pre>
-
-<p><code>make</code> 会把数据结构附加到各自的 Match 对象上, 随后通过 <code>.made</code> 方法取回。使用 <code>Match.perl</code> 方法可以看到, <code>Match</code> 里面有一个 <strong>made</strong> 属性：</p>
-
-<pre><code class="language-raku">&gt; if 'abc' ~~ /\w+/ { $/.make: {'a' =&gt; 'bc', 'd' =&gt; 'wsl'}; say $/.made }
+</code></pre><p><code>make</code> 会把数据结构附加到各自的 Match 对象上, 随后通过 <code>.made</code> 方法取回。使用 <code>Match.perl</code> 方法可以看到, <code>Match</code> 里面有一个 <strong>made</strong> 属性：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; if 'abc' ~~ /\w+/ { $/.make: {'a' =&gt; 'bc', 'd' =&gt; 'wsl'}; say $/.made }
 {a =&gt; bc, d =&gt; wsl}
 &gt; $/.WHAT
 (Match)
@@ -279,11 +265,8 @@ Match.new(list =&gt; (), made =&gt; {:a(&quot;bc&quot;), :d(&quot;wsl&quot;)}, p
 {a =&gt; bc, d =&gt; wsl}
 &gt; $/.perl
 Match.new(list =&gt; (), made =&gt; {:a(&quot;bc&quot;), :d(&quot;wsl&quot;)}, pos =&gt; 3, hash =&gt; Map.new(()), orig =&gt; &quot;abc&quot;, from =&gt; 0)
-</code></pre>
-
-<p>除了可以在 regex 中 make/made 数据外，还可以在 Action 类中做同样的事情：</p>
-
-<pre><code class="language-raku">grammar MathExpression {
+</code></pre><p>除了可以在 regex 中 make/made 数据外，还可以在 Action 类中做同样的事情：</p>
+<pre><code class="language-raku" data-lang="raku">grammar MathExpression {
     token TOP    { &lt;sum&gt;              } 
     rule sum     { &lt;product&gt;+ % '+'   } 
     rule product { &lt;term&gt;+    % '*'   } 
@@ -320,190 +303,186 @@ my $match = MathExpression.parse(
 
 say $match.made; # Output: 24
 say $match.perl; # 会打印一个 Match 的数据结构
-</code></pre>
-
-<p>Output：</p>
-
+</code></pre><p>Output：</p>
 <pre><code>MathExpression=(
-    :list(List=()),
-    :pos(15),
-    :made(24),
-    :hash(Map=(
-        :sum(MathExpression=(
-            :list(List=()),
-            :pos(15),
-            :made(24),
-            :hash(Map=(
-                :product(Array=[
-                    MathExpression=(
-                            :list(List=()),
-                            :pos(2),
-                            :made(4),
-                            :hash(Map=(
-                                :term(Array=[
-                                    MathExpression=(
-                                            :list(List=()),
-                                            :pos(2),
-                                            :made(4),
-                                            :hash(Map=(
-                                                :number(MathExpression=(
-                                                    :list(List=()),
-                                                    :pos(1),
-                                                    :made(4),
-                                                    :hash(Map=()),
-                                                    :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                    :to(1),
-                                                    :from(0)
-                                                ))
-                                            )),
-                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                            :to(2),
-                                            :from(0)
-                                    )
-                                ])
-                            )),
-                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                            :to(2),
-                            :from(0)
-                    ),
-                    MathExpression=(
-                            :list(List=()),
-                            :pos(15),
-                            :made(20),
-                            :hash(Map=(
-                                :term(Array=[
-                                    MathExpression=(
-                                            :list(List=()),
-                                            :pos(6),
-                                            :made(5),
-                                            :hash(Map=(
-                                                :number(MathExpression=(
-                                                    :list(List=()),
-                                                    :pos(5),
-                                                    :made(5),
-                                                    :hash(Map=()),
-                                                    :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                    :to(5),
-                                                    :from(4)
-                                                ))
-                                            )),
-                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                            :to(6),
-                                            :from(4)
-                                    ),
-                                    MathExpression=(
-                                            :list(List=()),
-                                            :pos(15),
-                                            :made(4),
-                                            :hash(Map=(
-                                                :group(MathExpression=(
-                                                    :list(List=()),
-                                                    :pos(15),
-                                                    :made(4),
-                                                    :hash(Map=(
-                                                        :sum(MathExpression=(
-                                                            :list(List=()),
-                                                            :pos(14),
-                                                            :made(4),
-                                                            :hash(Map=(
-                                                                :product(Array=[
-                                                                    MathExpression=(
-                                                                            :list(List=()),
-                                                                            :pos(11),
-                                                                            :made(1),
-                                                                            :hash(Map=(
-                                                                                :term(Array=[
-                                                                                    MathExpression=(
-                                                                                            :list(List=()),
-                                                                                            :pos(11),
-                                                                                            :made(1),
-                                                                                            :hash(Map=(
-                                                                                                :number(MathExpression=(
-                                                                                                    :list(List=()),
-                                                                                                    :pos(10),
-                                                                                                    :made(1),
-                                                                                                    :hash(Map=()),
-                                                                                                    :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                                                                    :to(10),
-                                                                                                    :from(9)
-                                                                                                ))
-                                                                                            )),
-                                                                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                                                            :to(11),
-                                                                                            :from(9)
-                                                                                    )
-                                                                                ])
-                                                                            )),
-                                                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                                            :to(11),
-                                                                            :from(9)
-                                                                    ),
-                                                                    MathExpression=(
-                                                                            :list(List=()),
-                                                                            :pos(14),
-                                                                            :made(3),
-                                                                            :hash(Map=(
-                                                                                :term(Array=[
-                                                                                    MathExpression=(
-                                                                                            :list(List=()),
-                                                                                            :pos(14),
-                                                                                            :made(3),
-                                                                                            :hash(Map=(
-                                                                                                :number(MathExpression=(
-                                                                                                    :list(List=()),
-                                                                                                    :pos(14),
-                                                                                                    :made(3),
-                                                                                                    :hash(Map=()),
-                                                                                                    :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                                                                    :to(14),
-                                                                                                    :from(13)
-                                                                                                ))
-                                                                                            )),
-                                                                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                                                            :to(14),
-                                                                                            :from(13)
-                                                                                    )
-                                                                                ])
-                                                                            )),
-                                                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                                            :to(14),
-                                                                            :from(13)
-                                                                    )
-                                                                ])
-                                                            )),
-                                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                            :to(14),
-                                                            :from(9)
-                                                        ))
-                                                    )),
-                                                    :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                                    :to(15),
-                                                    :from(8)
-                                                ))
-                                            )),
-                                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                                            :to(15),
-                                            :from(8)
-                                    )
-                                ])
-                            )),
-                            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-                            :to(15),
-                            :from(4)
-                    )
-                ])
-            )),
-            :orig(&quot;4 + 5 * (1 + 3)&quot;),
-            :to(15),
-            :from(0)
-        ))
-    )),
-    :orig(&quot;4 + 5 * (1 + 3)&quot;),
-    :to(15),
-    :from(0)
+	:list(List=()),
+	:pos(15),
+	:made(24),
+	:hash(Map=(
+		:sum(MathExpression=(
+			:list(List=()),
+			:pos(15),
+			:made(24),
+			:hash(Map=(
+				:product(Array=[
+					MathExpression=(
+							:list(List=()),
+							:pos(2),
+							:made(4),
+							:hash(Map=(
+								:term(Array=[
+									MathExpression=(
+											:list(List=()),
+											:pos(2),
+											:made(4),
+											:hash(Map=(
+												:number(MathExpression=(
+													:list(List=()),
+													:pos(1),
+													:made(4),
+													:hash(Map=()),
+													:orig(&quot;4 + 5 * (1 + 3)&quot;),
+													:to(1),
+													:from(0)
+												))
+											)),
+											:orig(&quot;4 + 5 * (1 + 3)&quot;),
+											:to(2),
+											:from(0)
+									)
+								])
+							)),
+							:orig(&quot;4 + 5 * (1 + 3)&quot;),
+							:to(2),
+							:from(0)
+					),
+					MathExpression=(
+							:list(List=()),
+							:pos(15),
+							:made(20),
+							:hash(Map=(
+								:term(Array=[
+									MathExpression=(
+											:list(List=()),
+											:pos(6),
+											:made(5),
+											:hash(Map=(
+												:number(MathExpression=(
+													:list(List=()),
+													:pos(5),
+													:made(5),
+													:hash(Map=()),
+													:orig(&quot;4 + 5 * (1 + 3)&quot;),
+													:to(5),
+													:from(4)
+												))
+											)),
+											:orig(&quot;4 + 5 * (1 + 3)&quot;),
+											:to(6),
+											:from(4)
+									),
+									MathExpression=(
+											:list(List=()),
+											:pos(15),
+											:made(4),
+											:hash(Map=(
+												:group(MathExpression=(
+													:list(List=()),
+													:pos(15),
+													:made(4),
+													:hash(Map=(
+														:sum(MathExpression=(
+															:list(List=()),
+															:pos(14),
+															:made(4),
+															:hash(Map=(
+																:product(Array=[
+																	MathExpression=(
+																			:list(List=()),
+																			:pos(11),
+																			:made(1),
+																			:hash(Map=(
+																				:term(Array=[
+																					MathExpression=(
+																							:list(List=()),
+																							:pos(11),
+																							:made(1),
+																							:hash(Map=(
+																								:number(MathExpression=(
+																									:list(List=()),
+																									:pos(10),
+																									:made(1),
+																									:hash(Map=()),
+																									:orig(&quot;4 + 5 * (1 + 3)&quot;),
+																									:to(10),
+																									:from(9)
+																								))
+																							)),
+																							:orig(&quot;4 + 5 * (1 + 3)&quot;),
+																							:to(11),
+																							:from(9)
+																					)
+																				])
+																			)),
+																			:orig(&quot;4 + 5 * (1 + 3)&quot;),
+																			:to(11),
+																			:from(9)
+																	),
+																	MathExpression=(
+																			:list(List=()),
+																			:pos(14),
+																			:made(3),
+																			:hash(Map=(
+																				:term(Array=[
+																					MathExpression=(
+																							:list(List=()),
+																							:pos(14),
+																							:made(3),
+																							:hash(Map=(
+																								:number(MathExpression=(
+																									:list(List=()),
+																									:pos(14),
+																									:made(3),
+																									:hash(Map=()),
+																									:orig(&quot;4 + 5 * (1 + 3)&quot;),
+																									:to(14),
+																									:from(13)
+																								))
+																							)),
+																							:orig(&quot;4 + 5 * (1 + 3)&quot;),
+																							:to(14),
+																							:from(13)
+																					)
+																				])
+																			)),
+																			:orig(&quot;4 + 5 * (1 + 3)&quot;),
+																			:to(14),
+																			:from(13)
+																	)
+																])
+															)),
+															:orig(&quot;4 + 5 * (1 + 3)&quot;),
+															:to(14),
+															:from(9)
+														))
+													)),
+													:orig(&quot;4 + 5 * (1 + 3)&quot;),
+													:to(15),
+													:from(8)
+												))
+											)),
+											:orig(&quot;4 + 5 * (1 + 3)&quot;),
+											:to(15),
+											:from(8)
+									)
+								])
+							)),
+							:orig(&quot;4 + 5 * (1 + 3)&quot;),
+							:to(15),
+							:from(4)
+					)
+				])
+			)),
+			:orig(&quot;4 + 5 * (1 + 3)&quot;),
+			:to(15),
+			:from(0)
+		))
+	)),
+	:orig(&quot;4 + 5 * (1 + 3)&quot;),
+	:to(15),
+	:from(0)
 )
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -594,7 +573,7 @@ say $match.perl; # 会打印一个 Match 的数据结构
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

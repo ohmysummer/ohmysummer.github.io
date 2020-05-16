@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-10-%E7%AC%AC%E5%8D%81%E7%AB%A0.-%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%9D%97/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,277 +231,139 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第十章-使用模块">第十章. 使用模块</h1>
-
 <p>Modules allow you to compartmentalize, distribute, and reuse code. Someone creates a general solution to something, then packages it so you can reuse it in your programs. Sometimes people make these modules available to everyone. You can find some Raku modules at <em><a href="https://modules.raku.org">https://modules.raku.org</a></em></p>
-
 <p>You don’t have to understand the code inside a module to benefit from its features. You can usually follow the examples in its documentation even if it uses syntax that you haven’t already seen.</p>
-
 <p>模块允许你划分，分发和重用代码。有人创建了一个通用的解决方案，然后将其打包，以便你可以在程序中重用它。有时人们会向所有人提供这些模块。你可以在 <em><a href="https://modules.raku.org">https://modules.raku.org</a></em> 找到一些 Raku 模块。</p>
-
 <p>你无需了解模块内部的代码即可从其功能中受益。你通常可以按照其文档中的示例进行操作，即使它使用你尚未看到的语法。</p>
-
 <h1 id="installing-modules">Installing Modules</h1>
-
 <p><em>zef</em> is one of the Raku module managers. It can install, update, and uninstall modules. It comes with Rakudo Star but you can install it yourself:</p>
-
 <p><em>zef</em> 是 Raku 的模块管理器之一。它可以安装，更新和卸载模块。它附带在 Rakudo Star 中，但你可以自行安装：</p>
-
 <pre><code>% git clone https://github.com/ugexe/zef.git
 % cd zef
 % raku -Ilib bin/zef install .
-</code></pre>
-
-<p>Once you have <em>zef</em> you can install modules. The <code>Task::Popular</code> module installs those most used by other modules:</p>
-
-<p>一旦你有了 *zef*，你就可以安装模块了。 <code>Task::Popular</code> 模块安装其他模块最常用的模块：</p>
-
+</code></pre><p>Once you have <em>zef</em> you can install modules. The <code>Task::Popular</code> module installs those most used by other modules:</p>
+<p>一旦你有了 <em>zef</em>，你就可以安装模块了。 <code>Task::Popular</code> 模块安装其他模块最常用的模块：</p>
 <pre><code>% zef install Task::Popular
-</code></pre>
-
-<p>You can install a module by name if the author has registered it in the module ecosystem:</p>
-
+</code></pre><p>You can install a module by name if the author has registered it in the module ecosystem:</p>
 <p>如果作者已在模块生态系统中注册了模块，你可以按名称安装模块：</p>
-
 <pre><code>% zef install HTTP::Tiny
-</code></pre>
-
-<p>You can also tell it to install the code directly from a Git repository:</p>
-
+</code></pre><p>You can also tell it to install the code directly from a Git repository:</p>
 <p>你也可以告诉它直接从 Git 仓库安装代码：</p>
-
 <pre><code>% zef install https://github.com/sergot/http-useragent.git
 
 % zef install git://github.com/sergot/http-useragent.git
-</code></pre>
-
-<p>Ensure that you are using the clone URL and not the project page URL.</p>
-
+</code></pre><p>Ensure that you are using the clone URL and not the project page URL.</p>
 <p>You can install from a local directory if the module infrastructure is there and there’s a <em>META6.json</em> file. You have to make the argument to <em>zef</em> not look like a module name. This one looks for a module directory in the current directory:</p>
-
 <p>确保你使用的是克隆 URL，而不是项目页面 URL。</p>
-
 <p>如果存在模块基础结构且存在 <em>META6.json</em> 文件，则可以从本地目录进行安装。你必须使 <em>zef</em> 的参数看起来不像模块名。这个在当前目录中查找模块目录：</p>
-
 <pre><code>% zef install ./json-tiny
-</code></pre>
-
-<p>You can install the modules from the current directory by using the <code>.</code> as the current working directory:</p>
-
+</code></pre><p>You can install the modules from the current directory by using the <code>.</code> as the current working directory:</p>
 <p>你可以使用 <code>.</code> 作为当前工作目录从当前目录安装模块：</p>
-
 <pre><code>% zef install .
-</code></pre>
-
-<h6 id="注意">注意</h6>
-
-<p>You may find references to <em>panda</em>, an early module installation tool. It’s the old, unsupported tool. *zef*is the new hotness. Double-check the <a href="https://docs.raku.org/language/modules">documentation</a>, though, since the favored tool may change by the time you read this book.</p>
-
+</code></pre><h6 id="注意">注意</h6>
+<p>You may find references to <em>panda</em>, an early module installation tool. It’s the old, unsupported tool. <em>zef</em>is the new hotness. Double-check the <a href="https://docs.raku.org/language/modules">documentation</a>, though, since the favored tool may change by the time you read this book.</p>
 <p>EXERCISE 10.1Install the <code>Inline::Perl5</code> module by its name. You’ll use that module later in this chapter. Install the <code>Grammar::Debugger</code> module by its repository URL. You’ll use that module in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch17.html#camelia-grammars">Chapter 17</a>. Find and clone the <code>Grammar::Tracer</code> module repository, change into its local directory, and install it from that directory.</p>
-
 <p>你可以找到对 <em>panda</em> 的参考，这是一个早期的模块安装工具。这是旧的，不受支持的工具。 <em>zef</em> 是新秀。但请仔细检查<a href="https://docs.raku.org/language/modules">文档</a>，因为在你阅读本书时，受欢迎的工具可能会发生变化。</p>
-
 <p>练习10.1 按名称安装 <code>Inline::Perl5</code> 模块。你将在本章后面使用该模块。通过其仓库 URL 安装 <code>Grammar::Debugger</code> 模块。你将在第 17 章中使用该模块。查找并克隆 <code>Grammar::Tracer</code> 模块仓库，切换到其本地目录，然后从该目录安装它。</p>
-
 <h1 id="加载模块">加载模块</h1>
-
 <p>You load a module into your program with <code>need</code>. This searches through the module <em>repository</em> looking for a match. If you’ve installed modules with <em>zef</em> they should be in the repository (in the next section I show you how to tell your program to look in other places too):</p>
-
 <p>你使用 <code>need</code> 将模块加载到程序中。这将搜索模块存储库以查找匹配项。如果你已经使用 <em>zef</em> 安装了模块，那么它们应该在存储库中（在下一节中，我将向你展示如何告诉你的程序在其他地方查找）：</p>
-
 <pre><code>need Number::Bytes::Human;
 my $human = Number::Bytes::Human.new;
 
 put $human.format(123435653); # '118M'
 put $human.parse('3GB');      # 3221225472
-</code></pre>
-
-<p>Loading a module with <code>use</code> does the same thing but also automatically <em>imports</em> anything the module has set to export. This allows modules to define thingys in your current scope as if you’d defined the code there yourself:</p>
-
+</code></pre><p>Loading a module with <code>use</code> does the same thing but also automatically <em>imports</em> anything the module has set to export. This allows modules to define thingys in your current scope as if you’d defined the code there yourself:</p>
 <p>使用 <code>use</code> 加载模块会做同样的事情，但也会自动导入模块设置为导出的任何内容。这允许模块在当前作用域内定义东西，就像你自己定义了代码一样：</p>
-
 <pre><code>use Number::Bytes::Human;
-</code></pre>
-
-<p>This is the same as doing a <code>need</code> and then an <code>import</code>:</p>
-
+</code></pre><p>This is the same as doing a <code>need</code> and then an <code>import</code>:</p>
 <p>这与执行 <code>need</code> 然后 <code>import</code> 相同：</p>
-
 <pre><code>need Number::Bytes::Human;
 import Number::Bytes::Human;
-</code></pre>
-
-<p>Some modules import things automatically and others wait until you ask for them. You can specify a list after the module name that asks for specific imports. The <code>Number::Bytes::Human</code> module uses an adverb for that:</p>
-
+</code></pre><p>Some modules import things automatically and others wait until you ask for them. You can specify a list after the module name that asks for specific imports. The <code>Number::Bytes::Human</code> module uses an adverb for that:</p>
 <p>有些模块自动导入东西，有些模块会等到你要求它们。你可以在要求特定导入的模块名称后指定一个列表。 <code>Number::Bytes::Human</code> 模块为此使用一个副词：</p>
-
 <pre><code>use Number::Bytes::Human :functions;
 
 put format-bytes(123435653); # '118M'
 put parse-bytes('3GB');     # 3221225472
-</code></pre>
-
-<p>No matter which way you load it, follow the examples in the documentation (or maybe look in the module tests).</p>
-
+</code></pre><p>No matter which way you load it, follow the examples in the documentation (or maybe look in the module tests).</p>
 <p>无论你以哪种方式加载，请按照文档中的示例（或者查看模块测试）。</p>
-
 <h2 id="查找模块">查找模块</h2>
-
 <p>When you install a module with <em>zef</em> the module’s filename becomes a digest of that file and is saved in one of the module repositories—this allows several versions and sources of the file to be simultaneously installed. You can see this path with the command <code>zef locate</code>:</p>
-
 <p>当你使用 <em>zef</em> 安装模块时，模块的文件名将成为该文件的摘要并保存在其中一个模块存储库中 - 这允许同时安装该文件的多个版本和源。你可以使用命令 <code>zef locate</code> 查看此路径：</p>
-
 <pre><code>% zef locate Number::Bytes::Human
 ===&gt; From Distribution: Number::Bytes::Human:ver&lt;0.0.3&gt;:auth&lt;&gt;:api&lt;&gt;
 Number::Bytes::Human =&gt; /opt/raku/site/sources/A5EA...
-</code></pre>
-
-<p>As you can see in the output, the module shows up in a cryptically named file. Raku uses several methods to store and retrieve compunits in repositories. This is very flexible but also much more than I have space to explain here. For the most part you don’t need to worry about that.</p>
-
+</code></pre><p>As you can see in the output, the module shows up in a cryptically named file. Raku uses several methods to store and retrieve compunits in repositories. This is very flexible but also much more than I have space to explain here. For the most part you don’t need to worry about that.</p>
 <p>正如你在输出中看到的那样，该模块显示在一个文件名加密过的文件中。 Raku 使用几种方法来存储和检索存储库中的 compunits。这非常灵活，但也比我在这里解释的要多。在大多数情况下，你无需担心这一点。</p>
-
 <h6 id="注意-1">注意</h6>
-
 <p>The repository system is complicated because it can manage the same module name with different versions or authors. This means it’s possible to store or load old and new module versions simultaneously.</p>
-
 <p>存储库系统很复杂，因为它可以使用不同的版本或作者管理相同的模块名称。这意味着可以同时存储或加载新旧模块版本。</p>
-
 <h3 id="lib-指令">LIB 指令</h3>
-
-<p>No matter where the module is, you need to tell your program where to find it. <em>zef</em> uses the repositories that *raku*has configured by default. The <code>lib</code> pragma can add a directory as a repository. You can store plain files in there (that is, unmanaged by Raku). The module name is translated to a path by replacing <code>::</code> with a <code>/</code> and adding a <em>.pm</em> or <em>.pm6</em> extension:</p>
-
+<p>No matter where the module is, you need to tell your program where to find it. <em>zef</em> uses the repositories that <em>raku</em>has configured by default. The <code>lib</code> pragma can add a directory as a repository. You can store plain files in there (that is, unmanaged by Raku). The module name is translated to a path by replacing <code>::</code> with a <code>/</code> and adding a <em>.pm</em> or <em>.pm6</em> extension:</p>
 <p>无论模块在哪里，你都需要告诉你的程序在哪里找到它。 <em>zef</em> 使用 <em>raku</em> 默认配置的存储库。 <code>lib</code> 指令可以将目录添加为存储库。你可以在其中存储普通文件（即，不受 Raku 管理）。通过将 <code>::</code> 替换为 <code>/</code> 并添加 <code>.pm</code> 或 <code>.pm6</code> 扩展名将模块名称转换为路径：</p>
-
 <pre><code>use lib &lt;/path/to/module/directory&gt;;
 use Number::Bytes::Human
-</code></pre>
-
-<p>This looks for <em>Number/Bytes/Human.pm</em> or <em>Number/Bytes/Human.pm6</em> in <em>/path/to/module/directory</em>.</p>
-
+</code></pre><p>This looks for <em>Number/Bytes/Human.pm</em> or <em>Number/Bytes/Human.pm6</em> in <em>/path/to/module/directory</em>.</p>
 <p>You can specify multiple directories:</p>
-
-<p>这将在 <em>/path/to/module/directory</em> 中查找 <em>Number/Bytes/Human.pm</em> 或 *Number/Bytes/Human.pm6*。</p>
-
+<p>这将在 <em>/path/to/module/directory</em> 中查找 <em>Number/Bytes/Human.pm</em> 或 <em>Number/Bytes/Human.pm6</em>。</p>
 <p>你可以指定多个目录：</p>
-
 <pre><code>use lib &lt;/path/to/module/directory /other/path&gt;;
-</code></pre>
-
-<p>Or specify <code>lib</code> multiple times:</p>
-
+</code></pre><p>Or specify <code>lib</code> multiple times:</p>
 <p>或者多次指定 <code>lib</code>：</p>
-
 <pre><code>use lib '/path/to/module/directory';
 use lib '/other/path';
-</code></pre>
-
-<p>Relative paths resolve themselves according to the current working directory:</p>
-
+</code></pre><p>Relative paths resolve themselves according to the current working directory:</p>
 <p>相对路径根据当前工作目录自行解析：</p>
-
 <pre><code>use lib &lt;module/directory&gt;;  # looks for module/ in current dir
-</code></pre>
-
-<p>The <code>.</code> works as the current working directory. People tend to do this if the module file and the program are in the same directory:</p>
-
+</code></pre><p>The <code>.</code> works as the current working directory. People tend to do this if the module file and the program are in the same directory:</p>
 <p>这个 <code>.</code> 作为当前工作目录。如果模块文件和程序在同一目录中，人们倾向于这样做：</p>
-
 <pre><code>use lib &lt;.&gt;:
-</code></pre>
-
-<p>You should carefully consider using the current working directory in your library search path. Since it’s a relative location you’re never quite sure where it’s looking. Running your program from a different directory (with a command like the following) means your program looks in a different directory and probably won’t find the module:</p>
-
+</code></pre><p>You should carefully consider using the current working directory in your library search path. Since it’s a relative location you’re never quite sure where it’s looking. Running your program from a different directory (with a command like the following) means your program looks in a different directory and probably won’t find the module:</p>
 <p>你应该仔细考虑在库搜索路径中使用当前工作目录。由于它是一个相对位置，你永远不能确定它在哪里。从不同的目录运行程序（使用如下命令）意味着你的程序在不同的目录中查找，可能找不到该模块：</p>
-
 <pre><code>% raku bin/my-program
-</code></pre>
-
-<p>It takes a bit more work to figure out the relative directory. Your program’s path is in the special variable <code>$*PROGRAM</code>. You can turn that into an <a href="https://docs.raku.org/type/IO::Path.html"><code>IO::Path</code></a> object with <code>.IO</code> and use <code>.parent</code> to get its directory. You can use that to add a <em>lib</em> directory at the same level as your program:</p>
-
+</code></pre><p>It takes a bit more work to figure out the relative directory. Your program’s path is in the special variable <code>$*PROGRAM</code>. You can turn that into an <a href="https://docs.raku.org/type/IO::Path.html"><code>IO::Path</code></a> object with <code>.IO</code> and use <code>.parent</code> to get its directory. You can use that to add a <em>lib</em> directory at the same level as your program:</p>
 <p>找出相对目录需要更多的工作。你的程序路径位于特殊变量 <code>$*PROGRAM</code> 中。你可以使用 <code>.IO</code> 将其转换为 <a href="https://docs.raku.org/type/IO::Path.html"><code>IO::Path</code></a> 对象，并使用 <code>.parent</code> 来获取其目录。你可以使用它来添加与程序相同级别的 <em>lib</em> 目录：</p>
-
 <pre><code># random-between.p6
 use lib $*PROGRAM.IO.parent;
 use lib $*PROGRAM.IO.parent.add: 'lib';
-</code></pre>
-
-<p>There’s also the <code>$?FILE</code> <em>compile-time variable</em>:</p>
-
+</code></pre><p>There’s also the <code>$?FILE</code> <em>compile-time variable</em>:</p>
 <p>还有 <code>$?FILE</code> 编译时变量：</p>
-
 <pre><code>use lib $?FILE.IO.parent;
 use lib $?FILE.IO.parent.add: 'lib';
-</code></pre>
-
-<p>For this to work you must add the paths to search before you try to load the library. It does no good to tell it where to look after it has already looked!</p>
-
+</code></pre><p>For this to work you must add the paths to search before you try to load the library. It does no good to tell it where to look after it has already looked!</p>
 <p>为此，你必须在尝试加载库之前添加要搜索的路径。告诉它已经看过它在哪里照顾它没有用！</p>
-
 <h3 id="环境">环境</h3>
-
 <p>The <code>PERL6LIB</code> environment variable applies to every program you run in the current session. Separate the directories with commas (no matter which system you are using). Here it is in <em>bash</em> syntax:</p>
-
 <p><code>PERL6LIB</code> 环境变量适用于你在当前会话中运行的每个程序。用逗号分隔目录（无论你使用哪个系统）。这是 <em>bash</em> 语法：</p>
-
 <pre><code>% export PERL6LIB=/path/to/module/directory,/other/path
-</code></pre>
-
-<p>And in Windows syntax:</p>
-
+</code></pre><p>And in Windows syntax:</p>
 <p>在 Windows 语法中：</p>
-
 <pre><code> C:\ set PERL6LIB=C:/module/directory,C:/other/path 
-</code></pre>
-
-<h3 id="i-开关">-I 开关</h3>
-
+</code></pre><h3 id="-i-开关">-I 开关</h3>
 <p>The <code>-I</code> switch to <em>raku</em> works for a single run of a program. This is handy inside a project repository (a different sort of repository!) that you haven’t installed. You can use the development version of the module from the project repository instead of a previous one you might have installed:</p>
-
 <p><code>-I</code> 切换到 <em>raku</em> 适用于单个程序运行。这在你尚未安装的项目存储库（不同类型的存储库！）中很方便。你可以使用项目存储库中的模块开发版本，而不是之前安装的模块：</p>
-
 <pre><code>% raku -Ilib bin/my_program.p6
-</code></pre>
-
-<p>Specify more than one extra directory with multiple <code>-I</code> switches or by separating them with commas:</p>
-
+</code></pre><p>Specify more than one extra directory with multiple <code>-I</code> switches or by separating them with commas:</p>
 <p>使用多个 <code>-I</code> 开关指定多个额外目录，或者用逗号分隔它们：</p>
-
 <pre><code>% raku -Ilib -I../lib bin/my_program.p6
 % raku -Ilib,../lib bin/my_program.p6
-</code></pre>
-
-<p>You can see the <code>-I</code> at work if you want to use <em>prove</em> to run Raku module tests. The argument to <code>-e</code> is the interpreter to use (with Perl 5 being the default). You want a <em>raku</em> that looks for the development modules in the current repository:</p>
-
-<p>如果要使用 <em>prove</em> 来运行 Raku 模块测试，可以看到 <code>-I</code> 在工作。 <code>-e</code> 参数是要使用的解释器（Perl 5 是默认值）。你需要一个在当前存储库中查找开发模块的 *raku*：</p>
-
+</code></pre><p>You can see the <code>-I</code> at work if you want to use <em>prove</em> to run Raku module tests. The argument to <code>-e</code> is the interpreter to use (with Perl 5 being the default). You want a <em>raku</em> that looks for the development modules in the current repository:</p>
+<p>如果要使用 <em>prove</em> 来运行 Raku 模块测试，可以看到 <code>-I</code> 在工作。 <code>-e</code> 参数是要使用的解释器（Perl 5 是默认值）。你需要一个在当前存储库中查找开发模块的 <em>raku</em>：</p>
 <pre><code>% prove -e &quot;raku -Ilib&quot;
-</code></pre>
-
-<p>The <code>$*REPO</code> variable can tell you where Raku will look for modules. These aren’t just directories. The repositories could be almost anything—including other code:</p>
-
+</code></pre><p>The <code>$*REPO</code> variable can tell you where Raku will look for modules. These aren’t just directories. The repositories could be almost anything—including other code:</p>
 <p><code>$*REPO</code> 变量可以告诉你 Raku 在哪里寻找模块。这些不仅仅是目录。存储库几乎可以是任何东西 - 包括其他代码：</p>
-
 <pre><code>for $*REPO.repo-chain -&gt; $item {
     say $item;
 }
-</code></pre>
-
-<p>EXERCISE 10.2Create a program to show the repository chain. Run it in several situations using <code>PERL6LIB</code>, <code>-I</code>, and <code>use lib</code>.</p>
-
+</code></pre><p>EXERCISE 10.2Create a program to show the repository chain. Run it in several situations using <code>PERL6LIB</code>, <code>-I</code>, and <code>use lib</code>.</p>
 <p>EXERCISE 10.2 创建一个程序来显示存储库链。使用 <code>PERL6LIB</code>，<code>-I</code> 和 <code>use lib</code> 在几种情况下运行它。</p>
-
 <h2 id="lexical-effect">Lexical Effect</h2>
-
 <p>Loading a module only affects the current scope. If you load a module in a <a href="https://docs.raku.org/type/Block"><code>Block</code></a> it’s only available in that<a href="https://docs.raku.org/type/Block"><code>Block</code></a>, and anything it imports is only available in that <a href="https://docs.raku.org/type/Block"><code>Block</code></a>. Outside of the <a href="https://docs.raku.org/type/Block"><code>Block</code></a> the program doesn’t know about the module:</p>
-
 <p>加载模块仅影响当前作用域。如果在<a href="https://docs.raku.org/type/Block"><code>块</code></a> 中加载模块，它只在该<a href="https://docs.raku.org/type/Block"><code>块</code></a>中可用，并且它导入的任何内容仅在该<a href="https://docs.raku.org/type/Block"><code>块</code></a>中可用。在 <a href="https://docs.raku.org/type/Block"><code>块</code></a> 之外，程序不知道该模块：</p>
-
 <pre><code>{
 use Number::Bytes::Human;
 
@@ -511,30 +373,18 @@ put $human.format(123435653); # '118M'
 }
 
 my $human = Number::Bytes::Human.new; # ERROR: not defined here
-</code></pre>
-
-<p>You’ll get an odd error where your program is looking for a subroutine that has a name that’s the same as the last part of the module name:</p>
-
+</code></pre><p>You’ll get an odd error where your program is looking for a subroutine that has a name that’s the same as the last part of the module name:</p>
 <p>你的程序正在寻找一个名称与模块名称的最后部分相同的子程序，你会得到一个奇怪的错误：</p>
-
 <pre><code>Could not find symbol '&amp;Human'
-</code></pre>
-
-<p>You can limit module imports to just where you need them. If you only need it in a subroutine you can load it there:</p>
-
+</code></pre><p>You can limit module imports to just where you need them. If you only need it in a subroutine you can load it there:</p>
 <p>你可以将模块导入限制在你需要的位置。如果你只需要在子程序中，你可以在那里加载它：</p>
-
 <pre><code>sub translate-it ( Int $bytes ) {
     use Number::Bytes::Human;
     state $human = Number::Bytes::Human.new;
     $human.format( $bytes );
 }
-</code></pre>
-
-<p>This means that you could load different versions of the same module for different parts of your program. The <code>lib</code> declaration is lexically scoped as well:</p>
-
+</code></pre><p>This means that you could load different versions of the same module for different parts of your program. The <code>lib</code> declaration is lexically scoped as well:</p>
 <p>这意味着你可以为程序的不同部分加载同一模块的不同版本。 <code>lib</code> 声明也是词法作用域的：</p>
-
 <pre><code>sub stable-version {
     use Number::Bytes::Human;
     ...
@@ -545,12 +395,8 @@ sub experimental-version {
     use Number::Bytes::Human;
     ...
 }
-</code></pre>
-
-<p>This sort of thing is often handy to convert data formats when they change between module versions:</p>
-
+</code></pre><p>This sort of thing is often handy to convert data formats when they change between module versions:</p>
 <p>当模块版本之间的数据格式发生变化时，转换数据格式通常很方便：</p>
-
 <pre><code>sub translate-to-new-format ( Str $file ) {
     my $data = do {
         use lib &lt;/path/to/legacy/lib&gt;;
@@ -561,83 +407,44 @@ sub experimental-version {
     use Module::Format; # new version
     Module::Format.new.save: $data, $file;
 }
-</code></pre>
-
-<h2 id="在运行时加载模块">在运行时加载模块</h2>
-
+</code></pre><h2 id="在运行时加载模块">在运行时加载模块</h2>
 <p><code>need</code> and <code>use</code> load a module as the program compiles. Sometimes you don’t know which module you want until you want to use it, or you know that you might use one of several modules but only want to load the one you’ll actually use. You can wait until runtime to load it with <code>require</code>. If the module isn’t there the <code>require</code>throws an exception:</p>
-
 <p><code>need</code> 和 <code>use</code> 在程序编译时加载模块。有时你不知道你想要使用哪个模块直到你要使用它，或者你知道你可能使用几个模块中的一个但只想加载你实际使用的模块。你可以等到运行时使用 <code>require</code> 加载它。如果模块不在那里，则 <code>require</code> 抛出异常：</p>
-
 <pre><code>try require Data::Dump::Tree;
 if $! { die &quot;Could not load module!&quot; }
-</code></pre>
-
-<h6 id="警告">警告</h6>
-
+</code></pre><h6 id="警告">警告</h6>
 <p>Even if the module fails to load, the <code>require</code> still creates the type. You can’t rely on the type being defined as a signal of successful loading.</p>
-
 <p>Perhaps you want to check that a module is installed before you try to load it. The <code>$*REPO</code> object has a<code>.resolve</code> method that can find a module from its dependency specification:</p>
-
 <p>即使模块无法加载，<code>require</code> 仍会创建类型。你不能依赖被定义的类型作为成功加载的信号。</p>
-
 <p>也许你想在尝试加载模块之前检查模块是否已安装。 <code>$*REPO</code> 对象有一个 <code>.resolve</code> 方法，可以从其依赖项规范中找到一个模块：</p>
-
 <pre><code>my $dependency-spec =
     CompUnit::DependencySpecification.new: :short-name($module);
 
 if $*REPO.resolve: $dependency-spec {
     put &quot;Found $module&quot;;
 }
-</code></pre>
-
-<p>EXERCISE 10.3Write a program that reports whether a module is installed. Try this with <code>Number::Bytes::Human</code> (assuming you installed it so it is present) and <code>Does::Not::Exist</code> (or any other name that isn’t a module).</p>
-
+</code></pre><p>EXERCISE 10.3Write a program that reports whether a module is installed. Try this with <code>Number::Bytes::Human</code> (assuming you installed it so it is present) and <code>Does::Not::Exist</code> (or any other name that isn’t a module).</p>
 <p>练习10.3 编写一个报告模块是否已安装的程序。尝试使用 <code>Number::Bytes::Human</code>（假设你安装它以便它存在）和 <code>Does::Not::Exist</code>（或任何其他不是模块的名称）。</p>
-
 <h3 id="插值模块名">插值模块名</h3>
-
 <p>You can interpolate a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> where you’d normally have a literal class name by putting the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> inside <code>::()</code>:</p>
-
 <p>你可以通过将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>放入 <code>::()</code> 来插入一个通常具有字面类名称的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>require ::($module);
-</code></pre>
-
-<p>Anywhere you’d use the literal class name you can use that <code>::($module)</code>. When you want to create an object but you don’t know the literal module name, you interpolate it just as you did in the <code>require</code>:</p>
-
+</code></pre><p>Anywhere you’d use the literal class name you can use that <code>::($module)</code>. When you want to create an object but you don’t know the literal module name, you interpolate it just as you did in the <code>require</code>:</p>
 <p>在你使用字面类名称的任何地方，你都可以使用 <code>::($module)</code>。如果要创建对象但不知道字面模块名称，则可以像在 <code>require</code> 中一样进行插值：</p>
-
 <pre><code>my $new-object = ::($module).new;
-</code></pre>
-
-<p>Not only that, but you can use a method name from a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> by putting it in double quotes. You must use the parentheses for the argument list when you do this:</p>
-
+</code></pre><p>Not only that, but you can use a method name from a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> by putting it in double quotes. You must use the parentheses for the argument list when you do this:</p>
 <p>不仅如此，你还可以通过将其放在双引号中来使用<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的方法名称。执行此操作时，必须使用圆括号作为参数列表：</p>
-
 <pre><code>$new-object.&quot;$method-name&quot;( @args );
-</code></pre>
-
-<p>You can use the return value of <code>require</code>. If it was able to load the module that value is the type:</p>
-
+</code></pre><p>You can use the return value of <code>require</code>. If it was able to load the module that value is the type:</p>
 <p>你可以使用 <code>require</code> 的返回值。如果它能够加载模块的值是类型：</p>
-
 <pre><code>my $class-i-loaded = (require ::($module));
 my $object = $class-i-loaded.new;
-</code></pre>
-
-<p>This might work better with a literal name that you don’t want to repeatedly type:</p>
-
+</code></pre><p>This might work better with a literal name that you don’t want to repeatedly type:</p>
 <p>对于你不想重复输入的字面名称，这可能会更好：</p>
-
 <pre><code>my $class-i-loaded = (require Digest::MD5);
 my $object = $class-i-loaded.new;
-</code></pre>
-
-<p>Checking this is a bit tricky. You can’t simply check for the type because that will be defined no matter which way it goes. Check that it’s not a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>:</p>
-
+</code></pre><p>Checking this is a bit tricky. You can’t simply check for the type because that will be defined no matter which way it goes. Check that it’s not a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>:</p>
 <p>检查这个有点棘手。你无法简单地检查类型，因为无论它采用何种方式，都将对其进行定义。检查它不是 <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>：</p>
-
 <pre><code>my $module = 'Hamadryas';
 
 try require ::($module);
@@ -646,12 +453,8 @@ say ::($module).^mro;  # ((Failure) Nil (Cool) (Any) (Mu))
 if ::($module) ~~ Failure {
     put &quot;Couldn't load $module!&quot;; # Couldn't load Hamadryas!
 }
-</code></pre>
-
-<p>These aren’t tricks to use frequently, but they are there as a last resort should you need them. Here’s a program that lets you choose which dumper class to use. It uses a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> to translate the class name to the method name it uses. At the end it merely dumps the only <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> defined in the program:</p>
-
+</code></pre><p>These aren’t tricks to use frequently, but they are there as a last resort should you need them. Here’s a program that lets you choose which dumper class to use. It uses a <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> to translate the class name to the method name it uses. At the end it merely dumps the only <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> defined in the program:</p>
 <p>这些不是经常使用的技巧，但如果你需要它们，它们是最后的手段。这是一个程序，可以让你选择要使用的转储程序类。它使用 <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> 将类名转换为它使用的方法名。最后它只转储程序中定义的唯一 <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> ：</p>
-
 <pre><code>sub MAIN ( Str $class = 'PrettyDump' ) {
     my %dumper-adapters = %(
         'Data::Dump::Tree' =&gt; 'ddt',
@@ -679,18 +482,11 @@ if ::($module) ~~ Failure {
 
     put ::($class).new.&quot;$method&quot;( %dumper-adapters );
 }
-</code></pre>
-
-<p>EXERCISE 10.4Modify the dumping program. Create another subroutine that takes a list of modules and returns the ones that are installed. Use that subroutine to provide the default for <code>MAIN</code>.</p>
-
+</code></pre><p>EXERCISE 10.4Modify the dumping program. Create another subroutine that takes a list of modules and returns the ones that are installed. Use that subroutine to provide the default for <code>MAIN</code>.</p>
 <p>练习10.4 修改转储程序。创建另一个子例程，该子例程获取模块列表并返回已安装的模块。使用该子例程为 <code>MAIN</code> 提供默认值。</p>
-
 <h1 id="从-web-抓取数据">从 Web 抓取数据</h1>
-
 <p><code>HTTP::UserAgent</code> is a handy module to fetch data from the web. Install it with <em>zef</em> and follow the example:</p>
-
 <p><code>HTTP::UserAgent</code> 是一个方便的模块，用于从 Web 抓取数据。用 <em>zef</em> 安装它并按照示例：</p>
-
 <pre><code>use HTTP::UserAgent;
 my $ua = HTTP::UserAgent.new;
 $ua.timeout = 10;
@@ -700,40 +496,23 @@ my $response = $ua.get( $url );
 my $data = do with $response {
     .is-success ?? .content !! die .status-line
 }
-</code></pre>
-
-<p>Once you have the data you can do whatever you like, including reading some lines from it:</p>
-
+</code></pre><p>Once you have the data you can do whatever you like, including reading some lines from it:</p>
 <p>获得数据后，你可以随意执行任何操作，包括从中读取一些行：</p>
-
 <pre><code>for $data.lines(5) -&gt; $line {
     put ++$, ': ', $line;
 }
-</code></pre>
-
-<p>EXERCISE 10.5Write a program that fetches the URL you provide on the command line, then outputs its contents to standard output.</p>
-
+</code></pre><p>EXERCISE 10.5Write a program that fetches the URL you provide on the command line, then outputs its contents to standard output.</p>
 <p>练习10.5 编写一个程序，用于抓取你在命令行上提供的 URL，然后将其内容输出到标准输出。</p>
-
 <h1 id="在-raku-中运行-perl-5">在 Raku 中运行 Perl 5</h1>
-
 <p>One of Raku’s original goals was Perl 5 interoperability. Larry Wall said that if the new Raku could run “with 95-percent accuracy 95 percent of the [Perl 5] scripts, and 100-percent accuracy 80 percent of the [Perl 5] scripts, then that’s getting into the ballpark.” This meant, as a goal, that a lot of the current Perl 5 contents of the Comprehensive Perl Archive Network (CPAN) would be available in Raku.</p>
-
 <p>The <code>Inline::Perl5</code> module allows you to load Perl 5 modules or evaluate Perl 5 snippets from a Raku program. Add the source <code>:from&lt;Perl5&gt;</code> after the module you want to load, then translate the syntax to Raku (so, <code>.</code> for a method call and so on). You don’t have to load <code>Inline::Perl5</code> explicitly in this case:</p>
-
 <p>Raku 最初的目标之一是 Perl 5 的互操作性。 Larry Wall 表示，如果新的 Raku 能够“以 95% 的[Perl 5]脚本 95% 的准确率运行，并且 80% 的[Perl 5]脚本能够 100% 准确地运行，那么它就会进入可变通范围。”这意味着，作为一个目标，Raku 中将提供 Comprehensive Perl Archive Network（CPAN）的许多当前 Perl 5 内容。</p>
-
 <p><code>Inline::Perl5</code> 模块允许你加载 Perl 5 模块或计算 Raku 程序中的 Perl 5 片段。在要加载的模块之后添加源：<code>:from&lt;Perl5&gt;</code>，然后将语法转换为 Raku（因此，<code>.</code> 用于方法调用等等。）。在这种情况下，你不必显式加载 <code>Inline::Perl5</code>：</p>
-
 <pre><code>use Business::ISBN:from&lt;Perl5&gt;;
 my $isbn = Business::ISBN.new( '9781491977682' );
 say $isbn.as_isbn10.as_string;
-</code></pre>
-
-<p>You can have Perl 5 code in your program and call it when you need it, dropping in and out of it as you like. Create an object that will handle the Perl 5 code for you:</p>
-
+</code></pre><p>You can have Perl 5 code in your program and call it when you need it, dropping in and out of it as you like. Create an object that will handle the Perl 5 code for you:</p>
 <p>你可以在程序中使用 Perl 5 代码，并在需要时调用它，根据需要加入和退出。创建一个将为你处理 Perl 5 代码的对象：</p>
-
 <pre><code>use Inline::Perl5;
 my $p5 = Inline::Perl5.new;
 
@@ -744,20 +523,12 @@ END
 put 'Hello from Raku!';
 
 $p5.run: 'print p5_test()';
-</code></pre>
-
-<p>EXERCISE 10.6Compare the results of the Perl 5 and 6 versions of <code>Digest::MD5</code> by loading them into the same program. Get the digest of the program itself. You can use <code>slurp</code> to read the entire contents of a file.</p>
-
+</code></pre><p>EXERCISE 10.6Compare the results of the Perl 5 and 6 versions of <code>Digest::MD5</code> by loading them into the same program. Get the digest of the program itself. You can use <code>slurp</code> to read the entire contents of a file.</p>
 <p>练习10.6将 <code>Digest::MD5</code> 的 Perl 5 和 Raku 版本的结果加载到同一程序中。获取程序本身的摘要。你可以使用 <code>slurp</code> 来读取文件的全部内容。</p>
-
 <h1 id="总结">总结</h1>
-
 <p>You’ve learned how to find and install modules with <em>zef</em>. You can often simply follow the example in the module’s documentation to get what you want. Before you set out to program something, see if someone else has already done it.</p>
-
 <p>You’re not limited to modules from Raku either. The <code>Inline</code> modules allow you to use code from other languages. If you have a favorite module you might not have to give it up.</p>
-
 <p>你已经学会了如何使用 <em>zef</em> 查找和安装模块。你通常可以按照模块文档中的示例来获得所需内容。在你开始编程之前，看看其他人是否已经做过了。</p>
-
 <p>你不仅限于 Raku 的模块。<code>Inline</code> 模块允许你使用其他语言的代码。如果你有一个喜欢的模块，你可能不必放弃它。</p>
 
 
@@ -850,7 +621,7 @@ $p5.run: 'print p5_test()';
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

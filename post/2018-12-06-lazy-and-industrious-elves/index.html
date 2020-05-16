@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-06-lazy-and-industrious-elves/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,56 +231,33 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>对圣诞老人来说，圣诞节总是一年中最忙碌的时刻。 幸运的是，圣诞老人有很多帮手。 他们总是做一些小工作和家务，只是为了创造最好的假日季节体验！</p>
-
+        <p>对圣诞老人来说，圣诞节总是一年中最忙碌的时刻。 幸运的是，圣诞老人有很多帮手。 他们总是做一些小工作和家务，只是为了创造最好的假日季节体验！</p>
 <p><a href="https://modules.raku.org/dist/Object::Delayed">Object::Delayed</a> 模块为圣诞老人的快乐精灵添加了两个非常有趣的精灵！ 他们的名字是 <code>slack</code> 和 <code>catchup</code>!</p>
-
 <h2 id="lazy-slack">Lazy slack</h2>
-
 <p>那个懒散的(<code>slack</code>)精灵确实非常懒惰。 懒散(<code>slack</code>)精灵不会做任何事情，直到你真的需要他去做。 虽然人们可以认为这是精灵中非常糟糕的性格特征，但它也是一种非常生态的特征。 人们可以认为这个懒散的(<code>slack</code>)精灵是他们所有人中最环保的精灵！ 你有多少次要求精灵为你做点事情，然后却没用过那个精灵辛苦工作的结果？ 即使它只是到处移动的被回收的电子，但仍然需要能量来移动它们！ 特别是, 如果那些电子被用来告诉其他精灵做一些遥远的事情，就像在外部数据库中一样！</p>
-
-<pre><code class="language-raku">use Object::Delayed;
+<pre><code class="language-raku" data-lang="raku">use Object::Delayed;
 my $dbh = slack { DBIish.connect(...) }
-</code></pre>
-
-<p>这就是你需要的 <code>$dbh</code> 变量，它只在实际需要时才与数据库建立连接。 当然，如果你想对该数据库进行查询，那么也可以使其懒惰！</p>
-
-<pre><code class="language-raku">use Object::Delayed;
+</code></pre><p>这就是你需要的 <code>$dbh</code> 变量，它只在实际需要时才与数据库建立连接。 当然，如果你想对该数据库进行查询，那么也可以使其懒惰！</p>
+<pre><code class="language-raku" data-lang="raku">use Object::Delayed;
 my $dbh = slack { DBIish.connect(...) }
 my $sth = slack { $dbh.prepare(...) }
-</code></pre>
-
-<p>由于语句句柄也是懒惰的，因此在实际需要之前它实际上不会进行查询准备。</p>
-
-<pre><code class="language-raku">use Object::Delayed;
+</code></pre><p>由于语句句柄也是懒惰的，因此在实际需要之前它实际上不会进行查询准备。</p>
+<pre><code class="language-raku" data-lang="raku">use Object::Delayed;
 my $dbh = slack { DBIish.connect(...) }
 my $sth = slack { $dbh.prepare(...) }
 # lotsa program
 if $needed {
     $sth.execute;  # opens database handle + prepares query
 }
-</code></pre>
-
-<p>因此，如果 <code>$needed</code> 为 true，调用 <code>.execute</code> 函数将使 <code>$sth</code> 成为一个真正的 statemement 句柄，因为它使 <code>$dbh</code> 成为真正的数据库句柄。 那不是很好吗？ 因为如果你不需要它，所有进行查询准备的精灵都可以做其他的事情，而建立数据库连接的精灵也可以做其他事情。 更不用说数据库中的精灵们根本不知道你最初计划建立一个数据库连接！</p>
-
+</code></pre><p>因此，如果 <code>$needed</code> 为 true，调用 <code>.execute</code> 函数将使 <code>$sth</code> 成为一个真正的 statemement 句柄，因为它使 <code>$dbh</code> 成为真正的数据库句柄。 那不是很好吗？ 因为如果你不需要它，所有进行查询准备的精灵都可以做其他的事情，而建立数据库连接的精灵也可以做其他事情。 更不用说数据库中的精灵们根本不知道你最初计划建立一个数据库连接！</p>
 <p>当然，如果您确实需要数据库连接，那么告诉数据库的精灵们您已经完成了这一点总是一个好主意。 在 Raku 中，这不会自动发生，因为圣诞老人不会跟踪每个精灵的行为。 圣诞老人喜欢委派责任！ 当您离开需要数据库句柄的代码部分时，通常会告诉数据库精灵您已完成的工作。</p>
-
 <pre><code>LEAVE .disconnect with $dbh;
-</code></pre>
-
-<p><code>LEAVE</code> 精灵的特殊之处在于，当你离开被称为 <code>LEAVE</code> 精灵的街区时，它将完成被告知要做的事情。 在这种情况下，如果 <code>$dbh</code> 被定义，则在 <code>$_</code> 上调用 <code>.disconnect</code> 方法：<code>with</code> 精灵不仅测试是否定义了给定值，还设置 <code>$_</code>。</p>
-
+</code></pre><p><code>LEAVE</code> 精灵的特殊之处在于，当你离开被称为 <code>LEAVE</code> 精灵的街区时，它将完成被告知要做的事情。 在这种情况下，如果 <code>$dbh</code> 被定义，则在 <code>$_</code> 上调用 <code>.disconnect</code> 方法：<code>with</code> 精灵不仅测试是否定义了给定值，还设置 <code>$_</code>。</p>
 <p>但是，但是，不会检查 <code>$dbh</code> 是否实际定义了与数据库的连接？ 不，这个懒散的精灵足够聪明，如果你问的是某个东西是 <code>.defined</code>，还是真或假，它实际上不会开始为你做这项工作。 这与 <code>catchup</code> 精灵有什么不同！</p>
-
 <h2 id="尽力追赶">尽力追赶</h2>
-
 <p>如果懒惰精灵是圣诞老人雇佣的最环保的精灵，那么 <code>catchup</code> 肯定是最红的精灵。 因为你总是试图赶上 <code>catchup</code> 精灵。 但是追赶精灵似乎只是非常勤奋。</p>
-
 <p>当你告诉 <code>catchup</code> 精灵做某事时，<code>catchup</code> 精灵会立即找到另一个精灵去做实际的工作并告诉你它完成了。 最有可能的不是。 当你真正想要使用你要求 <code>catchup</code> 精灵做的结果时，有两种可能性：如果另一个精灵完成并且结果可用，你将立即从<code>catchup</code> 精灵那里得到它。 如果其他精灵尚未完成，它将让你等到另一个精灵完成：它会迫使你赶上！ 那看起来怎么样？</p>
-
-<pre><code class="language-raku">use Object::Delayed;
+<pre><code class="language-raku" data-lang="raku">use Object::Delayed;
 my $foo = catchup { sleep 5; &quot;Merry&quot; }      # sleep is just
 my $bar = catchup { sleep 9; &quot;Christmas&quot; }  # another word
 my $baz = catchup { sleep 8; &quot;everyone&quot; }   # for baking
@@ -288,16 +265,10 @@ say “$foo $bar, $baz!”;
 say “Took { now - INIT now } seconds”;
 # Merry Christmas, everybody!
 # Took 9.008 seconds
-</code></pre>
-
-<p>在这里，<code>catchup</code> 精灵有另外3个精灵正在制作那些带有甜味硬壳釉的精美烘焙刻字，每个字母花费大约一秒钟。 如果只有一个精灵这样做，它至少需要5 + 9 + 8 = 22秒。 感谢 <code>catchup</code> 精灵，只用了9秒多一点！ 快了两倍多！</p>
-
+</code></pre><p>在这里，<code>catchup</code> 精灵有另外3个精灵正在制作那些带有甜味硬壳釉的精美烘焙刻字，每个字母花费大约一秒钟。 如果只有一个精灵这样做，它至少需要5 + 9 + 8 = 22秒。 感谢 <code>catchup</code> 精灵，只用了9秒多一点！ 快了两倍多！</p>
 <p>当然，如果所有其他精灵都在忙着做其他事情，那实际上可能需要一点时间而不是超过9秒。 或者甚至超过22秒，如果其他精灵正在处理更重要的事情，而不是用正确的玻璃烘焙字母。 所以你的精灵里程可能会有所不同。 你不想过度劳累你的精灵，也不要太久。 几秒钟应该没问题。</p>
-
 <h2 id="use-the-right-elf">Use the right elf</h2>
-
 <p>如果你想尽可能的绿色，请使用 <code>slack</code> 精灵。 如果你想要它，并且你现在想要它（嗯，尽快），那么如果你能够合理地确定有足够的其他精灵来完成实际的工作，那么使用 <code>catchup</code> 精灵是一个选择！</p>
-
 <p>参与此博客文章的所有精灵们都欢呼！ 你真的非常确定没有任何快速，慢速或任何其他精灵以任何方式受到伤害。</p>
 
 
@@ -390,7 +361,7 @@ say “Took { now - INIT now } seconds”;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

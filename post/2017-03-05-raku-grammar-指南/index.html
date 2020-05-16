@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-03-05-raku-grammar-%E6%8C%87%E5%8D%97/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,133 +231,76 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="开始之前">开始之前</h2>
-
+        <h2 id="开始之前">开始之前</h2>
 <h3 id="为什么是-grammars">为什么是 grammars?</h3>
-
 <p>Grammars 解析字符串并从这些字符串返回数据结构。Grammars 可用于编写执行程序以确定程序是否可以运行（如果它是一个有效的程序），将网页分解成组成部分，或在其它的东西中识别句子的不同部分。</p>
-
 <h3 id="我什么时候该使用-grammars">我什么时候该使用 grammars?</h3>
-
 <p>如果你有驯服或解释的字符串，grammar 提供工具来完成这项工作。</p>
-
 <p>该字符串可能是一个文件, 您想把它拆分成多个章节; 也许是一个协议，比如 SMTP，你需要指定哪些“命令”来自用户提供的数据;也许你正在设计自己的领域特定语言。Grammars 可以提供帮助。</p>
-
 <h3 id="grammars-的广义概念">grammars 的广义概念</h3>
-
 <p>正则表达式（<a href="https://docs.raku.org/language/regexes">Regexes</a>）适用于查找字符串中的模式。然而，对于一些任务来说，如同时查找多个模式，或者组合模式，或者单独测试可能围绕字符串正则表达式的模式是不够的。</p>
-
 <p>在使用 HTML 时，您可以定义一个 grammar 来识别 HTML 标记，包括开始和结束元素以及它们之间的文本。然后，您可以将这些元素组织到数据结构中，例如数组或散列。</p>
-
 <h2 id="grammar-指南">Grammar 指南</h2>
-
 <p>你总是会遇到令人头疼的字符串解析。举个例子, 据说  HTML 不能被有效地分解和解析，只需使用正则表达式来排序元素。另一个例子是定义单词和符号可能构成语言并提供含义的顺序。这正 和 Perl 的 Gramamr 系统完美契合。</p>
-
 <p>Grammar 非常适合接受字符串，试图理解它们，然后将它们保存到一个你实际可以使用的数据结构中。如果你有某种带顺序或解释类型的字符串，Grammar 给你一些很强大的工具，使解析字符串更容易。</p>
-
 <p>你的字符串可能是整个文件，你需要分成几个部分。也或许是一行一行的。也许你有一个正在使用的 SMTP 那样的协议，想要一个方便有条理的方式来定义哪些“命令”需要在用户数据的后面，使协议工作。也许你想创建自己的基于字符串的协议。也许你正在设计自己的语言。</p>
-
 <p>正则表达式（regex）很好地在字符串中查找模式并操作它们。然而，当你需要同时找到多个模式，或者需要组合模式，或者测试可能围绕字符串的模式或其他模式 - 单单用正则表达式是不够的。</p>
-
 <p>Grammar 提供了一种方式来定义如何使用正则表达式来检查字符串，并且可以将这些正则表达式组合在一起以提供更多的意义。</p>
-
 <p>例如，在HTML的情况下，您可以定义一个语法，它可以识别HTML标记（开始和结束元素以及它们之间的文本），并通过将这些元素填充到数据结构中来对这些元素进行操作，例如数组或散列，然后可以轻松使用。实质上，Grammar 提供了一种定义可用于解析任意大小和复杂度的字符串的完整语言或规范的手段。</p>
-
 <h2 id="更多-grammar-技术">更多 Grammar 技术</h2>
-
 <h3 id="概念描述">概念描述</h3>
-
 <p>Gramamr 被定义为对象, 就像 Perl 中的其它东西。从技术上讲, Gramamr 是普通的类加上一点额外的魔法, 我们稍后就说到它 &ndash; 还有一点限制。你像类那样命名和定义一个 Grammar, 除了使用「grammar」关键字代替「class」。</p>
-
 <pre><code>grammar My::Gram { ..methods 'n stuff... }
-</code></pre>
-
-<p>Grammar 包含像方法那样的元素, 这些方法叫做 <em>regex</em>, <em>token</em> 或 *rule*。这些方法是有名字的, 就像方法有名字一样。它们每一个都定义一个 regex, token 或 rule（它们几乎是同样的东西(并不真的一样)）。</p>
-
+</code></pre><p>Grammar 包含像方法那样的元素, 这些方法叫做 <em>regex</em>, <em>token</em> 或 <em>rule</em>。这些方法是有名字的, 就像方法有名字一样。它们每一个都定义一个 regex, token 或 rule（它们几乎是同样的东西(并不真的一样)）。</p>
 <p>一旦你定义了你的 Grammar, 在你的程序中通过 Grammar 的名字调用它并传递你想解析的字符串。该字符串将通过你的 regex, token 和 rule “方法”定义的规则运行。 完成后，将返回一个 Match 对象，该对象已填充了用于定义方法的名称所结构化并存储的数据。</p>
-
-<pre><code class="language-raku">my $matchObject = My::Gram.parse($what-a-big-string-you-have);
-</code></pre>
-
-<p>现在，你可能想知道，如果我让所有这些定义的正则表达式只返回他们的结果，那么这该如何帮助在字符串中向前或向后解析东西呢，或需要从多个那样的正则表达式组合的东西。 ..这就是 grammar action 发挥作用的地方。</p>
-
+<pre><code class="language-raku" data-lang="raku">my $matchObject = My::Gram.parse($what-a-big-string-you-have);
+</code></pre><p>现在，你可能想知道，如果我让所有这些定义的正则表达式只返回他们的结果，那么这该如何帮助在字符串中向前或向后解析东西呢，或需要从多个那样的正则表达式组合的东西。 ..这就是 grammar action 发挥作用的地方。</p>
 <p>对于你的 grammar 中匹配的每个“方法”，你会得到一个可调用的动作，用那个匹配你可以做一些有趣或聪明的事情。 你还可以得到一个最重要的 action，你可以使用这个 action 把它们捆绑在一起，并自定义构建一个你可能想要返回的数据结构，其中所有疯狂的字符串解析在你很好的排序和定义的数据结构是有意义的。 默认情况下，此 over-arching 方法称为 TOP。 我们也会得到更多的。</p>
-
 <h3 id="技术概览">技术概览</h3>
-
-<p>Grammars  就像类那样定义, 除了使用 <code>grammar</code> 关键字代替 <code>class</code>. grammars 中的「methods」叫做 <em>regex</em>, <em>token</em>, 或 *rule*。虽然 Regex 方法慢但是彻底 &ndash; 它们会在字符串中向后查看并真的尝试匹配。Token 方法更快一点并且它们忽略空白。Rule 方法和 token 方法一样, 但是它们在你的&rdquo;regex&rdquo; 定义中消费空白。</p>
-
+<p>Grammars  就像类那样定义, 除了使用 <code>grammar</code> 关键字代替 <code>class</code>. grammars 中的「methods」叫做 <em>regex</em>, <em>token</em>, 或 <em>rule</em>。虽然 Regex 方法慢但是彻底 &ndash; 它们会在字符串中向后查看并真的尝试匹配。Token 方法更快一点并且它们忽略空白。Rule 方法和 token 方法一样, 但是它们在你的&quot;regex&rdquo; 定义中消费空白。</p>
 <p>当方法(regex, token 或 rule)在 grammar 中匹配后, 匹配到的字符串被放入最终将返回的 Match 对象中, 并且它将使用与您选择命名的方法相同的名称。</p>
-
-<pre><code class="language-raku">grammar My::Gram {
+<pre><code class="language-raku" data-lang="raku">grammar My::Gram {
   token TOP { &lt;thingy&gt; .* }
   token thingy { 'clever_text_keyword' }
 }
-</code></pre>
-
-<p>所以在这里，如果你写 <code>my $match = My::Gram.parse($string)</code> - 并且你的字符串以 &lsquo;clever_text_keyword&rsquo; 开头, 那么你会得到一个匹配对象，在你的匹配对象中包含用「thingy」 标记的 &lsquo;clever_text_keyword&rsquo; 字符串。  这些可以变得越来越复杂，根据你的需要，如你所想。</p>
-
+</code></pre><p>所以在这里，如果你写 <code>my $match = My::Gram.parse($string)</code> - 并且你的字符串以 &lsquo;clever_text_keyword&rsquo; 开头, 那么你会得到一个匹配对象，在你的匹配对象中包含用「thingy」 标记的 &lsquo;clever_text_keyword&rsquo; 字符串。  这些可以变得越来越复杂，根据你的需要，如你所想。</p>
 <p>现在, 我们说说 TOP。 TOP 方法(regex, token or rule)是必须匹配一切的(默认)的包罗万象的 regex。 如果传递进来解析的字符串与 TOP regex 不匹配，则返回的匹配对象将为空（<code>Any</code>）。</p>
-
 <p>正如你可以看到的，在 TOP 中，提到了 <code>&lt;thingy&gt;</code> 标记。 <code>&lt;thingy&gt;</code> 被定义在下一行，<code>token thingy ...</code>。 这意味着 &lsquo;clever_text_keyword&rsquo; <strong>必须</strong>是传入的字符串中的第一个东西，否则 grammar 解析将失败，而我们将得到一个空匹配。 这对于识别有人可能给你应该被丢弃的畸形的东西是极好的。</p>
-
-<h2 id="通过一个例子学习-grammar-rest-设计">通过一个例子学习 Grammar - REST 设计</h2>
-
+<h2 id="通过一个例子学习-grammar---rest-设计">通过一个例子学习 Grammar - REST 设计</h2>
 <p>让我们假设我们要将一个 URL 解析成组成 RESTful 请求的组件部分。假设我们希望网址的工作方式如下：</p>
-
 <ul>
 <li>URI 的第一部分，我们称之为“主体”，如零件，产品或人。</li>
 <li>URI 的第二部分，我们称之为“命令”，就像标准的 CRUD 东西（创建，检索，更新或删除）。</li>
 <li>URI 的第三部分将是任意数据。也许我们将使用的具体ID，或者一个由“/”分隔的长列表数据。</li>
 <li>当我们得到一个URL时，我们需要把上面的1-3放在一个很好的我们可以使用的数据结构中，而不必做各种分割，并且可以很容易地在未来改变或扩展（或扩展） 。</li>
 </ul>
-
 <p>因此，如果我们在服务器上有一个 &ldquo;/product/update/7/notify&rdquo; 的 URI，我们希望我们的 Grammar 给我们一个很好的 <code>$match</code> 对象，它有一个“product”“subject”，一个”更新““command和”7/notify“的”数据“（现在）。</p>
-
 <p>我们做的第一件事是定义 grammar 类。我们将需要定义我们的主题，命令和数据。我想我们将为他们使用 token，因为我们不关心正则表达式中的空格。</p>
-
-<pre><code class="language-raku">grammar REST {
+<pre><code class="language-raku" data-lang="raku">grammar REST {
   token subject { \w+ }
   token command { \w+ }
   token data    { .*  }
 }
-</code></pre>
-
-<p>到目前为止，这个 REST Grammar 说，我们想要一个只是单词字符的主题，一个只是单词字符的命令和剩余全部是字符串的数据（在这种情况下为 URI）。</p>
-
+</code></pre><p>到目前为止，这个 REST Grammar 说，我们想要一个只是单词字符的主题，一个只是单词字符的命令和剩余全部是字符串的数据（在这种情况下为 URI）。</p>
 <p>但是在我们的大字符串中，我们不知道这些正则表达式匹配将会进入什么顺序。我们需要能够将这些匹配的 token 放在我们将作为该字符串传递的URI的更大的上下文中。 这就是 TOP 方法要做的。 因此，我们添加 TOP，并在其中放置我们的 token 名称，以及其它应该出现的有效字符串。</p>
-
-<pre><code class="language-raku">grammar REST {
+<pre><code class="language-raku" data-lang="raku">grammar REST {
   token TOP { '/' &lt;subject&gt; '/' &lt;command&gt; '/' &lt;data&gt; }
   token subject { \w+ }
   token command { \w+ }
   token data    { .*  }
 }
-</code></pre>
-
-<p>实际上，您可以用它从基本的 CRUD 的 URI 中提取您的数据，其中包含所有3个参数：</p>
-
-<pre><code class="language-raku">my $match = REST.parse('/product/update/7/notify');
+</code></pre><p>实际上，您可以用它从基本的 CRUD 的 URI 中提取您的数据，其中包含所有3个参数：</p>
+<pre><code class="language-raku" data-lang="raku">my $match = REST.parse('/product/update/7/notify');
 say $match;
-</code></pre>
-
-<p>输出:</p>
-
+</code></pre><p>输出:</p>
 <pre><code>«｢/product/update/7/notify｣␤ 
  subject =&gt; ｢product｣ 
  command =&gt; ｢update｣ 
  data =&gt; ｢7/notify｣» 
-</code></pre>
-
-<p>当然，可以使用 <code>$match&lt;subject&gt;</code> 或 <code>$match&lt;command&gt;</code> 或 <code>$match&lt;data&gt;</code> 直接访问数据以返回解析的值。 它们每个都包含可以进一步工作的匹配对象，或强制转换为字符串（<code>$match&lt;command&gt;.Str</code>）</p>
-
+</code></pre><p>当然，可以使用 <code>$match&lt;subject&gt;</code> 或 <code>$match&lt;command&gt;</code> 或 <code>$match&lt;data&gt;</code> 直接访问数据以返回解析的值。 它们每个都包含可以进一步工作的匹配对象，或强制转换为字符串（<code>$match&lt;command&gt;.Str</code>）</p>
 <h3 id="添加一点灵活性">添加一点灵活性</h3>
-
-<p>到目前为止，REST语法将处理检索，删除和更新。 但是，create 命令没有第三部分（数据部分）。 这意味着如果我们尝试解析 creat URL，我们的 Grammar 将无法匹配。 为了避免这种情况，我们需要使最后一个数据位置匹配可选，以及它前面的&rsquo;/&lsquo;。 这很容易通过为分组的&rsquo;/&lsquo;和 TOP token 的数据组件添加一个问号来表示它们的可选性质，就像一个普通的正则表达式那样。 所以现在我们有：</p>
-
-<pre><code class="language-raku">grammar REST {
+<p>到目前为止，REST语法将处理检索，删除和更新。 但是，create 命令没有第三部分（数据部分）。 这意味着如果我们尝试解析 creat URL，我们的 Grammar 将无法匹配。 为了避免这种情况，我们需要使最后一个数据位置匹配可选，以及它前面的&rsquo;/'。 这很容易通过为分组的&rsquo;/&lsquo;和 TOP token 的数据组件添加一个问号来表示它们的可选性质，就像一个普通的正则表达式那样。 所以现在我们有：</p>
+<pre><code class="language-raku" data-lang="raku">grammar REST {
     token TOP     { '/' &lt;subject&gt; '/' &lt;command&gt; [ '/' &lt;data&gt; ]? }
     token subject { \w+ }
     token command { \w+ }
@@ -368,11 +311,8 @@ my $m = REST.parse('/product/create');
 say $m&lt;subject&gt;, $m&lt;command&gt;;
  
 # OUTPUT: «｢product｣｢create｣␤» 
-</code></pre>
-
-<p>让我们想象，为了演示的目的，我们可能想允许用户从终端输入这些相同的 URI。 在这种情况下，他们可能在&rsquo;/&lsquo;之间放置空格，因为用户容易破坏事物。 如果我们想要适应这种可能性，我们可以用另一个 token 替换 TOP 中的 &lsquo;/&lsquo;，以允许在它的任何一边的空格。</p>
-
-<pre><code class="language-raku">grammar REST {
+</code></pre><p>让我们想象，为了演示的目的，我们可能想允许用户从终端输入这些相同的 URI。 在这种情况下，他们可能在&rsquo;/&lsquo;之间放置空格，因为用户容易破坏事物。 如果我们想要适应这种可能性，我们可以用另一个 token 替换 TOP 中的 &lsquo;/'，以允许在它的任何一边的空格。</p>
+<pre><code class="language-raku" data-lang="raku">grammar REST {
     token TOP     { &lt;slash&gt;&lt;subject&gt;&lt;slash&gt;&lt;command&gt;[&lt;slash&gt;&lt;data&gt;]? }
     token subject { \w+ }
     token command { \w+ }
@@ -391,49 +331,30 @@ say $m;
 #          command =&gt; ｢update｣ 
 #          slash =&gt; ｢ /｣ 
 #          data =&gt; ｢7 /notify｣» 
-</code></pre>
-
-<p>现在我们在我们的匹配对象中得到一些额外的垃圾，即那些斜线，但有一些非常好的方法，使我们得到一个整洁的返回值。</p>
-
+</code></pre><p>现在我们在我们的匹配对象中得到一些额外的垃圾，即那些斜线，但有一些非常好的方法，使我们得到一个整洁的返回值。</p>
 <h3 id="添加一些约束">添加一些约束</h3>
-
 <p>我们希望我们的 RESTful Grammar 只允许 CRUD 操作。 还有我们想要解析的东西。 这意味着我们上面的“命令”应该有四个值之一：create, retrieve, update 或 delete.。</p>
-
 <p>有几种方法来完成这个。 例如，您可以更改 command 方法：</p>
-
-<pre><code class="language-raku">token command { \w+ }
+<pre><code class="language-raku" data-lang="raku">token command { \w+ }
 
 # ...becomes...
 
 token command { 'create'|'retrieve'|'update'|'delete' }
-</code></pre>
-
-<p>要成功解析 URI，<code>/</code> 之间的字符串的第二部分必须是那些 CRUD 值之一，否则解析失败。这正是我们想要的。</p>
-
+</code></pre><p>要成功解析 URI，<code>/</code> 之间的字符串的第二部分必须是那些 CRUD 值之一，否则解析失败。这正是我们想要的。</p>
 <p>还有另一种技术可以在选项膨胀时提供更大的灵活性并提高可读性：原型正则表达式(proto-regexes)。</p>
-
 <p>为了利用这些原型正则表达式（实际上是 multi methods）将我们限制为有效的 CRUD 选项，我们将用以下代替 <code>token command</code>:</p>
-
-<pre><code class="language-raku">proto token command {*}
+<pre><code class="language-raku" data-lang="raku">proto token command {*}
 token command:sym&lt;create&gt;   { &lt;sym&gt; }
 token command:sym&lt;retrieve&gt; { &lt;sym&gt; }
 token command:sym&lt;update&gt;   { &lt;sym&gt; }
 token command:sym&lt;delete&gt;   { &lt;sym&gt; }
-</code></pre>
-
-<p><code>sym</code> 关键字用于创建各种原型正则表达式(proto-regex)选项。每个选项都被命名(例如, <code>sym&lt;update&gt;</code>), 并且为了使用该选项，会使用相同的名字自动生成一个特殊的 <code>&lt;sym&gt;</code> token。</p>
-
+</code></pre><p><code>sym</code> 关键字用于创建各种原型正则表达式(proto-regex)选项。每个选项都被命名(例如, <code>sym&lt;update&gt;</code>), 并且为了使用该选项，会使用相同的名字自动生成一个特殊的 <code>&lt;sym&gt;</code> token。</p>
 <p>可以在原型正则表达式选项块中使用 <code>&lt;sym&gt;</code> token 以及其他用户定义的 tokens 来定义特定的“匹配条件”。正则表达式 tokens 是编译过的形式，一旦定义，随后就不能被副词动作(例如: i)修改。因此，由于它是自动生成的，所以特殊的 <code>&lt;sym&gt;</code> token 仅在需要与选项名称完全匹配时才有用。</p>
-
 <p>如果对于其中一个原型正则表达式选项，出现匹配条件，则整个原型的搜索终止。匹配数据以匹配对象的形式分配给父原型 token。如果使用特殊 <code>&lt;sym&gt;</code> token，并形成全部或部分实际匹配，则将其保留为匹配对象中的子级别，否则它将不存在。</p>
-
-<p>使用这样的原型正则表达式给了我们很大的灵活性。例如，不是返回 <code>&lt;sym&gt;</code>，在这种情况下是匹配的整个字符串，我们可以输入自己的字符串，或做其他有趣的事情。我们可以用“token subject”方法做同样的事，并将其限制为仅对有效主题（如&rsquo;part&rsquo;或&rsquo;people&rsquo;等）进行正确解析。</p>
-
+<p>使用这样的原型正则表达式给了我们很大的灵活性。例如，不是返回 <code>&lt;sym&gt;</code>，在这种情况下是匹配的整个字符串，我们可以输入自己的字符串，或做其他有趣的事情。我们可以用“token subject”方法做同样的事，并将其限制为仅对有效主题（如&rsquo;part'或&rsquo;people'等）进行正确解析。</p>
 <h3 id="把我们的-restful-grammar-组合在一块">把我们的 RESTful Grammar 组合在一块</h3>
-
 <p>目前为止我们的 RESTful URIs 的处理如下:</p>
-
-<pre><code class="language-raku">grammar REST
+<pre><code class="language-raku" data-lang="raku">grammar REST
 {
     token TOP { &lt;slash&gt;&lt;subject&gt;&lt;slash&gt;&lt;command&gt;[&lt;slash&gt;&lt;data&gt;]? }
  
@@ -447,11 +368,8 @@ token command:sym&lt;delete&gt;   { &lt;sym&gt; }
     token data    { .* }
     token slash   { \s* '/' \s* }
 }
-</code></pre>
-
-<p>让我们看看各种 URI，以及它们在通过我们的 Grammar 时是如何表现的。</p>
-
-<pre><code class="language-raku">my @uris = ['/product/update/7/notify',
+</code></pre><p>让我们看看各种 URI，以及它们在通过我们的 Grammar 时是如何表现的。</p>
+<pre><code class="language-raku" data-lang="raku">my @uris = ['/product/update/7/notify',
             '/product/create',
             '/item/delete/4'];
  
@@ -463,36 +381,22 @@ for @uris -&gt; $uri {
 # OUTPUT: «Sub: product Cmd: update Dat: 7/notify␤ 
 #          Sub: product Cmd: create Dat: 
 #          Sub: item Cmd: delete Dat: 4» 
-</code></pre>
-
-<p>请注意，由于 <code>&lt;data&gt;</code> 与第二个字符串没有匹配，因此 <code>$m&lt;data&gt;</code> 将为 <code>Nil</code>，然后在 <code>say</code> 函数的字符串上下文中使用它会发出警告。</p>
-
+</code></pre><p>请注意，由于 <code>&lt;data&gt;</code> 与第二个字符串没有匹配，因此 <code>$m&lt;data&gt;</code> 将为 <code>Nil</code>，然后在 <code>say</code> 函数的字符串上下文中使用它会发出警告。</p>
 <p>只用 grammar 的这一部分，我们就能获得几乎所有我们正在寻找的东西。 URI 被解析，我们得到一个数据结构。</p>
-
 <p><em>data</em> token 将 URI 的整个末尾作为一个字符串返回。 4 很好。但是从 &lsquo;7/notify&rsquo; 中我们只需要那个 7。为了得到 7，我们将使用 grammar 类的另一个特性: actions。</p>
-
 <h2 id="grammar-actions">Grammar Actions</h2>
-
 <p>在 Grammar 类中使用 Grammar actions 来处理匹配。Actions 在它们自己的类中定义，与 grammar 类不同。</p>
-
 <p>您可以将 grammar action 看作 grammar 插件扩展模块的一种。很多时候你都会很开心的使用 grammars。但是当你需要进一步处理其中的一些字符串时，你可以插入 Actions 扩展模块。</p>
-
 <p>要使用 action，可以使用名为 <code>actions</code> 的命名参数，它应该包含 action 类的一个实例。通过上面的代码，如果我们的 action 类调用了 REST-actions，我们会像这样解析 URI 字符串：</p>
-
-<pre><code class="language-raku">my $matchObject = REST.parse($uri, actions =&gt; REST-actions.new);
+<pre><code class="language-raku" data-lang="raku">my $matchObject = REST.parse($uri, actions =&gt; REST-actions.new);
  
 #   …or if you prefer… 
  
 my $matchObject = REST.parse($uri, :actions(REST-actions.new));
-</code></pre>
-
-<p>如果你将你的 action 方法命名为与你的 grammar 方法（tokens，regexes，rules）相同的名称，那么当您的 grammar 方法匹配时，具有相同名称的 action 方法将自动调用。该方法还将传递相应的匹配对象（由 <code>$/</code> 变量表示）。</p>
-
+</code></pre><p>如果你将你的 action 方法命名为与你的 grammar 方法（tokens，regexes，rules）相同的名称，那么当您的 grammar 方法匹配时，具有相同名称的 action 方法将自动调用。该方法还将传递相应的匹配对象（由 <code>$/</code> 变量表示）。</p>
 <p>我们来看一个例子。</p>
-
 <p>我们回到我们离开的地方:</p>
-
-<pre><code class="language-raku">grammar REST
+<pre><code class="language-raku" data-lang="raku">grammar REST
 {
     token TOP { &lt;slash&gt;&lt;subject&gt;&lt;slash&gt;&lt;command&gt;[&lt;slash&gt;&lt;data&gt;]? }
  
@@ -506,55 +410,34 @@ my $matchObject = REST.parse($uri, :actions(REST-actions.new));
     token data    { .* }
     token slash   { \s* '/' \s* }
 }
-</code></pre>
-
-<p>回想一下，我们想要进一步处理 data token &ldquo;7/notify&rdquo;, 以获得 7. 为此，我们将创建一个与具名 token 名称相同的方法的 action 类。在这种情况下，我们的 token 被命名为 <code>data</code>，因此我们的方法也被命名为 <code>data</code>。</p>
-
-<pre><code class="language-raku">class REST-actions
+</code></pre><p>回想一下，我们想要进一步处理 data token &ldquo;7/notify&rdquo;, 以获得 7. 为此，我们将创建一个与具名 token 名称相同的方法的 action 类。在这种情况下，我们的 token 被命名为 <code>data</code>，因此我们的方法也被命名为 <code>data</code>。</p>
+<pre><code class="language-raku" data-lang="raku">class REST-actions
 {
     method data($/) { $/.split('/') }
 }
-</code></pre>
-
-<p>现在，当我们通过 Grammar 传递 URI 字符串时，<em>data</em> token 匹配将传递给 REST-actions 的 <em>data</em> 方法。action 方法会按照 <code>/</code> 字符拆分字符串，返回列表的第一个元素将是 ID 号 (即 &ldquo;7/notify&rdquo; 中的 7)。</p>
-
+</code></pre><p>现在，当我们通过 Grammar 传递 URI 字符串时，<em>data</em> token 匹配将传递给 REST-actions 的 <em>data</em> 方法。action 方法会按照 <code>/</code> 字符拆分字符串，返回列表的第一个元素将是 ID 号 (即 &ldquo;7/notify&rdquo; 中的 7)。</p>
 <p>但你高兴的太早了。</p>
-
 <h3 id="用-make-和-made-使-grammars-保持整洁">用 &ldquo;make&rdquo; 和 &ldquo;made&rdquo; 使 grammars 保持整洁</h3>
-
 <p>如果 grammar 在 data 上调用上面的 action，那么 <em>data</em> 方法将被调用，但是返回到程序的大的 <code>TOP</code> grammar 匹配结果中不会显示任何内容。 为了使 action 的结果显示出来，我们需要在这个结果上调用 <a href="https://docs.raku.org/routine/make">make</a>，这个结果可以是很多东西，包括字符串，数组或散列结构。</p>
-
 <p>你可以想象，<code>make</code> 把该结果存到 grammar 中一个特殊的容器化区域中。 我们所制作(<code>make</code>)的所有东西，稍后都可以通过 <a href="https://docs.raku.org/routine/made">made</a> 来访问。</p>
-
 <p>因此，代替我们的上面的 REST-actions 类，我们应该写:</p>
-
-<pre><code class="language-raku">class REST-actions
+<pre><code class="language-raku" data-lang="raku">class REST-actions
 {
     method data($/) { make $/.split('/') }
 }
-</code></pre>
-
-<p>当我们为 match split（它返回一个列表）中添加 <code>make</code> 时，这个 action 将返回一个<strong>数据结构</strong>给我们的 grammar，它将与原 grammar 的 <code>data</code> token 分开存储。 这样，如果我们需要，我们可以操作两者。</p>
-
+</code></pre><p>当我们为 match split（它返回一个列表）中添加 <code>make</code> 时，这个 action 将返回一个<strong>数据结构</strong>给我们的 grammar，它将与原 grammar 的 <code>data</code> token 分开存储。 这样，如果我们需要，我们可以操作两者。</p>
 <p>如果我们想从这个长的 URI 中访问 7 这个 ID, 那么我们访问从我们所制成的(<code>made</code>)的 <code>data</code> action 返回的列表的第一个元素：</p>
-
-<pre><code class="language-raku">my $uri = '/product/update/7/notify';
+<pre><code class="language-raku" data-lang="raku">my $uri = '/product/update/7/notify';
  
 my $match = REST.parse($uri, actions =&gt; REST-actions.new);
  
 say $match&lt;data&gt;.made[0];  # OUTPUT: «7␤» 
 say $match&lt;command&gt;.Str;   # OUTPUT: «update␤» 
-</code></pre>
-
-<p>在这里，我们在 <em>data</em> 上调用 <code>made</code>，因为我们想要我们所制成的(<code>made</code>)（使用 <code>make</code>）action 的结果以得到分割后的数组。这好极了！但是，如果我们能够构造(<code>make</code>)一个包含我们想要的所有东西的更友好的数据结构，而不是强转类型和牢记数组，是不是更好？</p>
-
+</code></pre><p>在这里，我们在 <em>data</em> 上调用 <code>made</code>，因为我们想要我们所制成的(<code>made</code>)（使用 <code>make</code>）action 的结果以得到分割后的数组。这好极了！但是，如果我们能够构造(<code>make</code>)一个包含我们想要的所有东西的更友好的数据结构，而不是强转类型和牢记数组，是不是更好？</p>
 <p>就像 Grammar 中匹配整个字符串的 <code>TOP</code>, actions 也有一个 TOP 方法。我们可以构造(<code>make</code>)所有单独的匹配组件，如 <code>data</code> 或 <code>subject</code> 或 <code>command</code>，然后我们可以将它们放置在我们将在 TOP 中构造(<code>make</code>)的数据结构中。当我们返回最终的匹配对象时，之后就可以访问该数据结构了。</p>
-
 <p>要做到这一点，我们要做的是将方法 <code>TOP</code> 添加到 action 类中，在该方法中，从组件片段中构造(<code>make</code>)出我们喜欢的任何数据结构。</p>
-
 <p>所以，我们的 action 类现在变成:</p>
-
-<pre><code class="language-raku">class REST-actions
+<pre><code class="language-raku" data-lang="raku">class REST-actions
 {
     method TOP ($/) {
         make { subject =&gt; $&lt;subject&gt;.Str,
@@ -564,15 +447,10 @@ say $match&lt;command&gt;.Str;   # OUTPUT: «update␤»
  
     method data($/) { make $/.split('/') }
 }
-</code></pre>
-
-<p>在我们的 <code>TOP</code> 方法中，<code>subject</code> 与我们在 grammar 中匹配的 <em>subject</em> 保持相同。 此外， <code>command</code> 返回匹配到的(create, update, retrieve, 或 delete)的有效 <code>&lt;sym&gt;</code>。 我们把每个匹配都强转为 <code>.Str</code>，因为我们不需要整个匹配对象。</p>
-
+</code></pre><p>在我们的 <code>TOP</code> 方法中，<code>subject</code> 与我们在 grammar 中匹配的 <em>subject</em> 保持相同。 此外， <code>command</code> 返回匹配到的(create, update, retrieve, 或 delete)的有效 <code>&lt;sym&gt;</code>。 我们把每个匹配都强转为 <code>.Str</code>，因为我们不需要整个匹配对象。</p>
 <p>但是我们想要确定的是，在 <code>$&lt;data&gt;</code> 对象上使用 <code>made</code> 方法，因为我们想要访问那个我们在 action 中使用 <code>make</code> 制成的(<code>made</code>)的分割，而不是正确的 <code>$&lt;data&gt;</code> 对象。</p>
-
 <p>我们在 grammar action 的 <code>TOP</code> 方法中构造(<code>make</code>)一些东西之后，我们可以通过在 grammar 结果对象上通过调用 <code>made</code> 方法来访问所有的自定义值。 代码现在变成:</p>
-
-<pre><code class="language-raku">my $uri = '/product/update/7/notify';
+<pre><code class="language-raku" data-lang="raku">my $uri = '/product/update/7/notify';
  
 my $match = REST.parse($uri, actions =&gt; REST-actions.new);
  
@@ -580,22 +458,16 @@ my $rest = $match.made;
 say $rest&lt;data&gt;[0];   # OUTPUT: «7␤» 
 say $rest&lt;command&gt;;   # OUTPUT: «update␤» 
 say $rest&lt;subject&gt;;   # OUTPUT: «product␤» 
-</code></pre>
-
-<p>如果你不需要完整的返回匹配对象，你可以从你的 actions 的 TOP 方法中只返回 made 后的数据。</p>
-
-<pre><code class="language-raku">my $uri = '/product/update/7/notify';
+</code></pre><p>如果你不需要完整的返回匹配对象，你可以从你的 actions 的 TOP 方法中只返回 made 后的数据。</p>
+<pre><code class="language-raku" data-lang="raku">my $uri = '/product/update/7/notify';
  
 my $rest = REST.parse($uri, actions =&gt; REST-actions.new).made;
  
 say $rest&lt;data&gt;[0];   # OUTPUT: «7␤» 
 say $rest&lt;command&gt;;   # OUTPUT: «update␤» 
 say $rest&lt;subject&gt;;   # OUTPUT: «product␤»
-</code></pre>
-
-<p>哦，我们忘了摆脱那个丑陋的数组元素编号了吗？ 嗯。 让我们在 <code>TOP</code> grammar 的自定义返回中构造(<code>make</code>) 一个新东西 - 我们称之为 <code>subject-id</code>，并将它设置为 <code>&lt;data&gt;</code> 的第0个元素。</p>
-
-<pre><code class="language-raku">class REST-actions
+</code></pre><p>哦，我们忘了摆脱那个丑陋的数组元素编号了吗？ 嗯。 让我们在 <code>TOP</code> grammar 的自定义返回中构造(<code>make</code>) 一个新东西 - 我们称之为 <code>subject-id</code>，并将它设置为 <code>&lt;data&gt;</code> 的第0个元素。</p>
+<pre><code class="language-raku" data-lang="raku">class REST-actions
 {
     method TOP ($/) {
         make { subject    =&gt; $&lt;subject&gt;.Str,
@@ -606,22 +478,16 @@ say $rest&lt;subject&gt;;   # OUTPUT: «product␤»
  
     method data($/) { make $/.split('/') }
 }
-</code></pre>
-
-<p>现在我们可以这样做:</p>
-
-<pre><code class="language-raku">my $uri = '/product/update/7/notify';
+</code></pre><p>现在我们可以这样做:</p>
+<pre><code class="language-raku" data-lang="raku">my $uri = '/product/update/7/notify';
  
 my $rest = REST.parse($uri, actions =&gt; REST-actions.new).made;
  
 say $rest&lt;command&gt;;    # OUTPUT: «update␤» 
 say $rest&lt;subject&gt;;    # OUTPUT: «product␤» 
 say $rest&lt;subject-id&gt;; # OUTPUT: «7␤» 
-</code></pre>
-
-<p>下面是完整的代码：</p>
-
-<pre><code class="language-raku">grammar REST
+</code></pre><p>下面是完整的代码：</p>
+<pre><code class="language-raku" data-lang="raku">grammar REST
 {
     token TOP { &lt;slash&gt;&lt;subject&gt;&lt;slash&gt;&lt;command&gt;[&lt;slash&gt;&lt;data&gt;]? }
  
@@ -648,13 +514,9 @@ class REST-actions
  
     method data($/) { make $/.split('/') }
 }
-</code></pre>
-
-<h3 id="直接添加-actions">直接添加 actions</h3>
-
+</code></pre><h3 id="直接添加-actions">直接添加 actions</h3>
 <p>上面我们看到如何将 grammars 与 actions 对象相关联，并在匹配对象上执行 actions。但是，当我们想要处理匹配对象时，这不是唯一的方法。看下面的例子：</p>
-
-<pre><code class="language-raku">grammar G {
+<pre><code class="language-raku" data-lang="raku">grammar G {
   rule TOP { &lt;function-define&gt; }
   rule function-define {
     'sub' &lt;identifier&gt;
@@ -671,15 +533,10 @@ class REST-actions
  
 G.parse('sub f ( a ) { }');
 # OUTPUT: «func f␤param a␤end f␤» 
-</code></pre>
-
-<p>这个例子是解析器的缩版。让我们更专注于它显示的功能。</p>
-
+</code></pre><p>这个例子是解析器的缩版。让我们更专注于它显示的功能。</p>
 <p>首先，我们可以在 grammar 本身中添加 action，一旦正则表达式的控制流到达它们，就会执行这些 action。请注意，action 对象的方法将始终在整个正则表达式项匹配后执行。其次，它展示了 <code>make</code> 真正做了什么，它不过是 <code>$/.made = ...</code> 的语法糖。这个技巧引入了一种从正则表达式 item 中传递消息的方法。</p>
-
 <p>希望这有助于向您介绍 Raku 中的 Grammar，并向您展示 grammar
 和 grammar action 类是如何协同工作的。有关更多信息，请查看更高级的 <a href="https://docs.raku.org/language/grammars">Perl Grammar指南</a>。</p>
-
 <p>对于更多的 Grammar 调试，请参见 <a href="https://github.com/jnthn/grammar-debugger">Grammar::Debugger</a>。它为每个 grammar tokens 提供了断点调试和颜色高亮的匹配(MATCH)和匹配失败(FAIL)的输出。</p>
 
 
@@ -778,7 +635,7 @@ G.parse('sub f ( a ) { }');
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

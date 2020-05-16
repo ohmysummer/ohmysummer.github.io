@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/action/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/action/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -271,8 +271,8 @@ if (!doNotTrack) {
               <div class="post-entry">
                 
                   有一段结构化的文本, 写一个 Grammar 来解析它：
-name = Animal Facts author = jnthn [cat] desc = The smartest and cutest cuteness = 100000 [dugong] desc = The cow of the sea cuteness = -10 [magpie] desc = crow; raven; rook; jackdaw; chough; magpie; jay cuteness = 99  每一段都是一个章节, 有的章节没有[cat]这样的标题, 要求 grammar 生成一个散列, 散列的键是方括号中的单词, 如果没有就默认为 _ , 散列的值是一个散列的数组, 数组里面的每个散列的键为等号左边的单词, 键值为等号右边的字符。Grammar 如下:
-use v6; #use Grammar::Debugger; grammar INIFile::Grammar { token TOP { ^ &lt;entries&gt; # 条目 &lt;section&gt;+ # 章节 $ } token section { '[' ~ ']' &lt;key&gt; \n &lt;entries&gt; # 每个章节含有多个条目 entry } token entries { [ | &lt;entry&gt; \n | \n # entry 可以为空 ]+ } token entry { &lt;key&gt; \h* '=' \h* &lt;value&gt; } token key { \w+ } token value { \N+ } } class INIFileActions { method entries($/) { my %entries; for $&lt;entry&gt; -&gt; $e { %entries{$e&lt;key&gt;} := ~$e&lt;value&gt;; } make %entries; } method TOP($/) { my %result; %result&lt;_&gt; := $&lt;entries&gt;.
+name = Animal Factsauthor = jnthn[cat]desc = The smartest and cutestcuteness = 100000[dugong]desc = The cow of the seacuteness = -10[magpie]desc = crow; raven; rook; jackdaw; chough; magpie; jaycuteness = 99每一段都是一个章节, 有的章节没有[cat]这样的标题, 要求 grammar 生成一个散列, 散列的键是方括号中的单词, 如果没有就默认为 _ , 散列的值是一个散列的数组, 数组里面的每个散列的键为等号左边的单词, 键值为等号右边的字符。Grammar 如下:
+use v6;#use Grammar::Debugger; grammar INIFile::Grammar {token TOP {^&lt;entries&gt; # 条目 &lt;section&gt;+ # 章节 $}token section {&#39;[&#39; ~ &#39;]&#39; &lt;key&gt; \n&lt;entries&gt; # 每个章节含有多个条目 entry }token entries {[| &lt;entry&gt; \n| \n # entry 可以为空 ]+}token entry { &lt;key&gt; \h* &#39;=&#39; \h* &lt;value&gt; }token key { \w+ }token value { \N+ }}class INIFileActions {method entries($/) {my %entries;for $&lt;entry&gt; -&gt; $e {%entries{$e&lt;key&gt;} := ~$e&lt;value&gt;;}make %entries;}method TOP($/) {my %result;%result&lt;_&gt; := $&lt;entries&gt;.
                   <a href="https://ohmysummer.github.io/post/2016-05-12-actions%E5%92%8C%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -316,7 +316,7 @@ use v6; #use Grammar::Debugger; grammar INIFile::Grammar { token TOP { ^ &lt;ent
                 
                   一个 Grammar 解析复杂文本的例子。
 一个 Grammar 调了很久, 先分解下：
- 解析[ ] 里面的数据：  use v6; use Grammar::Debugger; grammar Lines { token TOP { ^ &lt;line&gt;+ $ } token line { \[ &lt;student&gt;+ % &lt;semicolon&gt; \] \n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！ } token student { &lt;myname&gt;+ % &lt;comma&gt; # 分隔符也可以是一个 subrule } token myname { &lt;[A..Za..z-]&gt;+ # 字符类的写法 &lt;[...]&gt; } token comma { ',' \s+ # 逗号, 分号 不能裸露出现在 token 中 } token semicolon { ';' \s+ } } my $parse = Lines.
+ 解析[ ] 里面的数据：  use v6;use Grammar::Debugger;grammar Lines {token TOP {^ &lt;line&gt;+ $}token line {\[&lt;student&gt;+ % &lt;semicolon&gt;\]\n # 换行 \n 是最容易被忽略的地方, 坑了很多次了！}token student {&lt;myname&gt;+ % &lt;comma&gt; # 分隔符也可以是一个 subrule}token myname {&lt;[A..Za..z-]&gt;+ # 字符类的写法 &lt;[...]&gt;}token comma {',' \s+ # 逗号, 分号 不能裸露出现在 token 中}token semicolon {';' \s+}}my $parse = Lines.
                   <a href="https://ohmysummer.github.io/post/2015-07-11-grammar%E7%AC%94%E8%AE%B0/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -369,7 +369,7 @@ use v6; #use Grammar::Debugger; grammar INIFile::Grammar { token TOP { ^ &lt;ent
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

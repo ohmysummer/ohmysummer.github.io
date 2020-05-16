@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-09-raku%E4%B8%AD%E7%9A%84%E4%B8%8A%E6%A0%87/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,98 +231,63 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="raku-中的-superscripts">Raku 中的 Superscripts</h1>
-
+        <h1 id="raku-中的-superscripts">Raku 中的 Superscripts</h1>
 <p>在 Raku 中，可以使用上标索引来计算数字的幂数，例如:</p>
-
-<pre><code class="language-raku">&gt; 2⁵
+<pre><code class="language-raku" data-lang="raku">&gt; 2⁵
 32
 
 &gt; 7³
 343
-</code></pre>
-
-<p>也可以在上标中使用多个数字：</p>
-
-<pre><code class="language-raku">&gt; 10¹²
+</code></pre><p>也可以在上标中使用多个数字：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; 10¹²
 1000000000000
-</code></pre>
-
-<p>你可以猜到，上面的代码等同于这样：</p>
-
-<pre><code class="language-raku">&gt; 2**5
+</code></pre><p>你可以猜到，上面的代码等同于这样：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; 2**5
 32
 &gt; 7**3
 343
 
 &gt; 10**12
 1000000000000
-</code></pre>
-
-<p>但问题是：上标到底是如何工作的？让我们找出答案。</p>
-
+</code></pre><p>但问题是：上标到底是如何工作的？让我们找出答案。</p>
 <p>对于 <code>Numeric</code> 角色，定义了以下操作：</p>
-
-<pre><code class="language-raku">proto sub postfix:&lt;ⁿ&gt;(Mu $, Mu $) is pure {*}
+<pre><code class="language-raku" data-lang="raku">proto sub postfix:&lt;ⁿ&gt;(Mu $, Mu $) is pure {*}
 multi sub postfix:&lt;ⁿ&gt;(\a, \b) { a ** b }
-</code></pre>
-
-<p>啊哈，这就是我们需要的，上标符号在这里转换为简单的 <code>**</code> 运算符。</p>
-
+</code></pre><p>啊哈，这就是我们需要的，上标符号在这里转换为简单的 <code>**</code> 运算符。</p>
 <p>您可以通过<strong>打印操作数</strong>来可视化传递给操作的确切内容：</p>
-
-<pre><code class="language-raku">multi sub postfix:&lt;ⁿ&gt;(\a, \b) {
+<pre><code class="language-raku" data-lang="raku">multi sub postfix:&lt;ⁿ&gt;(\a, \b) {
     nqp::say('# a = ' ~ a);
     nqp::say('# b = ' ~ b);
     a ** b
 }
-</code></pre>
-
-<p>这个时候，你会看到上面的测试示例输出如下：</p>
-
-<pre><code class="language-raku">&gt; 2⁵
+</code></pre><p>这个时候，你会看到上面的测试示例输出如下：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; 2⁵
 # a = 2
 # b = 5
 
 &gt; 10¹²
 # a = 10
 # b = 12
-</code></pre>
-
-<p>现在，是时候理解提取上标的后缀是如何工作的了。它的名字 <code>ⁿ</code> 用上标写成，不应误导你。这不是解析器的魔术，这只是符号的名称，它可以在 Grammar 中找到：</p>
-
-<pre><code class="language-raku">token postfix:sym&lt;ⁿ&gt; {
+</code></pre><p>现在，是时候理解提取上标的后缀是如何工作的了。它的名字 <code>ⁿ</code> 用上标写成，不应误导你。这不是解析器的魔术，这只是符号的名称，它可以在 Grammar 中找到：</p>
+<pre><code class="language-raku" data-lang="raku">token postfix:sym&lt;ⁿ&gt; {
     &lt;sign=[⁻⁺¯]&gt;? &lt;dig=[⁰¹²³⁴⁵⁶⁷⁸⁹]&gt;+ &lt;O(|%autoincrement)&gt;
 }
-</code></pre>
-
-<p>你看，这个符号是一系列的上标数字，在它们之前有一个可选的符号。 （在 Grammar 到达这个时刻之前，你有没有想到过一个标志？）</p>
-
+</code></pre><p>你看，这个符号是一系列的上标数字，在它们之前有一个可选的符号。 （在 Grammar 到达这个时刻之前，你有没有想到过一个标志？）</p>
 <p>顺便说一下，我们可以试试负数作为幂：</p>
-
-<pre><code class="language-raku">&gt; say 4⁻³
+<pre><code class="language-raku" data-lang="raku">&gt; say 4⁻³
 # a = 4
 # b = -3
 0.015625
-</code></pre>
-
-<p>另请注意，整个构造被视为后缀运算符。它也可以应用于变量，例如：</p>
-
-<pre><code class="language-raku">&gt; my $x = 9
+</code></pre><p>另请注意，整个构造被视为后缀运算符。它也可以应用于变量，例如：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; my $x = 9
 9
 &gt; say $x²
 # a = 9
 # b = 2
 81
-</code></pre>
-
-<p>所以，上标中的数字不是变量名称的一部分。</p>
-
+</code></pre><p>所以，上标中的数字不是变量名称的一部分。</p>
 <p>好的，三部曲的最后一部分，是解析索引的 Actions 代码：</p>
-
-<pre><code class="language-raku">method postfix:sym&lt;ⁿ&gt;($/) {
+<pre><code class="language-raku" data-lang="raku">method postfix:sym&lt;ⁿ&gt;($/) {
     my $Int := $*W.find_symbol(['Int']);
     my $power := nqp::box_i(0, $Int);
     for $&lt;dig&gt; {
@@ -337,15 +302,10 @@ multi sub postfix:&lt;ⁿ&gt;(\a, \b) { a ** b }
     make QAST::Op.new(:op&lt;call&gt;, :name('&amp;postfix:&lt;ⁿ&gt;'),
                       $*W.add_numeric_constant($/, 'Int', $power));
 }
-</code></pre>
-
-<p>正如你在这里看到的那样，它扫描数字并通过在下一个小数位上添加值（在上面的代码中选择它）来更新 <code>$power</code> 变量。</p>
-
+</code></pre><p>正如你在这里看到的那样，它扫描数字并通过在下一个小数位上添加值（在上面的代码中选择它）来更新 <code>$power</code> 变量。</p>
 <p>可用字符在一个字符串中列出，为了得到它的值，使用字符串中的偏移量。 <code>$&lt;dig&gt;</code> match 包含一个数字，您可以在 Grammar 中看到它：</p>
-
-<pre><code class="language-raku">&lt;dig=[⁰¹²³⁴⁵⁶⁷⁸⁹]&gt;+
+<pre><code class="language-raku" data-lang="raku">&lt;dig=[⁰¹²³⁴⁵⁶⁷⁸⁹]&gt;+
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -436,7 +396,7 @@ multi sub postfix:&lt;ⁿ&gt;(\a, \b) { a ** b }
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

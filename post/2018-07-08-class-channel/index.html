@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-08-class-channel/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,14 +231,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<pre><code class="language-raku">class Channel {}
-</code></pre>
-
-<p><code>Channel</code> 是一个线程安全的队列，可帮助你将一个或多个生产者的一系列对象发送给一个或多个消费者。每个对象将仅到达由调度程序选择的一个这样的消费者。如果只有一个消费者和一个生产者，则保证保留对象的顺序。在 <code>Channel</code> 上发送是非阻塞的。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+        <pre><code class="language-raku" data-lang="raku">class Channel {}
+</code></pre><p><code>Channel</code> 是一个线程安全的队列，可帮助你将一个或多个生产者的一系列对象发送给一个或多个消费者。每个对象将仅到达由调度程序选择的一个这样的消费者。如果只有一个消费者和一个生产者，则保证保留对象的顺序。在 <code>Channel</code> 上发送是非阻塞的。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 await (^10).map: {
     start {
         my $r = rand;
@@ -248,58 +243,32 @@ await (^10).map: {
 }
 $c.close;
 say $c.list;
-</code></pre>
-
-<p>可以在<a href="https://docs.raku.org/language/concurrency#Channels">并发页面</a>中找到更多示例。</p>
-
+</code></pre><p>可以在<a href="https://docs.raku.org/language/concurrency#Channels">并发页面</a>中找到更多示例。</p>
 <h2 id="方法">方法</h2>
-
 <h3 id="send-方法">send 方法</h3>
-
 <p>定义为：</p>
-
-<pre><code class="language-raku">method send(Channel:D: \item)
-</code></pre>
-
-<p>将项目排入频道。如果通道已经关闭，则抛出类型X :: Channel :: SendOnClosed的异常。此调用不会阻止等待使用者获取该对象。对可排队的项目数量没有设定限制，因此应注意防止失控排队。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+<pre><code class="language-raku" data-lang="raku">method send(Channel:D: \item)
+</code></pre><p>将项目排入频道。如果通道已经关闭，则抛出类型X :: Channel :: SendOnClosed的异常。此调用不会阻止等待使用者获取该对象。对可排队的项目数量没有设定限制，因此应注意防止失控排队。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 $c.send(1);
 $c.send([2, 3, 4, 5]);
 $c.close;
 say $c.list; # OUTPUT: «(1 [2 3 4 5])␤» 
-</code></pre>
-
-<h3 id="receive-方法">receive 方法</h3>
-
+</code></pre><h3 id="receive-方法">receive 方法</h3>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method receive(Channel:D:)
-</code></pre>
-
-<p>从频道接收和删除项目。如果没有项目存在，它会阻塞，等待来自另一个线程的发送。</p>
-
+<pre><code class="language-raku" data-lang="raku">method receive(Channel:D:)
+</code></pre><p>从频道接收和删除项目。如果没有项目存在，它会阻塞，等待来自另一个线程的发送。</p>
 <p>如果通道已关闭，并且已经删除了最后一项，或者在接收等待项目到达时调用了close，则抛出类型X :: Channel :: ReceiveOnClosed的异常。</p>
-
 <p>如果通道已被标记为不稳定且方法失败，并且最后一项已被删除，则抛出作为异常而失败的参数。</p>
-
 <p>请参阅方法轮询以获取不会引发异常的非阻塞版本。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 $c.send(1);
 say $c.receive; # OUTPUT: «1␤» 
-</code></pre>
-
-<h3 id="poll-方法">poll 方法</h3>
-
+</code></pre><h3 id="poll-方法">poll 方法</h3>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method poll(Channel:D:)
-</code></pre>
-
-<p>从频道接收和删除项目。如果没有项目，则返回Nil而不是等待。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+<pre><code class="language-raku" data-lang="raku">method poll(Channel:D:)
+</code></pre><p>从频道接收和删除项目。如果没有项目，则返回Nil而不是等待。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 Promise.in(2).then: { $c.close; }
 ^10 .map({ $c.send($_); });
 loop {
@@ -307,117 +276,66 @@ loop {
     if $c.closed  { last };
     sleep 0.1;
 }
-</code></pre>
-
-<p>请参阅方法接收，以获取正确响应通道关闭和故障的阻止版本。</p>
-
+</code></pre><p>请参阅方法接收，以获取正确响应通道关闭和故障的阻止版本。</p>
 <h3 id="close-方法">close 方法</h3>
-
 <p>定义为：</p>
-
-<pre><code class="language-raku">method close(Channel:D:)
-</code></pre>
-
-<p>通常关闭频道。这使后续的发送调用死于X :: Channel :: SendOnClosed。后续调用.receive可能仍然会耗尽先前发送的任何剩余项目，但如果队列为空，则会抛出X :: Channel :: ReceiveOnClosed异常。由@（）或.list方法生成的Seq在完成此操作之前不会终止。 when-block也将在封闭的通道上正确终止。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+<pre><code class="language-raku" data-lang="raku">method close(Channel:D:)
+</code></pre><p>通常关闭频道。这使后续的发送调用死于X :: Channel :: SendOnClosed。后续调用.receive可能仍然会耗尽先前发送的任何剩余项目，但如果队列为空，则会抛出X :: Channel :: ReceiveOnClosed异常。由@（）或.list方法生成的Seq在完成此操作之前不会终止。 when-block也将在封闭的通道上正确终止。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 $c.close;
 $c.send(1);
 CATCH { default { put .^name, ': ', .Str } };
 # OUTPUT: «X::Channel::SendOnClosed: Cannot send a message on a closed channel␤» 
-</code></pre>
-
-<p>请注意，抛出的任何异常都可能会阻止调用.close，这可能会挂起接收线程。在这种情况下，使用LEAVE移相器强制执行.close调用。</p>
-
+</code></pre><p>请注意，抛出的任何异常都可能会阻止调用.close，这可能会挂起接收线程。在这种情况下，使用LEAVE移相器强制执行.close调用。</p>
 <h3 id="list-方法">list 方法</h3>
-
 <p>定义为：</p>
-
-<pre><code class="language-raku">method list(Channel:D: --&gt; List:D)
-</code></pre>
-
-<p>返回基于Seq的列表，它将迭代队列中的项目并在迭代时从中删除每个项目。这只能在调用close方法后终止。</p>
-
-<pre><code class="language-raku">my $c = Channel.new; $c.send(1); $c.send(2);
+<pre><code class="language-raku" data-lang="raku">method list(Channel:D: --&gt; List:D)
+</code></pre><p>返回基于Seq的列表，它将迭代队列中的项目并在迭代时从中删除每个项目。这只能在调用close方法后终止。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new; $c.send(1); $c.send(2);
 $c.close;
 say $c.list; # OUTPUT: «(1 2)␤» 
-</code></pre>
-
-<h3 id="closed-方法">closed 方法</h3>
-
+</code></pre><h3 id="closed-方法">closed 方法</h3>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method closed(Channel:D: --&gt; Promise:D)
-</code></pre>
-
-<p>返回通过调用方法close关闭通道后将保留的promise。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+<pre><code class="language-raku" data-lang="raku">method closed(Channel:D: --&gt; Promise:D)
+</code></pre><p>返回通过调用方法close关闭通道后将保留的promise。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 $c.closed.then({ say &quot;It's closed!&quot; });
 $c.close;
 sleep 1;
-</code></pre>
-
-<h3 id="fail-方法">fail 方法</h3>
-
+</code></pre><h3 id="fail-方法">fail 方法</h3>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method fail(Channel:D: $error)
-</code></pre>
-
-<p>关闭通道（即，使后续发送调用死亡），并将要作为通道中的最终元素抛出的错误排入队列。方法receive会将该错误作为异常抛出。如果频道已经关闭或者已经调用了.fail，则不执行任何操作。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+<pre><code class="language-raku" data-lang="raku">method fail(Channel:D: $error)
+</code></pre><p>关闭通道（即，使后续发送调用死亡），并将要作为通道中的最终元素抛出的错误排入队列。方法receive会将该错误作为异常抛出。如果频道已经关闭或者已经调用了.fail，则不执行任何操作。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 $c.fail(&quot;Bad error happens!&quot;);
 $c.receive;
 CATCH { default { put .^name, ': ', .Str } };
 # OUTPUT: «X::AdHoc: Bad error happens!␤» 
-</code></pre>
-
-<h3 id="capture-方法">Capture 方法</h3>
-
+</code></pre><h3 id="capture-方法">Capture 方法</h3>
 <p>定义为：</p>
-
-<pre><code class="language-raku">method Capture(Channel:D --&gt; Capture:D)
-</code></pre>
-
-<p>相当于在调用者上调用.List.Capture。</p>
-
+<pre><code class="language-raku" data-lang="raku">method Capture(Channel:D --&gt; Capture:D)
+</code></pre><p>相当于在调用者上调用.List.Capture。</p>
 <h3 id="supply-方法">Supply 方法</h3>
-
 <p>定义为：</p>
-
-<pre><code class="language-raku">method Supply(Channel:D:)
-</code></pre>
-
-<p>这将返回按需供应，该供应为通道上收到的每个值发出一个值。当通道关闭时，将在Supply上调用done。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+<pre><code class="language-raku" data-lang="raku">method Supply(Channel:D:)
+</code></pre><p>这将返回按需供应，该供应为通道上收到的每个值发出一个值。当通道关闭时，将在Supply上调用done。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 my Supply $s1 = $c.Supply;
 my Supply $s2 = $c.Supply;
 $s1.tap(-&gt; $v { say &quot;First $v&quot; });
 $s2.tap(-&gt; $v { say &quot;Second $v&quot; });
 ^10 .map({ $c.send($_) });
 sleep 1;
-</code></pre>
-
-<p>对此方法的多次调用会生成多个Supply实例，这些实例会与Channel的值竞争。</p>
-
+</code></pre><p>对此方法的多次调用会生成多个Supply实例，这些实例会与Channel的值竞争。</p>
 <h3 id="sub-await">sub await</h3>
-
 <p>定义为：</p>
-
-<pre><code class="language-raku">multi sub await(Channel:D)
+<pre><code class="language-raku" data-lang="raku">multi sub await(Channel:D)
 multi sub await(*@)
-</code></pre>
-
-<p>等待所有一个或多个通道都有可用值，并返回这些值（它在通道上调用.receive）。也适用于承诺。</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+</code></pre><p>等待所有一个或多个通道都有可用值，并返回这些值（它在通道上调用.receive）。也适用于承诺。</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 Promise.in(1).then({$c.send(1)});
 say await $c;
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -508,7 +426,7 @@ say await $c;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Io on Raku Programming</title>
+    <title>IO on Raku Programming</title>
     <link>https://ohmysummer.github.io/tags/io/</link>
-    <description>Recent content in Io on Raku Programming</description>
+    <description>Recent content in IO on Raku Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Sat, 14 Jul 2018 22:35:26 +0800</lastBuildDate>
@@ -17,14 +17,14 @@
       <pubDate>Sat, 14 Jul 2018 22:35:26 +0800</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2018-07-14-io-guide/</guid>
-      <description>基础知识 绝大多数常见的 IO 工作都是由 IO::Path 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
+      <description>基础知识 绝大多数常见的 IO 工作都是由 [IO::Path](https://docs.raku.org/type/ IO::Path ) 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
 在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 Proc 或 Proc::Async 类型，你还可以处理一个子类的 IO::Handle 在 IO::Pipe。
 最后，你有 IO::CatHandle ，以及 IO::Spec 及其子类，你很少直接使用它们。这些类为你提供了高级功能，例如将多个文件作为一个句柄进行操作，或者进行低级路径操作。
 除了所有这些类之外，Raku还提供了几个子程序，可以让你间接使用这些类。如果你喜欢函数式编程风格或Raku 单行程序，这些就派上用场了。
 虽然 IO::Socket 及其子类也与输入和输出有关，但本指南并未涵盖它们。
 路径导航 什么是 IO::Path？ 要将路径表示为文件或目录，请使用 IO::Path 类型。获取该类型对象的最简单方法是通过在 Str 上调用 .IO 方法将字符串强制为 IO 类型：
-say &#39;my-file.txt&#39;.IO; # OUTPUT: «&amp;quot;my-file.txt&amp;quot;.IO␤»  看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
-say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&amp;quot;my-file.txt&amp;quot;, :SPEC(IO::Spec::Unix), :CWD(&amp;quot;/home/camelia&amp;quot;))␤»  这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。</description>
+say &#39;my-file.txt&#39;.IO; # OUTPUT: «&amp;quot;my-file.txt&amp;quot;.IO␤» 看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
+say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&amp;quot;my-file.txt&amp;quot;, :SPEC(IO::Spec::Unix), :CWD(&amp;quot;/home/camelia&amp;quot;))␤» 这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。</description>
     </item>
     
     <item>
@@ -34,8 +34,8 @@ say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&amp;quot;my-file.tx
       
       <guid>https://ohmysummer.github.io/post/2015-10-11-io%E6%93%8D%E4%BD%9C/</guid>
       <description>文件存在、文件的时间戳、文件的修改时间等等
-批量插入文本 use v6; my @filenames = dir &#39;.&#39;, test =&amp;gt; any(/\.md$/, /\.markdown/); for @filenames -&amp;gt; $filePath { my $path = $filePath.path(); $path ~~ s/.md//; $path ~~ s/.markdown//; my $date = DateTime.new(now); my $head = qq:heredoc &#39;EOT&#39;; title: $path.IO.basename() date: $date tags: Raku categories: Raku --- &amp;lt;blockquote class=&amp;quot;blockquote-center&amp;quot;&amp;gt;这城市有太多风景都在提醒那过去！&amp;lt;/blockquote&amp;gt; [TOC] EOT my @content = slurp $filePath; spurt($filePath.path, &amp;quot;$head\n@content[]&amp;quot;); }  在当前目录中查找所有以 .md (.markdown)结尾的文件（即markdown文件）, 并在文件最前面插入一段文本， 形如：
-title: Raku date: 2015-08-20T23:19:13Z tags: Raku categories: Raku --- &amp;lt;blockquote class=&amp;quot;blockquote-center&amp;quot;&amp;gt;我站在天桥上念你, 有点狼狈&amp;lt;/blockquote&amp;gt;  类 IO::Path 提供了 basename, path, parts, 等方法供使用, 具体用法请看文档:</description>
+批量插入文本 use v6;my @filenames = dir &#39;.&#39;, test =&amp;gt; any(/\.md$/, /\.markdown/);for @filenames -&amp;gt; $filePath {my $path = $filePath.path();$path ~~ s/.md//;$path ~~ s/.markdown//;my $date = DateTime.new(now);my $head =qq:heredoc &#39;EOT&#39;;title: $path.IO.basename()date: $datetags: Rakucategories: Raku---&amp;lt;blockquote class=&amp;quot;blockquote-center&amp;quot;&amp;gt;这城市有太多风景都在提醒那过去！&amp;lt;/blockquote&amp;gt;[TOC]EOTmy @content = slurp $filePath;spurt($filePath.path, &amp;quot;$head\n@content[]&amp;quot;);}在当前目录中查找所有以 .md (.markdown)结尾的文件（即markdown文件）, 并在文件最前面插入一段文本， 形如：
+title: Rakudate: 2015-08-20T23:19:13Ztags: Rakucategories: Raku---&amp;lt;blockquote class=&amp;quot;blockquote-center&amp;quot;&amp;gt;我站在天桥上念你, 有点狼狈&amp;lt;/blockquote&amp;gt;类 IO::Path 提供了 basename, path, parts, 等方法供使用, 具体用法请看文档:</description>
     </item>
     
   </channel>

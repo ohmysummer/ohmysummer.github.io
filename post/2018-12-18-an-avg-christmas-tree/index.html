@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-18-an-avg-christmas-tree/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,36 +231,24 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>圣诞树是一种传统的象征，可以追溯到欧洲四百多年前，所以对于一篇关于创造圣诞树图像的出现文章来说，这可能更好。</p>
-
+        <p>圣诞树是一种传统的象征，可以追溯到欧洲四百多年前，所以对于一篇关于创造圣诞树图像的出现文章来说，这可能更好。</p>
 <p>树的典型，简化的表示是几个尺寸逐渐减小的三角形，彼此叠加并且具有小的重叠，因此使用计算机程序很容易创建。</p>
-
 <p>在这里，我将使用可缩放矢量图形（SVG）绘制图像，如上所述，它似乎非常适合任务。</p>
-
 <h2 id="关于svg并创建它">关于SVG并创建它</h2>
-
 <p>SVG是一种XML文档格式，它将图像描述为点之间的一组矢量，它具有线条和形状的基元，并提供所描述对象的样式。</p>
-
 <p>也许最简单的SVG文档是这样的：</p>
-
-<pre><code class="language-xml">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; 
-     xmlns:svg=&quot;http://www.w3.org/2000/svg&quot; 
-     xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; 
-     width=&quot;100&quot; 
-     height=&quot;100&quot;&gt;
-	&lt;g&gt;
-		&lt;rect x=&quot;5&quot; y=&quot;5&quot; width=&quot;90&quot; height=&quot;90&quot; stroke=&quot;black&quot; fill=&quot;green&quot; /&gt;
-	&lt;/g&gt;
-&lt;/svg&gt;
-</code></pre>
-
-<p>这描述了侧面90的绿色填充正方形（单元基本上是抽象的并且相对于显示器的尺寸，因为图像的可缩放特性意味着它们可能不等同于例如像素。）</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;svg</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span> 
+     <span class="na">xmlns:svg=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span> 
+     <span class="na">xmlns:xlink=</span><span class="s">&#34;http://www.w3.org/1999/xlink&#34;</span> 
+     <span class="na">width=</span><span class="s">&#34;100&#34;</span> 
+     <span class="na">height=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;g</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;rect</span> <span class="na">x=</span><span class="s">&#34;5&#34;</span> <span class="na">y=</span><span class="s">&#34;5&#34;</span> <span class="na">width=</span><span class="s">&#34;90&#34;</span> <span class="na">height=</span><span class="s">&#34;90&#34;</span> <span class="na">stroke=</span><span class="s">&#34;black&#34;</span> <span class="na">fill=</span><span class="s">&#34;green&#34;</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;/g&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div><p>这描述了侧面90的绿色填充正方形（单元基本上是抽象的并且相对于显示器的尺寸，因为图像的可缩放特性意味着它们可能不等同于例如像素。）</p>
 <p>现在我们可以在程序中使用一些变量插值打印出XML，但是对于比上面的例子更复杂的事情，这可能会非常繁琐且容易出错。幸运的是Raku有一个方便的<a href="https://github.com/moritz/svg">SVG</a>模块，它负责从描述它的数据结构中实际创建格式良好的XML文档。因此，我们的示例矩形可以使用以下内容创建：</p>
-
-<pre><code class="language-raku">use SVG;
+<pre><code class="language-raku" data-lang="raku">use SVG;
 
 say SVG.serialize(
     svg =&gt; [
@@ -268,64 +256,52 @@ say SVG.serialize(
         :g[:rect[:x&lt;5&gt;, :y&lt;5&gt;, :width&lt;90&gt;, :height&lt;90&gt;, :stroke&lt;black&gt;, :file&lt;green&gt;]],
     ],
 );
-</code></pre>
-
-<p>本质上，参数<code>serialize</code>是一组嵌套的<a href="https://docs.raku.org/type/Pair">Pairs</a>：其中value是标量类型，键和值用于形成XML属性，其中值是List of Pairs，这将创建一个以键命名的XML元素，列表中的每个对都被解释为如上所述，从而允许以简单的声明方式构建复杂文档。</p>
-
+</code></pre><p>本质上，参数<code>serialize</code>是一组嵌套的<a href="https://docs.raku.org/type/Pair">Pairs</a>：其中value是标量类型，键和值用于形成XML属性，其中值是List of Pairs，这将创建一个以键命名的XML元素，列表中的每个对都被解释为如上所述，从而允许以简单的声明方式构建复杂文档。</p>
 <p>所以我们可以通过构造适当的数据结构来生成我们的示例圣诞树，但是因为我们的图像中可能至少有四个对象（三个三角形和一个用于树干的矩形）及其相关属性，这可能会非常不合适如果我们想改变某些东西，很难改变。</p>
-
 <p>所以…</p>
-
 <h2 id="我们抽象吧">我们抽象吧！</h2>
-
 <p>为了使我们的SVG生成更加灵活并为未来的代码重用开辟了机会，创建一组代表我们可能想要使用的SVG原语的类并抽象出将要生成的数据结构可能是有意义的。序列化为XML。</p>
-
 <p>所以让我们从可以生成原始矩形示例的东西开始：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">SVG</span><span class="p">;</span>
 
-<pre><code class="language-perl">use SVG;
+<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="nn">SVG::</span><span class="n"></span><span class="n">Drawing</span> <span class="p">{</span>
+    <span class="n"></span><span class="n">role</span> <span class="n"></span><span class="n">Element</span> <span class="p">{</span>
+        <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">serialize</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+            <span class="o">...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-class SVG::Drawing {
-    role Element {
-        method serialize() {
-            ...
-        }
-    }
+    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Element</span> <span class="nv">@</span><span class="err">.</span><span class="nv">elements</span><span class="p">;</span>
 
-    has Element @.elements;
+    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">width</span><span class="p">;</span>
+    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">height</span><span class="p">;</span>
 
-    has Int $.width;
-    has Int $.height;
+    <span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Group</span> <span class="n"></span><span class="n">does</span> <span class="n"></span><span class="n">Element</span> <span class="p">{</span>
+        <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Element</span> <span class="nv">@</span><span class="err">.</span><span class="nv">elements</span><span class="p">;</span>
+        <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">serialize</span><span class="p">(</span> <span class="o">-</span><span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">Pair</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="n"></span><span class="n">g</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">@</span><span class="err">!</span><span class="nv">elements</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">e</span> <span class="p">{</span> <span class="nv">$</span><span class="nv">e</span><span class="o">.</span><span class="n"></span><span class="n">serialize</span> <span class="p">}</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">list</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    class Group does Element {
-        has Element @.elements;
-        method serialize( --&gt; Pair ) {
-            g =&gt; @!elements.map( -&gt; $e { $e.serialize }).list;
-        }
-    }
+    <span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Rectangle</span> <span class="n"></span><span class="n">does</span> <span class="n"></span><span class="n">Element</span> <span class="p">{</span>
+        <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">x</span><span class="p">;</span>
+        <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">y</span><span class="p">;</span>
+        <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">width</span><span class="p">;</span>
+        <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">height</span><span class="p">;</span>
+        <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Str</span> <span class="nv">$</span><span class="err">.</span><span class="nv">stroke</span><span class="p">;</span>
+        <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Str</span> <span class="nv">$</span><span class="err">.</span><span class="nv">fill</span><span class="p">;</span>
 
-    class Rectangle does Element {
-        has Int $.x;
-        has Int $.y;
-        has Int $.width;
-        has Int $.height;
-        has Str $.stroke;
-        has Str $.fill;
+        <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">serialize</span><span class="p">(</span> <span class="o">-</span><span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">Pair</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n"></span><span class="n">rect</span> <span class="o">=</span><span class="o">&gt;</span> <span class="p">[</span><span class="n"></span><span class="n">x</span> <span class="o">=</span><span class="o">&gt;</span>  <span class="nv">$</span><span class="err">!</span><span class="nv">x</span><span class="p">,</span> <span class="n"></span><span class="n">y</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">$</span><span class="err">!</span><span class="nv">y</span><span class="p">,</span> <span class="n"></span><span class="n">width</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">$</span><span class="err">!</span><span class="nv">width</span><span class="p">,</span> <span class="n"></span><span class="n">height</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">$</span><span class="err">!</span><span class="nv">height</span><span class="p">,</span> <span class="n"></span><span class="n">stroke</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">$</span><span class="err">!</span><span class="nv">stroke</span><span class="p">,</span> <span class="n"></span><span class="n">fill</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">$</span><span class="err">!</span><span class="nv">fill</span> <span class="p">]</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-        method serialize( --&gt; Pair) {
-            rect =&gt; [x =&gt;  $!x, y =&gt; $!y, width =&gt; $!width, height =&gt; $!height, stroke =&gt; $!stroke, fill =&gt; $!fill ];
-        }
-    }
-
-    method serialize( --&gt; Str ) {
-        SVG.serialize(svg =&gt; @!elements.map(-&gt; $e { $e.serialize }).list);
-    }
-}
-</code></pre>
-
-<p>如果要运行此示例，则应将其保存为<code>SVG/Drawing.pm</code>当前目录。</p>
-
+    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">serialize</span><span class="p">(</span> <span class="o">-</span><span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">Str</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n"></span><span class="n">SVG</span><span class="o">.</span><span class="n"></span><span class="n">serialize</span><span class="p">(</span><span class="n"></span><span class="n">svg</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">@</span><span class="err">!</span><span class="nv">elements</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">e</span> <span class="p">{</span> <span class="nv">$</span><span class="nv">e</span><span class="o">.</span><span class="n"></span><span class="n">serialize</span> <span class="p">}</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">list</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>如果要运行此示例，则应将其保存为<code>SVG/Drawing.pm</code>当前目录。</p>
 <p>这给出了一个类来描述我们的图像作为一个整体，并协调数据结构的创建，这些数据结构将被序列化为我们的SVG文档，并且每个类都用于我们在原始示例中使用的<code>g</code>（Group）和<code>rect</code>（Rectangle）基元所以我们可以这样做：</p>
-
 <pre><code>use SVG::Drawing;
 
 my SVG::Drawing $drawing = SVG::Drawing.new(elements =&gt; [ 
@@ -335,19 +311,12 @@ my SVG::Drawing $drawing = SVG::Drawing.new(elements =&gt; [
 ]);
 
 say $drawing.serialize;
-</code></pre>
-
-<p>生成与第一个类似的文档。</p>
-
+</code></pre><p>生成与第一个类似的文档。</p>
 <p>您可能已经注意到了<code>Element</code>stubbed方法的作用<code>serialize</code>：这是为了描述基本类所需的接口，以便收集基本类对象的类可以取决于<code>serialize</code>它们何时到来时序列化这些收集的对象。生成XML文档。从一开始就添加它可以更容易，更可靠地添加类来描述绘图的新基元。</p>
-
 <h2 id="让我们延伸">让我们延伸！</h2>
-
 <p>因此，除非我们有兴趣用相互叠加的不同大小的正方形制作圣诞树的相当现代主义的表示，否则我们需要一种创建我们需要的三角形的方法。幸运的是，SVG提供了许多从一组坐标点创建任意闭合形状的方法，但我们将使用最简单的方法，<code>polygon</code>它有一个属性<code>points</code>，它是以逗号分隔的顶点坐标的空格分隔列表。形状，最后一个连接到第一个以关闭形状。</p>
-
 <p>我们将使用一个新的Polygon类来描述<code>polygon</code>原语：</p>
-
-<pre><code class="language-raku">use SVG;
+<pre><code class="language-raku" data-lang="raku">use SVG;
 
 class SVG::Drawing {
     role Element {
@@ -406,13 +375,9 @@ class SVG::Drawing {
         SVG.serialize(svg =&gt; @!elements.map(-&gt; $e { $e.serialize }).list);
     }
 }
-</code></pre>
-
-<p>除了我们新的Polygon类之外，还有一个Point类描述了多边形顶点的坐标：<code>Str</code>提供的方法是为了简化<code>serialize</code>Polygon类方法的实现，因为<code>@.points</code>属性的元素将被字符串化为他们加入了<code>serialize</code>。</p>
-
+</code></pre><p>除了我们新的Polygon类之外，还有一个Point类描述了多边形顶点的坐标：<code>Str</code>提供的方法是为了简化<code>serialize</code>Polygon类方法的实现，因为<code>@.points</code>属性的元素将被字符串化为他们加入了<code>serialize</code>。</p>
 <p>所以现在我们可以生成类似外观的图像，但是以不同的方式构造，例如：</p>
-
-<pre><code class="language-raku">use SVG::Drawing;
+<pre><code class="language-raku" data-lang="raku">use SVG::Drawing;
 
 my SVG::Drawing $drawing = SVG::Drawing.new(elements =&gt; [ 
     SVG::Drawing::Group.new(elements =&gt; [
@@ -426,10 +391,7 @@ my SVG::Drawing $drawing = SVG::Drawing.new(elements =&gt; [
 ]);
 
 say $drawing.serialize;
-</code></pre>
-
-<p>这将生成一个XML文档，如：</p>
-
+</code></pre><p>这将生成一个XML文档，如：</p>
 <pre><code>&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; 
      xmlns:svg=&quot;http://www.w3.org/2000/svg&quot; 
      xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot;&gt;
@@ -437,17 +399,11 @@ say $drawing.serialize;
 		&lt;polygon points=&quot;5,5 105,5 105,105 5,105&quot; fill=&quot;green&quot; stroke=&quot;black&quot; /&gt;
 	&lt;/g&gt;
 &lt;/svg&gt;
-</code></pre>
-
-<p>所以现在我们几乎拥有了绘制Chritmas树所需的一切，但在这一点上，值得退一步，展示对未来自我（或者其他可能需要处理代码的人）的爱。</p>
-
+</code></pre><p>所以现在我们几乎拥有了绘制Chritmas树所需的一切，但在这一点上，值得退一步，展示对未来自我（或者其他可能需要处理代码的人）的爱。</p>
 <h2 id="一个重构点">一个重构点</h2>
-
 <p>当我们创建新的Polygon类时，我们复制了<code>S.stroke</code>和<code>$.fill</code>属性，并安排它们以类似于Rectangle类的方式进行序列化。如果我们赶时间这可能是有意义的，这些是他们可能被使用的唯一地方，但是当我们阅读SVG文档时，很明显它们可以应用于许多SVG原语，因此重构是有意义的。现在，在我们添加任何可能需要它们的类之前。</p>
-
 <p>最明显的方法是创建一个包含属性的新角色，并提供一个方法，该方法返回表示序列化中属性的对列表：</p>
-
-<pre><code class="language-raku">use SVG;
+<pre><code class="language-raku" data-lang="raku">use SVG;
 
 class SVG::Drawing {
     role Element {
@@ -512,17 +468,11 @@ class SVG::Drawing {
         SVG.serialize(svg =&gt; @!elements.map(-&gt; $e { $e.serialize }).list);
     }
 }
-</code></pre>
-
-<p>所以现在我们有一个双重好处，我们可以添加一个新的样式类而不必复制属性，而且我们可以添加我们可能想要的新样式属性，而无需更改消耗类。</p>
-
+</code></pre><p>所以现在我们有一个双重好处，我们可以添加一个新的样式类而不必复制属性，而且我们可以添加我们可能想要的新样式属性，而无需更改消耗类。</p>
 <p>通过一些额外的工作，我们可能失去了从the中的角色调用方法的需要<code>serialize</code>，比如说，使用属性上的特征，这将允许我们选择要序列化的属性，但我将把它当作一个随着圣诞节的到来，我们仍然没有树。</p>
-
 <h2 id="一个进一步的抽象">一个进一步的抽象</h2>
-
 <p>现在我们处于一个很好的位置来创建我们的圣诞树，因为我们需要的三角形只是一个多边形的三面形状，但我们想要不止一个并且顶点的计算将是相当重复，加上，因为我为了简单而任意选择使用等边三角形，其他两个角的坐标可以从顶点和边长度的坐标计算，所以如果我们有一个三角类它可以自我计算，我们只需关注自己的大小和位置：</p>
-
-<pre><code class="language-raku">use SVG;
+<pre><code class="language-raku" data-lang="raku">use SVG;
 
 class SVG::Drawing {
     role Element {
@@ -612,17 +562,11 @@ class SVG::Drawing {
         SVG.serialize(svg =&gt;  [ |self.dimensions, |@!elements.map(-&gt; $e { $e.serialize })]);
     }
 }
-</code></pre>
-
-<p>这需要在其他地方进行一些小的改动。在<code>Int</code>作为三角形的顶点的计算结果可能不是整数（或我们会风了一个靠不住的三角形，如果我们roumded他们）还点的属性是放宽到数字<code>serialize</code>多边形的方法是改变使用访问器方法<code>points</code>而不是直接使用属性，因此可以在我们的Triangle类中过度使用以计算三角形基线的附加点。</p>
-
+</code></pre><p>这需要在其他地方进行一些小的改动。在<code>Int</code>作为三角形的顶点的计算结果可能不是整数（或我们会风了一个靠不住的三角形，如果我们roumded他们）还点的属性是放宽到数字<code>serialize</code>多边形的方法是改变使用访问器方法<code>points</code>而不是直接使用属性，因此可以在我们的Triangle类中过度使用以计算三角形基线的附加点。</p>
 <p>计算本身只使用一些初级几何来确定基线到顶点的高度，使用毕达哥拉斯定理得到两个基线点的y坐标，x坐标是两侧边长的一半。顶点x坐标。</p>
-
 <p>此外，当我测试这个时，我注意到我之前没有实现高度和宽度属性的序列化，我们已经离开它，因为矩形没有超出默认绘图区域，但是三角形做了，因此没有显示。</p>
-
 <p>无论如何，现在我们可以用最少的代码绘制一个三角形：</p>
-
-<pre><code class="language-raku">use SVG::Drawing;
+<pre><code class="language-raku" data-lang="raku">use SVG::Drawing;
 
 my SVG::Drawing $drawing = SVG::Drawing.new(
     elements =&gt; [ 
@@ -638,15 +582,10 @@ my SVG::Drawing $drawing = SVG::Drawing.new(
 );
 
 say $drawing.serialize;
-</code></pre>
-
-<p>这将在足够大的空间中提供一个漂亮的绿色等边三角形来绘制我们的树。</p>
-
+</code></pre><p>这将在足够大的空间中提供一个漂亮的绿色等边三角形来绘制我们的树。</p>
 <h2 id="最后是我们的树">最后是我们的树</h2>
-
 <p>现在我们有了创建简单树的组成部分的方法，因此我们可以将它们与一个相对简单的脚本放在一起：</p>
-
-<pre><code class="language-raku">use SVG::Drawing;
+<pre><code class="language-raku" data-lang="raku">use SVG::Drawing;
 
 my SVG::Drawing $drawing = SVG::Drawing.new(
     elements =&gt; [ 
@@ -676,33 +615,24 @@ my SVG::Drawing $drawing = SVG::Drawing.new(
 );
 
 say $drawing.serialize;
-</code></pre>
-
-<p>我通过反复试验选择了形状的大小和位置，它可能更科学地完成。</p>
-
+</code></pre><p>我通过反复试验选择了形状的大小和位置，它可能更科学地完成。</p>
 <p>无论如何，这会产生这样的XML：</p>
-
-<pre><code class="language-xml">&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; 
-     xmlns:svg=&quot;http://www.w3.org/2000/svg&quot; 
-     xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; 
-     height=&quot;300&quot; 
-     width=&quot;200&quot;&gt;
-	&lt;g&gt;
-		&lt;polygon points=&quot;100,50 75,93.30127018922192 125,93.30127018922192&quot; stroke=&quot;green&quot; fill=&quot;green&quot; /&gt;
-		&lt;polygon points=&quot;100,75 62.5,139.9519052838329 137.5,139.9519052838329&quot; stroke=&quot;green&quot; fill=&quot;green&quot; /&gt;
-		&lt;polygon points=&quot;100,100 50,186.60254037844385 150,186.60254037844385&quot; stroke=&quot;green&quot; fill=&quot;green&quot; /&gt;
-		&lt;rect x=&quot;90&quot; y=&quot;185&quot; width=&quot;20&quot; height=&quot;40&quot; stroke=&quot;brown&quot; fill=&quot;brown&quot; /&gt;
-	&lt;/g&gt;
-&lt;/svg&gt;
-</code></pre>
-
-<p>这是一个合理的程式化圣诞树，用户代码最少。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;svg</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span> 
+     <span class="na">xmlns:svg=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span> 
+     <span class="na">xmlns:xlink=</span><span class="s">&#34;http://www.w3.org/1999/xlink&#34;</span> 
+     <span class="na">height=</span><span class="s">&#34;300&#34;</span> 
+     <span class="na">width=</span><span class="s">&#34;200&#34;</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;g</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;polygon</span> <span class="na">points=</span><span class="s">&#34;100,50 75,93.30127018922192 125,93.30127018922192&#34;</span> <span class="na">stroke=</span><span class="s">&#34;green&#34;</span> <span class="na">fill=</span><span class="s">&#34;green&#34;</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;polygon</span> <span class="na">points=</span><span class="s">&#34;100,75 62.5,139.9519052838329 137.5,139.9519052838329&#34;</span> <span class="na">stroke=</span><span class="s">&#34;green&#34;</span> <span class="na">fill=</span><span class="s">&#34;green&#34;</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;polygon</span> <span class="na">points=</span><span class="s">&#34;100,100 50,186.60254037844385 150,186.60254037844385&#34;</span> <span class="na">stroke=</span><span class="s">&#34;green&#34;</span> <span class="na">fill=</span><span class="s">&#34;green&#34;</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;rect</span> <span class="na">x=</span><span class="s">&#34;90&#34;</span> <span class="na">y=</span><span class="s">&#34;185&#34;</span> <span class="na">width=</span><span class="s">&#34;20&#34;</span> <span class="na">height=</span><span class="s">&#34;40&#34;</span> <span class="na">stroke=</span><span class="s">&#34;brown&#34;</span> <span class="na">fill=</span><span class="s">&#34;brown&#34;</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;/g&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div><p>这是一个合理的程式化圣诞树，用户代码最少。</p>
 <p>由于我们设计模块的方式，我们已经把自己放在一个好的地方进一步扩展它，比如说，一个Circle类可以用来轻松地为我们的树添加彩色小玩意。</p>
-
 <p>SVG是一个非常丰富的规范，具有大量基元，可满足大多数绘图需求，我们只实现了绘制树所需的最小值，但这可以扩展为支持您想要的任何类型的绘图。</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2018/12/tree.png?w=788" alt="树" /></p>
+<p><img src="https://rakuadvent.files.wordpress.com/2018/12/tree.png?w=788" alt="树"></p>
 
 
         
@@ -794,7 +724,7 @@ say $drawing.serialize;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

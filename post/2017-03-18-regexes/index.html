@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-03-18-regexes/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,152 +231,91 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>正则表达式, 简称 regexes, 是描述文本模式的字符序列。模式匹配就是将这些模式和实际的文本进行匹配的过程。</p>
-
+        <p>正则表达式, 简称 regexes, 是描述文本模式的字符序列。模式匹配就是将这些模式和实际的文本进行匹配的过程。</p>
 <h2 id="词法约定">词法约定</h2>
-
 <p>Raku 正则表达式有特殊的写法:</p>
-
-<pre><code class="language-raku">m/abc/;         # a regex that is immediately matched against $_ 
+<pre><code class="language-raku" data-lang="raku">m/abc/;         # a regex that is immediately matched against $_ 
 rx/abc/;        # a Regex object 
 /abc/;          # a Regex object 
-</code></pre>
-
-<p>对于前两个例子,  分隔符还能用除了斜线之外的其它字符:</p>
-
-<pre><code class="language-raku">m{abc};
+</code></pre><p>对于前两个例子,  分隔符还能用除了斜线之外的其它字符:</p>
+<pre><code class="language-raku" data-lang="raku">m{abc};
 rx{abc};
-</code></pre>
-
-<p>注意, 冒号和圆括号都不能用作分隔符; 禁止使用冒号作为正则表达式分割符是因为它和副词冲突, 例如 <code>rx:i/abc/</code>(忽略大小写的正则表达式), 而圆括号表明函数调用。</p>
-
+</code></pre><p>注意, 冒号和圆括号都不能用作分隔符; 禁止使用冒号作为正则表达式分割符是因为它和副词冲突, 例如 <code>rx:i/abc/</code>(忽略大小写的正则表达式), 而圆括号表明函数调用。</p>
 <p>空白符在正则表达式中通常被忽略(带有 <code>:s</code> 或 <code>:sigspace</code> 副词的正则表达式除外)。</p>
-
 <p>通常, 对于 Raku 来说, 正则表达式中的注释以 <code>#</code> 号开头, 直至行尾。</p>
-
 <h2 id="字面值">字面值</h2>
-
 <p>正则表达式最简单的情况是匹配字符串字面值。</p>
-
-<pre><code class="language-raku">if 'properly' ~~ m/ perl / {
+<pre><code class="language-raku" data-lang="raku">if 'properly' ~~ m/ perl / {
     say &quot;'properly' contains 'perl'&quot;;
 }
-</code></pre>
-
-<p>字母数字和下划线 <code>_</code> 按字面值匹配。所有其它字符要么使用反斜线转义(例如, <code>\:</code> 匹配一个冒号), 要么用引号引起来:</p>
-
-<pre><code class="language-raku">/ 'two words' /;     # matches 'two words' including the blank 
+</code></pre><p>字母数字和下划线 <code>_</code> 按字面值匹配。所有其它字符要么使用反斜线转义(例如, <code>\:</code> 匹配一个冒号), 要么用引号引起来:</p>
+<pre><code class="language-raku" data-lang="raku">/ 'two words' /;     # matches 'two words' including the blank 
 / &quot;a:b&quot;       /;     # matches 'a:b' including the colon 
 / '#' /;             # matches a hash character 
-</code></pre>
-
-<p>字符串是从左往右搜索的, 所以如果只有部分字符串匹配正则表达式也足够:</p>
-
-<pre><code class="language-raku">if 'abcdef' ~~ / de / {
+</code></pre><p>字符串是从左往右搜索的, 所以如果只有部分字符串匹配正则表达式也足够:</p>
+<pre><code class="language-raku" data-lang="raku">if 'abcdef' ~~ / de / {
     say ~$/;            # OUTPUT: «de␤» 
     say $/.prematch;    # OUTPUT: «abc␤» 
     say $/.postmatch;   # OUTPUT: «f␤» 
     say $/.from;        # OUTPUT: «3␤» 
     say $/.to;          # OUTPUT: «5␤» 
 };
-</code></pre>
-
-<p>匹配结果存储在 <code>$/</code> 变量中并且也从匹配中返回。如果匹配成功, 那么结果就是 <a href="https://docs.raku.org/type/Match">Match</a> 类型, 否则它就是 <a href="https://docs.raku.org/type/Nil">Nil</a></p>
-
+</code></pre><p>匹配结果存储在 <code>$/</code> 变量中并且也从匹配中返回。如果匹配成功, 那么结果就是 <a href="https://docs.raku.org/type/Match">Match</a> 类型, 否则它就是 <a href="https://docs.raku.org/type/Nil">Nil</a></p>
 <h2 id="通配符和字符类">通配符和字符类</h2>
-
-<h3 id="点号匹配任意字符">点号匹配任意字符: .</h3>
-
+<h3 id="点号匹配任意字符-">点号匹配任意字符: .</h3>
 <p>在正则表达式中一个未转义的点 <code>.</code>  匹配任意单个字符。</p>
-
 <p>所以,  这些都匹配:</p>
-
-<pre><code class="language-raku">'perl' ~~ /per./;       # matches the whole string 
+<pre><code class="language-raku" data-lang="raku">'perl' ~~ /per./;       # matches the whole string 
 'perl' ~~ / per . /;    # the same; whitespace is ignored 
 'perl' ~~ / pe.l /;     # the . matches the r 
 'speller' ~~ / pe.l/;   # the . matches the first l 
-</code></pre>
-
-<p>下面这个不匹配:</p>
-
-<pre><code class="language-raku">'perl' ~~ /. per /;
-</code></pre>
-
-<p>因为在目标字符串中 <code>per</code> 前面没有要匹配的字符。</p>
-
+</code></pre><p>下面这个不匹配:</p>
+<pre><code class="language-raku" data-lang="raku">'perl' ~~ /. per /;
+</code></pre><p>因为在目标字符串中 <code>per</code> 前面没有要匹配的字符。</p>
 <h3 id="反斜杠-预定义字符类">反斜杠, 预定义字符类</h3>
-
 <h3 id="unicode-properties">Unicode properties</h3>
-
 <p>Raku 有 <code>\w</code> 形式的预定义字符类。大写形式是它的反面, <code>\W</code>。</p>
-
 <ul>
 <li>\d 和 \D</li>
 </ul>
-
 <p><code>\d</code> 匹配单个数字(Unicode 属性 N) 而 <code>\D</code> 匹配单个不是数字的字符。</p>
-
-<pre><code class="language-raku">'ab42' ~~ /\d/ and say ~$/;     # OUTPUT: «4␤» 
+<pre><code class="language-raku" data-lang="raku">'ab42' ~~ /\d/ and say ~$/;     # OUTPUT: «4␤» 
 'ab42' ~~ /\D/ and say ~$/;     # OUTPUT: «a␤» 
-</code></pre>
-
-<p>注意, 不仅仅只有阿拉伯数字(通常用于拉丁字母表中)匹配 <code>\d</code>, 还有来自其它下标的数字也匹配 \d。</p>
-
+</code></pre><p>注意, 不仅仅只有阿拉伯数字(通常用于拉丁字母表中)匹配 <code>\d</code>, 还有来自其它下标的数字也匹配 \d。</p>
 <pre><code>U+0035 5 DIGIT FIVE
 U+07C2 ߂ NKO DIGIT TWO
 U+0E53 ๓ THAI DIGIT THREE
 U+1B56 ᭖ BALINESE DIGIT SIX
-</code></pre>
-
-<ul>
+</code></pre><ul>
 <li>\h 和 \H</li>
 </ul>
-
 <p><code>\h</code> 匹配单个水平空白符。 <code>\H</code> 匹配单个不是水平空白符的字符。</p>
-
 <p>水平空白符的例子有:</p>
-
 <pre><code>U+0020 SPACE
 U+00A0 NO-BREAK SPACE
 U+0009 CHARACTER TABULATION
 U+2001 EM QUAD
-</code></pre>
-
-<p>像换行符那样的垂直空白被显式地排除了; 那些可以用 <code>\v</code> 来匹配, 而 <code>\s</code> 匹配任何类型的空白:</p>
-
+</code></pre><p>像换行符那样的垂直空白被显式地排除了; 那些可以用 <code>\v</code> 来匹配, 而 <code>\s</code> 匹配任何类型的空白:</p>
 <ul>
 <li>\n 和 \N</li>
 </ul>
-
 <p><code>\n</code> 匹配单个逻辑换行符。<code>\n</code> 也支持匹配 Windows 的 CR LF 代码点对儿;　尽管还不清楚魔法是发生在读取数据时还是在正则表达式匹配时。 <code>\N</code> 匹配单个非逻辑换行符。</p>
-
 <ul>
 <li>\s 和 \S</li>
 </ul>
-
 <p><code>\s</code> 匹配单个空白符。 <code>\S</code> 匹配单个非空白符。</p>
-
-<pre><code class="language-raku">if 'contains a word starting with &quot;w&quot;' ~~ / w \S+ / {
+<pre><code class="language-raku" data-lang="raku">if 'contains a word starting with &quot;w&quot;' ~~ / w \S+ / {
     say ~$/;        # OUTPUT: «word␤» 
 }
-</code></pre>
-
-<ul>
+</code></pre><ul>
 <li>\t 和 \T</li>
 </ul>
-
 <p><code>\t</code> 匹配单个 tab/制表符, <code>U+0009</code>。(注意这儿不包含诸如 <code>U+000B VERTICAL TABULATION</code> 这样奇异的制表符)。<code>\T</code> 匹配单个非制表符。</p>
-
 <ul>
 <li>\v 和 \V</li>
 </ul>
-
 <p><code>\v</code> 匹配单个垂直空白符。 <code>\V</code> 匹配单个非垂直空白符。</p>
-
 <p>垂直空白符的例子:</p>
-
 <pre><code>U+000A LINE FEED
 U+000B VERTICAL TABULATION
 U+000C FORM FEED
@@ -384,28 +323,19 @@ U+000D CARRIAGE RETURN
 U+0085 NEXT LINE
 U+2028 LINE SEPARATOR
 U+2029 PARAGRAPH SEPARATOR
-</code></pre>
-
-<p>使用 <code>\s</code> 去匹配任意空白, 而不仅仅匹配垂直空白。</p>
-
+</code></pre><p>使用 <code>\s</code> 去匹配任意空白, 而不仅仅匹配垂直空白。</p>
 <ul>
 <li>\w 和 \W</li>
 </ul>
-
 <p><code>\w</code> 匹配单个单词字符; 例如: 一个字母(Unicode 类别 L), 一个数字或一个下划线。<code>\W</code> 匹配单个非单词字符。</p>
-
 <p>单词字符的例子:</p>
-
 <pre><code>0041 A LATIN CAPITAL LETTER A
 0031 1 DIGIT ONE
 03B4 δ GREEK SMALL LETTER DELTA
 03F3 ϳ GREEK LETTER YOT
 0409 Љ CYRILLIC CAPITAL LETTER LJE
-</code></pre>
-
-<p>预定义的 subrules:</p>
-
-<pre><code class="language-raku">&lt;alnum&gt;   \w       'alpha' plus 'digit'
+</code></pre><p>预定义的 subrules:</p>
+<pre><code class="language-raku" data-lang="raku">&lt;alnum&gt;   \w       'alpha' plus 'digit'
 &lt;alpha&gt;   &lt;:L&gt;     Alphabetic characters
 &lt;blank&gt;   \h       Horizontal whitespace
 &lt;cntrl&gt;            Control characters
@@ -419,22 +349,14 @@ U+2029 PARAGRAPH SEPARATOR
 &lt;|wb&gt;               Word Boundary (zero-width assertion)
 &lt;ww&gt;               Within Word (zero-width assertion)
 &lt;xdigit&gt;           Hexadecimal digit [0-9A-Fa-f]
-</code></pre>
-
-<h3 id="unicode-属性">Unicode 属性</h3>
-
+</code></pre><h3 id="unicode-属性">Unicode 属性</h3>
 <p>目前提到的字符类大多是为了方便; 另一种方法是使用 Unicode 字符属性。这些以 <code>&lt;:property&gt;</code> 的形式出现, 其中 <em>property</em> 可以是短的或长的 Unicode 一般类别名。它们使用 pair 语法。</p>
-
 <p>要匹配一个 Unicode 属性:</p>
-
-<pre><code class="language-raku">&quot;a&quot;.uniprop('Script');                 # OUTPUT: «Latin␤» 
+<pre><code class="language-raku" data-lang="raku">&quot;a&quot;.uniprop('Script');                 # OUTPUT: «Latin␤» 
 &quot;a&quot; ~~ / &lt;:Script&lt;Latin&gt;&gt; /;
 &quot;a&quot;.uniprop('Block');                  # OUTPUT: «Basic Latin␤» 
 &quot;a&quot; ~~ / &lt;:Block('Basic Latin')&gt; /;
-</code></pre>
-
-<p>下面的 Unicode 通用类别表是从 Perl 5 的 <a href="http://perldoc.perl.org/perlunicode.html">perlunicode</a> 文档偷来的:</p>
-
+</code></pre><p>下面的 Unicode 通用类别表是从 Perl 5 的 <a href="http://perldoc.perl.org/perlunicode.html">perlunicode</a> 文档偷来的:</p>
 <pre><code>Short	Long
 L	Letter
 LC	Cased_Letter
@@ -476,205 +398,105 @@ Cf	Format
 Cs	Surrogate
 Co	Private_Use
 Cn	Unassigned
-</code></pre>
-
-<p>举个例子: <code>&lt;:Lu&gt;</code> 匹配单个大写字母。</p>
-
+</code></pre><p>举个例子: <code>&lt;:Lu&gt;</code> 匹配单个大写字母。</p>
 <p>它的反面是这个: <code>&lt;:!property&gt;</code>。所以, <code>&lt;:!Lu&gt;</code> 匹配单个非大写字母的字符。</p>
-
 <p>类别可以使用中缀操作符组合在一起:</p>
-
 <pre><code>Operator	Meaning
 +	        set union
 |	        set union
 &amp;	        set intersection
 -	        set difference (first minus second)
 ^	        symmetric set intersection / XOR
-</code></pre>
-
-<p>要匹配要么一个小写字母,要么一个数字, 可以写 <code>&lt;:Ll+:N&gt;</code> 或 <code>&lt;:Ll+:Number&gt;</code> 或 <code>&lt;+ :Lowercase_Letter + :Number&gt;</code>。</p>
-
+</code></pre><p>要匹配要么一个小写字母,要么一个数字, 可以写 <code>&lt;:Ll+:N&gt;</code> 或 <code>&lt;:Ll+:Number&gt;</code> 或 <code>&lt;+ :Lowercase_Letter + :Number&gt;</code>。</p>
 <p>使用圆括号将类别和一组类别分组也是可以的; 例如:</p>
-
-<pre><code class="language-raku">'raku' ~~ m{\w+(&lt;:Ll+:N&gt;)}  # OUTPUT: «0 =&gt; ｢6｣␤» 
-</code></pre>
-
-<h3 id="可枚举的字符类和区间">可枚举的字符类和区间</h3>
-
+<pre><code class="language-raku" data-lang="raku">'raku' ~~ m{\w+(&lt;:Ll+:N&gt;)}  # OUTPUT: «0 =&gt; ｢6｣␤» 
+</code></pre><h3 id="可枚举的字符类和区间">可枚举的字符类和区间</h3>
 <p>有时候, 预先存在的通配符和字符类不够用。幸运的是, 定义你自己的字符类相当简单。在 <code>&lt;[]&gt;</code> 中, 你可以放入任何数量的单个字符和字符区间(两个端点之间有两个点号), 带有或不带有空白。</p>
-
-<pre><code class="language-raku">&quot;abacabadabacaba&quot; ~~ / &lt;[ a .. c 1 2 3 ]&gt; /;
+<pre><code class="language-raku" data-lang="raku">&quot;abacabadabacaba&quot; ~~ / &lt;[ a .. c 1 2 3 ]&gt; /;
 # Unicode hex codepoint range 
 &quot;ÀÁÂÃÄÅÆ&quot; ~~ / &lt;[ \x[00C0] .. \x[00C6] ]&gt; /;
 # Unicode named codepoint range 
 &quot;ÀÁÂÃÄÅÆ&quot; ~~ / &lt;[ \c[LATIN CAPITAL LETTER A WITH GRAVE] .. \c[LATIN CAPITAL LETTER AE] ]&gt; /;
-</code></pre>
-
-<p>在 <code>&lt;&gt;</code> 中你可以使用 <code>+</code> 或 <code>-</code> 来添加或移除多个区间定义, 甚至混合某些上面的 unicode 属性。你还可以在 <code>[]</code> 之间写上反斜线形式的字符类。</p>
-
-<pre><code class="language-raku">/ &lt;[\d] - [13579]&gt; /;
+</code></pre><p>在 <code>&lt;&gt;</code> 中你可以使用 <code>+</code> 或 <code>-</code> 来添加或移除多个区间定义, 甚至混合某些上面的 unicode 属性。你还可以在 <code>[]</code> 之间写上反斜线形式的字符类。</p>
+<pre><code class="language-raku" data-lang="raku">/ &lt;[\d] - [13579]&gt; /;
 # starts with \d and removes odd ASCII digits, but not quite the same as 
 / &lt;[02468]&gt; /;
 # because the first one also contains &quot;weird&quot; unicodey digits 
-</code></pre>
-
-<p>解析引号分割的字符串的一个常见模式涉及到对字符类取反:</p>
-
-<pre><code class="language-raku">say '&quot;in quotes&quot;' ~~ / '&quot;' &lt;-[ &quot; ]&gt; * '&quot;'/;
-</code></pre>
-
-<p>这先匹配一个引号, 然后匹配任何不是引号的字符, 再然后还是一个引号。 上面例子中的 <code>*</code> 和 <code>+</code> 会在<a href="https://docs.raku.org/language/regexes#Quantifiers">量词</a>一节中解释。</p>
-
+</code></pre><p>解析引号分割的字符串的一个常见模式涉及到对字符类取反:</p>
+<pre><code class="language-raku" data-lang="raku">say '&quot;in quotes&quot;' ~~ / '&quot;' &lt;-[ &quot; ]&gt; * '&quot;'/;
+</code></pre><p>这先匹配一个引号, 然后匹配任何不是引号的字符, 再然后还是一个引号。 上面例子中的 <code>*</code> 和 <code>+</code> 会在<a href="https://docs.raku.org/language/regexes#Quantifiers">量词</a>一节中解释。</p>
 <p>就像你可以使用 <code>-</code> 用于集合差集和取反单个值, 你也可以在前面显式地放上一个 <code>+</code>:</p>
-
-<pre><code class="language-raku">/ &lt;+[123]&gt; /  # same as &lt;[123]&gt; 
-</code></pre>
-
-<h2 id="量词">量词</h2>
-
-<p>量词使前面的原子匹配可变次数。例如, <code>a+</code> 匹配一个或多个字符 *a*。</p>
-
-<p>量词比连结绑定的更紧, 所以 <code>ab+</code> 匹配一个 <em>a</em>, 然后跟着一个或多个 *b*。对于引号来说, 有点不同, 所以 <code>'ab'+</code> 匹配字符串 <em>ab</em>, <em>abab</em>, <em>ababab</em> 等等。</p>
-
-<h3 id="一次-或多次">一次 或多次 : +</h3>
-
+<pre><code class="language-raku" data-lang="raku">/ &lt;+[123]&gt; /  # same as &lt;[123]&gt; 
+</code></pre><h2 id="量词">量词</h2>
+<p>量词使前面的原子匹配可变次数。例如, <code>a+</code> 匹配一个或多个字符 <em>a</em>。</p>
+<p>量词比连结绑定的更紧, 所以 <code>ab+</code> 匹配一个 <em>a</em>, 然后跟着一个或多个 <em>b</em>。对于引号来说, 有点不同, 所以 <code>'ab'+</code> 匹配字符串 <em>ab</em>, <em>abab</em>, <em>ababab</em> 等等。</p>
+<h3 id="一次-或多次--">一次 或多次 : +</h3>
 <p><code>+</code> 量词使它前面的原子匹配一次或多次, 没有次数上限。</p>
-
 <p>例如, 要匹配 <code>form=value</code> 形式的字符串, 你可以这样写正则表达式:</p>
-
-<pre><code class="language-raku">/ \w+ '=' \w+ /
-</code></pre>
-
-<h3 id="零次-或-多次">零次 或 多次: *</h3>
-
+<pre><code class="language-raku" data-lang="raku">/ \w+ '=' \w+ /
+</code></pre><h3 id="零次-或-多次-">零次 或 多次: *</h3>
 <p><code>*</code> 量词使它前面的原子匹配一次或多次, 没有次数上限。</p>
-
 <p>例如, 要允许 <em>a</em> 和 <em>b</em> 之间出现可选的空白,  你可以这样写:</p>
-
-<pre><code class="language-raku">/ a \s* b /
-</code></pre>
-
-<h3 id="零次-或-一次匹配">零次 或 一次匹配: ?</h3>
-
+<pre><code class="language-raku" data-lang="raku">/ a \s* b /
+</code></pre><h3 id="零次-或-一次匹配-">零次 或 一次匹配: ?</h3>
 <p><code>?</code> 量词使它前面的原子匹配零次或一次。</p>
-
-<h3 id="常规量词-min-max">常规量词: ** min..max</h3>
-
+<h3 id="常规量词--minmax">常规量词: ** min..max</h3>
 <p>要限定原子匹配任意次数,　你可以写出像 <code>a ** 2..5</code> 那样的表达式来匹配字符 <em>a</em> 至少 2 次, 至多 5 次。</p>
-
-<pre><code class="language-raku">say so 'a' ~~ /a ** 2..5/;        # OUTPUT: «False␤» 
+<pre><code class="language-raku" data-lang="raku">say so 'a' ~~ /a ** 2..5/;        # OUTPUT: «False␤» 
 say so  'aaa' ~~ /a ** 2..5/;     # OUTPUT: «True␤» 
-</code></pre>
-
-<p>如果最小匹配次数和最大匹配次数相同, 那么使用单个整数: <code>a ** 5</code> 精确地匹配 5 次。</p>
-
-<pre><code class="language-raku">say so 'aaaaa' ~~ /a ** 5/;       # OUTPUT: «True␤» 
-</code></pre>
-
-<p>也可以使用 <code>^</code> 脱字符来排除区间的端点:</p>
-
-<pre><code class="language-raku">say so 'a'    ~~ /a ** 1^..^6/;   # OUTPUT: «False␤» -- there are 2 to 5 'a's in a row 
+</code></pre><p>如果最小匹配次数和最大匹配次数相同, 那么使用单个整数: <code>a ** 5</code> 精确地匹配 5 次。</p>
+<pre><code class="language-raku" data-lang="raku">say so 'aaaaa' ~~ /a ** 5/;       # OUTPUT: «True␤» 
+</code></pre><p>也可以使用 <code>^</code> 脱字符来排除区间的端点:</p>
+<pre><code class="language-raku" data-lang="raku">say so 'a'    ~~ /a ** 1^..^6/;   # OUTPUT: «False␤» -- there are 2 to 5 'a's in a row 
 say so 'aaaa' ~~ /a ** 1^..^6/;   # OUTPUT: «True␤» 
-</code></pre>
-
-<p>下面这个包含从 0 开始的数值区间:</p>
-
-<pre><code class="language-raku">say so 'aaa' ~~ /a ** ^6/;        # OUTPUT: «True␤» -- there are 0 to 5 'a's in a row 
-</code></pre>
-
-<p>或使用一个 Whatever Star <code>*</code> 操作符来表示无限区间:</p>
-
-<pre><code class="language-raku">say so 'aaaa' ~~ /a ** 1^..*/;    # OUTPUT: «True␤» -- there are 2 or more 'a's in a row 
-</code></pre>
-
-<h3 id="modified-quantifier">Modified quantifier: %</h3>
-
+</code></pre><p>下面这个包含从 0 开始的数值区间:</p>
+<pre><code class="language-raku" data-lang="raku">say so 'aaa' ~~ /a ** ^6/;        # OUTPUT: «True␤» -- there are 0 to 5 'a's in a row 
+</code></pre><p>或使用一个 Whatever Star <code>*</code> 操作符来表示无限区间:</p>
+<pre><code class="language-raku" data-lang="raku">say so 'aaaa' ~~ /a ** 1^..*/;    # OUTPUT: «True␤» -- there are 2 or more 'a's in a row 
+</code></pre><h3 id="modified-quantifier-">Modified quantifier: %</h3>
 <p>为了更容易地匹配逗号分割那样的值, 你可以在以上任何一个量词后面加上一个 <code>%</code> 修饰符以指定某个修饰符必须出现在每一次匹配之间。例如, <code>a+ % ','</code> 会匹配 <em>a</em>, 或 <em>a,a</em> 或 <em>a,a,a</em> 等等, 但是不会匹配 <em>a,</em> 或 <em>a,a,</em> 等。要连这些也要匹配, 那么使用 <code>%%</code> 代替 <code>%</code>。</p>
-
-<h3 id="贪婪量词-vs-非贪婪量词">贪婪量词 Vs. 非贪婪量词: ?</h3>
-
+<h3 id="贪婪量词-vs-非贪婪量词-">贪婪量词 Vs. 非贪婪量词: ?</h3>
 <p>默认地, 量词要求进行贪婪匹配:</p>
-
-<pre><code class="language-raku">'abababa' ~~ /a .* a/ &amp;&amp; say ~$/;   # OUTPUT: «abababa␤» 
-</code></pre>
-
-<p>你可以给量词附加一个 <code>?</code> 修饰符来开启非贪婪匹配:</p>
-
-<pre><code class="language-raku">'abababa' ~~ /a .*? a/ &amp;&amp; say ~$/;   # OUTPUT: «aba␤» 
-</code></pre>
-
-<p>你还可以使用 <code>!</code> 修饰符显式地要求贪婪匹配。</p>
-
-<h3 id="阻止回溯">阻止回溯: :</h3>
-
+<pre><code class="language-raku" data-lang="raku">'abababa' ~~ /a .* a/ &amp;&amp; say ~$/;   # OUTPUT: «abababa␤» 
+</code></pre><p>你可以给量词附加一个 <code>?</code> 修饰符来开启非贪婪匹配:</p>
+<pre><code class="language-raku" data-lang="raku">'abababa' ~~ /a .*? a/ &amp;&amp; say ~$/;   # OUTPUT: «aba␤» 
+</code></pre><p>你还可以使用 <code>!</code> 修饰符显式地要求贪婪匹配。</p>
+<h3 id="阻止回溯-">阻止回溯: :</h3>
 <p>你可以在正则表达式中通过为量词附加一个 <code>:</code> 修饰符来阻止回溯:</p>
-
-<pre><code class="language-raku">say so 'abababa' ~~ /a .* aba/;    # OUTPUT: «True␤» 
+<pre><code class="language-raku" data-lang="raku">say so 'abababa' ~~ /a .* aba/;    # OUTPUT: «True␤» 
 say so 'abababa' ~~ /a .*: aba/;   # OUTPUT: «False␤» 
-</code></pre>
-
-<h2 id="alternation">Alternation: ||</h2>
-
-<p><a href="https://docs.raku.org/language/regexes#Alternation:_||">||</a> 在正则表达式中表示备选分支, 在匹配由 <code>||</code> 分割的几个可能的备选分支之一时, <strong>第一个</strong>匹配的备选分支胜出。例如, <em>ini</em> 文件有如下形式:</p>
-
+</code></pre><h2 id="alternation-">Alternation: ||</h2>
+<p><a href="https://docs.raku.org/language/regexes#Alternation:_%7C%7C">||</a> 在正则表达式中表示备选分支, 在匹配由 <code>||</code> 分割的几个可能的备选分支之一时, <strong>第一个</strong>匹配的备选分支胜出。例如, <em>ini</em> 文件有如下形式:</p>
 <pre><code>[section]
 key = value
-</code></pre>
-
-<p>因此, 如果你解析单行 <em>ini</em> 文件, 那么它要么是一个 section, 要么是一个键值对儿。所以正则表达式可以是:</p>
-
-<pre><code class="language-raku">/ '[' \w+ ']' || \S+ \s* '=' \s* \S* /
-</code></pre>
-
-<p>即, 它要么是一个由方括号包围起来的单词, 要么是一个键值对。</p>
-
-<h2 id="longest-alternation">Longest Alternation: |</h2>
-
+</code></pre><p>因此, 如果你解析单行 <em>ini</em> 文件, 那么它要么是一个 section, 要么是一个键值对儿。所以正则表达式可以是:</p>
+<pre><code class="language-raku" data-lang="raku">/ '[' \w+ ']' || \S+ \s* '=' \s* \S* /
+</code></pre><p>即, 它要么是一个由方括号包围起来的单词, 要么是一个键值对。</p>
+<h2 id="longest-alternation-">Longest Alternation: |</h2>
 <p>如果正则表达式由 <code>|</code> 分割, 则最长的那个匹配胜出。独立于正则表达式中的词法顺序。</p>
-
-<pre><code class="language-raku">say ('abc' ~~ / a | .b /).Str;    # OUTPUT: «ab␤» 
-</code></pre>
-
-<h2 id="anchors">Anchors</h2>
-
+<pre><code class="language-raku" data-lang="raku">say ('abc' ~~ / a | .b /).Str;    # OUTPUT: «ab␤» 
+</code></pre><h2 id="anchors">Anchors</h2>
 <p>正则表达式引擎尝试在字符串中从左至右地搜索来查找匹配。</p>
-
-<pre><code class="language-raku">say so 'properly' ~~ / perl/;   # OUTPUT: «True␤» 
+<pre><code class="language-raku" data-lang="raku">say so 'properly' ~~ / perl/;   # OUTPUT: «True␤» 
 #          ^^^^ 
-</code></pre>
-
-<p>有时候这不是你想要的。相反, 你可能只想匹配整个字符串, 或一整行, 或精确地一个或几个完整的单词。锚或断言能帮助我们。</p>
-
+</code></pre><p>有时候这不是你想要的。相反, 你可能只想匹配整个字符串, 或一整行, 或精确地一个或几个完整的单词。锚或断言能帮助我们。</p>
 <p>为了整个正则表达式能够匹配, 断言需要被成功地匹配但是断言在匹配时不消耗字符。</p>
-
-<h3 id="start-of-string-and-end-of-string">^ , Start of String and $ , End of String</h3>
-
+<h3 id="--start-of-string-and---end-of-string">^ , Start of String and $ , End of String</h3>
 <p><code>^</code> 断言只匹配字符串的开头:</p>
-
-<pre><code class="language-raku">say so 'properly' ~~ /  perl/;    # OUTPUT: «True␤» 
+<pre><code class="language-raku" data-lang="raku">say so 'properly' ~~ /  perl/;    # OUTPUT: «True␤» 
 say so 'properly' ~~ /^ perl/;    # OUTPUT: «False␤» 
 say so 'perly'    ~~ /^ perl/;    # OUTPUT: «True␤» 
 say so 'perl'     ~~ /^ perl/;    # OUTPUT: «True␤» 
-</code></pre>
-
-<p><code>$</code> 断言只匹配字符串的结尾:</p>
-
-<pre><code class="language-raku">say so 'use perl' ~~ /  perl  /;   # OUTPUT: «True␤» 
+</code></pre><p><code>$</code> 断言只匹配字符串的结尾:</p>
+<pre><code class="language-raku" data-lang="raku">say so 'use perl' ~~ /  perl  /;   # OUTPUT: «True␤» 
 say so 'use perl' ~~ /  perl $/;   # OUTPUT: «True␤» 
 say so 'perly'    ~~ /  perl $/;   # OUTPUT: «False␤» 
-</code></pre>
-
-<p>你可以把这两个断言组合起来:</p>
-
-<pre><code class="language-raku">say so 'use perl' ~~ /^ perl $/;   # OUTPUT: «False␤» 
+</code></pre><p>你可以把这两个断言组合起来:</p>
+<pre><code class="language-raku" data-lang="raku">say so 'use perl' ~~ /^ perl $/;   # OUTPUT: «False␤» 
 say so 'perl'     ~~ /^ perl $/;   # OUTPUT: «True␤» 
-</code></pre>
-
-<p>记住, <code>^</code> 匹配<strong>字符串</strong>的开头, 而非<strong>行</strong>的开头。同样地, <code>$</code> 匹配<strong>字符串</strong>的结尾, 而非<strong>行</strong>的结尾。</p>
-
+</code></pre><p>记住, <code>^</code> 匹配<strong>字符串</strong>的开头, 而非<strong>行</strong>的开头。同样地, <code>$</code> 匹配<strong>字符串</strong>的结尾, 而非<strong>行</strong>的结尾。</p>
 <p>下面的是多行字符串:</p>
-
-<pre><code class="language-raku">my $str = q:to/EOS/; 
+<pre><code class="language-raku" data-lang="raku">my $str = q:to/EOS/; 
    Keep it secret
    and keep it safe
    EOS
@@ -683,17 +505,11 @@ say so $str ~~ /safe   $/;   # OUTPUT: «True␤»  -- 'safe' is at the end of t
 say so $str ~~ /secret $/;   # OUTPUT: «False␤» -- 'secret' is at the end of a line -- not the string 
 say so $str ~~ /^Keep   /;   # OUTPUT: «True␤»  -- 'Keep' is at the start of the string 
 say so $str ~~ /^and    /;   # OUTPUT: «False␤» -- 'and' is at the start of a line -- not the string 
-</code></pre>
-
-<h3 id="start-of-line-and-end-of-line">^^ , Start of Line and $$ , End of Line</h3>
-
+</code></pre><h3 id="--start-of-line-and---end-of-line">^^ , Start of Line and $$ , End of Line</h3>
 <p><code>^^</code> 断言匹配逻辑行的开头。即, 要么在字符串的开头, 要么在换行符之后。然而, 它不匹配字符串的结尾, 即使它以一个换行符结尾。</p>
-
 <p><code>$$</code> 只匹配逻辑换行符的结尾, 即, 在换行符之前, 或在字符串的结尾, 当最后一个字符不是换行符时。</p>
-
 <p>(为了理解下面的示例, 最好先了解 <code>q:to/EOS/...EOS</code> 的 &ldquo;heredoc&rdquo; 语法移除了前置的缩进, 使之与 <code>EOS</code> 标记同级, 以至于第一行, 第二行和最后一行没有前置空格而第三行和第四行各有两个前置空格。)</p>
-
-<pre><code class="language-raku">my $str = q:to/EOS/; 
+<pre><code class="language-raku" data-lang="raku">my $str = q:to/EOS/; 
     There was a young man of Japan
     Whose limericks never would scan.
       When asked why this was,
@@ -711,157 +527,93 @@ say so $str ~~ / Japan $$/;       # OUTPUT: «True␤»  -- end of first line
 say so $str ~~ / scan $$/;        # OUTPUT: «False␤» -- there's a . between &quot;scan&quot; 
                                   #                      and the end of line 
 say so $str ~~ / '.&quot;' $$/;        # OUTPUT: «True␤»  -- at the last line 
-</code></pre>
-
-<h3 id="w-and-w-word-boundary">&lt;|w&gt; and &lt;!|w&gt;, word boundary</h3>
-
+</code></pre><h3 id="w-and-w-word-boundary">&lt;|w&gt; and &lt;!|w&gt;, word boundary</h3>
 <p>要匹配单词边界, 使用 <code>&lt;|w&gt;</code>。这与其它语言的 <code>\b</code> 类似，要匹配一个非单词边界, 使用 <code>&lt;!|w&gt;</code>, 类似其它语言的 <code>\B</code>。这些都是零宽断言。</p>
-
-<h3 id="and-left-and-right-word-boundary">&lt;&lt; and &gt;&gt; , left and right word boundary</h3>
-
+<h3 id="-and---left-and-right-word-boundary">&laquo; and &raquo; , left and right word boundary</h3>
 <p><code>&lt;&lt;</code> 匹配左单词边界。它匹配左侧(或者字符串的开头)是非单词字符而右侧是一个单词字符的位置。</p>
-
 <p><code>&gt;&gt;</code> 匹配右单词边界。它匹配左侧有一个单词字符而右侧(或者字符串的结尾)是一个非单词字符的位置。</p>
-
-<pre><code class="language-raku">my $str = 'The quick brown fox';
+<pre><code class="language-raku" data-lang="raku">my $str = 'The quick brown fox';
 say so $str ~~ /br/;              # OUTPUT: «True␤» 
 say so $str ~~ /&lt;&lt; br/;           # OUTPUT: «True␤» 
 say so $str ~~ /br &gt;&gt;/;           # OUTPUT: «False␤» 
 say so $str ~~ /own/;             # OUTPUT: «True␤» 
 say so $str ~~ /&lt;&lt; own/;          # OUTPUT: «False␤» 
 say so $str ~~ /own &gt;&gt;/;          # OUTPUT: «True␤» 
-</code></pre>
-
-<p>你可以使用变体 <strong>«</strong> 和 <strong>»</strong> :</p>
-
-<pre><code class="language-raku">my $str = 'The quick brown fox';
+</code></pre><p>你可以使用变体 <strong>«</strong> 和 <strong>»</strong> :</p>
+<pre><code class="language-raku" data-lang="raku">my $str = 'The quick brown fox';
 say so $str ~~ /« own/;          # OUTPUT: «False␤» 
 say so $str ~~ /own »/;          # OUTPUT: «True␤» 
-</code></pre>
-
-<h2 id="分组和捕获">分组和捕获</h2>
-
+</code></pre><h2 id="分组和捕获">分组和捕获</h2>
 <p>在普通的(非正则表达式)Raku 代码中, 你可以使用圆括号把东西组织到一块, 通常用于覆盖操作符优先级:</p>
-
-<pre><code class="language-raku">say 1+4*2;   # 9, parsed as 1 + (4*2)
+<pre><code class="language-raku" data-lang="raku">say 1+4*2;   # 9, parsed as 1 + (4*2)
 say (1+4)*2; # 输出: 10
-</code></pre>
-
-<p>在正则表达式中也可以使用同样的分组工具:</p>
-
-<pre><code class="language-raku">/ a || b c/;   # 匹配 'a' 或 'bc'
+</code></pre><p>在正则表达式中也可以使用同样的分组工具:</p>
+<pre><code class="language-raku" data-lang="raku">/ a || b c/;   # 匹配 'a' 或 'bc'
 / (a || b) c/; # 匹配 'ac' 或 'bc'
-</code></pre>
-
-<p>分组可以应用在量词上:</p>
-
-<pre><code class="language-raku">/ a b+ /;      # 匹配一个 'a', 后面再跟着一个或多个 'b'
+</code></pre><p>分组可以应用在量词上:</p>
+<pre><code class="language-raku" data-lang="raku">/ a b+ /;      # 匹配一个 'a', 后面再跟着一个或多个 'b'
 / (a b)+/;     # 匹配一个或多个 'ab' 序列
 / (a || b)+ /; # 匹配一个 'a' 序列或者 'b' 序列, 至少一次
-</code></pre>
-
-<p>一个非量词化的捕获产生一个 <a href="https://docs.raku.org/type/Match">Match</a>对象。当捕获被量化(除了使用 ? 量词)之后, 该捕获就变成 <a href="https://docs.raku.org/type/Match">Match</a>对象的列表。</p>
-
+</code></pre><p>一个非量词化的捕获产生一个 <a href="https://docs.raku.org/type/Match">Match</a>对象。当捕获被量化(除了使用 ? 量词)之后, 该捕获就变成 <a href="https://docs.raku.org/type/Match">Match</a>对象的列表。</p>
 <h3 id="捕获">捕获</h3>
-
 <p>圆括号不仅仅能够分组, 它们也<em>捕获</em>; 也就是说, 它们使分组中匹配到的字符串用作变量，并且还作为生成的 <a href="https://docs.raku.org/type/Match">Match</a> 对象的元素:</p>
-
-<pre><code class="language-raku">my $str = 'number 42';
+<pre><code class="language-raku" data-lang="raku">my $str = 'number 42';
 if $str ~~ /'number' (\d+) / {
     say &quot;The number is $0&quot;;    # The number is 42
     # or
     say &quot;The number is $/[0]&quot;; # The number is 42
 }
-</code></pre>
-
-<p>圆括号对儿是从左到右编号的, 编号从零开始。</p>
-
-<pre><code class="language-raku">if 'abc' ~~ /(a) b (c)/ {
+</code></pre><p>圆括号对儿是从左到右编号的, 编号从零开始。</p>
+<pre><code class="language-raku" data-lang="raku">if 'abc' ~~ /(a) b (c)/ {
     say &quot;0:$0; 1:$1&quot;; # 输出: 0:a; 1:c
 }
-</code></pre>
-
-<p><code>$0</code> 和 <code>$1</code> 等语法是简写的。这些捕获可以从用作列表的匹配对象 <code>$/</code> 中规范地获取到, 所以, <code>$0</code> 实际上是 <code>$/[0]</code> 的语法糖。</p>
-
+</code></pre><p><code>$0</code> 和 <code>$1</code> 等语法是简写的。这些捕获可以从用作列表的匹配对象 <code>$/</code> 中规范地获取到, 所以, <code>$0</code> 实际上是 <code>$/[0]</code> 的语法糖。</p>
 <p>将匹配对象强制转换为列表可以方便地以编程方式访问所有元素:</p>
-
-<pre><code class="language-raku">if 'abc' ~~ /(a) b (c)/ {
+<pre><code class="language-raku" data-lang="raku">if 'abc' ~~ /(a) b (c)/ {
     say $/.list.join: ','; # 输出 a,c
 }
-</code></pre>
-
-<h3 id="非捕获分组">非捕获分组</h3>
-
+</code></pre><h3 id="非捕获分组">非捕获分组</h3>
 <p>正则表达式中的圆括号扮演了双重角色: 它们将内部的正则表达式元素分组, 并通过内部的子正则表达式捕获所匹配到的内容。</p>
-
 <p>要仅仅获得分组行为, 可以使用方括号 <code>[...]</code> 代替圆括号。</p>
-
-<pre><code class="language-raku">if 'abc' ~~ / [a||b] (c) / {
+<pre><code class="language-raku" data-lang="raku">if 'abc' ~~ / [a||b] (c) / {
     say ~$0;                # OUTPUT: «c␤» 
 }
-</code></pre>
-
-<p>如果您不需要捕获, 则使用非捕获分组可提供三个好处: 它们更干净地传达正则表达式; 它们使您更容易对您关心的捕获组计数; 并且它匹配比较快。</p>
-
+</code></pre><p>如果您不需要捕获, 则使用非捕获分组可提供三个好处: 它们更干净地传达正则表达式; 它们使您更容易对您关心的捕获组计数; 并且它匹配比较快。</p>
 <h3 id="捕获编号">捕获编号</h3>
-
 <p>上面已经说明，捕获从左到右编号。 原则上是真的，这也是过于简单的。</p>
-
 <p>为了完整起见，列出了以下规则。 当您发现自己经常使用它们时，考虑命名捕获（可能是 subrules）是值得的。</p>
-
 <p>备选分支会重置捕获计数：</p>
-
-<pre><code class="language-raku">/ (x) (y)  || (a) (.) (.) /
+<pre><code class="language-raku" data-lang="raku">/ (x) (y)  || (a) (.) (.) /
 # $0  $1      $0  $1  $2 
-</code></pre>
-
-<p>例子:</p>
-
-<pre><code class="language-raku">if 'abc' ~~ /(x)(y) || (a)(.)(.)/ {
+</code></pre><p>例子:</p>
+<pre><code class="language-raku" data-lang="raku">if 'abc' ~~ /(x)(y) || (a)(.)(.)/ {
     say ~$1;            # b 
 }
-</code></pre>
-
-<p>如果两个（或多个）备选分支具有不同的捕获编号，则捕获编号最多的决定了下一个捕获的索引：</p>
-
-<pre><code class="language-raku">$_ = 'abcd';
+</code></pre><p>如果两个（或多个）备选分支具有不同的捕获编号，则捕获编号最多的决定了下一个捕获的索引：</p>
+<pre><code class="language-raku" data-lang="raku">$_ = 'abcd';
  
 if / a [ b (.) || (x) (y) ] (.) / {
     #      $0     $0  $1    $2 
     say ~$2;           # d 
 }
-</code></pre>
-
-<p>捕获可以嵌套，在这种情况下，它们的每一级都会编号:</p>
-
-<pre><code class="language-raku">if 'abc' ~~ / ( a (.) (.) ) / {
+</code></pre><p>捕获可以嵌套，在这种情况下，它们的每一级都会编号:</p>
+<pre><code class="language-raku" data-lang="raku">if 'abc' ~~ / ( a (.) (.) ) / {
     say &quot;Outer: $0&quot;;                # Outer: abc 
     say &quot;Inner: $0[0] and $0[1]&quot;;   # Inner: b and c 
 }
-</code></pre>
-
-<h3 id="命名捕获">命名捕获</h3>
-
+</code></pre><h3 id="命名捕获">命名捕获</h3>
 <p>除了给捕获编号，你也可以给他们起名字。 命名捕获的通用和略微冗长的方式是这样的：</p>
-
-<pre><code class="language-raku">if 'abc' ~~ / $&lt;myname&gt; = [ \w+ ] / {
+<pre><code class="language-raku" data-lang="raku">if 'abc' ~~ / $&lt;myname&gt; = [ \w+ ] / {
     say ~$&lt;myname&gt;      # OUTPUT: «abc␤» 
 }
-</code></pre>
-
-<p>对命名捕获 <em>$<myname></em> 的访问是将匹配对象作为哈希索引的简写，换句话说：<code>$/{'myname'}</code> 或 <code>$/&lt;myname&gt;</code>。</p>
-
+</code></pre><p>对命名捕获 <em>$<!-- raw HTML omitted --></em> 的访问是将匹配对象作为哈希索引的简写，换句话说：<code>$/{'myname'}</code> 或 <code>$/&lt;myname&gt;</code>。</p>
 <p>命名捕获也可以使用常规捕获分组语法进行嵌套:</p>
-
-<pre><code class="language-raku">if 'abc-abc-abc' ~~ / $&lt;string&gt;=( [ $&lt;part&gt;=[abc] ]* % '-' ) / {
+<pre><code class="language-raku" data-lang="raku">if 'abc-abc-abc' ~~ / $&lt;string&gt;=( [ $&lt;part&gt;=[abc] ]* % '-' ) / {
     say ~$&lt;string&gt;;         # OUTPUT: «abc-abc-abc␤» 
     say ~$&lt;string&gt;&lt;part&gt;;   # OUTPUT: «[abc, abc, abc]␤» 
 }
-</code></pre>
-
-<p>将匹配对象强制为散列可让您轻松地以编程方式访问所有命名捕获:</p>
-
-<pre><code class="language-raku">if 'count=23' ~~ / $&lt;variable&gt;=\w+ '=' $&lt;value&gt;=\w+ / {
+</code></pre><p>将匹配对象强制为散列可让您轻松地以编程方式访问所有命名捕获:</p>
+<pre><code class="language-raku" data-lang="raku">if 'count=23' ~~ / $&lt;variable&gt;=\w+ '=' $&lt;value&gt;=\w+ / {
     my %h = $/.hash;
     say %h.keys.sort.join: ', ';        # OUTPUT: «value, variable␤» 
     say %h.values.sort.join: ', ';      # OUTPUT: «23, count␤» 
@@ -873,124 +625,68 @@ if / a [ b (.) || (x) (y) ] (.) / {
         #   Found value '23' with key 'value' 
     }
 }
-</code></pre>
-
-<p>在 Subrules 部分会讨论获取命名捕获的更方便的方法。</p>
-
-<h3 id="capture-markers">Capture markers: &lt;( )&gt;</h3>
-
+</code></pre><p>在 Subrules 部分会讨论获取命名捕获的更方便的方法。</p>
+<h3 id="capture-markers--">Capture markers: &lt;( )&gt;</h3>
 <p><code>&lt;(</code> token 表示匹配的整体捕捉的开始，而相应的 <code>)&gt;</code> token 表示其末端。 <code>&lt;(</code> 类似于其他语言的 <code>\K</code> 丢弃 <code>\K</code> 之前找到的任何匹配项。</p>
-
 <h2 id="替换">替换</h2>
-
 <p>正则表达式也可以用来替换另一个文本。 您可以使用它来解决拼写错误(例如, 用 &ldquo;Pearl Jam&rdquo; 替换 &ldquo;Perl Jam&rdquo;), 从 <code>yyyy-mm-ddThh:mm:ssZ</code> 到 <code>mm-dd-yy h:m {AM,PM}</code> 重新格式化 ISO8601 日期及其它。</p>
-
 <p>就像搜索替换编辑器的对话框一样，<code>s///</code> 操作符有两面，左侧和右侧。 左侧是匹配表达式的位置，右侧是您要替换的表达式。</p>
-
 <h3 id="词汇约定">词汇约定</h3>
-
 <p>替换和匹配的写法类似，但替换运算符既有正则表达式匹配的区域，也有替换的文本区域：</p>
-
-<pre><code class="language-raku">s/replace/with/;           # a substitution that is applied to $_ 
+<pre><code class="language-raku" data-lang="raku">s/replace/with/;           # a substitution that is applied to $_ 
 $str ~~ s/replace/with/;   # a substitution applied to a scalar 
-</code></pre>
-
-<p>替换操作法允许除了斜线之外的分隔符:</p>
-
-<pre><code class="language-raku">s|replace|with|;
+</code></pre><p>替换操作法允许除了斜线之外的分隔符:</p>
+<pre><code class="language-raku" data-lang="raku">s|replace|with|;
 s!replace!with!;
 s,replace,with,;
-</code></pre>
-
-<p>注意, 冒号和诸如 <code>{}</code> 或 <code>()</code> 的分隔符不能作为替换分割符。带有副词的冒号斜线诸如 <code>s:i/Foo/Bar</code> 和其它分割符有其它用途。</p>
-
+</code></pre><p>注意, 冒号和诸如 <code>{}</code> 或 <code>()</code> 的分隔符不能作为替换分割符。带有副词的冒号斜线诸如 <code>s:i/Foo/Bar</code> 和其它分割符有其它用途。</p>
 <p>就像 <code>m//</code> 操作符一样, 通常会忽略空白。在 Raku 中, 注释以 <em>#</em> 号开头直到当前行的结尾。</p>
-
 <h3 id="替换字符串字面值">替换字符串字面值</h3>
-
 <p>要替换的最简单的东西就是字符串字面量。你要替换的字符串在替换运算符的左侧, 而替换它的字符串在替换操作符的右侧; 例如:</p>
-
-<pre><code class="language-raku">$_ = 'The Replacements';
+<pre><code class="language-raku" data-lang="raku">$_ = 'The Replacements';
 s/Replace/Entrap/;
 .say;                    # OUTPUT: «The Entrapments␤» 
-</code></pre>
-
-<p>字母数字字符和下划线是文字匹配，就像其表哥 <code>m//</code> 操作符一样。 所有其他字符都必须使用反斜杠<code>\</code>转义，或包含在引号中：</p>
-
-<pre><code class="language-raku">$_ = 'Space: 1999';
+</code></pre><p>字母数字字符和下划线是文字匹配，就像其表哥 <code>m//</code> 操作符一样。 所有其他字符都必须使用反斜杠<code>\</code>转义，或包含在引号中：</p>
+<pre><code class="language-raku" data-lang="raku">$_ = 'Space: 1999';
 s/Space\:/Party like it's/;
 .say                        # OUTPUT: «Party like it's 1999␤» 
-</code></pre>
-
-<p>请注意，匹配约束仅适用于替换表达式的左侧。</p>
-
+</code></pre><p>请注意，匹配约束仅适用于替换表达式的左侧。</p>
 <p>默认情况下，替换仅在第一匹配中完成：</p>
-
-<pre><code class="language-raku">$_ = 'There can be twly two';
+<pre><code class="language-raku" data-lang="raku">$_ = 'There can be twly two';
 s/tw/on/;                     # replace 'tw' with 'on' once 
 .say;                         # OUTPUT: «there can be only two␤» 
-</code></pre>
-
-<h3 id="通配符和字符类-1">通配符和字符类</h3>
-
+</code></pre><h3 id="通配符和字符类-1">通配符和字符类</h3>
 <p>任何可以进入 <code>m//</code> 操作符的内容都可以进入替换操作符的左侧，包括通配符和字符类。 当您匹配的文本不是静态的时，这很方便，例如尝试匹配字符串中间的数字：</p>
-
-<pre><code class="language-raku">$_ = &quot;Blake's 9&quot;;
+<pre><code class="language-raku" data-lang="raku">$_ = &quot;Blake's 9&quot;;
 s/\d+/7/;         # replace any sequence of digits with '7' 
 .say;             # OUTPUT: «Blake's 7␤»
-</code></pre>
-
-<p>当然，你可以使用任何<code>+</code>，<code>*</code>和<code>?</code> 修饰符，它们的行为就像在 <code>m//</code> 操作符的上下文中一样。</p>
-
+</code></pre><p>当然，你可以使用任何<code>+</code>，<code>*</code>和<code>?</code> 修饰符，它们的行为就像在 <code>m//</code> 操作符的上下文中一样。</p>
 <h3 id="捕获组">捕获组</h3>
-
 <p>就像在匹配运算符中一样，捕获组在左侧被允许，匹配的内容填充 <code>$0..$n</code> 变量和 <code>$/</code> 对象：</p>
-
-<pre><code class="language-raku">$_ = '2016-01-23 18:09:00';
+<pre><code class="language-raku" data-lang="raku">$_ = '2016-01-23 18:09:00';
 s/ (\d+)\-(\d+)\-(\d+) /today/;   # replace YYYY-MM-DD with 'today' 
 .say;                             # OUTPUT: «today 18:09:00␤» 
 &quot;$1-$2-$0&quot;.say;                   # OUTPUT: «01-23-2016␤» 
 &quot;$/[1]-$/[2]-$/[0]&quot;.say;          # OUTPUT: «01-23-2016␤» 
-</code></pre>
-
-<p>任何这些变量 <code>$0</code>，<code>$1</code>，<code>$/</code> 也可以在运算符的右侧使用，所以你可以操纵你刚刚匹配的内容。 这样，您可以将日期的YYYY，MM和DD部分分开，并将其重新格式化为 <code>MM-DD-YYYY</code> 顺序：</p>
-
-<pre><code class="language-raku">$_ = '2016-01-23 18:09:00';
+</code></pre><p>任何这些变量 <code>$0</code>，<code>$1</code>，<code>$/</code> 也可以在运算符的右侧使用，所以你可以操纵你刚刚匹配的内容。 这样，您可以将日期的YYYY，MM和DD部分分开，并将其重新格式化为 <code>MM-DD-YYYY</code> 顺序：</p>
+<pre><code class="language-raku" data-lang="raku">$_ = '2016-01-23 18:09:00';
 s/ (\d+)\-(\d+)\-(\d+) /$1-$2-$0/;    # transform YYYY-MM-DD to MM-DD-YYYY 
 .say;                                 # OUTPUT: «01-23-2016 18:09:00␤» 
-</code></pre>
-
-<p>由于右侧实际上是一个常规的 Raku 内插字符串，因此可以将时间从 <code>HH:MM</code> 重新格式化为 `h:MM {AM,PM} 格式, 如下所示：</p>
-
-<pre><code class="language-raku">$_ = '18:38';
+</code></pre><p>由于右侧实际上是一个常规的 Raku 内插字符串，因此可以将时间从 <code>HH:MM</code> 重新格式化为 `h:MM {AM,PM} 格式, 如下所示：</p>
+<pre><code class="language-raku" data-lang="raku">$_ = '18:38';
 s/(\d+)\:(\d+)/{$0 % 12}\:$1 {$0 &lt; 12 ?? 'AM' !! 'PM'}/;
 .say;                                                    # OUTPUT: «6:38 PM␤» 
-</code></pre>
-
-<p>使用上面的模数 <code>%</code> 运算符将样本代码保留在80个字符以下，否则就是 <code>$0 &lt;12 ?? $0 !! $0 - 12</code>。 结合解析器表达式语法的强大功能，真正使您在这里看到的内容成为可能，您可以使用“正则表达式”来解析任何文本。</p>
-
+</code></pre><p>使用上面的模数 <code>%</code> 运算符将样本代码保留在80个字符以下，否则就是 <code>$0 &lt;12 ?? $0 !! $0 - 12</code>。 结合解析器表达式语法的强大功能，真正使您在这里看到的内容成为可能，您可以使用“正则表达式”来解析任何文本。</p>
 <h3 id="common-adverbs">Common adverbs</h3>
-
 <h2 id="tilde-for-nesting-structures">Tilde for nesting structures</h2>
-
 <p><code>~</code> 运算符是一个帮助器，用于匹配具有特定终结符的嵌套子规则作为目标。 它被设计为放置在开口和闭合括号之间，如下所示：</p>
-
-<pre><code class="language-raku">/ '(' ~ ')' &lt;expression&gt; /
-</code></pre>
-
-<p>然而, 它主要忽略左侧的参数, 并且在接下来的两个原子（可以被量化）上操作。 它对下两个原子的操作是“旋转”它们，使得它们实际上以相反的顺序匹配。 因此，上面的表达式，起初是腮红，只不过是下面的简写:</p>
-
-<pre><code class="language-raku">/ '(' &lt;expression&gt; ')' /
-</code></pre>
-
-<p>但是除此之外，当它重写原子时，它还会插入将设置内部表达式以识别终止符的设备，并且如果内部表达式不在所需的闭合原子上终止，则产生适当的错误消息。 所以它确实也注意了左边的括号，它实际上把我们的例子改写成更像:</p>
-
-<pre><code class="language-raku">$&lt;OPEN&gt; = '(' &lt;SETGOAL: ')'&gt; &lt;expression&gt; [ $GOAL || &lt;FAILGOAL&gt; ]
-</code></pre>
-
-<p>FAILGOAL 是一种可以由用户定义的特殊方法，它将在解析失败时被调用：</p>
-
-<pre><code class="language-raku">grammar A { token TOP { '[' ~ ']' \w+  };
+<pre><code class="language-raku" data-lang="raku">/ '(' ~ ')' &lt;expression&gt; /
+</code></pre><p>然而, 它主要忽略左侧的参数, 并且在接下来的两个原子（可以被量化）上操作。 它对下两个原子的操作是“旋转”它们，使得它们实际上以相反的顺序匹配。 因此，上面的表达式，起初是腮红，只不过是下面的简写:</p>
+<pre><code class="language-raku" data-lang="raku">/ '(' &lt;expression&gt; ')' /
+</code></pre><p>但是除此之外，当它重写原子时，它还会插入将设置内部表达式以识别终止符的设备，并且如果内部表达式不在所需的闭合原子上终止，则产生适当的错误消息。 所以它确实也注意了左边的括号，它实际上把我们的例子改写成更像:</p>
+<pre><code class="language-raku" data-lang="raku">$&lt;OPEN&gt; = '(' &lt;SETGOAL: ')'&gt; &lt;expression&gt; [ $GOAL || &lt;FAILGOAL&gt; ]
+</code></pre><p>FAILGOAL 是一种可以由用户定义的特殊方法，它将在解析失败时被调用：</p>
+<pre><code class="language-raku" data-lang="raku">grammar A { token TOP { '[' ~ ']' \w+  };
             method FAILGOAL($goal) {
                 die &quot;Cannot find $goal near position {self.pos}&quot;
             }
@@ -1000,40 +696,24 @@ A.parse: '[good]';  # OUTPUT: «｢[good]｣␤»
 A.parse: '[bad';    # will throw FAILGOAL exception 
 CATCH { default { put .^name, ': ', .Str } };
 # OUTPUT: «X::AdHoc: Cannot find ']'  near position 5␤» 
-</code></pre>
-
-<p>请注意，即使没有开头括号，也可以使用此构造来设置闭合结构的期望值：</p>
-
-<pre><code class="language-raku">&quot;3)&quot;  ~~ / &lt;?&gt; ~ ')' \d+ /;  # RESULT: «｢3)｣» 
+</code></pre><p>请注意，即使没有开头括号，也可以使用此构造来设置闭合结构的期望值：</p>
+<pre><code class="language-raku" data-lang="raku">&quot;3)&quot;  ~~ / &lt;?&gt; ~ ')' \d+ /;  # RESULT: «｢3)｣» 
 &quot;(3)&quot; ~~ / &lt;?&gt; ~ ')' \d+ /;  # RESULT: «｢3)｣» 
-</code></pre>
-
-<p>这里 <code>&lt;?&gt;</code> 在第一个空字符串中返回true。</p>
-
+</code></pre><p>这里 <code>&lt;?&gt;</code> 在第一个空字符串中返回true。</p>
 <p>正则表达式捕获的顺序是原始的：</p>
-
-<pre><code class="language-raku">&quot;abc&quot; ~~ /a ~ (c) (b)/;
+<pre><code class="language-raku" data-lang="raku">&quot;abc&quot; ~~ /a ~ (c) (b)/;
 say $0; # OUTPUT: «｢c｣␤» 
 say $1; # OUTPUT: «｢b｣␤» 
-</code></pre>
-
-<h2 id="subrules">Subrules</h2>
-
+</code></pre><h2 id="subrules">Subrules</h2>
 <p>就像你可以把代码片段放进子例程中一样, 你同样可以把正则表达式片段放进命名规则中(named rules)。</p>
-
-<pre><code class="language-raku">my regex line { \N*\n }
+<pre><code class="language-raku" data-lang="raku">my regex line { \N*\n }
 if &quot;abc\ndef&quot; ~~ /&lt;line&gt; def/ {
     say &quot;First line:&quot;, $&lt;line&gt;.chomp; # OUTPUT:«First line: abc␤» 
 }
-</code></pre>
-
-<p>命名正则可以使用 <code>my regex_name { body here }</code> 来声明, 并使用 <code>&lt;regex_name&gt;</code> 来调用。与此同时, 调用命名正则的时候会安装一个同名的命名捕获。</p>
-
+</code></pre><p>命名正则可以使用 <code>my regex_name { body here }</code> 来声明, 并使用 <code>&lt;regex_name&gt;</code> 来调用。与此同时, 调用命名正则的时候会安装一个同名的命名捕获。</p>
 <p>要给捕获起一个和 regex 不同的名字, 那么使用 <code>&lt;capture_name=regex_name&gt;</code> 语法。如果不想捕获, 那么使用一个前置的点号来抑制捕获: <code>&lt;.regex_name&gt;</code>。</p>
-
 <p>下面是一个更完善的解析 ini 文件的例子:</p>
-
-<pre><code class="language-raku">my regex header { \s* '[' (\w+) ']' \h* \n+ }
+<pre><code class="language-raku" data-lang="raku">my regex header { \s* '[' (\w+) ']' \h* \n+ }
 my regex identifier  { \w+ }
 my regex kvpair { \s* &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
 my regex section {
@@ -1064,137 +744,76 @@ if $contents ~~ /&lt;section&gt;*/ {
 say %config.perl;
 # OUTPUT: «(&quot;passwords&quot; =&gt; {&quot;jack&quot; =&gt; &quot;password1&quot;, &quot;joy&quot; =&gt; &quot;muchmoresecure123&quot;},␤ 
 #          &quot;quotas&quot; =&gt; {&quot;jack&quot; =&gt; &quot;123&quot;, &quot;joy&quot; =&gt; &quot;42&quot;}).hash» 
-</code></pre>
-
-<p>命名正则可以规整到 <a href="https://docs.raku.org/language/grammars">gramamrs</a> 中。<a href="https://design.raku.org/S05.html#Predefined_Subrules">S05</a>中有一组预定义的 subrules。</p>
-
+</code></pre><p>命名正则可以规整到 <a href="https://docs.raku.org/language/grammars">gramamrs</a> 中。<a href="https://design.raku.org/S05.html#Predefined_Subrules">S05</a>中有一组预定义的 subrules。</p>
 <h2 id="副词">副词</h2>
-
 <p>副词修改正则表达式的工作方式, 并为某些类型的循环任务提供方便的快捷方式。</p>
-
 <p>有两种副词: 正则表达式副词适用于定义正则表达式时, 匹配副词适用于正则表达式与字符串匹配时。</p>
-
 <p>这种区别往往是模糊的, 因为匹配和声明通常是文本上关闭的, 但使用方法形式的匹配使得区分清晰一点。</p>
-
 <p><code>'abc' ~~ /../</code> 大致相当于 <code>'abc'.match(/../)</code>, 甚至可以更清楚地单独写成一行:</p>
-
-<pre><code class="language-raku">my $regex = /../;           # definition 
+<pre><code class="language-raku" data-lang="raku">my $regex = /../;           # definition 
 if 'abc'.match($regex) {    # matching 
     say &quot;'abc' has at least two characters&quot;;
 }
-</code></pre>
-
-<p>正则表达式副词像 <code>:i</code> 会进入定义行而匹配副词像 <code>:overlap</code> 会附加到匹配调用上:</p>
-
-<pre><code class="language-raku">my $regex = /:i . a/;
+</code></pre><p>正则表达式副词像 <code>:i</code> 会进入定义行而匹配副词像 <code>:overlap</code> 会附加到匹配调用上:</p>
+<pre><code class="language-raku" data-lang="raku">my $regex = /:i . a/;
 for 'baA'.match($regex, :overlap) -&gt; $m {
     say ~$m;
 }
 # OUTPUT: «ba␤aA␤» 
-</code></pre>
-
-<h3 id="regex-adverbs">Regex Adverbs</h3>
-
+</code></pre><h3 id="regex-adverbs">Regex Adverbs</h3>
 <p>在正则表达式声明时出现的副词是实际正则表达式的一部分, 并影响 Raku 编译器如何将正则表达式转换为二进制代码。</p>
-
 <p>例如: <code>:ignorecase (:i)</code> 副词告诉编译器忽略大写, 小写和标题大小写字母之间的区别。</p>
-
-<p>所以 <code>'a'~~ /A/</code> 是假的, 但 `&lsquo;a&rsquo; ~~ /:i A /是一个成功的匹配。</p>
-
-<p>正则表达式副词可以在正则表达式声明之前或之内, 并且仅在词法上影响其后的正则表达式部分。 请注意, 在正则表达式之前出现的正则表达式副词必须出现在将正则表达式引入解析器之后, 如 &lsquo;rx&rsquo; 或 &rsquo;m&rsquo; 或裸的 &lsquo;/&lsquo;。 但是这样是无效的:</p>
-
-<pre><code class="language-raku">my $rx1 = :i/a/;      # adverb is before the regex is recognized =&gt; exception 
-</code></pre>
-
-<p>下面这些是等价的:</p>
-
-<pre><code class="language-raku">my $rx1 = rx:i/a/;      # before 
+<p>所以 <code>'a'~~ /A/</code> 是假的, 但 `'a&rsquo; ~~ /:i A /是一个成功的匹配。</p>
+<p>正则表达式副词可以在正则表达式声明之前或之内, 并且仅在词法上影响其后的正则表达式部分。 请注意, 在正则表达式之前出现的正则表达式副词必须出现在将正则表达式引入解析器之后, 如 &lsquo;rx&rsquo; 或 &lsquo;m&rsquo; 或裸的 &lsquo;/'。 但是这样是无效的:</p>
+<pre><code class="language-raku" data-lang="raku">my $rx1 = :i/a/;      # adverb is before the regex is recognized =&gt; exception 
+</code></pre><p>下面这些是等价的:</p>
+<pre><code class="language-raku" data-lang="raku">my $rx1 = rx:i/a/;      # before 
 my $rx2 = rx/:i a/;     # inside 
-</code></pre>
-
-<p>而下面这两种是不等价的:</p>
-
-<pre><code class="language-raku">my $rx3 = rx/a :i b/;   # matches only the b case insensitively 
+</code></pre><p>而下面这两种是不等价的:</p>
+<pre><code class="language-raku" data-lang="raku">my $rx3 = rx/a :i b/;   # matches only the b case insensitively 
 my $rx4 = rx/:i a b/;   # matches completely case insensitively 
-</code></pre>
-
-<p>方括号和圆括号约束副词的作用域:</p>
-
-<pre><code class="language-raku">/ (:i a b) c /;         # matches 'ABc' but not 'ABC' 
+</code></pre><p>方括号和圆括号约束副词的作用域:</p>
+<pre><code class="language-raku" data-lang="raku">/ (:i a b) c /;         # matches 'ABc' but not 'ABC' 
 / [:i a b] c /;         # matches 'ABc' but not 'ABC' 
-</code></pre>
-
-<h3 id="ratchet">Ratchet</h3>
-
+</code></pre><h3 id="ratchet">Ratchet</h3>
 <p><code>:ratchet</code> 或 <code>:r</code> 副词会导致正则表达式引擎不回溯。</p>
-
 <p>假如没有这个副词, 那么正则表达式的一部分将尝试不同的路径来匹配字符串, 以使正则表达式的其他部分可以匹配。 例如, 在 <code>'abc' ~~ / \w+ ./</code> 中, <code>\w+</code> 首先吃光整个字符串 abc, 然后 <code>.</code> 就失败了。 因此 <code>\w+</code> 放弃一个字符, 只匹配 ab 而 <code>.</code> 可以成功匹配字符串 c。 放弃字符的过程(或在轮试的情况下, 尝试不同的分支)被称为回溯。</p>
-
-<pre><code class="language-raku">say so 'abc' ~~ / \w+ . /;        # OUTPUT: «True␤» 
+<pre><code class="language-raku" data-lang="raku">say so 'abc' ~~ / \w+ . /;        # OUTPUT: «True␤» 
 say so 'abc' ~~ / :r \w+ . /;     # OUTPUT: «False␤» 
-</code></pre>
-
-<p>Ratcheting 是一种优化, 因为回溯是昂贵的。 但更重要的是, 它与人类解析文本的方式密切相关。 如果你有一个正则表达式 <code>my regex identifier { \w+ }</code> 和 <code>my regex keyword { if | else | endif }</code>, 你直观地期望 <code>identifier</code> 吞噬整个单词，而不是放弃结束下一个规则，如果下一个 rule 失败时。</p>
-
+</code></pre><p>Ratcheting 是一种优化, 因为回溯是昂贵的。 但更重要的是, 它与人类解析文本的方式密切相关。 如果你有一个正则表达式 <code>my regex identifier { \w+ } </code> 和 <code>my regex keyword { if | else | endif }</code>, 你直观地期望 <code>identifier</code> 吞噬整个单词，而不是放弃结束下一个规则，如果下一个 rule 失败时。</p>
 <p>例如，你不想让单词 <code>motif</code> 被解析为标识符 mot 后面跟着关键字 if。 相反, 你想将 <code>motif</code> 解析为标识符; 并且如果解析器期望之后有一个 <code>if</code>, 那么最好让它失败, 而不是以你不期望的方式解析输入。</p>
-
 <p>由于 ratcheting 行为在解析器中通常是需要的, 所以有一个快捷方式来声明一个 ratcheting 正则表达式:</p>
-
-<pre><code class="language-raku">my token thing { .... }
+<pre><code class="language-raku" data-lang="raku">my token thing { .... }
 # short for 
 my regex thing { :r ... }
-</code></pre>
-
-<h3 id="sigspace">Sigspace</h3>
-
+</code></pre><h3 id="sigspace">Sigspace</h3>
 <p><code>:sigspace</code> 或 <code>:s</code> 副词使空白在正则表达式中有意义。</p>
-
-<pre><code class="language-raku">say so &quot;I used Photoshop®&quot;   ~~ m:i/   photo shop /;      # OUTPUT: «True␤»
+<pre><code class="language-raku" data-lang="raku">say so &quot;I used Photoshop®&quot;   ~~ m:i/   photo shop /;      # OUTPUT: «True␤»
 say so &quot;I used a photo shop&quot; ~~ m:i:s/ photo shop /;   # OUTPUT: «True␤»
 say so &quot;I used Photoshop®&quot;   ~~ m:i:s/ photo shop /;   # OUTPUT: «False␤»
-</code></pre>
-
-<p><code>m:s/ photo shop /</code> 的作用和 <code>m/ photo &lt;.ws&gt; shop &lt;.ws&gt; /</code> 一样。默认地, <code>&lt;.ws&gt;</code> 确保单词是分开的, 所以 <code>a b</code> 和 <code>^$</code> 会匹配中间的 <code>&lt;.ws&gt;</code>, 但是 <code>ab</code> 不会。</p>
-
+</code></pre><p><code>m:s/ photo shop /</code> 的作用和 <code>m/ photo &lt;.ws&gt; shop &lt;.ws&gt; /</code> 一样。默认地, <code>&lt;.ws&gt;</code> 确保单词是分开的, 所以 <code>a b</code> 和 <code>^$</code> 会匹配中间的 <code>&lt;.ws&gt;</code>, 但是 <code>ab</code> 不会。</p>
 <p>正则表达式中哪里的空白会被转换为 <code>&lt;.ws&gt;</code> 取决于空白前面是什么。在上面的例子中, 正则表达式开头的空白不会被转换为 <code>&lt;.ws&gt;</code>, 但是字符后面的空白会被转换为 <code>&lt;.ws&gt;</code>。通常, 规则就是, 如果某一项可能匹配某个东西, 那么它后面的空白会被转换为 <code>&lt;.ws&gt;</code>。</p>
-
 <p>此外, 如果空白跟在某个 term 之后, 量词(+,* 或 ?)之前, 那么 <code>&lt;.ws&gt;</code> 会在每次 term 匹配后匹配。 所以, <code>foo +</code> 变为 <code>[foo &lt;.ws&gt;]+</code>。另一方面, 量词后面的空白和普通的空白作用一样; 例如: &ldquo;foo+&rdquo; 变为 <code>foo+&lt;.ws&gt;</code></p>
-
 <h3 id="matching-adverbs">Matching adverbs</h3>
-
 <p>和正则表达式副词对比, 其与正则表达式声明有关, 匹配副词只有在将字符串与正则表达式匹配时才有意义。</p>
-
 <p>它们永远不会出现在正则表达式内部, 只能在外部 - 作为 <code>m/.../</code> 匹配的一部分或作为匹配方法的参数。</p>
-
 <h3 id="continue">Continue</h3>
-
 <p><code>:continue</code> 或短的 <code>:c</code> 副词接收一个参数。 这个参数是正则表达式开始搜索的位置。 默认情况下, 它从字符串的开头搜索, 但是 <code>:c</code> 覆盖该位置。 如果没有为 <code>:c</code> 指定位置, 它将默认为 0, 除非设置了 <code>$/</code>, 在这种情况下, 它默认为 <code>$/.to</code>。</p>
-
-<pre><code class="language-raku">given 'a1xa2' {
+<pre><code class="language-raku" data-lang="raku">given 'a1xa2' {
     say ~m/a./;         # OUTPUT: «a1␤» 
     say ~m:c(2)/a./;    # OUTPUT: «a2␤» 
 }
-</code></pre>
-
-<p>注意: 不同于 <code>:pos</code>, 使用 <code>:continue()</code> 的匹配将尝试在字符串中进一步匹配, 而不是马上失败:</p>
-
-<pre><code class="language-raku">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
+</code></pre><p>注意: 不同于 <code>:pos</code>, 使用 <code>:continue()</code> 的匹配将尝试在字符串中进一步匹配, 而不是马上失败:</p>
+<pre><code class="language-raku" data-lang="raku">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
 say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤» 
-</code></pre>
-
-<h3 id="exhaustive">Exhaustive</h3>
-
+</code></pre><h3 id="exhaustive">Exhaustive</h3>
 <p>要找到正则表达式的所有可能的匹配 - 包括重叠的 - 和几个从同一位置开始的匹配, 请使用 <code>:exhaustive</code>(short: <code>ex</code>) 副词。</p>
-
-<pre><code class="language-raku">given 'abracadabra' {
+<pre><code class="language-raku" data-lang="raku">given 'abracadabra' {
     for m:exhaustive/ a .* a / -&gt; $match {
         say ' ' x $match.from, ~$match;
     }
 }
-</code></pre>
-
-<p>上面的代码产生这样的输出:</p>
-
+</code></pre><p>上面的代码产生这样的输出:</p>
 <pre><code>abracadabra
 abracada
 abraca
@@ -1205,131 +824,68 @@ abra
      adabra
      ada
        abra
-</code></pre>
-
-<h3 id="global">Global</h3>
-
+</code></pre><h3 id="global">Global</h3>
 <p>不是搜索一个匹配并返回一个 <a href="https://docs.raku.org/type/Match">Match 对象</a>, Global 搜索每个不重叠的匹配, 并将其返回到<a href="https://docs.raku.org/type/List">列表</a>中。 为此, 请使用 <code>:global</code> 副词:</p>
-
-<pre><code class="language-raku">given 'several words here' {
+<pre><code class="language-raku" data-lang="raku">given 'several words here' {
     my @matches = m:global/\w+/;
     say @matches.elems;         # OUTPUT: «3␤» 
     say ~@matches[2];           # OUTPUT: «here␤» 
 }
-</code></pre>
-
-<p><code>:g</code> 是 <code>:global</code> 的简写。</p>
-
+</code></pre><p><code>:g</code> 是 <code>:global</code> 的简写。</p>
 <h3 id="pos">Pos</h3>
-
 <p>在字符串的特定位置锚定匹配:</p>
-
-<pre><code class="language-raku">given 'abcdef' {
+<pre><code class="language-raku" data-lang="raku">given 'abcdef' {
     my $match = m:pos(2)/.*/;
     say $match.from;        # OUTPUT: «2␤» 
     say ~$match;            # OUTPUT: «cdef␤» 
 }
-</code></pre>
-
-<p><code>:p</code> 是 <code>:pos</code> 的简写。</p>
-
+</code></pre><p><code>:p</code> 是 <code>:pos</code> 的简写。</p>
 <p>注意: 不同于 <code>:continue</code>, 使用 <code>:pos()</code> 锚定的匹配在不匹配时将立即失败, 而不是尝试进一步匹配字符串:</p>
-
-<pre><code class="language-raku">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
+<pre><code class="language-raku" data-lang="raku">say &quot;abcdefg&quot; ~~ m:c(3)/e.+/; # OUTPUT: «｢efg｣␤» 
 say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤» 
-</code></pre>
-
-<h3 id="overlap">Overlap</h3>
-
+</code></pre><h3 id="overlap">Overlap</h3>
 <p>要获得多个匹配, 包括重叠的匹配, 但每个起始位置只有一个(最长的)匹配, 请指定 <code>:overlap</code> (short <code>:ov</code>) 副词:</p>
-
-<pre><code class="language-raku">given 'abracadabra' {
+<pre><code class="language-raku" data-lang="raku">given 'abracadabra' {
     for m:overlap/ a .* a / -&gt; $match {
         say ' ' x $match.from, ~$match;
     }
 }
-</code></pre>
-
-<p>产生:</p>
-
-<pre><code class="language-raku">abracadabra
+</code></pre><p>产生:</p>
+<pre><code class="language-raku" data-lang="raku">abracadabra
    acadabra
      adabra
        abra
-</code></pre>
-
-<h2 id="look-around-assertions">Look-around assertions</h2>
-
+</code></pre><h2 id="look-around-assertions">Look-around assertions</h2>
 <h3 id="lookahead-assertions">Lookahead assertions</h3>
-
 <p>要检查一个模式是否出现在另一个模式之前，请通过 <code>before</code> 断言使用 lookahead 断言。形式如下：</p>
-
-<pre><code class="language-raku">&lt;?before pattern&gt;
-</code></pre>
-
-<p>因此，要搜索字符串 foo 后面紧跟着字符串 bar, 请使用以下 regexp:</p>
-
-<pre><code class="language-raku">rx{ foo &lt;?before bar&gt; }
-</code></pre>
-
-<p>例如:</p>
-
-<pre><code class="language-raku">say &quot;foobar&quot; ~~ rx{ foo &lt;?before bar&gt; };   # OUTPUT: «foo␤» 
-</code></pre>
-
-<p>但是，如果要搜索一个不紧随某个模式的模式, 那么您需要使用反向向前查看断言, 其形式如下:</p>
-
-<pre><code class="language-raku">&lt;!before pattern&gt;
-</code></pre>
-
-<p>因此，所有出现的不在 bar 之前的 foo 都会匹配:</p>
-
-<pre><code class="language-raku">rx{ foo &lt;!before bar&gt; }
-</code></pre>
-
-<h3 id="lookbehind-assertions">Lookbehind assertions</h3>
-
+<pre><code class="language-raku" data-lang="raku">&lt;?before pattern&gt;
+</code></pre><p>因此，要搜索字符串 foo 后面紧跟着字符串 bar, 请使用以下 regexp:</p>
+<pre><code class="language-raku" data-lang="raku">rx{ foo &lt;?before bar&gt; }
+</code></pre><p>例如:</p>
+<pre><code class="language-raku" data-lang="raku">say &quot;foobar&quot; ~~ rx{ foo &lt;?before bar&gt; };   # OUTPUT: «foo␤» 
+</code></pre><p>但是，如果要搜索一个不紧随某个模式的模式, 那么您需要使用反向向前查看断言, 其形式如下:</p>
+<pre><code class="language-raku" data-lang="raku">&lt;!before pattern&gt;
+</code></pre><p>因此，所有出现的不在 bar 之前的 foo 都会匹配:</p>
+<pre><code class="language-raku" data-lang="raku">rx{ foo &lt;!before bar&gt; }
+</code></pre><h3 id="lookbehind-assertions">Lookbehind assertions</h3>
 <p>要检查一个模式是否出现在另一个模式之后，请通过 <code>after</code> 断言使用 <code>lookbehind</code> 断言。 其形式如下：</p>
-
-<pre><code class="language-raku">&lt;?after pattern&gt;
-</code></pre>
-
-<p>因此, 要搜索字符串 foo 立即跟着的 bar 字符串, 使用如下正则表达式:</p>
-
-<pre><code class="language-raku">rx{ &lt;?after foo&gt; bar } # read as after foo is bar
-</code></pre>
-
-<p>例如:</p>
-
-<pre><code class="language-raku">say &quot;foobar&quot; ~~ rx{ &lt;?after foo&gt; bar }; #  OUTPUT: «bar␤» 
-</code></pre>
-
-<p>但是, 如果要搜索的模式不是紧随其后的模式, 那么您需要使用反向的 lookbehind 断言, 其形式如下:</p>
-
-<pre><code class="language-raku">&lt;!after pattern&gt;
-</code></pre>
-
-<p>因此, bar 前面不是 foo 的所有 bar 将被匹配:</p>
-
-<pre><code class="language-raku">rx{ &lt;!after foo&gt; bar }
-</code></pre>
-
-<h2 id="best-practices-and-gotchas">Best practices and gotchas</h2>
-
+<pre><code class="language-raku" data-lang="raku">&lt;?after pattern&gt;
+</code></pre><p>因此, 要搜索字符串 foo 立即跟着的 bar 字符串, 使用如下正则表达式:</p>
+<pre><code class="language-raku" data-lang="raku">rx{ &lt;?after foo&gt; bar } # read as after foo is bar
+</code></pre><p>例如:</p>
+<pre><code class="language-raku" data-lang="raku">say &quot;foobar&quot; ~~ rx{ &lt;?after foo&gt; bar }; #  OUTPUT: «bar␤» 
+</code></pre><p>但是, 如果要搜索的模式不是紧随其后的模式, 那么您需要使用反向的 lookbehind 断言, 其形式如下:</p>
+<pre><code class="language-raku" data-lang="raku">&lt;!after pattern&gt;
+</code></pre><p>因此, bar 前面不是 foo 的所有 bar 将被匹配:</p>
+<pre><code class="language-raku" data-lang="raku">rx{ &lt;!after foo&gt; bar }
+</code></pre><h2 id="best-practices-and-gotchas">Best practices and gotchas</h2>
 <p>为了帮助强大的正则表达式和 Grammar, 以下是代码布局和可读性的最佳实践，实际匹配的内容，并避免常见的陷阱。</p>
-
 <h3 id="code-layout">Code layout</h3>
-
 <p>没有 <code>:sigspace</code> 副词, 空白在 Raku 正则表达式中就是没有意义的。 在能增加可读性的地方插入空格。 此外, 必要时插入注释。</p>
-
 <p>比较下面这个比较紧凑的正则表达式:</p>
-
-<pre><code class="language-raku">my regex float { &lt;[+-]&gt;?\d*'.'\d+[e&lt;[+-]&gt;?\d+]? }
-</code></pre>
-
-<p>和可读性更好的版本:</p>
-
-<pre><code class="language-raku">my regex float {
+<pre><code class="language-raku" data-lang="raku">my regex float { &lt;[+-]&gt;?\d*'.'\d+[e&lt;[+-]&gt;?\d+]? }
+</code></pre><p>和可读性更好的版本:</p>
+<pre><code class="language-raku" data-lang="raku">my regex float {
      &lt;[+-]&gt;?        # optional sign 
      \d*            # leading digits, optional 
      '.'
@@ -1338,13 +894,9 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
         e &lt;[+-]&gt;?  \d+
      ]?
 }
-</code></pre>
-
-<p>根据经验，在原子周围和分组内部使用空格; 将量词直接置于原子之后; 并垂直对齐开口和闭合方括号和圆括号。</p>
-
+</code></pre><p>根据经验，在原子周围和分组内部使用空格; 将量词直接置于原子之后; 并垂直对齐开口和闭合方括号和圆括号。</p>
 <p>当你在方括号或圆括号中使用一组备选分支时, 请对齐垂直条:</p>
-
-<pre><code class="language-raku">my regex example {
+<pre><code class="language-raku" data-lang="raku">my regex example {
     &lt;preamble&gt;
     [
     || &lt;choice_1&gt;
@@ -1353,17 +905,11 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
     ]+
     &lt;postamble&gt;
 }
-</code></pre>
-
-<h3 id="keep-it-small">Keep it small</h3>
-
+</code></pre><h3 id="keep-it-small">Keep it small</h3>
 <p>正则表达式通常比常规代码更紧凑。 因为他们短小精悍, 保持正则表达式很短。</p>
-
 <p>当你可以命名正则表达式的一部分时, 通常最好将其放入单独的命名正则表达式中。</p>
-
 <p>例如, 您可以从前面获取 float 正则表达式：</p>
-
-<pre><code class="language-raku">my regex float {
+<pre><code class="language-raku" data-lang="raku">my regex float {
      &lt;[+-]&gt;?        # optional sign 
      \d*            # leading digits, optional 
      '.'
@@ -1372,11 +918,8 @@ say &quot;abcdefg&quot; ~~ m:p(3)/e.+/; # OUTPUT: «False␤»
         e &lt;[+-]&gt;?  \d+
      ]?
 }
-</code></pre>
-
-<p>并把它分解成几部分:</p>
-
-<pre><code class="language-raku">my token sign { &lt;[+-]&gt; }
+</code></pre><p>并把它分解成几部分:</p>
+<pre><code class="language-raku" data-lang="raku">my token sign { &lt;[+-]&gt; }
 my token decimal { \d+ }
 my token exponent { 'e' &lt;sign&gt;? &lt;decimal&gt; }
 my regex float {
@@ -1386,75 +929,40 @@ my regex float {
     &lt;decimal&gt;
     &lt;exponent&gt;?
 }
-</code></pre>
-
-<p>这很有用, 特别是当正则表达式变得更加复杂时。 例如, 你可能希望在存在指数的情况下使小数点可选。</p>
-
-<pre><code class="language-raku">my regex float {
+</code></pre><p>这很有用, 特别是当正则表达式变得更加复杂时。 例如, 你可能希望在存在指数的情况下使小数点可选。</p>
+<pre><code class="language-raku" data-lang="raku">my regex float {
     &lt;sign&gt;?
     [
     || &lt;decimal&gt;?  '.' &lt;decimal&gt; &lt;exponent&gt;?
     || &lt;decimal&gt; &lt;exponent&gt;
     ]
 }
-</code></pre>
-
-<h3 id="what-to-match">What to match</h3>
-
+</code></pre><h3 id="what-to-match">What to match</h3>
 <p>通常，输入数据格式没有明确的规范，或规范对编程人员来说是未知的。 那么，在你期望的时候是自由的，只要没有可能的含糊不清就行了。</p>
-
 <p>例如，在 ini 文件中:</p>
-
-<pre><code class="language-raku">[section]
+<pre><code class="language-raku" data-lang="raku">[section]
 key=value
-</code></pre>
-
-<p>什么可以在 section 标题内? 只允许一个单词可能太限制了。 有人会写 <code>[two words]</code>, 或用破折号等等。 而不是询问内部允许的内容, 可能这样问比较好: 什么是不允许的？</p>
-
+</code></pre><p>什么可以在 section 标题内? 只允许一个单词可能太限制了。 有人会写 <code>[two words]</code>, 或用破折号等等。 而不是询问内部允许的内容, 可能这样问比较好: 什么是不允许的？</p>
 <p>显然, 不允许使用括号，因为 <code>[a] b]</code> 是不明确的。 同样的论据, 应禁止开口方括号。 这让我们有了</p>
-
-<pre><code class="language-raku">token header { '[' &lt;-[ \[\] ]&gt;+ ']' }
-</code></pre>
-
-<p>如果你只处理一行就行了。 但是，如果你正在处理整个文件，突然间正则表达式解析到一句</p>
-
+<pre><code class="language-raku" data-lang="raku">token header { '[' &lt;-[ \[\] ]&gt;+ ']' }
+</code></pre><p>如果你只处理一行就行了。 但是，如果你正在处理整个文件，突然间正则表达式解析到一句</p>
 <pre><code>[with a
 newline in between]
-</code></pre>
-
-<p>这可能不是一个好方法。折中的方式是:</p>
-
-<pre><code class="language-raku">token header { '[' &lt;-[ \[\] \n ]&gt;+ ']' }
-</code></pre>
-
-<p>然后在扫尾处理中, 从 section 标题中移除前导和尾部空格和制表符。</p>
-
+</code></pre><p>这可能不是一个好方法。折中的方式是:</p>
+<pre><code class="language-raku" data-lang="raku">token header { '[' &lt;-[ \[\] \n ]&gt;+ ']' }
+</code></pre><p>然后在扫尾处理中, 从 section 标题中移除前导和尾部空格和制表符。</p>
 <h3 id="matching-whitespace">Matching Whitespace</h3>
-
 <p><code>:sigspace</code> 副词(或使用 <code>rule</code> 声明符, 而不是 <code>token</code> 或 <code>regex</code>) 非常适用于隐式解析许多地方可能出现的空格。</p>
-
 <p>回到解析 ini 文件的例子, 我们有</p>
-
-<pre><code class="language-raku">my regex kvpair { \s* &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
-</code></pre>
-
-<p>这可能不像我们想要的那样自由, 因为用户可能会在等号周围放置空格。 那么我们可以试试这个:</p>
-
-<pre><code class="language-raku">my regex kvpair { \s* &lt;key=identifier&gt; \s* '=' \s* &lt;value=identifier&gt; \n+ }
-</code></pre>
-
-<p>但这看起来很笨重, 所以我们尝试其他方式:</p>
-
-<pre><code class="language-raku">my rule kvpair { &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
-</code></pre>
-
-<p>可是等等! <code>value</code> 之后，隐含的空白匹配用光了所有的空白, 包括换行符, 所以 <code>\n+</code> 没有什么可以匹配的(rule 也禁止回溯, 所以运气不佳)。</p>
-
+<pre><code class="language-raku" data-lang="raku">my regex kvpair { \s* &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
+</code></pre><p>这可能不像我们想要的那样自由, 因为用户可能会在等号周围放置空格。 那么我们可以试试这个:</p>
+<pre><code class="language-raku" data-lang="raku">my regex kvpair { \s* &lt;key=identifier&gt; \s* '=' \s* &lt;value=identifier&gt; \n+ }
+</code></pre><p>但这看起来很笨重, 所以我们尝试其他方式:</p>
+<pre><code class="language-raku" data-lang="raku">my rule kvpair { &lt;key=identifier&gt; '=' &lt;value=identifier&gt; \n+ }
+</code></pre><p>可是等等! <code>value</code> 之后，隐含的空白匹配用光了所有的空白, 包括换行符, 所以 <code>\n+</code> 没有什么可以匹配的(rule 也禁止回溯, 所以运气不佳)。</p>
 <p>因此, 重要的是将隐式空白的定义重新定义为输入格式无意义的空白。</p>
-
 <p>这通过重新定义 token <code>ws</code>; 但是，它只适用于 <a href="https://docs.raku.org/language/grammars">Grammars</a>:</p>
-
-<pre><code class="language-raku">grammar IniFormat {
+<pre><code class="language-raku" data-lang="raku">grammar IniFormat {
     token ws { &lt;!ww&gt; \h* }
     rule header { \s* '[' (\w+) ']' \n+ }
     token identifier  { \w+ }
@@ -1478,17 +986,10 @@ my $contents = q:to/EOI/;
         joy = 42
 EOI
 say so IniFormat.parse($contents);
-</code></pre>
-
-<p>除了把所有的正则表达式都放在一个 Grammar 中并把它们变成了 tokens(因为他们不需要回溯) 之外, 有趣的新花样是:</p>
-
-<pre><code class="language-raku">token ws { &lt;!ww&gt; \h* }
-</code></pre>
-
-<p>这被称为隐式空白解析。 当它不在两个字符之间 (<code>&lt;ww&gt;</code>, 反向的&rdquo;within word&rdquo; 断言)时匹配, 以及零个或多个水平空格字符。 对水平空白的限制很重要, 因为换行符(它们是垂直空白)定界记录, 不应该被隐式地匹配。</p>
-
+</code></pre><p>除了把所有的正则表达式都放在一个 Grammar 中并把它们变成了 tokens(因为他们不需要回溯) 之外, 有趣的新花样是:</p>
+<pre><code class="language-raku" data-lang="raku">token ws { &lt;!ww&gt; \h* }
+</code></pre><p>这被称为隐式空白解析。 当它不在两个字符之间 (<code>&lt;ww&gt;</code>, 反向的&quot;within word&rdquo; 断言)时匹配, 以及零个或多个水平空格字符。 对水平空白的限制很重要, 因为换行符(它们是垂直空白)定界记录, 不应该被隐式地匹配。</p>
 <p>还有一些与空白有关的麻烦潜伏着。 正则表达式 <code>\n+</code> 将不会匹配 <code>\n \n</code> 这样的字符串, 因为两个换行符之间有空白。 要允许这样的输入字符串, 用 <code>\n\s*</code> 代替 <code>\n+</code>。</p>
-
 <p><a href="https://docs.raku.org/language/regexes">全文完</a></p>
 
 
@@ -1581,7 +1082,7 @@ say so IniFormat.parse($contents);
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

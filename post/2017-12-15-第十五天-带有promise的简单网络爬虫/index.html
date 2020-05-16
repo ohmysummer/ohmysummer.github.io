@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-15-%E7%AC%AC%E5%8D%81%E4%BA%94%E5%A4%A9-%E5%B8%A6%E6%9C%89promise%E7%9A%84%E7%AE%80%E5%8D%95%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,25 +231,16 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="day-15-a-simple-web-spider-with-promises-https-rakuadvent-wordpress-com-2017-12-15-a-simple-web-spider-with-promises"><a href="https://rakuadvent.wordpress.com/2017/12/15/a-simple-web-spider-with-promises/">Day 15 – A Simple Web Spider With Promises</a></h1>
-
+        <h1 id="day-15--a-simple-web-spider-with-promiseshttpsrakuadventwordpresscom20171215a-simple-web-spider-with-promises"><a href="https://rakuadvent.wordpress.com/2017/12/15/a-simple-web-spider-with-promises/">Day 15 – A Simple Web Spider With Promises</a></h1>
 <p>承诺，承诺
 去年夏天，我申请了一项编程工作，面试官要求我编写一个程序来抓取给定的域，只在该域中的链接之后，找到它引用的所有页面。我被允许以任何语言编写程序，但我选择使用Go语言执行任务，因为这是该公司使用的主要语言。这对于并发编程来说是一个理想的任务，并且Go具有非常好的现代化功能，即使有些低级别的并发支持。网络蜘蛛中的主要工作是执行与在域中发现的唯一锚链接相同的次数，即在每个页面上执行HTTP GET并解析页面文本以获取新链接。这个任务可以并行安全地完成，因为没有可能（除非你做得很糟糕），任何调用爬取代码都会干扰其他任何调用。</p>
-
 <p>Go和Raku的创造者受到安东尼霍尔爵士1978年的开创性工作“沟通顺序过程”的启发，但值得注意的是，Raku代码更加简洁，因此更容易隐藏到博客文章中。事实上，Go设计者总是将他们的结构称为“并发原语”。 Go为我的作业应用程序编写的并发spider代码大约有200行，而在Raku中大小不到这个大小的一半。</p>
-
 <p>下面我们来看看如何在Raku中实现一个简单的Web爬虫。内置的Promise类允许您启动，调度和检查异步计算的结果。所有你需要做的就是给Promise.start方法一个代码引用，然后调用await方法，这会阻塞，直到promise完成执行。然后您可以测试结果方法以确定承诺是否已被保留或中断。</p>
-
 <p>您可以通过将其保存到本地文件中来运行本文中的代码，例如网络spider.p6。如果您希望抓取https网站，请使用zef安装HTML :: Parser :: XML和HTTP :: UserAgent以及IO :: Socket :: SSL。我会提醒你，SSL支持目前看起来有点狼狈，所以最好坚持http站点。 Raku程序中的MAIN子程序存在时表示一个独立程序，这就是执行开始的地方。 MAIN的参数表示命令行参数。我编写了这个程序，以便默认情况下它会抓取Perlmonks站点，但是您可以覆盖它，如下所示：</p>
-
 <pre><code>$ raku web-spider.p6 [–domain=http://example.com]
 </code></pre>
-
 <p>简单的Raku域蜘蛛</p>
-
-<pre><code class="language-raku">use HTML::Parser::XML;
+<pre><code class="language-raku" data-lang="raku">use HTML::Parser::XML;
 use XML::Document;
 use HTTP::UserAgent;
 
@@ -312,10 +303,7 @@ sub crawl($ua, $domain, $url) {
 
     return @urls;
 }
-</code></pre>
-
-<h2 id="结论是">结论是</h2>
-
+</code></pre><h2 id="结论是">结论是</h2>
 <p>并发编程总是会有很多陷阱，从竞争状态到资源匮乏和死锁，但我认为很显然，Raku 已经使得这种编程形式更容易被大家接受。</p>
 
 
@@ -408,7 +396,7 @@ sub crawl($ua, $domain, $url) {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

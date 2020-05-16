@@ -12,13 +12,13 @@
 类和角色 我们的第一步是查看方法定义在哪里。以下是我们需要的类和角色列表：
  Duration Instant Int Num Rational Real  为了预测下一步，让我们添加一些关于他们关系的更多细节：
  class Duration is Cool does Real class Instant is Cool does Real class Int is Cool does Real class Num is Cool does Real role Rational does Real role Real does Numeric  在斜体字体中，我添加了伪声明，这些伪声明没有在 src/core 的相应文件中明确拼写，而是通过 src/Raku/Metamodel/BOOTSTRAP.nqp 设置:
-Int.HOW.add_parent(Int, Cool); . . . Num.HOW.add_parent(Num, Cool);  对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
+Int.HOW.add_parent(Int, Cool);. . .Num.HOW.add_parent(Num, Cool);对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
 Bridge 方法 现在，让我们看看这些类和角色中 Bridge 方法的定义。">
   <meta property="og:description" content="在处理 Raku 中的数字的类中，我们看到了 Bridge 方法，该方法以多态方式使用。让我们花一些时间，并试图了解 1）它是如何工作的，2）是否有必要。
 类和角色 我们的第一步是查看方法定义在哪里。以下是我们需要的类和角色列表：
  Duration Instant Int Num Rational Real  为了预测下一步，让我们添加一些关于他们关系的更多细节：
  class Duration is Cool does Real class Instant is Cool does Real class Int is Cool does Real class Num is Cool does Real role Rational does Real role Real does Numeric  在斜体字体中，我添加了伪声明，这些伪声明没有在 src/core 的相应文件中明确拼写，而是通过 src/Raku/Metamodel/BOOTSTRAP.nqp 设置:
-Int.HOW.add_parent(Int, Cool); . . . Num.HOW.add_parent(Num, Cool);  对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
+Int.HOW.add_parent(Int, Cool);. . .Num.HOW.add_parent(Num, Cool);对于完整的图片，我们可以查看其他类的位置，例如 Rat 或 Complex，但让我们先关注上面的列表。
 Bridge 方法 现在，让我们看看这些类和角色中 Bridge 方法的定义。">
   <meta name="twitter:description" content="在处理 Raku 中的数字的类中，我们看到了 Bridge 方法，该方法以多态方式使用。让我们花一些时间，并试图了解 1）它是如何工作的，2）是否有必要。
 类和角色 我们的第一步是查看方法定义在哪里。以下是我们需要的类和角色列表：
@@ -33,7 +33,7 @@ Bridge 方法 现在，让我们看看这些类和角色中 Bridge 方法的定�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-02-11-going-over-the-bridge-part-1/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -240,14 +240,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>在处理 Raku 中的数字的类中，我们看到了 <code>Bridge</code> 方法，该方法以多态方式使用。让我们花一些时间，并试图了解 1）它是如何工作的，2）是否有必要。</p>
-
+        <p>在处理 Raku 中的数字的类中，我们看到了 <code>Bridge</code> 方法，该方法以多态方式使用。让我们花一些时间，并试图了解 1）它是如何工作的，2）是否有必要。</p>
 <h2 id="类和角色">类和角色</h2>
-
 <p>我们的第一步是查看方法定义在哪里。以下是我们需要的类和角色列表：</p>
-
 <ul>
 <li>Duration</li>
 <li>Instant</li>
@@ -256,9 +251,7 @@ if (!doNotTrack) {
 <li>Rational</li>
 <li>Real</li>
 </ul>
-
 <p>为了预测下一步，让我们添加一些关于他们关系的更多细节：</p>
-
 <ul>
 <li>class Duration is Cool does Real</li>
 <li>class Instant is Cool does Real</li>
@@ -267,63 +260,36 @@ if (!doNotTrack) {
 <li>role Rational does Real</li>
 <li>role Real does Numeric</li>
 </ul>
-
 <p>在斜体字体中，我添加了伪声明，这些伪声明没有在 <code>src/core</code> 的相应文件中明确拼写，而是通过 <code>src/Raku/Metamodel/BOOTSTRAP.nqp</code> 设置:</p>
-
-<pre><code class="language-raku">Int.HOW.add_parent(Int, Cool);
+<pre><code class="language-raku" data-lang="raku">Int.HOW.add_parent(Int, Cool);
 . . .
 Num.HOW.add_parent(Num, Cool);
-</code></pre>
-
-<p>对于完整的图片，我们可以查看其他类的位置，例如 <code>Rat</code> 或 <code>Complex</code>，但让我们先关注上面的列表。</p>
-
+</code></pre><p>对于完整的图片，我们可以查看其他类的位置，例如 <code>Rat</code> 或 <code>Complex</code>，但让我们先关注上面的列表。</p>
 <h2 id="bridge-方法">Bridge 方法</h2>
-
 <p>现在，让我们看看这些类和角色中 <code>Bridge</code> 方法的定义。</p>
-
 <p>这两个类, <code>Duration</code> 和 <code>Instand</code> 与其他类有些区别，因为它们代表时间而不是数字（当然，时间用数字表示）。 <code>Bridge</code> 方法的定义方式如下（在本文和下面的节选中，通过查看参数的类型，可以很容易地看到方法的定义类）:</p>
-
-<pre><code class="language-raku">method Bridge(Duration:D:) { $!tai.Num }
+<pre><code class="language-raku" data-lang="raku">method Bridge(Duration:D:) { $!tai.Num }
 
 method Bridge(Instant:D:) { $!tai.Bridge }
-</code></pre>
-
-<p><code>$!tai</code> 类属性是一个 <code>Rat</code> 数字，它保存着了自 1970 年以来的秒数。</p>
-
+</code></pre><p><code>$!tai</code> 类属性是一个 <code>Rat</code> 数字，它保存着了自 1970 年以来的秒数。</p>
 <p>好吧，转到数字。对于 <code>Num</code> 类和 <code>Real</code> 角色，没有注释：</p>
-
-<pre><code class="language-raku">method Bridge(Num:D:) { self }
+<pre><code class="language-raku" data-lang="raku">method Bridge(Num:D:) { self }
 
 method Bridge(Real:D:) { self.Num }
-</code></pre>
-
-<p><code>Rational</code> 角色中的定义看起来有点突出，并且不包含明确的参数，因此它可以接受定义的和未定义的调用者：</p>
-
-<pre><code class="language-raku">method Bridge() { self.Num } # Rational role
-</code></pre>
-
-<p>最后，<code>Int</code> 类使用 NQP 构建桥：</p>
-
-<pre><code class="language-raku">method Bridge(Int:D:) {
+</code></pre><p><code>Rational</code> 角色中的定义看起来有点突出，并且不包含明确的参数，因此它可以接受定义的和未定义的调用者：</p>
+<pre><code class="language-raku" data-lang="raku">method Bridge() { self.Num } # Rational role
+</code></pre><p>最后，<code>Int</code> 类使用 NQP 构建桥：</p>
+<pre><code class="language-raku" data-lang="raku">method Bridge(Int:D:) {
     nqp::p6box_n(nqp::tonum_I(self));
 }
-</code></pre>
-
-<p>它将 <code>Int</code> 数字转换为原生数字，并将其解包为 Raku <code>Num</code> 值。这很重要，我们应该在 REPL 输出中看到它，例如：</p>
-
-<pre><code class="language-raku">$ raku 
+</code></pre><p>它将 <code>Int</code> 数字转换为原生数字，并将其解包为 Raku <code>Num</code> 值。这很重要，我们应该在 REPL 输出中看到它，例如：</p>
+<pre><code class="language-raku" data-lang="raku">$ raku 
 To exit type 'exit' or '^D'
 &gt; Int.new.Bridge.WHAT;
 (Num)
-</code></pre>
-
-<p>所以，来自 <code>Int</code> 的桥是 <code>Num</code>。其实，其他桥梁也给我们相同的数据类型。从我们刚刚看到的方法的定义中可以清楚地看到它。唯一的例外是 <code>Instant</code> 类：它在 <code>Rat</code> 值上调用 <code>.Bridge</code>。 <code>Rat</code> 类没有定义方法，但它是从 <code>Rational</code> 角色继承的：</p>
-
-<pre><code class="language-raku">my class Rat is Cool does Rational
-</code></pre>
-
-<p>我们知道该角色的方法返回 <code>self.Num</code>。</p>
-
+</code></pre><p>所以，来自 <code>Int</code> 的桥是 <code>Num</code>。其实，其他桥梁也给我们相同的数据类型。从我们刚刚看到的方法的定义中可以清楚地看到它。唯一的例外是 <code>Instant</code> 类：它在 <code>Rat</code> 值上调用 <code>.Bridge</code>。 <code>Rat</code> 类没有定义方法，但它是从 <code>Rational</code> 角色继承的：</p>
+<pre><code class="language-raku" data-lang="raku">my class Rat is Cool does Rational
+</code></pre><p>我们知道该角色的方法返回 <code>self.Num</code>。</p>
 <p>感觉头晕？让我们休息一下，继续下一篇文章。</p>
 
 
@@ -416,7 +382,7 @@ To exit type 'exit' or '^D'
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

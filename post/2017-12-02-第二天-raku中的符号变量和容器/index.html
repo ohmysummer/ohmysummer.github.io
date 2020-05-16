@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-02-%E7%AC%AC%E4%BA%8C%E5%A4%A9-raku%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E5%8F%98%E9%87%8F%E5%92%8C%E5%AE%B9%E5%99%A8/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,435 +231,287 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="第二天-raku-符号-变量和容器">第二天-Raku: 符号, 变量和容器</h1>
-
+        <h1 id="第二天-raku-符号-变量和容器">第二天-Raku: 符号, 变量和容器</h1>
 <p>对容器的基本理解对于在 Raku 中进行愉快的编程是至关重要的。它们无处不在，不仅影响你获得的变量类型，还决定了 <a href="https://docs.raku.org/type/List"><code>List</code></a> 和 <a href="https://docs.raku.org/type/Map"><code>Map</code></a> 在迭代时的行为方式。</p>
-
 <p>今天，我们将学习什么是容器，以及如何使用它们，但是首先，我希望你暂时忘记你对 Raku 的符号和变量的所有知识或怀疑，特别是如果你来自 Perl 5 的背景。 忘记一切。</p>
-
 <h2 id="把钱拿出来">把钱拿出来</h2>
-
 <p>在 Raku 中，变量以 <code>$</code> 符号为前缀，用绑定运算符（<code>:=</code>）赋值。 像这样：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">foo</span> <span class="p">:</span><span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;The value is $foo&#34;</span><span class="p">;</span> <span class="c1"># OUTPUT: «The value is 42␤»</span>
+</code></pre></div><p>如果你已经按照我的建议来忘记你所知道的一切，那么学习 <a href="https://docs.raku.org/type/List"><code>List</code></a> 和 <a href="https://docs.raku.org/type/Hash"><code>Hash</code></a> 类型也是一样：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">ordered</span><span class="o">-</span><span class="n"></span><span class="n">things</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="n"></span><span class="n">foo</span> <span class="n"></span><span class="n">bar</span> <span class="n"></span><span class="n">ber</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">named</span><span class="o">-</span><span class="n"></span><span class="n">things</span>   <span class="p">:</span><span class="o">=</span> <span class="nv">%</span><span class="err">(</span><span class="nv">:42foo</span><span class="p">,</span> <span class="p">:</span><span class="n"></span><span class="n">bar</span><span class="sr">&lt;ber&gt;</span><span class="p">)</span><span class="p">;</span>
 
-<pre><code class="language-perl">my $foo := 42;
-say &quot;The value is $foo&quot;; # OUTPUT: «The value is 42␤»
-</code></pre>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;$named-things&lt;foo&gt; bottles of $ordered-things[2] on the wall&#34;</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «42 bottles of ber on the wall␤»</span>
 
-<p>如果你已经按照我的建议来忘记你所知道的一切，那么学习 <a href="https://docs.raku.org/type/List"><code>List</code></a> 和 <a href="https://docs.raku.org/type/Hash"><code>Hash</code></a> 类型也是一样：</p>
-
-<pre><code class="language-perl">my $ordered-things := &lt;foo bar ber&gt;;
-my $named-things   := %(:42foo, :bar&lt;ber&gt;);
-
-say &quot;$named-things&lt;foo&gt; bottles of $ordered-things[2] on the wall&quot;;
-# OUTPUT: «42 bottles of ber on the wall␤»
-
-.say for $ordered-things;  # OUTPUT: «foo␤bar␤ber␤»
-.say for $named-things;    # OUTPUT: «bar =&gt; ber␤foo =&gt; 42␤»
-</code></pre>
-
-<p>了解这一点，你可以写出各种各样的程序，所以如果你开始觉得有太多的东西需要学习，记住你不需要一次学习所有东西。</p>
-
+<span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="nv">$</span><span class="nv">ordered</span><span class="o">-</span><span class="n"></span><span class="n">things</span><span class="p">;</span>  <span class="c1"># OUTPUT: «foo␤bar␤ber␤»</span>
+<span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="nv">$</span><span class="nv">named</span><span class="o">-</span><span class="n"></span><span class="n">things</span><span class="p">;</span>    <span class="c1"># OUTPUT: «bar =&gt; ber␤foo =&gt; 42␤»</span>
+</code></pre></div><p>了解这一点，你可以写出各种各样的程序，所以如果你开始觉得有太多的东西需要学习，记住你不需要一次学习所有东西。</p>
 <h2 id="我们祝你有一个愉快的列表圣诞">我们祝你有一个愉快的列表圣诞</h2>
-
 <p>让我们试着用我们的变量做更多的事情。 想要更改列表中的值并不罕见。 到目前为止我们的表现如何呢？</p>
-
-<pre><code class="language-perl">my $list := (1, 2, 3);
-$list[0] := 100;
-# OUTPUT: «Cannot use bind operator with this left-hand side […] »
-</code></pre>
-
-<p>尽管我们可以绑定到变量，但是如果我们试图绑定到某个值，我们会得到一个错误，无论这个值是来自 <a href="https://docs.raku.org/type/List"><code>List</code></a> 还是只是一个字面值：</p>
-
-<pre><code class="language-perl">1 := 100;
-# OUTPUT: «Cannot use bind operator with this left-hand side […] »
-</code></pre>
-
-<p>这就是为什么列表是不可变的。 然而，这是一个实现愿望的季节，所以我们希望有一个可变的<a href="https://docs.raku.org/type/List"><code>List</code></a>！</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span><span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «Cannot use bind operator with this left-hand side […] »</span>
+</code></pre></div><p>尽管我们可以绑定到变量，但是如果我们试图绑定到某个值，我们会得到一个错误，无论这个值是来自 <a href="https://docs.raku.org/type/List"><code>List</code></a> 还是只是一个字面值：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="mi">1</span> <span class="p">:</span><span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «Cannot use bind operator with this left-hand side […] »</span>
+</code></pre></div><p>这就是为什么列表是不可变的。 然而，这是一个实现愿望的季节，所以我们希望有一个可变的<a href="https://docs.raku.org/type/List"><code>List</code></a>！</p>
 <p>我们需要掌握的是一个 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 对象，因为绑定操作符可以使用它。 顾名思义，一个 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 存储一个东西。 你不能通过 <a href="https://docs.raku.org/routine/new"><code>.new</code></a> 方法实例化一个 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>，但是我们可以通过声明一些词法变量来得到它们。 不需要费心给他们的名字：</p>
-
-<pre><code class="language-perl">my $list := (my $, my $, my $);
-$list[0] := 100;
-say $list; # OUTPUT: «(100 (Any) (Any))␤»
-</code></pre>
-
-<p>输出中的 <code>(Any)</code> 是容器的默认值（稍后一点）。 上面，似乎我们设法在 <a href="https://docs.raku.org/type/List"><code>List</code></a> 创建后将一个值绑定到列表的元素上，我们不是吗？ 确实我们做了，但是&hellip;</p>
-
-<pre><code class="language-perl">my $list := (my $, my $, my $);
-$list[0] := 100;
-$list[0] := 200;
-# OUTPUT: «Cannot use bind operator with this left-hand side […] »
-</code></pre>
-
-<p>绑定操作用一个新的值（<code>100</code>）代替 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器，所以如果我们试图再次绑定，我们又回到了原来的方括号那个，试图绑定到一个值，而不是一个容器。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="k">my</span> <span class="vg">$,</span> <span class="k">my</span> <span class="vg">$,</span> <span class="k">my</span> <span class="nv">$</span><span class="p">)</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span><span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">list</span><span class="p">;</span> <span class="c1"># OUTPUT: «(100 (Any) (Any))␤»</span>
+</code></pre></div><p>输出中的 <code>(Any)</code> 是容器的默认值（稍后一点）。 上面，似乎我们设法在 <a href="https://docs.raku.org/type/List"><code>List</code></a> 创建后将一个值绑定到列表的元素上，我们不是吗？ 确实我们做了，但是&hellip;</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="k">my</span> <span class="vg">$,</span> <span class="k">my</span> <span class="vg">$,</span> <span class="k">my</span> <span class="nv">$</span><span class="p">)</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span><span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span><span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «Cannot use bind operator with this left-hand side […] »</span>
+</code></pre></div><p>绑定操作用一个新的值（<code>100</code>）代替 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器，所以如果我们试图再次绑定，我们又回到了原来的方括号那个，试图绑定到一个值，而不是一个容器。</p>
 <p>我们需要一个更好的工具。</p>
-
-<h2 id="that-s-your-assignment">That&rsquo;s Your Assignment</h2>
-
+<h2 id="thats-your-assignment">That&rsquo;s Your Assignment</h2>
 <p>绑定运算符有一个表亲：赋值运算符（<code>=</code>）。 我们不用一个绑定操作符替换我们的 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器，而是使用赋值操作符来赋值或者“存储”我们在容器中的值：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">1</span><span class="p">,</span> <span class="k">my</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">2</span><span class="p">,</span> <span class="k">my</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">3</span><span class="p">)</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">list</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «(200 2 3)␤»</span>
+</code></pre></div><p>现在，我们可以从一开始就指定我们的原始值，并且可以随时用其他值替换它们。 我们甚至可以变得时髦，并在每个容器上放置不同的类型约束：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="k">my</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">1</span><span class="p">,</span> <span class="k">my</span> <span class="n"></span><span class="n">Str</span> <span class="nv">$</span> <span class="err">=</span> <span class="err">&#39;</span><span class="nv">2</span><span class="err">&#39;</span><span class="p">,</span> <span class="k">my</span> <span class="n"></span><span class="n">Rat</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">3</span><span class="mf">.0</span><span class="p">)</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span> <span class="c1"># OK!</span>
+<span class="nv">$</span><span class="nv">list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>  <span class="c1"># Typecheck failure!</span>
 
-<pre><code class="language-perl">my $list := (my $ = 1, my $ = 2, my $ = 3);
-$list[0] = 100;
-$list[0] = 200;
-say $list;
-# OUTPUT: «(200 2 3)␤»
-</code></pre>
-
-<p>现在，我们可以从一开始就指定我们的原始值，并且可以随时用其他值替换它们。 我们甚至可以变得时髦，并在每个容器上放置不同的类型约束：</p>
-
-<pre><code class="language-perl">my $list := (my Int $ = 1, my Str $ = '2', my Rat $ = 3.0);
-$list[0] = 100; # OK!
-$list[1] = 42;  # Typecheck failure!
-
-# OUTPUT: «Type check failed in assignment;
-#    expected Str but got Int (42) […] »
-</code></pre>
-
-<p>这有些放纵，但有一件事可以使用类型约束：<code>$list</code> 变量。 我们将其限制为 <a href="https://docs.raku.org/type/Positional"><code>Positional</code></a> 角色，以确保它只能保持 <a href="https://docs.raku.org/type/Positional"><code>Positional</code></a> 类型，就像 <a href="https://docs.raku.org/type/List"><code>List</code></a> 和 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>：</p>
-
-<pre><code class="language-perl">my Positional $list := (my $ = 1, my $ = '2', my $ = 3.0);
-</code></pre>
-
-<p>不知你咋想的，但是这对我来说看起来非常冗长。 幸运的是，Raku 有语法来简化它！</p>
-
-<h2 id="position-lly">Position@lly</h2>
-
+<span class="c1"># OUTPUT: «Type check failed in assignment;</span>
+<span class="c1">#    expected Str but got Int (42) […] »</span>
+</code></pre></div><p>这有些放纵，但有一件事可以使用类型约束：<code>$list</code> 变量。 我们将其限制为 <a href="https://docs.raku.org/type/Positional"><code>Positional</code></a> 角色，以确保它只能保持 <a href="https://docs.raku.org/type/Positional"><code>Positional</code></a> 类型，就像 <a href="https://docs.raku.org/type/List"><code>List</code></a> 和 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="n"></span><span class="n">Positional</span> <span class="nv">$</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="k">my</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">1</span><span class="p">,</span> <span class="k">my</span> <span class="nv">$</span> <span class="err">=</span> <span class="err">&#39;</span><span class="nv">2</span><span class="err">&#39;</span><span class="p">,</span> <span class="k">my</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">3</span><span class="mf">.0</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>不知你咋想的，但是这对我来说看起来非常冗长。 幸运的是，Raku 有语法来简化它！</p>
+<h2 id="positionlly">Position@lly</h2>
 <p>首先，让我们摆脱变量的显式类型约束。 在 Raku 中，您可以使用 <code>@</code> 而不是 <code>$</code> 作为符号来表示您希望变量受到角色 <a href="https://docs.raku.org/type/Positional"><code>Positional</code></a> 的类型约束：</p>
-
-<pre><code class="language-perl">my @list := 42;
-# OUTPUT: «Type check failed in binding;
-#   expected Positional but got Int (42) […] »
-</code></pre>
-
-<p>其次，我们将使用方括号来代替圆括号来存储我们的 <a href="https://docs.raku.org/type/List"><code>List</code></a>。 这告诉编译器创建一个 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 而不是一个 <a href="https://docs.raku.org/type/List"><code>List</code></a>。 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>s 是可变的，它们将每个元素自动粘贴到 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器中，就像我们在前一节中手动操作一样：</p>
-
-<pre><code class="language-perl">my @list := [1, '2', 3.0];
-@list[0] = 100;
-@list[0] = 200;
-say @list;
-# OUTPUT: «[200 2 3]␤»
-</code></pre>
-
-<p>我们的代码变得更短了，但我们可以折腾更多的字符。 就像赋值给<code>$</code>-sigiled 变量而不是绑定一样，你可以赋值给<code>@</code> -sigiled 变量来获得一个自由的 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>。 如果我们切换到赋值，我们可以完全摆脱方括号：</p>
-
-<pre><code class="language-perl">my @list = 1, '2', 3.0;
-</code></pre>
-
-<p>好，简洁。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «Type check failed in binding;</span>
+<span class="c1">#   expected Positional but got Int (42) […] »</span>
+</code></pre></div><p>其次，我们将使用方括号来代替圆括号来存储我们的 <a href="https://docs.raku.org/type/List"><code>List</code></a>。 这告诉编译器创建一个 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 而不是一个 <a href="https://docs.raku.org/type/List"><code>List</code></a>。 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>s 是可变的，它们将每个元素自动粘贴到 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器中，就像我们在前一节中手动操作一样：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">list</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «[200 2 3]␤»</span>
+</code></pre></div><p>我们的代码变得更短了，但我们可以折腾更多的字符。 就像赋值给<code>$</code>-sigiled 变量而不是绑定一样，你可以赋值给<code>@</code> -sigiled 变量来获得一个自由的 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>。 如果我们切换到赋值，我们可以完全摆脱方括号：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">list</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">;</span>
+</code></pre></div><p>好，简洁。</p>
 <p>类似的想法背后是 <code>％</code> - 和 <code>&amp;</code> 符号化的变量。 <code>％</code> sigil 意味着 <a href="https://docs.raku.org/type/Associative"><code>Associative</code></a> 角色的类型约束，并为赋值提供相同的快捷方式（给你一个 <a href="https://docs.raku.org/type/Hash"><code>Hash</code></a>），并为这些值创建 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器。 对于角色 <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 和赋值的 <code>＆</code>-sigiled变量类型 - 行为类似于 <code>$</code> sigils，给出一个可以修改其值的自由 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span>  <span class="nv">%</span><span class="nv">hash</span> <span class="o">=</span> <span class="p">:</span><span class="mi">42</span><span class="n"></span><span class="n">foo</span><span class="p">,</span> <span class="p">:</span><span class="n"></span><span class="n">bar</span><span class="sr">&lt;ber&gt;</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">%</span><span class="nv">hash</span><span class="p">;</span>  <span class="c1"># OUTPUT: «{bar =&gt; ber, foo =&gt; 42}␤»</span>
 
-<pre><code class="language-perl">my  %hash = :42foo, :bar&lt;ber&gt;;
-say %hash;  # OUTPUT: «{bar =&gt; ber, foo =&gt; 42}␤»
+<span class="k">my</span> <span class="o">&amp;</span><span class="n"></span><span class="n">reversay</span> <span class="o">=</span> <span class="k">sub</span> <span class="p">{</span> <span class="nv">$</span><span class="err">^</span><span class="nv">text</span><span class="o">.</span><span class="n"></span><span class="n">flip</span><span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="p">}</span>
+<span class="n"></span><span class="n">reversay</span> <span class="s">&#39;6 lreP ♥ I&#39;</span><span class="p">;</span> <span class="c1"># OUTPUT: «I ♥ Raku␤»</span>
 
-my &amp;reversay = sub { $^text.flip.say }
-reversay '6 lreP ♥ I'; # OUTPUT: «I ♥ Raku␤»
-
-# store a different Callable in the same variable
-&amp;reversay = *.uc.say;  # a WhateverCode object
-reversay 'I ♥ Raku'; # OUTPUT: «I ♥ PERL 6␤»
-</code></pre>
-
-<h2 id="the-one-and-only">The One and Only</h2>
-
+<span class="c1"># store a different Callable in the same variable</span>
+<span class="o">&amp;</span><span class="n"></span><span class="n">reversay</span> <span class="o">=</span> <span class="o">*</span><span class="o">.</span><span class="nb">uc</span><span class="o">.</span><span class="n"></span><span class="n">say</span><span class="p">;</span>  <span class="c1"># a WhateverCode object</span>
+<span class="n"></span><span class="n">reversay</span> <span class="s">&#39;I ♥ Raku&#39;</span><span class="p">;</span> <span class="c1"># OUTPUT: «I ♥ PERL 6␤»</span>
+</code></pre></div><h2 id="the-one-and-only">The One and Only</h2>
 <p>之前我们知道赋值给 <code>$</code> -sigiled 变量会给你一个免费的 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器。 由于标量，顾名思义，只包含一个东西&hellip;&hellip;如果你把一个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 放到 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 中会发生什么？ 毕竟，当你试图这样做的时候，宇宙仍然没有被扼杀：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span>  <span class="nv">$</span><span class="nv">listish</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">listish</span><span class="p">;</span> <span class="c1"># OUTPUT: «(1 2 3)␤»</span>
+</code></pre></div><p>这样的行为可能使 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 看起来似乎是一个用词不当，但它确实把整个列表视为一个东西。 我们可以通过几种方式观察其差异。 我们来比较绑定到 <code>$</code> -sigiled 变量的 <a href="https://docs.raku.org/type/List"><code>List</code></a>（所以不包含 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>）和赋值给 <code>$</code> -sigiled 变量（自动 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器）的 <a href="https://docs.raku.org/type/List"><code>List</code></a>：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1"># Binding:</span>
+<span class="k">my</span>  <span class="nv">$</span><span class="nv">list</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">list</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;Item: $_&#34;</span> <span class="k">for</span> <span class="nv">$</span><span class="nv">list</span><span class="p">;</span>
 
-<pre><code class="language-perl">my  $listish = (1, 2, 3);
-say $listish; # OUTPUT: «(1 2 3)␤»
-</code></pre>
-
-<p>这样的行为可能使 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 看起来似乎是一个用词不当，但它确实把整个列表视为一个东西。 我们可以通过几种方式观察其差异。 我们来比较绑定到 <code>$</code> -sigiled 变量的 <a href="https://docs.raku.org/type/List"><code>List</code></a>（所以不包含 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>）和赋值给 <code>$</code> -sigiled 变量（自动 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器）的 <a href="https://docs.raku.org/type/List"><code>List</code></a>：</p>
-
-<pre><code class="language-perl"># Binding:
-my  $list := (1, 2, 3);
-say $list.perl;
-say &quot;Item: $_&quot; for $list;
-
-# OUTPUT:
-# (1, 2, 3)
-# Item: 1
-# Item: 2
-# Item: 3
+<span class="c1"># OUTPUT:</span>
+<span class="c1"># (1, 2, 3)</span>
+<span class="c1"># Item: 1</span>
+<span class="c1"># Item: 2</span>
+<span class="c1"># Item: 3</span>
 
 
-# Assignment:
-my $listish = (1, 2, 3);
-say $listish.perl;
-say &quot;Item: $_&quot; for $listish;
+<span class="c1"># Assignment:</span>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">listish</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">listish</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;Item: $_&#34;</span> <span class="k">for</span> <span class="nv">$</span><span class="nv">listish</span><span class="p">;</span>
 
-# OUTPUT:
-# $(1, 2, 3)
-# Item: 1 2 3
-</code></pre>
-
-<p><a href="https://docs.raku.org/routine/perl"><code>.perl</code></a> 方法给了我们一个额外的见解，并在第二个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 之前显示了一个 <code>$</code>，以表明它在 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 中是集装箱化的。 更重要的是，当我们用 <code>for</code> 循环迭代我们的 <a href="https://docs.raku.org/type/List"><code>List</code></a>s 时，第二个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 结果只有一个迭代：整个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 作为一个项目！ <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 没有辜负它的名字。</p>
-
+<span class="c1"># OUTPUT:</span>
+<span class="c1"># $(1, 2, 3)</span>
+<span class="c1"># Item: 1 2 3</span>
+</code></pre></div><p><a href="https://docs.raku.org/routine/perl"><code>.perl</code></a> 方法给了我们一个额外的见解，并在第二个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 之前显示了一个 <code>$</code>，以表明它在 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 中是集装箱化的。 更重要的是，当我们用 <code>for</code> 循环迭代我们的 <a href="https://docs.raku.org/type/List"><code>List</code></a>s 时，第二个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 结果只有一个迭代：整个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 作为一个项目！ <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 没有辜负它的名字。</p>
 <p>这种行为不仅仅是学术上的兴趣。 回想一下，<a href="https://docs.raku.org/type/Array"><code>Array</code></a>s（和<a href="https://docs.raku.org/type/Hash"><code>Hash</code></a>es）为它们的值创建<a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器。 这意味着如果我们嵌套东西，即使我们选择一个单独的列表或散列在里面存储着 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>（或 <a href="https://docs.raku.org/type/Hash"><code>Hash</code></a>），并试图迭代它，它将只被视为一个单一的项目：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">stuff</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="nv">%</span><span class="err">(</span><span class="nv">:42foo</span><span class="p">,</span> <span class="p">:</span><span class="mi">70</span><span class="n"></span><span class="n">bar</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;List Item: $_&#34;</span> <span class="k">for</span> <span class="nv">@</span><span class="nv">stuff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;Hash Item: $_&#34;</span> <span class="k">for</span> <span class="nv">@</span><span class="nv">stuff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">;</span>
 
-<pre><code class="language-perl">my @stuff = (1, 2, 3), %(:42foo, :70bar);
-say &quot;List Item: $_&quot; for @stuff[0];
-say &quot;Hash Item: $_&quot; for @stuff[1];
+<span class="c1"># OUTPUT:</span>
+<span class="c1"># List Item: 1 2 3</span>
+<span class="c1"># Hash Item: bar  70</span>
+<span class="c1"># foo 42</span>
+</code></pre></div><p>同样的推理（即 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器中的列表和散列是单个项目）适用于当您试图压扁 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 的元素或将它们作为参数传递给 <a href="https://docs.raku.org/type/Signature#index-entry-parameter_%2A%40-parameter_%2A%2525_slurpy_argument_%28Signature%29-Slurpy_%28A.K.A._Variadic%29_Parameters">slurpy</a> 参数时：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">stuff</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="nv">%</span><span class="err">(</span><span class="nv">:42foo</span><span class="p">,</span> <span class="p">:</span><span class="mi">70</span><span class="n"></span><span class="n">bar</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">flat</span> <span class="nv">@</span><span class="nv">stuff</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «((1 2 3) {bar =&gt; 70, foo =&gt; 42})␤»</span>
 
-# OUTPUT:
-# List Item: 1 2 3
-# Hash Item: bar  70
-# foo 42
-</code></pre>
-
-<p>同样的推理（即 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器中的列表和散列是单个项目）适用于当您试图压扁 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 的元素或将它们作为参数传递给 <a href="https://docs.raku.org/type/Signature#index-entry-parameter_%2A%40-parameter_%2A%2525_slurpy_argument_%28Signature%29-Slurpy_%28A.K.A._Variadic%29_Parameters">slurpy</a> 参数时：</p>
-
-<pre><code class="language-perl">my @stuff = (1, 2, 3), %(:42foo, :70bar);
-say flat @stuff;
-# OUTPUT: «((1 2 3) {bar =&gt; 70, foo =&gt; 42})␤»
-
--&gt; *@args { @args.say }(@stuff)
-# OUTPUT: «[(1 2 3) {bar =&gt; 70, foo =&gt; 42}]␤»
-</code></pre>
-
-<p>正是这种行为可以将 Raku 初学者推上墙，特别是那些来自 Perl 5 自动展平语言的人。然而，现在我们知道为什么会出现这种行为，我们可以改变它！</p>
-
+<span class="o">-</span><span class="o">&gt;</span> <span class="o">*</span><span class="nv">@</span><span class="nv">args</span> <span class="p">{</span> <span class="nv">@</span><span class="nv">args</span><span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="p">}</span><span class="p">(</span><span class="nv">@</span><span class="nv">stuff</span><span class="p">)</span>
+<span class="c1"># OUTPUT: «[(1 2 3) {bar =&gt; 70, foo =&gt; 42}]␤»</span>
+</code></pre></div><p>正是这种行为可以将 Raku 初学者推上墙，特别是那些来自 Perl 5 自动展平语言的人。然而，现在我们知道为什么会出现这种行为，我们可以改变它！</p>
 <h2 id="decont">Decont</h2>
-
 <p>如果 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器是罪魁祸首，我们所要做的就是删除它。 我们需要将我们的列表和哈希值去容器化，或者简称为 “decont”。 在你的 Raku 之旅中，你可以找到几种方法来完成这个工作，但是为此设计的一个方法就是 decont methodop（<code>&lt;&gt;</code>）：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">stuff</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="nv">%</span><span class="err">(</span><span class="nv">:42foo</span><span class="p">,</span> <span class="p">:</span><span class="mi">70</span><span class="n"></span><span class="n">bar</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;Item: $_&#34;</span> <span class="k">for</span> <span class="nv">@</span><span class="nv">stuff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;Item: $_&#34;</span> <span class="k">for</span> <span class="nv">@</span><span class="nv">stuff</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">;</span>
 
-<pre><code class="language-perl">my @stuff = (1, 2, 3), %(:42foo, :70bar);
-say &quot;Item: $_&quot; for @stuff[0]&lt;&gt;;
-say &quot;Item: $_&quot; for @stuff[1]&lt;&gt;;
-
-# OUTPUT:
-# Item: 1
-# Item: 2
-# Item: 3
-# Item: bar   70
-# Item: foo   42
-</code></pre>
-
-<p>它很容易记住：它看起来像一个被挤压的盒子（一个被踩踏的容器）。 在通过索引到 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 中检索我们的容器化项目之后，我们附加了 decont 并从 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器中移除了内容，导致我们的循环遍历它们中的每个项目。</p>
-
+<span class="c1"># OUTPUT:</span>
+<span class="c1"># Item: 1</span>
+<span class="c1"># Item: 2</span>
+<span class="c1"># Item: 3</span>
+<span class="c1"># Item: bar   70</span>
+<span class="c1"># Item: foo   42</span>
+</code></pre></div><p>它很容易记住：它看起来像一个被挤压的盒子（一个被踩踏的容器）。 在通过索引到 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 中检索我们的容器化项目之后，我们附加了 decont 并从 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器中移除了内容，导致我们的循环遍历它们中的每个项目。</p>
 <p>如果您希望一次去除 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 中的每个元素，只需使用超运算符（<code>»</code>，或 <code>&gt;&gt;</code>，如果您更喜欢使用 ASCII）就可以使用 decont：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">stuff</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="nv">%</span><span class="err">(</span><span class="nv">:42foo</span><span class="p">,</span> <span class="p">:</span><span class="mi">70</span><span class="n"></span><span class="n">bar</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">flat</span> <span class="nv">@</span><span class="nv">stuff</span><span class="err">»</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «(1 2 3 bar =&gt; 70 foo =&gt; 42)␤»</span>
 
-<pre><code class="language-perl">my @stuff = (1, 2, 3), %(:42foo, :70bar);
-say flat @stuff»&lt;&gt;;
-# OUTPUT: «(1 2 3 bar =&gt; 70 foo =&gt; 42)␤»
+<span class="o">-</span><span class="o">&gt;</span> <span class="o">*</span><span class="nv">@</span><span class="nv">args</span> <span class="p">{</span> <span class="nv">@</span><span class="nv">args</span><span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="p">}</span><span class="p">(</span><span class="nv">@</span><span class="nv">stuff</span><span class="err">»</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="c1"># OUTPUT: «[1 2 3 bar =&gt; 70 foo =&gt; 42]␤»</span>
+</code></pre></div><p>随着容器被删除，我们的列表和散列就像我们想要的那样变平。 当然，我们可以避免使用 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>，而将原始 <a href="https://docs.raku.org/type/List"><code>List</code></a> 绑定到变量上。 由于 <a href="https://docs.raku.org/type/List"><code>List</code></a> 没有把它们的元素放入容器，所以没有任何东西可以去除：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">stuff</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="nv">%</span><span class="err">(</span><span class="nv">:42foo</span><span class="p">,</span> <span class="p">:</span><span class="mi">70</span><span class="n"></span><span class="n">bar</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">flat</span> <span class="nv">@</span><span class="nv">stuff</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «(1 2 3 bar =&gt; 70 foo =&gt; 42)␤»</span>
 
--&gt; *@args { @args.say }(@stuff»&lt;&gt;)
-# OUTPUT: «[1 2 3 bar =&gt; 70 foo =&gt; 42]␤»
-</code></pre>
+<span class="o">-</span><span class="o">&gt;</span> <span class="o">*</span><span class="nv">@</span><span class="nv">args</span> <span class="p">{</span> <span class="nv">@</span><span class="nv">args</span><span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="p">}</span><span class="p">(</span><span class="nv">@</span><span class="nv">stuff</span><span class="p">)</span>
+<span class="c1"># OUTPUT: «[1 2 3 bar =&gt; 70 foo =&gt; 42]␤»</span>
+</code></pre></div><h2 id="不要让它溜走">不要让它溜走</h2>
+<p>当我们在这里的时候，值得注意的是，当他们想要执行decont（我们不是在传递参数给 <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 的时候使用它）时，许多人使用 <em>slip</em>运算符（<code>|</code>）：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">stuff</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;Item: $_&#34;</span> <span class="k">for</span> <span class="o">|</span><span class="nv">@</span><span class="nv">stuff</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
 
-<p>随着容器被删除，我们的列表和散列就像我们想要的那样变平。 当然，我们可以避免使用 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>，而将原始 <a href="https://docs.raku.org/type/List"><code>List</code></a> 绑定到变量上。 由于 <a href="https://docs.raku.org/type/List"><code>List</code></a> 没有把它们的元素放入容器，所以没有任何东西可以去除：</p>
-
-<pre><code class="language-perl">my @stuff := (1, 2, 3), %(:42foo, :70bar);
-say flat @stuff;
-# OUTPUT: «(1 2 3 bar =&gt; 70 foo =&gt; 42)␤»
-
--&gt; *@args { @args.say }(@stuff)
-# OUTPUT: «[1 2 3 bar =&gt; 70 foo =&gt; 42]␤»
-</code></pre>
-
-<h2 id="不要让它溜走">不要让它溜走</h2>
-
-<p>当我们在这里的时候，值得注意的是，当他们想要执行decont（我们不是在传递参数给 <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 的时候使用它）时，许多人使用 *slip*运算符（<code>|</code>）：</p>
-
-<pre><code class="language-perl">my @stuff = (1, 2, 3), (4, 5);
-say &quot;Item: $_&quot; for |@stuff[0];
-
-# OUTPUT:
-# Item: 1
-# Item: 2
-# Item: 3
-</code></pre>
-
-<p>虽然它可以完成工作，但可能会引入微妙的 bugs，这些 bug 可能很难追查到。 尝试在这里找到一个，在一个程序中迭代了一个无限的非负整数列表，并打印那些素数：</p>
-
-<pre><code class="language-perl">my $primes = ^∞ .grep: *.is-prime;
-say &quot;$_ is a prime number&quot; for |$primes;
-</code></pre>
-
-<p>放弃？ 这个程序会导致内存泄漏&hellip; 非常缓慢。 尽管我们遍历了无限的项目列表，但这不是问题，因为 <a href="https://docs.raku.org/routine/grep"><code>.grep</code></a> 方法返回的 <a href="https://docs.raku.org/type/Seq"><code>Seq</code></a> 对象不会保留已经迭代的项目，因此内存使用永远不会增长。</p>
-
+<span class="c1"># OUTPUT:</span>
+<span class="c1"># Item: 1</span>
+<span class="c1"># Item: 2</span>
+<span class="c1"># Item: 3</span>
+</code></pre></div><p>虽然它可以完成工作，但可能会引入微妙的 bugs，这些 bug 可能很难追查到。 尝试在这里找到一个，在一个程序中迭代了一个无限的非负整数列表，并打印那些素数：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">primes</span> <span class="o">=</span> <span class="o">^</span><span class="err">∞</span> <span class="o">.</span><span class="nb">grep</span><span class="p">:</span> <span class="o">*</span><span class="o">.</span><span class="n"></span><span class="n">is</span><span class="o">-</span><span class="n"></span><span class="n">prime</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="s">&#34;$_ is a prime number&#34;</span> <span class="k">for</span> <span class="o">|</span><span class="nv">$</span><span class="nv">primes</span><span class="p">;</span>
+</code></pre></div><p>放弃？ 这个程序会导致内存泄漏&hellip; 非常缓慢。 尽管我们遍历了无限的项目列表，但这不是问题，因为 <a href="https://docs.raku.org/routine/grep"><code>.grep</code></a> 方法返回的 <a href="https://docs.raku.org/type/Seq"><code>Seq</code></a> 对象不会保留已经迭代的项目，因此内存使用永远不会增长。</p>
 <p>有问题的部分是我们的 <code>|</code>  slip 操作符。 它将我们的 <a href="https://docs.raku.org/type/Seq"><code>Seq</code></a> 转换成一个 <a href="https://docs.raku.org/type/Slip"><code>Slip</code></a> ，这是一个 <a href="https://docs.raku.org/type/List"><code>List</code></a> 类型，并且保存我们已经消耗的所有的值。 如果您希望在 <a href="http://hisham.hm/htop/"><code>htop</code></a> 中看到增长，那么这个程序的修改版本会更快地增长：</p>
-
-<pre><code class="language-perl"># CAREFUL! Don't consume all of your resources!
-my $primes = ^∞ .map: *.self;
-Nil for |$primes;
-</code></pre>
-
-<p>让我们再试一次，但是这次使用 decont 方法 op：</p>
-
-<pre><code class="language-perl">my $primes = ^∞ .map: *.self;
-Nil for $primes&lt;&gt;;
-</code></pre>
-
-<p>内存使用现在是稳定的，程序可以坐在那里迭代直到时间结束。 当然，因为我们知道这是 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器导致的容器化，我们希望在这里避免它，所以我们可以简单地将 <a href="https://docs.raku.org/type/Seq"><code>Seq</code></a> 绑定到变量上：</p>
-
-<pre><code class="language-perl">my $primes := ^∞ .map: *.self;
-Nil for $primes;
-</code></pre>
-
-<h2 id="i-want-less">I Want Less</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1"># CAREFUL! Don&#39;t consume all of your resources!</span>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">primes</span> <span class="o">=</span> <span class="o">^</span><span class="err">∞</span> <span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="o">*</span><span class="o">.</span><span class="n"></span><span class="n">self</span><span class="p">;</span>
+<span class="n"></span><span class="n">Nil</span> <span class="k">for</span> <span class="o">|</span><span class="nv">$</span><span class="nv">primes</span><span class="p">;</span>
+</code></pre></div><p>让我们再试一次，但是这次使用 decont 方法 op：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">primes</span> <span class="o">=</span> <span class="o">^</span><span class="err">∞</span> <span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="o">*</span><span class="o">.</span><span class="n"></span><span class="n">self</span><span class="p">;</span>
+<span class="n"></span><span class="n">Nil</span> <span class="k">for</span> <span class="nv">$</span><span class="nv">primes</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div><p>内存使用现在是稳定的，程序可以坐在那里迭代直到时间结束。 当然，因为我们知道这是 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器导致的容器化，我们希望在这里避免它，所以我们可以简单地将 <a href="https://docs.raku.org/type/Seq"><code>Seq</code></a> 绑定到变量上：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">primes</span> <span class="p">:</span><span class="o">=</span> <span class="o">^</span><span class="err">∞</span> <span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="o">*</span><span class="o">.</span><span class="n"></span><span class="n">self</span><span class="p">;</span>
+<span class="n"></span><span class="n">Nil</span> <span class="k">for</span> <span class="nv">$</span><span class="nv">primes</span><span class="p">;</span>
+</code></pre></div><h2 id="i-want-less">I Want Less</h2>
 <p>如果你讨厌符号，Raku 会得到一些你可以微笑的东西：无符号的变量。 只要在声明中加一个反斜杠的前缀，表示你不想要讨厌的符号：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="o">\</span><span class="n"></span><span class="n">Δ</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">Δ</span><span class="err">²</span><span class="p">;</span> <span class="c1"># OUTPUT: «1764␤»</span>
+</code></pre></div><p>你不会得到任何这样的变量的自由 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>，因此，在声明期间，绑定或赋值给他们没有任何区别。 它们的行为类似于将值绑定到 <code>$</code> -sigiled 变量的行为，包括绑定 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>s 并使变量可变：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="o">\</span><span class="n"></span><span class="n">Δ</span> <span class="o">=</span> <span class="k">my</span> <span class="nv">$</span> <span class="err">=</span> <span class="nv">42</span><span class="p">;</span>
+<span class="n"></span><span class="n">Δ</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">Δ</span><span class="err">²</span><span class="p">;</span> <span class="c1"># OUTPUT: «121␤»</span>
+</code></pre></div><p>一个更常见的地方，你可能会看到这样的变量是作为例程的参数，在这里，这意味着你想把 <code>is raw</code> trait 应用到参数上。 这在 <a href="https://docs.raku.org/type/Signature#index-entry-%2B_%28Single_Argument_Rule_Slurpy%29"><code>+</code> positional slurpy</a> 参数的含义也是存在的（不需要反斜杠），如果它是 <code>is raw</code> 的，意味着你将不会得到不需要的 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器，因为它是一个 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>，因为它具有 <code>@</code> sigil：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">sigiled</span> <span class="p">($x is raw, +@y) {</span>
+    <span class="nv">$</span><span class="nv">x</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">flat</span> <span class="nv">@</span><span class="nv">y</span>
+<span class="p">}</span>
 
-<pre><code class="language-perl">my \Δ = 42;
-say Δ²; # OUTPUT: «1764␤»
-</code></pre>
+<span class="k">sub</span> <span class="nf">sigil</span><span class="p">-less (\x, +y) {</span>
+    <span class="n"></span><span class="n">x</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+    <span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">flat</span> <span class="n"></span><span class="n">y</span>
+<span class="p">}</span>
 
-<p>你不会得到任何这样的变量的自由 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>，因此，在声明期间，绑定或赋值给他们没有任何区别。 它们的行为类似于将值绑定到 <code>$</code> -sigiled 变量的行为，包括绑定 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>s 并使变量可变：</p>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">x</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n"></span><span class="n">sigiled</span>    <span class="nv">$</span><span class="nv">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="p">;</span> <span class="c1"># OUTPUT: «((1 2) (3 4))␤»</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">x</span><span class="p">;</span>                        <span class="c1"># OUTPUT: «100␤»</span>
 
-<pre><code class="language-perl">my \Δ = my $ = 42;
-Δ = 11;
-say Δ²; # OUTPUT: «121␤»
-</code></pre>
-
-<p>一个更常见的地方，你可能会看到这样的变量是作为例程的参数，在这里，这意味着你想把 <code>is raw</code> trait 应用到参数上。 这在 <a href="https://docs.raku.org/type/Signature#index-entry-%2B_%28Single_Argument_Rule_Slurpy%29"><code>+</code> positional slurpy</a> 参数的含义也是存在的（不需要反斜杠），如果它是 <code>is raw</code> 的，意味着你将不会得到不需要的 <a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a> 容器，因为它是一个 <a href="https://docs.raku.org/type/Array"><code>Array</code></a>，因为它具有 <code>@</code> sigil：</p>
-
-<pre><code class="language-perl">sub sigiled ($x is raw, +@y) {
-    $x = 100;
-    say flat @y
-}
-
-sub sigil-less (\x, +y) {
-    x = 200;
-    say flat y
-}
-
-my $x = 42;
-sigiled    $x, (1, 2), (3, 4); # OUTPUT: «((1 2) (3 4))␤»
-say $x;                        # OUTPUT: «100␤»
-
-sigil-less $x, (1, 2), (3, 4); # OUTPUT: «(1 2 3 4)␤»
-say $x;                        # OUTPUT: «200␤»
-</code></pre>
-
-<h2 id="defaulting-on-default-defaults">Defaulting on Default Defaults</h2>
-
+<span class="n"></span><span class="n">sigil</span><span class="o">-</span><span class="n"></span><span class="n">less</span> <span class="nv">$</span><span class="nv">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="p">;</span> <span class="c1"># OUTPUT: «(1 2 3 4)␤»</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">x</span><span class="p">;</span>                        <span class="c1"># OUTPUT: «200␤»</span>
+</code></pre></div><h2 id="defaulting-on-default-defaults">Defaulting on Default Defaults</h2>
 <p>容器提供的一个很棒的功能是默认值。 你可能听说过在 Raku 中，<code>Nil</code>表示缺少一个值，而不是一个值。 容器默认值就是它的作用：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">x</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">default</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">x</span><span class="p">;</span>   <span class="c1"># OUTPUT: «42␤»</span>
 
-<pre><code class="language-perl">my $x is default(42);
-say $x;   # OUTPUT: «42␤»
+<span class="nv">$</span><span class="nv">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">x</span><span class="p">;</span>   <span class="c1"># OUTPUT: «10␤»</span>
 
-$x = 10;
-say $x;   # OUTPUT: «10␤»
-
-$x = Nil;
-say $x;   # OUTPUT: «42␤»
-</code></pre>
-
-<p>一个容器的默认值是使用 <a href="https://docs.raku.org/type/Variable#index-entry-trait_is_default_%28Variable%29-trait_is_default"><code>is default</code> trait</a> 给它的。 它的参数是在编译时计算的，每当容器缺少一个值时，就使用结果值。 由于 <code>Nil</code> 的工作是表明这一点，因此将 <code>Nil</code> 分配到容器中将导致容器包含其默认值，而不是 <code>Nil</code>。</p>
-
+<span class="nv">$</span><span class="nv">x</span> <span class="o">=</span> <span class="n"></span><span class="n">Nil</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">x</span><span class="p">;</span>   <span class="c1"># OUTPUT: «42␤»</span>
+</code></pre></div><p>一个容器的默认值是使用 <a href="https://docs.raku.org/type/Variable#index-entry-trait_is_default_%28Variable%29-trait_is_default"><code>is default</code> trait</a> 给它的。 它的参数是在编译时计算的，每当容器缺少一个值时，就使用结果值。 由于 <code>Nil</code> 的工作是表明这一点，因此将 <code>Nil</code> 分配到容器中将导致容器包含其默认值，而不是 <code>Nil</code>。</p>
 <p>可以给 <a href="https://docs.raku.org/type/Array"><code>Array</code></a> 和 <a href="https://docs.raku.org/type/Hash"><code>Hash</code></a> 容器赋予默认值，如果你希望你的容器在字面上包含 <code>Nil</code>，当没有值时，只需要指定 <code>Nil</code> 作为默认值：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">default</span><span class="sr">&lt;meow&gt;</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">42</span><span class="p">]</span><span class="p">;</span> <span class="c1"># OUTPUT: «(1 3 meow)␤»</span>
 
-<pre><code class="language-perl">my @a is default&lt;meow&gt; = 1, 2, 3;
-say @a[0, 2, 42]; # OUTPUT: «(1 3 meow)␤»
+<span class="nv">@</span><span class="nv">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">:</span><span class="nb">delete</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>        <span class="c1"># OUTPUT: «meow␤»</span>
 
-@a[0]:delete;
-say @a[0];        # OUTPUT: «meow␤»
+<span class="k">my</span> <span class="nv">%</span><span class="nv">h</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">default</span><span class="p">(</span><span class="n"></span><span class="n">Nil</span><span class="p">)</span> <span class="o">=</span> <span class="p">:</span><span class="n"></span><span class="n">bar</span><span class="sr">&lt;ber&gt;</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">%</span><span class="nv">h</span><span class="o">&lt;</span><span class="n"></span><span class="n">bar</span> <span class="n"></span><span class="n">foos</span><span class="o">&gt;</span><span class="p">;</span> <span class="c1"># OUTPUT: «(ber Nil)␤»</span>
 
-my %h is default(Nil) = :bar&lt;ber&gt;;
-say %h&lt;bar foos&gt;; # OUTPUT: «(ber Nil)␤»
+<span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;bar&gt;</span><span class="p">:</span><span class="nb">delete</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;bar&gt;</span>       <span class="c1"># OUTPUT: «Nil␤»</span>
+</code></pre></div><p>容器的默认值有一个默认的默认值：容器上的显式类型约束：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="k">my</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">y</span><span class="p">;</span> <span class="c1"># OUTPUT: «(Int)␤»</span>
+<span class="n"></span><span class="n">say</span> <span class="k">my</span> <span class="n"></span><span class="n">Mu</span>  <span class="nv">$</span><span class="nv">z</span><span class="p">;</span> <span class="c1"># OUTPUT: «(Mu)␤»</span>
 
-%h&lt;bar&gt;:delete;
-say %h&lt;bar&gt;       # OUTPUT: «Nil␤»
-</code></pre>
-
-<p>容器的默认值有一个默认的默认值：容器上的显式类型约束：</p>
-
-<pre><code class="language-perl">say my Int $y; # OUTPUT: «(Int)␤»
-say my Mu  $z; # OUTPUT: «(Mu)␤»
-
-say my Int $i where *.is-prime; # OUTPUT: «(&lt;anon&gt;)␤»
-$i.new; # OUTPUT: (exception) «You cannot create […]»
-</code></pre>
-
-<p>如果没有明确的类型约束，默认的默认值是一个 <a href="https://docs.raku.org/type/Any"><code>Any</code></a> 类型的对象：</p>
-
-<pre><code class="language-perl">say my $x;    # OUTPUT: «(Any)␤»
-say $x = Nil; # OUTPUT: «(Any)␤»
-</code></pre>
-
-<p>请注意，您可能在可选参数的例程签名中使用的默认值不是容器默认值，将 <code>Nil</code> 分配给子例程参数或分配给参数不会使用签名中的默认值。</p>
-
+<span class="n"></span><span class="n">say</span> <span class="k">my</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">i</span> <span class="n"></span><span class="n">where</span> <span class="o">*</span><span class="o">.</span><span class="n"></span><span class="n">is</span><span class="o">-</span><span class="n"></span><span class="n">prime</span><span class="p">;</span> <span class="c1"># OUTPUT: «(&lt;anon&gt;)␤»</span>
+<span class="nv">$</span><span class="nv">i</span><span class="o">.</span><span class="k">new</span><span class="p">;</span> <span class="c1"># OUTPUT: (exception) «You cannot create […]»</span>
+</code></pre></div><p>如果没有明确的类型约束，默认的默认值是一个 <a href="https://docs.raku.org/type/Any"><code>Any</code></a> 类型的对象：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="k">my</span> <span class="nv">$</span><span class="nv">x</span><span class="p">;</span>    <span class="c1"># OUTPUT: «(Any)␤»</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">x</span> <span class="o">=</span> <span class="n"></span><span class="n">Nil</span><span class="p">;</span> <span class="c1"># OUTPUT: «(Any)␤»</span>
+</code></pre></div><p>请注意，您可能在可选参数的例程签名中使用的默认值不是容器默认值，将 <code>Nil</code> 分配给子例程参数或分配给参数不会使用签名中的默认值。</p>
 <h2 id="自定义">自定义</h2>
-
 <p>如果容器的标准行为不适合您的需求，您可以使用 <a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 类型创建自己的容器：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">collector</span> <span class="p">:</span><span class="o">=</span> <span class="k">do</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="nv">@</span><span class="nv">stuff</span><span class="p">;</span>
+    <span class="n"></span><span class="n">Proxy</span><span class="o">.</span><span class="k">new</span><span class="p">:</span> <span class="p">:</span><span class="n"></span><span class="n">STORE</span><span class="p">{</span> <span class="nv">@</span><span class="nv">stuff</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="nv">@</span><span class="nv">_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">}</span><span class="p">,</span>
+               <span class="p">:</span><span class="n"></span><span class="n">FETCH</span><span class="p">{</span> <span class="nv">@</span><span class="nv">stuff</span><span class="o">.</span><span class="nb">join</span><span class="p">:</span> <span class="s">&#34;|&#34;</span>   <span class="p">}</span>
+<span class="p">}</span>
 
-<pre><code class="language-perl">my $collector := do {
-    my @stuff;
-    Proxy.new: :STORE{ @stuff.push: @_[1] },
-               :FETCH{ @stuff.join: &quot;|&quot;   }
-}
+<span class="nv">$</span><span class="nv">collector</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">collector</span> <span class="o">=</span> <span class="s">&#39;meows&#39;</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">collector</span><span class="p">;</span> <span class="c1"># OUTPUT: «42|meows␤»</span>
 
-$collector = 42;
-$collector = 'meows';
-say $collector; # OUTPUT: «42|meows␤»
-
-$collector = 'foos';
-say $collector; # OUTPUT: «42|meows|foos␤»
-</code></pre>
-
-<p>接口有点笨重，但它完成了工作。我们使用 <a href="https://docs.raku.org/routine/new"><code>.new</code></a> 方法创建 <a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 对象，该方法需要两个必需的命名参数：<code>STORE</code> 和 <code>FETCH</code>，每个都带一个 <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a>。</p>
-
+<span class="nv">$</span><span class="nv">collector</span> <span class="o">=</span> <span class="s">&#39;foos&#39;</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">collector</span><span class="p">;</span> <span class="c1"># OUTPUT: «42|meows|foos␤»</span>
+</code></pre></div><p>接口有点笨重，但它完成了工作。我们使用 <a href="https://docs.raku.org/routine/new"><code>.new</code></a> 方法创建 <a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 对象，该方法需要两个必需的命名参数：<code>STORE</code> 和 <code>FETCH</code>，每个都带一个 <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a>。</p>
 <p>每当从容器中读取一个值时，<code>FETCH</code><a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 被调用，这可能比直接看到的次数多出现一次：在上面的代码中，当容器通过调度和例程这两个调用渗透时，<code>FETCH</code><a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 被调用10次。 <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 被调用一个单一的位置参数：<a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 对象本身。</p>
-
 <p>无论何时将值存储到我们的容器中（例如，使用赋值运算符（<code>=</code>）），<code>STORE</code> <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 都会被调用。 <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 的第一个位置参数是 <a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 对象本身，第二个参数是存储的值。</p>
-
 <p>我们希望 <code>STORE</code> 和 <code>FETCH</code>  <a href="https://docs.raku.org/type/Callable"><code>Callable</code></a> 共享 <code>@stuff</code> 变量，所以我们使用 <a href="https://docs.raku.org/syntax/do"><code>do</code> statement prefix</a> 和一个代码块来很好地包含它。</p>
-
 <p>我们将我们的 <a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 绑定到一个变量，其余的只是正常的变量用法。输出显示我们的自定义容器提供的改变过的行为。</p>
-
 <p>Proxies 也可以方便地作为返回值来提供具有可变属性的额外行为。例如，这里有一个属性，从外部看来只是一个正常的可变属性，但实际上强制它的值从 <a href="https://docs.raku.org/type/Any"><code>Any</code></a> 任何类型变为 <a href="https://docs.raku.org/type/Int"><code>Int</code></a> 类型：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Foo</span> <span class="p">{</span>
+    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">!</span><span class="nv">foo</span><span class="p">;</span>
+    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">foo</span> <span class="p">{</span>
+        <span class="n"></span><span class="n">Proxy</span><span class="o">.</span><span class="k">new</span><span class="p">:</span> <span class="p">:</span><span class="n"></span><span class="n">STORE</span><span class="p">(</span><span class="o">-</span><span class="o">&gt;</span> <span class="vg">$,</span> <span class="n"></span><span class="n">Int</span><span class="p">(</span><span class="p">)</span> <span class="nv">$</span><span class="err">!</span><span class="nv">foo</span> <span class="p">{</span> <span class="nv">$</span><span class="err">!</span><span class="nv">foo</span> <span class="p">}</span><span class="p">)</span><span class="p">,</span>
+                   <span class="p">:</span><span class="n"></span><span class="n">FETCH</span><span class="p">{</span> <span class="nv">$</span><span class="err">!</span><span class="nv">foo</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-<pre><code class="language-perl">class Foo {
-    has $!foo;
-    method foo {
-        Proxy.new: :STORE(-&gt; $, Int() $!foo { $!foo }),
-                   :FETCH{ $!foo }
-    }
-}
-
-my $o = Foo.new;
-$o.foo = ' 42.1e0 ';
-say $o.foo; # OUTPUT: «42␤»
-</code></pre>
-
-<p>很甜蜜！ 如果你想要一个更好的接口的 <a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 与一些更多的功能，请检查 <a href="http://modules.raku.org/dist/Proxee">Proxee</a> 模块。</p>
-
-<h2 id="这就是全部-伙计">这就是全部，伙计</h2>
-
+<span class="k">my</span> <span class="nv">$</span><span class="nv">o</span> <span class="o">=</span> <span class="n"></span><span class="n">Foo</span><span class="o">.</span><span class="k">new</span><span class="p">;</span>
+<span class="nv">$</span><span class="nv">o</span><span class="o">.</span><span class="n"></span><span class="n">foo</span> <span class="o">=</span> <span class="s">&#39; 42.1e0 &#39;</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">o</span><span class="o">.</span><span class="n"></span><span class="n">foo</span><span class="p">;</span> <span class="c1"># OUTPUT: «42␤»</span>
+</code></pre></div><p>很甜蜜！ 如果你想要一个更好的接口的 <a href="https://docs.raku.org/type/Proxy"><code>Proxy</code></a> 与一些更多的功能，请检查 <a href="http://modules.raku.org/dist/Proxee">Proxee</a> 模块。</p>
+<h2 id="这就是全部伙计">这就是全部，伙计</h2>
 <p>那关于这一切。 在 Raku 中你将会看到的剩下的动物是 “twigils”：名称前带有两个符号的变量，但是就容器而言，它们的行为与我们所介绍的变量相同。 第二个符号只是表示附加信息，如变量是隐含的位置参数还是命名参数&hellip;</p>
-
-<pre><code class="language-perl">sub test { say &quot;$^implied @:parameters[]&quot; }
-test 'meow', :parameters&lt;says the cat&gt;;
-# OUTPUT: «meow says the cat␤»
-</code></pre>
-
-<p>&hellip;或者该变量是私有属性还是公共属性：</p>
-
-<pre><code class="language-perl">with class Foo {
-    has $!foo = 42;
-    has @.bar = 100;
-    method what's-foo { $!foo }
-}.new {
-    say .bar;       # OUTPUT: «[100]␤»
-    say .what's-foo # OUTPUT: «42␤»
-}
-</code></pre>
-
-<p>然而，这是另一天的旅程。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">test</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="s">&#34;$^implied @:parameters[]&#34;</span> <span class="p">}</span>
+<span class="n"></span><span class="n">test</span> <span class="s">&#39;meow&#39;</span><span class="p">,</span> <span class="p">:</span><span class="n"></span><span class="n">parameters</span><span class="o">&lt;</span><span class="n"></span><span class="n">says</span> <span class="n"></span><span class="n">the</span> <span class="n"></span><span class="n">cat</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="c1"># OUTPUT: «meow says the cat␤»</span>
+</code></pre></div><p>&hellip;或者该变量是私有属性还是公共属性：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">with</span> <span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Foo</span> <span class="p">{</span>
+    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">!</span><span class="nv">foo</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+    <span class="n"></span><span class="n">has</span> <span class="nv">@</span><span class="err">.</span><span class="nv">bar</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">what</span><span class="s">&#39;s-foo { $!foo }
+</span><span class="s">}.new {
+</span><span class="s">    say .bar;       # OUTPUT: «[100]␤»
+</span><span class="s">    say .what&#39;</span><span class="n"></span><span class="n">s</span><span class="o">-</span><span class="n"></span><span class="n">foo</span> <span class="c1"># OUTPUT: «42␤»</span>
+<span class="p">}</span>
+</code></pre></div><p>然而，这是另一天的旅程。</p>
 <h2 id="结论">结论</h2>
-
 <p>Raku 有一个丰富的变量和容器系统，与 Perl 5 有很大的不同。理解它的工作方式是非常重要的，因为它会影响列表和哈希行为的迭代和展开方式。</p>
-
 <p>赋值给变量提供了有价值的快捷方式，例如提供<a href="https://docs.raku.org/type/Scalar"><code>Scalar</code></a>，<a href="https://docs.raku.org/type/Array"><code>Array</code></a>或<a href="https://docs.raku.org/type/Hash"><code>Hash</code></a> 容器，具体取决于符号。 如果您需要，绑定到变量允许您绕过这样的快捷方式。</p>
-
 <p>在 Raku 中存在无符号变量，它们与具有绑定功能的 <code>$</code> -sigiled 变量具有相似的行为。 当用作参数时，这些变量的行为就像应用了 <code>is raw</code> trait一样。</p>
-
 <p>最后，容器可以有默认值，可以创建自己的自定义容器，可以绑定到变量或从例程返回。</p>
-
 <p>节日快乐！</p>
 
 
@@ -752,7 +604,7 @@ test 'meow', :parameters&lt;says the cat&gt;;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

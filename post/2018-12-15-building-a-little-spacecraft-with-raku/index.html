@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-15-building-a-little-spacecraft-with-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,13 +231,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="炫耀长耳朵">炫耀长耳朵</h2>
-
+        <h2 id="炫耀长耳朵">炫耀长耳朵</h2>
 <p>在<a href="https://rakuadvent.wordpress.com/2018/12/14/designing-a-space-ship-with-perl-6/">上一篇文章</a>中，我们遇到了某种特殊精灵的魔力：</p>
-
-<pre><code class="language-raku">enum Fuel &lt;Solid Liquid Gas&gt;;
+<pre><code class="language-raku" data-lang="raku">enum Fuel &lt;Solid Liquid Gas&gt;;
 
 class SpeedChoice does ASNChoice {
     method ASN-choice { { mph =&gt; (1 =&gt; Int), kmph =&gt; (0 =&gt; Int) } }
@@ -273,13 +269,9 @@ my $rocket-bytes = ASN::Serializer.serialize($rocket, :mode(Implicit));
 ]
 
 say ASN::Parser.new(:type(Rocket)).parse($rocket-bytes) eqv $rocket; # Certainly true!
-</code></pre>
-
-<h2 id="类型-类型-类型">类型，类型，类型</h2>
-
+</code></pre><h2 id="类型类型类型">类型，类型，类型</h2>
 <p>有些事情是不言而喻的（或者对于我来说，用了无数个小时来看精灵如何玩魔法）</p>
-
-<pre><code class="language-raku"># 1
+<pre><code class="language-raku" data-lang="raku"># 1
 role ASNSequence {
     # every descendant has to fulfill this important vow!
     method ASN-order {...}
@@ -309,23 +301,16 @@ role ASN::Types::UTF8String does ASN::StringWrapper {}
 
 # Yes, it is _this_ short
 multi trait_mod:(Attribute $attr, :$UTF8String) is export { $attr does ASN::Types::UTF8String }
-</code></pre>
-
-<ul>
-<li>第一个是一个简单的角色，它允许我们强制执行 <code>ASN-order</code> 方法<br /></li>
-<li>第二个是持有 CHOICE 实际值的角色，并强制执行用户必须描述可能选项的方法<br /></li>
-<li>第三个描述了一个特性，如 <code>is UTF8String</code>，它为属性添加一个角色，这将在以后帮助我们，并提供角色本身以及一些包装代码<br /></li>
+</code></pre><ul>
+<li>第一个是一个简单的角色，它允许我们强制执行 <code>ASN-order</code> 方法</li>
+<li>第二个是持有 CHOICE 实际值的角色，并强制执行用户必须描述可能选项的方法</li>
+<li>第三个描述了一个特性，如 <code>is UTF8String</code>，它为属性添加一个角色，这将在以后帮助我们，并提供角色本身以及一些包装代码</li>
 </ul>
-
 <p>与第三部分表达的方式相同，可以表达 <code>OPTIONAL</code>，<code>DEFAULT</code> “traits”和其他字符串类型。</p>
-
-<h2 id="进步-进化-序列化">进步，进化，序列化！</h2>
-
+<h2 id="进步进化序列化">进步，进化，序列化！</h2>
 <p>通过一系列规则可以做什么来序列化事物？鉴于 <code>Basic Encoding Rules</code> 对不同类型的值有不同的处理方式（如果你思考一下就不会觉得太奇怪！）以及一个类型可以嵌套在另一个类型中的事实，更不用说是递归的了？我觉得它可能不太难实现。 Raku 的 multi-dispatch 正派上用场！</p>
-
 <p>一般来说，事情如下：</p>
-
-<pre><code class="language-raku">class ASN::Serializer {
+<pre><code class="language-raku" data-lang="raku">class ASN::Serializer {
     ...
 
     # like this:
@@ -339,47 +324,31 @@ multi trait_mod:(Attribute $attr, :$UTF8String) is export { $attr does ASN::Type
     multi method serialize(Positional $sequence, Int $index is copy = 16, :$debug, :$mode) { ... }
 
     ...
-</code></pre>
-
-<p>描述该领域所有内容的规则是：</p>
-
+</code></pre><p>描述该领域所有内容的规则是：</p>
 <ul>
-<li>对于复杂类型，必须引入一个 *has*，如 <code>ASNStructure</code>，迭代其内容，逐个序列化内部，并正确加入它。在一天结束时，对于每个这样的 <code>Serializer</code> 程序都具有已知的属性类型或者可以基于特征应用的角色（方便！）推断它，可以具有属性的值（或者如果属性是可选的并且可以省略则可以跳过该属性） ，可以包装/解包基于 <code>Str</code> 的类型 - 所有这些都允许一个序列化类型<br /></li>
-<li>对于简单类型，可以根据给定的规则对其进行序列化<br /></li>
-<li>对于一些方便的“特殊情况”，例如像 <code>@.foo</code> 那样的属性，需要推断发生了什么（在这种情况下，它将是 <code>SEQUENCEOF</code> 类型）并正确地序列化它<br /></li>
+<li>对于复杂类型，必须引入一个 <em>has</em>，如 <code>ASNStructure</code>，迭代其内容，逐个序列化内部，并正确加入它。在一天结束时，对于每个这样的 <code>Serializer</code> 程序都具有已知的属性类型或者可以基于特征应用的角色（方便！）推断它，可以具有属性的值（或者如果属性是可选的并且可以省略则可以跳过该属性） ，可以包装/解包基于 <code>Str</code> 的类型 - 所有这些都允许一个序列化类型</li>
+<li>对于简单类型，可以根据给定的规则对其进行序列化</li>
+<li>对于一些方便的“特殊情况”，例如像 <code>@.foo</code> 那样的属性，需要推断发生了什么（在这种情况下，它将是 <code>SEQUENCEOF</code> 类型）并正确地序列化它</li>
 </ul>
-
 <p>除了带有值的第一个参数外，还有三个参数：</p>
-
 <ul>
-<li><code>$index</code> 整数派上用场，特别是对于 BER 特定的索引<br /></li>
-<li><code>$debug</code> flag 启用调试输出（当调试一些二进制协议时，这非常有用！）<br /></li>
+<li><code>$index</code> 整数派上用场，特别是对于 BER 特定的索引</li>
+<li><code>$debug</code> flag 启用调试输出（当调试一些二进制协议时，这非常有用！）</li>
 <li>将来可能会使用 <code>$mode</code> 值来支持 <code>IMPLICIT</code> 以外的标记模式。</li>
 </ul>
-
-<h2 id="如果有时间进行编码-总会有时间进行解码">如果有时间进行编码，总会有时间进行解码</h2>
-
+<h2 id="如果有时间进行编码总会有时间进行解码">如果有时间进行编码，总会有时间进行解码</h2>
 <p>什么是解析器？如果序列化程序是“向后解析器”，那么解析器就是&hellip;&hellip;是的，它是一个向后的序列化器！但是这是什么意思？通常，序列化器接收一些 A 并产生一些给定形式的 B。并且解析器获取给定形式的一些 B 并产生一些 A。</p>
-
 <p>假设有人知道正在解析的确切类型：</p>
-
-<pre><code class="language-raku">my $parser = ASN::Parser.new(type =&gt; Rocket);
+<pre><code class="language-raku" data-lang="raku">my $parser = ASN::Parser.new(type =&gt; Rocket);
 say $parser.parse($rocket-ber); # Yes, here goes our rocket!
-</code></pre>
-
-<p>如果要解析此 <code>Buf</code> 内容，则必须指定其类型，就像下面这样：</p>
-
-<pre><code class="language-raku">multi method parse(Blob $input, ...) {
+</code></pre><p>如果要解析此 <code>Buf</code> 内容，则必须指定其类型，就像下面这样：</p>
+<pre><code class="language-raku" data-lang="raku">multi method parse(Blob $input, ...) {
     ...
     self.parse($input, $!type, ...);
 }
-</code></pre>
-
-<p>这个方法不知道它所解析的类型，但它调用了它的朋友：<code>parse($input, SomeCoolType, ...)</code> 超出了传递的内容和它可以得到的类型。如果知道了类型，多重分派将很乐意为我们提供必要的解析实现。对于简单的类型。对于复杂的类型。对于“特殊”类型。有了 Raku，任何一天都会发生便利的奇迹！</p>
-
+</code></pre><p>这个方法不知道它所解析的类型，但它调用了它的朋友：<code>parse($input, SomeCoolType, ...)</code> 超出了传递的内容和它可以得到的类型。如果知道了类型，多重分派将很乐意为我们提供必要的解析实现。对于简单的类型。对于复杂的类型。对于“特殊”类型。有了 Raku，任何一天都会发生便利的奇迹！</p>
 <p>让我们再看一眼：</p>
-
-<pre><code class="language-raku"># Details and basic indentation are omitted for clarity
+<pre><code class="language-raku" data-lang="raku"># Details and basic indentation are omitted for clarity
 
 ...
 
@@ -395,27 +364,17 @@ multi method parse(Buf $input is rw, ASNSequence $type, :$debug, :$mode) {
     # Yes, it is kind of neat. :)
     $type.bless(|Map.new(@params));
 }
-</code></pre>
-
-<p>事实上，更简单的类型更简单，就像这样：</p>
-
-<pre><code class="language-raku">multi method parse(Buf $input is rw, $enum-type where $enum-type.HOW ~~ Metamodel::EnumHOW, :$debug, :$mode) {
+</code></pre><p>事实上，更简单的类型更简单，就像这样：</p>
+<pre><code class="language-raku" data-lang="raku">multi method parse(Buf $input is rw, $enum-type where $enum-type.HOW ~~ Metamodel::EnumHOW, :$debug, :$mode) {
     say &quot;Parsing `$input[0]` out of $input.perl()&quot; if $debug;
     $enum-type($input[0]);
 }
-</code></pre>
-
-<p>但是，必须保持规则，以表明错误，并做各种“无聊”的事情，而不是“必要”的事情。虽然 Raku 允许我们在这个区域使用一些不错的技巧，但在圣诞节前看它并不是太感兴趣。</p>
-
-<h2 id="what-o-clock-supply-o-clock">What o’clock? Supply o’clock!</h2>
-
+</code></pre><p>但是，必须保持规则，以表明错误，并做各种“无聊”的事情，而不是“必要”的事情。虽然 Raku 允许我们在这个区域使用一些不错的技巧，但在圣诞节前看它并不是太感兴趣。</p>
+<h2 id="what-oclock-supply-oclock">What o’clock? Supply o’clock!</h2>
 <p>如果你已经厌倦了所有这些与 <code>ASN.1</code> 相关的东西，我有一个好消息：它已经快结束了。 \O/</p>
-
 <p>虽然所有这些“类型是我的一等公民而我很酷”技巧很有趣，但还有一个技巧可以展示，虽然是相关的，但却有点完全不同。</p>
-
 <p><code>ASN.1</code> 解析器应该是增量的。更重要的是，它必须是非常明确的，因为人们可以使用未知长度的值。可以做些什么来快速使我们的解析器增量？我们快点做吧：</p>
-
-<pre><code class="language-raku">class ASN::Parser::Async {
+<pre><code class="language-raku" data-lang="raku">class ASN::Parser::Async {
     has Supplier::Preserving $!out = Supplier::Preserving.new;
     has Supply $!values = $!out.Supply;
     has Buf $!buffer = Buf.new;
@@ -447,11 +406,8 @@ multi method parse(Buf $input is rw, ASNSequence $type, :$debug, :$mode) {
         $!out.done;
     }
 }
-</code></pre>
-
-<p>它可以像这样使用：</p>
-
-<pre><code class="language-raku">my $parser = ASN::Parser::Async.new(type =&gt; Rocket);
+</code></pre><p>它可以像这样使用：</p>
+<pre><code class="language-raku" data-lang="raku">my $parser = ASN::Parser::Async.new(type =&gt; Rocket);
 
 $parser.values.tap({ say &quot;I get a nice thing!&quot;; });
 
@@ -461,12 +417,8 @@ react {
         LAST { $parser.close; }
     }
 }
-</code></pre>
-
-<p>这是所有必须添加的，以使这种 <code>Parser</code> 增量为这个最小的情况。</p>
-
+</code></pre><p>这是所有必须添加的，以使这种 <code>Parser</code> 增量为这个最小的情况。</p>
 <p>当然，正如你可以猜到的那样，我正在写的东西有点过于具体，不仅仅是我的想象力，不仅是精灵，而是一群完整的冒险者（他们也可以处理一些二进制的东西！）。该实现已在 <a href="https://github.com/Altai-man/ASN-BER">ASN::BER 仓库</a>中提供。虽然它可能是一个非常早期的 alpha 版本，有许多东西甚至还没有计划好，并且有很长的篇幅可以用来改善这个模块的整体状态，它已经对我有用了解我的工作前面提到的半秘密。仓库肯定会打开建议，错误报告（甚至可能是 hug 报告），因为还有大量工作要做，但这是另一个故事了。</p>
-
 <p>祝您度过愉快的一天，并确保在圣诞假期休息好！</p>
 
 
@@ -559,7 +511,7 @@ react {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

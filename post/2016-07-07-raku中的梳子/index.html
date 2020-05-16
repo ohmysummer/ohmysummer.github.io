@@ -9,17 +9,19 @@
   <meta property="og:title" content="Raku 中的梳子!" />
   <meta name="twitter:title" content="Raku 中的梳子!" />
   <meta name="description" content="Raku 中的梳子! 在 Perl 5 中, 我很感激有这样两个便利的结构:
-my @things = $text =~ /thing/g; my %things = $text =~ /(key)...(value)/g;  你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl 6 中使用正则表达式，但是 comb 更适合做这个工作。
+my @things = $text =~/thing/g;my %things = $text =~/(key)...(value)/g;你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl 6 中使用正则表达式，但是 comb 更适合做这个工作。
 Plain &lsquo;Ol Characters 你可以把 comb 用作子例程或方法。在它的最基本的形式中， comb 会把字符串分解为字符:
-&#39;foobar moobar 駱駝道bar&#39;.comb.join(&#39;|&#39;).say; &#39;foobar moobar 駱駝道bar&#39;.comb(6).join(&#39;|&#39;).say; # OUTPUT: # f|o|o|b|a|r| |m|o|o|b|a|r| |駱|駝|道|b|a|r # foobar| mooba|r 駱駝道b|ar  不适用任何参数的 comb 你会得到各个单独的字符。给 comb 提供一个整数 $n, 那么你会得到长度至多为 $n 个字符的一个列表，并且如果没有剩下的字符不够的话，这个列表会接收较短的这个字符串。这个方法比使用正则表快了 30 倍。
-Limits 你也可以为 comb 提供第二个整数参数，即 *limit*，来标示每个列表中最多含有 limit 个元素:">
+&#39;foobar moobar 駱駝道bar&#39;.comb.join(&#39;|&#39;).say;&#39;foobar moobar 駱駝道bar&#39;.comb(6).join(&#39;|&#39;).say;# OUTPUT:# f|o|o|b|a|r| |m|o|o|b|a|r| |駱|駝|道|b|a|r# foobar| mooba|r 駱駝道b|ar不适用任何参数的 comb 你会得到各个单独的字符。给 comb 提供一个整数 $n, 那么你会得到长度至多为 $n 个字符的一个列表，并且如果没有剩下的字符不够的话，这个列表会接收较短的这个字符串。这个方法比使用正则表快了 30 倍。
+Limits 你也可以为 comb 提供第二个整数参数，即 limit，来标示每个列表中最多含有 limit 个元素:
+&#39;foobar moobar 駱駝道bar&#39;.comb(1, 5).join(&#39;|&#39;).say;&#39;foobar moobar 駱駝道bar&#39;.">
   <meta property="og:description" content="Raku 中的梳子! 在 Perl 5 中, 我很感激有这样两个便利的结构:
-my @things = $text =~ /thing/g; my %things = $text =~ /(key)...(value)/g;  你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl 6 中使用正则表达式，但是 comb 更适合做这个工作。
+my @things = $text =~/thing/g;my %things = $text =~/(key)...(value)/g;你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl 6 中使用正则表达式，但是 comb 更适合做这个工作。
 Plain &lsquo;Ol Characters 你可以把 comb 用作子例程或方法。在它的最基本的形式中， comb 会把字符串分解为字符:
-&#39;foobar moobar 駱駝道bar&#39;.comb.join(&#39;|&#39;).say; &#39;foobar moobar 駱駝道bar&#39;.comb(6).join(&#39;|&#39;).say; # OUTPUT: # f|o|o|b|a|r| |m|o|o|b|a|r| |駱|駝|道|b|a|r # foobar| mooba|r 駱駝道b|ar  不适用任何参数的 comb 你会得到各个单独的字符。给 comb 提供一个整数 $n, 那么你会得到长度至多为 $n 个字符的一个列表，并且如果没有剩下的字符不够的话，这个列表会接收较短的这个字符串。这个方法比使用正则表快了 30 倍。
-Limits 你也可以为 comb 提供第二个整数参数，即 *limit*，来标示每个列表中最多含有 limit 个元素:">
+&#39;foobar moobar 駱駝道bar&#39;.comb.join(&#39;|&#39;).say;&#39;foobar moobar 駱駝道bar&#39;.comb(6).join(&#39;|&#39;).say;# OUTPUT:# f|o|o|b|a|r| |m|o|o|b|a|r| |駱|駝|道|b|a|r# foobar| mooba|r 駱駝道b|ar不适用任何参数的 comb 你会得到各个单独的字符。给 comb 提供一个整数 $n, 那么你会得到长度至多为 $n 个字符的一个列表，并且如果没有剩下的字符不够的话，这个列表会接收较短的这个字符串。这个方法比使用正则表快了 30 倍。
+Limits 你也可以为 comb 提供第二个整数参数，即 limit，来标示每个列表中最多含有 limit 个元素:
+&#39;foobar moobar 駱駝道bar&#39;.comb(1, 5).join(&#39;|&#39;).say;&#39;foobar moobar 駱駝道bar&#39;.">
   <meta name="twitter:description" content="Raku 中的梳子! 在 Perl 5 中, 我很感激有这样两个便利的结构:
-my @things = $text =~ /thing/g; my %things = $text =~ /(key)...(value)/g;  你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl 6 中使用正则表达式，但是 comb 更适合做这个工 …">
+my @things = $text =~/thing/g;my %things = $text =~/(key)...(value)/g;你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl 6 中使用正则表达式，但是 comb 更适合做这个工作。 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -29,7 +31,7 @@ my @things = $text =~ /thing/g; my %things = $text =~ /(key)...(value)/g;  你�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-07-07-raku%E4%B8%AD%E7%9A%84%E6%A2%B3%E5%AD%90/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -217,7 +219,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (281 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (279 words)
   
   
 </span>
@@ -236,128 +238,81 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="raku-中的梳子">Raku 中的梳子!</h1>
-
+        <h1 id="raku-中的梳子">Raku 中的梳子!</h1>
 <p>在 Perl 5 中, 我很感激有这样两个便利的结构:</p>
-
-<pre><code class="language-perl">my @things = $text =~ /thing/g;
-my %things = $text =~ /(key)...(value)/g;
-</code></pre>
-
-<p>你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl  6 中使用正则表达式，但是 <strong><a href="http://docs.raku.org/routine/comb">comb</a></strong> 更适合做这个工作。</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/326727-29a3966bbb8e437f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img" /></p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">things</span> <span class="o">=</span> <span class="nv">$</span><span class="nv">text</span> <span class="o">=~</span><span class="sr"> /thing/g</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">%</span><span class="nv">things</span> <span class="o">=</span> <span class="nv">$</span><span class="nv">text</span> <span class="o">=~</span><span class="sr"> /(key)...(value)/g</span><span class="p">;</span>
+</code></pre></div><p>你拿出一小段可以预见的文本，并给它一个正则表达式，吼吼, 你得到了一个列表和散列，像变魔术一般！我们也可以在 Perl  6 中使用正则表达式，但是 <strong><a href="http://docs.raku.org/routine/comb">comb</a></strong> 更适合做这个工作。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/326727-29a3966bbb8e437f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img"></p>
 <h2 id="plain-ol-characters">Plain &lsquo;Ol Characters</h2>
-
 <p>你可以把 <em>comb</em> 用作子例程或方法。在它的最基本的形式中， <em>comb</em> 会把字符串分解为字符:</p>
-
-<pre><code class="language-Raku">'foobar moobar 駱駝道bar'.comb.join('|').say;
+<pre><code class="language-Raku" data-lang="Raku">'foobar moobar 駱駝道bar'.comb.join('|').say;
 'foobar moobar 駱駝道bar'.comb(6).join('|').say;
 
 # OUTPUT:
 # f|o|o|b|a|r| |m|o|o|b|a|r| |駱|駝|道|b|a|r
 # foobar| mooba|r 駱駝道b|ar
-</code></pre>
-
-<p>不适用任何参数的 <em>comb</em> 你会得到各个单独的字符。给 <em>comb</em> 提供一个整数 <code>$n</code>, 那么你会得到长度至多为 <code>$n</code> 个字符的一个列表，并且如果没有剩下的字符不够的话，这个列表会接收较短的这个字符串。这个方法比使用正则表快了 30 倍。</p>
-
+</code></pre><p>不适用任何参数的 <em>comb</em> 你会得到各个单独的字符。给 <em>comb</em> 提供一个整数 <code>$n</code>, 那么你会得到长度至多为 <code>$n</code> 个字符的一个列表，并且如果没有剩下的字符不够的话，这个列表会接收较短的这个字符串。这个方法比使用正则表快了 30 倍。</p>
 <h2 id="limits">Limits</h2>
-
-<p>你也可以为 <em>comb</em> 提供第二个整数参数，即 *limit*，来标示每个列表中最多含有 limit 个元素:</p>
-
-<pre><code class="language-Raku">'foobar moobar 駱駝道bar'.comb(1, 5).join('|').say;
+<p>你也可以为 <em>comb</em> 提供第二个整数参数，即 <em>limit</em>，来标示每个列表中最多含有 limit 个元素:</p>
+<pre><code class="language-Raku" data-lang="Raku">'foobar moobar 駱駝道bar'.comb(1, 5).join('|').say;
 'foobar moobar 駱駝道bar'.comb(6, 2).join('|').say;
 
 # OUTPUT:
 # f|o|o|b|a
 # foobar| mooba
-</code></pre>
-
-<p>这适用于使用 <em>comb</em> 方法/函数的所有形式，而不仅仅是上面展示的那样。</p>
-
+</code></pre><p>这适用于使用 <em>comb</em> 方法/函数的所有形式，而不仅仅是上面展示的那样。</p>
 <h2 id="计数">计数</h2>
-
 <p><em>comb</em> 也接收普通的 <a href="http://docs.raku.org/type/Str">Str</a> 作为参数，返回一个包含那个字符串的匹配的列表。所以这在计算子字符串在字符串中出现的次数时很有用。</p>
-
-<pre><code class="language-Raku">'The 🐈 ran after a 🐁, but the 🐁 ran away'.comb('🐈').Int.say;
+<pre><code class="language-Raku" data-lang="Raku">'The 🐈 ran after a 🐁, but the 🐁 ran away'.comb('🐈').Int.say;
 'The 🐈 ran after a 🐁, but the 🐁 ran away'.comb('ran').Int.say;
 
 # OUTPUT:
 # 1
 # 2
-</code></pre>
-
-<h2 id="简单的匹配">简单的匹配</h2>
-
+</code></pre><h2 id="简单的匹配">简单的匹配</h2>
 <p><em>comb</em> 的参数也可以是一个正则表达式，整个匹配会作为一个标量被返回：</p>
-
-<pre><code class="language-Raku">foobar moobar 駱駝道bar'.comb(/&lt;[a..z]&gt;+ 'bar'/).join('|').say;
+<pre><code class="language-Raku" data-lang="Raku">foobar moobar 駱駝道bar'.comb(/&lt;[a..z]&gt;+ 'bar'/).join('|').say;
 
 # OUTPUT:
 # foobar|moobar
-</code></pre>
-
-<h2 id="限制所匹配的东西">限制所匹配的东西</h2>
-
+</code></pre><h2 id="限制所匹配的东西">限制所匹配的东西</h2>
 <p>你可以使用<a href="http://docs.raku.org/language/regexes#Look-around_assertions">环视断言</a>或者更简单的 <code>&lt;(</code> 和 <code>)&gt;</code> 正则表达式捕获记号:</p>
-
-<pre><code class="language-raku">'moo=meow ping=pong'.comb(/\w+    '=' &lt;( \w**4/).join('|').say; # values
+<pre><code class="language-raku" data-lang="raku">'moo=meow ping=pong'.comb(/\w+    '=' &lt;( \w**4/).join('|').say; # values
 'moo=meow ping=pong'.comb(/\w+ )&gt; '='    \w**4/).join('|').say; # keys
 
 # OUTPUT:
 # meow|pong
 # moo|ping
-</code></pre>
-
-<p>你可以使用  <code>&lt;(</code> 和 <code>)&gt;</code> 两者之一或两者都使用。 <code>&lt;(</code> 从匹配中排除任何它之前的东西而 <code>)&gt;</code> 会排序之后的任何东西。即 <code>/'foo' &lt;('bar')&gt; 'ber'/</code>  会匹配包含 <em>foobarber</em> 的东西，但是从 <em>comb</em> 中返回的东西只会有 *bar*。</p>
-
+</code></pre><p>你可以使用  <code>&lt;(</code> 和 <code>)&gt;</code> 两者之一或两者都使用。 <code>&lt;(</code> 从匹配中排除任何它之前的东西而 <code>)&gt;</code> 会排序之后的任何东西。即 <code>/'foo' &lt;('bar')&gt; 'ber'/</code>  会匹配包含 <em>foobarber</em> 的东西，但是从 <em>comb</em> 中返回的东西只会有 <em>bar</em>。</p>
 <h2 id="多个捕获">多个捕获</h2>
-
 <p>怎么样得出 Perl 5 那样的 键/值对儿呢？</p>
-
-<pre><code class="language-Raku">my %things = 'moo=meow ping=pong'.comb(/(\w+) '=' (\w+)/, :match)».Slip».Str;
+<pre><code class="language-Raku" data-lang="Raku">my %things = 'moo=meow ping=pong'.comb(/(\w+) '=' (\w+)/, :match)».Slip».Str;
 say %things;
 
 # OUTPUT:
 # moo =&gt; meow, ping =&gt; pong
-</code></pre>
-
-<p>圆括号用于捕获。<code>:match</code> 参数使 <em>comb</em> 返回一个 <strong>Match</strong> 对象的列表，而非返回一个字符串列表。下一步，我们使用两个 hyper 运算符把 <strong>Matches</strong> 转换为 <a href="http://docs.raku.org/type/Slip">Slips</a>，这会给我们一个捕获的列表，但是它们仍旧是 <strong>Match</strong> 对象，这就是为什么我们还要把它们转换为 <strong>Str</strong> 的原因。</p>
-
+</code></pre><p>圆括号用于捕获。<code>:match</code> 参数使 <em>comb</em> 返回一个 <strong>Match</strong> 对象的列表，而非返回一个字符串列表。下一步，我们使用两个 hyper 运算符把 <strong>Matches</strong> 转换为 <a href="http://docs.raku.org/type/Slip">Slips</a>，这会给我们一个捕获的列表，但是它们仍旧是 <strong>Match</strong> 对象，这就是为什么我们还要把它们转换为 <strong>Str</strong> 的原因。</p>
 <p>我们还可以使用具名捕获使代码更清晰：</p>
-
-<pre><code class="language-Raku">my %things = 'moo=meow ping=pong'
+<pre><code class="language-Raku" data-lang="Raku">my %things = 'moo=meow ping=pong'
     .comb(/$&lt;key&gt;=\w+ '=' $&lt;value&gt;=\w+/, :match)
     .map({ .&lt;key&gt; =&gt; .&lt;value&gt;.Str });
 say %things;
 
 # OUTPUT:
 # moo =&gt; meow, ping =&gt; pong
-</code></pre>
-
-<p>你还可以把上面的代码写成这样：</p>
-
-<pre><code class="language-Raku">my %things = ('moo=meow ping=pong' ~~ m:g/(\w+) '=' (\w+)/)».Slip».Str;
+</code></pre><p>你还可以把上面的代码写成这样：</p>
+<pre><code class="language-Raku" data-lang="Raku">my %things = ('moo=meow ping=pong' ~~ m:g/(\w+) '=' (\w+)/)».Slip».Str;
 say %things;
 
 # OUTPUT:
 # moo =&gt; meow, ping =&gt; pong
-</code></pre>
-
-<h2 id="结论">结论</h2>
-
+</code></pre><h2 id="结论">结论</h2>
 <p>把 <em>comb</em> 和 <em><a href="http://blogs.perl.org/users/zoffix_znet/2016/01/perl-6-rotor-the-king-of-list-manipulation.html">rotor</a></em> 结合起来用会很强大。</p>
-
 <h2 id="评论">评论</h2>
-
 <p>代替使用带有 <code>:match</code> 参数的 <code>.comb</code> , 你最好就使用 <code>.match</code> 方法好了:</p>
-
-<pre><code class="language-Raku">'moo=meow ping=pong'.match(/(\w+) '=' (\w+)/, :g)
+<pre><code class="language-Raku" data-lang="Raku">'moo=meow ping=pong'.match(/(\w+) '=' (\w+)/, :g)
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -448,7 +403,7 @@ say %things;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

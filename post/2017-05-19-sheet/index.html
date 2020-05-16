@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-05-19-sheet/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,23 +231,16 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="正则表达式">正则表达式</h2>
-
+        <h2 id="正则表达式">正则表达式</h2>
 <p>Raku 的正则表达式允许你为你自定义的字符类混进 Unicode 属性！</p>
-
-<pre><code class="language-raku">constant string = 'The Quick 🐼 Jumped Over 57 Dogs';
+<pre><code class="language-raku" data-lang="raku">constant string = 'The Quick 🐼 Jumped Over 57 Dogs';
 
 say string ~~ m:g/ &lt;:upper-[TQ]&gt;                /; # (「J」 「O」 「P」)
 say string ~~ m:g/ &lt;-[\x0..\x255]+[\x35..\x37]&gt; /; # (「🐼」 「5」 「7」)
 say string ~~ m:g/ &lt;-:digit -:Ll -:Zs&gt;          /; # (「T」 「Q」 「🐼」 「J」 「O」 「D」)
 say string ~~ m:g/ &lt;[\w]-[TQJ\d]-:lower+[5]&gt;    /; # (「O」 「5」 「D」)
-</code></pre>
-
-<p>Wow! #Raku #Regex is so awesome, you can just shove an array into it and it&rsquo;ll know to treat it as alternatives to match!</p>
-
-<pre><code class="language-raku">my @stuff = &lt;fo ba me&gt;;
+</code></pre><p>Wow! #Raku #Regex is so awesome, you can just shove an array into it and it&rsquo;ll know to treat it as alternatives to match!</p>
+<pre><code class="language-raku" data-lang="raku">my @stuff = &lt;fo ba me&gt;;
 say 'foo bar meows' ~~ m:g/ @stuff        \S+ /; # OUTPUT: (「foo」 「bar」 「meows」)
 say 'foo bar meows' ~~ m:g/ @(&lt;fo ba me&gt;) \S+ /; # OUTPUT: (「foo」 「bar」 「meows」)
 
@@ -265,12 +258,8 @@ say 'meowy' ~~ / ||@(&lt;me meow&gt;) /; # OUTPUT: 「me」
 say 'meowy' ~~ / 'me' |  'meow' /; # OUTPUT: 「meow」
 # First Token Match:
 say 'meowy' ~~ / 'me' || 'meow' /; # OUTPUT: 「me」
-</code></pre>
-
-<pre><code class="language-shell">D:\blog\ohmysummer&gt;raku -e &quot;my @releases=map {sprintf '%d-%02d', .year, .month},  (Date.new(:2016year :12month), *.later(:month) ... Date.new: :2017year, :4month ); for @releases.map(*.split('-').join: '.').rotor: 2 =&gt; -1  { print qqx/printf '%s - %-7s:' { .[0] } { .[1] };  git log --oneline '{.[0]} ... {.[1]}' | wc -l /  };&quot;
-</code></pre>
-
-<pre><code class="language-raku">
+</code></pre><div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">D:<span class="se">\b</span>log<span class="se">\o</span>hmysummer&gt;raku -e <span class="s2">&#34;my @releases=map {sprintf &#39;%d-%02d&#39;, .year, .month},  (Date.new(:2016year :12month), *.later(:month) ... Date.new: :2017year, :4month ); for @releases.map(*.split(&#39;-&#39;).join: &#39;.&#39;).rotor: 2 =&gt; -1  { print qqx/printf &#39;%s - %-7s:&#39; { .[0] } { .[1] };  git log --oneline &#39;{.[0]} ... {.[1]}&#39; | wc -l /  };&#34;</span>
+</code></pre></div><pre><code class="language-raku" data-lang="raku">
 END {
     say &quot;Doing some clean up here or something...&quot;;
     say 'Good bye!';
@@ -291,7 +280,6 @@ say &quot;This script ran for {now - INIT now} seconds&quot;;
 # Doing some clean up here or something...
 # Good bye!
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -382,7 +370,7 @@ say &quot;This script ran for {now - INIT now} seconds&quot;;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

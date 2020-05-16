@@ -9,15 +9,15 @@
   <meta property="og:title" content="Raku 中的 require" />
   <meta name="twitter:title" content="Raku 中的 require" />
   <meta name="description" content="有时你必须不择手段地得到一个东西。 如果它是一个文件，你可以使用 Jonathan Stowes 的 URI::FetchFile。 所述模块检查四个模块中的任何一个是否可用，并且采用第一个将 URI 保存为磁盘上的文件。 在他的代码中有一个有趣的触发了 ENODOC 的行。
-$type = try require :: ($class-name);  这里 require 返回一个类型对象，该类型对象由模块声明，并且具有与该模块相同的名字。
+$type = try require :: ($class-name); 这里 require 返回一个类型对象，该类型对象由模块声明，并且具有与该模块相同的名字。
 检查 roast 这个巧妙的花招并把玩整个动态模块的魔法让我意识到，我们没有真正地在文档中覆盖这一点。 当我尝试处理一个 ENODOC 时我喜欢从一个可编译的例子开始。 这一次，我们需要两个文件。
 # M.pm6 unit module M; class C is export { method m { &#39;method C::m&#39; } }; class D is export { method m { &#39;method D::m&#39; } }; # dynamic-modules.p6 use v6; use lib &#39;.&#39;; subset C where ::(&#39;M::C&#39;); my C $context = try { CATCH { default { .">
   <meta property="og:description" content="有时你必须不择手段地得到一个东西。 如果它是一个文件，你可以使用 Jonathan Stowes 的 URI::FetchFile。 所述模块检查四个模块中的任何一个是否可用，并且采用第一个将 URI 保存为磁盘上的文件。 在他的代码中有一个有趣的触发了 ENODOC 的行。
-$type = try require :: ($class-name);  这里 require 返回一个类型对象，该类型对象由模块声明，并且具有与该模块相同的名字。
+$type = try require :: ($class-name); 这里 require 返回一个类型对象，该类型对象由模块声明，并且具有与该模块相同的名字。
 检查 roast 这个巧妙的花招并把玩整个动态模块的魔法让我意识到，我们没有真正地在文档中覆盖这一点。 当我尝试处理一个 ENODOC 时我喜欢从一个可编译的例子开始。 这一次，我们需要两个文件。
 # M.pm6 unit module M; class C is export { method m { &#39;method C::m&#39; } }; class D is export { method m { &#39;method D::m&#39; } }; # dynamic-modules.p6 use v6; use lib &#39;.&#39;; subset C where ::(&#39;M::C&#39;); my C $context = try { CATCH { default { .">
   <meta name="twitter:description" content="有时你必须不择手段地得到一个东西。 如果它是一个文件，你可以使用 Jonathan Stowes 的 URI::FetchFile。 所述模块检查四个模块中的任何一个是否可用，并且采用第一个将 URI 保存为磁盘上的文件。 在他的代码中有一个有趣的触发了 ENODOC 的行。
-$type = try require :: ($class-name);  这里 require 返回一个类型对象，该类 …">
+$type = try require :: ($class-name); 这里 require 返回一个类型对象，该类型 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -27,7 +27,7 @@ $type = try require :: ($class-name);  这里 require 返回一个类型对象�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-26-raku%E4%B8%AD%E7%9A%84require/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -235,15 +235,10 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>有时你必须不择手段地得到一个东西。 如果它是一个文件，你可以使用 Jonathan Stowes  的 <a href="https://github.com/jonathanstowe/URI-FetchFile">URI::FetchFile</a>。 所述模块检查四个模块中的任何一个是否可用，并且采用第一个将 URI 保存为磁盘上的文件。 在他的代码中有一个有趣的触发了 ENODOC 的<a href="https://github.com/jonathanstowe/URI-FetchFile/blob/master/lib/URI/FetchFile.pm#L82">行</a>。</p>
-
-<pre><code class="language-raku">$type = try require :: ($class-name);
-</code></pre>
-
-<p>这里 <code>require</code> 返回一个类型对象，该类型对象由模块声明，并且具有与该模块相同的名字。</p>
-
+<pre><code class="language-raku" data-lang="raku">$type = try require :: ($class-name);
+</code></pre><p>这里 <code>require</code> 返回一个类型对象，该类型对象由模块声明，并且具有与该模块相同的名字。</p>
 <p>检查 <a href="https://github.com/raku/roast/blob/master/S11-modules/require.t">roast</a> 这个巧妙的花招并把玩整个动态模块的魔法让我意识到，我们没有真正地在文档中覆盖这一点。 当我尝试处理一个 ENODOC 时我喜欢从一个可编译的例子开始。 这一次，我们需要<a href="https://gist.github.com/a04a57109892b31f3f2e14cbd0235714">两个文件</a>。</p>
-
-<pre><code class="language-raku"># M.pm6
+<pre><code class="language-raku" data-lang="raku"># M.pm6
 unit module M;
 class C is export { method m { 'method C::m' } };
 class D is export { method m { 'method D::m' } };
@@ -265,64 +260,41 @@ dd $context.HOW.WHAT; # Raku::Metamodel::ClassHOW
 dd $context.WHAT; # M::C
 dd ('M::C').^methods.elems; # 57;
 dd $context.HOW.shortname($context); # &quot;C&quot;
-</code></pre>
-
-<p>通过 <code>require</code> 加载的任何符号在运行时将不可用。因此，我们不能进行静态类型检查。使用 <code>subset</code> 和动态查找，我们可以得到一个类型对象来检查。 <code>where</code> 从句将与类型对象进行智能匹配。由于动态查找很慢，所以像下面这样缓存类型对象可能是明智的：</p>
-
-<pre><code class="language-raku">subset C where $ //= ::('M::C');
-</code></pre>
-
-<p><code>where</code> 会智能匹配给定的表达式，除非你用 <code>*</code> 或 <code>$_</code> 手动匹配。 给定的表达式本身不进行智能匹配，因此它将被求值。 由于 <code>$</code> 是一个状态变量，它的初始化将只被执行一次（对于给定的thunk）。 所以我们最终得到一个状态变量 <code>$</code>，它填充了第一次使用subset时 <code>::('M::C')</code> 后面的类型对象。 然后，针对该subset的每个约束检查，完成对该类型对象的智能匹配。</p>
-
+</code></pre><p>通过 <code>require</code> 加载的任何符号在运行时将不可用。因此，我们不能进行静态类型检查。使用 <code>subset</code> 和动态查找，我们可以得到一个类型对象来检查。 <code>where</code> 从句将与类型对象进行智能匹配。由于动态查找很慢，所以像下面这样缓存类型对象可能是明智的：</p>
+<pre><code class="language-raku" data-lang="raku">subset C where $ //= ::('M::C');
+</code></pre><p><code>where</code> 会智能匹配给定的表达式，除非你用 <code>*</code> 或 <code>$_</code> 手动匹配。 给定的表达式本身不进行智能匹配，因此它将被求值。 由于 <code>$</code> 是一个状态变量，它的初始化将只被执行一次（对于给定的thunk）。 所以我们最终得到一个状态变量 <code>$</code>，它填充了第一次使用subset时 <code>::('M::C')</code> 后面的类型对象。 然后，针对该subset的每个约束检查，完成对该类型对象的智能匹配。</p>
 <p><code>//</code> 是 Defined-or 运算符。它返回第一个<strong>有定义的</strong>的操作数, 否则就返回最后的那个操作数。是短路运算符。</p>
-
-<pre><code class="language-raku">say Any // 0 // 42;   # 0
+<pre><code class="language-raku" data-lang="raku">say Any // 0 // 42;   # 0
 say Int // Mu // 42;  # 42
 say Int // Mu // Str; # (Str)
-</code></pre>
-
-<p><code>Any</code> 是类型对象(Type Object)， 类型对象是<code>未定义的</code>（unfined）。如果你在类型对象上调用 <code>.defined</code> 方法, 它会返回 <code>False</code>。
+</code></pre><p><code>Any</code> 是类型对象(Type Object)， 类型对象是<code>未定义的</code>（unfined）。如果你在类型对象上调用 <code>.defined</code> 方法, 它会返回 <code>False</code>。
 你可以用这种方法来找出一个对象到底是不是<strong>类型对象</strong>:</p>
-
-<pre><code class="language-raku">my $obj = Int; # Int 是类型对象
+<pre><code class="language-raku" data-lang="raku">my $obj = Int; # Int 是类型对象
 if $obj.defined {
     say &quot;普通对象, 有定义的对象&quot;;
 } else {
     say &quot;类型对象&quot;;
 }
-</code></pre>
-
-<p>而对于普通对象:</p>
-
-<pre><code class="language-raku">0.defined     # True
+</code></pre><p>而对于普通对象:</p>
+<pre><code class="language-raku" data-lang="raku">0.defined     # True
 False.defined # True
 True.defined  # True
 &quot;&quot;.defined    # True
 [].defined    # True
 ().defined    # True
-</code></pre>
-
-<p><code>//=</code> 是多余的，可以被一个简单的 <code>=</code> 替换，但它告诉读者，我期望 <code>$</code> 是未定义的。 我使用<code>定义或赋值</code>语法，希望读者熟悉它。</p>
-
-<pre><code class="language-raku">&gt; $a = Int  # $a 初始值是未定义的类型对象
+</code></pre><p><code>//=</code> 是多余的，可以被一个简单的 <code>=</code> 替换，但它告诉读者，我期望 <code>$</code> 是未定义的。 我使用<code>定义或赋值</code>语法，希望读者熟悉它。</p>
+<pre><code class="language-raku" data-lang="raku">&gt; $a = Int  # $a 初始值是未定义的类型对象
 (Int)
 &gt; $a //= 3  # 等价于 $a = $a // 3
 3
 &gt; $a        # // 返回第一个有定义的操作数
 3
-</code></pre>
-
-<p>现在我们得到一个类型约束来防止 <code>require</code> 不返回一个匹配我们期望的名称的类型。请注意，我们会检查名称，而不是类型或接口。如果您有机会设计动态加载的模块，您可能需要定义一个角色（甚至可能为空），这些角色必须由动态加载的类实现，以确保您可以真正调用所期望的方法。不只是具有相同名称的方法。</p>
-
+</code></pre><p>现在我们得到一个类型约束来防止 <code>require</code> 不返回一个匹配我们期望的名称的类型。请注意，我们会检查名称，而不是类型或接口。如果您有机会设计动态加载的模块，您可能需要定义一个角色（甚至可能为空），这些角色必须由动态加载的类实现，以确保您可以真正调用所期望的方法。不只是具有相同名称的方法。</p>
 <p>现在实际上我们可以按名字加载模块，并动态解析其中一个类，并从 <code>try</code> 块返回它。因为 M.pm6 定义了一个模块（如在 <code>Raku::Metamodel::ModuleHOW</code>中）作为它的顶层包，我们不能简单地接受 <code>require</code> 的返回值，因为 Module 不是我们在 Raku 中最内省的东西。请注意，require 所加载的符号可在 try-block 外部通过动态查找获得。我不知道会发生什么如果你 go wild 并加载具有相同完全限定名的符号的模块。可能会有龙。</p>
-
 <p>加载任何一组可能安装过也可能没有安装过的模块是一种相当普遍的情况，对我有限的知识，我们的<a href="http://modules.raku.org/">生态系统</a>中还没有那样一个模块。因此，我想挑战一下，写一个运行以下接口的模块。</p>
-
-<pre><code class="language-raku">sub load-any-module(*%module-name-to-adapter);
+<pre><code class="language-raku" data-lang="raku">sub load-any-module(*%module-name-to-adapter);
 load-any-module({'Module::Name' =&gt; &amp;Callable-adapter});
-</code></pre>
-
-<p>其中 <code>Callable-adapter</code> 提供了一个通用接口，将模块的 <code>sub</code> 或方法调用转换为用户代码需要的任何内容。有了这样的模块，Jonathan 可以将 URI::FetchFile 减少到 50 行代码。</p>
+</code></pre><p>其中 <code>Callable-adapter</code> 提供了一个通用接口，将模块的 <code>sub</code> 或方法调用转换为用户代码需要的任何内容。有了这样的模块，Jonathan 可以将 URI::FetchFile 减少到 50 行代码。</p>
 
 
         
@@ -414,7 +386,7 @@ load-any-module({'Module::Name' =&gt; &amp;Callable-adapter});
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Roles</title>
-  <meta property="og:title" content="Roles" />
-  <meta name="twitter:title" content="Roles" />
+  <title>roles</title>
+  <meta property="og:title" content="roles" />
+  <meta name="twitter:title" content="roles" />
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/roles/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/roles/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -184,7 +184,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#Roles</h1>
+              <h1>#roles</h1>
               <hr class="small">
             </div>
           </div>
@@ -224,7 +224,7 @@ if (!doNotTrack) {
               <div class="post-entry">
                 
                   Protocol 在 Swift 中是一组方法和属性的集合, 可用于代码复用。 Raku 中有与之类似的结构, 叫做 Role, 下面转换一个 Swift 的 Protocol 为 Raku 的 Role, 把部门人员的相关信息打印为一个表格:
-Protocol in Swift 　import UIKit func padding(amount: Int) -&gt; String { var paddingString = &quot;&quot; for _ in 0..&lt;amount { paddingString += &quot; &quot; } return paddingString } // 协议 protocol TabularDataSource { var numberOfRows: Int { get } var numberOfColumns: Int { get } func labelForRow(row: Int) -&gt; String // 行标签 func labelForColumn(column: Int) -&gt; String // 列标签 func itemForRow(row: Int, column: Int) -&gt; Int // 表格中的单元格 } struct Person { let name: String let age: Int let yearsOfExperience: Int } // 让 **Department** 遵守 **TabularDataSource**协议 struct Department: TabularDataSource { let name: String var people = [Person]() init(name: String) { self.
+Protocol in Swift 　import UIKitfunc padding(amount: Int) -&gt; String {var paddingString = &#34;&#34;for _ in 0..&lt;amount {paddingString += &#34; &#34;}return paddingString}// 协议protocol TabularDataSource {var numberOfRows: Int { get }var numberOfColumns: Int { get }func labelForRow(row: Int) -&gt; String // 行标签func labelForColumn(column: Int) -&gt; String // 列标签func itemForRow(row: Int, column: Int) -&gt; Int // 表格中的单元格}struct Person {let name: Stringlet age: Intlet yearsOfExperience: Int}// 让 **Department** 遵守 **TabularDataSource**协议struct Department: TabularDataSource {let name: Stringvar people = [Person]()init(name: String) {self.
                   <a href="https://ohmysummer.github.io/post/2016-01-21-roles/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -254,7 +254,7 @@ Protocol in Swift 　import UIKit func padding(amount: Int) -&gt; String { var p
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 2 minutes (303 words)
+  <i class="fa fa-clock-o"></i> 2 minutes (300 words)
   
   
 </span>
@@ -263,7 +263,7 @@ Protocol in Swift 　import UIKit func padding(amount: Int) -&gt; String { var p
               <div class="post-entry">
                 
                   学会了怎么创建类, 我们继续用它来构建我们的中心内容:
-class Hammer { method hammer($stuff) { say &quot;You hammer on $stuff. BAM BAM BAM!&quot;; } } class Gavel { method hammer($stuff) { say &quot;You hammer on $stuff. BAM BAM BAM!&quot;; } } class Mallet { method hammer($stuff) { say &quot;You hammer on $stuff. BAM BAM BAM!&quot;; } }  但是注意到了吗？ 这三个方法包含了同样的方法, 在类中重复了。我们必须那样做如果我们想让每个 Hammar、Gavel 和 Mallet 有能力击打的话。（并且那是合理的）。 但是遗憾的是我们不得不把那个方法一式三份。
+class Hammer {method hammer($stuff) {say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;}}class Gavel {method hammer($stuff) {say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;}}class Mallet {method hammer($stuff) {say &quot;You hammer on $stuff. BAM BAM BAM!&quot;;}}但是注意到了吗？ 这三个方法包含了同样的方法, 在类中重复了。我们必须那样做如果我们想让每个 Hammar、Gavel 和 Mallet 有能力击打的话。（并且那是合理的）。 但是遗憾的是我们不得不把那个方法一式三份。
 为什么遗憾？ 因为一方面在真实世界中, 方法并不是很彼此相似, 有一天你决定在 hammer 方法中更改某些东西, 并没有意识到这个方法在三个不同的地方&hellip; 这导致了一堆痛苦和难受。
 所以我们的新玩具, 类, 展现出了一个问题。我们想在每个类中重用 hammer 方法。一个新的概念, role 来拯救我们来了:
                   <a href="https://ohmysummer.github.io/post/2015-11-16-roles%E5%86%B2%E7%AA%81/" class="post-read-more">[Read More]</a>
@@ -316,7 +316,7 @@ class Hammer { method hammer($stuff) { say &quot;You hammer on $stuff. BAM BAM B
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

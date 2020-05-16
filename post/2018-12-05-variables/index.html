@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-05-variables/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,43 +231,25 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>这么简单的事，不是吗？ 变量是一个保存着值的名字。</p>
-
+        <p>这么简单的事，不是吗？ 变量是一个保存着值的名字。</p>
 <p>有时候，它持有的值可能会被另一个值所取代 - 因此就是名字。 （根据外科医生的说法，没有经常变化的变量应该看医生，并要求被诊断为常数。）</p>
-
 <p>虽然它们很容易掌握，而且基本上每种语言都有它们，但我今天的目标是让你相信变量实际上非常棘手。 好的方式！ 我的目的是让你被这篇博文绊倒，茫然，喃喃自语“我以为我知道变量，但我真的不知道&hellip;&hellip;”。</p>
-
 <p>接近最后，<a href="http://github.com/masak/007/">实验语言007</a>也将会出现，我考虑变量这么多完全是这种语言的过错。</p>
-
 <h2 id="左还是右">左还是右？</h2>
-
 <p>变量奇怪的第一种方式是它们以两种完全不同的方式使用。</p>
-
-<pre><code class="language-raku">my $x = &quot;Christmas&quot;;
+<pre><code class="language-raku" data-lang="raku">my $x = &quot;Christmas&quot;;
 
 say(&quot;Merry &quot; ~ $x);       # reading
 $x = &quot;Easter&quot;;            # writing
-</code></pre>
-
-<p>有时我们使用变量来读取值，有时我们使用它们来写一个值。但在这两种情况下，语法看起来完全一样！一些较旧的语言（例如Forth）实际上对这两种用法有不同的语法，我喜欢它们。但是这样的惯例似乎并没有幸存到现代。</p>
-
+</code></pre><p>有时我们使用变量来读取值，有时我们使用它们来写一个值。但在这两种情况下，语法看起来完全一样！一些较旧的语言（例如Forth）实际上对这两种用法有不同的语法，我喜欢它们。但是这样的惯例似乎并没有幸存到现代。</p>
 <p>相反，我们通过语法位置来区分这两种用法。如果你在赋值的左侧，那么你就被写了。否则，你正在被读取。</p>
-
-<p>在文献中，这两种用途分别称为 <em>lvalues</em> 和 *rvalues*。分别为“左”和“右”。</p>
-
+<p>在文献中，这两种用途分别称为 <em>lvalues</em> 和 <em>rvalues</em>。分别为“左”和“右”。</p>
 <p>Rvalues 非常正常，与我们对变量的一般考虑方式相对应;他们只是计算它们包含的值。然而，Lvalues 很奇怪。它们更像是盒子，你可以把东西放入（或内存位置？引用？），或者如果不是盒子本身，那么分离的能力放入其中。如果 lvalues 有一个类型，它看起来像 <code>(T) -&gt; void</code>，接受 <code>T</code> 但不返回任何东西的东西。</p>
-
 <h2 id="参数">参数</h2>
-
 <p>变量对现代编程至关重要。 还有一个原则表明它们完全没有必要。</p>
-
 <p>那就对了！ Tennent 的通信原则！ （我知道你在想什么。不，我说的不是那个 <a href="https://en.wikipedia.org/wiki/Tenth_Doctor">Tennant</a>。</p>
-
 <p>这个原则主要指向一种在程序中重写所有变量声明的方法，因此它们是参数声明。 一个例子应该足以展示一般原则：</p>
-
-<pre><code class="language-raku"># Before
+<pre><code class="language-raku" data-lang="raku"># Before
 my $veggie = &quot;potato&quot;;
 say &quot;$veggie, and that's all I have to say about that!&quot;;
 
@@ -275,21 +257,13 @@ say &quot;$veggie, and that's all I have to say about that!&quot;;
 (-&gt; $veggie {
     say &quot;$veggie, and that's all I have to say about that!&quot;;
 })(&quot;potato&quot;);
-</code></pre>
-
-<p>看看变量声明如何变成参数声明，相应的赋值转变为参数？有经验的（或者我应该说是饱受争吵蹂躏的）JavaScript开发人员将这种结构视为 <a href="https://stackoverflow.com/questions/8228281/what-is-the-function-construct-in-javascript">IIFE</a>。</p>
-
+</code></pre><p>看看变量声明如何变成参数声明，相应的赋值转变为参数？有经验的（或者我应该说是饱受争吵蹂躏的）JavaScript开发人员将这种结构视为 <a href="https://stackoverflow.com/questions/8228281/what-is-the-function-construct-in-javascript">IIFE</a>。</p>
 <p>由于我们总能进行这种转换，因此我们并不需要变量。只有参数。我主要是告诉你这个，所以你可以有点特别感谢你不必用参数编写你的代码。</p>
-
 <p>关于Tennent的通信原则的最后注释：它的原始用法在<a href="https://en.wikipedia.org/wiki/S-algol#Semantic_principles">维基百科</a>上有简要描述。它基本上被遗忘了，直到Java即将获得闭包并且它的名称被调用并且原则<a href="https://softwareengineering.stackexchange.com/questions/116395/what-is-the-good-explanation-of-tennents-correspondence-principle">被过度使用了一些</a>，也许。</p>
-
 <h2 id="动态范围">动态范围</h2>
-
 <p>在Raku中，只要变量范围偏离词法范围，变量就会产生额外的“twigil”（sigil之后的可选符号）。这些替代范围中最重要的可能只是动态范围。</p>
-
 <p>同样，我们最好用一个例子来说明差异：</p>
-
-<pre><code class="language-raku">my $lexical = &quot;mainline&quot;;
+<pre><code class="language-raku" data-lang="raku">my $lexical = &quot;mainline&quot;;
 my $*dynamic = &quot;mainline&quot;;
 
 sub foo() {
@@ -304,27 +278,16 @@ sub bar() {
 }
 
 foo();
-</code></pre>
-
-<p>忘记处女座和Saggitarius以及其他占星术的迹象。对于你更深层次的个性而言，值得做的唯一区别就是你是在做词法查找还是动态查找。毕竟，只有两种人。</p>
-
+</code></pre><p>忘记处女座和Saggitarius以及其他占星术的迹象。对于你更深层次的个性而言，值得做的唯一区别就是你是在做词法查找还是动态查找。毕竟，只有两种人。</p>
 <p>无论我们喜不喜欢，查找都是一个过程。我们给了一个名字，然后我们去找相应的值。我知道，这令人沮丧。但无论如何，让我们这样做，看看它在哪里。</p>
-
 <p>对于 <code>$lexical</code>，通过查看程序文本本身来进行查找。该变量是否定义在我们所在的最小范围内，那个 <code>bar</code> sub？ （事实并非如此。）然后我们向外走，直到周围的范围 - 这最终成为整个计划的范围。它是在那里定义的吗？是!真幸运的是我们从查找中获得胜利，其值为 <code>“mainline”</code>。</p>
-
 <p><code>$*dynamic</code> - 请注意名字中的星号？我告诉过你有占星术！ - 我们也从最里面的范围，<code>bar</code> sub开始，并在那里寻找定义。 （我们找不到。）但现在发生了一些不同的事情。我们不会向外跟随块结构，而是向上跟随调用链。谁调用给我们？ <code>foo</code>。这就是我们的目标。那里有定义吗？是!所以我们已经完成并且成功了。</p>
-
 <p>从历史的角度来看，动态查找是“明显的”，大多数语言最初都有它。词汇查找只是逐渐证明了它的价值，现在已成为流行病。 Perl 5实际上跨越了这段历史，而我的变量是词法，但较旧的我们/包变量是动态的。这就是你在历史发生时从身边得到的东西。</p>
-
 <p>在Raku中，我们也通过禁止术语“父范围”来履行自己的职责。在一个词法和动态查找的世界里，它太混乱了。相反，我们更喜欢术语 <code>OUTER</code>（用于词法查找）和<code>CALLER</code>（用于动态查找）。</p>
-
 <p>如果可能的话，Raku中的一些结构（例如<code>return</code>和<code>next</code>）会尝试词法，但如果找不到任何词汇周围的东西来“附加”，则会回归到动态。这种类型的行为似乎没有真正的学术术语，所以Raku的概要称它为“lexotic”。</p>
-
 <h2 id="宏里面的变量">宏里面的变量</h2>
-
 <p>还在我这儿？礼包。 我们来谈谈宏。</p>
-
-<pre><code class="language-raku">use experimental :macros;
+<pre><code class="language-raku" data-lang="raku">use experimental :macros;
 
 macro moo {
     my $counter = 0;
@@ -336,20 +299,12 @@ macro moo {
 for ^10 {
     moo;
 }
-</code></pre>
-
-<p>这是一个简单的宏，只是将代码中的 <code>++$counter</code> 注入到 <code>for</code> 循环中。该程序将在各行上打印从1到10的所有数字。</p>
-
+</code></pre><p>这是一个简单的宏，只是将代码中的 <code>++$counter</code> 注入到 <code>for</code> 循环中。该程序将在各行上打印从1到10的所有数字。</p>
 <p>很好，但&hellip;&hellip;怎么样？请注意，宏扩展代码引用 <code>$counter</code>，但词法查找（如上所述）将找不到在周围词法范围内声明的变量。但是，这个程序仍然有效，或者更确切地说，是有效的。</p>
-
 <p>那么使程序运作的基本原则是什么呢？事实证明，通过一个非常幸运的偶然事件，在宏体内定义的变量可以被“无法统一”并被左值替换。注入的代码说 <code>++$counter</code> 实际上看起来更像是 <code>++☐</code>，其中 <code>☐</code> 代表那个（代表不可代理的）左值。</p>
-
 <p>我知道这是一件小事，但是当我最终把它放在一起时我很高兴。事实上，我很高兴我把它写成<a href="https://github.com/masak/007/issues/410">github iuuse</a>，只是为了确保细节都能解决。请继续关注此项的实现，从而保持卫生。</p>
-
 <p>（对于那些在家中保持分数的人来说，卫生宏是<a href="http://news.perlfoundation.org/2011/09/hague-grant-application-implem.html">本拨款申请</a>中的里程碑D3。）</p>
-
 <p>需要明确的是 - 这更像是一种实现意图。 Raku（和007）尚未实现完全卫生。但是，拥有明确的前进道路令人振奋。</p>
-
 <p>无论如何，这是变数。他们很可爱，有点奇怪，但最后我们很高兴他们在那里。快乐的历险。☺</p>
 
 
@@ -442,7 +397,7 @@ for ^10 {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

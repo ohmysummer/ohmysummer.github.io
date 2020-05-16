@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-01-porting-vigilance/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,83 +231,55 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="移植-vigilance-将raku与标准工具集成在一起">移植 Vigilance，将Raku与标准工具集成在一起</h1>
-
+        <h1 id="移植-vigilance将raku与标准工具集成在一起">移植 Vigilance，将Raku与标准工具集成在一起</h1>
 <p>大家好，今天我们将采用基础设施脚本并将其从Perl 5移植到Raku.本文基于James Clark的一对帖子，你可以在这里找到：</p>
-
 <ul>
 <li><a href="http://blog.lazycat.com.au/2014/05/integrating-integrity-part-1.html">第1部分</a></li>
 <li><a href="http://blog.lazycat.com.au/2014/05/integrating-integrity-part-2.html">第2部分</a></li>
 </ul>
-
 <p>此脚本用于创建和验证MD5总和。 这些是128位值，可用于验证数据完整性。 虽然MD5已经被证明在防范恶意行为者方面不安全，但它对于检测磁盘损坏仍然很有用。</p>
-
 <p>Raku生态系统正在发展，其中包含多种工具，这些工具可以从Perl 5 CPAN移植，也可以替代。 我将介绍原始脚本和移植的几个方面，并说明我为什么要进行一些特定的更改。 希望这会鼓励你出去移植你自己的小脚本。</p>
-
 <h2 id="shebang-和导入">Shebang 和导入</h2>
-
 <p>Perl 5版本使用一些基础设施和一些实用程序来处理Unicode并使命令行输出更好：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="ch">#!/usr/bin/perl -CSDA</span>
 
-<pre><code class="language-perl">#!/usr/bin/perl -CSDA
-
-use strict;
-use warnings;
-use utf8;
-use Encode qw/encode_utf8 decode_utf8/;
-use Getopt::Long;
-use Digest::MD5;
-use Term::ANSIColor;
-use Term::ProgressBar;
-use File::Find;
-use File::Basename;
-use Data::Dumper;
-</code></pre>
-
-<p>Raku默认启用了警告和限制，并且内置了Unicode支持，因此我们可以将其保留。 Data::Dumper也已经实现，它具有非常有用的IO功能。 将所有这些加在一起我们可以得到一个非常精益的标头：</p>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">utf8</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Encode</span> <span class="sx">qw/encode_utf8 decode_utf8/</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Getopt::Long</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Digest::MD5</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Term::ANSIColor</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Term::ProgressBar</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">File::Find</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">File::Basename</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Data::Dumper</span><span class="p">;</span>
+</code></pre></div><p>Raku默认启用了警告和限制，并且内置了Unicode支持，因此我们可以将其保留。 Data::Dumper也已经实现，它具有非常有用的IO功能。 将所有这些加在一起我们可以得到一个非常精益的标头：</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 use v6;
 
 use Digest::MD5;
 use Terminal::ANSIColor;
 use Terminal::Spinners;
-</code></pre>
-
-<h2 id="命令行选项">命令行选项</h2>
-
+</code></pre><h2 id="命令行选项">命令行选项</h2>
 <p>Perl 5有许多用于处理命令行参数的很棒的模块，在我们使用 Getopt::Long 的原始脚本中：</p>
-
-<pre><code class="language-perl"># Define our command-line arguments.
-my %opts = ( 'blocksize' =&gt; 16384 );
-GetOptions(\%opts, &quot;verify=s&quot;, &quot;create=s&quot;, &quot;update=s&quot;, &quot;files&quot;, &quot;blocksize=s&quot;, &quot;help!&quot;);
-</code></pre>
-
-<p>在Raku中，我们可以直接在MAIN方法中定义命令行选项。 我们使用多个调度来根据传递的参数来控制脚本的执行：</p>
-
-<pre><code class="language-raku">multi MAIN (Str :$create, *@files where { so @files }) { ... }
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1"># Define our command-line arguments.</span>
+<span class="k">my</span> <span class="nv">%</span><span class="nv">opts</span> <span class="o">=</span> <span class="p">(</span> <span class="s">&#39;blocksize&#39;</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">16384</span> <span class="p">)</span><span class="p">;</span>
+<span class="n"></span><span class="n">GetOptions</span><span class="p">(</span><span class="o">\</span><span class="nv">%</span><span class="nv">opts</span><span class="p">,</span> <span class="s">&#34;verify=s&#34;</span><span class="p">,</span> <span class="s">&#34;create=s&#34;</span><span class="p">,</span> <span class="s">&#34;update=s&#34;</span><span class="p">,</span> <span class="s">&#34;files&#34;</span><span class="p">,</span> <span class="s">&#34;blocksize=s&#34;</span><span class="p">,</span> <span class="s">&#34;help!&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>在Raku中，我们可以直接在MAIN方法中定义命令行选项。 我们使用多个调度来根据传递的参数来控制脚本的执行：</p>
+<pre><code class="language-raku" data-lang="raku">multi MAIN (Str :$create, *@files where { so @files }) { ... }
 multi MAIN (Str :$update, *@files) { ... }
 multi MAIN (Str :$verify, *@files) { ... }
 multi MAIN (*@files where { so @files }) { ... }
-</code></pre>
-
-<p>这也意味着我们不必定义帮助选项/sub，因为我们可以文档化我们的MAIN子例程，因此：</p>
-
-<pre><code class="language-raku">#| Verify the MD5 sums in a file that conforms to md5sum output:
+</code></pre><p>这也意味着我们不必定义帮助选项/sub，因为我们可以文档化我们的MAIN子例程，因此：</p>
+<pre><code class="language-raku" data-lang="raku">#| Verify the MD5 sums in a file that conforms to md5sum output:
 #|   
 multi MAIN (Str :$verify, *@files) { ... }
-</code></pre>
-
-<p>您可能已经注意到Raku版本没有定义blocksize选项，我将回过头来看看。</p>
-
+</code></pre><p>您可能已经注意到Raku版本没有定义blocksize选项，我将回过头来看看。</p>
 <h2 id="io-读写文件">IO: 读写文件</h2>
-
 <p>我们将校验和存储在一个文件中，其中每一行的格式都与GNU coreutils中的md5sum程序的输出相同：32个十六进制数字，两个空格和文件名。</p>
-
 <p>一些基本的IO，我们使用正则表达式来解析每一行。 使用有意义的空格有助于保持每个正则表达式相当简洁：</p>
-
-<pre><code class="language-raku">sub load_md5sum_file
+<pre><code class="language-raku" data-lang="raku">sub load_md5sum_file
 {
 	my ($filename) = @_;
 	my @plan;
@@ -340,11 +312,8 @@ multi MAIN (Str :$verify, *@files) { ... }
 	
 	return @plan;
 }
-</code></pre>
-
-<p>Raku允许我们验证我们是否通过签名传递了实际存在的文件。 此外，我们用 grammar 替换正则表达式，如果需要，我们可以在脚本的不同位置使用该 grammar：</p>
-
-<pre><code class="language-raku">grammar MD5SUM {
+</code></pre><p>Raku允许我们验证我们是否通过签名传递了实际存在的文件。 此外，我们用 grammar 替换正则表达式，如果需要，我们可以在脚本的不同位置使用该 grammar：</p>
+<pre><code class="language-raku" data-lang="raku">grammar MD5SUM {
 	token TOP        { &lt;md5&gt; &lt;spacer&gt; &lt;filehandle&gt; }
 	token md5        { &lt;xdigit&gt; ** 32 }
 	token spacer     { \s+ }
@@ -380,29 +349,23 @@ sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
 
 	 return @plans;
 }
-</code></pre>
-
-<p>写出数据非常相似：</p>
-
-<pre><code class="language-perl">sub save_md5sum_file
-{
-	my ($filename, @plan) = @_;
+</code></pre><p>写出数据非常相似：</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">save_md5sum_file</span>
+<span class="p">{</span>
+	<span class="k">my</span> <span class="p">(</span><span class="nv">$</span><span class="nv">filename</span><span class="p">,</span> <span class="nv">@</span><span class="nv">plan</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">_</span><span class="p">;</span>
 	
-	my $fh;
-	unless (open($fh, '&gt;:utf8', $filename)) {
-		...
-	}
-	foreach my $plan_entry (@plan) {
-		next unless $plan_entry-&gt;{correct_md5} &amp;&amp; $plan_entry-&gt;{filename};
-		print $fh &quot;$plan_entry-&gt;{correct_md5}  $plan_entry-&gt;{filename}\n&quot;;
-	}
-	close($fh) or die &quot;Couldn't close '$filename' : $!\n&quot;;
-}
-</code></pre>
-
-<p>值得注意的是，Raku默认以Unicode格式写入文件：</p>
-
-<pre><code class="language-raku">sub save-md5sum-file (Str $filehandle, @plans) {
+	<span class="k">my</span> <span class="nv">$</span><span class="nv">fh</span><span class="p">;</span>
+	<span class="k">unless</span> <span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="nv">$</span><span class="nv">fh</span><span class="p">,</span> <span class="s">&#39;&gt;:utf8&#39;</span><span class="p">,</span> <span class="nv">$</span><span class="nv">filename</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+		<span class="o">...</span>
+	<span class="p">}</span>
+	<span class="k">foreach</span> <span class="k">my</span> <span class="nv">$</span><span class="nv">plan_entry</span> <span class="p">(</span><span class="nv">@</span><span class="nv">plan</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">next</span> <span class="k">unless</span> <span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">correct_md5</span><span class="p">}</span> <span class="o">&amp;&amp;</span> <span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">filename</span><span class="p">}</span><span class="p">;</span>
+		<span class="k">print</span> <span class="nv">$</span><span class="nv">fh</span> <span class="s">&#34;$plan_entry-&gt;{correct_md5}  $plan_entry-&gt;{filename}\n&#34;</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="nb">close</span><span class="p">(</span><span class="nv">$</span><span class="nv">fh</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">die</span> <span class="s">&#34;Couldn&#39;t close &#39;$filename&#39; : $!\n&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>值得注意的是，Raku默认以Unicode格式写入文件：</p>
+<pre><code class="language-raku" data-lang="raku">sub save-md5sum-file (Str $filehandle, @plans) {
 	my $io = $filehandle.IO.open: :w;
 
 	WRITE: for @plans -&gt; $plan {
@@ -413,47 +376,40 @@ sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
 
 	$io.close;
 }
-</code></pre>
-
-<h2 id="获得md5校验和">获得MD5校验和</h2>
-
+</code></pre><h2 id="获得md5校验和">获得MD5校验和</h2>
 <p>Perl 5版本的Digest::MD5使用了相当多的XS来提高性能。 XS中包含了以块的形式添加数据以进行整体解析的方法。 这允许我们使用ProgressBar向用户展示用户等待时的进度：</p>
-
-<pre><code class="language-perl">sub run_md5_file
-{
-	my ($plan_entry, $progress_fn) = @_;
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">run_md5_file</span>
+<span class="p">{</span>
+	<span class="k">my</span> <span class="p">(</span><span class="nv">$</span><span class="nv">plan_entry</span><span class="p">,</span> <span class="nv">$</span><span class="nv">progress_fn</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">_</span><span class="p">;</span>
 	
-	# We use the OO interface to Digest::MD5 so we can feed it data a chunk at a time.
-	my $md5 = Digest::MD5-&gt;new();
-	my $current_bytes_read = 0;
-	my $buffer;
-	$plan_entry-&gt;{start_time} = time();
-	$plan_entry-&gt;{elapsed_time} = 0;
-	$plan_entry-&gt;{elapsed_bytes} = 0;
+	<span class="c1"># We use the OO interface to Digest::MD5 so we can feed it data a chunk at a time.</span>
+	<span class="k">my</span> <span class="nv">$</span><span class="nv">md5</span> <span class="o">=</span> <span class="n"></span><span class="nn">Digest::MD5</span><span class="o">-</span><span class="o">&gt;</span><span class="k">new</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	<span class="k">my</span> <span class="nv">$</span><span class="nv">current_bytes_read</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">my</span> <span class="nv">$</span><span class="nv">buffer</span><span class="p">;</span>
+	<span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">start_time</span><span class="p">}</span> <span class="o">=</span> <span class="nb">time</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	<span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">elapsed_time</span><span class="p">}</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">elapsed_bytes</span><span class="p">}</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 	
-	# 3 argument form of open() allows us to specify 'raw' directly instead of using binmode and is a bit more modern.
-	open(my $fh, '&lt;:raw', $plan_entry-&gt;{filename}) or die &quot;Couldn't open file $plan_entry-&gt;{filename}, $!\n&quot;;
+	<span class="c1"># 3 argument form of open() allows us to specify &#39;raw&#39; directly instead of using binmode and is a bit more modern.</span>
+	<span class="nb">open</span><span class="p">(</span><span class="k">my</span> <span class="nv">$</span><span class="nv">fh</span><span class="p">,</span> <span class="s">&#39;&lt;:raw&#39;</span><span class="p">,</span> <span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">filename</span><span class="p">}</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">die</span> <span class="s">&#34;Couldn&#39;t open file $plan_entry-&gt;{filename}, $!\n&#34;</span><span class="p">;</span>
 	
-	# Read the file in chunks and feed into md5.
-	while ($current_bytes_read = read($fh, $buffer, $opts{blocksize})) {
-		$md5-&gt;add($buffer);
-		$plan_entry-&gt;{elapsed_bytes} += $current_bytes_read;
-		$plan_entry-&gt;{elapsed_time} = time() - $plan_entry-&gt;{start_time};
-		&amp;$progress_fn($plan_entry-&gt;{elapsed_bytes});
-	}
-	# The loop will exit as soon as read() returns 0 or undef. 0 is normal EOF, undef indicates an error.
-	die &quot;Error while reading $plan_entry-&gt;{filename}, $!\n&quot; if ( ! defined $current_bytes_read);
+	<span class="c1"># Read the file in chunks and feed into md5.</span>
+	<span class="k">while</span> <span class="p">(</span><span class="nv">$</span><span class="nv">current_bytes_read</span> <span class="o">=</span> <span class="nb">read</span><span class="p">(</span><span class="nv">$</span><span class="nv">fh</span><span class="p">,</span> <span class="nv">$</span><span class="nv">buffer</span><span class="p">,</span> <span class="nv">$</span><span class="nv">opts</span><span class="p">{</span><span class="n"></span><span class="n">blocksize</span><span class="p">}</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nv">$</span><span class="nv">md5</span><span class="o">-</span><span class="o">&gt;</span><span class="n"></span><span class="n">add</span><span class="p">(</span><span class="nv">$</span><span class="nv">buffer</span><span class="p">)</span><span class="p">;</span>
+		<span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">elapsed_bytes</span><span class="p">}</span> <span class="o">+=</span> <span class="nv">$</span><span class="nv">current_bytes_read</span><span class="p">;</span>
+		<span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">elapsed_time</span><span class="p">}</span> <span class="o">=</span> <span class="nb">time</span><span class="p">(</span><span class="p">)</span> <span class="o">-</span> <span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">start_time</span><span class="p">}</span><span class="p">;</span>
+		<span class="o">&amp;</span><span class="nv">$</span><span class="nv">progress_fn</span><span class="p">(</span><span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">elapsed_bytes</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1"># The loop will exit as soon as read() returns 0 or undef. 0 is normal EOF, undef indicates an error.</span>
+	<span class="nb">die</span> <span class="s">&#34;Error while reading $plan_entry-&gt;{filename}, $!\n&#34;</span> <span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nb">defined</span> <span class="nv">$</span><span class="nv">current_bytes_read</span><span class="p">)</span><span class="p">;</span>
 	
-	close($fh) or die &quot;Couldn't close file $plan_entry-&gt;{filename}, $!\n&quot;;
+	<span class="nb">close</span><span class="p">(</span><span class="nv">$</span><span class="nv">fh</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">die</span> <span class="s">&#34;Couldn&#39;t close file $plan_entry-&gt;{filename}, $!\n&#34;</span><span class="p">;</span>
 	
-	# We made it out of the file alive. Store the md5 we computed. Note that this resets the Digest::MD5 object.
-	$plan_entry-&gt;{computed_md5} = $md5-&gt;hexdigest();
-}
-</code></pre>
-
-<p>Raku版本使用纯Perl并且缺少添加功能，因此我使用微调器而不是进度条。 我们还需要专门设置我们的编码，以避免在将二进制数据读取为Unicode时出现的错误：</p>
-
-<pre><code class="language-raku">sub calc-md5-sum (MD5Plan $plan) {
+	<span class="c1"># We made it out of the file alive. Store the md5 we computed. Note that this resets the Digest::MD5 object.</span>
+	<span class="nv">$</span><span class="nv">plan_entry</span><span class="o">-</span><span class="o">&gt;</span><span class="p">{</span><span class="n"></span><span class="n">computed_md5</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$</span><span class="nv">md5</span><span class="o">-</span><span class="o">&gt;</span><span class="n"></span><span class="n">hexdigest</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>Raku版本使用纯Perl并且缺少添加功能，因此我使用微调器而不是进度条。 我们还需要专门设置我们的编码，以避免在将二进制数据读取为Unicode时出现的错误：</p>
+<pre><code class="language-raku" data-lang="raku">sub calc-md5-sum (MD5Plan $plan) {
     my $md5 = Digest::MD5.new;
 
     print &quot;Calculating MD5 sum for { $plan.filehandle }       &quot;; # We need some space for the spinner to take up.
@@ -478,10 +434,7 @@ sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
 
 	$plan.computed-md5 = $promise.result;
 }
-</code></pre>
-
-<h2 id="结束之前的思考">结束之前的思考</h2>
-
+</code></pre><h2 id="结束之前的思考">结束之前的思考</h2>
 <p>我没有在我的系统上使用Raku版本因为Digest::MD5的低性能，在我的系统上我用md5sum调用替换它。 其他可能性是使用Inline::Perl5和Perl 5版本的Digest::MD5，或使用惊人的Raku原生调用接口来运行C实现。 我希望这篇文章能激发您将一些自己的Perl 5脚本移植到Raku，或者至少为您提供一些命令行交互的技巧。</p>
 
 
@@ -574,7 +527,7 @@ sub load-md5sum-file (Str $filehandle where { $filehandle.IO.f }) {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

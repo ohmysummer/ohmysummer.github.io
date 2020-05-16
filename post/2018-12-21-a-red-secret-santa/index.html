@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-21-a-red-secret-santa/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 5 minutes (858 words)
+  <i class="fa fa-clock-o"></i> 5 minutes (857 words)
   
   
 </span>
@@ -232,12 +232,9 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>这一年即将结束，我们有很多值得庆祝的事情！与家人和朋友相比，庆祝今年年底更好的方式是什么？为了帮助实现这一目标，在我家，我们决定开办秘密圣诞老人游戏！所以，我的目标是写一个秘密圣诞老人计划！这就是我可以使用这个名为<a href="https://github.com/FCO/Red">Red的</a>精彩项目的地方。</p>
-
 <p><a href="https://github.com/FCO/Red">Red</a>是一个仍在开发中的<strong>raku</strong>的<em>ORM</em> （对象关系模型），尚未作为模块发布。但它正在增长，而且接近发布。</p>
-
 <p>因此，让我们创建我们的第一张桌子：一张桌子，用于存储参与我们的秘密圣诞老人的人。代码：</p>
-
-<pre><code class="language-raku">use Red;
+<pre><code class="language-raku" data-lang="raku">use Red;
 
 model Person {
    has UInt     $.id        is serial;
@@ -255,81 +252,52 @@ Person.^create: :name&lt;Fernanda&gt;;
 Person.^create: :name&lt;Sophia&gt;;
 
 .say for Person.^all.grep(*.email.defined).map: *.name;
-</code></pre>
-
-<p><a href="http://github.com/FCO/Red">Red</a>将<strong>关系数据库</strong>映射  到<strong>OOP</strong>。每个表都映射到一个  <a href="https://github.com/FCO/Red"><strong>Red</strong></a>类（*模型*），每个表的  *对象*代表*一行*。</p>
-
-<p>我们创建*模型的方式*是使用<strong>模型</strong>特殊单词。一个*模型*仅仅是延伸的正常类<strong>红::型号</strong> ，具有<strong>MetamodelX ::红::型号</strong>的对象作为它的  *元类*。 <a href="https://github.com/FCO/Red"><strong>Red</strong></a>不会向您的模型添加任何未明确创建的方法。因此，要与*数据库*进行交互，您应该使用*元类*。</p>
-
+</code></pre><p><a href="http://github.com/FCO/Red">Red</a>将<strong>关系数据库</strong>映射  到<strong>OOP</strong>。每个表都映射到一个  <a href="https://github.com/FCO/Red"><strong>Red</strong></a>类（<em>模型</em>），每个表的  <em>对象</em>代表<em>一行</em>。</p>
+<p>我们创建<em>模型的方式</em>是使用<strong>模型</strong>特殊单词。一个<em>模型</em>仅仅是延伸的正常类<strong>红::型号</strong> ，具有<strong>MetamodelX ::红::型号</strong>的对象作为它的  <em>元类</em>。 <a href="https://github.com/FCO/Red"><strong>Red</strong></a>不会向您的模型添加任何未明确创建的方法。因此，要与<em>数据库</em>进行交互，您应该使用<em>元类</em>。</p>
 <p>但是让我们继续吧。</p>
-
-<p>代码创建一个名为  *Person*的新*模型*。此*模型*表示的*表*的名称将与模型名称相同：“Person”。如有必要，您可以使用特征更改表的名称 （例如  *:)*。<code>is table&lt;...&gt;</code> <code>model Person is table&lt;another_name&gt; {...}</code></p>
-
-<p>该*模型*有3个*属性*：</p>
-
+<p>代码创建一个名为  <em>Person</em>的新<em>模型</em>。此<em>模型</em>表示的<em>表</em>的名称将与模型名称相同：“Person”。如有必要，您可以使用特征更改表的名称 （例如  <em>:)</em>。<code>is table&lt;...&gt;</code> <code>model Person is table&lt;another_name&gt; {...}</code></p>
+<p>该<em>模型</em>有3个<em>属性</em>：</p>
 <ul>
 <li><strong>$ .name</strong>有一个  <code>is column</code> <em>特征</em> ;</li>
 <li><strong>$ .email</strong>有  <code>is column{ :nullable }</code>;</li>
 <li>和<strong>$ .id</strong>有一个  <code>is serial</code>。这意味着同样的<code>is column{ :id, :auto-increment }</code>。</li>
 </ul>
-
 <blockquote>
-<p><a href="https://github.com/FCO/Red"><strong>Red</strong></a>默认 使用*非空*列，因此如果要创建可以为空的列，则应使用 <code>is column{ :nullable }</code>。</p>
+<p><a href="https://github.com/FCO/Red"><strong>Red</strong></a>默认 使用<em>非空</em>列，因此如果要创建可以为空的列，则应使用 <code>is column{ :nullable }</code>。</p>
 </blockquote>
-
-<p>因此*Person*上的所有属性都是*列*。在<code>is serial</code>（我指的是  <code>:id</code> 一部分）意味着它是表的主键。</p>
-
-<p>之后，它为结果设置*动态变量*（<code>$*RED-DB</code>）<code>database &quot;SQLite&quot;</code>。该<strong>数据库</strong> *子*收到*司机*的名字和它期望的参数。</p>
-
-<p>在这种情况下，它使用<em>SQLite</em>  驱动程序，如果您不传递任何参数，它将使用它作为  <em>内存</em> *数据库*。如果要使用名为<em>secret-santa.db</em>  的文件作为数据库文件，则可以执行此操作<code>database &quot;SQLite&quot;, :database&lt;secret-santa.db&gt;</code>。或者，如果您想使用本地*Postgres*，只需使用   <code>database &quot;Pg&quot;</code>。 <a href="https://github.com/FCO/Red"><strong>Red</strong></a>  使用变量  <code>$*RED-DB</code> 来知道要使用的数据库。</p>
-
-<p>好的，现在让我们创建*表*！正如我之前所说，<a href="https://github.com/FCO/Red"><strong>红</strong></a>没有添加任何*方法*你没有明确要求。因此，要创建*表，*使用<em>元类</em> &lsquo; *方法*。<code>Person.^create-table</code>是你如何创建*表*。</p>
-
+<p>因此<em>Person</em>上的所有属性都是<em>列</em>。在<code>is serial</code>（我指的是  <code>:id</code> 一部分）意味着它是表的主键。</p>
+<p>之后，它为结果设置<em>动态变量</em>（<code>$*RED-DB</code>）<code>database &quot;SQLite&quot;</code>。该<strong>数据库</strong> <em>子</em>收到<em>司机</em>的名字和它期望的参数。</p>
+<p>在这种情况下，它使用<em>SQLite</em>  驱动程序，如果您不传递任何参数，它将使用它作为  <em>内存</em> <em>数据库</em>。如果要使用名为<em>secret-santa.db</em>  的文件作为数据库文件，则可以执行此操作<code>database &quot;SQLite&quot;, :database&lt;secret-santa.db&gt;</code>。或者，如果您想使用本地<em>Postgres</em>，只需使用   <code>database &quot;Pg&quot;</code>。 <a href="https://github.com/FCO/Red"><strong>Red</strong></a>  使用变量  <code>$*RED-DB</code> 来知道要使用的数据库。</p>
+<p>好的，现在让我们创建<em>表</em>！正如我之前所说，<a href="https://github.com/FCO/Red"><strong>红</strong></a>没有添加任何<em>方法</em>你没有明确要求。因此，要创建<em>表，<em>使用</em>元类</em> ' <em>方法</em>。<code>Person.^create-table</code>是你如何创建<em>表</em>。</p>
 <p>这将运行：</p>
-
-<pre><code class="language-raku">CREATE TABLE person(
+<pre><code class="language-raku" data-lang="raku">CREATE TABLE person(
     id integer NOT NULL primary key AUTOINCREMENT,
     name varchar(255) NOT NULL,
     email varchar(255) NULL
 )
-</code></pre>
-
-<p>现在我们应该插入一些数据。我们用另一个*meta方法*（<code>.^create</code>）来做到这一点。该  <code>.^create</code> *元方法*预期相同<em>参数</em> <code>.new</code>  的期望。每个*命名参数*都将设置一个具有相同名称的  *属性*。 <code>.^create</code>将创建一个新的*Person*对象，将其保存在  *数据库中*（with <code>.^save: :insert</code>），然后返回它。</p>
-
+</code></pre><p>现在我们应该插入一些数据。我们用另一个<em>meta方法</em>（<code>.^create</code>）来做到这一点。该  <code>.^create</code> <em>元方法</em>预期相同<em>参数</em> <code>.new</code>  的期望。每个<em>命名参数</em>都将设置一个具有相同名称的  <em>属性</em>。 <code>.^create</code>将创建一个新的<em>Person</em>对象，将其保存在  <em>数据库中</em>（with <code>.^save: :insert</code>），然后返回它。</p>
 <p>它运行：</p>
-
-<pre><code class="language-raku">INSERT INTO person(
+<pre><code class="language-raku" data-lang="raku">INSERT INTO person(
     email,
     name
 ) VALUES(
     'fco@aco.com',
     'Fernando'
 )
-</code></pre>
-
-<p>每个*模型*都有一个*ResultSeq*。这是代表每一个序列*行*的*表*。我们可以 用（或）得到它的*ResultSeq*。*ResultSeq*有一些方法可以帮助您从*表中*获取信息，例如：  将过滤*行*（就像在普通*Seq中一样*），但它不会在内存中执行此操作，它会返回带有该过滤器集的新  *ResultSeq*。检索其*迭代器时*，它使用*ResultSeq*上设置的所有内容运行<strong>SQL</strong>查询  。<code>.^all</code><code>.^rs</code><code>.grep</code></p>
-
+</code></pre><p>每个<em>模型</em>都有一个<em>ResultSeq</em>。这是代表每一个序列<em>行</em>的<em>表</em>。我们可以 用（或）得到它的<em>ResultSeq</em>。<em>ResultSeq</em>有一些方法可以帮助您从<em>表中</em>获取信息，例如：  将过滤<em>行</em>（就像在普通<em>Seq中一样</em>），但它不会在内存中执行此操作，它会返回带有该过滤器集的新  <em>ResultSeq</em>。检索其<em>迭代器时</em>，它使用<em>ResultSeq</em>上设置的所有内容运行<strong>SQL</strong>查询  。<code>.^all``.^rs``.grep</code></p>
 <p>在我们的示例中，<code>Person.^all.grep(*.email.defined).map: *.name</code>将运行如下查询：</p>
-
-<pre><code class="language-raku">SELECT
+<pre><code class="language-raku" data-lang="raku">SELECT
     person.name
 FROM
     person
 WHERE
     email IS NOT NULL
-</code></pre>
-
-<p>它会打印：</p>
-
+</code></pre><p>它会打印：</p>
 <pre><code>Fernando
 Aline
-</code></pre>
-
-<p>好的，我们有一个代码可以保存谁进入我们的秘密圣诞老人游戏。但每个人都想要不同的礼物。我们怎么知道每个人的意愿？</p>
-
+</code></pre><p>好的，我们有一个代码可以保存谁进入我们的秘密圣诞老人游戏。但每个人都想要不同的礼物。我们怎么知道每个人的意愿？</p>
 <p>让我们修改代码，使其为参与秘密圣诞老人的每个人保存心愿单：</p>
-
-<pre><code class="language-raku">use Red;
+<pre><code class="language-raku" data-lang="raku">use Red;
 
 model Person { ... }
 
@@ -369,10 +337,7 @@ my \sophia = Person.^create: :name&lt;Sophia&gt;, :email&lt;saco@aco.com&gt;;
 sophia.wishes.create: :name(&quot;baby alive&quot;), :link&lt;https://www.target.com/p/baby-alive-face-paint-fairy-brunette/-/A-51304817&gt;;
 
 say &quot;\n{ .name }\n{ .wishes.map({&quot; { .name } =&gt; { .link }&quot; }).join(&quot;\n&quot;).indent: 3 }&quot; for Person.^all
-</code></pre>
-
-<p>它打印：</p>
-
+</code></pre><p>它打印：</p>
 <pre><code>Fernando
     Comma =&gt; https://commaide.com
     raku books =&gt; https://rakubook.com
@@ -387,29 +352,19 @@ Fernanda
 
 Sophia
     baby alive =&gt; https://www.target.com/p/baby-alive-face-paint-fairy-brunette/-/A-51304817
-</code></pre>
-
-<p>现在我们有一个新的  <em>模型</em> <em>愿望清单</em>  ，它引用了一个名为*withlist*的表  。它  <code>$!id</code> 作为  <strong>ID</strong>，  <code>$!name</code> 并  <code>$!link</code> 为列，也有一些新的东西！ <code>has UInt $!wisher-id is referencing{ Person.id };</code> 是一样  <code>has UInt $!wisher-id is column{ :references{ Person.id } };</code> ，这意味着它是一个*列*，这是一个  <strong>外键</strong>  引用  <em>ID</em> *的人*的*列*。它也有  <code>has Person $.wisher is relationship{ .wisher-id };</code> 它<strong>不是</strong>一个*列*，这是一个“虚拟”。在  <strong>$</strong>  <em>印记</em>  意味着有  <strong>只有1</strong>好心人˚F <strong>或</strong>愿望。并  <code>is relationship</code> 期待一个  <em>Callable</em> 这将获得一个  *模型*。如果它是  <em>标量</em>  ，它将接收当前  <em>模型</em>  作为唯一参数。所以，在这种情况下，它将是  *愿望清单*。该relationsip的回报  <em>可赎回</em>  必须是*列*引用其他一些*列*。</p>
-
+</code></pre><p>现在我们有一个新的  <em>模型</em> <em>愿望清单</em>  ，它引用了一个名为<em>withlist</em>的表  。它  <code>$!id</code> 作为  <strong>ID</strong>，  <code>$!name</code> 并  <code>$!link</code> 为列，也有一些新的东西！ <code>has UInt $!wisher-id is referencing{ Person.id };</code> 是一样  <code>has UInt $!wisher-id is column{ :references{ Person.id } };</code> ，这意味着它是一个<em>列</em>，这是一个  <strong>外键</strong>  引用  <em>ID</em> <em>的人</em>的<em>列</em>。它也有  <code>has Person $.wisher is relationship{ .wisher-id };</code> 它<strong>不是</strong>一个<em>列</em>，这是一个“虚拟”。在  <strong>$</strong>  <em>印记</em>  意味着有  <strong>只有1</strong>好心人˚F <strong>或</strong>愿望。并  <code>is relationship</code> 期待一个  <em>Callable</em> 这将获得一个  <em>模型</em>。如果它是  <em>标量</em>  ，它将接收当前  <em>模型</em>  作为唯一参数。所以，在这种情况下，它将是  <em>愿望清单</em>。该relationsip的回报  <em>可赎回</em>  必须是<em>列</em>引用其他一些<em>列</em>。</p>
 <p>让我们看看这个表是如何创建的：</p>
-
-<pre><code class="language-raku">CREATE TABLE wishlist(
+<pre><code class="language-raku" data-lang="raku">CREATE TABLE wishlist(
    id integer NOT NULL primary key,
    name varchar(255) NOT NULL,
    link varchar(255) NULL,
    wisher_id integer NULL references person(id)
 )
-</code></pre>
-
-<p>如您所见，没有   创建*wisher*列。</p>
-
-<p>该  <em>人</em> <em>模式</em>  也发生了变化！现在它有一个  <code>@.wishes</code> *关系*（<code>has Wishlist @.wishes is relationship{ .wisher-id }</code>）。它使用  <strong>@</strong>  <em>sigil，</em>  因此每个  <em>人</em> 都可以拥有多个愿望。 传递的  *Callable*将接收<em>Positional</em> *属性*的类型   （ 在此情况下为*Wishlist*），并且必须返回引用其他列的列。</p>
-
+</code></pre><p>如您所见，没有   创建<em>wisher</em>列。</p>
+<p>该  <em>人</em> <em>模式</em>  也发生了变化！现在它有一个  <code>@.wishes</code> <em>关系</em>（<code>has Wishlist @.wishes is relationship{ .wisher-id }</code>）。它使用  <strong>@</strong>  <em>sigil，</em>  因此每个  <em>人</em> 都可以拥有多个愿望。 传递的  <em>Callable</em>将接收<em>Positional</em> <em>属性</em>的类型   （ 在此情况下为<em>Wishlist</em>），并且必须返回引用其他列的列。</p>
 <p>创建的表与以前相同。</p>
-
-<p>我们之前创建了一个新的  <em>Person</em>  ：  <code>my \fernando = Person.^create: :name&lt;Fernando&gt;, :email&lt;fco@aco.com&gt;;</code> 现在我们可以使用*关系*（<strong>愿望</strong>）来创建一个新的愿望（）。这为Fernando运行以下SQL创建了一个新的愿望：<code>fernando.wishes.create: :name&lt;Comma&gt;, :link&lt;https://commaide.com&amp;gt;</code></p>
-
-<pre><code class="language-raku">INSERT INTO wishlist(
+<p>我们之前创建了一个新的  <em>Person</em>  ：  <code>my \fernando = Person.^create: :name&lt;Fernando&gt;, :email&lt;fco@aco.com&gt;;</code> 现在我们可以使用<em>关系</em>（<strong>愿望</strong>）来创建一个新的愿望（）。这为Fernando运行以下SQL创建了一个新的愿望：<code>fernando.wishes.create: :name&lt;Comma&gt;, :link&lt;https://commaide.com&amp;gt;</code></p>
+<pre><code class="language-raku" data-lang="raku">INSERT INTO wishlist(
    name,
    link,
    wisher_id
@@ -418,17 +373,11 @@ Sophia
    'https://commaide.com',
    1
 )
-</code></pre>
-
-<p>你看过了吗？ <code>wisher_id</code> 是  <strong>1</strong> &hellip; 1是费尔南多的身份。一旦你创建了Fernando的<strong>.wishes（）</strong>的愿望  ，它已经知道它属于Fernando。</p>
-
+</code></pre><p>你看过了吗？ <code>wisher_id</code> 是  <strong>1</strong> &hellip; 1是费尔南多的身份。一旦你创建了Fernando的**.wishes（）**的愿望  ，它已经知道它属于Fernando。</p>
 <p>然后我们为我们创造的每个人定义愿望。</p>
-
-<p>然后我们遍历 数据库中的每个  *Person*（<code>Person.^all</code>）并打印其名称并循环该人的意愿并打印其名称和链接。</p>
-
+<p>然后我们遍历 数据库中的每个  <em>Person</em>（<code>Person.^all</code>）并打印其名称并循环该人的意愿并打印其名称和链接。</p>
 <p>哦，我们可以拯救谁参与&hellip;&hellip;得到他们想要的东西&hellip;&hellip;但是平局？我应该送谁礼物？为此，我们再次更改程序：</p>
-
-<pre><code class="language-raku">use lib &lt;lib&gt;;
+<pre><code class="language-raku" data-lang="raku">use lib &lt;lib&gt;;
 use Red;
 
 model Person { ... }
@@ -485,24 +434,16 @@ sophia.wishes.create: :name(&quot;baby alive&quot;),      :link&lt;https://www.t
 Person.draw;
 
 say &quot;{ .name } -&gt; { .pair.name }\n\tWishlist: { .pair.wishes.map(*.name).join: &quot;, &quot; }&quot; for Person.^all
-</code></pre>
-
-<p>现在<strong>Person</strong>  有两个新<em>属性</em>  （<strong>$！pair-id</strong>和<strong>$ .pair</strong>）和一个新方法（<strong>draw</strong>）。 <strong>$！pair-id</strong>  是一个 引用 同一个<em>表</em>  （<strong>Person</strong>）上  的字段<strong>id</strong>的*外键*，因此我们必须使用  <em>别名</em>  （）。另一个是使用该*外键*的<em>关系</em>  （<strong>$ .pair</strong>）。<code>.^alias</code></p>
-
+</code></pre><p>现在<strong>Person</strong>  有两个新<em>属性</em>  （<strong>$！pair-id</strong>和<strong>$ .pair</strong>）和一个新方法（<strong>draw</strong>）。 <strong>$！pair-id</strong>  是一个 引用 同一个<em>表</em>  （<strong>Person</strong>）上  的字段<strong>id</strong>的<em>外键</em>，因此我们必须使用  <em>别名</em>  （）。另一个是使用该<em>外键</em>的<em>关系</em>  （<strong>$ .pair</strong>）。<code>.^alias</code></p>
 <p>新方法（<strong>平局</strong>）是神奇发生的地方。它使用方法  <strong>.pick：*</strong>  在普通的  <em>Positional</em>  上将洗牌。它在这里做同样的事情，查询：</p>
-
-<pre><code class="language-sql">SELECT
-   person.email , person.id , person.name , person.pair_id as &quot;pair-id&quot;
-FROM
-   person
-ORDER BY
-   random()
-</code></pre>
-
-<p>一旦我们有了洗牌列表，我们就会使用  <em>.rotor</em>  来获取两个项目并返回一个，所以我们保存每个人给予下一个人的那一对，并且列表中的最后一个人将给第一个人。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>
+   <span class="n">person</span><span class="p">.</span><span class="n">email</span> <span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">id</span> <span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">name</span> <span class="p">,</span> <span class="n">person</span><span class="p">.</span><span class="n">pair_id</span> <span class="k">as</span> <span class="s2">&#34;</span><span class="s2">pair-id</span><span class="s2">&#34;</span>
+<span class="k">FROM</span>
+   <span class="n">person</span>
+<span class="k">ORDER</span> <span class="k">BY</span>
+   <span class="n">random</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>一旦我们有了洗牌列表，我们就会使用  <em>.rotor</em>  来获取两个项目并返回一个，所以我们保存每个人给予下一个人的那一对，并且列表中的最后一个人将给第一个人。</p>
 <p>这是我们最终代码的输出：</p>
-
 <pre><code>Fernando -&gt; Sophia
 	Wishlist: baby alive
 Aline -&gt; Fernanda
@@ -511,11 +452,8 @@ Fernanda -&gt; Fernando
 	Wishlist: COMMA, raku books, mac book pro
 Sophia -&gt; Aline
 	Wishlist: a new closet
-</code></pre>
-
-<p>作为奖励，让我们看一下Red将要跟随的曲目。这是当前的工作代码：</p>
-
-<pre><code class="language-raku">use Red;
+</code></pre><p>作为奖励，让我们看一下Red将要跟随的曲目。这是当前的工作代码：</p>
+<pre><code class="language-raku" data-lang="raku">use Red;
 
 model Person {
    has UInt     $.id        is id;
@@ -533,28 +471,21 @@ Person.^create: :name&lt;Fernanda&gt;;
 Person.^create: :name&lt;Sophia&gt;;
 
 .say for Person.^all.map: { &quot;{ .name }{ &quot; =&gt; { .email }&quot; if .email }&quot; };
-</code></pre>
-
-<p>这是它运行的SQL：</p>
-
-<pre><code class="language-sql">SELECT
-   CASE 
-      WHEN (email == '' OR email IS NULL) THEN name
-   ELSE name || ' =&gt; ' || email
-   END
-    as &quot;data&quot;
-FROM
-   person
-</code></pre>
-
-<p>它打印</p>
-
+</code></pre><p>这是它运行的SQL：</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span>
+   <span class="k">CASE</span> 
+      <span class="k">WHEN</span> <span class="p">(</span><span class="n">email</span> <span class="o">=</span><span class="o">=</span> <span class="s1">&#39;</span><span class="s1">&#39;</span> <span class="k">OR</span> <span class="n">email</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">)</span> <span class="k">THEN</span> <span class="n">name</span>
+   <span class="k">ELSE</span> <span class="n">name</span> <span class="o">|</span><span class="o">|</span> <span class="s1">&#39;</span><span class="s1"> =&gt; </span><span class="s1">&#39;</span> <span class="o">|</span><span class="o">|</span> <span class="n">email</span>
+   <span class="k">END</span>
+    <span class="k">as</span> <span class="s2">&#34;</span><span class="s2">data</span><span class="s2">&#34;</span>
+<span class="k">FROM</span>
+   <span class="n">person</span>
+</code></pre></div><p>它打印</p>
 <pre><code>Fernando =&gt; fco@aco.com 
 Aline =&gt; aja@aco.com 
 Fernanda 
 Sophia
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -645,7 +576,7 @@ Sophia
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

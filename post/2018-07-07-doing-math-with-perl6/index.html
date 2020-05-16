@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-07-doing-math-with-perl6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,13 +231,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="sets">Sets</h2>
-
+        <h2 id="sets">Sets</h2>
 <p>Raku 包括 <a href="https://docs.raku.org/type/Set">Set</a> 数据类型，以及对<a href="https://docs.raku.org/language/setbagmix#Set%2FBag_Operators">大多数 set 操作</a>的支持。<a href="https://en.wikipedia.org/wiki/Algebra_of_sets">并集和交集</a>不仅是原生操作，它们使用自然符号 <code>∩</code> 和 <code>∪</code>。例如，此代码将检查有限数量集的集算术的基本定律：</p>
-
-<pre><code class="language-raku">my @arbitrary-numbers = ^100;
+<pre><code class="language-raku" data-lang="raku">my @arbitrary-numbers = ^100;
 my \U = @arbitrary-numbers.Set;
  
 my @sets;
@@ -269,13 +265,9 @@ say &quot;Empty set dominates &quot;, so @empty-set.all;  # OUTPUT: «Empty set 
  
 say &quot;Identity with U &quot;, so @id-universe.all;    # OUTPUT: «Identity with U True» 
 say &quot;Identity with ∅ &quot;, so @id-empty.all;       # OUTPUT: «Identity with ∅ True» 
-</code></pre>
-
-<p>在这个使用 Raku 已经定义的<a href="https://docs.raku.org/language/setbagmix#term_%25E2%2588%2585">空集</a>的代码中，我们不仅检查集合代数中的等式是否成立，我们还通过<a href="https://docs.raku.org/language/variables#index-entry-%5C_%28sigilless_variables%29">无符号变量</a>和集合运算符的 Unicode 形式使用表达式。尽可能接近原始形式; 例如，<code>A ∪ U === U</code>，除了使用<a href="https://docs.raku.org/routine/===">值标识运算符 &lt;===&gt;</a> 与<a href="https://en.wikipedia.org/wiki/Algebra_of_sets">维基百科条目</a>中的实际数学表达式非常接近。</p>
-
+</code></pre><p>在这个使用 Raku 已经定义的<a href="https://docs.raku.org/language/setbagmix#term_%25E2%2588%2585">空集</a>的代码中，我们不仅检查集合代数中的等式是否成立，我们还通过<a href="https://docs.raku.org/language/variables#index-entry-%5C_%28sigilless_variables%29">无符号变量</a>和集合运算符的 Unicode 形式使用表达式。尽可能接近原始形式; 例如，<code>A ∪ U === U</code>，除了使用<a href="https://docs.raku.org/routine/===">值标识运算符 &lt;===&gt;</a> 与<a href="https://en.wikipedia.org/wiki/Algebra_of_sets">维基百科条目</a>中的实际数学表达式非常接近。</p>
 <p>我们甚至可以测试摩根定律，如下面的代码所示：</p>
-
-<pre><code class="language-raku">my @alphabet = 'a'..'z';
+<pre><code class="language-raku" data-lang="raku">my @alphabet = 'a'..'z';
 my \U = @alphabet.Set;
 sub postfix:&lt;⁻&gt;(Set $a) { U ⊖ $a }
 my @sets;
@@ -287,14 +279,9 @@ for @sets X @sets -&gt; (\A, \B){
 }
 say &quot;1st De Morgan is &quot;, $de-Morgan1;
 say &quot;2nd De Morgan is &quot;, $de-Morgan2;
-</code></pre>
-
-<p>我们声明 - 作为补语运算，它计算通用集U和我们集之间的对称差⊖。一旦宣布这一点，就可以比较容易地表达诸如A和B的并集 <code>(A ∪ B)⁻</code> 的补集，其符号与原始数学符号非常接近。</p>
-
+</code></pre><p>我们声明 - 作为补语运算，它计算通用集U和我们集之间的对称差⊖。一旦宣布这一点，就可以比较容易地表达诸如A和B的并集 <code>(A ∪ B)⁻</code> 的补集，其符号与原始数学符号非常接近。</p>
 <h2 id="算术">算术</h2>
-
 <p>Raku 可以使用不同的数据类型进行算术运算。 <a href="https://docs.raku.org/type/Num">Num</a>，<a href="https://docs.raku.org/type/Rat">Rat</a> 和 <a href="https://docs.raku.org/type/Complex">Complex</a> 都可以<a href="https://en.wikipedia.org/wiki/Field_(mathematics)">在操作加法，减法，乘法和除法下作为场</a>运行。等效的数学领域是：</p>
-
 <table>
 <thead>
 <tr>
@@ -302,88 +289,53 @@ say &quot;2nd De Morgan is &quot;, $de-Morgan2;
 <th align="center">Field</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="center">C<Rat></td>
+<td align="center">C<!-- raw HTML omitted --></td>
 <td align="center">ℚ</td>
 </tr>
-
 <tr>
-<td align="center">C<Num></td>
+<td align="center">C<!-- raw HTML omitted --></td>
 <td align="center">ℝ</td>
 </tr>
-
 <tr>
-<td align="center">C<Complex></td>
+<td align="center">C<!-- raw HTML omitted --></td>
 <td align="center">ℂ</td>
 </tr>
 </tbody>
 </table>
-
 <p><code>Int</code>s 虽然在技术上与 <strong>Z</strong> 相对应，但它并不是真正的数学领域，因为它们不是在四个算术运算下关闭的，并且整数不满足<a href="https://math.stackexchange.com/questions/2192317/set-of-integers-not-a-field/2192330">同一性公理</a>。但是，如果使用整数除法 <code>div</code>，它们的操作将始终产生其他整数;但是，如果使用 <code>/</code>，通常结果将是 <a href="https://docs.raku.org/type/Rat">Rat</a>。</p>
-
 <p>此外，<code>Int</code> 可以进行无限精度算术（或者至少在存储器允许的情况下无限制;还可以发生数字溢出(<code>Numeric overflow</code>)），如果数字太大则不会回落到 <a href="https://docs.raku.org/type/Num">Num</a>：</p>
-
-<pre><code class="language-raku">my @powers = 2, 2 ** * ... Inf; say @powers[4].chars; # OUTPUT: «19729␤» 
-</code></pre>
-
-<p>同样严格地说，行为类似于数学领域的 Rational 类是 <a href="https://docs.raku.org/type/FatRat">FatRat</a>。出于效率原因，当数字足够大或者分子和分母之间存在很大差异时，操作 <code>Rats</code> 时会回落到 <code>Num</code>。 <code>FatRat</code> 可以使用任意精度，与默认的 <code>Int</code> 类相同。</p>
-
+<pre><code class="language-raku" data-lang="raku">my @powers = 2, 2 ** * ... Inf; say @powers[4].chars; # OUTPUT: «19729␤» 
+</code></pre><p>同样严格地说，行为类似于数学领域的 Rational 类是 <a href="https://docs.raku.org/type/FatRat">FatRat</a>。出于效率原因，当数字足够大或者分子和分母之间存在很大差异时，操作 <code>Rats</code> 时会回落到 <code>Num</code>。 <code>FatRat</code> 可以使用任意精度，与默认的 <code>Int</code> 类相同。</p>
 <p>生态系统中的某些模块可以使用数学方法处理其他数据类型：</p>
-
 <ul>
 <li><a href="https://github.com/pierre-vigier/Raku-Math-Matrix">Math::Matrix</a> 操作矩阵字段。</li>
 <li><a href="https://github.com/Util/Raku-Math-Quaternion">Math::Quaternion</a> 操作<a href="https://en.wikipedia.org/wiki/Quaternion">四元数字段</a>，这是复数的推广。</li>
 <li><a href="https://github.com/colomon/Math-Polynomial">Math::Polynomial</a> 与多项式一起使用，并且能够用它们进行简单的算术运算。</li>
 <li><a href="https://github.com/raydiak/Math-Symbolic">Math::Symbolic</a>，用于符号数学</li>
 </ul>
-
 <p>数字会自动变为其实际表示的数字类型：</p>
-
-<pre><code class="language-raku">.^name.say for (4, ⅗, 1e-9, 3+.1i); # OUTPUT: «Int␤Rat␤Num␤Complex␤» 
-</code></pre>
-
-<p>这也使算术运算最适合特定类型</p>
-
-<pre><code class="language-raku">say .33-.22-.11 == 0; # OUTPUT: «True␤» 
-</code></pre>
-
-<p>在这儿，所有数字都被解释为 <code>Rat</code>s，这使得操作准确。通常，大多数语言会将它们解释为浮点数，</p>
-
-<pre><code class="language-raku">say .33.Num -.22.Num - .11.Num; # OUTPUT: «1.3877787807814457e-17␤» 
-</code></pre>
-
-<p>对于这样的情况，Raku 还包括一个近似相等的运算符(<code>approximately equal</code>)，<a href="https://docs.raku.org/language/operators#infix_%3D~%3D">≅</a></p>
-
-<pre><code class="language-raku">say .33.Num -.22.Num - .11.Num ≅ 0; # OUTPUT: «True␤» 
-</code></pre>
-
-<h2 id="序列">序列</h2>
-
+<pre><code class="language-raku" data-lang="raku">.^name.say for (4, ⅗, 1e-9, 3+.1i); # OUTPUT: «Int␤Rat␤Num␤Complex␤» 
+</code></pre><p>这也使算术运算最适合特定类型</p>
+<pre><code class="language-raku" data-lang="raku">say .33-.22-.11 == 0; # OUTPUT: «True␤» 
+</code></pre><p>在这儿，所有数字都被解释为 <code>Rat</code>s，这使得操作准确。通常，大多数语言会将它们解释为浮点数，</p>
+<pre><code class="language-raku" data-lang="raku">say .33.Num -.22.Num - .11.Num; # OUTPUT: «1.3877787807814457e-17␤» 
+</code></pre><p>对于这样的情况，Raku 还包括一个近似相等的运算符(<code>approximately equal</code>)，<a href="https://docs.raku.org/language/operators#infix_%3D~%3D">≅</a></p>
+<pre><code class="language-raku" data-lang="raku">say .33.Num -.22.Num - .11.Num ≅ 0; # OUTPUT: «True␤» 
+</code></pre><h2 id="序列">序列</h2>
 <p><a href="https://en.wikipedia.org/wiki/Sequence">序列</a>是允许重复的对象的枚举集合，也是 Raku 中称为 <a href="https://docs.raku.org/type/Seq">Seq</a> 的第一类数据类型。 <code>Seq</code> 能够表示无限序列，如自然数：</p>
-
-<pre><code class="language-raku">my \𝕟 = 1,2 … ∞;
+<pre><code class="language-raku" data-lang="raku">my \𝕟 = 1,2 … ∞;
 say 𝕟[3];# OUTPUT: «4␤» 
-</code></pre>
-
-<p>无限序列使用 ∞，<code>Inf</code> 或 <code>*</code>（Whatever）作为终止符。 <code>...</code> 是列表生成器，只要插入第一个数字，它实际上可以理解算术和几何级数：</p>
-
-<pre><code class="language-raku">say 1,5,9 … * &gt; 100;
+</code></pre><p>无限序列使用 ∞，<code>Inf</code> 或 <code>*</code>（Whatever）作为终止符。 <code>...</code> 是列表生成器，只要插入第一个数字，它实际上可以理解算术和几何级数：</p>
+<pre><code class="language-raku" data-lang="raku">say 1,5,9 … * &gt; 100;
 # OUTPUT: «(1 5 9 13 17 21 25 29 33 37 41 45 49 53 57 61 65 69 73 77 81 85 89 93 97 101)␤» 
 say 1,3,9 … * &gt; 337; # OUTPUT: «(1 3 9 27 81 243 729)␤» 
-</code></pre>
-
-<p>当生成的数字大于 100 时，第一个序列将终止; 第二个序列，当它大于 337 时，是几何级数。</p>
-
+</code></pre><p>当生成的数字大于 100 时，第一个序列将终止; 第二个序列，当它大于 337 时，是几何级数。</p>
 <p>可以使用任意生成器的事实可以很容易地生成像 <a href="https://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci</a> 这样的序列：</p>
-
-<pre><code class="language-raku">say 1,1, * + * … * &gt; 50;#  OUTPUT: «(1 1 2 3 5 8 13 21 34 55)␤» 
-</code></pre>
-
-<p>事实上，我们可以通过这种方式计算<a href="https://en.wikipedia.org/wiki/Golden_ratio">黄金比例</a>的近似值：</p>
-
-<pre><code class="language-raku">my @phis = (2.FatRat, 1 + 1 / * ... *);
+<pre><code class="language-raku" data-lang="raku">say 1,1, * + * … * &gt; 50;#  OUTPUT: «(1 1 2 3 5 8 13 21 34 55)␤» 
+</code></pre><p>事实上，我们可以通过这种方式计算<a href="https://en.wikipedia.org/wiki/Golden_ratio">黄金比例</a>的近似值：</p>
+<pre><code class="language-raku" data-lang="raku">my @phis = (2.FatRat, 1 + 1 / * ... *);
 my @otherphi = (1 - @phis[200], 1 + 1 / * ... *);
 say @otherphi[^10, |(20, 30 ... 100)];# OUTPUT: 
 # «((-0.61803398874989484820458683436563811772030918 
@@ -392,35 +344,19 @@ say @otherphi[^10, |(20, 30 ... 100)];# OUTPUT:
 # -0.61803398874989484820458683436563811772030918 
 # -0.61803398874989484820458683436563811772030918 
 # -0.618033…» 
-</code></pre>
-
-<p><a href="https://github.com/ajs/raku-Math-Sequences">Math::Sequences</a> 模块包含许多已为你定义的数学序列。它定义了<a href="https://oeis.org/">百科全书中的许多序列</a>，其中一些序列的原始名称，如 ℤ 或 ℝ。</p>
-
+</code></pre><p><a href="https://github.com/ajs/raku-Math-Sequences">Math::Sequences</a> 模块包含许多已为你定义的数学序列。它定义了<a href="https://oeis.org/">百科全书中的许多序列</a>，其中一些序列的原始名称，如 ℤ 或 ℝ。</p>
 <p>一些集合运算符也对序列进行操作，它们可用于查明对象是否是其中的一部分：</p>
-
-<pre><code class="language-raku">say 876 ∈ (7,14 … * &gt; 1000) ; # OUTPUT: «False␤» 
-</code></pre>
-
-<p>在这种特殊情况下，我们可以看出 <code>876</code> 是否是 7 的直接倍数，但同样的原理适用于使用复杂发生器的其他序列。我们也可以使用集合包含运算符：</p>
-
-<pre><code class="language-raku">say (55,89).Set ⊂ (1,1, * + * … * &gt; 200); # OUTPUT: «True␤» 
-</code></pre>
-
-<p>虽然它没有考虑到它是否实际上是一个子序列，但这里只是存在两个元素;集合没有顺序，即使您没有将子序列显式地转换为Set或显式地将其转换为Seq，它也会被强制转换为包含运算符的应用程序。</p>
-
+<pre><code class="language-raku" data-lang="raku">say 876 ∈ (7,14 … * &gt; 1000) ; # OUTPUT: «False␤» 
+</code></pre><p>在这种特殊情况下，我们可以看出 <code>876</code> 是否是 7 的直接倍数，但同样的原理适用于使用复杂发生器的其他序列。我们也可以使用集合包含运算符：</p>
+<pre><code class="language-raku" data-lang="raku">say (55,89).Set ⊂ (1,1, * + * … * &gt; 200); # OUTPUT: «True␤» 
+</code></pre><p>虽然它没有考虑到它是否实际上是一个子序列，但这里只是存在两个元素;集合没有顺序，即使您没有将子序列显式地转换为Set或显式地将其转换为Seq，它也会被强制转换为包含运算符的应用程序。</p>
 <h2 id="数学常数">数学常数</h2>
-
 <p>Raku 已经包含了一组数学常量作为核心的一部分。</p>
-
-<pre><code class="language-raku">say π; # OUTPUT: «3.141592653589793» 
+<pre><code class="language-raku" data-lang="raku">say π; # OUTPUT: «3.141592653589793» 
 say τ; # Equivalent to 2π; OUTPUT: «6.283185307179586» 
 say 𝑒; # OUTPUT: «2.718281828459045␤» 
-</code></pre>
-
-<p>它们的拉丁名字 <code>e</code>, <code>pi</code> 和 <code>tau</code> 也是可得的, 具有相同的值 (尽管 <code>𝑒</code> 在 MoarVM 外面访问不了).</p>
-
+</code></pre><p>它们的拉丁名字 <code>e</code>, <code>pi</code> 和 <code>tau</code> 也是可得的, 具有相同的值 (尽管 <code>𝑒</code> 在 MoarVM 外面访问不了).</p>
 <p><a href="https://github.com/JJ/p6-math-constants/pulls">Math::Constants</a> 模块包括一系列额外的物理和数学常数，例如前面提到的黄金比率 <code>φ</code> 或普朗克常数 <code>ℎ</code>。</p>
-
 <p>由于 Raku 允许定义使用 Unicode 字形的变量，以及没有任何类型的 sigil 的变量和常量名称，因此使用概念的实际数学名称来尽可能地命名它们被认为是一种好的做法。</p>
 
 
@@ -513,7 +449,7 @@ say 𝑒; # OUTPUT: «2.718281828459045␤»
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

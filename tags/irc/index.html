@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Irc</title>
-  <meta property="og:title" content="Irc" />
-  <meta name="twitter:title" content="Irc" />
+  <title>IRC</title>
+  <meta property="og:title" content="IRC" />
+  <meta name="twitter:title" content="IRC" />
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/irc/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/irc/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -184,7 +184,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#Irc</h1>
+              <h1>#IRC</h1>
               <hr class="small">
             </div>
           </div>
@@ -219,7 +219,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1251 words)
+  <i class="fa fa-clock-o"></i> 7 minutes (1434 words)
   
   
 </span>
@@ -227,11 +227,11 @@ if (!doNotTrack) {
               </p>
               <div class="post-entry">
                 
-                  IRC::Client: Raku Multi-Server IRC (or Awesome Async Interfaces with Raku) 我在 2015 年圣诞节编写了我的第一个 Raku 程序 - 一个新年 IRC 派对机器人工具。这项工作包括发布 IRC::Client 模块. 我从这个语言中找到了童年的乐趣并且在假期喝了不少酒, 结果就是这个模块差强人意。
-最近，我需要一个用于某些 Raku bug 队列工作的工具，因此我决定花费一个周末，从头开始重新设计并重写这个模块。在过去的几个月中，有好几个人请求我这么做，所以我想我还会写一篇关于如何使用该模块的教程 - 作为一名主拖延者的道歉。如果你对 IRC 不感兴趣，我希望本教程将作为 Raku 中异步，非阻塞接口的一个通用示例。
-基础 要创建一个 IRC 机器人，实例化一个 IRC::Client 对象，给它一些基本信息，并调用 .run 方法。实现所需的所有功能，并将它们作为方法名称匹配要收听的事件的类，并通过 .plugins 属性传递。当发生 IRC 事件时，它会按照您指定的顺序传递给所有插件，如果某个插件要求它处理事件，则停止。
-这里有一个简单的 IRC 机器人，它可以响应在频道中发送的消息，通知和发送给它的私人消息。响应是 bot 收到的大写原始消息：
-use IRC::Client; .run with IRC::Client.new: :nick&lt;MahBot&gt; :host&lt;irc.freenode.net&gt; :channels&lt;#raku&gt; :debug :plugins(class { method irc-to-me ($_) { .text.uc } })  以下是运行时机器人的表现：
+                  2015 年圣诞节前后, 我写了我的第一个 Raku 程序 - 新年 IRC 派对机器人。这项工作包括发布了 IRC::Client 模块。我从这个语言中找到了童年的乐趣并且在假期喝了不少酒, 结果就是这个模块最终足够疯狂。
+最近, 我需要一个工具来完成一些 Raku 的 bug 队列工作, 因此我决定把自己关上一个周末, 从头开始重新设计和重写这个模块。在过去的几个月里, 有好几个人请求我这么做, 所以我想我也应该写一篇关于如何使用这个模块的教程 - 作为对我这个拖延症大师的道歉。如果你对 IRC 没有兴趣的话, 我希望这篇教程可以作为 Raku 中的异步、非阻塞接口的一个一般示例。
+基础 要创建一个 IRC 机器人, 请实例化一个 IRC::Client 对象, 给它一些基本信息, 然后调用 .run 方法。将所有你需要的功能实现为类, 并通过方法名匹配你想要监听的事件, 然后通过 .plugins 属性将其传递给所有的插件。当发生 IRC 事件时, 它会按照你指定的顺序传递给所有的插件, 如果有插件宣称处理了该事件就停止。
+这里有一个简单的 IRC 机器人, 它可以响应在频道中找人、通知和发送给它的私人消息。下面这个响应是机器人收到的大写后的原始消息：
+use IRC::Client;.run with IRC::Client.new::nick&lt;MahBot&gt;:host&lt;irc.freenode.net&gt;:channels&lt;#raku&gt;:debug:plugins(class { method irc-to-me ($_) { .text.uc } })这就是机器人运行时的样子：
                   <a href="https://ohmysummer.github.io/post/2018-04-27-raku%E4%B8%AD%E4%BB%A4%E4%BA%BA%E6%83%8A%E5%8F%B9%E7%9A%84%E5%BC%82%E6%AD%A5%E6%8E%A5%E5%8F%A3/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -284,7 +284,7 @@ use IRC::Client; .run with IRC::Client.new: :nick&lt;MahBot&gt; :host&lt;irc.fre
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

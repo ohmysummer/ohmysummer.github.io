@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-29-raku%E4%B8%AD%E7%9A%84%E5%AE%B9%E5%99%A8/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,158 +231,86 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>在本系列的<a href="https://opensource.com/article/18/7/migrating-perl-5-perl-6">第一篇</a>文章中，将 Perl 5 与 Raku 进行了比较，我们研究了将代码迁移到 Raku 时可能遇到的一些问题。在<a href="https://opensource.com/article/18/7/garbage-collection-perl-6">第二篇</a>文章中，我们研究了垃圾收集在 Raku 中的工作原理。第三篇文章，我们将重点介绍 Perl 5 的引用以及如何在 Raku 中处理它们，并介绍绑定和容器的概念。</p>
-
+        <p>在本系列的<a href="https://opensource.com/article/18/7/migrating-perl-5-perl-6">第一篇</a>文章中，将 Perl 5 与 Raku 进行了比较，我们研究了将代码迁移到 Raku 时可能遇到的一些问题。在<a href="https://opensource.com/article/18/7/garbage-collection-perl-6">第二篇</a>文章中，我们研究了垃圾收集在 Raku 中的工作原理。第三篇文章，我们将重点介绍 Perl 5 的引用以及如何在 Raku 中处理它们，并介绍绑定和容器的概念。</p>
 <h2 id="引用">引用</h2>
-
 <p>Raku 中没有引用，这对许多习惯于 Perl 5 语义的人来说都是令人惊讶的。但不要担心：因为没有引用，所以您不必担心是否应该解引用某些内容。</p>
-
-<pre><code class="language-perl5"># Perl 5
+<pre><code class="language-perl5" data-lang="perl5"># Perl 5
 my $foo = \@bar;   # must add reference \ to make $foo a reference to @bar
 say @bar[1];       # no dereference needed
 say $foo-&gt;[1];     # must add dereference -&gt;
-</code></pre>
-
-<pre><code class="language-raku"># Raku
+</code></pre><pre><code class="language-raku" data-lang="raku"># Raku
 my $foo = @bar;    # $foo now contains @bar
 say @bar[1];       # no dereference needed, note: sigil does not change
 say $foo[1];       # no dereference needed either
-</code></pre>
-
-<p>有人可能会说 Raku 中的所有东西都是引用。来自 Perl 5（其中一个对象是一个受祝福的引用），这将是关于 Raku 的逻辑结论，其中所有的东西都是对象（或者可以被认为是一个对象）。但这并不能完全符合 Raku 中的情况，并且会妨碍你理解 Raku 的工作原理。谨防<a href="https://en.wikipedia.org/wiki/False_friend">虚假的朋友</a>！</p>
-
+</code></pre><p>有人可能会说 Raku 中的所有东西都是引用。来自 Perl 5（其中一个对象是一个受祝福的引用），这将是关于 Raku 的逻辑结论，其中所有的东西都是对象（或者可以被认为是一个对象）。但这并不能完全符合 Raku 中的情况，并且会妨碍你理解 Raku 的工作原理。谨防<a href="https://en.wikipedia.org/wiki/False_friend">虚假的朋友</a>！</p>
 <h2 id="绑定">绑定</h2>
-
 <p>在我们完成赋值之前，了解 Raku 中绑定的概念很重要。您可以使用 <code>:=</code> 运算符将某些东西显式绑定到其他东西上。定义词法变量时，可以将值绑定到它：</p>
-
-<pre><code class="language-raku">my $foo := 42;  # note: := instead of =
-</code></pre>
-
-<p>简单地说，这会在词法填充（lexpad）中创建一个名为 &ldquo;<strong>$foo</strong>&rdquo; 的键（您可以将其视为编译时哈希，其中包含有关该词法范围内可见事物的信息）并使其 42 为字面值。因为这是一个文字常量，所以你无法改变它。试图这样做会导致异常。所以不要那样做！</p>
-
+<pre><code class="language-raku" data-lang="raku">my $foo := 42;  # note: := instead of =
+</code></pre><p>简单地说，这会在词法填充（lexpad）中创建一个名为 &ldquo;<strong>$foo</strong>&rdquo; 的键（您可以将其视为编译时哈希，其中包含有关该词法范围内可见事物的信息）并使其 42 为字面值。因为这是一个文字常量，所以你无法改变它。试图这样做会导致异常。所以不要那样做！</p>
 <p>在许多情况下，这种绑定操作在引擎盖下使用，例如在迭代时：</p>
-
-<pre><code class="language-raku">my @a = 0..9;    # can also be written as ^10
+<pre><code class="language-raku" data-lang="raku">my @a = 0..9;    # can also be written as ^10
 say @a;          # [0 1 2 3 4 5 6 7 8 9]
 for @a { $_++ }  # $_ is bound to each array element and incremented
 say @a;          # [1 2 3 4 5 6 7 8 9 10]
-</code></pre>
-
-<p>如果您尝试迭代常量列表，则 <code>**$_**</code> 绑定到字面值，您无法递增：</p>
-
-<pre><code class="language-raku">for 0..9 { $_++ }  # error: requires mutable arguments
-</code></pre>
-
-<h2 id="赋值">赋值</h2>
-
+</code></pre><p>如果您尝试迭代常量列表，则 <code>**$_**</code> 绑定到字面值，您无法递增：</p>
+<pre><code class="language-raku" data-lang="raku">for 0..9 { $_++ }  # error: requires mutable arguments
+</code></pre><h2 id="赋值">赋值</h2>
 <p>如果你在 Perl 5 和 Raku 中比较“创建一个词法变量并赋值给它”，它在外面看起来是一样的：</p>
-
-<pre><code class="language-raku">my $bar = 56;  # both Perl 5 and Raku
-</code></pre>
-
-<p>在 Raku 中，这也会在 lexpad 中创建一个名为 “<strong>$bar</strong>” 的键。但是不是直接将值绑定到该 lexpad 条目，而是为您创建一个容器（<strong>Scalar</strong>对象），并将其绑定到“<strong>$bar</strong>”的 lexpad 条目。然后，56 被存储为该容器中的值。在伪代码中，您可以将其视为：</p>
-
-<pre><code class="language-raku">my $bar := Scalar.new( value =&gt; 56 );
-</code></pre>
-
-<p>请注意，<strong>Scalar</strong> 对象已绑定，未分配。 Perl 5 中最接近它的是绑定标量。但当然“= <strong>56</strong>”的类型要少得多！</p>
-
+<pre><code class="language-raku" data-lang="raku">my $bar = 56;  # both Perl 5 and Raku
+</code></pre><p>在 Raku 中，这也会在 lexpad 中创建一个名为 “<strong>$bar</strong>” 的键。但是不是直接将值绑定到该 lexpad 条目，而是为您创建一个容器（<strong>Scalar</strong>对象），并将其绑定到“<strong>$bar</strong>”的 lexpad 条目。然后，56 被存储为该容器中的值。在伪代码中，您可以将其视为：</p>
+<pre><code class="language-raku" data-lang="raku">my $bar := Scalar.new( value =&gt; 56 );
+</code></pre><p>请注意，<strong>Scalar</strong> 对象已绑定，未分配。 Perl 5 中最接近它的是绑定标量。但当然“= <strong>56</strong>”的类型要少得多！</p>
 <p>诸如 <strong>Array</strong> 和 <strong>Hash</strong> 之类的数据结构也会自动将值放在绑定到结构的容器中。</p>
-
-<pre><code class="language-raku">my @a;       # empty Array
+<pre><code class="language-raku" data-lang="raku">my @a;       # empty Array
 @a[5] = 42;  # bind a Scalar container to 6th element and put 42 in it
-</code></pre>
-
-<h2 id="容器">容器</h2>
-
+</code></pre><h2 id="容器">容器</h2>
 <p>对于 Raku 中的大多数操作，<strong>Scalar</strong> 容器对象是不可见的，因此大多数情况下您不必考虑它。例如，每当您使用变量作为参数调用子例程（或方法）时，它将绑定到容器中的值。而且因为您无法分配值，您会得到：</p>
-
-<pre><code class="language-raku">sub frobnicate($this) {
+<pre><code class="language-raku" data-lang="raku">sub frobnicate($this) {
     $this = 42;
 }
 my $foo = 666;
 frobnicate($foo); # Cannot assign to a readonly variable or a value
-</code></pre>
-
-<p>如果要允许分配外部值，可以将 <strong>is rw</strong> trait 添加到签名中的变量。这会将签名中的变量绑定到指定变量的容器，从而允许赋值：</p>
-
-<pre><code class="language-raku">sub oknicate($this is rw) {
+</code></pre><p>如果要允许分配外部值，可以将 <strong>is rw</strong> trait 添加到签名中的变量。这会将签名中的变量绑定到指定变量的容器，从而允许赋值：</p>
+<pre><code class="language-raku" data-lang="raku">sub oknicate($this is rw) {
     $this = 42;
 }
 my $foo = 666;
 oknicate($foo); # no problem
 say $foo;       # 42
-</code></pre>
-
-<h2 id="proxy">Proxy</h2>
-
+</code></pre><h2 id="proxy">Proxy</h2>
 <p>从概念上讲，Raku 中的 <strong>Scalar</strong> 对象有一个 <strong>FETCH</strong> 方法（用于生成对象中的值）和一个 <strong>STORE</strong> 方法（用于更改对象中的值），就像 Perl 5 中的绑定标量一样。</p>
-
 <p>假设您稍后将值 <strong>768</strong> 分配给 <strong>$bar</strong> 变量：</p>
-
-<pre><code class="language-raku">$bar = 768;
-</code></pre>
-
-<p>发生的事情在概念上相当于：</p>
-
-<pre><code class="language-raku">$bar.STORE(768);
-</code></pre>
-
-<p>假设您要在 <strong>$bar</strong> 中的值中添加 <strong>20</strong>：</p>
-
-<pre><code class="language-raku">$bar = $bar + 20;
-</code></pre>
-
-<p>概念上发生的是：</p>
-
-<pre><code class="language-raku">$bar.STORE( $bar.FETCH + 20 );
-</code></pre>
-
-<p>如果要在容器上指定自己的 <strong>FETCH</strong> 和 <strong>STORE</strong> 方法，可以通过绑定到 <a href="https://docs.raku.org/type/Proxy">Proxy</a> 对象来实现。例如，要创建一个始终报告分配给它的值的两倍的变量：</p>
-
-<pre><code class="language-raku">my $double := do {  # $double now a Proxy, rather than a Scalar container
+<pre><code class="language-raku" data-lang="raku">$bar = 768;
+</code></pre><p>发生的事情在概念上相当于：</p>
+<pre><code class="language-raku" data-lang="raku">$bar.STORE(768);
+</code></pre><p>假设您要在 <strong>$bar</strong> 中的值中添加 <strong>20</strong>：</p>
+<pre><code class="language-raku" data-lang="raku">$bar = $bar + 20;
+</code></pre><p>概念上发生的是：</p>
+<pre><code class="language-raku" data-lang="raku">$bar.STORE( $bar.FETCH + 20 );
+</code></pre><p>如果要在容器上指定自己的 <strong>FETCH</strong> 和 <strong>STORE</strong> 方法，可以通过绑定到 <a href="https://docs.raku.org/type/Proxy">Proxy</a> 对象来实现。例如，要创建一个始终报告分配给它的值的两倍的变量：</p>
+<pre><code class="language-raku" data-lang="raku">my $double := do {  # $double now a Proxy, rather than a Scalar container
     my $value;
     Proxy.new(
       FETCH =&gt; method ()     { $value + $value },
       STORE =&gt; method ($new) { $value = $new }
     )
 }
-</code></pre>
-
-<p>请注意，您需要一个额外的变量来保存存储在这样一个容器中的值。</p>
-
+</code></pre><p>请注意，您需要一个额外的变量来保存存储在这样一个容器中的值。</p>
 <h2 id="约束和默认值">约束和默认值</h2>
-
 <p>除了值之外，<a href="https://docs.raku.org/type/Scalar">Scalar</a> 还包含额外信息，例如类型约束和默认值。采用这个定义：</p>
-
-<pre><code class="language-raku">my Int $baz is default(42) = 666;
-</code></pre>
-
-<p>它创建一个名为 “<strong>$baz</strong>” 的标量绑定到 lexpad，将该容器中的值约束为使用 <strong>Int</strong> 成功智能匹配的类型，将容器的默认值设置为 <strong>42</strong>，并将值 <strong>666</strong> 放入容器中。</p>
-
+<pre><code class="language-raku" data-lang="raku">my Int $baz is default(42) = 666;
+</code></pre><p>它创建一个名为 “<strong>$baz</strong>” 的标量绑定到 lexpad，将该容器中的值约束为使用 <strong>Int</strong> 成功智能匹配的类型，将容器的默认值设置为 <strong>42</strong>，并将值 <strong>666</strong> 放入容器中。</p>
 <p>由于类型约束，为该变量分配字符串将失败：</p>
-
-<pre><code class="language-raku">$baz = &quot;foo&quot;;
+<pre><code class="language-raku" data-lang="raku">$baz = &quot;foo&quot;;
 # Type check failed in assignment to $baz; expected Int but got Str (&quot;foo&quot;)
-</code></pre>
-
-<p>如果在定义变量时未给出类型约束，则将假定为 <strong>Any</strong> 类型。如果未指定默认值，则将假定类型约束。</p>
-
+</code></pre><p>如果在定义变量时未给出类型约束，则将假定为 <strong>Any</strong> 类型。如果未指定默认值，则将假定类型约束。</p>
 <p>将 <strong>Nil</strong>（相当于 Perl 5 的 <strong>undef</strong> 的 Raku）分配给该变量会将其重置为默认值：</p>
-
-<pre><code class="language-raku">say $baz;   # 666
+<pre><code class="language-raku" data-lang="raku">say $baz;   # 666
 $baz = Nil;
 say $baz;   # 42
-</code></pre>
-
-<h2 id="总结">总结</h2>
-
+</code></pre><h2 id="总结">总结</h2>
 <p>Perl 5 具有值和值的引用。 Raku 没有引用，但它有值和容器。 Raku 中有两种类型的容器：<a href="https://docs.raku.org/type/Proxy">Proxy</a>（很像 Perl 5 中的绑定标量）和 <a href="https://docs.raku.org/type/Scalar">Scalar</a>。简单地说，变量以及 <a href="https://docs.raku.org/type/List">List</a>，<a href="https://docs.raku.org/type/Array">Array</a> 或 <a href="https://docs.raku.org/type/Hash">Hash</a> 的元素是值（如果它已绑定）或容器（如果已分配）。无论何时调用子例程（或方法），给定的参数都被解除容器化并绑定到子例程的参数（除非另有说明）。容器还保留类型约束和默认值等信息。将Nil分配给变量会将其返回到其默认值，如果未指定类型约束，则为Any。</p>
-
 <h2 id="原文连接">原文连接</h2>
-
 <p><a href="https://opensource.com/article/18/8/containers-perl-6">https://opensource.com/article/18/8/containers-perl-6</a></p>
 
 
@@ -475,7 +403,7 @@ say $baz;   # 42
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

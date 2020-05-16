@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-05-08-perl6cookbook/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,25 +231,15 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>Raku CookBook(inspired by Python cookbook)</p>
-
+        <p>Raku CookBook(inspired by Python cookbook)</p>
 <h1 id="数据结构和算法">数据结构和算法</h1>
-
 <h2 id="解压序列赋值给多个变量">解压序列赋值给多个变量</h2>
-
 <h3 id="问题">问题</h3>
-
 <p>现在有一个包含 N 个元素的元组或者是序列，怎样将它里面的值解压后同时赋值 给 N 个变量？</p>
-
 <h3 id="解决方案">解决方案</h3>
-
 <p>任何的序列 (或者是可迭代对象) 可以通过一个简单的赋值语句解压并赋值给多个 变量。唯一的前提就是变量的数量必须跟序列元素的数量是一样的。</p>
-
 <p>代码示例：</p>
-
-<pre><code class="language-raku">&gt; my @p = (4,5);
+<pre><code class="language-raku" data-lang="raku">&gt; my @p = (4,5);
 [4 5]
 &gt; my ($x, $y) = @p;
 (4 5)
@@ -271,18 +261,11 @@ ACME
 # 或者使用签名字面值和绑定(REPL 模式下报错, 需要在脚本中运行！)
 &gt; my ($name, $shares, $price, $year, $mon, $day); # a signature literal
 &gt; :($name, $shares, $price, ($year, $mon, $day)) := ('ACME', 50, 91.1, (2012, 12, 21) ); # binding operation
-</code></pre>
-
-<p>如果变量个数和序列元素的个数不匹配，会有变量的值为 <code>Any</code>。</p>
-
+</code></pre><p>如果变量个数和序列元素的个数不匹配，会有变量的值为 <code>Any</code>。</p>
 <p>代码示例：</p>
-
-<pre><code class="language-raku">&gt; my ($x,$y,$z) = @p;
+<pre><code class="language-raku" data-lang="raku">&gt; my ($x,$y,$z) = @p;
 (4 5 (Any))
-</code></pre>
-
-<p>字符串如果 unpack 则需要先 <code>comb</code>：</p>
-
+</code></pre><p>字符串如果 unpack 则需要先 <code>comb</code>：</p>
 <pre><code>my $s = 'Hello';
 my ($a, $b, $c, $d, $e) =$s.comb;
 &gt; $a
@@ -291,66 +274,41 @@ H
 e
 &gt; $e
 o
-</code></pre>
-
-<p>有时候，你可能只想解压一部分，丢弃其他的值。对于这种情况 Raku 并没有提 供特殊的语法。但是你可以使用任意变量名去占位，到时候丢掉这些变量就行了。</p>
-
+</code></pre><p>有时候，你可能只想解压一部分，丢弃其他的值。对于这种情况 Raku 并没有提 供特殊的语法。但是你可以使用任意变量名去占位，到时候丢掉这些变量就行了。</p>
 <p>代码示例：</p>
-
-<pre><code class="language-raku">my @data = ('ACME', 50, 91.1, |(2012, 12, 21));
+<pre><code class="language-raku" data-lang="raku">my @data = ('ACME', 50, 91.1, |(2012, 12, 21));
 my ($, $shares, $price, $) = @data;
 &gt; $shares
 50
 &gt; $price
 91.1
-</code></pre>
-
-<h2 id="解压可迭代对象赋值给多个变量">解压可迭代对象赋值给多个变量</h2>
-
+</code></pre><h2 id="解压可迭代对象赋值给多个变量">解压可迭代对象赋值给多个变量</h2>
 <p>如果一个可迭代对象的元素个数超过变量个数时，会抛出一个 Error。那么 怎样才能从这个可迭代对象中解压出 N 个元素出来？</p>
-
 <h3 id="解决方案-1">解决方案</h3>
-
 <p>Raku 使用星号来解决这个问题。比如，你在学习一门课程，在学期 末的时候，你想统计下家庭作业的平均成绩，但是排除掉第一个和最后一个分数。如 果只有四个分数，你可能就直接去简单的手动赋值，但如果有 24 个呢？这时候星号表 达式就派上用场了：</p>
-
-<pre><code class="language-raku">sub drop_first_last(@grades) {
+<pre><code class="language-raku" data-lang="raku">sub drop_first_last(@grades) {
     my ($first, *middle, $last) = @grades;
     return avg(@middle);
 }
-</code></pre>
-
-<p>另外一种情况， 假设你现在有一些用户的记录列表， 每条记录包含一个名字、邮 件，接着就是不确定数量的电话号码。你可以像下面这样分解这些记录：</p>
-
-<pre><code class="language-raku">&gt; my @record = ('Dave', 'dave@example.com', '773-555-1212', '847-555-1212')
+</code></pre><p>另外一种情况， 假设你现在有一些用户的记录列表， 每条记录包含一个名字、邮 件，接着就是不确定数量的电话号码。你可以像下面这样分解这些记录：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; my @record = ('Dave', 'dave@example.com', '773-555-1212', '847-555-1212')
 [Dave dave@example.com 773-555-1212 847-555-1212]
 &gt; my ($name, $email, @phone_numbers ) = @record
 (Dave dave@example.com [773-555-1212 847-555-1212])
 &gt; say @phone_numbers
 [773-555-1212 847-555-1212]
-</code></pre>
-
-<h2 id="保留最后-n-个元素">保留最后 N 个元素</h2>
-
+</code></pre><h2 id="保留最后-n-个元素">保留最后 N 个元素</h2>
 <h3 id="问题-1">问题</h3>
-
 <p>实现 python 中的 deque</p>
-
 <h2 id="查找最大或最小的-n-个元素">查找最大或最小的 N 个元素</h2>
-
 <h3 id="问题-2">问题</h3>
-
 <p>怎样从一个集合中获得最大或者最小的 N 个元素列表？</p>
-
 <h3 id="解决方案-2">解决方案</h3>
-
-<pre><code class="language-raku">my @nums = [1, 8, 2, 23, 7, -4, 18, 23, 42, 37, 2];
+<pre><code class="language-raku" data-lang="raku">my @nums = [1, 8, 2, 23, 7, -4, 18, 23, 42, 37, 2];
 say @nums.sort.head(3); # 最小的前三个元素
 say @nums.sort.tail(3); # 最大的前三个元素
-</code></pre>
-
-<p>sort 还可以对更复杂的数据结构进行排序：</p>
-
-<pre><code class="language-raku">my @portfolio = [ 
+</code></pre><p>sort 还可以对更复杂的数据结构进行排序：</p>
+<pre><code class="language-raku" data-lang="raku">my @portfolio = [ 
     {'name'=&gt; 'IBM', 'shares'=&gt; 100, 'price'=&gt; 91.1}, 
     {'name'=&gt; 'AAPL', 'shares'=&gt; 50, 'price'=&gt; 543.22}, 
     {'name'=&gt; 'FB', 'shares'=&gt; 200, 'price'=&gt; 21.09}, 
@@ -364,19 +322,12 @@ say @portfolio.sort(-*.{'price'}).head(3);
 
 # ({name =&gt; YHOO, price =&gt; 16.35, shares =&gt; 45} {name =&gt; FB, price =&gt; 21.09, shares =&gt; 200} {name =&gt; HPQ, price =&gt; 31.75, shares =&gt; 35})
 # ({name =&gt; AAPL, price =&gt; 543.22, shares =&gt; 50} {name =&gt; ACME, price =&gt; 115.65, shares =&gt; 75} {name =&gt; IBM, price =&gt; 91.1, shares =&gt; 100})
-</code></pre>
-
-<h2 id="序列中出现次数最多的元素">序列中出现次数最多的元素</h2>
-
+</code></pre><h2 id="序列中出现次数最多的元素">序列中出现次数最多的元素</h2>
 <h3 id="问题-3">问题</h3>
-
 <p>怎样找出一个序列中出现次数最多的元素呢？</p>
-
 <h3 id="解决方案-3">解决方案</h3>
-
 <p>使用 Bag:</p>
-
-<pre><code class="language-raku">my @words = [ 
+<pre><code class="language-raku" data-lang="raku">my @words = [ 
     'look', 'into', 'my', 'eyes', 'look', 'into', 'my', 'eyes', 
     'the', 'eyes', 'the', 'eyes', 'the', 'eyes', 'not', 'around', 'the', 
     'eyes', &quot;don't&quot;, 'look', 'around', 'the', 'eyes', 'look', 'into', 
@@ -384,11 +335,8 @@ say @portfolio.sort(-*.{'price'}).head(3);
 ];
 
 say @words.Bag.sort(-*.value).head(3);
-</code></pre>
-
-<p>Bag 还可以进行集合操作：</p>
-
-<pre><code class="language-raku">my @more_words = [ 
+</code></pre><p>Bag 还可以进行集合操作：</p>
+<pre><code class="language-raku" data-lang="raku">my @more_words = [ 
     'look', 'into', 'my', 'eyes', 
     'the', 'eyes', 'not', 'around', 'the', 
     'eyes', &quot;don't&quot;, 'look', 'around', 'the', 'eyes', 'look', 'into', 
@@ -400,17 +348,11 @@ say @words.Bag ⊎  @more_words.Bag;
 
 say @words.Bag (-)  @more_words.Bag;
 # Bag(eyes(3), into, look, my, the(2))
-</code></pre>
-
-<h2 id="通过某个关键字排序一个字典列表">通过某个关键字排序一个字典列表</h2>
-
+</code></pre><h2 id="通过某个关键字排序一个字典列表">通过某个关键字排序一个字典列表</h2>
 <h3 id="问题-4">问题</h3>
-
 <p>你有一个字典列表，你想根据某个或某几个字典字段来排序这个列表。</p>
-
 <h3 id="解决方案-4">解决方案</h3>
-
-<pre><code class="language-raku">my @rows = [ 
+<pre><code class="language-raku" data-lang="raku">my @rows = [ 
     {'fname' =&gt; 'Brian', 'lname' =&gt; 'Jones',   'uid' =&gt; 1003}, 
     {'fname' =&gt; 'David', 'lname' =&gt; 'Beazley', 'uid' =&gt; 1002}, 
     {'fname' =&gt; 'John',  'lname' =&gt; 'Cleese',  'uid' =&gt; 1001}, 
@@ -423,10 +365,7 @@ say @words.Bag (-)  @more_words.Bag;
 
 # sort by uid
 .say for @rows.sort: *.{'uid'};
-</code></pre>
-
-<p>代码的输出如下:</p>
-
+</code></pre><p>代码的输出如下:</p>
 <pre><code>{fname =&gt; Big, lname =&gt; Jones, uid =&gt; 1004}
 {fname =&gt; Brian, lname =&gt; Jones, uid =&gt; 1003}
 {fname =&gt; David, lname =&gt; Beazley, uid =&gt; 1002}
@@ -435,17 +374,11 @@ say @words.Bag (-)  @more_words.Bag;
 {fname =&gt; David, lname =&gt; Beazley, uid =&gt; 1002}
 {fname =&gt; Brian, lname =&gt; Jones, uid =&gt; 1003}
 {fname =&gt; Big, lname =&gt; Jones, uid =&gt; 1004}
-</code></pre>
-
-<h2 id="通过某个字段将记录分组">通过某个字段将记录分组</h2>
-
+</code></pre><h2 id="通过某个字段将记录分组">通过某个字段将记录分组</h2>
 <h3 id="问题-5">问题</h3>
-
 <p>你有一个字典或者实例的序列，然后你想根据某个特定的字段比如 date 来分组迭代访问。</p>
-
 <h3 id="解决方案-5">解决方案</h3>
-
-<pre><code class="language-raku">my @rows = [
+<pre><code class="language-raku" data-lang="raku">my @rows = [
 {'address' =&gt; '5412 N CLARK', 'date' =&gt; '07/01/2012'}, 
 {'address' =&gt; '5148 N CLARK', 'date' =&gt; '07/04/2012'}, 
 {'address' =&gt; '5800 E 58TH', 'date' =&gt; '07/02/2012'}, 
@@ -457,48 +390,30 @@ say @words.Bag (-)  @more_words.Bag;
 ];
 
 .say for @rows.classify: *.{'date'};
-</code></pre>
-
-<h2 id="过滤序列元素">过滤序列元素</h2>
-
+</code></pre><h2 id="过滤序列元素">过滤序列元素</h2>
 <h3 id="问题-6">问题</h3>
-
 <p>你有一个数据序列，想利用一些规则从中提取出需要的值或者是缩短序列</p>
-
 <h3 id="解决方案-6">解决方案</h3>
-
 <h2 id="字符串对齐">字符串对齐</h2>
-
 <h3 id="问题-7">问题</h3>
-
 <p>你想通过某种对齐方式来格式化字符串</p>
-
-<pre><code class="language-raku">my $text = 'Hello World'
+<pre><code class="language-raku" data-lang="raku">my $text = 'Hello World'
 Hello World
 &gt; $text.indent(4)
     Hello World
 &gt; &quot;  indented by 2 spaces\n    indented even more&quot;.indent(*)
 indented by 2 spaces
   indented even more
-</code></pre>
-
-<h2 id="合并拼接字符串">合并拼接字符串</h2>
-
+</code></pre><h2 id="合并拼接字符串">合并拼接字符串</h2>
 <h3 id="问题-8">问题</h3>
-
 <p>你想将几个小的字符串合并为一个大的字符串</p>
-
 <h3 id="解决方案-7">解决方案</h3>
-
-<pre><code class="language-raku">my @parts = ['Is', 'Chicago', 'Not', 'Chicago?'];
+<pre><code class="language-raku" data-lang="raku">my @parts = ['Is', 'Chicago', 'Not', 'Chicago?'];
 [Is Chicago Not Chicago?]
 &gt; @parts.join(' ');
 Is Chicago Not Chicago?
-</code></pre>
-
-<h2 id="基本的日期与时间转换">基本的日期与时间转换</h2>
-
-<pre><code class="language-raku">&gt; my $today = Date.today
+</code></pre><h2 id="基本的日期与时间转换">基本的日期与时间转换</h2>
+<pre><code class="language-raku" data-lang="raku">&gt; my $today = Date.today
 2018-05-04
 
 # 10 天后
@@ -517,17 +432,11 @@ Is Chicago Not Chicago?
 &gt; my $d = Date.new(2018,5,12)
 &gt; $d - $today
 8
-</code></pre>
-
-<h2 id="计算上一个周五的日期">计算上一个周五的日期</h2>
-
+</code></pre><h2 id="计算上一个周五的日期">计算上一个周五的日期</h2>
 <h3 id="问题-9">问题</h3>
-
 <p>你需要查找星期中上个星期五的日期。</p>
-
 <h3 id="解决方案-8">解决方案</h3>
-
-<pre><code class="language-raku"># error
+<pre><code class="language-raku" data-lang="raku"># error
 (Date.today.later(days =&gt; -7) ... Date.today).grep: *.day-of-week==5
 
 # error, last friday
@@ -547,19 +456,13 @@ Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date
 
 # or
 (Date.today-1, *.pred ... -&gt; $d { $d.day-of-week==5 &amp;&amp; $d.week[1]+1==Date.today.week[1] }).tail 
-</code></pre>
-
-<p>同理, 可以计算出下个周五:</p>
-
-<pre><code class="language-raku">(Date.today, *.later(:1day) ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
+</code></pre><p>同理, 可以计算出下个周五:</p>
+<pre><code class="language-raku" data-lang="raku">(Date.today, *.later(:1day) ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
 
 # or
 (Date.today+1, *.succ ... all( *.day-of-week==5,  *.week[1]==Date.today.week[1]+1 )).tail
-</code></pre>
-
-<h2 id="反转散列">反转散列</h2>
-
-<pre><code class="language-raku">my @weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+</code></pre><h2 id="反转散列">反转散列</h2>
+<pre><code class="language-raku" data-lang="raku">my @weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 @weekdays.kv.reverse.hash.{'Thursday'} # 3
 
 # antipairs 翻转键值对儿
@@ -567,41 +470,26 @@ Date.today, *.earlier(:1day) ... ( *.day-of-week==5 &amp;&amp; *.week[1]+1==Date
 
 # 使用 :k 副词
 @weekdays.first('Thursday', :k) # 3
-</code></pre>
-
-<h2 id="格式化日期">格式化日期</h2>
-
-<pre><code class="language-raku">Date.new('2018-05-04', formatter =&gt; sub ($self) {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day given $self})
+</code></pre><h2 id="格式化日期">格式化日期</h2>
+<pre><code class="language-raku" data-lang="raku">Date.new('2018-05-04', formatter =&gt; sub ($self) {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day given $self})
 2018/05/04
 
 &gt; Date.new('2018-05-04', formatter =&gt; {sprintf &quot;%04d/%02d/%02d&quot;, .year, .month, .day })
 2018/05/04
-</code></pre>
-
-<h2 id="如何避免语法重复和样板">如何避免语法重复和样板</h2>
-
-<pre><code class="language-raku">%tweets&lt;statuses&gt;[0]&lt;metadata&gt;&lt;iso_language_code&gt;.say;
+</code></pre><h2 id="如何避免语法重复和样板">如何避免语法重复和样板</h2>
+<pre><code class="language-raku" data-lang="raku">%tweets&lt;statuses&gt;[0]&lt;metadata&gt;&lt;iso_language_code&gt;.say;
 %tweets&lt;statuses&gt;[0]&lt;created_at&gt;.say;
-</code></pre>
-
-<p>可以被写为：</p>
-
-<pre><code class="language-raku">given %tweets&lt;statuses&gt;[0] {
+</code></pre><p>可以被写为：</p>
+<pre><code class="language-raku" data-lang="raku">given %tweets&lt;statuses&gt;[0] {
     .&lt;metadata&gt;&lt;iso_language_code&gt;.say;
     .&lt;created_at&gt;.say;
 }
-</code></pre>
-
-<p>这使用了主题变量 <code>$_</code>。简而言之，对于简短的循环也可以使用主题变量，如下所示：</p>
-
-<pre><code class="language-raku">for @(%tweets&lt;statuses&gt;) {
+</code></pre><p>这使用了主题变量 <code>$_</code>。简而言之，对于简短的循环也可以使用主题变量，如下所示：</p>
+<pre><code class="language-raku" data-lang="raku">for @(%tweets&lt;statuses&gt;) {
     .&lt;created_at&gt;.say;
 }
-</code></pre>
-
-<h2 id="解构">解构</h2>
-
-<pre><code class="language-raku">subset Seconds of Numeric;
+</code></pre><h2 id="解构">解构</h2>
+<pre><code class="language-raku" data-lang="raku">subset Seconds of Numeric;
 my regex number { \d+ [ '.' \d+ ]? } # float 
 my regex suffix { &lt;:alpha&gt; } # 只匹配字母
 
@@ -617,18 +505,11 @@ sub MAIN(*@timicles where .all ~~ /&lt;number&gt; &lt;[dhms]&gt;/) {
 }
 
 # Usage： raku program_file.pl6 1d 2h 3m 5s
-</code></pre>
-
-<p>map 里面使用了 Pointy-block <code>-&gt; {}</code>,</p>
-
+</code></pre><p>map 里面使用了 Pointy-block <code>-&gt; {}</code>,</p>
 <pre><code>-&gt; % (:$number, :suffix) { }
-</code></pre>
-
-<p><code>%</code> 是一个匿名散列。</p>
-
+</code></pre><p><code>%</code> 是一个匿名散列。</p>
 <h2 id="在正则表达式中使用数组">在正则表达式中使用数组</h2>
-
-<pre><code class="language-raku">subset Seconds of Numeric;
+<pre><code class="language-raku" data-lang="raku">subset Seconds of Numeric;
 
 # Junction 作为散列的键, 可以让多个键对应同一个值, Also, any @keys =&gt; value is possible
 my %unit-multipliers = 'd'|'day' =&gt; 60*60*24, 'h'|'hour' =&gt; 60*60, 'm'|'min' =&gt; 60, 's'|'sec' =&gt; 1; 
@@ -645,13 +526,9 @@ sub MAIN(*@timicles where .all ~~ /&lt;number&gt; @units $/) {
         .sum;
     say $to-wait ~ &quot;s&quot;;
 }
-</code></pre>
-
-<h2 id="多个字符在字符串中的索引">多个字符在字符串中的索引</h2>
-
+</code></pre><h2 id="多个字符在字符串中的索引">多个字符在字符串中的索引</h2>
 <p>有一个字符串 banana, 要查看字符 a 和 字符 b 在 banana 中的索引：</p>
-
-<pre><code class="language-raku">&gt; &quot;banana&quot;.comb.grep: 'a' | 'b',:k
+<pre><code class="language-raku" data-lang="raku">&gt; &quot;banana&quot;.comb.grep: 'a' | 'b',:k
 (0 1 3 5)
 
 # or
@@ -665,7 +542,6 @@ gather 'banana'.comb.antipairs».&amp;{.value.take if .key ∈ ['a','b'] }
 &gt; 'banana'.comb.antipairs&gt;&gt;.&amp;{.{.key (&amp;) ['a','b']}}
 (0 1 Nil 3 Nil 5)
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -756,7 +632,7 @@ gather 'banana'.comb.antipairs».&amp;{.value.take if .key ∈ ['a','b'] }
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-24-insertion-sort-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -232,12 +232,9 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>今天，我们研究插入排序算法及其在 Raku 中的可能实现。算法的复杂性是 O(n2)，但它是练习 Raku 的一个很好的选择。</p>
-
 <p>这个想法很简单。您可以在数组中找到最小值并将其放在第一个位置。然后从第二个位置开始扫描数据（因为第一个位置已经被最低元素占用）。然后你向右走，找到最小值并将它们放到当前位置直到你到达终点。</p>
-
 <p>它类似于选择排序，但不是交换两个元素，而是插入一个（因此，移动其他元素）。让我们从简单的方法和两个嵌套循环开始：</p>
-
-<pre><code class="language-raku">sub insertion-sort(@data) {
+<pre><code class="language-raku" data-lang="raku">sub insertion-sort(@data) {
     for ^@data -&gt; $i {
         for ^$i -&gt; $j {
             if @data[$i] &lt; @data[$j] {
@@ -251,22 +248,13 @@ if (!doNotTrack) {
 my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
 insertion-sort @data;
 say @data;
-</code></pre>
-
-<p>在Raku中，数组的拼接方法可以完成两个任务：用另一个元素列表替换数组的一部分，或者只是删除元素或一行中的一些元素。</p>
-
+</code></pre><p>在Raku中，数组的拼接方法可以完成两个任务：用另一个元素列表替换数组的一部分，或者只是删除元素或一行中的一些元素。</p>
 <p>在上面的代码中，使用了该方法的两个应用程序。首先，将新找到的元素插入当前位置。其次，它从之前的位置删除（数组刚刚增长，因此索引变为$ i + 1）。</p>
-
 <p>由于splice方法也返回已删除的元素，我们可以将第二个调用放到正在读取元素的位置：@data [$ i]。因此，可以使用以下嵌套调用替换这两行</p>
-
-<pre><code class="language-raku">@data.splice($j, 0, @data.splice($i, 1))
-</code></pre>
-
-<p>请注意，索引现在只是$ i，因为数组尚未修改。</p>
-
+<pre><code class="language-raku" data-lang="raku">@data.splice($j, 0, @data.splice($i, 1))
+</code></pre><p>请注意，索引现在只是$ i，因为数组尚未修改。</p>
 <p>您应该已经熟悉了第二个可能的技巧：如果出现以下情况，请使用 <code>if</code> 后缀：</p>
-
-<pre><code class="language-raku">sub insertion-sort(@data) {
+<pre><code class="language-raku" data-lang="raku">sub insertion-sort(@data) {
     for ^@data -&gt; $i {
         for ^$i -&gt; $j {
             @data.splice($j, 0, @data.splice($i, 1)) 
@@ -274,22 +262,13 @@ say @data;
         }
     }
 }
-</code></pre>
-
-<p>你可以在这一点上停下来，但我希望你还不满意。至少，两个嵌套的fors似乎是进一步思考的好领域。</p>
-
+</code></pre><p>你可以在这一点上停下来，但我希望你还不满意。至少，两个嵌套的fors似乎是进一步思考的好领域。</p>
 <p>不幸的是，不可能直接使用交叉运算符来获得类似^ @ data X ^ @ data的东西，因为第二个列表依赖于第一个列表，但是有一种完全不同的简化代码的方法。</p>
-
 <p>最内部for循环的主要目标是找到数组中的第一个最小元素。 Raku为我们提供了第一种方法，它就是这样做的。</p>
-
 <p>默认情况下，它返回元素，但我们需要它的索引。您可以通过添加：k命名参数来实现</p>
-
-<pre><code class="language-raku">@data.first(* &gt;= @data[$_], :k)
-</code></pre>
-
-<p>裸：k相当于将参数设置为True :: k（True）或k =&gt; True。</p>
-
-<pre><code class="language-raku">sub insertion-sort(@data) {
+<pre><code class="language-raku" data-lang="raku">@data.first(* &gt;= @data[$_], :k)
+</code></pre><p>裸：k相当于将参数设置为True :: k（True）或k =&gt; True。</p>
+<pre><code class="language-raku" data-lang="raku">sub insertion-sort(@data) {
     for ^@data -&gt; $i {
         @data.splice(
             @data.first(* &gt;= @data[$i], :k), 
@@ -298,11 +277,8 @@ say @data;
         )
     }
 }
-</code></pre>
-
-<p>最后，让剩下的for循环成为一个postfix子句，并且你完成了一个很好的单行函数（这里显示在不同的行上分成较短的部分）：</p>
-
-<pre><code class="language-raku">sub insertion-sort(@data) {
+</code></pre><p>最后，让剩下的for循环成为一个postfix子句，并且你完成了一个很好的单行函数（这里显示在不同的行上分成较短的部分）：</p>
+<pre><code class="language-raku" data-lang="raku">sub insertion-sort(@data) {
     @data.splice(
         @data.first(* &gt;= @data[$_], :k), 
         0,
@@ -313,11 +289,8 @@ say @data;
 my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
 insertion-sort @data;
 say @data;
-</code></pre>
-
-<p>这一切都是现在，但如果你发现可以改进的东西，请在下面的评论中告诉我们。<a href="https://github.com/ash/raku-algorithms/blob/master/sort/insertion-sort-3.pl6">源代码</a>可在GitHub上获得。</p>
-
-<p>原文：<a href="https://raku.online/2019/06/24/102-insertion-sort-in-perl-6/">https://raku.online/2019/06/24/102-insertion-sort-in-perl-6/</a></p>
+</code></pre><p>这一切都是现在，但如果你发现可以改进的东西，请在下面的评论中告诉我们。<a href="https://github.com/ash/raku-algorithms/blob/master/sort/insertion-sort-3.pl6">源代码</a>可在GitHub上获得。</p>
+<p>原文：https://raku.online/2019/06/24/102-insertion-sort-in-perl-6/</p>
 
 
         
@@ -409,7 +382,7 @@ say @data;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

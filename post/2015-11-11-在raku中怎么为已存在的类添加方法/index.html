@@ -10,17 +10,17 @@
   <meta name="twitter:title" content="在 Raku 中怎么为已存在的类添加方法" />
   <meta name="description" content="How do you add a method to an existing class in Raku? Raku 中怎么为已存在的类添加方法?
 Int 类有一个方法叫做 is-prime, 我想为 Int类型添加其它的方法。
-class MyInt is Int { method is-even () returns Bool:D { return False if self % 2; return True; } } my $n = MyInt.new(138); say $n.is-even;  通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
-method add_method(Metamodel::MethodContainer: $obj, $name, $code)  这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
-Int.^add_method( &#39;is-even&#39;, method () returns Bool:D { return False if self % 2; return True; } ); say 137.">
+class MyInt is Int {method is-even () returns Bool:D {return False if self % 2;return True;}}my $n = MyInt.new(138);say $n.is-even;通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
+method add_method(Metamodel::MethodContainer: $obj, $name, $code)这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
+Int.^add_method( &#39;is-even&#39;, method () returns Bool:D {return False if self % 2;return True;} );say 137.">
   <meta property="og:description" content="How do you add a method to an existing class in Raku? Raku 中怎么为已存在的类添加方法?
 Int 类有一个方法叫做 is-prime, 我想为 Int类型添加其它的方法。
-class MyInt is Int { method is-even () returns Bool:D { return False if self % 2; return True; } } my $n = MyInt.new(138); say $n.is-even;  通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
-method add_method(Metamodel::MethodContainer: $obj, $name, $code)  这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
-Int.^add_method( &#39;is-even&#39;, method () returns Bool:D { return False if self % 2; return True; } ); say 137.">
+class MyInt is Int {method is-even () returns Bool:D {return False if self % 2;return True;}}my $n = MyInt.new(138);say $n.is-even;通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
+method add_method(Metamodel::MethodContainer: $obj, $name, $code)这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
+Int.^add_method( &#39;is-even&#39;, method () returns Bool:D {return False if self % 2;return True;} );say 137.">
   <meta name="twitter:description" content="How do you add a method to an existing class in Raku? Raku 中怎么为已存在的类添加方法?
 Int 类有一个方法叫做 is-prime, 我想为 Int类型添加其它的方法。
-class MyInt is Int { method is-even () returns Bool:D { return False if self % 2; …">
+class MyInt is Int {method is-even () returns Bool:D {return False if self % 2; …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -30,7 +30,7 @@ class MyInt is Int { method is-even () returns Bool:D { return False if self % 2
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2015-11-11-%E5%9C%A8raku%E4%B8%AD%E6%80%8E%E4%B9%88%E4%B8%BA%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E7%B1%BB%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -237,15 +237,10 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="how-do-you-add-a-method-to-an-existing-class-in-raku">How do you add a method to an existing class in Raku?</h2>
-
+        <h2 id="how-do-you-add-a-method-to-an-existing-class-in-raku">How do you add a method to an existing class in Raku?</h2>
 <p>Raku 中怎么为已存在的类添加方法?</p>
-
 <p>Int 类有一个方法叫做 <code>is-prime</code>, 我想为 <code>Int</code>类型添加其它的方法。</p>
-
-<pre><code class="language-raku">class MyInt is Int {
+<pre><code class="language-raku" data-lang="raku">class MyInt is Int {
     method is-even () returns Bool:D {
         return False if self % 2;
         return True;
@@ -254,27 +249,18 @@ if (!doNotTrack) {
 
 my $n = MyInt.new(138);
 say $n.is-even;
-</code></pre>
-
-<p>通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 <code>add_method</code>方法:</p>
-
-<pre><code class="language-raku">method add_method(Metamodel::MethodContainer: $obj, $name, $code)
-</code></pre>
-
-<p>这会给元类(meta class)添加一个方法, 使用 <code>$name</code> 作为调用的方法名。这只会在类型被组合前使用。</p>
-
-<pre><code class="language-raku">Int.^add_method( 'is-even', method () returns Bool:D {
+</code></pre><p>通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 <code>add_method</code>方法:</p>
+<pre><code class="language-raku" data-lang="raku">method add_method(Metamodel::MethodContainer: $obj, $name, $code)
+</code></pre><p>这会给元类(meta class)添加一个方法, 使用 <code>$name</code> 作为调用的方法名。这只会在类型被组合前使用。</p>
+<pre><code class="language-raku" data-lang="raku">Int.^add_method( 'is-even', method () returns Bool:D {
     return False if self % 2;
     return True;
     } );
 
 say 137.is-even;
 say Int.^methods;
-</code></pre>
-
-<p>如果我调用 <code>Int.^methods</code>时, <code>is-even</code>没有出现。但是上面的代码能被调用并起作用了。</p>
-
-<pre><code class="language-raku">
+</code></pre><p>如果我调用 <code>Int.^methods</code>时, <code>is-even</code>没有出现。但是上面的代码能被调用并起作用了。</p>
+<pre><code class="language-raku" data-lang="raku">
 Int.^add_method('fac', method () returns Int:D {
      return 1 if self == 0;
      return 1 if self == 1;
@@ -283,34 +269,22 @@ Int.^add_method('fac', method () returns Int:D {
 
 1.fac # 1
 5.fac # 120
-</code></pre>
-
-<p><code>method</code> 后面的圆括号是方法的签名：</p>
-
-<pre><code class="language-raku">Int.^add_method('power', method (Int $num) returns Int:D {
+</code></pre><p><code>method</code> 后面的圆括号是方法的签名：</p>
+<pre><code class="language-raku" data-lang="raku">Int.^add_method('power', method (Int $num) returns Int:D {
      return self ** $num;
 });
 
 2.power(3).say;  # 8
 2.power(10).say; # 1024
-</code></pre>
-
-<h2 id="词法方法">词法方法</h2>
-
-<hr />
-
+</code></pre><h2 id="词法方法">词法方法</h2>
+<hr>
 <p>我可以让方法不依附于任何类, 并且能在对象上调用该方法:</p>
-
-<pre><code class="language-raku">my &amp;is-even = method (Int:D :) returns Bool:D { self %% 2 };
-</code></pre>
-
-<p>这构建了一个 <code>Callable</code> （查看以下 <code>&amp;is-even.WHAT</code>）。 在签名中, 我把它约束为一个定义了的 Int 类型的值(<code>Int:D</code>), 但是没有给它名字。我在类型约束后面添加冒号来说明第一个参数是调用者。现在我能把这个方法应用到任何我想要的对象上:</p>
-
-<pre><code class="language-raku">say 137.&amp;is-even;
+<pre><code class="language-raku" data-lang="raku">my &amp;is-even = method (Int:D :) returns Bool:D { self %% 2 };
+</code></pre><p>这构建了一个 <code>Callable</code> （查看以下 <code>&amp;is-even.WHAT</code>）。 在签名中, 我把它约束为一个定义了的 Int 类型的值(<code>Int:D</code>), 但是没有给它名字。我在类型约束后面添加冒号来说明第一个参数是调用者。现在我能把这个方法应用到任何我想要的对象上:</p>
+<pre><code class="language-raku" data-lang="raku">say 137.&amp;is-even;
 say 138.&amp;is-even;
 say &quot;foo&quot;.&amp;is-even;  # works, although inside is-even blow up
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -403,7 +377,7 @@ say &quot;foo&quot;.&amp;is-even;  # works, although inside is-even blow up
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

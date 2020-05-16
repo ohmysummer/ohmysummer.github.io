@@ -8,24 +8,24 @@
   <title>Io Guide</title>
   <meta property="og:title" content="Io Guide" />
   <meta name="twitter:title" content="Io Guide" />
-  <meta name="description" content="基础知识 绝大多数常见的 IO 工作都是由 IO::Path 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
+  <meta name="description" content="基础知识 绝大多数常见的 IO 工作都是由 [IO::Path](https://docs.raku.org/type/ IO::Path ) 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
 在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 Proc 或 Proc::Async 类型，你还可以处理一个子类的 IO::Handle 在 IO::Pipe。
 最后，你有 IO::CatHandle ，以及 IO::Spec 及其子类，你很少直接使用它们。这些类为你提供了高级功能，例如将多个文件作为一个句柄进行操作，或者进行低级路径操作。
 除了所有这些类之外，Raku还提供了几个子程序，可以让你间接使用这些类。如果你喜欢函数式编程风格或Raku 单行程序，这些就派上用场了。
 虽然 IO::Socket 及其子类也与输入和输出有关，但本指南并未涵盖它们。
 路径导航 什么是 IO::Path？ 要将路径表示为文件或目录，请使用 IO::Path 类型。获取该类型对象的最简单方法是通过在 Str 上调用 .IO 方法将字符串强制为 IO 类型：
-say &#39;my-file.txt&#39;.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤»  看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
-say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤»  这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。">
-  <meta property="og:description" content="基础知识 绝大多数常见的 IO 工作都是由 IO::Path 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
+say &#39;my-file.txt&#39;.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤» 看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
+say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤» 这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。">
+  <meta property="og:description" content="基础知识 绝大多数常见的 IO 工作都是由 [IO::Path](https://docs.raku.org/type/ IO::Path ) 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
 在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 Proc 或 Proc::Async 类型，你还可以处理一个子类的 IO::Handle 在 IO::Pipe。
 最后，你有 IO::CatHandle ，以及 IO::Spec 及其子类，你很少直接使用它们。这些类为你提供了高级功能，例如将多个文件作为一个句柄进行操作，或者进行低级路径操作。
 除了所有这些类之外，Raku还提供了几个子程序，可以让你间接使用这些类。如果你喜欢函数式编程风格或Raku 单行程序，这些就派上用场了。
 虽然 IO::Socket 及其子类也与输入和输出有关，但本指南并未涵盖它们。
 路径导航 什么是 IO::Path？ 要将路径表示为文件或目录，请使用 IO::Path 类型。获取该类型对象的最简单方法是通过在 Str 上调用 .IO 方法将字符串强制为 IO 类型：
-say &#39;my-file.txt&#39;.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤»  看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
-say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤»  这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。">
-  <meta name="twitter:description" content="基础知识 绝大多数常见的 IO 工作都是由 IO::Path 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
-在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 Proc …">
+say &#39;my-file.txt&#39;.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤» 看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 .perl 方法看到它：
+say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤» 这两个额外的属性 - SPEC 和 - CWD 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。">
+  <meta name="twitter:description" content="基础知识 绝大多数常见的 IO 工作都是由 [IO::Path](https://docs.raku.org/type/ IO::Path ) 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。
+在幕后， IO::Path 与 IO::Handle 一起使用 ; 如果你需要比 IO::Path 提供的更多控制， …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -35,7 +35,7 @@ say &#39;my-file.txt&#39;.IO.perl; # OUTPUT: «IO::Path.new(&quot;my-file.txt&qu
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-07-14-io-guide/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -223,7 +223,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 3 minutes (501 words)
+  <i class="fa fa-clock-o"></i> 3 minutes (503 words)
   
   
 </span>
@@ -242,191 +242,104 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="基础知识">基础知识</h2>
-
-<p>绝大多数常见的 IO 工作都是由 <a href="https://docs.raku.org/type/ IO::Path">IO::Path</a> 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。</p>
-
+        <h2 id="基础知识">基础知识</h2>
+<p>绝大多数常见的 IO 工作都是由 [IO::Path](<a href="https://docs.raku.org/type/">https://docs.raku.org/type/</a> IO::Path ) 类型完成的。如果你想以某种形式或形状读取或写入文件，这就是你想要的类。它抽象出文件句柄（或“文件描述符”）的细节，因此你甚至不必考虑它们。</p>
 <p>在幕后， <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 与 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 一起使用 ; 如果你需要比 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 提供的更多控制，你可以直接使用的类。当与其他进程，例如通过工作 <a href="https://docs.raku.org/type/Proc">Proc</a> 或 <a href="https://docs.raku.org/type/Proc::Async">Proc::Async</a> 类型，你还可以处理一个子类的 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 在 <a href="https://docs.raku.org/type/IO::Pipes">IO::Pipe</a>。</p>
-
 <p>最后，你有 <a href="https://docs.raku.org/type/IO::CatHandle">IO::CatHandle</a> ，以及 <a href="https://docs.raku.org/type/IO::Spec">IO::Spec</a> 及其子类，你很少直接使用它们。这些类为你提供了高级功能，例如将多个文件作为一个句柄进行操作，或者进行低级路径操作。</p>
-
 <p>除了所有这些类之外，Raku还提供了几个子程序，可以让你间接使用这些类。如果你喜欢函数式编程风格或Raku 单行程序，这些就派上用场了。</p>
-
 <p>虽然 <a href="https://docs.raku.org/type/IO::Socket">IO::Socket</a> 及其子类也与输入和输出有关，但本指南并未涵盖它们。</p>
-
 <h2 id="路径导航">路径导航</h2>
-
-<h3 id="什么是-io-path">什么是 IO::Path？</h3>
-
+<h3 id="什么是-iopath">什么是 IO::Path？</h3>
 <p>要将路径表示为文件或目录，请使用 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 类型。获取该类型对象的最简单方法是通过在 <a href="https://docs.raku.org/type/Str">Str</a> 上调用 <a href="https://docs.raku.org/routine/IO">.IO</a> 方法将字符串强制为 IO 类型：</p>
-
-<pre><code class="language-raku">say 'my-file.txt'.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤» 
-</code></pre>
-
-<p>看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 <a href="https://docs.raku.org/routine/perl">.perl</a> 方法看到它：</p>
-
-<pre><code class="language-raku">say 'my-file.txt'.IO.perl;
+<pre><code class="language-raku" data-lang="raku">say 'my-file.txt'.IO; # OUTPUT: «&quot;my-file.txt&quot;.IO␤» 
+</code></pre><p>看起来这里似乎缺少某些东西 - 没有涉及卷或绝对路径 - 但该信息实际上存在于该 IO 对象中。你可以通过使用 <a href="https://docs.raku.org/routine/perl">.perl</a> 方法看到它：</p>
+<pre><code class="language-raku" data-lang="raku">say 'my-file.txt'.IO.perl;
 # OUTPUT: «IO::Path.new(&quot;my-file.txt&quot;, :SPEC(IO::Spec::Unix), :CWD(&quot;/home/camelia&quot;))␤» 
-</code></pre>
-
-<p>这两个额外的属性 - <code>SPEC</code> 和 - <code>CWD</code> 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。</p>
-
+</code></pre><p>这两个额外的属性 - <code>SPEC</code> 和 - <code>CWD</code> 指定路径应该使用的操作系统语义类型以及路径的“当前工作目录”，即如果它是相对路径，则它相对于该目录。</p>
 <p>这意味着无论你如何创建一个， <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 对象在技术上始终引用绝对路径。这就是它的 <a href="https://docs.raku.org/routine/absolute">.absolute</a> 和 <a href="https://docs.raku.org/routine/relative">.relative</a> 方法返回 <a href="https://docs.raku.org/type/Str">Str</a> 对象的原因，它们是字符串化路径的正确方法。</p>
-
 <p>但是，不要急于字符串化任何东西。将路径作为 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 对象传递。在路径上运行的所有例程都可以处理它们，因此不需要转换它们。</p>
-
 <h3 id="使用文件">使用文件</h3>
-
 <h4 id="写入文件">写入文件</h4>
-
 <h4 id="写入新内容">写入新内容</h4>
-
 <p>让我们制作一些文件并从中写入和读取数据！在 <a href="https://docs.raku.org/routine/spurt">spurt</a> 和 <a href="https://docs.raku.org/routine/slurp">slurp</a> 子里程以块儿的形式读写数据。除非你正在处理难以完全存储在内存中的非常大的文件，否则这两个例程都适合你。</p>
-
-<pre><code class="language-raku">&quot;my-file.txt&quot;.IO.spurt: &quot;I ♥ Perl!&quot;;
-</code></pre>
-
-<p>上面的代码在当前目录中创建了一个名为 <code>my-file.txt</code> 的文件，然后将文本 <strong>I ♥ Perl!</strong> 写入其中。如果 Raku 是你的第一语言，请庆祝你的成就！尝试使用其他程序打开你创建的文件，以验证你写入的内容。如果你已经了解其他语言，你可能想知道本指南是否遗漏了处理编码或错误条件等问题。</p>
-
+<pre><code class="language-raku" data-lang="raku">&quot;my-file.txt&quot;.IO.spurt: &quot;I ♥ Perl!&quot;;
+</code></pre><p>上面的代码在当前目录中创建了一个名为 <code>my-file.txt</code> 的文件，然后将文本 <strong>I ♥ Perl!</strong> 写入其中。如果 Raku 是你的第一语言，请庆祝你的成就！尝试使用其他程序打开你创建的文件，以验证你写入的内容。如果你已经了解其他语言，你可能想知道本指南是否遗漏了处理编码或错误条件等问题。</p>
 <p>但是，这就是你需要的所有代码。默认情况下，字符串将以 <em>utf-8</em> 编码方式进行编码，并通过 <a href="https://docs.raku.org/type/Failure">Failure</a> 机制处理错误：这些是你可以使用常规条件处理的异常。在这种情况下，我们会让所有潜在的 <a href="https://docs.raku.org/type/Failure">Failures</a> 事件在调用之后陷入沉没，因此它们包含的任何<a href="https://docs.raku.org/type/Exception">异常</a>都将被抛出。</p>
-
 <h4 id="附加内容">附加内容</h4>
-
 <p>如果你想为我们在上一节中创建的文件添加更多内容，你可以注意 <a href="https://docs.raku.org/routine/spurt">spurt 文档</a>中提到的 <code>:append</code> 参数。但是，为了更好地控制，让我们自己使用 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 来处理：</p>
-
-<pre><code class="language-raku">my $fh = 'my-file.txt'.IO.open: :a;
+<pre><code class="language-raku" data-lang="raku">my $fh = 'my-file.txt'.IO.open: :a;
 $fh.print: &quot;I count: &quot;;
 $fh.print: &quot;$_ &quot; for ^10;
 $fh.close;
-</code></pre>
-
-<p>该 <a href="https://docs.raku.org/routine/open">.open</a> 方法调用打开我们的 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a>，并返回一个 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a>。我们将 <code>:a</code> 作为参数传递，表示我们想要以追加模式打开文件。</p>
-
+</code></pre><p>该 <a href="https://docs.raku.org/routine/open">.open</a> 方法调用打开我们的 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a>，并返回一个 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a>。我们将 <code>:a</code> 作为参数传递，表示我们想要以追加模式打开文件。</p>
 <p>在接下来的两行代码中，我们使用 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 上常用的 <a href="https://docs.raku.org/routine/print">.print</a> 方法打印一行包含 11 个文本（<em>I count</em> 字符串和 10 个数字）。请注意，<a href="https://docs.raku.org/type/Failure">Failure</a> 机制再一次负责我们的所有错误检查。如果 <a href="https://docs.raku.org/routine/open">.open</a> 失败，它将返回一个 <a href="https://docs.raku.org/type/Failure">Failure</a>，当我们尝试在其上调用 <a href="https://docs.raku.org/routine/print">.print</a> 方法时，它将抛出。</p>
-
 <p>最后，我们通过调用它上面的 <a href="https://docs.raku.org/routine/close">.close</a> 方法来关闭 <a href="https://docs.raku.org/type/IO::Handle">IO::Handl</a>。这样做很重要，特别是在大型程序或处理大量文件的程序中，因为许多系统对程序可以同时打开的文件数量有限制。如果你没有关闭句柄，最终你将达到该限制并且 <a href="https://docs.raku.org/routine/open">.open</a> 调用将失败。请注意，与其他语言不同，Raku 不使用引用计数，因此当离开定义它们的作用域时，文件句柄<strong>不会被关闭</strong>。只有当它们被垃圾回收并且未能关闭句柄时，它们才会被关闭，这可能会导致程序有机会在打开的句柄被垃圾回收之前达到文件限制。</p>
-
 <h4 id="从文件中读取">从文件中读取</h4>
-
-<h4 id="使用-io-path">使用 IO::Path</h4>
-
+<h4 id="使用-iopath">使用 IO::Path</h4>
 <p>我们在前面的章节中已经看到，在文件中写东西是 Raku 中的单行代码。从它们中读取，同样容易：</p>
-
-<pre><code class="language-raku">say 'my-file.txt'.IO.slurp;        # OUTPUT: «I ♥ Perl!␤» 
+<pre><code class="language-raku" data-lang="raku">say 'my-file.txt'.IO.slurp;        # OUTPUT: «I ♥ Perl!␤» 
 say 'my-file.txt'.IO.slurp: :bin;  # OUTPUT: «Buf[uint8]:0x&lt;49 20 e2 99 a5 20 50 65 72 6c 21&gt;␤» 
-</code></pre>
-
-<p>该 <a href="https://docs.raku.org/routine/slurp">.slurp</a> 方法读取文件的全部内容并将其作为单个 <a href="https://docs.raku.org/type/Str">Str</a> 对象返回，如果请求二进制模式，则通过指定 <code>:bin</code> 命名参数将其作为 <a href="https://docs.raku.org/type/Buf">Buf</a> 对象返回。</p>
-
+</code></pre><p>该 <a href="https://docs.raku.org/routine/slurp">.slurp</a> 方法读取文件的全部内容并将其作为单个 <a href="https://docs.raku.org/type/Str">Str</a> 对象返回，如果请求二进制模式，则通过指定 <code>:bin</code> 命名参数将其作为 <a href="https://docs.raku.org/type/Buf">Buf</a> 对象返回。</p>
 <p>由于 <a href="https://docs.raku.org/routine/slurp">slurping</a> 将整个文件加载到内存中，因此不适合处理大文件。</p>
-
 <p>该 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 类型提供了另外两种便捷方法：<a href="https://docs.raku.org/type/IO::Path#method_words">.words</a> 与 <a href="https://docs.raku.org/type/IO::Path#method_lines">.lines</a> 惰性地读取小块文件并返回<a href="https://docs.raku.org/type/Seq">序列</a>对象是（默认）不保存已经消耗的值。</p>
-
 <p>这是一个示例，它在文本文件中查找提及 Perl 并将其打印出来的行。尽管文件本身太大而无法容纳到可用的 <a href="https://en.wikipedia.org/wiki/Random-access_memory">RAM</a> 中，但程序运行时不会出现任何问题，因为内容是以小块的形式处理的：</p>
-
-<pre><code class="language-raku">.say for '500-PetaByte-File.txt'.IO.lines.grep: *.contains: 'Perl';
-</code></pre>
-
-<p>这是另一个打印文件中前 100 个单词的示例，而不是完全加载它：</p>
-
-<pre><code class="language-raku">.say for '500-PetaByte-File.txt'.IO.words: 100
-</code></pre>
-
-<p>请注意，我们通过传递 limit 参数 <a href="https://docs.raku.org/type/IO::Path#method_words">.words</a> 而不是使用<a href="https://docs.raku.org/language/operators#index-entry-array_indexing_operator-array_subscript_operator-array_indexing_operator">列表索引操作</a>来完成此操作。原因是在引擎盖下仍然使用文件句柄，并且在完全使用返回的 Seq 之前，句柄将保持打开状态。如果没有引用 Seq，最终句柄将在垃圾收集运行期间关闭，但在大型程序中使用大量文件时，最好确保所有句柄立即关闭。所以，你应该始终确保SEQ从 IO::Path 的.words 和 .lines 方法是完全具体化; 而极限论证可以帮助你。</p>
-
-<h4 id="使用-io-handle">使用 IO::Handle</h4>
-
+<pre><code class="language-raku" data-lang="raku">.say for '500-PetaByte-File.txt'.IO.lines.grep: *.contains: 'Perl';
+</code></pre><p>这是另一个打印文件中前 100 个单词的示例，而不是完全加载它：</p>
+<pre><code class="language-raku" data-lang="raku">.say for '500-PetaByte-File.txt'.IO.words: 100
+</code></pre><p>请注意，我们通过传递 limit 参数 <a href="https://docs.raku.org/type/IO::Path#method_words">.words</a> 而不是使用<a href="https://docs.raku.org/language/operators#index-entry-array_indexing_operator-array_subscript_operator-array_indexing_operator">列表索引操作</a>来完成此操作。原因是在引擎盖下仍然使用文件句柄，并且在完全使用返回的 Seq 之前，句柄将保持打开状态。如果没有引用 Seq，最终句柄将在垃圾收集运行期间关闭，但在大型程序中使用大量文件时，最好确保所有句柄立即关闭。所以，你应该始终确保SEQ从 IO::Path 的.words 和 .lines 方法是完全具体化; 而极限论证可以帮助你。</p>
+<h4 id="使用-iohandle">使用 IO::Handle</h4>
 <p>当然，你可以使用 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 类型从文件中读取，这样可以更好地控制你正在执行的操作：</p>
-
-<pre><code class="language-raku">given 'some-file.txt'.IO.open {
+<pre><code class="language-raku" data-lang="raku">given 'some-file.txt'.IO.open {
     say .readchars: 8;  # OUTPUT: «I ♥ Perl␤» 
     .seek: 1, SeekFromCurrent;
     say .readchars: 15;  # OUTPUT: «I ♥ Programming␤» 
     .close
 }
-</code></pre>
-
-<p>该 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 给你 <a href="https://docs.raku.org/type/IO::Handle#method_read">.read</a>，<a href="https://docs.raku.org/type/IO::Handle#method_readchars">.readchars</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_get">.get</a>，<a href="https://docs.raku.org/type/IO::Handle#method_getc">.getc</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_words">.words</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_lines">.lines</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_slurp">.slurp</a>，<a href="https://docs.raku.org/type/IO::Handle#method_comb">.comb</a>，<a href="https://docs.raku.org/type/IO::Handle#method_split">.split</a> 和 <a href="https://docs.raku.org/type/IO::Handle#method_Supply">.Supply</a> 方法从中读取数据。有很多选项; 当你完成它时，需要关闭句柄。</p>
-
+</code></pre><p>该 <a href="https://docs.raku.org/type/IO::Handle">IO::Handle</a> 给你 <a href="https://docs.raku.org/type/IO::Handle#method_read">.read</a>，<a href="https://docs.raku.org/type/IO::Handle#method_readchars">.readchars</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_get">.get</a>，<a href="https://docs.raku.org/type/IO::Handle#method_getc">.getc</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_words">.words</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_lines">.lines</a>，<a href="https://docs.raku.org/type/IO::Handle#routine_slurp">.slurp</a>，<a href="https://docs.raku.org/type/IO::Handle#method_comb">.comb</a>，<a href="https://docs.raku.org/type/IO::Handle#method_split">.split</a> 和 <a href="https://docs.raku.org/type/IO::Handle#method_Supply">.Supply</a> 方法从中读取数据。有很多选项; 当你完成它时，需要关闭句柄。</p>
 <p>与某些语言不同，当离开所定义的作用域时，句柄不会自动关闭。相反，它将保持打开，直到垃圾回收为止。为了使关闭业务更容易，一些方法允许你指定 <code>:close</code> 参数，你还可以使用 <a href="https://docs.raku.org/language/phasers#index-entry-will_trait">will leave trait</a> 或由 <a href="https://modules.raku.org/dist/Trait::IO">Trait::IO</a> 模块提供的 <code>does auto-close</code> trait。</p>
-
 <h2 id="错误的做事方法">错误的做事方法</h2>
-
 <p>本节介绍如何不执行 Raku IO。</p>
-
 <h3 id="不管-spec">不管 $*SPEC</h3>
-
 <p>你可能听说过 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*SPEC</a> 并看过一些代码或书籍显示其用于拆分和连接路径片段的用法。它提供的一些例程名称甚至可能看起来与你在其他语言中使用的名称相似。</p>
-
 <p>但是，除非你编写自己的 IO 框架，否则几乎不需要直接使用 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*SPEC</a>。<a href="https://docs.raku.org/language/variables#Dynamic_variables">$*SPEC</a> 提供低级别的东西，它的使用不仅会使你的代码难以阅读，还可能会引入安全问题（例如 null 字符）！</p>
-
 <p><a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 类型是 Raku 世界的主力。它满足所有路径操作需求，并提供快捷例程，让你避免处理文件句柄。使用它代替 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*SPEC</a>。</p>
-
 <p>提示：你可以使用 <code>/</code> 连接路径部分并将其提供给 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 例程; 无论操作系统如何，他们仍将与他们一起做 The Right Thing™。</p>
-
-<pre><code class="language-raku"># WRONG!! TOO MUCH WORK! 
+<pre><code class="language-raku" data-lang="raku"># WRONG!! TOO MUCH WORK! 
 my $fh = open $*SPEC.catpath: '', 'foo/bar', $file;
 my $data = $fh.slurp;
 $fh.close;
-</code></pre>
-
-<pre><code class="language-raku"># RIGHT! Use IO::Path to do all the dirty work 
+</code></pre><pre><code class="language-raku" data-lang="raku"># RIGHT! Use IO::Path to do all the dirty work 
 my $data = 'foo/bar'.IO.add($file).slurp;
-</code></pre>
-
-<p>但是，将它用于 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 无法提供的东西是很好的。例如，<a href="https://docs.raku.org/routine/devnull">.devnull</a> 方法：</p>
-
-<pre><code class="language-raku">{
+</code></pre><p>但是，将它用于 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 无法提供的东西是很好的。例如，<a href="https://docs.raku.org/routine/devnull">.devnull</a> 方法：</p>
+<pre><code class="language-raku" data-lang="raku">{
     temp $*OUT = open :w, $*SPEC.devnull;
     say &quot;In space no one can hear you scream!&quot;;
 }
 say &quot;Hello&quot;
-</code></pre>
-
-<h3 id="字符串化-io-path">字符串化 IO::Path</h3>
-
+</code></pre><h3 id="字符串化-iopath">字符串化 IO::Path</h3>
 <p>不要使用该 <code>.Str</code> 方法对 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 对象进行字符串化，除非你只是想将它们显示在某处以供参考或使用某些内容。该 <code>.Str</code> 方法返回 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 实例化的任何基本路径字符串。它不考虑 <a href="https://docs.raku.org/type/IO::Path#attribute_CWD">$.CWD</a> 属性的值。例如，此代码已损坏：</p>
-
-<pre><code class="language-raku"># WRONG!! .Str DOES NOT USE $.CWD! 
+<pre><code class="language-raku" data-lang="raku"># WRONG!! .Str DOES NOT USE $.CWD! 
 my $path = 'foo'.IO;
 chdir 'bar';
 run &lt;tar -cvvf archive.tar&gt;, ~$path;
-</code></pre>
-
-<p>该 <a href="https://docs.raku.org/routine/chdir">chdir</a> 调用更改了当前目录的值，但我们创建的  <code>$path</code> 是相对于该更改之前的目录。</p>
-
+</code></pre><p>该 <a href="https://docs.raku.org/routine/chdir">chdir</a> 调用更改了当前目录的值，但我们创建的  <code>$path</code> 是相对于该更改之前的目录。</p>
 <p>但是，该 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 对象确实知道它相对于哪个目录。我们只需要使用 <a href="https://docs.raku.org/routine/absolute">.absolute</a> 或 <a href="https://docs.raku.org/routine/relative">.relative</a> 对字符串进行字符串化。两个例程都返回一个 <a href="https://docs.raku.org/type/Str">Str</a> 对象; 它们的不同之处只是在于结果是绝对路径还是相对路径。所以，我们可以像这样修复我们的代码：</p>
-
-<pre><code class="language-raku"># RIGHT!! .absolute does consider the value of $.CWD! 
+<pre><code class="language-raku" data-lang="raku"># RIGHT!! .absolute does consider the value of $.CWD! 
 my $path = 'foo'.IO;
 chdir 'bar';
 run &lt;tar -cvvf archive.tar&gt;, $path.absolute;
 # Also good: 
 run &lt;tar -cvvf archive.tar&gt;, $path.relative;
-</code></pre>
-
-<h3 id="要留意的-cwd">要留意的 $*CWD</h3>
-
+</code></pre><h3 id="要留意的-cwd">要留意的 $*CWD</h3>
 <p>虽然通常不在视图范围内，但 <a href="https://docs.raku.org/type/IO::Path">IO::Path</a> 默认情况下，每个对象都使用 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*CWD</a> 的当前值来设置其 <a href="https://docs.raku.org/type/IO::Path#attribute_CWD">$.CWD 属性</a>。这意味着有两件事需要注意。</p>
-
 <h4 id="temp-cwd">temp $*CWD</h4>
-
 <p>这段代码是错误的：</p>
-
-<pre><code class="language-raku"># WRONG!! 
+<pre><code class="language-raku" data-lang="raku"># WRONG!! 
 my $*CWD = &quot;foo&quot;.IO;
-</code></pre>
-
-<p>该 <code>my $*CWD</code> 使 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*CWD</a> 为未定义的。然后 <a href="https://docs.raku.org/routine/IO">.IO</a> coercer 继续并将其创建的路径的<a href="https://docs.raku.org/type/IO::Path#attribute_CWD">$.CWD 属性</a>设置为 undefined 的字符串化版本$*CWD; 一个空字符串。</p>
-
+</code></pre><p>该 <code>my $*CWD</code> 使 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*CWD</a> 为未定义的。然后 <a href="https://docs.raku.org/routine/IO">.IO</a> coercer 继续并将其创建的路径的<a href="https://docs.raku.org/type/IO::Path#attribute_CWD">$.CWD 属性</a>设置为 undefined 的字符串化版本$*CWD; 一个空字符串。</p>
 <p>执行此操作的正确方法是使用 <a href="https://docs.raku.org/routine/temp">temp</a> 而不是 <code>my</code>。它会将更改的效果本地化 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*CWD</a>，就像 <code>my</code> 那样，但它不会使其未定义，因此 <a href="https://docs.raku.org/routine/IO">.IO</a> coercer 仍将获得正确的旧值：</p>
-
-<pre><code class="language-raku">temp $*CWD = &quot;foo&quot;.IO;
-</code></pre>
-
-<p>更好的是，如果要在本地化中执行某些代码 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*CWD</a>，请使用 <a href="https://docs.raku.org/routine/indir">indir</a> 例程来实现此目的。</p>
+<pre><code class="language-raku" data-lang="raku">temp $*CWD = &quot;foo&quot;.IO;
+</code></pre><p>更好的是，如果要在本地化中执行某些代码 <a href="https://docs.raku.org/language/variables#Dynamic_variables">$*CWD</a>，请使用 <a href="https://docs.raku.org/routine/indir">indir</a> 例程来实现此目的。</p>
 
 
         
@@ -518,7 +431,7 @@ my $*CWD = &quot;foo&quot;.IO;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-09-constants-in-perl6/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,98 +231,55 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>我自豪地告诉人们在<a href="https://act.yapc.eu/lpw2018">伦敦 Perl 工作室</a>前一天我写了我的第一个 Raku 程序（也就是一个能工作的程序）。 所以，JJ 说：“为什么不为 Raku 写一个 Advent 日历帖？”</p>
-
+        <p>我自豪地告诉人们在<a href="https://act.yapc.eu/lpw2018">伦敦 Perl 工作室</a>前一天我写了我的第一个 Raku 程序（也就是一个能工作的程序）。 所以，JJ 说：“为什么不为 Raku 写一个 Advent 日历帖？”</p>
 <p>我名下只有区区一个程序，我该写些什么呢？ 嗯&hellip;&hellip;我在 Perl 5 中创作了 <a href="https://metacpan.org/pod/Astro::Constants">Astro::Constants</a>，那么将它迁移到 Raku 有多难？</p>
-
 <p>话匣子打开就关不上了，我给你讲一个 Perl 5 模块作者在 Raku 的领地中徘徊的故事。</p>
-
 <p>如果在<a href="https://rakuadvent.wordpress.com/2018/12/04/day-5-variables/">第5天</a>你被“诊断”为常数，那么你正好需要今天的帖子。</p>
-
 <p>我们习惯使用变量来计算东西和持有东西。 随着我们获得更多“东西”，总量会发生变化。 <a href="https://docs.raku.org/language/variables#The_constant_prefix">常量</a>是那些永远不会改变的值。 像一天中的秒数或光速。 当然，我们在计算中使用它们就像使用变量一样，但是你不想通过赋值意外地改变常量</p>
-
-<pre><code class="language-raku">$SPEED_LIGHT = 30;
-</code></pre>
-
-<p>甚至意外地当你打算测试它是否等于某个值时，就像这样</p>
-
-<pre><code class="language-raku">if ( $SECONDS_IN_A_DAY = $seconds_waited) {
-</code></pre>
-
-<p>当你真正想的是</p>
-
-<pre><code class="language-raku">if ( $SECONDS_IN_A_DAY == $seconds_waited) {
-</code></pre>
-
-<p>在这些情况下，你希望编译器说“对不起，戴夫。 恐怕我不能这样做。“ Perl 编译器关闭了。 如果你尝试运行第一行，你会得到</p>
-
+<pre><code class="language-raku" data-lang="raku">$SPEED_LIGHT = 30;
+</code></pre><p>甚至意外地当你打算测试它是否等于某个值时，就像这样</p>
+<pre><code class="language-raku" data-lang="raku">if ( $SECONDS_IN_A_DAY = $seconds_waited) {
+</code></pre><p>当你真正想的是</p>
+<pre><code class="language-raku" data-lang="raku">if ( $SECONDS_IN_A_DAY == $seconds_waited) {
+</code></pre><p>在这些情况下，你希望编译器说“对不起，戴夫。 恐怕我不能这样做。“ Perl 编译器关闭了。 如果你尝试运行第一行，你会得到</p>
 <pre><code>Cannot modify an immutable Num (299792458)
   in block  at im_sorry_dave.p6 line 12
-</code></pre>
-
-<p>单击此处获取<a href="https://docs.raku.org/language/terms#Constants">完整解释</a></p>
-
+</code></pre><p>单击此处获取<a href="https://docs.raku.org/language/terms#Constants">完整解释</a></p>
 <h2 id="如何制作一个常数">如何制作一个常数</h2>
-
 <p>要使变量保持不变，请使用 <code>constant</code> 关键字声明它。</p>
-
-<pre><code class="language-raku">constant $tau = pi * 2;
-</code></pre>
-
-<p>嘿！ sigil 是可选的，所以我可以使用我最喜欢的样式进行常量声明：</p>
-
-<pre><code class="language-raku">my constant SPEED_LIGHT is export = 2.99792458e8;
-</code></pre>
-
-<p>所有这些乐趣不仅仅适用于<a href="https://docs.raku.org/type/Scalar">标量</a>。 <a href="https://docs.raku.org/type/List">列表</a>和<a href="https://docs.raku.org/type/Hash">散列</a>也可以声明为常量！</p>
-
+<pre><code class="language-raku" data-lang="raku">constant $tau = pi * 2;
+</code></pre><p>嘿！ sigil 是可选的，所以我可以使用我最喜欢的样式进行常量声明：</p>
+<pre><code class="language-raku" data-lang="raku">my constant SPEED_LIGHT is export = 2.99792458e8;
+</code></pre><p>所有这些乐趣不仅仅适用于<a href="https://docs.raku.org/type/Scalar">标量</a>。 <a href="https://docs.raku.org/type/List">列表</a>和<a href="https://docs.raku.org/type/Hash">散列</a>也可以声明为常量！</p>
 <p>为什么要使 List 保持不变？ 一年中的月份是列表吧, 它阻止这样：</p>
-
-<pre><code class="language-raku">my constant @months = ;
+<pre><code class="language-raku" data-lang="raku">my constant @months = ;
 ...
 @months[9] = 'Hacktober';   # changing a name
 push @months, 'Hogmannay';  # we'd all like more time after Christmas
-</code></pre>
-
-<p>如果你尝试其中任何一个，你得到</p>
-
+</code></pre><p>如果你尝试其中任何一个，你得到</p>
 <pre><code>Cannot modify and immutable Str (D)       # error for the assignment
 # or
 Cannot call 'push' on an immutable 'List' # error for the push
-</code></pre>
-
-<p>顺便说一句，<code>tau</code>，<code>pi</code>，<code>e</code> 和 <code>i</code> 都是 Raku 中的内置常量，以及它们的 Unicode 等价物，<code>τ</code>，<code>π</code> 和 <code>𝑒</code>。 似乎你可以使用<a href="https://docs.raku.org/language/variables#Sigilless_variables">无 sigil 变量</a>获得相同的行为但是今天暂且不表。</p>
-
+</code></pre><p>顺便说一句，<code>tau</code>，<code>pi</code>，<code>e</code> 和 <code>i</code> 都是 Raku 中的内置常量，以及它们的 Unicode 等价物，<code>τ</code>，<code>π</code> 和 <code>𝑒</code>。 似乎你可以使用<a href="https://docs.raku.org/language/variables#Sigilless_variables">无 sigil 变量</a>获得相同的行为但是今天暂且不表。</p>
 <h2 id="从模块导出常量">从模块导出常量</h2>
-
 <p>如果你要在代码中反复使用相同的常量，那么将它们放在一个模块（一个单独的文件）中并将其加载到程序中是有意义的。 现在我不得不在这里加一些土鳖编程，但这对我有用，我会尽力解释它的能力。</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 unit class Astro::Constants:ver&lt;0.0.1&gt;:auth;
 
 my constant SPEED_LIGHT is export = 2.99792458e8;
 ...
-</code></pre>
-
-<p><strong>第1行</strong> - 轻松入手。<code>use v6;</code> 告诉编译器这是一个 Raku 程序。等等！我不需要它。这只是编写程序的一个习惯。我可以摆脱它。</p>
-
+</code></pre><p><strong>第1行</strong> - 轻松入手。<code>use v6;</code> 告诉编译器这是一个 Raku 程序。等等！我不需要它。这只是编写程序的一个习惯。我可以摆脱它。</p>
 <p><strong>第2行</strong></p>
-
 <ul>
-<li><a href="https://docs.raku.org/language/module-packages#The_unit_keyword">unit</a> 表示此文件只提供一个模块 - 不知道这意味着什么<br /></li>
-<li><a href="https://docs.raku.org/syntax/class">class</a> 创建文件的词法范围 - 但我可能已经使用了<a href="https://docs.raku.org/language/module-packages">模块</a>，而不是用于不属于类的代码。嗯，我想我必须更深入地考虑我的代码设计。但它仍然奏效！<br /></li>
-<li><code>Astro::Constants</code>  - 模块名称<br /></li>
-<li><code>ver&lt;0.0.1&gt;</code>  - 版本字符串，现在在包声明中。<br /></li>
+<li><a href="https://docs.raku.org/language/module-packages#The_unit_keyword">unit</a> 表示此文件只提供一个模块 - 不知道这意味着什么</li>
+<li><a href="https://docs.raku.org/syntax/class">class</a> 创建文件的词法范围 - 但我可能已经使用了<a href="https://docs.raku.org/language/module-packages">模块</a>，而不是用于不属于类的代码。嗯，我想我必须更深入地考虑我的代码设计。但它仍然奏效！</li>
+<li><code>Astro::Constants</code>  - 模块名称</li>
+<li><code>ver&lt;0.0.1&gt;</code>  - 版本字符串，现在在包声明中。</li>
 <li><code>auth</code>  - 嗯，这是作者。为包名添加更高的维度有点怪，但它确实允许您指定要使用的模块的版本。在 PAUSE 中没有名称空间露营的问题。</li>
 </ul>
-
 <p><strong>第N行</strong> <code>my</code> 词汇范围; <code>constant</code> 使其成为只读; <code>SPEED_LIGHT</code> 是常量的名称; <code>is export</code> 允许常量<a href="https://docs.raku.org/language/modules#Exporting_and_selective_importing">在模块外部使用</a>，即在代码中使用; <code>2.99792458e8</code> 只是 Perl 表达 <code>2.99×10⁸</code> 的方式。</p>
-
 <p>&hellip;为了完整起见，加上版本方法和一些<a href="https://rakuadvent.wordpress.com/2015/12/10/day-10-perl-6-pod/">文档</a>来完成模块怎么样:</p>
-
-<pre><code class="language-raku">method ver { v0.0.1 }
+<pre><code class="language-raku" data-lang="raku">method ver { v0.0.1 }
 
 =begin pod
 
@@ -331,47 +288,27 @@ my constant SPEED_LIGHT is export = 2.99792458e8;
 A set of constants used in Physics, Chemistry and Math
 
 =end pod
-</code></pre>
-
-<p>将常量放入模块的一个副作用是它们<a href="https://docs.raku.org/language/traps#Constants_are_computed_at_compile_time">在编译时计算</a>。它应该使您的代码运行得更快，但编译后的模块仍然存在。 这对于常量非常有用，但如果您的模块包含您可能想要更改的内容，则需要重新编译它。</p>
-
+</code></pre><p>将常量放入模块的一个副作用是它们<a href="https://docs.raku.org/language/traps#Constants_are_computed_at_compile_time">在编译时计算</a>。它应该使您的代码运行得更快，但编译后的模块仍然存在。 这对于常量非常有用，但如果您的模块包含您可能想要更改的内容，则需要重新编译它。</p>
 <h2 id="在程序中使用模块">在程序中使用模块</h2>
-
 <p>一旦你有了一个模块，你如何在程序中使用它？</p>
-
 <p>在这个例子中，我创建了一个目录 <code>mylib/Astro</code>，并将该模块放在一个名为 <code>mylib/Astro/Constants.pm6</code> 的文件中。 这是我的程序：</p>
-
-<pre><code class="language-raku">use v6;
+<pre><code class="language-raku" data-lang="raku">use v6;
 use lib ;
 use Astro::Constants;
 
 say &quot;speed of light =\t&quot;, SPEED_LIGHT;
-</code></pre>
-
-<p>它<strong>起作用了</strong>！ 解释一下前3行：<code>use v6</code> 说使用 Raku; <code>use lib</code> 表示把路径添加到库搜索路径; <code>use Astro::Constants</code> 表示在库路径中搜索文件 <code>Astro/Constants.pm6</code> 并加载它。</p>
-
+</code></pre><p>它<strong>起作用了</strong>！ 解释一下前3行：<code>use v6</code> 说使用 Raku; <code>use lib</code> 表示把路径添加到库搜索路径; <code>use Astro::Constants</code> 表示在库路径中搜索文件 <code>Astro/Constants.pm6</code> 并加载它。</p>
 <h3 id="我必须做这一切吗-不">我必须做这一切吗？ &hellip;&hellip;不。</h3>
-
 <p>为什么要重新发明轮子？ 前面提到的JJ有<a href="https://github.com/JJ/p6-math-constants">以前的常量形式</a>，但你需要一个包管理器来完成它的安装工作。 在 Fedora 28 中，使用 <code>dnf install rakudo-zef</code> 来安装包管理器 <strong>zef</strong>。 然后，您可以搜索任何处理常量的模块。运行</p>
-
-<pre><code class="language-shell">zef search Constants
-</code></pre>
-
-<p>将为您提供至少15个在生态系统中注册的软件包，并非所有软件包都是你正在寻找的软件包。您可以立即开始使用 <code>zef install Math::Constants</code> 并使用JJ的模块，或者您可以使用搜索来查看我是否已经找到时间上传我的尝试（当时可能名为 *<strong>Physics::Constants</strong>），即将于2019年发布。</p>
-
-<h2 id="最后-对代码维护进行了一些注释">最后，对代码维护进行了一些注释</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">zef search Constants
+</code></pre></div><p>将为您提供至少15个在生态系统中注册的软件包，并非所有软件包都是你正在寻找的软件包。您可以立即开始使用 <code>zef install Math::Constants</code> 并使用JJ的模块，或者您可以使用搜索来查看我是否已经找到时间上传我的尝试（当时可能名为 *<strong>Physics::Constants</strong>），即将于2019年发布。</p>
+<h2 id="最后对代码维护进行了一些注释">最后，对代码维护进行了一些注释</h2>
 <p>对我来说，代码维护是科学编程中最重要的考虑因素。想想那位走进美学院门口的新科学专业的学生，​​并在第1天交给你维护的代码。在第20天保证，他们被要求做出改变。为了他们的缘故，我喜欢为了清晰而不是简洁而写作，因为科学中存在如此多的重载符号。因此，我对将符号投入计算时很谨慎。也许我什么都不担心，但找到答案的唯一方法就是去做，看看是否有害。</p>
-
 <p>我现在发生的一种可能性是能够指定你所指的常数。这个组成的例子看起来有点像 Python。可能值得偷窃。</p>
-
-<pre><code class="language-raku">import GRAVITATIONAL as G;
+<pre><code class="language-raku" data-lang="raku">import GRAVITATIONAL as G;
 ...
 $F_between_two_bodies = G * $mass1 * $mass2 / $distance**2;
-</code></pre>
-
-<p>我将在圣诞节阅读 <a href="https://www.packtpub.com/application-development/perl-6-deep-dive">Raku Deep Dive</a>，我会告诉你我明年的表现。</p>
-
+</code></pre><p>我将在圣诞节阅读 <a href="https://www.packtpub.com/application-development/perl-6-deep-dive">Raku Deep Dive</a>，我会告诉你我明年的表现。</p>
 <p>快乐地搞科学！</p>
 
 
@@ -464,7 +401,7 @@ $F_between_two_bodies = G * $mass1 * $mass2 / $distance**2;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

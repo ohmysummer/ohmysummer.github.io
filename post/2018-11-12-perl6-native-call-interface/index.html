@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-11-12-perl6-native-call-interface/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,66 +231,36 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="原生调用接口">原生调用接口</h1>
-
+        <h1 id="原生调用接口">原生调用接口</h1>
 <h2 id="入门指南">入门指南</h2>
-
 <p>能想象出的最简单的 <code>NativeCall</code> 用法应该类似于这样的东西：</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 sub some_argless_function() is native('something') { * }
 some_argless_function();
-</code></pre>
-
-<p>第一行导入了各种 <code>traits</code> 和类型，接下来的一行看起来很像相对普通的 Raku 子例程声明 - 稍微有点变化。我们使用<strong>native</strong>这个 <code>trait</code> 是为了指定这个 sub 子例程实际上被定义在<strong>原生库</strong>中。Raku 会给你添加特定平台的扩展名（比如 <code>.so</code> 或者 <code>.dll</code>）还有任何惯常的前缀(例如: &lsquo;lib&rsquo;)。</p>
-
+</code></pre><p>第一行导入了各种 <code>traits</code> 和类型，接下来的一行看起来很像相对普通的 Raku 子例程声明 - 稍微有点变化。我们使用<strong>native</strong>这个 <code>trait </code> 是为了指定这个 sub 子例程实际上被定义在<strong>原生库</strong>中。Raku 会给你添加特定平台的扩展名（比如 <code>.so</code> 或者 <code>.dll</code>）还有任何惯常的前缀(例如: &lsquo;lib&rsquo;)。</p>
 <p>当你第一次调用 “some_argless_function” 时，“<strong>lib</strong>something” 将会被加载，然后会在 libsomething 库中定位到 “some_argless_function” 函数，接下来将会进行一次调用。之后的调用将会更快，因为符号句柄会被保留。</p>
-
 <p>当然，大部分的函数都会接受参数或者返回值 - 但是你可以做的其他事情只是增加了这个声明Raku sub的简单模式</p>
-
 <p>但是一切你需要做的就是增加这个简单的模式，通过声明一个 Raku 的过程、在符号后面指出你想要调用的名字，并且使用 “native” trait。</p>
-
 <h2 id="改变名字">改变名字</h2>
-
 <p>有时你想要 Raku 子例程的名字和加载库中使用的名字不同，可能这个名字很长, 或者有不同的大小写或者在你想要创建的模块的上下文中, 这个名字很繁琐。</p>
-
 <p>NativeCall 为你提供了一个 <code>symbol</code> trait 以指定库中<strong>原生子例程</strong>的名字, 这个名字和你的 Raku 子例程名字不同。</p>
-
-<pre><code class="language-raku">module Foo;
+<pre><code class="language-raku" data-lang="raku">module Foo;
 use NativeCall;
 our sub init() is native('foo') is symbol('FOO_INIT') { * }
-</code></pre>
-
-<p>在 <code>libfoo</code> 库里面有一个子例程叫 <code>FOO_INIT</code>，因为我们创建了一个模块叫做 Foo，我们更愿意使用 <code>Foo::init</code> 调用子例程，我们使用 <code>symbol</code> trait 来指定在 <code>libfoo</code> 库名字符号的名字，然后以任何我们想要的方式调用这个子例程（这里是 “init”）。</p>
-
+</code></pre><p>在 <code>libfoo</code> 库里面有一个子例程叫 <code>FOO_INIT</code>，因为我们创建了一个模块叫做 Foo，我们更愿意使用 <code>Foo::init</code> 调用子例程，我们使用 <code>symbol</code> trait 来指定在 <code>libfoo</code> 库名字符号的名字，然后以任何我们想要的方式调用这个子例程（这里是 “init”）。</p>
 <h2 id="传递值和返回值">传递值和返回值</h2>
-
 <p>普通的 Raku 签名和 <code>returns</code> trait 的使用是为了传送原生函数期望的参数类型以及返回的东西，下面有个例子：</p>
-
-<pre><code class="language-raku">sub add(int32, int32) returns int32 is native('calculator') { * }
-</code></pre>
-
-<p>在这里，我们声明该函数接受两个32位整数，返回一个32位整数。你可以在<a href="https://docs.raku.org/language/nativetypes">原生类型</a>页面中找到可以传递的其他类型。 请注意，缺少 <code>returns</code> trait 用于指示 <code>void</code> 返回类型。 除指针参数化外，不要在任何地方使用 <code>void</code> 类型。</p>
-
+<pre><code class="language-raku" data-lang="raku">sub add(int32, int32) returns int32 is native('calculator') { * }
+</code></pre><p>在这里，我们声明该函数接受两个32位整数，返回一个32位整数。你可以在<a href="https://docs.raku.org/language/nativetypes">原生类型</a>页面中找到可以传递的其他类型。 请注意，缺少 <code>returns</code> trait 用于指示 <code>void</code> 返回类型。 除指针参数化外，不要在任何地方使用 <code>void</code> 类型。</p>
 <p>对于字符串，还有一个额外的 <code>encoded</code> trait，可以提供一些关于如何进行编组的额外提示。</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 sub message_box(Str is encoded('utf8')) is native('gui') { * }
-</code></pre>
-
-<p>为了指定如何对返回类型进行编组，只需在子例程自身应用这个 trait 即可。</p>
-
-<pre><code class="language-raku">use NativeCall;
+</code></pre><p>为了指定如何对返回类型进行编组，只需在子例程自身应用这个 trait 即可。</p>
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 sub input_box() returns Str is encoded('utf8') is native('gui') { * }
-</code></pre>
-
-<p>注意, 可以通过传递 Str 类型对象来传递 NULL 字符串指针; NULL 返回也将由类型对象表示。</p>
-
+</code></pre><p>注意, 可以通过传递 Str 类型对象来传递 NULL 字符串指针; NULL 返回也将由类型对象表示。</p>
 <p>如果 C 函数要求字符串的生命周期超过函数调用，则必须手动编码该参数并将其作为 <code>CArray[uint8]</code> 传递：</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 # C prototype is void set_foo(const char *) 
 sub set_foo(CArray[uint8]) is native('foo') { * }
 # C prototype is void use_foo(void) 
@@ -305,13 +275,9 @@ set_foo($array);
 # ... 
 use_foo();
 # It's fine if $array goes out of scope starting from here. 
-</code></pre>
-
-<h2 id="指定原生表示">指定原生表示</h2>
-
+</code></pre><h2 id="指定原生表示">指定原生表示</h2>
 <p>使用原生函数时，有时需要指定要使用的原生数据结构类型。 <code>is repr</code> 是用于此的术语。</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
  
 class timespec is repr('CStruct') {
     has uint32 $.tv_sec;
@@ -325,30 +291,19 @@ my timespec $this-time .=new;
 my $result = clock_gettime( 0, $this-time);
  
 say &quot;$result, $this-time&quot;; # OUTPUT: «0, timespec&lt;65385480&gt;␤» 
-</code></pre>
-
-<p><a href="https://linux.die.net/man/3/clock_gettime">我们调用的原始函数</a>, <a href="https://docs.raku.org/routine/clock_gettime">clock_gettime</a> 使用指向 <code>timespec</code> 结构的指针作为第二个参数。 我们在这里将它声明为一个<a href="https://docs.raku.org/routine/class">类</a>，但是将其表示指定为 <code>repr('CStruct')</code>, 以指示它对应于 C 数据结构。 当我们创建该类的对象时，我们正在创建 <code>clock_gettime</code> 所期望的指针类型。 这样，数据可以无缝地传输到原生接口和从原生接口传输。</p>
-
+</code></pre><p><a href="https://linux.die.net/man/3/clock_gettime">我们调用的原始函数</a>, <a href="https://docs.raku.org/routine/clock_gettime">clock_gettime</a> 使用指向 <code>timespec</code> 结构的指针作为第二个参数。 我们在这里将它声明为一个<a href="https://docs.raku.org/routine/class">类</a>，但是将其表示指定为 <code>repr('CStruct')</code>, 以指示它对应于 C 数据结构。 当我们创建该类的对象时，我们正在创建 <code>clock_gettime</code> 所期望的指针类型。 这样，数据可以无缝地传输到原生接口和从原生接口传输。</p>
 <h2 id="指针的基本使用">指针的基本使用</h2>
-
 <p>当你的原生函数签名需要一个指向某些原生类型（<code>int32</code>、<code>uint32</code>等等）的指针时，所有你需要做的就是将参数声明为 <code>is rw</code>：</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 # C prototype is void my_version(int *major, int *minor) 
 sub my_version(int32 is rw, int32 is rw) is native('foo') { * }
 my_version(my int32 $major, my int32 $minor); # Pass a pointer to 
-</code></pre>
-
-<p>有的时候你需要获取一个从 C 库返回的指针（比如一个库句柄），你不关心它指向什么 - 你只需要保存它就可以了，<code>Pointer</code> 类型就是为此而生的：</p>
-
-<pre><code class="language-raku">use NativeCall;
+</code></pre><p>有的时候你需要获取一个从 C 库返回的指针（比如一个库句柄），你不关心它指向什么 - 你只需要保存它就可以了，<code>Pointer</code> 类型就是为此而生的：</p>
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 sub Foo_init() returns Pointer is native(&quot;foo&quot;) { * }
 sub Foo_free(Pointer) is native(&quot;foo&quot;) { * }
-</code></pre>
-
-<p>这个可以正常工作，但是你可能想要使用比 <code>Pointer</code> 更好的类型，事实证明，任何具有表示“CPointer”的类都可以担任此角色，这意味着你可以通过编写如下类来暴露工作在句柄上的库：</p>
-
-<pre><code class="language-raku">use NativeCall;
+</code></pre><p>这个可以正常工作，但是你可能想要使用比 <code>Pointer</code> 更好的类型，事实证明，任何具有表示“CPointer”的类都可以担任此角色，这意味着你可以通过编写如下类来暴露工作在句柄上的库：</p>
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
  
 class FooHandle is repr('CPointer') {
     # Here are the actual NativeCall functions. 
@@ -375,42 +330,25 @@ class FooHandle is repr('CPointer') {
         Foo_free(self);
     }
 }
-</code></pre>
-
-<p>请注意，CPointer 表示只能保存 C 指针。 这意味着你的类不能有额外的属性。 但是，对于简单的库，这可能是向其暴露面向对象的接口的一种巧妙方式。</p>
-
+</code></pre><p>请注意，CPointer 表示只能保存 C 指针。 这意味着你的类不能有额外的属性。 但是，对于简单的库，这可能是向其暴露面向对象的接口的一种巧妙方式。</p>
 <p>当然，你总是可以有一个空类：</p>
-
-<pre><code class="language-raku">class DoorHandle is repr('CPointer') { }
-</code></pre>
-
-<p>只需像使用 <code>Pointer</code> 一样使用类，但有可能提高类型安全性和更易读的代码。</p>
-
+<pre><code class="language-raku" data-lang="raku">class DoorHandle is repr('CPointer') { }
+</code></pre><p>只需像使用 <code>Pointer</code> 一样使用类，但有可能提高类型安全性和更易读的代码。</p>
 <p>同样，类型对象用于表示 NULL 指针。</p>
-
 <h2 id="函数指针">函数指针</h2>
-
 <p>C 库可以将指向 C 函数的指针暴露为函数的返回值和结构体的成员，例如 structs 和 unions。</p>
-
 <p>使用定义所需函数参数和返回值的签名调用函数“f”返回的函数指针“$fptr”的示例：</p>
-
-<pre><code class="language-raku">sub f() returns Pointer is native('mylib') { * }
+<pre><code class="language-raku" data-lang="raku">sub f() returns Pointer is native('mylib') { * }
 
 my $fptr    = f();
 my $nfptr   = nativecast(:(Str, size_t --&gt; int32), $fptr);
 
 say $nfptr(&quot;test&quot;, 4);
-</code></pre>
-
-<h2 id="数组">数组</h2>
-
+</code></pre><h2 id="数组">数组</h2>
 <p>NativeCall 对数组有一些支持。 它受限于使用机器大小的整数，双精度和字符串，定型的数字类型，指针数组，结构体数组和数组的数组。</p>
-
 <p>Raku 数组支持懒惰，在内存中以与 C 数组完全不同的方式布局。 因此，NativeCall 库提供了更原始的 CArray 类型，如果使用 C 数组，则必须使用该类型。</p>
-
 <p>这是传递 C 数组的示例。</p>
-
-<pre><code class="language-raku">sub RenderBarChart(Str, int32, CArray[Str], CArray[num64]) is native(&quot;chart&quot;) { * }
+<pre><code class="language-raku" data-lang="raku">sub RenderBarChart(Str, int32, CArray[Str], CArray[num64]) is native(&quot;chart&quot;) { * }
 my @titles := CArray[Str].new;
 @titles[0]  = 'Me';
 @titles[1]  = 'You';
@@ -420,60 +358,43 @@ my @values := CArray[num64].new;
 @values[1]  = 61.2e0;
 @values[2]  = 180.7e0;
 RenderBarChart('Weights (kg)', 3, @titles, @values);
-</code></pre>
-
-<p>注意我们对 <code>@titles</code> 使用了绑定，而不是赋值，如果你使用赋值，则会把值放进 Raku 数组，然后它就不会工作了。如果这令你抓狂，忘记你所知道的关于 <code>@</code> 符号的事情，使用 NativeCall 的时候直接使用 <code>$</code> 吧。</p>
-
-<pre><code class="language-raku">use NativeCall;
+</code></pre><p>注意我们对 <code>@titles</code> 使用了绑定，而不是赋值，如果你使用赋值，则会把值放进 Raku 数组，然后它就不会工作了。如果这令你抓狂，忘记你所知道的关于 <code>@</code> 符号的事情，使用 NativeCall 的时候直接使用 <code>$</code> 吧。</p>
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 my $titles = CArray[Str].new;
 $titles[0] = 'Me';
 $titles[1] = 'You';
 $titles[2] = 'Hagrid';
-</code></pre>
-
-<p>获取数组的返回值也是一样的。</p>
-
+</code></pre><p>获取数组的返回值也是一样的。</p>
 <p>某些库 API 可能会将数组作为缓冲区，将由 C 函数填充，例如，返回填充的实际项数：</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 sub get_n_ints(CArray[int32], int32) returns int32 is native('ints') { * }
-</code></pre>
-
-<p>在这些情况下，重要的是 CArray 在将其传递给原生子例程之前至少具有要填充的元素的数量，否则 C 函数可能会遍历 Perl 的内存，从而可能导致不可预测的行为：</p>
-
-<pre><code class="language-raku">my $number_of_ints = 10;
+</code></pre><p>在这些情况下，重要的是 CArray 在将其传递给原生子例程之前至少具有要填充的元素的数量，否则 C 函数可能会遍历 Perl 的内存，从而可能导致不可预测的行为：</p>
+<pre><code class="language-raku" data-lang="raku">my $number_of_ints = 10;
 my $ints = CArray[int32].allocate($number_of_ints); # instantiates an array with 10 elements 
 my $n = get_n_ints($ints, $number_of_ints);
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p>注意：<code>allocate</code> 是在 Rakudo 2018.05 中引入的。 在此之前，你必须使用此机制将数组扩展为许多元素：</p>
 </blockquote>
-
-<pre><code class="language-raku">my $ints = CArray[int32].new;
+<pre><code class="language-raku" data-lang="raku">my $ints = CArray[int32].new;
 my $number_of_ints = 10;
 $ints[$number_of_ints - 1] = 0; # extend the array to 10 items 
-</code></pre>
-
-<p>数组的内存管理很重要。 当你自己创建一个数组时，可以根据需要为其添加元素，并根据需要为你进行扩展。 但是，这可能会导致元素在内存中移动（但是，对现有元素的赋值永远不会导致这种情况）。 这意味着如果在将数组传递给 C 库之后将数组旋转，你最好知道自己在做什么。</p>
-
+</code></pre><p>数组的内存管理很重要。 当你自己创建一个数组时，可以根据需要为其添加元素，并根据需要为你进行扩展。 但是，这可能会导致元素在内存中移动（但是，对现有元素的赋值永远不会导致这种情况）。 这意味着如果在将数组传递给 C 库之后将数组旋转，你最好知道自己在做什么。</p>
 <p>相比之下，当 C 库向你返回一个数组时，内存不能由 NativeCall 管理，并且它不知道数组的结束位置。 据推测，库 API 中的某些东西告诉你这一点（例如，你知道当你看到一个 null 元素时，你应该不再读取）。 请注意，NativeCall 在这里无法为您提供任何保护 - 一旦做错了，你将遇到 segfault 错误或导致内存损坏。 这不是 NativeCall 的缺点，它是原生世界的工作方式。害怕吗？ 还在这里，拥抱一下。 祝好运！</p>
-
 <h2 id="carray-方法">CArray 方法</h2>
-
 <p>除了每个 Raku 实例上可用的常用方法之外，CArray 还提供了以下方法，可以从 Raku 的角度与它进行交互：</p>
-
 <ul>
-<li><p><code>elems</code> 提供数组中的元素数量;</p></li>
-
-<li><p><code>AT-POS</code> 在给定位置提供特定元素（从零开始）;</p></li>
-
-<li><p><code>list</code> 提供了从原生数组迭代器构建它的数组中的元素<a href="https://docs.raku.org/type/List">列表</a>。</p></li>
+<li>
+<p><code>elems</code> 提供数组中的元素数量;</p>
+</li>
+<li>
+<p><code>AT-POS</code> 在给定位置提供特定元素（从零开始）;</p>
+</li>
+<li>
+<p><code>list</code> 提供了从原生数组迭代器构建它的数组中的元素<a href="https://docs.raku.org/type/List">列表</a>。</p>
+</li>
 </ul>
-
 <p>例如，请考虑以下简单的代码：</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
  
 my $native-array = CArray[int32].new( 1, 2, 3, 4, 5 );
 say 'Number of elements: ' ~ $native-array.elems;
@@ -488,10 +409,7 @@ for 0..$native-array.elems - 1 -&gt; $position {
     say &quot;Element at position $position is &quot;
           ~ $native-array.AT-POS( $position );
 }
-</code></pre>
-
-<p>产生以下输出：</p>
-
+</code></pre><p>产生以下输出：</p>
 <pre><code>Number of elements: 5
 Current element is: 1
 Current element is: 2
@@ -503,25 +421,16 @@ Element at position 1 is 2
 Element at position 2 is 3
 Element at position 3 is 4
 Element at position 4 is 5
-</code></pre>
-
-<h2 id="结构体">结构体</h2>
-
+</code></pre><h2 id="结构体">结构体</h2>
 <p>由于表示多态性，可以声明一个看起来很正常的 Raku 类，实际上，C 编译器将它们放置在类似的结构体定义中以相同的方式存储其属性。 所需要的只是快速使用“repr” trait：</p>
-
-<pre><code class="language-raku">class Point is repr('CStruct') {
+<pre><code class="language-raku" data-lang="raku">class Point is repr('CStruct') {
     has num64 $.x;
     has num64 $.y;
 }
-</code></pre>
-
-<p>声明的属性只能是 NativeCall 已知的可以转换成结构体字段的类型，目前，结构体中可以包含机器大小的整数，doubles，strings 以及其它 NativeCall 对象（CArrays，还有 CPointer 以及 CStruct reprs）。除此之外，你可以做一些跟类一样的常用的设置，你甚至可以让某些属性来自于角色或者从其它的类继承。当然，方法也完全没有问题，疯狂!</p>
-
+</code></pre><p>声明的属性只能是 NativeCall 已知的可以转换成结构体字段的类型，目前，结构体中可以包含机器大小的整数，doubles，strings 以及其它 NativeCall 对象（CArrays，还有 CPointer 以及 CStruct reprs）。除此之外，你可以做一些跟类一样的常用的设置，你甚至可以让某些属性来自于角色或者从其它的类继承。当然，方法也完全没有问题，疯狂!</p>
 <p>CStruct 对象以引用的形式传递到原生函数，并且原生函数必须返回 CStruct 对象的引用，对于这些引用的内存管理规则跟数组的内存管理规则很像，尽管更简单，因为结构体的大小是不变的。当你创建一个结构体，内存也一并为你分配好，当指向 CStruct 实例的变量的生命期结束，GC 会负责释放内存。当基于 CStruct 的类型作为原生函数的返回类型时，GC 并不帮你管理它的内存。</p>
-
 <p>NativeCall 目前并不把对象成员放到容器里面，所以不能对对象进行赋（使用 =）新值。 相反，你必须将新值绑定到私有成员上：</p>
-
-<pre><code class="language-raku">class MyStruct is repr('CStruct') {
+<pre><code class="language-raku" data-lang="raku">class MyStruct is repr('CStruct') {
     has CArray[num64] $!arr;
     has Str $!str;
     has Point $!point; # Point is a user-defined class 
@@ -535,15 +444,10 @@ Element at position 4 is 5
         $!point := Point.new;
     }
 }
-</code></pre>
-
-<p>正如你预测的那样，空指针由结构体类型的类型对象表示的。</p>
-
+</code></pre><p>正如你预测的那样，空指针由结构体类型的类型对象表示的。</p>
 <h2 id="cunions">CUnions</h2>
-
 <p>同样地，我们可以声明一个 Raku 类，它的属性拥有和 C 编译器中联合体（<code>union</code>）的相同的内存布局，这可以使用 <code>CUnion</code> 表示：</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
  
 class MyUnion is repr('CUnion') {
     has int32 $.flags32;
@@ -551,13 +455,9 @@ class MyUnion is repr('CUnion') {
 }
  
 say nativesizeof(MyUnion.new);  # 8, ie. max(sizeof(MyUnion.flags32), sizeof(MyUnion.flags64)) 
-</code></pre>
-
-<h2 id="嵌套的-cstructs-和-cunions">嵌套的 CStructs 和 CUnions</h2>
-
+</code></pre><h2 id="嵌套的-cstructs-和-cunions">嵌套的 CStructs 和 CUnions</h2>
 <p>反过来, CStructs 和 CUnions 可以被周围的 CStruct 和 CUnion 引用，或者嵌入到其他的 CStructs 和 CUnions 里面，如果是引用我们则像往常一样使用 <code>has</code> 来声明，如果是嵌入则使用 <code>HAS</code> 代替：</p>
-
-<pre><code class="language-raku">class MyStruct is repr('CStruct') {
+<pre><code class="language-raku" data-lang="raku">class MyStruct is repr('CStruct') {
     has Point $.point;  # referenced 
     has int32 $.flags;
 }
@@ -570,15 +470,10 @@ class MyStruct2 is repr('CStruct') {
 }
  
 say nativesizeof(MyStruct2.new);  # 24, ie. sizeof(struct Point) + sizeof(int32_t) 
-</code></pre>
-
-<h3 id="注意内存管理">注意内存管理</h3>
-
+</code></pre><h3 id="注意内存管理">注意内存管理</h3>
 <p>分配结构体以用作结构体时，请确保在 C 函数中分配自己的内存。 如果要将结构体传递给需要提前分配的 <code>Str/char*</code> 的C函数，请确保在将结构体传递给函数之前为 <code>Str</code> 类型的变量分配容器。</p>
-
 <h4 id="在你的-raku-代码中">在你的 Raku 代码中&hellip;</h4>
-
-<pre><code class="language-raku">class AStringAndAnInt is repr(&quot;CStruct&quot;) {
+<pre><code class="language-raku" data-lang="raku">class AStringAndAnInt is repr(&quot;CStruct&quot;) {
   has Str $.a_string;
   has int32 $.an_int32;
  
@@ -588,49 +483,32 @@ say nativesizeof(MyStruct2.new);  # 24, ie. sizeof(struct Point) + sizeof(int32_
     init_struct(self, $a_string, $an_int);
   }
 }
-</code></pre>
-
-<p>在此代码中，我们首先设置我们的成员 <code>$.a_string</code> 和 <code>$.an_int32</code>。 之后，我们声明 <code>init_struct()</code> 函数以使 <code>init()</code> 方法包装; 然后从 <code>BUILD</code> 调用此函数以在返回创建的对象之前有效地分配值。</p>
-
-<h4 id="在你的-c-代码中">在你的 C 代码中 &hellip;</h4>
-
-<pre><code class="language-raku">typedef struct a_string_and_an_int32_t_ {
+</code></pre><p>在此代码中，我们首先设置我们的成员 <code>$.a_string</code> 和 <code>$.an_int32</code>。 之后，我们声明 <code>init_struct()</code> 函数以使 <code>init()</code> 方法包装; 然后从 <code>BUILD</code> 调用此函数以在返回创建的对象之前有效地分配值。</p>
+<h4 id="在你的-c-代码中-">在你的 C 代码中 &hellip;</h4>
+<pre><code class="language-raku" data-lang="raku">typedef struct a_string_and_an_int32_t_ {
   char *a_string;
   int32_t an_int32;
 } a_string_and_an_int32_t;
-</code></pre>
-
-<p>这是结构体。 注意我们在那里有怎么得到一个 <code>char *</code>。</p>
-
-<pre><code class="language-c">void init_struct(a_string_and_an_int32_t *target, char *str, int32_t int32) {
-  target-&gt;an_int32 = int32;
-  target-&gt;a_string = strdup(str);
+</code></pre><p>这是结构体。 注意我们在那里有怎么得到一个 <code>char *</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">init_struct</span><span class="p">(</span><span class="n">a_string_and_an_int32_t</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="n">int32_t</span> <span class="n">int32</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">target</span><span class="o">-</span><span class="o">&gt;</span><span class="n">an_int32</span> <span class="o">=</span> <span class="n">int32</span><span class="p">;</span>
+  <span class="n">target</span><span class="o">-</span><span class="o">&gt;</span><span class="n">a_string</span> <span class="o">=</span> <span class="n">strdup</span><span class="p">(</span><span class="n">str</span><span class="p">)</span><span class="p">;</span>
  
-  return;
-}
-</code></pre>
-
-<p>在这个函数中，我们通过按值分配整数并通过引用传递字符串来初始化 C 结构体。 该函数在复制字符串时将 <code>&lt;point * a_string&gt;</code> 指向的内存分配到结构中。 （注意，你还必须管理内存的释放以避免内存泄漏。）</p>
-
-<pre><code class="language-raku"># A long time ago in a galaxy far, far away... 
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>在这个函数中，我们通过按值分配整数并通过引用传递字符串来初始化 C 结构体。 该函数在复制字符串时将 <code>&lt;point * a_string&gt;</code> 指向的内存分配到结构中。 （注意，你还必须管理内存的释放以避免内存泄漏。）</p>
+<pre><code class="language-raku" data-lang="raku"># A long time ago in a galaxy far, far away... 
 my $foo = AStringAndAnInt.new(a_string =&gt; &quot;str&quot;, an_int =&gt; 123);
 say &quot;foo is {$foo.a_string} and {$foo.an_int32}&quot;;
 # OUTPUT: «foo is str and 123␤» 
-</code></pre>
-
-<h2 id="类型指针">类型指针</h2>
-
+</code></pre><h2 id="类型指针">类型指针</h2>
 <p>将 <code>Pointer</code> 作为参数传递时可以类型化你的 <code>Pointer</code>。这不但对原生类型可用，同样适用于 <code>CArray</code> 以及 <code>CStruct</code> 定义类型，NativeCall 将不会显式为他们分配内存，即使在它们身上调用 <code>new</code> 方法也不会。这适用于那种 C 函数返回指针或者 <code>CStruct</code> 中嵌入的指针情况。</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
 sub strdup(Str $s --&gt; Pointer[Str]) is native {*}
 my Pointer[Str] $p = strdup(&quot;Success!&quot;);
 say $p.deref;
-</code></pre>
-
-<p>原生函数返回指向元素的数组的指针是很常见的。 可以将类型化指针解引用为数组以获取单个元素。</p>
-
-<pre><code class="language-raku">my $n = 5;
+</code></pre><p>原生函数返回指向元素的数组的指针是很常见的。 可以将类型化指针解引用为数组以获取单个元素。</p>
+<pre><code class="language-raku" data-lang="raku">my $n = 5;
 # returns a pointer to an array of length $n 
 my Pointer[Point] $plot = some_other_c_routine($n);
 # display the 5 elements in the array 
@@ -639,11 +517,8 @@ for 1 .. $n -&gt; $i {
     my $y = $plot[$i - 1].y;
     say &quot;$i: ($x, $y)&quot;;
 }
-</code></pre>
-
-<p>指针也可以更新以引用数组中的连续元素：</p>
-
-<pre><code class="language-raku">my Pointer[Point] $elem = $plot;
+</code></pre><p>指针也可以更新以引用数组中的连续元素：</p>
+<pre><code class="language-raku" data-lang="raku">my Pointer[Point] $elem = $plot;
 # show differences between successive points 
 for 1 ..^ $n {
     my Point $lo = $elem.deref;
@@ -653,134 +528,83 @@ for 1 ..^ $n {
     my $dy = $hi.y = $lo.y;
     say &quot;$_: delta ($dx, $dy)&quot;;
 }
-</code></pre>
-
-<p>通过声明 <code>Pointer[void]</code> 也可以使用 Void 指针。 有关该主题的更多信息，请参阅<a href="https://docs.raku.org/language/nativetypes#The_void_type">原生类型文档</a>。</p>
-
+</code></pre><p>通过声明 <code>Pointer[void]</code> 也可以使用 Void 指针。 有关该主题的更多信息，请参阅<a href="https://docs.raku.org/language/nativetypes#The_void_type">原生类型文档</a>。</p>
 <h2 id="字符串">字符串</h2>
-
 <h3 id="显式内存管理">显式内存管理</h3>
-
 <h3 id="buffers-and-blobs">Buffers and Blobs</h3>
-
 <h2 id="函数参数">函数参数</h2>
-
 <p>NativeCall 也支持把函数作为原生函数的参数，一个常用的情况就是事件驱动模型中，使用函数指针作为回调。当通过 NativeCall 绑定了这些函数，只需要提供对等的 signature 作为函数参数的约束。</p>
-
-<h1 id="void-setcallback-int-callback-char-const">void SetCallBack(int (*callback)(char const *))</h1>
-
+<h1 id="void-setcallbackint-callbackchar-const-">void SetCallBack(int (*callback)(char const *))</h1>
 <p>my sub SetCallBack(&amp;callback(Str &ndash;&gt; int32)) is native(&lsquo;mylib&rsquo;) { * }
 注意：原生代码负责传递给 Raku 回调的值的内存管理，换句话说，NativeCall 将不会释放传递给回调的字符串占用的内存。</p>
-
 <h2 id="库路径以及名字">库路径以及名字</h2>
-
 <p>native trait 接受库的名字或者全路径：</p>
-
 <p>constant LIBMYSQL = &lsquo;mysqlclient&rsquo;;
 constant LIBFOO = &lsquo;/usr/lib/libfoo.so.1&rsquo;;</p>
-
 <p>sub mysql_affectied_rows( .. ) returns int32 is native(LIBMYSQL);
 sub bar is native(LIBFOO);
 你也可以使用相对路径比如&rsquo;./foo&rsquo;，NativeCall 将会自动根据不同的平台添加对应的扩展名。
 注意：native trait 和 constant 都是在编译期求值的，constant类型的变量不要依赖动态变量，比如：</p>
-
-<p>constant LIBMYSQL = %*ENV<P6LIB_MYSQLCLIENT> || &lsquo;mysqlclient&rsquo;;
+<p>constant LIBMYSQL = %*ENV&lt;P6LIB_MYSQLCLIENT&gt; || &lsquo;mysqlclient&rsquo;;
 这将在编译期保持给定的值，在一个模块预编译时，LIBMYSQL将会始终保持那个值。</p>
-
-<h3 id="abi-api版本">ABI/API版本</h3>
-
-<p>假设你写的原生库为native(&lsquo;foo&rsquo;)， 在类Unix系统下，NativeCall 将会搜索&rsquo;libfoo.so&rsquo;（对于OS X是libfoo.dynlib，win32是foo.dll）。在大多数的现代系统上，将会需要你或者模块的使用者安装开发环境包，因为它们总是建议支持动态库的API/ABI的版本控制，所以&rsquo;libfoo.so&rsquo;大多数是一个符号链接，并且只被开发包提供。</p>
-
+<h3 id="abiapi版本">ABI/API版本</h3>
+<p>假设你写的原生库为native(&lsquo;foo&rsquo;)， 在类Unix系统下，NativeCall 将会搜索&rsquo;libfoo.so&rsquo;（对于OS X是libfoo.dynlib，win32是foo.dll）。在大多数的现代系统上，将会需要你或者模块的使用者安装开发环境包，因为它们总是建议支持动态库的API/ABI的版本控制，所以&rsquo;libfoo.so'大多数是一个符号链接，并且只被开发包提供。</p>
 <p>sub foo is native(&lsquo;foo&rsquo;, v1);         # 将会查找并加载 libfoo.so.1
 sub foo is native(&lsquo;foo&rsquo;, v1.2.3);    # 将会查找并加载 libfoo.so.1.2.3</p>
-
 <p>my List $lib = (&lsquo;foo&rsquo;, &lsquo;v1&rsquo;);
 sub foo is native($lib);</p>
-
 <h3 id="例程">例程</h3>
-
 <p>native trait 也可以接受一个Callable作为参数，允许你使用自己的方式指定将会被加载的库文件：</p>
-
 <p>sub foo is native(sub { &lsquo;libfoo.so.42&rsquo; } );
 这个函数只会在第一个调用者访问的时候调用。</p>
-
 <h3 id="调用标准库">调用标准库</h3>
-
 <p>如果你想调用一个已经被加载的，或者是标准库或者来自你自己的程序的 C 函数，你可以将 Str 类型对象作为参数传递给is native，这将会是is native(Str)。
 比如说，在类UNIX操作系统下，你可以使用下面的代码打印当前用户的home目录：</p>
-
 <p>use NativeCall;
 my class PwStruct is repr(&lsquo;CStruct&rsquo;) {
-    has Str $.pw_name;
-    has Str $.pw_passwd;
-    has uint32 $.pw_uid;
-    has uint32 $.pw_gid;
-    has Str $.pw_gecos;
-    has Str $.pw_dir;
-    has Str $.pw_shell;
+has Str $.pw_name;
+has Str $.pw_passwd;
+has uint32 $.pw_uid;
+has uint32 $.pw_gid;
+has Str $.pw_gecos;
+has Str $.pw_dir;
+has Str $.pw_shell;
 }</p>
-
 <p>sub getuid()                returns uint32         is native(Str) { * }
 sub getpwuid(uint32 $uid)    returns PwStruct     is native(Str) { * }</p>
-
 <p>say getpwuid(getuid());
 不过，使用$*HOME更方便一些 :-)</p>
-
 <h2 id="导出的变量">导出的变量</h2>
-
 <p>一个库导出的变量 &ndash; 也被叫做“全局（global）”或者 “外部（extern）”变量 &ndash; 可以使用cglobal访问。比如：</p>
-
 <p>my $var := cglobal(&lsquo;libc.so.6&rsquo;, &lsquo;error&rsquo;, int32);
 这将会为$var绑定一个新的Proxy对象，并且将对它的访问重定向到被“libc.so.6”导出的叫做errno的整数变量。</p>
-
-<h2 id="对c-的支持">对C++的支持</h2>
-
+<h2 id="对c的支持">对C++的支持</h2>
 <p>NativeCall 也支持使用来自 c++ 的类以及方法，就像这个例子展示的那样（还有相关的 c++ 文件），注意现阶段还不像 C 一样支持测试和开发。</p>
-
 <h2 id="helper-函数">Helper 函数</h2>
-
 <h3 id="sub-nativecast">sub nativecast</h3>
-
 <h3 id="sub-cglobal">sub cglobal</h3>
-
 <h3 id="sub-nativesizeof">sub nativesizeof</h3>
-
 <h3 id="sub-explicitly-manage">sub explicitly-manage</h3>
-
 <h2 id="例子">例子</h2>
-
 <p>一些具体示例，以及在特定平台上使用上述示例的说明。</p>
-
 <h3 id="postgresql">PostgreSQL</h3>
-
 <p><a href="https://github.com/raku/DBIish/blob/master/examples/pg.p6">DBIish</a> 中的 PostgreSQL 示例使用 NativeCall 库，并且<code>原生使用</code> Windows 中的原生 <code>_putenv</code> 函数调用。</p>
-
 <h3 id="mysql">MySQL</h3>
-
 <p>注意：请记住，自 Stretch 版本以来，Debian 已经将 MySQL 替换为 MariaDB，因此如果要安装 MySQL，请使用 <a href="https://dev.mysql.com/downloads/repo/apt/">MySQL APT 存储库</a>而不是默认存储库。</p>
-
 <p>要在 <a href="https://github.com/raku/DBIish/blob/master/examples/mysql.p6">DBIish</a> 中使用 MySQL 示例，您需要在本地安装 MySQL 服务器; 在Debian-esque 系统上，它可以安装如下：</p>
-
-<pre><code class="language-shell">wget https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb
-sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb # Don't forget to select 5.6.x 
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">wget https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb
+sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb <span class="c1"># Don&#39;t forget to select 5.6.x</span> 
 sudo apt-get update
 sudo apt-get install mysql-community-server -y
 sudo apt-get install libmysqlclient18 -y
-</code></pre>
-
-<p>在尝试示例之前，请按照这些方法准备系统：</p>
-
+</code></pre></div><p>在尝试示例之前，请按照这些方法准备系统：</p>
 <pre><code>$ mysql -u root -p
 SET PASSWORD = PASSWORD('sa');
 DROP DATABASE test;
 CREATE DATABASE test;
-</code></pre>
-
-<h3 id="microsoft-windows">Microsoft Windows</h3>
-
+</code></pre><h3 id="microsoft-windows">Microsoft Windows</h3>
 <p>这是一个 Windows API 调用的例子：</p>
-
-<pre><code class="language-raku">use NativeCall;
+<pre><code class="language-raku" data-lang="raku">use NativeCall;
  
 sub MessageBoxA(int32, Str, Str, int32)
     returns int32
@@ -788,54 +612,35 @@ sub MessageBoxA(int32, Str, Str, int32)
     { * }
  
 MessageBoxA(0, &quot;We have NativeCall&quot;, &quot;ohai&quot;, 64);
-</code></pre>
-
-<h3 id="关于调用-c-函数的简明指南">关于调用 C 函数的简明指南</h3>
-
+</code></pre><h3 id="关于调用-c-函数的简明指南">关于调用 C 函数的简明指南</h3>
 <p>这是一个调用标准函数并在 Raku 程序中使用返回信息的示例。</p>
-
 <p><code>getaddrinfo</code> 是 POSIX 标准函数，用于获取有关网络节点的网络信息，例如 <code>google.com</code>。 这是一个有趣的功能，因为它说明了 NativeCall 的许多元素。</p>
-
 <p>Linux 手册提供了有关 C 可调用函数的以下信息：</p>
-
-<pre><code class="language-c">int getaddrinfo(const char *node, const char *service,
-       const struct addrinfo *hints,
-       struct addrinfo **res);
-</code></pre>
-
-<p>该函数返回响应码 0 = 错误，1 = 成功。 数据是从 <code>addrinfo</code> 元素的链表中提取的，第一个元素由 <code>res</code> 指向。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="nf">getaddrinfo</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">node</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">service</span><span class="p">,</span>
+       <span class="k">const</span> <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="n">hints</span><span class="p">,</span>
+       <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="o">*</span><span class="n">res</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>该函数返回响应码 0 = 错误，1 = 成功。 数据是从 <code>addrinfo</code> 元素的链表中提取的，第一个元素由 <code>res</code> 指向。</p>
 <p>从 NativeCall 类型表我们知道 <code>int</code> 是 <code>int32</code>。 我们也知道 <code>char *</code> 是 C <code>Str</code> 的形式 C 之一，它简单地映射到 Str。 但是 <code>addrinfo</code> 是一个结构体，这意味着我们需要编写自己的 Type 类。 但是，函数声明很简单：</p>
-
-<pre><code class="language-raku">sub getaddrinfo( Str $node, Str $service, Addrinfo $hints, Pointer $res is rw )
+<pre><code class="language-raku" data-lang="raku">sub getaddrinfo( Str $node, Str $service, Addrinfo $hints, Pointer $res is rw )
     returns int32
     is native
     { * }
-</code></pre>
-
-<p>请注意，<code>$res</code> 将由函数写入，因此必须将其标记为 <code>rw</code>。 由于库是标准 POSIX，因此库名称可以是 Type 定义或 null。</p>
-
+</code></pre><p>请注意，<code>$res</code> 将由函数写入，因此必须将其标记为 <code>rw</code>。 由于库是标准 POSIX，因此库名称可以是 Type 定义或 null。</p>
 <p>我们现在必须处理结构体 <code>Addrinfo</code>。 Linux 手册提供了以下信息：</p>
-
-<pre><code class="language-c">struct addrinfo {
-               int              ai_flags;
-               int              ai_family;
-               int              ai_socktype;
-               int              ai_protocol;
-               socklen_t        ai_addrlen;
-               struct sockaddr *ai_addr;
-               char            *ai_canonname;
-               struct addrinfo *ai_next;
-           };
-</code></pre>
-
-<p><code>int</code>，<code>char *</code> 部分很简单。 一些研究表明 <code>socklen_t</code> 可以依赖于架构，但是是一个至少32位的无符号整数。 所以 <code>socklen_t</code> 可以映射到 <code>uint32</code> 类型。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="k">struct</span> <span class="n">addrinfo</span> <span class="p">{</span>
+               <span class="kt">int</span>              <span class="n">ai_flags</span><span class="p">;</span>
+               <span class="kt">int</span>              <span class="n">ai_family</span><span class="p">;</span>
+               <span class="kt">int</span>              <span class="n">ai_socktype</span><span class="p">;</span>
+               <span class="kt">int</span>              <span class="n">ai_protocol</span><span class="p">;</span>
+               <span class="n">socklen_t</span>        <span class="n">ai_addrlen</span><span class="p">;</span>
+               <span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="n">ai_addr</span><span class="p">;</span>
+               <span class="kt">char</span>            <span class="o">*</span><span class="n">ai_canonname</span><span class="p">;</span>
+               <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="n">ai_next</span><span class="p">;</span>
+           <span class="p">}</span><span class="p">;</span>
+</code></pre></div><p><code>int</code>，<code>char *</code> 部分很简单。 一些研究表明 <code>socklen_t</code> 可以依赖于架构，但是是一个至少32位的无符号整数。 所以 <code>socklen_t</code> 可以映射到 <code>uint32</code> 类型。</p>
 <p>复杂的是 <code>sockaddr</code>，它取决于 <code>ai_socktype</code> 是否是未定义的，INET 还是 INET6（标准的v4 IP 地址或 v6 地址）。</p>
-
 <p>所以我们创建一个 Raku 类来映射到 C <code>struct addrinfo</code>; 当我们在它的时候，我们还为 <code>SockAddr</code> 创建了另一个类。</p>
-
-<pre><code class="language-raku">class SockAddr is repr('CStruct') {
+<pre><code class="language-raku" data-lang="raku">class SockAddr is repr('CStruct') {
     has int32    $.sa_family;
     has Str      $.sa_data;
 }
@@ -851,26 +656,16 @@ class Addrinfo is repr('CStruct') {
     has Addrinfo  $.ai_next       is rw;
  
 }
-</code></pre>
-
-<p>最后三个属性的 <code>is rw</code> 反映了这些在 C 中被定义为指针。</p>
-
+</code></pre><p>最后三个属性的 <code>is rw</code> 反映了这些在 C 中被定义为指针。</p>
 <p>映射到 C <code>Struct</code> 的重要一点是类的状态部分的结构，即属性。 但是，类可以有方法，而 <code>NativeCall</code> 不会“触摸”它们以映射到C.这意味着我们可以向类添加额外的方法以更易读的方式解包属性，例如，</p>
-
-<pre><code class="language-raku">method flags {
+<pre><code class="language-raku" data-lang="raku">method flags {
     do for AddrInfo-Flags.enums { .key if $!ai_flags +&amp; .value }
 }
-</code></pre>
-
-<p>通过定义适当的 <code>enum</code>，<code>flags</code> 将返回一串键而不是一个打包的整数。</p>
-
+</code></pre><p>通过定义适当的 <code>enum</code>，<code>flags</code> 将返回一串键而不是一个打包的整数。</p>
 <p><code>sockaddr</code> 结构中最有用的信息是节点的地址，它取决于 Socket 的族。 因此，我们可以将方法地址添加到 Raku 类中，该类根据族来解释地址。</p>
-
 <p>为了获得人类可读的 IP 地址，有一个 C 函数 <code>inet_ntop</code>，它给出一个带有 <code>addrinfo</code> 的缓冲区的 <code>char *</code>。</p>
-
 <p>将所有这些组合在一起会产生以下程序：</p>
-
-<pre><code class="language-raku">#!/usr/bin/env raku 
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku 
  
 use v6;
 use NativeCall;
@@ -1001,10 +796,7 @@ sub MAIN() {
     }
     freeaddrinfo($res);
 }
-</code></pre>
-
-<p>这产生如下输出:</p>
-
+</code></pre><p>这产生如下输出:</p>
 <pre><code>return val: 0
 Name: google.com
 AF_INET SOCK_STREAM
@@ -1020,7 +812,6 @@ AF_INET6 SOCK_DGRAM
 AF_INET6 SOCK_RAW
 2607:f8b0:4006:800::200e
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -1111,7 +902,7 @@ AF_INET6 SOCK_RAW
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

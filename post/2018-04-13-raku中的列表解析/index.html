@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-13-raku%E4%B8%AD%E7%9A%84%E5%88%97%E8%A1%A8%E8%A7%A3%E6%9E%90/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,84 +231,52 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="raku-中的列表解析">Raku 中的列表解析</h1>
-
+        <h1 id="raku-中的列表解析">Raku 中的列表解析</h1>
 <p>看一看 Python 中关于列表推导的页面。</p>
-
 <pre><code>S = {x² : x in {0 ... 9}}
 V = (1, 2, 4, 8, ..., 2¹²)
 M = {x | x in S and x even}
-</code></pre>
-
-<p>Python 列表解析:</p>
-
-<pre><code class="language-python">S = [x**2 for x in range(10)]
-V = [2**i for i in range(13)]
-M = [x for x in S if x % 2 == 0]
-</code></pre>
-
-<p>在原始定义中我没有看到 10 或 13 , Raku 与原始语言最接近的语法是:</p>
-
-<pre><code class="language-raku">my \S = ($_² for 0 ... 9);
+</code></pre><p>Python 列表解析:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">S</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">*</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">]</span>
+<span class="n">V</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span><span class="p">]</span>
+<span class="n">M</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">S</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+</code></pre></div><p>在原始定义中我没有看到 10 或 13 , Raku 与原始语言最接近的语法是:</p>
+<pre><code class="language-raku" data-lang="raku">my \S = ($_² for 0 ... 9);
 my \V = (1, 2, 4, 8 ... 2¹²); # almost identical
 my \M = ($_ if $_ %% 2 for S);
-</code></pre>
-
-<p>Raku 与 Python 最接近的语法是:</p>
-
-<pre><code class="language-raku">my \S = [-&gt; \x { x**2 } for ^10];
+</code></pre><p>Raku 与 Python 最接近的语法是:</p>
+<pre><code class="language-raku" data-lang="raku">my \S = [-&gt; \x { x**2 } for ^10];
 my \V = [-&gt; \i { 2**i } for ^13];
 my \M = [-&gt; \x { x if x % 2 == 0 } for S];
-</code></pre>
-
-<p>Raku 更惯用的语法是:</p>
-
-<pre><code class="language-raku">my \S = (0..9)»²;
+</code></pre><p>Raku 更惯用的语法是:</p>
+<pre><code class="language-raku" data-lang="raku">my \S = (0..9)»²;
 my \V = 1, 2, 4 ... 2¹²;
 my \M = S.grep: * %% 2;
-</code></pre>
-
-<p>具有无限序列的 Raku:</p>
-
-<pre><code class="language-raku">my \S = (0..*).map: *²;
+</code></pre><p>具有无限序列的 Raku:</p>
+<pre><code class="language-raku" data-lang="raku">my \S = (0..*).map: *²;
 my \V = 1, 2, 4 ... *;
 my \M = S.grep: * %% 2;
-</code></pre>
-
-<hr />
-
+</code></pre><hr>
 <ul>
 <li>Python</li>
 </ul>
-
-<pre><code class="language-python">string = 'The quick brown fox jumps over the lazy dog'
-words = string.split()
-stuff = [[w.upper(), w.lower(), len(w)] for w in words]
-</code></pre>
-
-<ul>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">string</span> <span class="o">=</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">The quick brown fox jumps over the lazy dog</span><span class="s1">&#39;</span>
+<span class="n">words</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="p">)</span>
+<span class="n">stuff</span> <span class="o">=</span> <span class="p">[</span><span class="p">[</span><span class="n">w</span><span class="o">.</span><span class="n">upper</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">lower</span><span class="p">(</span><span class="p">)</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">]</span>
+</code></pre></div><ul>
 <li>Raku</li>
 </ul>
-
-<pre><code class="language-raku">my \string = 'The quick brown fox jumps over the lazy dog';
+<pre><code class="language-raku" data-lang="raku">my \string = 'The quick brown fox jumps over the lazy dog';
 my \words = string.words;
 my \stuff = [[.uc, .lc, .chars] for words]
-</code></pre>
-
-<p>这里有一些使用 Set 运算符的其他翻译</p>
-
-<pre><code class="language-raku">primes = [x for x in range(2, 50) if x not in noprimes] # python
+</code></pre><p>这里有一些使用 Set 运算符的其他翻译</p>
+<pre><code class="language-raku" data-lang="raku">primes = [x for x in range(2, 50) if x not in noprimes] # python
 
 my \primes = (2..^50).grep: * ∉ noprimes;
 my \prime-set = 2..^50 (-) noprimes; # a Set object
 my \primes = prime-set.keys.sort;
-</code></pre>
-
-<p>另外我相当确定 Python 没有在 Supply 上并发地使用它们的方法。</p>
-
-<pre><code class="language-raku"># create a prime supply and act on it in the background
+</code></pre><p>另外我相当确定 Python 没有在 Supply 上并发地使用它们的方法。</p>
+<pre><code class="language-raku" data-lang="raku"># create a prime supply and act on it in the background
 Supply.interval(1).grep(*.is-prime).act: &amp;say;
 
 say 'main thread still running';
@@ -325,7 +293,6 @@ await Promise.new;
 # waits 4 seconds, says 11
 # and so on until it is terminated
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -416,7 +383,7 @@ await Promise.new;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

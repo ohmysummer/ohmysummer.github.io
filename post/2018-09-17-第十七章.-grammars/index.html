@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-17-%E7%AC%AC%E5%8D%81%E4%B8%83%E7%AB%A0.-grammars/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 25 minutes (5205 words)
+  <i class="fa fa-clock-o"></i> 25 minutes (5206 words)
   
   
 </span>
@@ -231,36 +231,20 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第十七章-grammars">第十七章. Grammars</h1>
-
 <p>Grammars are patterns on a higher plane of existence. They integrate and reuse pattern fragments to parse and react to complicated formats. This feature is at the core of Raku in a very literal sense; the language itself is implemented as a grammar. Once you start using it you’ll probably prefer it to regexes for all but the most simple problems.</p>
-
 <p>Grammars 是存在于更高层面上的模式。它们集成并重用模式片段来解析复杂的格式并做出反应。从字面意义上讲，这个功能是Raku的核心;语言本身是作为语法实现的。一旦你开始使用它，你可能更喜欢它除了最简单的问题之外的所有正则表达式。</p>
-
 <h1 id="a-simple-grammar">A Simple Grammar</h1>
-
 <p>A grammar is a special sort of package. It can have methods and subroutines but mostly comprises special pattern methods called <code>regex</code>, <code>token</code>, and <code>rule</code>. Each of these define a pattern and apply different modifiers.</p>
-
 <h6 id="note">NOTE</h6>
-
 <p>Raku tends to refer to <code>regex</code>, <code>token</code>, and <code>rule</code> declarations as “rules,” which can be a bit imprecise at times. In this book, you can tell the difference between the language keyword and the general term by the typesetting. I’ll try to not present an ambiguous situation.</p>
-
 <p>Start with something simple (too simple for grammars). Define a <code>TOP</code> pattern that matches digits as the starting point. That name is special because <code>.parse</code> uses it by default. In this example, you declare that with <code>regex</code>:</p>
-
 <p>Grammar 是一种特殊的包。它可以有方法和子程序，但主要包括称为 <code>regex</code>，<code>token</code> 和 <code>rule</code> 的特殊模式方法。其中每个都定义了一个模式并应用了不同的修饰符。</p>
-
 <h6 id="注意">注意</h6>
-
 <p>Raku 倾向于将 <code>regex</code>，<code>token</code> 和 <code>rule</code> 声明称为“规则”，有时可能有点不精确。在本书中，您可以通过排版来区分语言关键字和一般术语。我会尽量不提出模棱两可的情况。</p>
-
 <p>从简单的东西开始（对于 grammar 来说太简单了）。定义匹配数字作为起点的 <code>TOP</code> 模式。该名称很特殊，因为 <code>.parse</code> 默认使用它。在此示例中，您使用 <code>regex</code> 声明一个 <code>TOP</code>：</p>
-
 <pre><code>grammar Number {
     regex TOP { \d }
     }
@@ -268,100 +252,58 @@ if (!doNotTrack) {
 my $result = Number.parse( '7' );  # works
 
 put $result ?? 'Parsed!' !! 'Failed!';  # Parsed!
-</code></pre>
-
-<p>This succeeds. <code>.parse</code> applies the grammar to the entire value of <code>7</code>. It starts with the parts that <code>TOP</code> describes. It can match a digit, and the value you pass to <code>.parse</code> is a digit.</p>
-
+</code></pre><p>This succeeds. <code>.parse</code> applies the grammar to the entire value of <code>7</code>. It starts with the parts that <code>TOP</code> describes. It can match a digit, and the value you pass to <code>.parse</code> is a digit.</p>
 <p>When <code>.parse</code> succeeds, it returns a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object (it returns <code>Nil</code> when it fails). Try it with a different value. Instead of a single digit, try several digits:</p>
-
 <p>这成功了。 <code>.parse</code> 将 grammar 应用于整个值 <code>7</code>. 它从 <code>TOP</code> 描述的部分开始。它可以匹配一个数字，你传递给 <code>.parse</code> 的值是一个数字。</p>
-
 <p>当 <code>.parse</code> 成功时，它返回一个 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象（当它失败时返回 <code>Nil</code>）。尝试使用不同的值。尝试几个数字而不是单个数字：</p>
-
 <pre><code>my $result = Number.parse( '137' );  # fails (extra digits)
 
 put $result ?? 'Parsed!' !! 'Failed!';  # Failed!
-</code></pre>
-
-<p>This time <code>.parse</code> doesn’t succeed. It starts matching with the first character and ends matching on the last character. It asserts that the text starts, there is a single digit, and the text ends. If <code>.parse</code> sees that there are some characters before or after its match, it fails. It matches everything or not at all. It’s almost the same thing as explicitly using anchors:</p>
-
+</code></pre><p>This time <code>.parse</code> doesn’t succeed. It starts matching with the first character and ends matching on the last character. It asserts that the text starts, there is a single digit, and the text ends. If <code>.parse</code> sees that there are some characters before or after its match, it fails. It matches everything or not at all. It’s almost the same thing as explicitly using anchors:</p>
 <p>这次 <code>.parse</code> 没有成功。它开始与第一个字符匹配，并在最后一个字符上结束匹配。它断言文本开始，有一个数字，文本结束。如果 <code>.parse</code> 看到匹配之前或之后有一些字符，则会失败。它匹配全部或根本不匹配。它与显式地使用锚点几乎相同：</p>
-
 <pre><code>grammar Number {
     regex TOP { ^ \d+ $ }  # explicitly anchored
     }
-</code></pre>
-
-<p>But <code>TOP</code> is only the default starting point for a grammar. You can tell <code>.parse</code> where you’d like to start. This version defines the same pattern but calls it <code>digits</code> instead of <code>TOP</code>:</p>
-
+</code></pre><p>But <code>TOP</code> is only the default starting point for a grammar. You can tell <code>.parse</code> where you’d like to start. This version defines the same pattern but calls it <code>digits</code> instead of <code>TOP</code>:</p>
 <p>但 <code>TOP</code> 是仅有的 grammar 的默认起点。你可以告诉 <code>.parse</code> 你想要开始的地方。此版本定义相同的模式但称为 <code>digits</code> 而不是 <code>TOP</code>：</p>
-
 <pre><code>grammar Number {
     regex digits { \d+ }
     }
-</code></pre>
-
-<p>Tell <code>.parse</code> where to start with the <code>:rule</code> named argument:</p>
-
+</code></pre><p>Tell <code>.parse</code> where to start with the <code>:rule</code> named argument:</p>
 <p>使用 <code>:rule</code> 命名参数告诉 <code>.parse</code> 从哪里开始：</p>
-
 <pre><code>my @strings = '137', '137 ', ' 137 ';
 
 for @strings -&gt; $string {
     my $result = Number.parse( $string, :rule&lt;digits&gt; );
     put &quot;｢$string｣ &quot;, $result ?? 'Parsed!' !! 'Failed!';
     }
-</code></pre>
-
-<p>The first element of <code>@strings</code> parses because it is only digits. The other ones fail because they have extra characters:</p>
-
+</code></pre><p>The first element of <code>@strings</code> parses because it is only digits. The other ones fail because they have extra characters:</p>
 <p><code>@strings</code> 的第一个元素解析成功了因为它只是数字。其他的失败了因为他们有额外的字符：</p>
-
 <pre><code>｢137｣ parsed!
 ｢137 ｣ failed!
 ｢ 137 ｣ failed!
-</code></pre>
-
-<p>Declare <code>digits</code> with <code>rule</code> instead of <code>regex</code>. This implicitly allows whitespace after any part of your pattern:</p>
-
+</code></pre><p>Declare <code>digits</code> with <code>rule</code> instead of <code>regex</code>. This implicitly allows whitespace after any part of your pattern:</p>
 <p>使用 <code>rule</code> 而不是 <code>regex</code> 声明 <code>digits</code>。这隐式地允许在模式的任何部分之后有空格：</p>
-
 <pre><code>grammar Number {
     rule digits { \d+ }  #  not anchored, and works
     }
-</code></pre>
-
-<p>Now the second <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> matches too because the implicit whitespace can match the space at the end (but not the beginning):</p>
-
+</code></pre><p>Now the second <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> matches too because the implicit whitespace can match the space at the end (but not the beginning):</p>
 <p>现在第二个 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> 也匹配，因为隐式空格可以匹配末尾的空格（但不是开头）：</p>
-
 <pre><code>｢137｣ parsed!
 ｢137 ｣ parsed!
 ｢ 137 ｣ failed!
-</code></pre>
-
-<p>The <code>rule</code> applies <code>:sigspace</code> to its pattern. It’s the same thing as adding that adverb to the pattern:</p>
-
+</code></pre><p>The <code>rule</code> applies <code>:sigspace</code> to its pattern. It’s the same thing as adding that adverb to the pattern:</p>
 <p>该 <code>rule</code> 将 <code>:sigspace</code> 应用到其模式。将该副词添加到模式中是一回事：</p>
-
 <pre><code>grammar Number {
     regex digits { :sigspace \d+ }
     }
-</code></pre>
-
-<p><code>:sigspace</code> inserts the predefined <code>&lt;.ws&gt;</code> <em>after</em> pattern tokens. Since there’s a dot before the name <code>ws</code>, the <code>&lt;.ws&gt;</code> does not create a capture. It’s the same as adding optional whitespace explicitly:</p>
-
+</code></pre><p><code>:sigspace</code> inserts the predefined <code>&lt;.ws&gt;</code> <em>after</em> pattern tokens. Since there’s a dot before the name <code>ws</code>, the <code>&lt;.ws&gt;</code> does not create a capture. It’s the same as adding optional whitespace explicitly:</p>
 <p><code>:sigspace</code>在模式标记之后插入预定义的 <code>&lt;.ws&gt;</code>。由于名称 <code>ws</code> 之前有一个点号，<code>&lt;.ws&gt;</code> 不会创建捕获。它与显式添加可选空格相同：</p>
-
 <pre><code>grammar Number {
     regex digits { \d+ &lt;.ws&gt; }
     }
-</code></pre>
-
-<p>Instead of showing <code>Parsed!</code>, you can on success output the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object you stored in <code>$result</code>:</p>
-
+</code></pre><p>Instead of showing <code>Parsed!</code>, you can on success output the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object you stored in <code>$result</code>:</p>
 <p>您可以在成功输出存储在 <code>$result</code> 中的  <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象，而不是显示 <code>Parsed!</code></p>
-
 <pre><code>grammar Number {
     regex digits { \d+ &lt;.ws&gt; }
     }
@@ -372,87 +314,50 @@ for @strings -&gt; $string {
     my $result = Number.parse( $string, :rule&lt;digits&gt; );
     put $result ?? $result !! 'Failed!';
     }
-</code></pre>
-
-<p>The output isn’t that different, but instead of its success status you see the text that matched:</p>
-
+</code></pre><p>The output isn’t that different, but instead of its success status you see the text that matched:</p>
 <p>输出没有那么不同，但您可以看到匹配到的文本，而不是其成功状态：</p>
-
 <pre><code>｢137｣
 ｢137 ｣
 Failed!
-</code></pre>
-
-<p>Modify the grammar to remove that dot from <code>&lt;.ws&gt;</code> so it captures whitespace and try again:</p>
-
+</code></pre><p>Modify the grammar to remove that dot from <code>&lt;.ws&gt;</code> so it captures whitespace and try again:</p>
 <p>修改 grammar 以从 <code>&lt;.ws&gt;</code> 中删除该点号，以便捕获空格并再次尝试：</p>
-
 <pre><code>grammar Number {
     regex digits { \d+ &lt;ws&gt; }
     }
-</code></pre>
-
-<p>Now the output shows the nested levels of named captures:</p>
-
+</code></pre><p>Now the output shows the nested levels of named captures:</p>
 <p>现在输出显示了命名捕获的嵌套级别：</p>
-
 <pre><code>｢137｣
  ws =&gt; ｢｣
 ｢137 ｣
  ws =&gt; ｢ ｣
 Failed!
-</code></pre>
-
-<p>This still doesn’t match the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with leading whitespace. The parser couldn’t match that since <code>rule</code> only inserts <code>&lt;.ws&gt;</code> after explicit parts of the pattern. To match leading whitespace you need to add something to the front of the pattern. The beginning-of-string anchor does that, and now there’s something that <code>&lt;.ws&gt;</code> can come after:</p>
-
+</code></pre><p>This still doesn’t match the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with leading whitespace. The parser couldn’t match that since <code>rule</code> only inserts <code>&lt;.ws&gt;</code> after explicit parts of the pattern. To match leading whitespace you need to add something to the front of the pattern. The beginning-of-string anchor does that, and now there’s something that <code>&lt;.ws&gt;</code> can come after:</p>
 <p>这仍然与带有前导空格的 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> 不匹配。解析器无法匹配，因为 <code>rule</code> 仅在模式的显式部分之后插入 <code>&lt;.ws&gt;</code>。要匹配前导空格，您需要在模式的前面添加一些内容。字符串开头的锚点就是这样，现在有一些 <code>&lt;.ws&gt;</code> 后面可以出现的东西：</p>
-
 <pre><code>grammar Number {
     rule digits { ^ \d+ }    # ^ &lt;.ws&gt; \d+ &lt;.ws&gt;
     }
-</code></pre>
-
-<p>There’s also the zero-width always-matches token, <code>&lt;?&gt;</code>:</p>
-
+</code></pre><p>There’s also the zero-width always-matches token, <code>&lt;?&gt;</code>:</p>
 <p>还有零宽度始终匹配的 token 标记，<code>&lt;?&gt;</code>：</p>
-
 <pre><code>grammar Number {
     rule digits { &lt;?&gt; \d+ }  #  &lt;?&gt; &lt;.ws&gt; \d+ &lt;.ws&gt;
     }
-</code></pre>
-
-<p>Most of the time you don’t want to play these games. If you want leading whitespace, you can note that explicitly (and you probably don’t want to capture it):</p>
-
+</code></pre><p>Most of the time you don’t want to play these games. If you want leading whitespace, you can note that explicitly (and you probably don’t want to capture it):</p>
 <p>大多数时候你不想玩这些游戏。如果你想要前导空格，你可以显式地注意到（并且你可能不想捕获它）：</p>
-
 <pre><code>grammar Number {
     rule digits { &lt;.ws&gt; \d+ }  # &lt;.ws&gt; \d+ &lt;.ws&gt;
     }
-</code></pre>
-
-<p>Use <code>token</code> instead of <code>rule</code> if you don’t want any implicit whitespace:</p>
-
+</code></pre><p>Use <code>token</code> instead of <code>rule</code> if you don’t want any implicit whitespace:</p>
 <p>如果您不想要任何隐式空格，请使用 <code>token</code> 而不是 <code>rule</code>：</p>
-
 <pre><code>grammar Number {
     token digits { \d+ }  # just the digits
     }
-</code></pre>
-
-<p>You’ll see another feature of <code>rule</code> and <code>token</code> later in this chapter.</p>
-
+</code></pre><p>You’ll see another feature of <code>rule</code> and <code>token</code> later in this chapter.</p>
 <p>您将在本章后面看到 <code>rule</code> 和 <code>token</code> 的另一个功能。</p>
-
 <p>EXERCISE 17.1Write a grammer to match octal digits, with or without a leading <code>0</code> or <code>0o</code>. Your grammar should parse numbers such as <code>123</code>, <code>0123</code>, and <code>0o456</code>, but not <code>8</code>, <code>129</code>, or <code>o345</code>.</p>
-
 <p>练习17.1写一个 grammar 来匹配八进制数字，带或不带前导 <code>0</code> 或 <code>0o</code>。您的 grammar 应该解析诸如 <code>123</code>, <code>0123</code> 和 <code>0o456</code> 之类的数字，但不能解析 <code>8</code> ,<code>129</code> 或 <code>o345</code>。</p>
-
 <h1 id="multiple-rules">Multiple Rules</h1>
-
 <p>Grammars wouldn’t be useful if you were limited to one rule. You can define additional rules and use them inside other rules. In the first exercise you had only the <code>TOP</code> rule but you could separate the pattern into parts. Break up the pattern in <code>TOP</code> into rules for <code>prefix</code> and <code>digits</code>. It’s this decomposability that makes it so easy to solve hard parsing problems:</p>
-
 <p>如果你只限于一条规则，那么 grammar 就没用了。您可以定义其他规则并在其他规则中使用它们。在第一个练习中，您只有 <code>TOP</code> 规则，但您可以将模式分成几部分。将 <code>TOP</code> 中的模式分解为 <code>prefix</code>和<code>digits</code>的规则。正是这种可分解性使得解决困难的解析问题变得如此简单：</p>
-
 <pre><code>grammar OctalNumber {
     regex TOP          { &lt;prefix&gt;? &lt;digits&gt;  }
     regex prefix       {  [ 0o? ]  }
@@ -462,33 +367,19 @@ Failed!
 my $number = '0o177';
 my $result = OctalNumber.parse( $number );
 say $result // &quot;failed&quot;;
-</code></pre>
-
-<p>The stringified <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object shows the overall match and the named subcaptures:</p>
-
+</code></pre><p>The stringified <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object shows the overall match and the named subcaptures:</p>
 <p>字符串化的 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象显示整体匹配和命名的子捕获：</p>
-
 <pre><code>｢0o177｣
  prefix =&gt; ｢0o｣
  digits =&gt; ｢177｣
-</code></pre>
-
-<p>You can access the pieces:</p>
-
+</code></pre><p>You can access the pieces:</p>
 <p>你可以访问这些部分：</p>
-
 <pre><code>put &quot;Prefix: $result&lt;prefix&gt;&quot;;
 put &quot;Digits: $result&lt;digits&gt;&quot;;
-</code></pre>
-
-<p>EXERCISE 17.2Create a grammar to match a Raku variable name with a sigil (ignore sigilless variables, because that’s too easy). Use separate rules to match the sigil and the identifier. Here is a list of candidates to check if you don’t come up with your own:<code>my @candidates = qw/     sigilless   $scalar  @array   %hash     $123abc    $abc'123 $ab'c123     $two-words $two-    $-dash     /;</code></p>
-
+</code></pre><p>EXERCISE 17.2Create a grammar to match a Raku variable name with a sigil (ignore sigilless variables, because that’s too easy). Use separate rules to match the sigil and the identifier. Here is a list of candidates to check if you don’t come up with your own:<code>my @candidates = qw/     sigilless   $scalar  @array   %hash     $123abc    $abc'123 $ab'c123     $two-words $two-    $-dash     /;</code></p>
 <p>You can suppress some of those named captures by prefixing the rule with a dot. You probably don’t care about the prefix, so don’t save it:</p>
-
 <p>练习17.2 创建一个 grammar，匹配带有 sigil 的 Raku 变量名（忽略无符号变量，因为这太简单了）。使用单独的规则来匹配 sigil 和标识符。这是一个候选人列表，检查你是否没有自己的：<code>my @candidates = qw/     sigilless   $scalar  @array   %hash     $123abc    $abc'123 $ab'c123     $two-words $two-    $-dash     /;</code></p>
-
 <p>您可以通过在规则前加一个点号来抑制某些命名捕获。您可能不关心前缀，所以不要保存它：</p>
-
 <pre><code>grammar OctalNumber {
     regex TOP          { &lt;.prefix&gt;? &lt;digits&gt; }
     regex prefix       {  [ 0o? ]  }
@@ -498,32 +389,18 @@ put &quot;Digits: $result&lt;digits&gt;&quot;;
 my $number = '0o177';
 my $result = OctalNumber.parse( $number );
 say $result // &quot;failed&quot;;
-</code></pre>
-
-<p>The output doesn’t include the prefix information:</p>
-
+</code></pre><p>The output doesn’t include the prefix information:</p>
 <p>输出不包含前缀信息：</p>
-
 <pre><code>｢0o177｣
  digits =&gt; ｢177｣
-</code></pre>
-
-<p>This doesn’t make much of a difference in this small example, but imagine a complicated grammar with many, many rules. That brings you to the next big feature of grammars. Besides the grammar itself, you can specify an <em>action class</em> that processes the rules as the grammar successfully parses them.</p>
-
+</code></pre><p>This doesn’t make much of a difference in this small example, but imagine a complicated grammar with many, many rules. That brings you to the next big feature of grammars. Besides the grammar itself, you can specify an <em>action class</em> that processes the rules as the grammar successfully parses them.</p>
 <p>这在这个小例子中并没有太大的区别，但想象一下复杂的 grammar 有很多很多规则。这将带您进入 grammar 的下一个重要特征。除 grammar 本身外，您还可以指定一个 action 类来处理规则，因为 grammar 会成功解析它们。</p>
-
 <h1 id="debugging-grammars">Debugging Grammars</h1>
-
 <p>There are two modules that can help you figure out what’s going on in your grammar. Both are much more impressive in your terminal.</p>
-
 <p>有两个模块可以帮助您弄清楚 grammar 中发生了什么。两者在你的终端中都更令人印象深刻。</p>
-
-<h2 id="grammar-tracer">Grammar::Tracer</h2>
-
+<h2 id="grammartracer">Grammar::Tracer</h2>
 <p>The <code>Grammar::Tracer</code> module shows you the path through a grammar (and applies to any grammar in its scope). Merely loading the module is enough to activate it:</p>
-
 <p><code>Grammar::Tracer</code> 模块向您显示 grammar 的路径（并适用于其作用域内的任何 grammar）。仅加载模块就足以激活它：</p>
-
 <pre><code>use Grammar::Tracer;
 
 grammar OctalNumber {
@@ -535,12 +412,8 @@ grammar OctalNumber {
 my $number = '0o177';
 $/ = OctalNumber.parse( $number );
 say $/ // &quot;failed&quot;;
-</code></pre>
-
-<p>The first part of the output is the trace. It shows which rule it’s in and the result. In this example each one matches:</p>
-
+</code></pre><p>The first part of the output is the trace. It shows which rule it’s in and the result. In this example each one matches:</p>
 <p>输出的第一部分是跟踪。它显示了它所在的规则和结果。在这个例子中，每个规则都匹配：</p>
-
 <pre><code>TOP
 |  prefix
 |  * MATCH &quot;0o&quot;
@@ -550,12 +423,8 @@ say $/ // &quot;failed&quot;;
 ｢0o177｣
  prefix =&gt; ｢0o｣
  digits =&gt; ｢177｣
-</code></pre>
-
-<p>Changing the data to include invalid digits, such as <code>0o178</code>, means the grammar will fail. In the trace you can see it matches up to <code>0o17</code> but can’t continue, so you know where in your <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> things went wrong. It could be that the grammar should not match the text or the grammar is not as accommodating as it should be:</p>
-
+</code></pre><p>Changing the data to include invalid digits, such as <code>0o178</code>, means the grammar will fail. In the trace you can see it matches up to <code>0o17</code> but can’t continue, so you know where in your <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> things went wrong. It could be that the grammar should not match the text or the grammar is not as accommodating as it should be:</p>
 <p>更改数据以包含无效数字（例如 <code>0o178</code>）意味着 grammar 将失败。在跟踪中，您可以看到它最多匹配到 <code>0o17</code> 但无法继续，因此你就知道  <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>  中的哪些地方出错了。可能是 grammar 不应该与文本匹配，或者 grammar 不应该像它应该的那样适应：</p>
-
 <pre><code>TOP
 |  prefix
 |  * MATCH &quot;0o&quot;
@@ -567,21 +436,12 @@ digits
 digits
 * MATCH &quot;0&quot;
 failed
-</code></pre>
-
-<p>Instead of adding <code>Grammar::Tracer</code> to your program you can load it from the command line with the <code>-M</code>switch. You probably don’t mean to leave it in anyway:</p>
-
+</code></pre><p>Instead of adding <code>Grammar::Tracer</code> to your program you can load it from the command line with the <code>-M</code>switch. You probably don’t mean to leave it in anyway:</p>
 <p>您可以使用 <code>-M</code> 开关从命令行加载 <code>Grammar::Tracer</code>，而不是将 <code>Grammar::Tracer</code> 添加到程序中。你可能并不是故意把它留下来：</p>
-
 <pre><code>% raku -MGrammar::Tracer program.p6
-</code></pre>
-
-<h2 id="grammar-debugger">Grammar::Debugger</h2>
-
+</code></pre><h2 id="grammardebugger">Grammar::Debugger</h2>
 <p>The <code>Grammar::Debugger</code> module does the same thing as <code>Grammar::Tracer</code> (they come together in the same distribution) but allows you to proceed one step at a time. When you start it you get a prompt; type <code>h</code> to get a list of commands:</p>
-
 <p><code>Grammar::Debugger</code> 模块与 <code>Grammar::Tracer</code> （它们在同一个发行版中）执行相同的操作，但允许您一次执行一个步骤。当你启动它时，你得到一个提示; 键入 <code>h</code> 以获取命令列表：</p>
-
 <pre><code>% raku -MGrammar::Debugger test.p6
 TOP
 &gt; h
@@ -594,12 +454,8 @@ TOP
     bp rm &lt;name&gt;   remove a rule name breakpoint
     bp rm          removes all breakpoints
     q              quit
-</code></pre>
-
-<p>Typing Enter with no command single-steps through the parse process and gives you a chance to inspect the text and the state of the parser. The <code>rf</code> command will get you to the next failing rule:</p>
-
-<p>在没有命令的情况下键入回车键单步执行解析过程，并让你有机会检查文本和解析器的状态。<code>rf</code> 命令会使你进入下一个失败的规则：</p>
-
+</code></pre><p>Typing Enter with no command single-steps through the parse process and gives you a chance to inspect the text and the state of the parser. The <code>rf</code> command will get you to the next failing rule:</p>
+<p>在没有命令的情况下键入回车键单步执行解析过程，并让你有机会检查文本和解析器的状态。<code> rf</code> 命令会使你进入下一个失败的规则：</p>
 <pre><code>&gt; rf
 |  prefix
 |  * MATCH &quot;0o&quot;
@@ -609,18 +465,11 @@ TOP
 digits
 * FAIL
 &gt;
-</code></pre>
-
-<h1 id="a-simple-action-class">A Simple Action Class</h1>
-
+</code></pre><h1 id="a-simple-action-class">A Simple Action Class</h1>
 <p>A grammar does its work by descending into its rules to take apart text. You can go the opposite way by processing each part of the parsed text to build a new <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> (or data structure, or whatever you like). You can tell <code>.parse</code> to use an action class to do this.</p>
-
 <p>grammar 通过下降到它的规则中分解文本来完成其工作。你可以通过处理已解析文本的每个部分来构建新的 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>（或数据结构，或任何您喜欢的任何内容）。您可以告诉 <code>.parse</code> 使用 action 类来执行此操作。</p>
-
 <p>Here’s a simple action class, <code>OctalActions</code>. It doesn’t need to have the same name as the grammar, but the method names are the same as the rule names. Each method takes a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object argument. In this example, the signature uses <code>$/</code>, which is a variable with a few advantages that you’ll see in a moment:</p>
-
 <p>这是一个简单的 action 类 <code>OctalActions</code>。它不需要与 grammar 具有相同的名称，但方法名称与规则名称相同。每个方法都接收 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象参数。在此示例中，签名使用 <code>$/</code>，这是一个具有一些优势的变量，稍后你将看到：</p>
-
 <pre><code>class OctalActions {
     method digits ($/) { put &quot;Action class got $/&quot; }
     }
@@ -630,38 +479,23 @@ grammar OctalNumber {
     regex prefix       {  [ 0o? ]  }
     regex digits       { &lt;[0..7]&gt;+ }
     }
-</code></pre>
-
-<p>Tell <code>.parse</code> which class to use with the <code>:actions</code> named parameter. The name does not need to correspond to the grammar:</p>
-
+</code></pre><p>Tell <code>.parse</code> which class to use with the <code>:actions</code> named parameter. The name does not need to correspond to the grammar:</p>
 <p>使用 <code>:actions</code> 命名参数告诉 <code>.parse</code> 使用哪个类。该名称不需要与 grammar 对应：</p>
-
 <pre><code>my $number = '0o177';
 my $result = OctalNumber.parse(
     $number, :actions(OctalActions)
     );
 say $result // &quot;failed&quot;;
-</code></pre>
-
-<p>This action class doesn’t do much. When the <code>digits</code> rule successfully matches it triggers the rule of the same name in the action class. That method merely outputs the argument:</p>
-
+</code></pre><p>This action class doesn’t do much. When the <code>digits</code> rule successfully matches it triggers the rule of the same name in the action class. That method merely outputs the argument:</p>
 <p>这个 action 类做的不多。当 <code>digits</code> 规则成功匹配时，它会触发 action 类中相同名称的规则。该方法仅输出参数：</p>
-
 <pre><code>Action class got 177
 ｢0o177｣
  digits =&gt; ｢177｣
-</code></pre>
-
-<p>EXERCISE 17.3Implement your own action class for the <code>OctalNumber</code> grammar. When the <code>digits</code> method matches, output the decimal version of the number. The <code>parse-base</code> routine from <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> may be useful. For extra credit, take one number per line from standard input and turn them into decimal numbers.</p>
-
+</code></pre><p>EXERCISE 17.3Implement your own action class for the <code>OctalNumber</code> grammar. When the <code>digits</code> method matches, output the decimal version of the number. The <code>parse-base</code> routine from <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> may be useful. For extra credit, take one number per line from standard input and turn them into decimal numbers.</p>
 <p>练习17.3 为 <code>OctalNumber</code> grammar 实现自己的 action 类。当 <code>digits</code> 方法匹配时，输出数字的十进制版本。 <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> 的 <code>parse-base</code> 例程可能很有用。如需额外学分，请从标准输入中每行获取一个数字并将其转换为十进制数字。</p>
-
 <h2 id="creating-an-abstract-syntax-tree">Creating an Abstract Syntax Tree</h2>
-
 <p>Actions shouldn’t output information directly. Instead, they can add values to the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object. Calling <code>make</code>in the action method sets a value in the abstract syntax tree (or <code>.ast</code>) slot of the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>. You can access that with <code>.made</code>:</p>
-
 <p>Action 不应直接输出信息。相反，他们可以向 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象添加值。在 action 方法中调用 <code>make</code> 会在 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 的抽象语法树（或 <code>.ast</code> ）槽中设置一个值。您可以使用 <code>.made</code> 访问它：</p>
-
 <pre><code>class OctalActions {
     method digits ($/) {
         make parse-base( ~$/, 8 ) # must stringify $/
@@ -681,16 +515,10 @@ my $result = OctalNumber.parse(
 put $result ??
     &quot;Turned ｢{$result&lt;digits&gt;}｣ into ｢{$result&lt;digits&gt;.made}｣&quot;
     !! 'Failed!';
-</code></pre>
-
-<p>The <code>make</code> puts something into the <code>.ast</code> slot of the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> and <code>.made</code> gets it back out. You can <code>make</code> any value that you like, including containers, objects, and most other things you can imagine. You still get the original, literal match.</p>
-
+</code></pre><p>The <code>make</code> puts something into the <code>.ast</code> slot of the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> and <code>.made</code> gets it back out. You can <code>make</code> any value that you like, including containers, objects, and most other things you can imagine. You still get the original, literal match.</p>
 <p>In the previous example, the <code>digits</code> action method handled the value. A <code>TOP</code> action method could do it, but it has to reach one level below the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> object:</p>
-
 <p><code>make</code> 将一些内容放入<a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>的 <code>.ast</code> 插槽中，然后 <code>.made</code> 将其恢复原状。您可以<code>make</code> 任何您喜欢的值，包括容器，对象和您可以想象的大多数其他内容。你仍然得到原始的，字面上的匹配。</p>
-
 <p>在前面的示例中，<code>digits</code> action 方法处理了该值。 <code>TOP</code> action 方法可以做到，但它必须到达  <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 对象下面的一个级别：</p>
-
 <pre><code>class OctalActions {
     method digits ($/) {
         make parse-base( ~$/, 8 ) # must stringify $/
@@ -710,83 +538,47 @@ my $result = OctalNumber.parse(
 put $result.so ??
     &quot;Turned ｢{$number}｣ into ｢{$result.made}｣&quot;
     !! 'Failed!';
-</code></pre>
-
-<p>You don’t have to use <code>$/</code> in the signature; it’s a convenience. There’s nothing particularly magical about it. You could use some other variable if you are paid by the character:</p>
-
+</code></pre><p>You don’t have to use <code>$/</code> in the signature; it’s a convenience. There’s nothing particularly magical about it. You could use some other variable if you are paid by the character:</p>
 <p>您不必在签名中使用 <code>$/</code>; 这是一个方便写法。它没什么特别神奇的。如果你有其它字符，您可以使用其他变量：</p>
-
 <pre><code>class OctalActions {
     method TOP ($match) { make parse-base( ~$match&lt;digits&gt;, 8 ) }
     }
-</code></pre>
-
-<p>EXERCISE 17.4Create a grammar to parse a four-part, dotted-decimal IP address, such as <code>192.168.1.137</code>. Create an action class that turns the parse results into a 32-bit number. Output that 32-bit number in hexadecimal.</p>
-
+</code></pre><p>EXERCISE 17.4Create a grammar to parse a four-part, dotted-decimal IP address, such as <code>192.168.1.137</code>. Create an action class that turns the parse results into a 32-bit number. Output that 32-bit number in hexadecimal.</p>
 <p>练习17.4 创建一个 grammar 来解析一个由四部分组成的点分十进制 IP 地址，例如 <code>192.168.1.137</code>。创建一个 action 类，将解析结果转换为32位数。以十六进制输出那个32位数。</p>
-
 <h1 id="ratcheting">Ratcheting</h1>
-
 <p>The <code>rule</code> and <code>token</code> declarators have a feature that <code>regex</code> doesn’t; they both prevent backtracking by implicitly setting the <code>:ratchet</code> adverb. Once one of those rules matches they don’t backtrack to try again if there’s a failure later in the grammar.</p>
-
 <p>Here’s a nonsense grammar that includes a rule <code>&lt;some-stuff&gt;</code> that matches one or more of any character. The <code>TOP</code> token wants to match digits surrounded by unspecified stuff:</p>
-
 <p><code>rule</code> 和 <code>token</code> 声明符具有 <code>regex</code> 不具有的功能;他们都通过隐式设置 <code>:ratchet</code> 副词来阻止回溯。一旦这些规则中的一个匹配，如果在 grammar 中稍后出现失败，则它们不会回溯以再次尝试。</p>
-
 <p>这是一个无意义的 grammar，其中包含能匹配一个或多个字符的 <code>&lt;some-stuff&gt;</code> 规则。 <code>TOP</code> token 想要匹配由未指定的东西包围的数字：</p>
-
 <pre><code>grammar Stuff {
     token TOP { &lt;some-stuff&gt; &lt;digits&gt; &lt;some-stuff&gt; }
     token digits       { \d+ }
     token some-stuff   { .+  }
     }
-</code></pre>
-
-<p>This <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> could satisfy that pattern. It has stuff, some digits, and more stuff:</p>
-
+</code></pre><p>This <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> could satisfy that pattern. It has stuff, some digits, and more stuff:</p>
 <p>这个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>可以满足这种模式。它有东西，一些数字和更多的东西：</p>
-
 <pre><code>my $string = 'abcdef123xyx456';
-</code></pre>
-
-<p>But, <code>Stuff</code> fails to parse it:</p>
-
+</code></pre><p>But, <code>Stuff</code> fails to parse it:</p>
 <p>但是，<code>Stuff</code> 无法解析它：</p>
-
 <pre><code>my $result = Stuff.parse( $string );
 put &quot;｢$string｣ &quot;, $result ?? 'Parsed!' !! 'Failed!'; # Failed!
-</code></pre>
-
-<p>It’s the <code>:ratchet</code> that makes it fail. Work out its path to see why. <code>TOP</code> has to first match <code>&lt;some-stuff&gt;</code>. That matches any character one or more times, greedily—it matches the entire text. <code>TOP</code> next needs to match<code>&lt;digits&gt;</code>, but there is nothing left to match because of that greediness. Without <code>:ratchet</code> the pattern might roll back some of the characters it already consumed. With <code>:ratchet</code> it doesn’t do that. The grammar can’t match the rest of <code>TOP</code> and it fails.</p>
-
+</code></pre><p>It’s the <code>:ratchet</code> that makes it fail. Work out its path to see why. <code>TOP</code> has to first match <code>&lt;some-stuff&gt;</code>. That matches any character one or more times, greedily—it matches the entire text. <code>TOP</code> next needs to match<code>&lt;digits&gt;</code>, but there is nothing left to match because of that greediness. Without <code>:ratchet</code> the pattern might roll back some of the characters it already consumed. With <code>:ratchet</code> it doesn’t do that. The grammar can’t match the rest of <code>TOP</code> and it fails.</p>
 <p>Without <code>:ratchet</code> the situation is different. If you use <code>regex</code> instead of <code>token</code>, you allow the grammar to give back characters it has already matched:</p>
-
 <p>是 <code>:ratchet</code> 使它失败的。找出原因，看看为什么。 <code>TOP</code> 必须首先匹配 <code>&lt;some-stuff&gt;</code>。这匹配任何一个字符一次或多次，贪婪地 - 它匹配整个文本。 <code>TOP</code>  接着需要匹配 <code>&lt;digits&gt;</code>，但由于这种贪婪，没有什么可以匹配的了。如果没有 <code>:ratchet</code> 模式可能会回滚它已经消耗的一些字符。使用 <code>:ratchet</code> 它不会那样做。Grammar 不能匹配 <code>TOP</code> 的其余部分，所以失败了。</p>
-
 <p>没有 <code>:ratchet</code> 的情况是不同的。如果使用 <code>regex</code> 而不是 <code>token</code>，则允许 grammar 归还已匹配的字符：</p>
-
 <pre><code>grammar Stuff {
     # regex does not turn on ratcheting
     regex TOP { &lt;some-stuff&gt; &lt;digits&gt; &lt;some-stuff&gt; }
     token digits       { \d+ }
     regex some-stuff   { .+  }
     }
-</code></pre>
-
-<p>That could match. The <code>TOP</code> matches <code>&lt;some-stuff&gt;</code> but realizes it’s run out of text and starts backtracking. All parts of the grammar that want to allow backtracking have to use <code>regex</code>. It’s not good enough for <code>TOP</code> to backtrack but not <code>&lt;some-stuff&gt;</code>.</p>
-
+</code></pre><p>That could match. The <code>TOP</code> matches <code>&lt;some-stuff&gt;</code> but realizes it’s run out of text and starts backtracking. All parts of the grammar that want to allow backtracking have to use <code>regex</code>. It’s not good enough for <code>TOP</code> to backtrack but not <code>&lt;some-stuff&gt;</code>.</p>
 <p>那可能会匹配。 <code>TOP</code> 匹配 <code>&lt;some-stuff&gt;</code>，但意识到它已用完文本并开始回溯。想要允许回溯的 grammar 的所有部分都必须使用 <code>regex</code>。对于 <code>TOP</code> 来说，回溯并不是足够好，除了 <code>&lt;some-stuff&gt;</code> 。</p>
-
 <h1 id="parsing-json">Parsing JSON</h1>
-
 <p>In <em>Mastering Perl</em> I presented a JSON parser that Randal Schwartz created using some advanced features of Perl 5 regular expressions. In many ways his implementation was a grammar, but he was forced to inseparably combine the parsing and the actions. That made the regular expression almost impenetrable. It’s much cleaner and more accessible to write it as a Raku grammar.</p>
-
 <p>JSON is actually quite simple with only a few weird things to handle, but it gives you the opportunity to see how <code>proto</code> rules can simplify actions:</p>
-
 <p>在 Mastering Perl 中，我提到了一个 Randal Schwartz 使用 Perl 5 正则表达式的一些高级功能创建的 JSON 解析器。在许多方面，他的实现是一种 grammar，但他被迫不可分割地将解析和 action 组合在一块。这使得正则表达式几乎无法穿透。用 Raku grammar 编写它会更清晰，更容易访问。</p>
-
 <p>JSON 实际上非常简单，只需处理几个奇怪的事情，但它让您有机会了解 <code>proto</code> 规则如何简化 action：</p>
-
 <pre><code>grammar Grammar::JSON {
     rule TOP                { &lt;.ws&gt; &lt;value&gt; &lt;.ws&gt; }
 
@@ -828,12 +620,8 @@ put &quot;｢$string｣ &quot;, $result ?? 'Parsed!' !! 'Failed!'; # Failed!
         [ &lt;[eE]&gt; &lt;[+-]&gt;? &lt;[0..9]&gt;+ ]?
         }
     }
-</code></pre>
-
-<p>You may be surprised at how easy and short that grammar is. It’s almost a straight translation of the grammar from <a href="https://trac.tools.ietf.org/html/rfc8259">RFC 8259</a>. Now, create an action class for that:</p>
-
+</code></pre><p>You may be surprised at how easy and short that grammar is. It’s almost a straight translation of the grammar from <a href="https://trac.tools.ietf.org/html/rfc8259">RFC 8259</a>. Now, create an action class for that:</p>
 <p>您可能会对这个 grammar 的简单和简短感到惊讶。它几乎是  <a href="https://trac.tools.ietf.org/html/rfc8259">RFC 8259</a> grammar 的直接翻译。现在，为此创建一个 action 类：</p>
-
 <pre><code>class JSON::Actions {
     method TOP ($/) { make $&lt;value&gt;.made }
     method object ($/) {
@@ -867,16 +655,10 @@ put &quot;｢$string｣ &quot;, $result ?? 'Parsed!' !! 'Failed!'; # Failed!
     method code_point ($/) { make chr( (~$/).parse-base(16) ) }
     method number     ($/) { make +$/ }
     }
-</code></pre>
-
-<p>Look at the clunky handling of <code>value</code>. Almost anything can be a value, so the action method does some ham-handed work to figure out which thing just matched. It looks into the possible submatches to find one with a defined value. Well, that’s pretty stupid even if it’s a quick way to get started (although there is some value in the immediate stupid versus the far-off smart).</p>
-
+</code></pre><p>Look at the clunky handling of <code>value</code>. Almost anything can be a value, so the action method does some ham-handed work to figure out which thing just matched. It looks into the possible submatches to find one with a defined value. Well, that’s pretty stupid even if it’s a quick way to get started (although there is some value in the immediate stupid versus the far-off smart).</p>
 <p>A <code>proto</code> rule gets around this by making it easy for you to give different subrules the same name but different patterns. Instead of an alternation you have one token for each:</p>
-
 <p>看看笨重的 <code>value</code> 处理。几乎任何东西都可以是一个值，所以 action 方法会做一些简单的工作来弄清楚哪个东西匹配。它查找可能的子匹配以找到具有定义值的子匹配。好吧，即使这是一个快速入门的方式，这也是非常愚蠢的（虽然在愚蠢的直接智能中存在一些价值）。</p>
-
 <p><code>proto</code> 规则可以让您轻松地为不同的子规则赋予相同的名称但不同的模式。不是备选分支，而是每个都有一个 <code>token</code>：</p>
-
 <pre><code>proto token value { * }
 token value:sym&lt;string&gt; { &lt;string&gt; }
 token value:sym&lt;number&gt; { &lt;number&gt; }
@@ -885,20 +667,12 @@ token value:sym&lt;array&gt;  { &lt;array&gt;  }
 token value:sym&lt;true&gt;   { &lt;sym&gt;    }
 token value:sym&lt;false&gt;  { &lt;sym&gt;    }
 token value:sym&lt;null&gt;   { &lt;sym&gt;    }
-</code></pre>
-
-<p>The first <code>proto</code> rule matches <code>*</code>, which really means it dispatches to another rule in that group. It can dispatch to all of them and find the one that works.</p>
-
+</code></pre><p>The first <code>proto</code> rule matches <code>*</code>, which really means it dispatches to another rule in that group. It can dispatch to all of them and find the one that works.</p>
 <p>Some of these use the special <code>&lt;sym&gt;</code> subrule in their pattern. This means that the name of the rule is the literal text to match. The <code>proto</code> rule <code>&lt;true&gt;</code> matches the literal text <code>true</code>. You don’t have to type that out in the name and the pattern.</p>
-
 <p>It doesn’t matter which of those matches; the grammar calls each of them <code>$&lt;value&gt;</code>. The superrule only knows that something that is a value matched and that the subrule handled it appropriately. The action class <code>make</code>s the right value and stores it in the <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>:</p>
-
 <p>第一个 <code>proto</code> 规则匹配 <code>*</code>，这实际上意味着它将分派给该组中的另一个规则。它可以发送给所有人并找到有效的。</p>
-
 <p>其中一些在其模式中使用特殊的 <code>&lt;sym&gt;</code> 子规则。这意味着规则的名称是要匹配的文字文本。 <code>proto</code> 规则 <code>&lt;true&gt;</code> 匹配文字文本 <code>true</code>。您不必在名称和模式中输入该内容。</p>
-
 <p>哪些匹配无关紧要; grammar 调用每个 <code>$&lt;value&gt;</code>。超级规则只知道值匹配的东西，并且子规则适当地处理它。 action 类生成正确的值并将其存储在 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 中：</p>
-
 <pre><code>class JSON::Actions {
     method TOP    ($/) { make $&lt;value&gt;.made }
     method object ($/) { make $&lt;string-value-list&gt;.made.hash.item }
@@ -924,32 +698,18 @@ token value:sym&lt;null&gt;   { &lt;sym&gt;    }
     method u_char     ($/) { make $&lt;code_point&gt;.made }
     method code_point ($/) { make chr( (~$/).parse-base(16) ) }
     }
-</code></pre>
-
-<p>EXERCISE 17.5Implement your own JSON parser (steal all the code you like). Test it against some JSON files to see how well it works. You might like to try the JSON files at [<em><a href="https://github.com/briandfoy/json-acceptance-tests">https://github.com/briandfoy/json-acceptance-tests</a></em></p>
-
+</code></pre><p>EXERCISE 17.5Implement your own JSON parser (steal all the code you like). Test it against some JSON files to see how well it works. You might like to try the JSON files at [<em>https://github.com/briandfoy/json-acceptance-tests</em></p>
 <p>练习17.5实现自己的 JSON 解析器（窃取你喜欢的所有代码）。针对某些 JSON 文件进行测试，看看它的工作情况。您可能想在 <a href="https//github.com/briandfoy/json-acceptance-tests">https//github.com/briandfoy/json-acceptance-tests</a> 上尝试 JSON文件。</p>
-
 <h1 id="parsing-csv">Parsing CSV</h1>
-
 <p>Let’s parse some comma-separated values (CSV) files. These are tricky because there’s no actual standard (despite <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a>). Microsoft Excel does it one way but some other producers do it slightly differently.</p>
-
 <p>People often initially go wrong thinking they can merely split the data on a comma character—but that might be part of the literal data in a quoted field. The quote character may also be part of the literal data, but one producer might escape internal quote marks by doubling them, <code>&quot;&quot;</code>, while another might use the backslash, <code>\&quot;</code>. People often assume they are line-oriented, but some producers allow unescaped (but quoted!) vertical whitespace. If all of that wasn’t bad enough, what do you do if one line has fewer (or more) fields than the other lines?</p>
-
 <p>让我们解析一些逗号分隔值（CSV）文件。这些都很棘手，因为没有实际的标准（尽管有despite <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a> ）。 Microsoft Excel 以一种方式实现，但其他一些生产商则略有不同。</p>
-
 <p>最初人们通常认为他们只能按照逗号字符拆分数据 - 但逗号可能是引用字段中字面量数据的一部分。引号字符也可能是字面量数据的一部分，但是有些制作人可能会通过两个双引号 <code>&quot;&quot;</code> 来避免内部引号，而另一个可能会使用反斜杠，<code>\&quot;</code>。人们通常认为它们是面向行的，但是一些制作人允许未转义的（但引起来！）垂直空白。如果所有这些都不够糟糕，如果一行的字段少于（或多于）其他行，你会怎么做？</p>
-
 <h6 id="warning-警告">WARNING 警告</h6>
-
 <p>Don’t parse CSV files like this. The <code>Text::CSV</code> module not only parses the format but also tries to correct problems as it goes.</p>
-
 <p>不要像这样解析 CSV 文件。 <code>Text::CSV</code> 模块不仅可以解析格式，还可以尝试纠正问题。</p>
-
 <p>Still willing to give it a try? You should find that grammars make most of these concerns tractable:</p>
-
 <p>仍然愿意尝试一下？您应该发现 grammar 使大多数这样的问题易于处理：</p>
-
 <ul>
 <li>The ratcheting behavior keeps things simple.</li>
 <li>You can easily handle balanced openers and closers (i.e., the quoting stuff).</li>
@@ -962,11 +722,8 @@ token value:sym&lt;null&gt;   { &lt;sym&gt;    }
 <li>您已经看过 action 类，但你也可以拥有记住额外非<a href="https://docs.raku.org/type/Match.html"><code>匹配</code></a>数据的 action 实例。</li>
 <li>有一个 <code>.subparse</code> 方法，可以让你解析块，这样你就可以一次处理一条记录。</li>
 </ul>
-
 <p>Here’s a simple CSV grammar based off the rules in <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a>. It allows for quoted fields and uses <code>&quot;&quot;</code> to escape a literal quote. If a comma, quote, or vertical whitespace appears in the literal data, it must be quoted:</p>
-
 <p>这是一个简单的 CSV grammar，基于 <a href="https://tools.ietf.org/html/rfc4180">RFC 4180</a> 中的规则。它允许引用的字段并使用 <code>&quot;&quot;</code> 来避免字面量引号。如果字面量数据中出现逗号，引号或垂直空格，则必须引起它：</p>
-
 <pre><code>grammar Grammar::CSV {
     token TOP       { &lt;record&gt;+ }
     token record    { &lt;value&gt;+ % &lt;.separator&gt; \R }
@@ -991,35 +748,21 @@ class CSV::Actions {
         make $/.subst( rx/ '&quot;&quot;' /, '&quot;', :g )
         }
     }
-</code></pre>
-
-<p>Try this on entire files. The entire file either satisfies this grammar or doesn’t:</p>
-
+</code></pre><p>Try this on entire files. The entire file either satisfies this grammar or doesn’t:</p>
 <p>在整个文件上试试这个。整个文件要么满足这个 grammar，要么不满足：</p>
-
 <pre><code>my $data = $filename.IO.slurp;
 my $result = Grammar::CSV.parse( $data );
-</code></pre>
-
-<p>You typically don’t want to parse entire files, though. Let’s fix the first part of that problem. You want to process records as you run into them. Instead of using <code>.parse</code>, which anchors to the end of the text, you can use <code>.subparse</code>, which doesn’t. This means you can parse part of the text then stop.</p>
-
+</code></pre><p>You typically don’t want to parse entire files, though. Let’s fix the first part of that problem. You want to process records as you run into them. Instead of using <code>.parse</code>, which anchors to the end of the text, you can use <code>.subparse</code>, which doesn’t. This means you can parse part of the text then stop.</p>
 <p>You can deal with one record at a time. Using <code>.subparse</code> with the <code>record</code> rule gets you the first record and only the first record. The <code>.subparse</code> method always returns a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>, unlike <code>.parse</code>, which only returns a <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> when it succeeds. You can’t rely on the type of the object as an indication of success:</p>
-
 <p>但是，您通常不希望解析整个文件。让我们解决这个问题的第一部分。您希望在遇到记录时处理记录。你可以使用 <code>.subparse</code>，而不是使用锚定到文本末尾的 <code>.parse</code>，  <code>.subparse</code> 不会锚定到文本末尾。这意味着您可以解析部分文本然后停止。</p>
-
 <p>您可以一次处理一条记录。将 <code>.subparse</code> 与 <code>record</code> 规则一起使用可以获得第一条记录，并且只获得第一条记录。与 <code>.parse</code> 不同，<code>.subparse</code> 方法总是返回一个 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>，<code>.parse</code> 方法只在成功时返回一个 <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a>。你不能依赖对象的类型作为成功的指示：</p>
-
 <pre><code>my $data = $filename.IO.slurp;
 my $first_result = Grammar::CSV.subparse(
     $data, :rule('record'), :action(CSV::Actions)
     );
 if $first-result { ... }
-</code></pre>
-
-<p>That works for the first line. Use <code>:c(N)</code> to tell these methods where to start in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. You have to know where you want to start. The <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> knows how far it got; look in the <code>.from</code> slot:</p>
-
+</code></pre><p>That works for the first line. Use <code>:c(N)</code> to tell these methods where to start in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. You have to know where you want to start. The <a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> knows how far it got; look in the <code>.from</code> slot:</p>
 <p>这适用于第一行。使用 <code>:c(N)</code> 告诉这些方法在 <a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中从哪里开始。你必须知道你想要从哪里开始。<a href="https://docs.raku.org/type/Match.html"><code>Match</code></a> 知道它进行了多远;看看 <code>.from</code> 插槽：</p>
-
 <pre><code>my $data  = $filename.IO.slurp;
 
 loop {
@@ -1036,22 +779,13 @@ loop {
     $from = $match.to;
     say $match;
     }
-</code></pre>
-
-<p>This is most of the way to a solution—it fails to go through the entire file if <code>.subparse</code> fails on one record. With some boring monkey work you could fix this to find the start of the next record and restart the parsing, but that’s more than I want to fit in this book.</p>
-
+</code></pre><p>This is most of the way to a solution—it fails to go through the entire file if <code>.subparse</code> fails on one record. With some boring monkey work you could fix this to find the start of the next record and restart the parsing, but that’s more than I want to fit in this book.</p>
 <p>这是解决方案的大部分方法 - 如果 <code>.subparse</code> 在一条记录上失败，则无法遍历整个文件。使用一些无聊的猴子工作，你可以修复这个问题，找到下一条记录的开始并重新开始解析，但这比我想要适应本书更多。</p>
-
 <h2 id="adjusting-the-grammar">Adjusting the Grammar</h2>
-
 <p>You thought the problem was solved. Then, someone sent you a file with a slightly different format. Instead of escaping a <code>&quot;</code> by doubling it, the new format uses the backslash.</p>
-
 <p>Now your existing grammar fails to parse. You don’t have a rule that satisfies that type of escape because you didn’t need it for your grammar. As a matter of practice in both patterns and grammars, only match what you should match. Be liberal in what you accept in other ways, such as making a subgrammar to handle the new case:</p>
-
 <p>你以为问题已经解决了。然后，有人给你发送了一个格式略有不同的文件。新格式使用反斜杠，而不是使用两个引号转义 <code>&quot;</code>。</p>
-
 <p>现在你现有的 grammar 解析失败。您没有满足该类型的转义的规则，因为您的 grammar 不需要它。作为模式和 grammar 的练习，只匹配你应该匹配的内容。在其他方面随心所欲，例如制作一个子 grammar 来处理新案例：</p>
-
 <pre><code>grammar Grammar::CSV::Backslashed is Grammar::CSV {
     token escaped-quote { '\\&quot;' }
     }
@@ -1059,12 +793,8 @@ loop {
 class CSV::Actions::Backslashed is CSV::Actions {
     method value ($/)  { make $/.subst( rx/ '\\&quot;' /, '&quot;', :g ) }
     }
-</code></pre>
-
-<p>With two grammars, how do you get the one that you need to use? The name interpolation <code>::($</code><em>name</em><code>)</code> comes in handy here:</p>
-
+</code></pre><p>With two grammars, how do you get the one that you need to use? The name interpolation <code>::($</code><em>name</em><code>)</code> comes in handy here:</p>
 <p>有两个 grammar，你如何得到你需要使用的那个？<code>::($</code><em>name</em><code>)</code> 在这里派上用场：</p>
-
 <pre><code>my %formats;
 %formats&lt;doubled&gt; = {
     'file'    =&gt; $*SPEC.catfile( &lt;corpus test.csv&gt; ),
@@ -1082,34 +812,19 @@ for %formats.values -&gt; $hash {
     say &quot;{$hash&lt;file&gt;} with {$hash&lt;grammar&gt;} &quot;,
         $match ?? 'parsed' !! 'failed';
     }
-</code></pre>
-
-<p>The <code>%formats</code> <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> of <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>es stores the filenames and the grammars for them. You can load a grammar and use it to parse the data without the explicit grammar name:</p>
-
+</code></pre><p>The <code>%formats</code> <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a> of <a href="https://docs.raku.org/type/Hash.html"><code>Hash</code></a>es stores the filenames and the grammars for them. You can load a grammar and use it to parse the data without the explicit grammar name:</p>
 <p><code>%formats</code> <a href="https://docs.raku.org/type/Hash.html"><code>散列</code></a>的<a href="https://docs.raku.org/type/Hash.html"><code>散列</code></a>存储文件名和 grammar。您可以加载 grammar 并使用它来解析数据而不使用显式的 grammar 名称：</p>
-
 <pre><code>corpus/test.csv with Grammar::CSV parsed
 corpus/test-backslash.csv with Grammar::CSV::Backslashed parsed
-</code></pre>
-
-<p>That mostly solves the problem, although there are plenty of special cases that this doesn’t cover.</p>
-
+</code></pre><p>That mostly solves the problem, although there are plenty of special cases that this doesn’t cover.</p>
 <p>这主要解决了这个问题，尽管有很多特殊情况并没有涵盖。</p>
-
 <h2 id="using-roles-in-grammars">Using Roles in Grammars</h2>
-
 <p>Roles can supply rules and methods that grammars can use. In the previous section you handled different sorts of double-quote escaping through inheritance, where you overrode the rule. You can do the same thing with roles.</p>
-
 <p>A grammar can have methods and subroutines. The way you declare a name with <code>sub</code>, <code>method</code>, or <code>rule</code> tells the language parser (not your grammar!) how to parse the stuff in the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>.</p>
-
 <p>First, adjust the main grammar to have a stub method for <code>&lt;escaped-quote&gt;</code>. This forces something else to define it:</p>
-
 <p>角色可以提供 grammar 可以使用的规则和方法。在上一节中，您通过继承处理了不同类型的双引号转义，其中您重写了规则。你可以用角色做同样的事情。</p>
-
 <p>Grammar 可以有方法和子程序。使用 <code>sub</code>，<code>method</code>或 <code>rule</code> 声明名称的方式告诉语言解析器（而不是 grammar！）如何解析<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中的东西。</p>
-
 <p>首先，调整主 grammar，使其具有 <code>&lt;escaped-quote&gt;</code> 的存根方法。这迫使别人定义它：</p>
-
 <pre><code>grammar Grammar::CSV {
      token TOP       { &lt;record&gt;+ }
      token record    { &lt;value&gt;+ % &lt;.separator&gt; \R }
@@ -1127,45 +842,25 @@ corpus/test-backslash.csv with Grammar::CSV::Backslashed parsed
      # stub that you must define in a role
      method escaped-quote { !!! }
      }
-</code></pre>
-
-<p>A role will fill in that stub method. There’s one role for each way to escape the double quote:</p>
-
+</code></pre><p>A role will fill in that stub method. There’s one role for each way to escape the double quote:</p>
 <p>角色将填充该存根方法。每种方式都有一个角色来转义双引号：</p>
-
 <pre><code>role DoubledQuote     { token escaped-quote { '&quot;&quot;'  } }
 role BackslashedQuote { token escaped-quote { '\\&quot;' } }
-</code></pre>
-
-<p>When it’s time to parse a file you can choose which role you want to use. You can create a new object for <code>Grammar::CSV</code> and apply the appropriate role to it:</p>
-
+</code></pre><p>When it’s time to parse a file you can choose which role you want to use. You can create a new object for <code>Grammar::CSV</code> and apply the appropriate role to it:</p>
 <p>在解析文件时，您可以选择要使用的角色。您可以为 <code>Grammar::CSV</code> 创建一个新对象并将适当的角色应用于它：</p>
-
 <pre><code>my $filename   = ...;
 my $csv-data   = $filename.IO.slurp;
 my $csv-parser = Grammar::CSV.new but DoubledQuote;
-</code></pre>
-
-<p>Use that object to parse your data:</p>
-
+</code></pre><p>Use that object to parse your data:</p>
 <p>使用该对象解析数据：</p>
-
 <pre><code>my $match = $csv-parser.parse: $csv-data;
 say $match // 'Failed!';
-</code></pre>
-
-<p>Doing this doesn’t fix the double quotes in the data—a <code>&quot;&quot;</code> stays as a <code>&quot;&quot;</code>—but you can fix that in an action class.</p>
-
+</code></pre><p>Doing this doesn’t fix the double quotes in the data—a <code>&quot;&quot;</code> stays as a <code>&quot;&quot;</code>—but you can fix that in an action class.</p>
 <p>EXERCISE 17.6Adjust the CSV example to use roles instead of inheritance. Create an action class to adjust the escaped double quotes as you run into them. You can start with <em>Grammars/test.csv</em> from the downloads section of <a href="https://www.learningraku.com/">the book’s website</a> if you like.</p>
-
 <p>这样做不会修复数据中的双引号 -  <code>&quot;&quot;</code> 保留为 <code>&quot;&quot;</code> - 但您可以在 action 类中修复它。</p>
-
 <p>练习17.6 调整 CSV 示例以使用角色而不是继承。创建一个 action 类，以便在遇到它们时调整转义的双引号。如果您愿意，可以从本书网站的下载部分 Grammars/ test.csv 开始。</p>
-
 <h1 id="summary">Summary</h1>
-
 <p>Grammars are one of the killer features of the language. You can define complex relationships between patterns and use action classes to run arbitrarily complex code when something matches. You might find that your entire program ends up being one big grammar.</p>
-
 <p>Grammars 是 Raku 语言的杀手级特性之一。您可以定义模式之间的复杂关系，并在匹配时使用 action 类来运行任意复杂的代码。您可能会发现整个程序最终变成一个大的 grammar。</p>
 
 
@@ -1258,7 +953,7 @@ say $match // 'Failed!';
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

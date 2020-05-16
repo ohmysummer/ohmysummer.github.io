@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-13-%E7%AC%AC%E5%8D%81%E4%B8%89%E5%A4%A9-%E4%BD%BF%E7%94%A8-raku-%E6%8C%96%E6%8E%98%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,75 +231,56 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="介绍">介绍</h2>
-
+        <h2 id="介绍">介绍</h2>
 <p>大家好!</p>
-
 <p>今天，让我介绍一下如何用 Raku 挖掘维基百科的 Infobox。</p>
-
 <p>维基百科信息框在自然语言处理中扮演着非常重要的角色，并且有许多应用程序可以利用维基百科信息框：</p>
-
 <ul>
 <li>构建知识库（例如 DBpedia[0]）</li>
 <li>排名属性的重要性[1]</li>
 <li>问答[2]</li>
 </ul>
-
 <p>其中，我将重点讨论信息框提取问题，并演示如何使用 Grammars 和 Actions 解析信息框的复杂结构。</p>
-
 <h2 id="grammar-和-actions-难学吗">Grammar 和 Actions 难学吗?</h2>
-
 <p>不，他们不是！</p>
-
 <p>你只需要知道五件事情：</p>
-
 <ul>
-<li><p>Grammar</p>
-
-<ul>
-<li><strong>token</strong> 是最基础的一个。你通常使用它。</li>
-<li><strong>rule</strong> 让空白符有意义。</li>
-<li><strong>regex</strong> 让匹配引擎回溯。</li>
-</ul></li>
-
-<li><p>Actions</p>
-
-<ul>
-<li><strong>make</strong> 准备一个对象用于返回当 made calls on it。</li>
-<li><strong>made</strong> 在它的调用者身上调用并返回准备好的对象。</li>
-</ul></li>
+<li>
+<p>Grammar</p>
+</li>
+<li>
+<p><strong>token</strong> 是最基础的一个。你通常使用它。</p>
+</li>
+<li>
+<p><strong>rule</strong> 让空白符有意义。</p>
+</li>
+<li>
+<p><strong>regex</strong> 让匹配引擎回溯。</p>
+</li>
+<li>
+<p>Actions</p>
+</li>
+<li>
+<p><strong>make</strong> 准备一个对象用于返回当 made calls on it。</p>
+</li>
+<li>
+<p><strong>made</strong> 在它的调用者身上调用并返回准备好的对象。</p>
+</li>
 </ul>
-
 <p>欲了解更多信息, 请查看: <a href="https://docs.raku.org/language/grammars">https://docs.raku.org/language/grammars</a></p>
-
 <h3 id="什么是-infobox">什么是 Infobox?</h3>
-
 <p>你有没有听过 &ldquo;Infobox&rdquo; 这个词?</p>
-
 <p>对于那些没听说过的人，我会简单地解释一下。</p>
-
 <p>理解信息框的一个简单方法是使用一个真实的例子：</p>
-
-<p><img src="https://rakuadvent.files.wordpress.com/2017/11/rakuinfobox.png" alt="img" /></p>
-
+<p><img src="https://rakuadvent.files.wordpress.com/2017/11/rakuinfobox.png" alt="img"></p>
 <p>你可以看到，信息框会在页面的右上方显示页面主题的属性-值对儿。例如, 在这个例子中, 它说 Raku 的设计者 (ja: 設計者)是 Larry Wall(ja: ラリー・ウォール)。</p>
-
 <p>欲了解更多信息, 请查看: <a href="https://en.wikipedia.org/wiki/Help:Infobox">https://en.wikipedia.org/wiki/Help:Infobox</a></p>
-
 <h3 id="第一个例子-raku">第一个例子: Raku</h3>
-
 <p>首先要说的是，我将使用日文维基百科而不是英文维基百科演示解析技术。</p>
-
 <p>主要原因是解析日文维基百科是我的$ dayjob :)</p>
-
 <p>第二个原因是我想要展示 Raku 如何轻松地处理 Unicode 字符串。</p>
-
 <p>然后，让我们开始解析 <a href="https://ja.wikipedia.org/wiki/Perl_6">Raku 文章</a>中的信息框！</p>
-
 <p>用 wiki 标记写的文章的代码是：</p>
-
 <pre><code>{{Comp-stub}}
 
 {{Infobox プログラミング言語
@@ -321,24 +302,17 @@ if (!doNotTrack) {
 
 Rakuは、[[2000年]]に[[Perl]]の次期メジャーバージョンとして設計が始められ、[[2015年]]12月25日に公式のRaku正式安定版がリリースされた。しかし、言語仕様は現在のPerl (Perl 5)と互換性がなく、既存のPerl 5のソフトウェアをRaku用に「アップグレ
 ード」するのは極めて困難である。したがって現在はPerl 5とRakuは別の言語であると考えられており、RakuはPerl 5の次期バージョンではないとされている。換言すれば、RakuはPerl 5から移行対象とはみなされていない。
-</code></pre>
-
-<p>代码有三个有问题的部分：</p>
-
+</code></pre><p>代码有三个有问题的部分：</p>
 <ol>
 <li>信息框块后面有多余的元素，例如模板 <code>{{プログラミング言語}}</code> 和以 <code>'''Raku'''</code> 开头的主句。</li>
 <li>我们必须区分三种类型的 token: 锚点文本（例如: <code>[[Rakudo]]</code>）, 原始文本（例如： <code>Rakudo Star 2016.04</code>）, 网站链接
 （例如： <code>[https://raku.org/ Raku.org]</code>）。</li>
 <li>信息框不从文章的顶部位置开始。在这个例子中, <code>{{Comb-stub}}</code> 在文章的顶部。</li>
 </ol>
-
 <p>好的，接下来我将演示如何按照 Grammar，Actions，Caller（即调用 Grammar 和 Actions 的代码部分）的顺序来解决上述问题。</p>
-
 <h3 id="grammar">Grammar</h3>
-
 <p>解析信息框的 Grammar 代码如下:</p>
-
-<pre><code class="language-raku">grammar Infobox::Grammar {
+<pre><code class="language-raku" data-lang="raku">grammar Infobox::Grammar {
     token TOP { &lt;infobox&gt; .+ } # (#1)
     token infobox { '{{Infobox' &lt;.ws&gt; &lt;name&gt; \n &lt;propertylist&gt; '}}' }
     token name { &lt;-[\n]&gt;+ }
@@ -369,33 +343,19 @@ Rakuは、[[2000年]]に[[Perl]]の次期メジャーバージョンとして設
     token rawtext    { &lt;-[\|\[\]\n、\,\&lt;\&gt;\}\{]&gt;+ } # (#4)
     token delimiter  { [ '、' | ',' ]             } # (#5)
 }
-</code></pre>
-
-<ul>
-<li>问题 1 的答案:
-
-<ul>
+</code></pre><ul>
+<li>问题 1 的答案:</li>
 <li>使用 <code>.+</code> 来匹配多余的部分。(#1)</li>
-</ul></li>
-<li>问题 2 的答案:
-
-<ul>
+<li>问题 2 的答案:</li>
 <li>准备 3 种类型的 tokens: 锚文本(#2), 网站链接(#2), 和原始文本(#4)。</li>
 <li>tokens 可能被分隔符（例如: <code>,</code>）分割, 所以准备分割符 token。(#5)</li>
 <li>将 token 值-内容表示为四个 token 的任意长度序列（即，锚点文本，网站链接，原始文本，分隔符）。(#6)</li>
-</ul></li>
-<li>问题 3 的答案:
-
-<ul>
+<li>问题 3 的答案:</li>
 <li>没有特别的事情要提及。</li>
-</ul></li>
 </ul>
-
 <h3 id="actions">Actions</h3>
-
 <p>Actions 的代码如下:</p>
-
-<pre><code class="language-raku">class Infobox::Actions {
+<pre><code class="language-raku" data-lang="raku">class Infobox::Actions {
     method TOP($/) { make $&lt;infobox&gt;.made }
     method infobox($/) {
         make %( name =&gt; $&lt;name&gt;.made, propertylist =&gt; $&lt;propertylist&gt;.made )
@@ -430,26 +390,15 @@ Rakuは、[[2000年]]に[[Perl]]の次期メジャーバージョンとして設
         make ~$/;
     }
 }
-</code></pre>
-
-<ul>
-<li>问题 2 的解决方法:
-
-<ul>
+</code></pre><ul>
+<li>问题 2 的解决方法:</li>
 <li>使 token value-content 由三个键组成：anchortext，weblink 和 rawtext。</li>
-</ul></li>
-<li>问题 1 和 3的解决方法:
-
-<ul>
+<li>问题 1 和 3的解决方法:</li>
 <li>没有特别的事情要提及。</li>
-</ul></li>
 </ul>
-
 <h3 id="caller">Caller</h3>
-
 <p>Caller 部分的代码如下:</p>
-
-<pre><code class="language-raku">my @lines = $*IN.lines;
+<pre><code class="language-raku" data-lang="raku">my @lines = $*IN.lines;
 while @lines {
     my $chunk = @lines.join(&quot;\n&quot;); # (#1)
     my $result = Infobox::Grammar.parse($chunk, actions =&gt; Infobox::Actions).made; # (#2)
@@ -464,30 +413,19 @@ while @lines {
     }
     shift @lines;
 }
-</code></pre>
-
-<ul>
-<li>问题 3 的解决方法:
-
-<ul>
+</code></pre><ul>
+<li>问题 3 的解决方法:</li>
 <li>逐行阅读文章并制作一个包含当前行和最后一行之间的行的块。 （＃1）</li>
 <li>如果解析器确定：</li>
 <li>该块不包含信息框，它返回一个未定义的值。接收未定义值的好方法之一是使用 <code>$</code> 符号。(#2)</li>
 <li>该块包含信息框，它返回一个定义的值。使用 <code>@()</code> contextualizer 并迭代结果。(#3)</li>
-</ul></li>
-<li>问题 1 和 2 的解决方法：
-
-<ul>
+<li>问题 1 和 2 的解决方法：</li>
 <li>没有特别的事情要提及。</li>
-</ul></li>
 </ul>
-
 <h3 id="运行解析器">运行解析器</h3>
-
 <p>你准备好了吗？
 是时候运行第一个例子了！</p>
-
-<pre><code class="language-raku">$ raku parser.p6 &lt; raku.txt
+<pre><code class="language-raku" data-lang="raku">$ raku parser.p6 &lt; raku.txt
 プログラミング言語
 名前
 {anchortext =&gt; [], rawtext =&gt; [Raku], weblink =&gt; []}
@@ -511,16 +449,10 @@ while @lines {
 {anchortext =&gt; [[[Artistic License 2]]], rawtext =&gt; [], weblink =&gt; []}
 ウェブサイト
 {anchortext =&gt; [], rawtext =&gt; [], weblink =&gt; [[https://raku.org/ Raku.org]]}
-</code></pre>
-
-<p>我们看到的例子可能对您来说太简单了。让我们挑战更难的！</p>
-
+</code></pre><p>我们看到的例子可能对您来说太简单了。让我们挑战更难的！</p>
 <h3 id="第二个例子-阿尔伯特爱因斯坦">第二个例子: 阿尔伯特爱因斯坦</h3>
-
 <p>作为第二个例子，我们来解析<a href="https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AB%E3%83%99%E3%83%AB%E3%83%88%E3%83%BB%E3%82%A2%E3%82%A4%E3%83%B3%E3%82%B7%E3%83%A5%E3%82%BF%E3%82%A4%E3%83%B3">阿尔伯特爱因斯坦</a>的信息框。</p>
-
 <p>用 wiki 标记写的文章的代码是：</p>
-
 <pre><code>{{Infobox Scientist
 |name = アルベルト・アインシュタイン
 |image = Einstein1921 by F Schmutzer 2.jpg
@@ -587,31 +519,27 @@ while @lines {
 {{thumbnail:ノーベル賞受賞者|1921年|ノーベル物理学賞|光電効果の法則の発見等}}
 {{thumbnail:end}}
 '''アルベルト・アインシュタイン'''&lt;ref group=&quot;†&quot;&gt;[[日本語]]における表記には、他に「アル{{Underline|バー}}ト・アインシュine|バー}}ト・アイン{{Underline|ス}}タイン」（[[英語]]の発音由来）がある。&lt;/ref&gt;（{{lang-de-short|Albert Einstein}}&lt;ref ɛrt ˈaɪnˌʃtaɪn}} '''ア'''ルベルト・'''ア'''インシュタイン、'''ア'''ルバート・'''ア'''インシュタイン&lt;/ref&gt;&lt;ref group=&quot;†&quot;taɪn}} '''ア'''ルバ（ー）ト・'''ア'''インスタイン、'''ア'''ルバ（ー）'''タ'''インスタイン&lt;/ref&gt;&lt;ref&gt;[http://dictionary.rein Einstein] (Dictionary.com)&lt;/ref&gt;&lt;ref&gt;[http://www.oxfordlearnersdictionaries.com/definition/english/albert-einstein?q=Albert+Einstein Albert Einstein] (Oxford Learner's Dictionaries)&lt;/ref&gt;、[[1879年]][[3月14日]] - [[1955年]][[4月18日]]）ツ]]生まれの[[理論物理学者]]である。
-</code></pre>
-
-<p>正如你所看到的，这里有五个新问题：</p>
-
+</code></pre><p>正如你所看到的，这里有五个新问题：</p>
 <ol>
-<li><p>一些模板
+<li>
+<p>一些模板
 a. 包含换行符;并且
-b. 是嵌套的(例如. <code>{{nowrap|{{仮リンク|...}}...}}</code>)</p></li>
-
-<li><p>某些 attribute-value 对是空的。</p></li>
-
-<li><p>attribute-value 对的一些 value-sides
+b. 是嵌套的(例如. <code>{{nowrap|{{仮リンク|...}}...}}</code>)</p>
+</li>
+<li>
+<p>某些 attribute-value 对是空的。</p>
+</li>
+<li>
+<p>attribute-value 对的一些 value-sides
 a. 包含中断标签;并且
-b. 由不同类型的 token 组成（例如，anchortext 和 rawtext）。所以你需要添加位置信息来表示 tokens 之间的依赖关系。</p></li>
+b. 由不同类型的 token 组成（例如，anchortext 和 rawtext）。所以你需要添加位置信息来表示 tokens 之间的依赖关系。</p>
+</li>
 </ol>
-
 <p>我将按照 Grammar，Actions 的顺序展示如何解决上述问题。</p>
-
 <p>Caller 的代码与前一个相同。</p>
-
 <h3 id="grammar-1">Grammar</h3>
-
 <p>Grammar 代码如下:</p>
-
-<pre><code class="language-raku">grammar Infobox::Grammar {
+<pre><code class="language-raku" data-lang="raku">grammar Infobox::Grammar {
     token TOP { &lt;infobox&gt; .+ }
     token infobox { '{{Infobox' &lt;.ws&gt; &lt;name&gt; \n &lt;propertylist&gt; '}}' }
     token name { &lt;-[\n]&gt;+ }
@@ -673,40 +601,23 @@ b. 由不同类型的 token 组成（例如，anchortext 和 rawtext）。所以
     token delimiter { [ '、' | ',' | '&amp;nbsp;' ] }
     token sup { '&lt;sup&gt;' &lt;-[\n]&gt;+? '&lt;/sup&gt;'}
 }
-</code></pre>
-
-<ul>
-<li>问题 1.1 的解决方法：
-
-<ul>
-<li>创建 token *value-content-list-nl*，它是 value-content-list token 的换行符分隔版本。使用<a href="https://docs.raku.org/language/regexes#Modified_quantifier:_%,_%%">修改量词</a> <code>％</code> 来表示这种序列是很有用的。 （＃1）</li>
+</code></pre><ul>
+<li>问题 1.1 的解决方法：</li>
+<li>创建 token <em>value-content-list-nl</em>，它是 value-content-list token 的换行符分隔版本。使用<a href="https://docs.raku.org/language/regexes#Modified_quantifier:_%25,_%25%25">修改量词</a> <code>％</code> 来表示这种序列是很有用的。 （＃1）</li>
 <li>创建 token 模板。在这一个中，定义一个代表 <a href="https://en.wikipedia.org/wiki/Template:Plainlist">Plainlist 模板</a> 的序列。 （＃2）</li>
-</ul></li>
-<li>问题 1.2 的解决方法：
-
-<ul>
+<li>问题 1.2 的解决方法：</li>
 <li>使 token 模板能够调用 token value-content-list。此修改触发递归调用并捕获嵌套结构，因为 token value-content-list 包含 token 模板。 （＃3）</li>
-</ul></li>
-<li>问题 2 的解决方法：
-
-<ul>
-<li>在 token <em>property</em> 中，定义一个 value-side 为空的序列（即以&rsquo;=&lsquo;结尾的序列）。 （＃4）</li>
-</ul></li>
-<li>问题 3.1 的解决方法:
-
-<ul>
+<li>问题 2 的解决方法：</li>
+<li>在 token <em>property</em> 中，定义一个 value-side 为空的序列（即以'='结尾的序列）。 （＃4）</li>
+<li>问题 3.1 的解决方法:</li>
 <li>创建 token br（＃5）
  - 让 token br 遵循两个 token 中的 token value-content：</li>
 <li>token value-content-list （＃6）</li>
 <li>token-content-list-nl（＃7）</li>
-</ul></li>
 </ul>
-
 <h3 id="actions-1">Actions</h3>
-
 <p>Action 代码如下:</p>
-
-<pre><code class="language-raku">class Infobox::Actions {
+<pre><code class="language-raku" data-lang="raku">class Infobox::Actions {
     method TOP($/) { make $&lt;infobox&gt;.made }
     method infobox($/) {
         make %( name =&gt; $&lt;name&gt;.made, propertylist =&gt; $&lt;propertylist&gt;.made )
@@ -745,20 +656,12 @@ b. 由不同类型的 token 组成（例如，anchortext 和 rawtext）。所以
         make %(body =&gt; ~$/, from =&gt; $/.from, to =&gt; $/.to); # (#4)
     }
 }  
-</code></pre>
-
-<ul>
-<li>问题 3.2 的解决方法：
-
-<ul>
+</code></pre><ul>
+<li>问题 3.2 的解决方法：</li>
 <li>调用 make 时，分别使用 Match.from 和 Match.to 来获取匹配开始位置和匹配结束位置。 （＃1〜＃4）</li>
-</ul></li>
 </ul>
-
 <h3 id="运行解析器-1">运行解析器</h3>
-
 <p>该跑了！</p>
-
 <pre><code>$ raku parser.p6 &lt; einstein.txt
 Scientist
 name
@@ -862,26 +765,15 @@ signature
 {anchortext =&gt; [], rawtext =&gt; [{body =&gt; Albert Einstein signature 1934.svg, from =&gt; 2206, to =&gt; 2241}], template =&gt; [], weblink =&gt; []}
 footnotes
 Nil
-</code></pre>
-
-<h3 id="结论">结论</h3>
-
+</code></pre><h3 id="结论">结论</h3>
 <p>我演示了信息框的解析技术。如果您有机会将 Wikipedia 用作 NLP 的资源，我强烈建议您创建自己的解析器。它不仅会加深你对 Raku 的理解而且还会加深关于维基百科知识的理解。</p>
-
 <p>再见！</p>
-
 <h3 id="引文">引文</h3>
-
 <p>[0] Lehmann，Jens 等人。 “DBpedia&ndash;一种从维基百科中提取的大型多语言知识库。”Semantic Web 6.2（2015）：167-195。</p>
-
 <p>[1]阿里，Esraa，Annalina Caputo 和 SéamusLawless。 “使用学习排序的实体属性排名”。</p>
-
 <p>[2]莫拉莱斯，阿尔瓦罗等人。 “学会回答维基百科信息框的问题。”2016年自然语言处理实证方法会议论文集。 2016年</p>
-
 <h3 id="license">License</h3>
-
 <p>所有来自维基百科的资料都是根据Creative Commons Attribution-ShareAlike 3.0 Unported License 授权使用的。</p>
-
 <p>-
 Itsuki丰田
 日本的网页开发人员。</p>
@@ -976,7 +868,7 @@ Itsuki丰田
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

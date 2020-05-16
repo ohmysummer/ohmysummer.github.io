@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-04-%E7%AC%AC%E5%9B%9B%E7%AB%A0.-%E5%AD%97%E7%AC%A6%E4%B8%B2/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,187 +231,99 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第四章-字符串">第四章 字符串</h1>
-
 <p>Strings represent the text data in your program as <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> objects. Raku’s facility with text data and its manipulation is one of its major attractions. This chapter focuses on the many ways that you can create <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s; for any job you have there’s likely a feature that makes that easy for you. Along with that you’ll see a bit about inspecting, extracting, and comparing text in preparation for loftier goals coming up.</p>
-
 <p>字符串将程序中的文本数据表示为<a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>对象。 Raku 的文本数据和它的文本操作天赋是其主要吸引力之一。本章重点介绍可以创建<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的多种方法;对于你的任何工作，可能有一个功能，使你的工作变得容易。除此之外，你还会看到有关检查，提取和比较文本的内容，以便为即将出现的更高目标做准备。</p>
-
 <h1 id="literal-quoting">Literal Quoting</h1>
-
 <p>You can type literal text directly into your program. What you type is what the text is, and the compiler does not interpret it as anything other than exactly what you typed. You can surround literal text with half-width corner brackets, <code>｢</code> and <code>｣</code>:</p>
-
 <p>你可以直接在程序中键入字面文本。你键入的内容是文本的内容，编译器会将其解释为你输入的内容。你可以使用半角括号<code>｢</code> 和 <code>｣</code>来包围字面文本：</p>
-
 <pre><code>｢Literal string｣
-</code></pre>
-
-<p>This is your first encounter with a paired delimiter. These characters mark the beginning and end of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. There’s an opening character and a closing character that surround your text.</p>
-
+</code></pre><p>This is your first encounter with a paired delimiter. These characters mark the beginning and end of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. There’s an opening character and a closing character that surround your text.</p>
 <p>Any character that you use is interpreted as exactly what it is, with no special processing:</p>
-
 <p>这是你第一次遇到配对分隔符。这些字符标记<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的开头和结尾。文本周围有一个开口字符和一个闭合字符。</p>
-
 <p>你使用的任何字符都被解释为它的确切含义，没有特殊处理：</p>
-
 <pre><code>｢Literal '&quot; string with \ and {} and /｣
-</code></pre>
-
-<p>You can’t use only one of the delimiter characters in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. These won’t work:</p>
-
+</code></pre><p>You can’t use only one of the delimiter characters in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. These won’t work:</p>
 <p>你不能只使用<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的一个分隔符。这些不起作用：</p>
-
 <pre><code>｢ Unpaired ｢ Delimiters ｣
 ｢ Unpaired ｣ Delimiters ｣
-</code></pre>
-
-<p>However, if you pair delimiters in the text the compiler will figure out if they are balanced—the opening delimiter comes first and a closing delimiter pairs with it:</p>
-
+</code></pre><p>However, if you pair delimiters in the text the compiler will figure out if they are balanced—the opening delimiter comes first and a closing delimiter pairs with it:</p>
 <p>但是，如果在文本中对分隔符进行配对，编译器将确定它们是否是平衡的 - 开口分隔符首先出现，并且闭合分隔符与它配对：</p>
-
 <pre><code>｢ Del｢i｣miters ｣
-</code></pre>
-
-<h6 id="note">NOTE</h6>
-
+</code></pre><h6 id="note">NOTE</h6>
 <p>The Raku language is a collection of sublanguages, or slangs. Once inside a particular slang the compiler parses your source code by that slang’s rules. The quoting language is one of those slangs.</p>
-
 <p>If your literal text has corner brackets in it you can use a generalized quoting mechanism. These start with a <code>Q</code>(or <code>q</code>) and can get as limiting or as permissive as you like, as you’ll see in this chapter.</p>
-
 <p>After the <code>Q</code> you can select almost any character to be the delimiter. It can’t be a character valid in a variable name, because that would make it look like a name instead of a delimiter. The paired characters are common; the opening character has to be on the left and its closing partner has to be on the right. Perhaps you want to use square brackets instead of corner brackets. Now the <code>｣</code> isn’t special because it’s not a delimiter:</p>
-
 <h6 id="注意">注意</h6>
-
 <p>Raku 语言是一个子语言或方言的集合。一旦进入特定的方言，编译器就会根据该方言的规则解析你的源代码。引用语言是其中一个方言。</p>
-
 <p>如果你的字面文本中包含角括号，则可以使用通用引用机制。这些以 <code>Q</code>（或 <code>q</code> ）开头，可以像你想的那样得到限制或许可，正如你将在本章中看到的那样。</p>
-
 <p>在 <code>Q</code> 之后，你可以选择几乎任何字符作为分隔符。它不能是变量名中有效的字符，因为这会使它看起来像名称而不是分隔符。配对字符很常见;开口字符必须位于左侧，其闭合字符必须位于右侧。也许你想使用方括号而不是角括号。现在，这并不特别，因为它不是分隔符：</p>
-
 <pre><code>Q[Unpaired ｣ Delimiters]
-</code></pre>
-
-<p>Most of the paired characters act the same:</p>
-
+</code></pre><p>Most of the paired characters act the same:</p>
 <p>大多数配对字符的行为相同：</p>
-
 <pre><code>Q{Unpaired ｣ Delimiters}
 Q&lt;Unpaired ｣ Delimiters&gt;
 Q&lt;&lt;Unpaired ｣ Delimiters&gt;&gt;
 Q«Works»
-</code></pre>
-
-<p>There’s one exception. You can’t have an open parenthesis right after the <code>Q</code> because that makes it look like a subroutine call (but it’s not):</p>
-
+</code></pre><p>There’s one exception. You can’t have an open parenthesis right after the <code>Q</code> because that makes it look like a subroutine call (but it’s not):</p>
 <p>有一个例外。在 <code>Q</code> 之后你不能有开口圆括号，因为这使它看起来像一个子程序调用（但它不是）：</p>
-
 <pre><code>Q(Does not compile)
-</code></pre>
-
-<p>You don’t have to use paired characters. You can use the same character for the opening and closing delimiter:</p>
-
+</code></pre><p>You don’t have to use paired characters. You can use the same character for the opening and closing delimiter:</p>
 <p>你不必使用配对字符。你可以对开口和闭合分隔符使用相同的字符：</p>
-
 <pre><code>Q/hello/
-</code></pre>
-
-<p>You can store a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> in a variable or output it immediately:</p>
-
+</code></pre><p>You can store a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> in a variable or output it immediately:</p>
 <p>你可以将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>存储在变量中或立即输出：</p>
-
 <pre><code>my $greeting = Q/Hello World!/;
 put Q/Hello World!/;
-</code></pre>
-
-<p>And you can call methods on your <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> just like you could do with numbers:</p>
-
-<p>你可以在你的<a href="https://docs.raku.org/type/Str.html"><a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a></a>上调用方法，就像你对数字一样：</p>
-
+</code></pre><p>And you can call methods on your <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> just like you could do with numbers:</p>
+<p>你可以在你的[<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>](<a href="https://docs.raku.org/type/Str.html">https://docs.raku.org/type/Str.html</a>)上调用方法，就像你对数字一样：</p>
 <pre><code>Q/Hello World!/.^name;  # Str
 Q/Hello World!/.put;
-</code></pre>
-
-<h1 id="escaped-strings">Escaped Strings</h1>
-
+</code></pre><h1 id="escaped-strings">Escaped Strings</h1>
 <p>One step up from literal <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s are escaped strings. The single tick acts as the delimiter for these <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. These are often called single-quoted strings:</p>
-
-<p>从字面<a href="https://docs.raku.org/type/Str.html"><a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a></a>向上一步是转义字符串。单个记号作为这些<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的分隔符。这些通常称为单引号字符串：</p>
-
+<p>从字面[<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>](<a href="https://docs.raku.org/type/Str.html">https://docs.raku.org/type/Str.html</a>)向上一步是转义字符串。单个记号作为这些<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的分隔符。这些通常称为单引号字符串：</p>
 <pre><code>% raku
 &gt; 'Hamadryas perlicus'
 Hamadryas perlicus
-</code></pre>
-
-<p>If you want to have the single tick as a character in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you can escape it with a backslash. That tells the quoting slang that the next character isn’t the delimiter but belongs as literal text:</p>
-
+</code></pre><p>If you want to have the single tick as a character in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you can escape it with a backslash. That tells the quoting slang that the next character isn’t the delimiter but belongs as literal text:</p>
 <p>如果你想让单个记号作为<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的一个字符，你可以用反斜杠来转义它。这告诉引用方言的下一个字符不是分隔符但属于字面文本：</p>
-
 <pre><code>% raku
 &gt; 'The escaped \' stays in the string'
 The escaped ' stays in the string
-</code></pre>
-
-<p>Since the <code>\</code> is the escape character, you can escape it to get a literal backslash:</p>
-
+</code></pre><p>Since the <code>\</code> is the escape character, you can escape it to get a literal backslash:</p>
 <p>由于 <code>\</code> 是转义字符，你可以转义它以获得字面反斜杠：</p>
-
 <pre><code>% raku
 &gt; 'Escape the \\ backslash'
 Escape the \ backslash
-</code></pre>
-
-<p>A DOS path can be quite annoying to type, but escaped and literal <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s take care of that:</p>
-
+</code></pre><p>A DOS path can be quite annoying to type, but escaped and literal <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s take care of that:</p>
 <p>DOS 路径可能非常烦人，但是转义和字面<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>负责：</p>
-
 <pre><code>% raku
 &gt; 'C:\\Documents and Settings\\Annoying\\Path'
 C:\Documents and Settings\Annoying\Path
 &gt; Q/C:\Documents and Settings\Annoying\Path/
 C:\Documents and Settings\Annoying\Path
-</code></pre>
-
-<p>If you want to use a different delimiter for an escaped string you use the lowercase <code>q</code> followed by the delimiter that you want (following the same rules as for the literal quoting delimiters):</p>
-
+</code></pre><p>If you want to use a different delimiter for an escaped string you use the lowercase <code>q</code> followed by the delimiter that you want (following the same rules as for the literal quoting delimiters):</p>
 <p>如果要对转义字符串使用不同的分隔符，请使用小写 <code>q</code> 后跟所需的分隔符（遵循与字面引用分隔符相同的规则）：</p>
-
 <pre><code>q{Unpaired ' Delimiters}
 q&lt;Unpaired ' Delimiters&gt;
 q&lt;&lt;Unpaired ' Delimiters&gt;&gt;
 q«Works»
-</code></pre>
-
-<h2 id="adverbs-for-quoting">Adverbs for Quoting</h2>
-
+</code></pre><h2 id="adverbs-for-quoting">Adverbs for Quoting</h2>
 <p>Adverbs modify how something works and are a big part of Raku. You’ll see more of these in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch09.html#camelia-hashes">Chapter 9</a>, but you’ll get a taste for them in this chapter. Adverbs start with a colon followed by letters or numbers.</p>
-
 <p>All of the quoting methods you’ll see in this chapter are modifications of basic literal quoting. You use adverbs to adjust the quoting behavior.</p>
-
 <p>The <code>:q</code> adverb modifies <code>Q</code> to become an escaping quote. There must be some whitespace after the adverb, but it’s optional after the <code>Q</code>:</p>
-
 <p>副词会修改某些东西的工作方式，并且是 Raku 的重要组成部分。你将在第9章中看到更多这些内容，但在本章中你将会对它们有所了解。副词以冒号开头，后跟字母或数字。</p>
-
 <p>你将在本章中看到的所有引用方法都是对基本字面引用的修改。你使用副词来调整引用行为。</p>
-
 <p><code>:q</code> 副词修改 <code>Q</code> 成为转义引用。在副词之后必须有一些空格，但在 <code>Q</code> 之后它是可选的：</p>
-
 <pre><code>% raku
 &gt; Q:q 'This quote \' escapes \\'
 This quote ' escapes \
 &gt; Q :q 'This quote \' escapes \\'
 This quote ' escapes \
-</code></pre>
-
-<p>This form doesn’t specifically escape the single tick; it escapes the backslash and the delimiter characters. A backslash that doesn’t precede a delimiter or another backslash is interpreted as a literal backslash:</p>
-
+</code></pre><p>This form doesn’t specifically escape the single tick; it escapes the backslash and the delimiter characters. A backslash that doesn’t precede a delimiter or another backslash is interpreted as a literal backslash:</p>
 <p>这种形式并没有特别转义单个记号;它转义了反斜杠和分隔符字符。不在分隔符或另一个反斜杠之前的反斜杠被解释为字面反斜杠：</p>
-
 <pre><code>% raku
 &gt; Q :q  ｢This quote \' escapes｣
 This quote \' escapes
@@ -419,168 +331,92 @@ This quote \' escapes
 This quote ｢ escapes
 &gt; Q :q  ｢This quote \｢\｣ escapes｣
 This quote ｢ escapes
-</code></pre>
-
-<p>The <code>:single</code> adverb is a longer version of <code>:q</code> and might help you remember what you want:</p>
-
+</code></pre><p>The <code>:single</code> adverb is a longer version of <code>:q</code> and might help you remember what you want:</p>
 <p><code>:single</code> 副词是 <code>:q</code> 的较长版本，可能会帮助你记住你想要的内容：</p>
-
 <pre><code>% raku
 &gt; Q :single 'This quote \' escapes'
 This quote ' escapes
-</code></pre>
-
-<p>Most of the time you aren’t going to work this hard. The common uses of quoting have default delimiters so you don’t even see the <code>Q</code>. Even though many <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s would be more correctly represented with strict literal quoting, most people tend to use the single ticks simply because it’s easier to type. No matter which quoting method you use you get the same type of object.</p>
-
+</code></pre><p>Most of the time you aren’t going to work this hard. The common uses of quoting have default delimiters so you don’t even see the <code>Q</code>. Even though many <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s would be more correctly represented with strict literal quoting, most people tend to use the single ticks simply because it’s easier to type. No matter which quoting method you use you get the same type of object.</p>
 <p>大多数时候你不打算这么努力。引用的常见用法具有默认分隔符，因此你甚至不会看到 <code>Q</code>.即使使用严格的字面引用更准确地表示许多<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>，大多数人倾向于使用单个记号，因为它更容易键入。无论使用哪种引用方法，都可以获得相同类型的对象。</p>
-
 <h2 id="string-operators-and-methods">String Operators and Methods</h2>
-
 <p>Use the concatenation operator, <code>~</code>, to combine <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. Some people call this “string addition.” The output shows the two <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s as one with nothing else between them:</p>
-
 <p>使用连接运算符 <code>~</code> 来组合<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。有些人将此称为“字符串添加。”输出显示两个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>合为一个，它们之间没有其他内容：</p>
-
 <pre><code>my $name = 'Hamadryas' ~ 'perlicus';
 put $name;      # Hamadryasperlicus
-</code></pre>
-
-<p>You could add a space yourself by putting it in one of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s, but you can also concatenate more than two <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s at a time:</p>
-
+</code></pre><p>You could add a space yourself by putting it in one of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s, but you can also concatenate more than two <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s at a time:</p>
 <p>你可以在两个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>之间添加一个空格，但你也可以一次连接两个以上的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>put 'Hamadryas ' ~ 'perlicus';
 put 'Hamadryas' ~ ' ' ~ 'perlicus';
-</code></pre>
-
-<p>The <code>join</code> routine glues together <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s with the first <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you give it:</p>
-
+</code></pre><p>The <code>join</code> routine glues together <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s with the first <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you give it:</p>
 <p><code>join</code> 例程将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>与你给它的第一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>粘在一起：</p>
-
 <pre><code>my $butterfly-name = join ' ', 'Hamadryas', 'perlicus'
-</code></pre>
-
-<p>You can make larger <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s by repeating a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. The <code>x</code> is the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> replication operator. It repeats the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> the number of times you specify. This is handy for making a text-based divider or ruler for your output:</p>
-
+</code></pre><p>You can make larger <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s by repeating a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. The <code>x</code> is the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> replication operator. It repeats the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> the number of times you specify. This is handy for making a text-based divider or ruler for your output:</p>
 <p>你可以通过重复<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>来制作更大的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。<code>x</code> 是<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>复制运算符。它会重复<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>指定的次数。这对于为输出创建基于文本的分隔符或标尺很方便：</p>
-
 <pre><code>put '-' x 70;
 put '.123456789' x 7;
-</code></pre>
-
-<p>The <code>.chars</code> methods tells you how many characters are in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>The <code>.chars</code> methods tells you how many characters are in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p><code>.chars</code> 方法告诉你<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中有多少个字符：</p>
-
 <pre><code>put 'Hamadryas'.chars;  # 9
-</code></pre>
-
-<p>Any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with at least one character is <code>True</code> as a Boolean, including the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> of the single character <code>0</code>:</p>
-
+</code></pre><p>Any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with at least one character is <code>True</code> as a Boolean, including the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> of the single character <code>0</code>:</p>
 <p>任何具有至少一个字符的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>都是 <code>True</code> 作为布尔值，包括单个字符 <code>0</code> 的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>put ?'Hamadryas';       # True
 put ?'0';               # True
-</code></pre>
-
-<p>The empty string has no characters. It consists only of the opening delimiter and the closing delimiter. It’s <code>False</code> as a Boolean:</p>
-
+</code></pre><p>The empty string has no characters. It consists only of the opening delimiter and the closing delimiter. It’s <code>False</code> as a Boolean:</p>
 <p>空字符串没有字符。它仅包含开口分隔符和闭合分隔符。它作为布尔值是假的：</p>
-
 <pre><code>put ''.chars;           # 0
 put ?'';                # False
-</code></pre>
-
-<p>Be careful that when you test a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you test the right thing. A <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> type object is also <code>False</code>, but <code>.DEFINITE</code>can tell them apart:</p>
-
+</code></pre><p>Be careful that when you test a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you test the right thing. A <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> type object is also <code>False</code>, but <code>.DEFINITE</code>can tell them apart:</p>
 <p>小心，当你测试一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>你测试正确的东西。 <a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>类型对象也是 <code>False</code>，但 <code>.DEFINITE</code> 可以将它们区分开：</p>
-
 <pre><code>put ''.DEFINITE         # True
 put Str.DEFINITE        # False
-</code></pre>
-
-<p>This is handy in a conditional expression where you don’t care what the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is (empty, <code>'0'</code>, or anything else) as long as it’s not a type object:</p>
-
+</code></pre><p>This is handy in a conditional expression where you don’t care what the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is (empty, <code>'0'</code>, or anything else) as long as it’s not a type object:</p>
 <p>这在条件表达式中很方便，只要它不是类型对象，你不关心<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>是什么（空，<code>'0'</code> 或其他任何东西）：</p>
-
 <pre><code>given $string {
     when .DEFINITE {
         put .chars ?? 'Has characters' !! 'Is empty';
         }
     default { put 'Type object' }
     }
-</code></pre>
-
-<p>The <code>.lc</code> method changes all the characters in a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to lowercase, and <code>.uc</code> changes them to uppercase:</p>
-
+</code></pre><p>The <code>.lc</code> method changes all the characters in a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to lowercase, and <code>.uc</code> changes them to uppercase:</p>
 <p><code>.lc</code> 方法将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的所有字符更改为小写，<code>.uc</code> 将它们更改为大写：</p>
-
 <pre><code>put 'HaMAdRyAs'.lc;     # hamadryas
 put 'perlicus'.uc;      # PERLICUS
-</code></pre>
-
-<p>The <code>.tclc</code> method uses title case, lowercasing everything then capitalizing the first character of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>The <code>.tclc</code> method uses title case, lowercasing everything then capitalizing the first character of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p><code>.tclc</code> 方法使用标题大小写，小写所有内容然后大写<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的第一个字符：</p>
-
 <pre><code>put 'hamadryas PERLICUS'.tc;    # Hamadryas perlicus
-</code></pre>
-
-<p>EXERCISE 4.1Write a program to report the number of characters in the text you enter.</p>
-
+</code></pre><p>EXERCISE 4.1Write a program to report the number of characters in the text you enter.</p>
 <p>EXERCISE 4.2Modify the previous exercise to continually prompt for text and report the number of characters in your answers until you provide an empty answer.</p>
-
 <p>练习4.1 编写一个程序来报告你输入的文本中的字符数。</p>
-
 <p>练习4.2 修改上一个练习以不断提示文本并报告答案中的字符数，直到你提供空答案。</p>
-
 <h2 id="looking-inside-strings">Looking Inside Strings</h2>
-
 <p>You can also inspect a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to find out things about it. The <code>.contains</code> method returns a Boolean value indicating whether it finds one <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>—the substring—inside the target <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
 <p>你也可以检查一下<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>来找出它的相关信息。 <code>.contains</code> 方法返回一个布尔值，指示它是否找到一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>-子字符串-在目标<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>内：</p>
-
 <pre><code>% raku
 &gt; 'Hamadryas perlicus'.contains( 'perl' )
 True
 &gt; 'Hamadryas perlicus'.contains( 'Perl' )
 False
-</code></pre>
-
-<p>Instead of parentheses you can put a colon followed by the substring to search for:</p>
-
+</code></pre><p>Instead of parentheses you can put a colon followed by the substring to search for:</p>
 <p>你可以使用冒号后跟子字符串来代替圆括号来搜索：</p>
-
 <pre><code>% raku
 &gt; 'Hamadryas perlicus'.contains: 'perl'
 True
 &gt; 'Hamadryas perlicus'.contains: 'Perl'
 False
-</code></pre>
-
-<p>The <code>.starts-with</code> and <code>.ends-with</code> methods do the same thing as <code>.contains</code> but require the substring to appear at a particular location:</p>
-
+</code></pre><p>The <code>.starts-with</code> and <code>.ends-with</code> methods do the same thing as <code>.contains</code> but require the substring to appear at a particular location:</p>
 <p><code>.starts-with</code> 和 <code>.ends-with</code> 方法与 <code>.contains</code> 的作用相同，但要求子字符串出现在特定位置：</p>
-
 <pre><code>&gt; 'Hamadryas perlicus'.starts-with: 'Hama'
 True
 &gt; 'Hamadryas perlicus'.starts-with: 'hama'
 False
 &gt; 'Hamadryas perlicus'.ends-with: 'us'
 True
-</code></pre>
-
-<p>These methods are case sensitive. The case of each character in the substring must match the case in the target <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. If it’s uppercase in the substring it must be uppercase in the target. If you want case insensitivity you canuse <code>.fc</code> to make a “caseless” <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. This “case folding” method is especially designed for comparisons:</p>
-
+</code></pre><p>These methods are case sensitive. The case of each character in the substring must match the case in the target <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. If it’s uppercase in the substring it must be uppercase in the target. If you want case insensitivity you canuse <code>.fc</code> to make a “caseless” <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. This “case folding” method is especially designed for comparisons:</p>
 <p>这些方法区分大小写。子字符串中每个字符的大小写必须与目标<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的大小写匹配。如果它在子字符串中是大写的，则它在目标中必须为大写。如果你想要不区分大小写，你可以使用 <code>.fc</code> 来制作一个“无大小写”的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。这种“大小写折叠”方法专门用于比较：</p>
-
 <pre><code>&gt; 'Hamadryas perlicus'.fc.starts-with: 'hama'
 False
-</code></pre>
-
-<p><code>.fc</code> also knows about equivalent characters such as the <em>ss</em> and the sharp <em>ß</em>. The method doesn’t change the text; it evaluates to a new <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> based on a long list of rules about equivalence defined by Unicode. You should case fold both the target and substrings if you want to allow these sorts of variations:</p>
-
-<p><code>.fc</code> 也知道相等的字符，如 <em>ss</em> 和 *sharpß*。该方法不会改变文本; 它基于由 Unicode 定义的关于等价的一长串规则列表来计算新的 <a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。如果要允许这些变化，你应该折叠目标字符串和子字符串串：</p>
-
+</code></pre><p><code>.fc</code> also knows about equivalent characters such as the <em>ss</em> and the sharp <em>ß</em>. The method doesn’t change the text; it evaluates to a new <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> based on a long list of rules about equivalence defined by Unicode. You should case fold both the target and substrings if you want to allow these sorts of variations:</p>
+<p><code>.fc</code> 也知道相等的字符，如 <em>ss</em> 和 <em>sharpß</em>。该方法不会改变文本; 它基于由 Unicode 定义的关于等价的一长串规则列表来计算新的 <a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。如果要允许这些变化，你应该折叠目标字符串和子字符串串：</p>
 <pre><code>&gt; 'Reichwaldstrasse'.contains: 'straße'
 False
 &gt; 'Reichwaldstrasse'.fc.contains: 'straße'
@@ -589,44 +425,25 @@ False
 True
 &gt; 'Reichwaldstrasse'.fc.contains: 'straße'.fc
 True
-</code></pre>
-
-<p><code>.substr</code> extracts a substring by its starting position and length inside the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. The counting starts with zero at the first character:</p>
-
+</code></pre><p><code>.substr</code> extracts a substring by its starting position and length inside the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. The counting starts with zero at the first character:</p>
 <p><code>.substr</code> 通过<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的起始位置和长度提取子字符串。计数从第一个字符的零开始：</p>
-
 <pre><code>put 'Hamadryas perlicus'.substr: 10, 4;     # perl
-</code></pre>
-
-<p>The <code>.index</code> method tells you where it finds a substring inside the larger <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> (still counting from zero), or returns <code>Nil</code> if it can’t find the substring:</p>
-
+</code></pre><p>The <code>.index</code> method tells you where it finds a substring inside the larger <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> (still counting from zero), or returns <code>Nil</code> if it can’t find the substring:</p>
 <p><code>.index</code> 方法告诉你它在较大的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>内部找到一个子字符串（仍然从零开始计数），或者如果它找不到子字符串则返回 <code>Nil</code>：</p>
-
 <pre><code>my $i = 'Hamadryas perlicus'.index: 'p';
 put $i ?? 'Found at ' ~ $i !! 'Not in string'; # Found at 10
-</code></pre>
-
-<p>Use both of them together to figure out where to start:</p>
-
+</code></pre><p>Use both of them together to figure out where to start:</p>
 <p>同时使用它俩来确定从哪里开始：</p>
-
 <pre><code>my $s = 'Hamadryas perlicus';
 put do given $s.index: 'p' {
     when Nil { 'Not found' }
     when Int { $s.substr: $_, 4 }
     }
-</code></pre>
-
-<p>EXERCISE 4.3Repeatedly prompt for text and report if it contains the substring “Hamad”. Stop prompting if the answer has no characters (an empty answer). Can you make this work regardless of casing?</p>
-
+</code></pre><p>EXERCISE 4.3Repeatedly prompt for text and report if it contains the substring “Hamad”. Stop prompting if the answer has no characters (an empty answer). Can you make this work regardless of casing?</p>
 <p>练习4.3 如果包含子字符串 “Hamad”，则重复提示文本和报告。如果答案没有字符，则停止提示（空答案）。如果没有大小写，你能做到这一点吗？</p>
-
 <h2 id="normal-form-grapheme">Normal Form Grapheme</h2>
-
-<p>Raku is Unicode all the way down. It works on graphemes, which most of us think of as “characters” in the everyday sense. These are the full expression of some idea, such as <em>e</em>, <em>é</em>, or <img src="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/assets/butterfly.png" alt="img" />. It expects your source code to be UTF-8 encoded and outputs UTF-8 text. All of these work, although they each represent a different language:</p>
-
-<p>Raku 一直是支持 Unicode 的。它适用于字素，我们大多数人都认为它是日常意义上的“字符”。这些是一些想法的完整表达，例如e，é，或 <img src="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/assets/butterfly.png" alt="img" />。它希望你的源代码是 UTF-8 编码并输出 UTF-8 文本。所有这些都有效，虽然它们各自代表不同的语言：</p>
-
+<p>Raku is Unicode all the way down. It works on graphemes, which most of us think of as “characters” in the everyday sense. These are the full expression of some idea, such as <em>e</em>, <em>é</em>, or <img src="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/assets/butterfly.png" alt="img">. It expects your source code to be UTF-8 encoded and outputs UTF-8 text. All of these work, although they each represent a different language:</p>
+<p>Raku 一直是支持 Unicode 的。它适用于字素，我们大多数人都认为它是日常意义上的“字符”。这些是一些想法的完整表达，例如e，é，或 <img src="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/assets/butterfly.png" alt="img">。它希望你的源代码是 UTF-8 编码并输出 UTF-8 文本。所有这些都有效，虽然它们各自代表不同的语言：</p>
 <pre><code>'көпөлөк'
 'तितली'
 '蝴蝶'
@@ -635,243 +452,138 @@ put do given $s.index: 'p' {
 'πεταλούδα'
 'भंबीरा'
 'פרפר'
-</code></pre>
-
-<p>You can use emojis too:</p>
-
+</code></pre><p>You can use emojis too:</p>
 <p>你也可以使用表情符号：</p>
-
 <pre><code>my $string = '';
 put $string;
-</code></pre>
-
-<p>One of the Raku “characters” might be made of up two or more entries in the Universal Character Database (<em>UCD</em>). Raku refers to entries in the UCD as codes and to their composition as a “character.” It’s not the best terminology. In this book, <em>character</em> means grapheme and <em>code point</em> refers to an entry in the UCD.</p>
-
+</code></pre><p>One of the Raku “characters” might be made of up two or more entries in the Universal Character Database (<em>UCD</em>). Raku refers to entries in the UCD as codes and to their composition as a “character.” It’s not the best terminology. In this book, <em>character</em> means grapheme and <em>code point</em> refers to an entry in the UCD.</p>
 <p>Why does any of that matter? The <code>.chars</code> method tells you the length of the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> in graphemes. Consider the Hebrew word for “caterpillar.” It has 11 graphemes but 14 code points:</p>
-
 <p>其中一个 Raku “字符”可能由通用字符数据库（UCD）中的两个或多个条目组成。 Raku 将 UCD 中的条目称为代码，将其组成称为“字符”。这不是最好的术语。在本书中，字符表示字素，而代码点表示 UCD 中的条目。</p>
-
 <p>为什么这有关系？ <code>.chars</code> 方法告诉你字素中<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的长度。考虑希伯来语中的“caterpillar”一词。它有 11 个字素，但有 14 个代码点：</p>
-
 <pre><code>% raku
 &gt; 'קאַטערפּיללאַר'.chars
 11
 &gt; 'קאַטערפּיללאַר'.codes
 14
-</code></pre>
-
-<p>Why the different counts? There are graphemes such as <code>אַ</code> that are more than one code point (in that case, the two code points are the Hebrew Aleph and patah diacritical mark). Most of the time you won’t care about this. If you do, you can get a list of the code points with <code>.ords</code>:</p>
-
+</code></pre><p>Why the different counts? There are graphemes such as <code>אַ</code> that are more than one code point (in that case, the two code points are the Hebrew Aleph and patah diacritical mark). Most of the time you won’t care about this. If you do, you can get a list of the code points with <code>.ords</code>:</p>
 <p>为什么是不同的计数？像 <code>אַ</code> 这样的字素不止一个代码点（在这种情况下，两个代码点是希伯来语Aleph和patah变音符号）。大多数时候你不会关心这个。如果这样做，你可以用 <code>.ords</code> 获得的代码点列表：</p>
-
 <pre><code>&gt; 'קאַטערפּיללאַר'.ords
 (1511 1488 1463 1496 1506 1512 1508 1468 1497 1500
 1500 1488 1463 1512)
-</code></pre>
-
-<h2 id="string-comparisons">String Comparisons</h2>
-
+</code></pre><h2 id="string-comparisons">String Comparisons</h2>
 <p><a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> objects know if they are relatively greater than, less than, or the same as another <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. Raku uses lexicographic comparison to go through the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s character by character.</p>
-
 <p>The numbers comparison operators are symbols, but the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s use operators made up of letters. The <code>eq</code> operator tests if the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s are exactly equal. Case matters. Every character at each position in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> must be exactly the same in each <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
 <p><a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a> 对象知道它们是否比另一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>相对大，小于或相同。 Raku 使用字典比较来逐字逐句地浏览<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。</p>
-
 <p>数字比较运算符是符号，但<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>使用由字母组成的运算符。 <code>eq</code> 运算符测试<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>是否完全相等。大小写敏感。 <a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中每个位置的每个字符在每个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中必须完全相同：</p>
-
 <pre><code>% raku
 &gt; 'Hamadryas' eq 'hamadryas'
 False
 &gt; 'Hamadryas' eq 'Hamadryas'
 True
-</code></pre>
-
-<p>The <code>gt</code> operator evaluates to <code>True</code> if the first <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is strictly lexicographically greater than the second (<code>ge</code> allows it to be greater than or equal to the second <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>). This is not a dictionary comparison, so case matters. The lowercase letters come after the uppercase ones and so are “greater”:</p>
-
+</code></pre><p>The <code>gt</code> operator evaluates to <code>True</code> if the first <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is strictly lexicographically greater than the second (<code>ge</code> allows it to be greater than or equal to the second <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>). This is not a dictionary comparison, so case matters. The lowercase letters come after the uppercase ones and so are “greater”:</p>
 <p>如果第一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>严格按字典顺序排列大于第二个（<code>ge</code> 允许它大于或等于第二个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>），则<code>gt</code>运算符的计算结果为 <code>True</code>。这不是字典比较，因此大小写敏感。小写字母位于大写字母之后，因此“更大”：</p>
-
 <pre><code>% raku
 &gt; 'Hama' gt 'hama'
 False
 &gt; 'hama' gt 'Hama'
 True
-</code></pre>
-
-<p>The uppercase letters come before the lowercase ones, so any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> that starts with a lowercase letter is greater than any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> that starts with an uppercase letter:</p>
-
+</code></pre><p>The uppercase letters come before the lowercase ones, so any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> that starts with a lowercase letter is greater than any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> that starts with an uppercase letter:</p>
 <p>大写字母位于小写字母之前，因此任何以小写字母开头的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>都大于以大写字母开头的任何<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>% raku
 &gt; 'alpha' gt 'Omega'
 True
 &gt; 'α' gt 'Ω'
 True
-</code></pre>
-
-<p>You can get some weird results if you compare numbers as <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. The character <code>2</code> is greater than the character <code>1</code>, so any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> starting with <code>2</code> is greater than any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> starting with <code>1</code>:</p>
-
+</code></pre><p>You can get some weird results if you compare numbers as <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. The character <code>2</code> is greater than the character <code>1</code>, so any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> starting with <code>2</code> is greater than any <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> starting with <code>1</code>:</p>
 <p>如果将数字作为<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>进行比较，你可能会得到一些奇怪的结果。字符<code>2</code>大于字符<code>1</code>，因此从<code>2</code>开始的任何<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>都大于从<code>1</code>开始的任何<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>% raku
 &gt; '2' gt '10'
 True
-</code></pre>
-
-<p>The <code>lt</code> operator evaluates to <code>True</code> if the first <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is lexicographically less than the second (<code>le</code> allows it to be less than or equal to the second <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>):</p>
-
+</code></pre><p>The <code>lt</code> operator evaluates to <code>True</code> if the first <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is lexicographically less than the second (<code>le</code> allows it to be less than or equal to the second <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>):</p>
 <p>如果第一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>在字典上小于第二个（<code>le</code> 允许它小于或等于第二个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>），则 <code>lt</code> 运算符求值为 <code>True</code>：</p>
-
 <pre><code>% raku
 &gt; 'Perl 5' lt 'Raku'
 True
-</code></pre>
-
-<p>If you don’t care about their case you can lowercase both sides with <code>.lc</code>:</p>
-
+</code></pre><p>If you don’t care about their case you can lowercase both sides with <code>.lc</code>:</p>
 <p>如果你不关心他们的大小写你可以使用 <code>.lc</code> 小写双方：</p>
-
 <pre><code>% raku
 &gt; 'Hamadryas'.lc eq 'hamadryas'.lc
 True
-</code></pre>
-
-<p>This wouldn’t work for the Reichwaldstrasse example you saw previously. If you wanted to allow for equivalent representations you’d use <code>.fc</code>:</p>
-
+</code></pre><p>This wouldn’t work for the Reichwaldstrasse example you saw previously. If you wanted to allow for equivalent representations you’d use <code>.fc</code>:</p>
 <p>这对你之前看到的 Reichwaldstrasse 例子不起作用。如果你想允许等效表示，请使用 <code>.fc</code>：</p>
-
 <pre><code>% raku
 &gt; 'Reichwaldstrasse'.lc eq 'Reichwaldstraße'.lc
 False
 &gt; 'Reichwaldstrasse'.fc eq 'Reichwaldstraße'.fc
 True
-</code></pre>
-
-<p>As with numbers, you can chain the comparisons:</p>
-
+</code></pre><p>As with numbers, you can chain the comparisons:</p>
 <p>与数字一样，你可以链接比较：</p>
-
 <pre><code>% raku
 &gt; 'aardvark' lt 'butterfly' lt 'zebra'
 True
-</code></pre>
-
-<h2 id="prompting-for-input">Prompting for Input</h2>
-
+</code></pre><h2 id="prompting-for-input">Prompting for Input</h2>
 <p>You’ve already used <code>prompt</code> for simple things. When you call it your program reads a single line and chops off the newline that you typed. A small modification of the program shows you what sort of type you get back:</p>
-
 <p>你已经将 <code>prompt</code> 用于简单的提示了。当你调用它时，你的程序读取一行并切掉你键入的换行符。对程序进行一些小修改即可显示你获得的类型：</p>
-
 <pre><code>my $answer = prompt( 'What\'s your favorite animal? ' );
 put '$answer is type ', $answer.^name;
 put 'You chose ', $answer;
-</code></pre>
-
-<p>When you answer the question you get a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>When you answer the question you get a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>当你回答这个问题时，你会得到一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>% raku prompt.p6
 What's your favorite animal? Fox
 $answer is type Str
 You chose Fox
-</code></pre>
-
-<p>When you don’t type anything other than a Return the answer is still a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>, but it’s an empty <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>When you don’t type anything other than a Return the answer is still a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>, but it’s an empty <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>当你没有输入除了换行符之外的任何东西时，答案仍然是一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>，但它是一个空<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>% raku prompt.p6
 What's your favorite animal?
 $answer is type Str
 You chose
-</code></pre>
-
-<p>You end input with Control-D, which is the same as not typing anything. In that case it returns an <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> type object. Notice that the line showing the type appears on the same line as the prompt text—you never typed a Return. There’s also a warning about that <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> value, and finally your last line of output:</p>
-
+</code></pre><p>You end input with Control-D, which is the same as not typing anything. In that case it returns an <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> type object. Notice that the line showing the type appears on the same line as the prompt text—you never typed a Return. There’s also a warning about that <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> value, and finally your last line of output:</p>
 <p>你使用 Control-D 结束输入，这与不输入任何内容相同。在这种情况下，它返回一个<a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> 类型的对象。请注意，显示该类型的行与提示文本显示在同一行 - 你从未键入Return。还有关于<a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> 值的警告，最后是你的最后一行输出：</p>
-
 <pre><code>% raku prompt.p6
 What's your favorite animal? $answer is type Any
 Use of uninitialized value $answer of type Any in string context.
 You chose
-</code></pre>
-
-<p>To guard against this problem you can test <code>$answer</code>. The <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> type object is always <code>False</code>. So is the empty <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>To guard against this problem you can test <code>$answer</code>. The <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> type object is always <code>False</code>. So is the empty <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>为了防止这个问题，你可以测试 <code>$answer</code>。 <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>  类型对象始终为 <code>False</code>。空的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>也是如此：</p>
-
 <pre><code>my $answer = prompt( 'What\'s your favorite animal? ' );
 put do
     if $answer { 'You chose ' ~ $answer }
     else       { 'You didn\'t choose anything.' }
-</code></pre>
-
-<p><code>prompt</code> takes whatever you type, including whitespace. If you put some spaces at the beginning and end that’s what shows up in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p><code>prompt</code> takes whatever you type, including whitespace. If you put some spaces at the beginning and end that’s what shows up in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p><code>prompt</code>接受你输入的任何内容，包括空格。如果你在开头和结尾放置一些空格，那就是<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中出现的空格：</p>
-
 <pre><code>% raku prompt.p6
 What's your favorite animal?                 Butterfly
 You chose                 Butterfly
-</code></pre>
-
-<p>You can see this better if you put in something to surround the answer portion of the output, such as <code>&lt;&gt;</code> in this example:</p>
-
+</code></pre><p>You can see this better if you put in something to surround the answer portion of the output, such as <code>&lt;&gt;</code> in this example:</p>
 <p>如果你在输出的答案部分放置一些东西，你可以更好地看到这一点，例如本例中的 <code>&lt;&gt;</code>：</p>
-
 <pre><code>my $answer = prompt( 'What\'s your favorite animal? ' );
 put do
    if $answer { 'You chose &lt;', $answer, '&gt;' }
    else       { 'You didn't choose anything' }
-</code></pre>
-
-<p>Now you can easily see the extra space in <code>$answer</code>:</p>
-
+</code></pre><p>Now you can easily see the extra space in <code>$answer</code>:</p>
 <p>现在，你可以轻松地在 <code>$answer</code> 中看到额外的空格：</p>
-
 <pre><code>% raku prompt.p6
 What's your favorite animal?                 Butterfly
 You chose &lt;                Butterfly            &gt;
-</code></pre>
-
-<p>The <code>.trim</code> method takes off the surrounding whitespace and gives you back the result:</p>
-
+</code></pre><p>The <code>.trim</code> method takes off the surrounding whitespace and gives you back the result:</p>
 <p><code>.trim</code> 方法去掉周围的空格并返回结果：</p>
-
 <pre><code>my $answer = prompt( 'What\'s your favorite animal? ' ).trim;
-</code></pre>
-
-<p>If you apply it to <code>$answer</code> by itself it doesn’t work:</p>
-
+</code></pre><p>If you apply it to <code>$answer</code> by itself it doesn’t work:</p>
 <p>如果你将它自己应用于 <code>$answer</code> 那么它不起作用：</p>
-
 <pre><code>$answer.trim;
-</code></pre>
-
-<p>You need to assign the result to <code>$answer</code> to get the updated value:</p>
-
+</code></pre><p>You need to assign the result to <code>$answer</code> to get the updated value:</p>
 <p>你需要将结果赋值给 <code>$answer</code> 以获取更新后的值：</p>
-
 <pre><code>$answer = $answer.trim;
-</code></pre>
-
-<p>That requires you to type <code>$answer</code> twice. However, you know about binary assignment so you can shorten that to use the variable name once:</p>
-
+</code></pre><p>That requires you to type <code>$answer</code> twice. However, you know about binary assignment so you can shorten that to use the variable name once:</p>
 <p>这要求你输入两次 <code>$answer</code>。但是，你知道二进制赋值，因此你可以缩短它以使用变量名称一次：</p>
-
 <pre><code>$answer .= trim;
-</code></pre>
-
-<p>If you don’t want to remove the whitespace from both sides you can use either <code>.trim-leading</code> or <code>.trim-trailing</code> for the side that you want.</p>
-
+</code></pre><p>If you don’t want to remove the whitespace from both sides you can use either <code>.trim-leading</code> or <code>.trim-trailing</code> for the side that you want.</p>
 <p>如果你不想从两侧删除空格，可以使用 <code>.trim-leading</code> 或 <code>.trim-trailing</code> 作为所需的一侧。</p>
-
 <h2 id="number-to-string-conversions">Number to String Conversions</h2>
-
 <p>You can easily convert numbers to <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s with the <code>.Str</code> method. They may not look like what you started with. These look like number values but they are actually <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> objects where the digits you see are characters:</p>
-
 <p>你可以使用 <code>.Str</code> 方法轻松地将数字转换为<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。它们可能看起来不像开始那样。这些看起来像数字值但它们实际上是<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>对象，其中你看到的数字是字符：</p>
-
 <pre><code>% raku
 &gt; 4.Str
 4
@@ -879,12 +591,8 @@ You chose &lt;                Butterfly            &gt;
 0.8
 &gt; (13+7i).Str
 13+7i
-</code></pre>
-
-<p>The unary prefix version of <code>~</code> does the same thing:</p>
-
+</code></pre><p>The unary prefix version of <code>~</code> does the same thing:</p>
 <p><code>~</code> 的一元前缀版本做同样的事情：</p>
-
 <pre><code>% raku
 &gt; ~4
 4
@@ -892,25 +600,16 @@ You chose &lt;                Butterfly            &gt;
 0.8
 &gt; ~(13+7i)
 13+7i
-</code></pre>
-
-<p>If you use a number in a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> operation it automatically converts it to its <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> form:</p>
-
+</code></pre><p>If you use a number in a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> operation it automatically converts it to its <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> form:</p>
 <p>如果在<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>操作中使用数字，它会自动将其转换为<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>形式：</p>
-
 <pre><code>% raku
 &gt; 'Hamadryas ' ~ &lt;4/5&gt;
 Hamadryas 0.8
 &gt; 'Hamadryas ' ~ 5.5
 Hamadryas 5.5
-</code></pre>
-
-<h2 id="string-to-number-conversions">String to Number Conversions</h2>
-
+</code></pre><h2 id="string-to-number-conversions">String to Number Conversions</h2>
 <p>Going from <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s to numbers is slightly more complicated. If the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> looks like a number you can convert it to some sort of number with the unary prefix version of <code>+</code>. It converts the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to the number of the narrowest form, which you can check with <code>.^name</code>:</p>
-
 <p>从<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>到数字稍微复杂一些。如果<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>看起来像一个数字，你可以使用一元前缀版本<code>+</code>将其转换为某种数字。它将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>转换为最窄形式的数字，你可以查看 <code>^name</code>：</p>
-
 <pre><code>% raku
 &gt; +'137'
 137
@@ -920,12 +619,8 @@ Int
 0.5
 &gt; (+'1/2').^name
 Rat
-</code></pre>
-
-<p>This only works for decimal digits. You can have the decimal digits 0 to 9 and a possible decimal point followed by more decimal digits. An underscore is allowed with the same rules as for literal numbers. The conversion ignores surrounding whitespace:</p>
-
+</code></pre><p>This only works for decimal digits. You can have the decimal digits 0 to 9 and a possible decimal point followed by more decimal digits. An underscore is allowed with the same rules as for literal numbers. The conversion ignores surrounding whitespace:</p>
 <p>这仅适用于十进制数字。你可以使用小数位数0到9以及可能的小数点后跟更多的十进制数字。允许使用与字面数相同的规则的下划线。转换忽略了周围的空格：</p>
-
 <pre><code>% raku
 &gt; +' 1234 '
 1234
@@ -933,20 +628,12 @@ Rat
 1234
 &gt; +' 12.34 '
 12.34
-</code></pre>
-
-<p>Anything else, such as two decimal points, causes an error:</p>
-
+</code></pre><p>Anything else, such as two decimal points, causes an error:</p>
 <p>其他任何内容，例如两个小数点，都会导致错误：</p>
-
 <pre><code>&gt; +'12.34.56'
 Cannot convert string to number: trailing characters after number
-</code></pre>
-
-<p>When you perform numerical operations on a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> it’s automatically converted to a number:</p>
-
+</code></pre><p>When you perform numerical operations on a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> it’s automatically converted to a number:</p>
 <p>当你对<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>执行数值运算时，它会自动转换为数字：</p>
-
 <pre><code>% raku
 &gt; '2' + 3
 5
@@ -954,58 +641,33 @@ Cannot convert string to number: trailing characters after number
 6
 &gt; '2' ** '8'
 256
-</code></pre>
-
-<p>EXERCISE 4.4Write a program that prompts for two numbers then outputs their sum, difference, product, and quotient. What happens if you enter something that’s not a number? (You don’t need to handle any errors.)</p>
-
+</code></pre><p>EXERCISE 4.4Write a program that prompts for two numbers then outputs their sum, difference, product, and quotient. What happens if you enter something that’s not a number? (You don’t need to handle any errors.)</p>
 <p>In the previous exercise you should have been able to create a conversion error even though you didn’t have the tools to handle it. If you want to check if a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> can convert to a number you can use the <code>val</code> routine. That gives you an object that does the <a href="https://docs.raku.org/type/Numeric.html"><code>Numeric</code></a> role if it can convert the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>. Use the smart match operator to check that it worked:</p>
-
 <p>练习4.4 写一个程序，提示输入两个数字，然后输出它们的和，差，乘积和商。如果你输入的不是数字，会发生什么？ （你不需要处理任何错误。）</p>
-
 <p>在上一个练习中，即使你没有处理它的工具，你也应该能够创建转换错误。如果要检查<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>是否可以转换为数字，可以使用 <code>val</code> 例程。如果它可以转换<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>，那么它将为你提供一个执行 <a href="https://docs.raku.org/type/Numeric.html"><code>Numeric</code></a> 角色的对象。使用智能匹配运算符检查它是否有效：</p>
-
 <pre><code>my $some-value = prompt( 'Enter any value: ' );
 my $candidate = val( $some-value );
 
 put $candidate, ' ', do
     if $candidate ~~ Numeric { ' is numeric' }
     else                     { ' is not numeric' }
-</code></pre>
-
-<p>This seems complicated now because you haven’t read about interpolated <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s yet. It will be much clearer by the end of this chapter.</p>
-
+</code></pre><p>This seems complicated now because you haven’t read about interpolated <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s yet. It will be much clearer by the end of this chapter.</p>
 <p>EXERCISE 4.5Update the previous exercise to handle nonnumeric values that would cause a conversion error. If one of the values isn’t numeric, output a message saying so.</p>
-
 <p>Sometimes your text is numeric but not decimal. The <code>.parse-base</code> method can convert it for you. It takes a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> that looks like a nondecimal number and turns it into a number:</p>
-
 <p>现在这看起来很复杂，因为你还没有读过有关插值的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。到本章结尾将会更清楚。</p>
-
 <p>练习4.5 更新上一个练习以处理可能导致转换错误的非数字值。如果其中一个值不是数字，则输出一条说明的消息。</p>
-
 <p>有时你的文本是数字但不是小数。 <code>.parse-base</code> 方法可以为你转换它。它需要一个看起来像非十进制数字的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>并将其转换为数字：</p>
-
 <pre><code>my $octal  = '0755'.parse-base: 8;     # 493
 my $number = 'IG88'.parse-base: 36;    # 860840
-</code></pre>
-
-<p>This is the same thing the colon form was doing in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch03.html#camelia-numbers">Chapter 3</a>:</p>
-
+</code></pre><p>This is the same thing the colon form was doing in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch03.html#camelia-numbers">Chapter 3</a>:</p>
 <p>这与第3章中的冒号对形式所做的相同：</p>
-
 <pre><code>:8&lt;0755&gt;
 :36&lt;IG88&gt;
-</code></pre>
-
-<h1 id="interpolated-strings">Interpolated Strings</h1>
-
+</code></pre><h1 id="interpolated-strings">Interpolated Strings</h1>
 <p>You’ve taken a long path through this chapter to get to the quoting mechanism that you’re likely to use the most. An interpolated string replaces special sequences within the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with other characters. These <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s will also make easier some of the code you’ve already seen.</p>
-
 <p>Interpolated <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s use the double quote, <code>&quot;</code>, as the default delimiter and are sometimes called double-quoted strings. You need to escape the <code>&quot;</code> if you want one in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>, and you can escape the <code>\</code>:</p>
-
 <p>你已经通过本章走了很长的路，以了解你可能最常使用的引用机制。插值字符串用其他字符替换<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的特殊序列。这些<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>也会使你已经看过的一些代码变得更容易。</p>
-
 <p>插值<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>使用双引号 <code>&quot;</code> 作为默认分隔符，有时也称为双引号字符串。如果你想在<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中使用双引号你需要转义 <code>&quot;</code>，你也可以转义 <code>\</code>：</p>
-
 <pre><code>% raku
 &gt; &quot;Hamadryas perlicus&quot;
 Hamadryas perlicus
@@ -1013,139 +675,67 @@ Hamadryas perlicus
 The escaped &quot; stays in the string
 &gt; &quot;Escape the \\ backslash&quot;
 Escape the \ backslash
-</code></pre>
-
-<p>The backslash also starts other special interpolating sequences. A <code>\t</code> represents a tab character. A <code>\n</code> represents a newline:</p>
-
+</code></pre><p>The backslash also starts other special interpolating sequences. A <code>\t</code> represents a tab character. A <code>\n</code> represents a newline:</p>
 <p>反斜杠也会启动其他特殊插值序列。 <code>\t</code> 表示制表符。 <code>\n</code> 表示换行符：</p>
-
 <pre><code>put &quot;First line\nSecond line\nThird line&quot;;
-</code></pre>
-
-<p>If you want a character that’s not easy to type you can put its code number (a hexadecimal value) after <code>\x</code> or inside <code>\x[]</code>. Don’t use the <code>0x</code> prefix; the <code>\x</code> already assumes that:</p>
-
+</code></pre><p>If you want a character that’s not easy to type you can put its code number (a hexadecimal value) after <code>\x</code> or inside <code>\x[]</code>. Don’t use the <code>0x</code> prefix; the <code>\x</code> already assumes that:</p>
 <p>如果你想要一个不容易输入的字符，你可以在 <code>\x</code> 之后或在 <code>\x[]</code> 之内输入它的代码号（十六进制值）。不要使用 <code>0x</code> 前缀; <code>\x</code> 已经假定：</p>
-
 <pre><code>put &quot;The snowman is \x[2603]&quot;;
-</code></pre>
-
-<p>Several comma-separated code numbers inside <code>\x[]</code> turn into multiple characters:</p>
-
+</code></pre><p>Several comma-separated code numbers inside <code>\x[]</code> turn into multiple characters:</p>
 <p><code>\x[]</code> 内的几个以逗号分隔的代码编号变为多个字符：</p>
-
 <pre><code>put &quot;\x[1F98B, 2665, 1F33B]&quot;;  # 
-</code></pre>
-
-<p>If you know the name of the character you can put that inside <code>\c[]</code>. You don’t quote these names and the names are case insensitive:</p>
-
+</code></pre><p>If you know the name of the character you can put that inside <code>\c[]</code>. You don’t quote these names and the names are case insensitive:</p>
 <p>如果你知道字符的名称，可以将其放在 <code>\c[]</code> 中。你不引起这些名称，并且名称不区分大小写：</p>
-
 <pre><code>put &quot;\c[BUTTERFLY, BLACK HEART, TACO]&quot;;  # 
-</code></pre>
-
-<p>Those are nice, but it’s much more handy to interpolate variables. When a double-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> recognizes a sigiled variable name it replaces the variable with its value:</p>
-
+</code></pre><p>Those are nice, but it’s much more handy to interpolate variables. When a double-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> recognizes a sigiled variable name it replaces the variable with its value:</p>
 <p>这些很好，但插入变量更方便。当双引号<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>识别出一个带符号的变量名时，它用它的值替换变量：</p>
-
 <pre><code>my $name = 'Hamadryas perlicus';
 put &quot;The best butterfly is $name&quot;;
-</code></pre>
-
-<p>The quoting slang looks for the longest possible variable name (and not the longest name actually defined). If the text after the variable name looks like it could be a variable name that’s the variable it looks for:</p>
-
+</code></pre><p>The quoting slang looks for the longest possible variable name (and not the longest name actually defined). If the text after the variable name looks like it could be a variable name that’s the variable it looks for:</p>
 <p>引用方言查找可能的最长变量名称（而不是实际定义的最长名称）。如果变量名后面的文本看起来像是一个变量名，那就是它所寻找的变量：</p>
-
 <pre><code>my $name = 'Hamadryas perlicus';
 put &quot;The best butterfly is $name-just saying!&quot;;
-</code></pre>
-
-<p>This is a compile-time error:</p>
-
+</code></pre><p>This is a compile-time error:</p>
 <p>这是一个编译时错误：</p>
-
 <pre><code>Variable '$name-just' is not declared
-</code></pre>
-
-<p>If you need to separate the variable name from the rest of the text in the double-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you can surround the entire variable in braces:</p>
-
+</code></pre><p>If you need to separate the variable name from the rest of the text in the double-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you can surround the entire variable in braces:</p>
 <p>如果你需要将变量名与双引号<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中的其余文本分开，则可以在花括号中包围整个变量：</p>
-
 <pre><code>my $name = 'Hamadryas perlicus';
 put &quot;The best butterfly is {$name}-just saying!&quot;;
-</code></pre>
-
-<p>Escape a literal <code>$</code> where it might look like a sigil that starts a variable name:</p>
-
+</code></pre><p>Escape a literal <code>$</code> where it might look like a sigil that starts a variable name:</p>
 <p>转义一个字面 <code>$</code>，它可能看起来像一个启动变量名称的sigil：</p>
-
 <pre><code>put &quot;I used the variable \$name&quot;;
-</code></pre>
-
-<p>Now here’s the powerful part. You can put any code you like inside the braces. The quoting slang will evaluate the code and replace the braces with the last evaluated expression:</p>
-
+</code></pre><p>Now here’s the powerful part. You can put any code you like inside the braces. The quoting slang will evaluate the code and replace the braces with the last evaluated expression:</p>
 <p>现在这是强大的部分。你可以把任何你喜欢的代码放在花括号内。引用方言将计算代码并用最后计算的表达式替换花括号：</p>
-
 <pre><code>put &quot;The sum of two and two is { 2 + 2 }&quot;;
-</code></pre>
-
-<p>This means that the previous programs in this chapter are much easier to type than they first appear. You can construct the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> inside the delimiters rather than using a series of separate <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s:</p>
-
+</code></pre><p>This means that the previous programs in this chapter are much easier to type than they first appear. You can construct the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> inside the delimiters rather than using a series of separate <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s:</p>
 <p>这意味着本章中的先前程序比首次出现时更容易键入。你可以在分隔符内构造<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>而不是使用一系列单独的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>my $answer = prompt( 'What\'s your favorite animal? ' );
 put &quot;\$answer is type {$answer.^name}&quot;;
 put &quot;You chose $answer&quot;;
-</code></pre>
-
-<p>Like with the previous <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s, you can choose a different delimiter for interpolated <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. Use <code>qq</code> (double <code>q</code> for double quoting) in front of the delimiter:</p>
-
+</code></pre><p>Like with the previous <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s, you can choose a different delimiter for interpolated <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. Use <code>qq</code> (double <code>q</code> for double quoting) in front of the delimiter:</p>
 <p>与之前的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>一样，你可以为插值的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>选择不同的分隔符。在分隔符前面使用 <code>qq</code> （两个 <code>q</code> 表示双引号）：</p>
-
 <pre><code>put qq/\$answer is type {$answer.^name}/;
-</code></pre>
-
-<p>The <code>\n</code> is interpolated as a newline and the <code>\t</code> becomes a tab:</p>
-
+</code></pre><p>The <code>\n</code> is interpolated as a newline and the <code>\t</code> becomes a tab:</p>
 <p><code>\n</code> 插值为换行符，<code>\t</code> 变为制表符：</p>
-
 <pre><code>put qq/\$answer is:\n\t$answer/;
-</code></pre>
-
-<p>This <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> has two lines and the second one is indented:</p>
-
+</code></pre><p>This <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> has two lines and the second one is indented:</p>
 <p>这个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>有两行，第二行是缩进的：</p>
-
 <pre><code>answer is:
     Hamadryas perlicus
-</code></pre>
-
-<p><code>qq//</code> is the same as <code>Q</code> with the <code>:qq</code> or <code>:double</code> adverb:</p>
-
+</code></pre><p><code>qq//</code> is the same as <code>Q</code> with the <code>:qq</code> or <code>:double</code> adverb:</p>
 <p><code>qq//</code> 与带有 <code>:qq</code> 或 <code>:double</code> 副词的 <code>Q</code> 相同：</p>
-
 <pre><code>put Q :qq /\$answer is type {$answer.^name}/;
 put Q :double /\$answer is type {$answer.^name}/;
-</code></pre>
-
-<p>If you want to interpolate only part of a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you can use <code>\qq[]</code> for that part:</p>
-
+</code></pre><p>If you want to interpolate only part of a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> you can use <code>\qq[]</code> for that part:</p>
 <p>如果只想插入<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的一部分，可以使用 <code>\qq[]</code> 作为该部分：</p>
-
 <pre><code>my $genus = 'Hamadryas';
 put '$genus is \qq[$genus]';
-</code></pre>
-
-<p>Going the other way, you can turn off interpolation for part of a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> by making that part act like a single-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with <code>\q[]</code>:</p>
-
+</code></pre><p>Going the other way, you can turn off interpolation for part of a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> by making that part act like a single-quoted <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> with <code>\q[]</code>:</p>
 <p>换句话说，你可以通过使该部分与 <code>\q[]</code> 的单引号<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>一起使用来关闭部分<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的插值：</p>
-
 <pre><code>put &quot;\q[$genus] is $genus&quot;;
-</code></pre>
-
-<p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings-TABLE-backslashes">Table 4-1</a> shows many other special sequences available inside a double-quoted context.</p>
-
+</code></pre><p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings-TABLE-backslashes">Table 4-1</a> shows many other special sequences available inside a double-quoted context.</p>
 <p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings-TABLE-backslashes">表4-1</a>显示了很多双引号上下文中其它可用的特殊序列。</p>
-
 <table>
 <thead>
 <tr>
@@ -1153,88 +743,64 @@ put '$genus is \qq[$genus]';
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>\a</code></td>
 <td>The ASCII bell character</td>
 </tr>
-
 <tr>
 <td><code>\b</code></td>
 <td>Backspace</td>
 </tr>
-
 <tr>
 <td><code>\r</code></td>
 <td>Carriage return</td>
 </tr>
-
 <tr>
 <td><code>\n</code></td>
 <td>Newline</td>
 </tr>
-
 <tr>
 <td><code>\t</code></td>
 <td>Tab</td>
 </tr>
-
 <tr>
 <td><code>\f</code></td>
 <td>Form feed</td>
 </tr>
-
 <tr>
 <td><code>\c[</code><em>NAME</em><code>]</code></td>
 <td>Character by name</td>
 </tr>
-
 <tr>
 <td><code>\q[…]</code></td>
 <td>Single quote the part inside the brackets</td>
 </tr>
-
 <tr>
 <td><code>\qq[…]</code></td>
 <td>Double quote the part inside the brackets</td>
 </tr>
-
 <tr>
 <td><code>\x[</code><em>ABCD</em><code>]</code></td>
 <td>Character by code number in hex</td>
 </tr>
 </tbody>
 </table>
-
 <p>EXERCISE 4.6Modify your character-counting program to show the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> as well as the number of characters it counts. For example, <code>'Hamadryas' has 10 characters</code>. You should be able to output a single interpolated <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>.</p>
-
-<p>练习4.6 修改你的字符计数程序，以显示<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>以及它所计算的字符数。例如，&rsquo;Hamadryas&rsquo; 有10个字符。你应该能够输出单个插值的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。</p>
-
+<p>练习4.6 修改你的字符计数程序，以显示<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>以及它所计算的字符数。例如，&lsquo;Hamadryas&rsquo; 有10个字符。你应该能够输出单个插值的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。</p>
 <h1 id="here-docs">Here Docs</h1>
-
 <p>For multiline quoting you could use the quoting you’ve seen so far, but every character between those delimiters matters. This often results in ugly outdenting:</p>
-
 <p>对于多行引用，你可以使用到目前为止看到的引用，但这些分隔符之间的每个字符都很重要。这通常导致丑陋的外观：</p>
-
 <pre><code>my $multi-line = '
     Hamadryas perlicus: 19
     Vanessa atalanta: 17
     Nymphalis antiopa: 0
     ';
-</code></pre>
-
-<p>Interpolating <code>\n</code> doesn’t make it any prettier:</p>
-
+</code></pre><p>Interpolating <code>\n</code> doesn’t make it any prettier:</p>
 <p>插入换行符 <code>\n</code> 不会使它更漂亮：</p>
-
 <pre><code>my $multi-line = &quot;Hamadryas perlicus: 19\n...&quot;;
-</code></pre>
-
-<p>A here doc is a special way of quoting a multiline text. Specify a delimiter with the <code>:heredoc</code> adverb. The<a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> ends when the slang finds that same <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> on a line by itself:</p>
-
+</code></pre><p>A here doc is a special way of quoting a multiline text. Specify a delimiter with the <code>:heredoc</code> adverb. The<a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> ends when the slang finds that same <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> on a line by itself:</p>
 <p>here doc 是一种引用多行文本的特殊方式。使用 <code>:heredoc</code> 副词指定分隔符。当该方言在一条线上找到相同的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>时，<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>结束：</p>
-
 <pre><code>my $multi-line = q :heredoc/END/;
     Hamadryas perlicus: 19
     Vanessa atalanta: 17
@@ -1242,32 +808,20 @@ put '$genus is \qq[$genus]';
     END
 
 put $multi-line;
-</code></pre>
-
-<p>This also strips the same indentation it finds before the closing delimiter. The output ends up with no indention even though it had it in the literal code:</p>
-
+</code></pre><p>This also strips the same indentation it finds before the closing delimiter. The output ends up with no indention even though it had it in the literal code:</p>
 <p>这也剥离了它在结束分隔符之前找到的相同缩进。输出最终没有缩进，即使它在字面代码中有缩进：</p>
-
 <pre><code>Hamadryas perlicus: 19
 Vanessa atalanta: 17
 Nymphalis antiopa: 0
-</code></pre>
-
-<p>The <code>:to</code> adverb does the same thing as <code>:heredoc</code>:</p>
-
+</code></pre><p>The <code>:to</code> adverb does the same thing as <code>:heredoc</code>:</p>
 <p><code>:to</code> 副词与 <code>:heredoc</code> 副词的作用相同：</p>
-
 <pre><code>my $multi-line = q :to&lt;HERE&gt;;
     Hamadryas perlicus: 19
     Vanessa atalanta: 17
     Nymphalis antiopa: 0
     HERE
-</code></pre>
-
-<p>This works with the other quoting forms too:</p>
-
+</code></pre><p>This works with the other quoting forms too:</p>
 <p>这与其他引用形式一起使用也有效：</p>
-
 <pre><code>put Q :to/END/;
     These are't special: $ \
     END
@@ -1275,137 +829,75 @@ Nymphalis antiopa: 0
 put qq :to/END/;
     The genus is $genus
     END
-</code></pre>
-
-<h1 id="shell-strings">Shell Strings</h1>
-
+</code></pre><h1 id="shell-strings">Shell Strings</h1>
 <p>Shell strings are the same sort of quoting that you’ve seen so far, but they don’t construct a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to store in your program. They create an external command to run in the shell. A shell string captures the command’s output and gives it to you. <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch19.html#camelia-interprocess">Chapter 19</a> covers this, but here’s something to get you started.</p>
-
 <p><code>qx</code> uses the same rules as escaped <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s. The <em>hostname</em> command works on both Unix and Windows systems:</p>
-
 <p>Shell 字符串与你到目前为止看到的引用相同，但它们不构造要存储在程序中的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>。它们创建一个外部命令以在 shell 中运行。 shell 字符串捕获命令的输出并将其提供给你。第19章介绍了这一点，但这里有一些东西可以帮助你入门。</p>
-
 <p><code>qx</code> 使用与转义的<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>相同的规则。 <em>hostname</em> 命令适用于 Unix 和 Windows 系统：</p>
-
 <pre><code>my $uname = qx/hostname/;
 put &quot;The hostname is $uname&quot;;
 put &quot;The hostname is { qx/hostname/ }&quot;; # quoting inside quoting
-</code></pre>
-
-<p>In this output there’s a blank line between the lines because it includes the newline in the normal command output:</p>
-
+</code></pre><p>In this output there’s a blank line between the lines because it includes the newline in the normal command output:</p>
 <p>在此输出中，行之间有一个空行，因为它包含正常命令输出中的换行符：</p>
-
 <pre><code>The hostname is hamadryas.local
 
 The hostname is hamadryas.local
-</code></pre>
-
-<p>Use <code>.chomp</code> to fix that. If there’s a newline on the end of the text it removes it (although <code>put</code> adds its own):</p>
-
+</code></pre><p>Use <code>.chomp</code> to fix that. If there’s a newline on the end of the text it removes it (although <code>put</code> adds its own):</p>
 <p>使用 <code>.chomp</code> 来解决这个问题。如果文本末尾有换行符，则删除它（尽管 <code>put</code> 添加了自己的换行符）：</p>
-
 <pre><code>my $uname = qx/hostname/.chomp;
 put &quot;The hostname is $uname&quot;;
 put &quot;The hostname is { qx/hostname/.chomp }&quot;;
-</code></pre>
-
-<p><code>print</code> doesn’t add a newline for you, so you don’t need to remove the one from the command output:</p>
-
+</code></pre><p><code>print</code> doesn’t add a newline for you, so you don’t need to remove the one from the command output:</p>
 <p><code>print</code>不会为你添加换行符，因此你无需从命令输出中删除该换行符：</p>
-
 <pre><code>print &quot;The hostname is { qx/hostname/ }&quot;;
-</code></pre>
-
-<p><code>qx</code> and <code>qqx</code> are shortcuts for single and double quoting <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s with the <code>:x</code> or <code>:exec</code> adverbs:</p>
-
+</code></pre><p><code>qx</code> and <code>qqx</code> are shortcuts for single and double quoting <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s with the <code>:x</code> or <code>:exec</code> adverbs:</p>
 <p><code>qx</code> 和 <code>qqx</code> 是带有 <code>:x</code> 或 <code>:exec</code> 副词的单引号和双引号<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的快捷方式：</p>
-
 <pre><code>print Q :q      :x    /hostname/;
 print Q :q      :exec /hostname/;
 print Q :single :exec /hostname/;
-</code></pre>
-
-<h2 id="shell-safety">Shell Safety</h2>
-
+</code></pre><h2 id="shell-safety">Shell Safety</h2>
 <p>In the previous examples, the shell looks through its <code>PATH</code> environment variable to find the <em>hostname</em> command and executes the first one that it finds. Since people can set their <code>PATH</code> (or something can set it for them), you might not get the command you expect. If you use an absolute path you don’t have this problem. Literal quoting is handy to avoid inadvertent escaping:</p>
-
 <p>在前面的示例中，shell 查看其 <code>PATH</code> 环境变量以查找 <em>hostname</em> 命令并执行它找到的第一个命令。由于人们可以设置他们的 <code>PATH</code>（或者某些东西可以为他们设置），你可能无法得到你期望的命令。如果使用绝对路径，则不会出现此问题。字面引用可以避免无意中的转义：</p>
-
 <pre><code>put Q :x '/bin/hostname';
 put Q :x 'C:\Windows\System32\hostname.exe'
-</code></pre>
-
-<h6 id="note-注意">NOTE 注意</h6>
-
+</code></pre><h6 id="note-注意">NOTE 注意</h6>
 <p>I won’t cover secure programming techniques here, but I do write more about these problems in <em>Mastering Perl</em>. Although that’s a Perl 5 book, the risks to your program are the same.</p>
-
 <p>Although you have not seen hashes yet (<a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch09.html#camelia-hashes">Chapter 9</a>), you could change the environment for your program. If you set <code>PATH</code> to the empty <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> your program won’t be able to search for any programs:</p>
-
 <p>我不会在这里介绍安全编程技术，但我在 Mastering Perl 中写了更多关于这些问题的内容。虽然这是一本 Perl 5书，但你的程序风险是一样的。</p>
-
 <p>虽然你还没有看到哈希（第9章），但你可以更改程序的环境。如果将 <code>PATH</code> 设置为空<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>，则程序将无法搜索任何程序：</p>
-
 <pre><code>%*ENV&lt;PATH&gt; = '';
 print Q :x 'hostname';       # does not find this
 print Q :x '/bin/hostname';  # this works
-</code></pre>
-
-<p>If that’s too restrictive you can set the <code>PATH</code> to exactly the directories that you consider safe:</p>
-
+</code></pre><p>If that’s too restrictive you can set the <code>PATH</code> to exactly the directories that you consider safe:</p>
 <p>如果限制太多，你可以将 <code>PATH</code> 设置为你认为安全的目录：</p>
-
 <pre><code>%*ENV&lt;PATH&gt; = '/bin:/sbin';
 print Q :x 'hostname';       # does not find this
 print Q :x '/bin/hostname';  # this works
-</code></pre>
-
-<p>There’s also a double-quoted form of shell <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s:</p>
-
+</code></pre><p>There’s also a double-quoted form of shell <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>s:</p>
 <p>还有一个双引号形式的shell <a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>my $new-date-string = '...';
 my $output = qqx/date $new-date-string/
-</code></pre>
-
-<p>What’s in that <code>$new-date-string</code>? If it descends from user data, external configuration, or something else that you don’t control, you might be in for a surprise. That could be malicious or merely accidental, so be careful:</p>
-
+</code></pre><p>What’s in that <code>$new-date-string</code>? If it descends from user data, external configuration, or something else that you don’t control, you might be in for a surprise. That could be malicious or merely accidental, so be careful:</p>
 <p>那个 <code>$new-date-string</code> 中有什么？如果它来自用户数据，外部配置或你无法控制的其他内容，你可能会感到惊讶。这可能是恶意的或仅仅是偶然的，所以要小心：</p>
-
 <pre><code>my $new-date-string = '; /bin/rm -rf';
 my $output = qqx/date $new-date-string/
-</code></pre>
-
-<p>EXERCISE 4.7Write a program to capture the output of <em>hostname</em>. Make it work on both Windows and Unix systems. <code>$*DISTRO.is-win</code> is <code>True</code> if you are on Windows and <code>False</code> otherwise.</p>
-
+</code></pre><p>EXERCISE 4.7Write a program to capture the output of <em>hostname</em>. Make it work on both Windows and Unix systems. <code>$*DISTRO.is-win</code> is <code>True</code> if you are on Windows and <code>False</code> otherwise.</p>
 <p>练习4.7 编写一个程序来捕获主机名的输出。使其适用于 Windows 和 Unix 系统。如果你在 Windows上，<code>$* DISTRO.is-win</code> 为 <code>True</code>，否则为 <code>False</code>。</p>
-
 <h1 id="fancier-quoting">Fancier Quoting</h1>
-
 <p>You can combine adverbs in generalized quoting to use just the features that you need. Suppose that you want to interpolate only things in braces but nothing else. You can use the <code>:c</code> adverb:</p>
-
 <p>你可以在通用引用中组合副词，以仅使用所需的功能。假设你只想在花括号中插入内容而不是其他内容。你可以使用 <code>:c</code> 副词：</p>
-
 <pre><code>% raku
 &gt; Q :c &quot;The \r and \n stay, but 2 + 2 = { 2 + 2 }&quot;
 The \r and \n stay, but 2 + 2 = 4
-</code></pre>
-
-<p>To get only variable interpolation use the <code>:s</code> adverb. No other processing happens:</p>
-
+</code></pre><p>To get only variable interpolation use the <code>:s</code> adverb. No other processing happens:</p>
 <p>要只获得变量插值，请使用 <code>:s</code> 副词。没有其他处理发生：</p>
-
 <pre><code>% raku
 &gt; my $name = 'Hamadryas'
 Hamadryas
 &gt; Q :s &quot;\r \n { 2 + 2 } $name&quot;
 \r \n { 2 + 2 } Hamadryas
-</code></pre>
-
-<p>You can combine adverbs to get any mix of features that you like. Cluster the adverbs or space them out. They work the same either way:</p>
-
+</code></pre><p>You can combine adverbs to get any mix of features that you like. Cluster the adverbs or space them out. They work the same either way:</p>
 <p>你可以组合副词来获得你喜欢的任何功能组合。聚集副词或将它们分开。他们的工作方式相同：</p>
-
 <pre><code>% raku
 &gt; Q :s:c &quot;\r \n { 2 + 2 } $name&quot;
 \r \n 4 Hamadryas
@@ -1415,19 +907,11 @@ Hamadryas
 &gt; Q :s :c :b &quot;\r \n { 2 + 2 } $name&quot;
 
  4 Hamadryas
-</code></pre>
-
-<p>The <code>:qq</code> adverb is actually the combination of <code>:s :a :h :f :c :b</code>. This interpolates all of the variables, the stuff in braces, and all backslash sequences. If you don’t want to interpolate everything, you can turn off an adverb. This might be easier than specifying several just to leave one out. Put a <code>!</code> in front of the one to disable. <code>:!c</code> turns off brace interpolation:</p>
-
+</code></pre><p>The <code>:qq</code> adverb is actually the combination of <code>:s :a :h :f :c :b</code>. This interpolates all of the variables, the stuff in braces, and all backslash sequences. If you don’t want to interpolate everything, you can turn off an adverb. This might be easier than specifying several just to leave one out. Put a <code>!</code> in front of the one to disable. <code>:!c</code> turns off brace interpolation:</p>
 <p><code>:qq</code> 副词实际上是 <code>:s :a :h :f :c :b</code> 的组合。这会插入所有变量、花括号中的内容以及所有反斜杠序列。如果你不想插入所有内容，可以关闭副词。这可能比指定几个更简单，只留下一个。放一个 <code>!</code> 在需要禁用的副词前面。 <code>:!c</code> 关闭花括号插值：</p>
-
 <pre><code>qq :!c /No { 2+2 } interpolation/;
-</code></pre>
-
-<p>Selected quoting forms and adverbs are summarized in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings-TABLE-summary">Table 4-2</a> and <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings-TABLE-quoting_adverbs">Table 4-3</a>.</p>
-
+</code></pre><p>Selected quoting forms and adverbs are summarized in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings-TABLE-summary">Table 4-2</a> and <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch04.html#camelia-strings-TABLE-quoting_adverbs">Table 4-3</a>.</p>
 <p>表4-2和表4-3总结了选定的引用形式和副词。</p>
-
 <table>
 <thead>
 <tr>
@@ -1436,80 +920,67 @@ Hamadryas
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>｢…｣</code></td>
 <td>Literal</td>
 <td>Default delimiter, corner brackets</td>
 </tr>
-
 <tr>
 <td><code>Q ‘…’</code></td>
 <td>Literal</td>
 <td>Generalized quoting with alternate delimiter</td>
 </tr>
-
 <tr>
 <td><code>Q[…]</code></td>
 <td>Literal</td>
 <td>Generalized quoting with paired delimiter</td>
 </tr>
-
 <tr>
 <td><code>‘…’</code></td>
 <td>Escaped</td>
 <td>Default delimiter, single quote</td>
 </tr>
-
 <tr>
 <td><code>q{…}</code></td>
 <td>Escaped</td>
 <td>Use alternate paired delimiter</td>
 </tr>
-
 <tr>
 <td><code>Q:q […]</code></td>
 <td>Escaped</td>
 <td>Generalized quoting with <code>:q</code> adverb</td>
 </tr>
-
 <tr>
 <td><code>“…”</code></td>
 <td>Interpolated</td>
 <td>Default delimiter, double quote</td>
 </tr>
-
 <tr>
 <td><code>qq[…]</code></td>
 <td>Interpolated</td>
 <td>Use alternate paired delimiter</td>
 </tr>
-
 <tr>
 <td><code>Q:qq ‘…’</code></td>
 <td>Interpolated</td>
 <td>Generalized quoting with <code>:qq</code> adverb</td>
 </tr>
-
 <tr>
 <td><code>Q:c ‘…{ }…’</code></td>
 <td>Interpolated</td>
 <td>Generalized quoting only interpolating closures</td>
 </tr>
-
 <tr>
 <td><code>Q:to(HERE)</code></td>
 <td>Literal</td>
 <td>Here doc</td>
 </tr>
-
 <tr>
 <td><code>q:to(HERE)</code></td>
 <td>Escaped</td>
 <td>Here doc</td>
 </tr>
-
 <tr>
 <td><code>qq:to(HERE)</code></td>
 <td>Interpolated</td>
@@ -1517,7 +988,6 @@ Hamadryas
 </tr>
 </tbody>
 </table>
-
 <table>
 <thead>
 <tr>
@@ -1526,68 +996,57 @@ Hamadryas
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>:x</code></td>
 <td><code>:exec</code></td>
 <td>Execute shell command and return results</td>
 </tr>
-
 <tr>
 <td><code>:q</code></td>
 <td><code>:single</code></td>
 <td>Interpolate <code>\\</code>, <code>\qq[…]</code>, and an escaped delimiter</td>
 </tr>
-
 <tr>
 <td><code>:qq</code></td>
 <td><code>:double</code></td>
 <td>Interpolate with <code>:s</code>, <code>:a</code>, <code>:h</code>, <code>:f</code>, <code>:c</code>, <code>:b</code></td>
 </tr>
-
 <tr>
 <td><code>:s</code></td>
 <td><code>:scalar</code></td>
 <td>Interpolate <code>$</code> variables</td>
 </tr>
-
 <tr>
 <td><code>:a</code></td>
 <td><code>:array</code></td>
 <td>Interpolate <code>@</code> variables</td>
 </tr>
-
 <tr>
 <td><code>:h</code></td>
 <td><code>:hash</code></td>
 <td>Interpolate <code>%</code> variables</td>
 </tr>
-
 <tr>
 <td><code>:f</code></td>
 <td><code>:function</code></td>
 <td>Interpolate <code>&amp;</code> calls</td>
 </tr>
-
 <tr>
 <td><code>:c</code></td>
 <td><code>:closure</code></td>
 <td>Interpolate code in <code>{…}</code></td>
 </tr>
-
 <tr>
 <td><code>:b</code></td>
 <td><code>:backslash</code></td>
 <td>Interpolate <code>\n</code>, <code>\t</code>, and others</td>
 </tr>
-
 <tr>
 <td><code>:to</code></td>
 <td><code>:heredoc</code></td>
 <td>Parse result as here doc terminator</td>
 </tr>
-
 <tr>
 <td><code>:v</code></td>
 <td><code>:val</code></td>
@@ -1595,11 +1054,8 @@ Hamadryas
 </tr>
 </tbody>
 </table>
-
 <h1 id="summary">Summary</h1>
-
 <p>The quoting slang offers several ways to represent and combine text, so you can get exactly what you need in an easy fashion. Once you have the text, you have many options for looking inside the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to find or extract parts of it. This is still early in the book, though. You’ll see more features along the way and then really have fun in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch15.html#camelia-regex1">Chapter 15</a>.</p>
-
 <p>引用方言提供了几种表示和组合文本的方法，因此你可以轻松地获得所需的内容。获得文本后，你可以在<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>内部查找或提取部分内容。不过，这仍然是本书的早期版本。在第15章中，你将看到更多功能，变得真正有趣。</p>
 
 
@@ -1692,7 +1148,7 @@ Hamadryas
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

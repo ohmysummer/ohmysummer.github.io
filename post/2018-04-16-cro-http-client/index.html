@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-16-cro-http-client/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -212,7 +212,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (836 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (838 words)
   
   
 </span>
@@ -231,30 +231,17 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="cro-http-client-http-cro-services-docs-reference-cro-http-client"><a href="http://cro.services/docs/reference/cro-http-client">Cro::HTTP::Client</a></h1>
-
+        <h1 id="crohttpclienthttpcroservicesdocsreferencecro-http-client"><a href="http://cro.services/docs/reference/cro-http-client">Cro::HTTP::Client</a></h1>
 <p><code>Cro::HTTP::Client</code> 类提供了一个灵活的 HTTP 和 HTTPS 客户端实现，可以从简单到更复杂的情况进行扩展。它可以通过两种方式消费：</p>
-
 <p>通过对类型对象（ <code>Cro::HTTP::Client.get($url)</code> ）进行调用。这对于一次性请求很有用，但在向同一服务器发出多个请求时（例如使用 <code>keep-alive</code>）不提供连接重用。</p>
-
 <p>通过创建一个 <code>Cro::HTTP::Client</code> 实例。默认情况下，这可以重用连接池。它还可以配置默认的 base URL，传递的默认授权数据，甚至是插入到请求/响应处理管道中的中间件。 <code>Cro::HTTP::Client</code> 实例可以并发地使用。</p>
-
 <p>一般来说，如果您打算发起一次性请求，请使用类型对象。如果您要向同一台服务器或一组服务器发出很多请求，请创建一个实例。</p>
-
 <p>默认情况下，HTTPS 请求将使用 ALPN 来协商是否执行 HTTP/2 或 HTTP/1.1，并且 HTTP 请求将始终使用 HTTP/1.1。</p>
-
 <h2 id="发起基本请求">发起基本请求</h2>
-
 <p>可以在类型对象或 <code>Cro::HTTP::Client</code> 的实例上调用 <code>get</code>，<code>post</code>，<code>put</code>，<code>delete</code>，<code>patch</code> 和 <code>head</code> 方法。他们都会返回一个 <code>Promise</code>，如果请求成功则会被保留(kept), 如果失败则被毁掉(broken)。</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.get('https://www.raku.org/');
-</code></pre>
-
-<p>响应(<code>$resp</code>) 是一个 <code>Cro::HTTP::Response</code> 对象。它将在请求头可用时立即生成;请求体可能尚未收到。默认情况下，错误（4xx和5xx状态码）将导致遵守 <code>X::Cro::HTTP::Error</code> 角色的异常，该角色具有包含 <code>Cro::HTTP::Response</code> 对象的 <code>response</code> 属性。</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.delete($product-url);
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.get('https://www.raku.org/');
+</code></pre><p>响应(<code>$resp</code>) 是一个 <code>Cro::HTTP::Response</code> 对象。它将在请求头可用时立即生成;请求体可能尚未收到。默认情况下，错误（4xx和5xx状态码）将导致遵守 <code>X::Cro::HTTP::Error</code> 角色的异常，该角色具有包含 <code>Cro::HTTP::Response</code> 对象的 <code>response</code> 属性。</p>
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.delete($product-url);
 CATCH {
     when X::Cro::HTTP::Error {
         if .response.status == 404 {
@@ -265,22 +252,14 @@ CATCH {
         }
     }
 }
-</code></pre>
-
-<p>实际的异常类型要么是用于 4xx 错误的 <code>X::Cro::HTTP::Error::Client</code> , 要么是用于 5xx 错误的 <code>X::Cro::HTTP::Error::Server</code>（这在设置重试时很有用应该区分服务器错误和客户端错误）。</p>
-
+</code></pre><p>实际的异常类型要么是用于 4xx 错误的 <code>X::Cro::HTTP::Error::Client</code> , 要么是用于 5xx 错误的 <code>X::Cro::HTTP::Error::Server</code>（这在设置重试时很有用应该区分服务器错误和客户端错误）。</p>
 <p>要为每个客户端请求设置 base URL，可以将 base URL 作为 <code>base-uri</code> 参数传递给 <code>Cro::HTTP::Client</code> 实例。</p>
-
-<pre><code class="language-raku">my $client = Cro::HTTP::Client.new(base-uri =&gt; &quot;http://persistent.url.com&quot;);
+<pre><code class="language-raku" data-lang="raku">my $client = Cro::HTTP::Client.new(base-uri =&gt; &quot;http://persistent.url.com&quot;);
 await $client.get('/first');   # http://persistent.url.com/first
 await $client.get('/another'); # http://persistent.url.com/another
-</code></pre>
-
-<h2 id="添加额外的请求头">添加额外的请求头</h2>
-
+</code></pre><h2 id="添加额外的请求头">添加额外的请求头</h2>
 <p>通过给 <code>headers</code> 命名参数传递一个数组，可以为请求设置一个或多个请求头。它可能包含 <code>Pair</code> 对象，<code>Cro::HTTP::Header</code> 实例，或者两者的混合。</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.get: 'example.com',
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.get: 'example.com',
     headers =&gt; [
         referer =&gt; 'http://anotherexample.com',
         Cro::HTTP::Header.new(
@@ -288,64 +267,42 @@ await $client.get('/another'); # http://persistent.url.com/another
             value =&gt; 'Cro'
         )
     ];
-</code></pre>
-
-<p>如果请求头要添加到所有的请求中，则可以在构建时设置默认请求头：</p>
-
-<pre><code class="language-raku">my $client = Cro::HTTP::Client.new:
+</code></pre><p>如果请求头要添加到所有的请求中，则可以在构建时设置默认请求头：</p>
+<pre><code class="language-raku" data-lang="raku">my $client = Cro::HTTP::Client.new:
     headers =&gt; [
         User-agent =&gt; 'Cro'
     ];
-</code></pre>
-
-<h2 id="设置请求体">设置请求体</h2>
-
+</code></pre><h2 id="设置请求体">设置请求体</h2>
 <p>为了给请求一个请求体，传递一个 <code>body</code> 命名参数。<code>content-type</code> 命名参数通常也应该传递，以指示正文的类型。例如，具有 JSON 正文的请求可以发送为：</p>
-
-<pre><code class="language-raku">my %panda = name =&gt; 'Bao Bao', eats =&gt; 'bamboo';
+<pre><code class="language-raku" data-lang="raku">my %panda = name =&gt; 'Bao Bao', eats =&gt; 'bamboo';
 my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
     content-type =&gt; 'application/json',
     body =&gt; %panda;
-</code></pre>
-
-<p>如果为 JSON API 编写客户端，那么在每个请求上设置内容类型(content type)可能会变得繁琐。在这种情况下，它可以在构建客户端实例时设置，并在默认情况下使用（请注意，只有在设置了主体的情况下才会使用它）：</p>
-
-<pre><code class="language-raku"># Configure with JSON content type.
+</code></pre><p>如果为 JSON API 编写客户端，那么在每个请求上设置内容类型(content type)可能会变得繁琐。在这种情况下，它可以在构建客户端实例时设置，并在默认情况下使用（请注意，只有在设置了主体的情况下才会使用它）：</p>
+<pre><code class="language-raku" data-lang="raku"># Configure with JSON content type.
 my $client = Cro::HTTP::Client.new: content-type =&gt; 'application/json';
 
 # And later get it added by default.
 my %panda = name =&gt; 'Bao Bao', eats =&gt; 'bamboo';
 my $resp = await $client.post: 'we.love.pand.as/pandas', body =&gt; %panda;
-</code></pre>
-
-<p><code>Cro::HTTP::Client</code> 类使用一个 <code>Cro::BodySerializer</code> 来序列化所发送的请求体。除了 JSON 之外，还有 body parser 编码和发送一个 <code>Str</code>：</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/facts',
+</code></pre><p><code>Cro::HTTP::Client</code> 类使用一个 <code>Cro::BodySerializer</code> 来序列化所发送的请求体。除了 JSON 之外，还有 body parser 编码和发送一个 <code>Str</code>：</p>
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/facts',
     content-type =&gt; 'text/plain; charset=UTF-8',
     body =&gt; &quot;99% of a Panda's diet consists of bamboo&quot;;
-</code></pre>
-
-<p><code>Blob</code>:</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.put: 'we.love.pand.as/images/baobao.jpg',
+</code></pre><p><code>Blob</code>:</p>
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.put: 'we.love.pand.as/images/baobao.jpg',
     content-type =&gt; 'image/jpeg',
     body =&gt; slurp('baobao.jpg', :bin);
-</code></pre>
-
-<p>根据 <code>application/x-www-form-urlencoded</code> 格式化的表单数据（这是 Web 浏览器中的默认设置）：</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
+</code></pre><p>根据 <code>application/x-www-form-urlencoded</code> 格式化的表单数据（这是 Web 浏览器中的默认设置）：</p>
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
     content-type =&gt; 'application/x-www-form-urlencoded',
     # Can use a Hash; an Array of Pair allows multiple values per name
     body =&gt; [
         name =&gt; 'Bao Bao',
         eats =&gt; 'bamboo'
     ];
-</code></pre>
-
-<p>或者根据 <code>multipart/form-data</code> 格式化表单数据（这在Web浏览器中用于包含文件上传的表单）：</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
+</code></pre><p>或者根据 <code>multipart/form-data</code> 格式化表单数据（这在Web浏览器中用于包含文件上传的表单）：</p>
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.post: 'we.love.pand.as/pandas',
     content-type =&gt; 'multipart/form-data',
     body =&gt; [
         # Simple pairs for simple form values
@@ -362,184 +319,116 @@ my $resp = await $client.post: 'we.love.pand.as/pandas', body =&gt; %panda;
             body-blob =&gt; slurp('baobao.jpg', :bin)
         )
     ];
-</code></pre>
-
-<p>要替换客户端将使用的一组正文序列化程序，请在构造 <code>Cro::HTTP::Client</code> 实例时给 <code>body-serializers</code> 命名参数传递一个数组：</p>
-
-<pre><code class="language-raku">my $client = Cro::HTTP::Client.new:
+</code></pre><p>要替换客户端将使用的一组正文序列化程序，请在构造 <code>Cro::HTTP::Client</code> 实例时给 <code>body-serializers</code> 命名参数传递一个数组：</p>
+<pre><code class="language-raku" data-lang="raku">my $client = Cro::HTTP::Client.new:
     body-serializers =&gt; [
         Cro::HTTP::BodySerializer::JSON,
         My::BodySerializer::XML
     ];
-</code></pre>
-
-<p>要改为保留现有的一组正文序列化器并添加一些新的（它们将具有较高的优先级），请使用 <code>add-body-serializers</code>:</p>
-
-<pre><code class="language-raku">my $client = Cro::HTTP::Client.new:
+</code></pre><p>要改为保留现有的一组正文序列化器并添加一些新的（它们将具有较高的优先级），请使用 <code>add-body-serializers</code>:</p>
+<pre><code class="language-raku" data-lang="raku">my $client = Cro::HTTP::Client.new:
     add-body-serializers =&gt; [ My::BodySerializer::XML ];
-</code></pre>
-
-<p>通过将一个 <code>Supply</code> 传递给 <code>body-byte-stream</code>，也可以让主体来自一个字节流。</p>
-
-<pre><code class="language-raku">my $resp = await Cro::HTTP::Client.post: 'example.com/incoming',
+</code></pre><p>通过将一个 <code>Supply</code> 传递给 <code>body-byte-stream</code>，也可以让主体来自一个字节流。</p>
+<pre><code class="language-raku" data-lang="raku">my $resp = await Cro::HTTP::Client.post: 'example.com/incoming',
     content-type =&gt; 'application/octet-stream',
     body-byte-stream =&gt; $supply;
-</code></pre>
-
-<p><code>body</code> 和 <code>body-byte-stream</code> 参数不能一起使用; 试图这样做会导致 <code>X::Cro::HTTP::Client::BodyAlreadySet</code> 异常.</p>
-
+</code></pre><p><code>body</code> 和 <code>body-byte-stream</code> 参数不能一起使用; 试图这样做会导致 <code>X::Cro::HTTP::Client::BodyAlreadySet</code> 异常.</p>
 <h2 id="获得响应体">获得响应体</h2>
-
 <p>响应体通常由 <code>Promise</code>（如果请求整个主体）或 <code>Supply</code>（当主体到达时将交付）异步提供的。</p>
-
 <p><code>body</code> 方法返回一个 <code>Promise</code>，当接收并分析正文时将保留 Promise。一些默认的主体解析器是：</p>
-
 <ul>
-<li><p>JSON，当 <code>Content-type</code> 头部是 <code>application/json</code> 或使用 <code>+json</code> 后缀时将使用这个 JSON。 <code>JSON::Fast</code> 将用于执行解析。</p></li>
-
-<li><p>字符串回退，在 <code>Content-type</code> 为 <code>text</code> 时使用。会返回一个 <code>Str</code>。</p></li>
-
-<li><p>Blob 回退，在所有其他情况下使用，并返回一个带主体的 <code>Blob</code>。</p></li>
+<li>
+<p>JSON，当 <code>Content-type</code> 头部是 <code>application/json</code> 或使用 <code>+json</code> 后缀时将使用这个 JSON。 <code>JSON::Fast</code> 将用于执行解析。</p>
+</li>
+<li>
+<p>字符串回退，在 <code>Content-type</code> 为 <code>text</code> 时使用。会返回一个 <code>Str</code>。</p>
+</li>
+<li>
+<p>Blob 回退，在所有其他情况下使用，并返回一个带主体的 <code>Blob</code>。</p>
+</li>
 </ul>
-
 <p>一个 <code>Cro::HTTP::Client</code> 可以通过传递 <code>body-parsers</code> 命名参数来配置一个替代的 body 解析器组：</p>
-
-<pre><code class="language-raku">my $client = Cro::HTTP::Client.new:
+<pre><code class="language-raku" data-lang="raku">my $client = Cro::HTTP::Client.new:
     body-parsers =&gt; [
         Cro::HTTP::BodyParser::JSON,
         My::BodyParser::XML
     ];
-</code></pre>
-
-<p>或者使用 <code>add-body-parsers</code> 在默认设置的顶部添加额外的 body 解析器:</p>
-
-<pre><code class="language-raku">my $client = Cro::HTTP::Client.new:
+</code></pre><p>或者使用 <code>add-body-parsers</code> 在默认设置的顶部添加额外的 body 解析器:</p>
+<pre><code class="language-raku" data-lang="raku">my $client = Cro::HTTP::Client.new:
     add-body-parsers =&gt; [ My::BodyParser::XML ];
-</code></pre>
-
-<p>为了将响应主体作为一个 <code>Supply</code> 来供应，当它们通过网络到达时会发送这些字节，请使用 <code>body-byte-stream</code> 方法：</p>
-
-<pre><code class="language-raku">react {
+</code></pre><p>为了将响应主体作为一个 <code>Supply</code> 来供应，当它们通过网络到达时会发送这些字节，请使用 <code>body-byte-stream</code> 方法：</p>
+<pre><code class="language-raku" data-lang="raku">react {
     whenever $resp.body-byte-stream -&gt; $chunk {
         say &quot;Got chunk: $chunk.gist()&quot;;
     }
 }
-</code></pre>
-
-<p>要将整个响应主体作为 <code>Blob</code> 获取，请使用 <code>body-blob</code> 方法：</p>
-
-<pre><code class="language-raku">my Blob $body = await $resp.body-blob();
-</code></pre>
-
-<p>要将整个响应主体作为 <code>Str</code>，请使用 <code>body-text</code> 方法：</p>
-
-<pre><code class="language-raku">my Str $body = await $resp.body-text();
-</code></pre>
-
-<p>此方法将查看 <code>Content-type</code> 头以查看是否指定了 <code>charset</code>，并使用该字符串解码身体。否则，它会查看主体是否以 BOM 开始并依赖于此。如果没有通过，将使用启发式：如果 body 可以被解码为 utf-8，那么它将被认为是 utf-8，并且如果它不能被解码为 latin-1（它永远不会失败因为所有字节都是有效的）。</p>
-
+</code></pre><p>要将整个响应主体作为 <code>Blob</code> 获取，请使用 <code>body-blob</code> 方法：</p>
+<pre><code class="language-raku" data-lang="raku">my Blob $body = await $resp.body-blob();
+</code></pre><p>要将整个响应主体作为 <code>Str</code>，请使用 <code>body-text</code> 方法：</p>
+<pre><code class="language-raku" data-lang="raku">my Str $body = await $resp.body-text();
+</code></pre><p>此方法将查看 <code>Content-type</code> 头以查看是否指定了 <code>charset</code>，并使用该字符串解码身体。否则，它会查看主体是否以 BOM 开始并依赖于此。如果没有通过，将使用启发式：如果 body 可以被解码为 utf-8，那么它将被认为是 utf-8，并且如果它不能被解码为 latin-1（它永远不会失败因为所有字节都是有效的）。</p>
 <h2 id="cookies">Cookies</h2>
-
 <p>默认情况下，响应中的 Cookie 会被忽略。但是，使用 <code>:cookie-jar</code> 选项（即传递 <code>True</code>）构造一个 <code>Cro::HTTP::Client</code> 将创建一个 <code>Cro::HTTP::Client::CookieJar</code> 实例。这将用于存储响应中设置的所有 Cookie。相关的 cookies 将自动包含在后续请求中。</p>
-
-<pre><code class="language-raku">my $client = Cro::HTTP::Client.new(:cookie-jar);
-</code></pre>
-
-<p>Cookie 相关性通过考虑主机，路径和 <code>Secure</code> 扩展来确定。已经过了最大年龄的过期日期的 Cookies 将自动从 cookie jar 中移除。</p>
-
+<pre><code class="language-raku" data-lang="raku">my $client = Cro::HTTP::Client.new(:cookie-jar);
+</code></pre><p>Cookie 相关性通过考虑主机，路径和 <code>Secure</code> 扩展来确定。已经过了最大年龄的过期日期的 Cookies 将自动从 cookie jar 中移除。</p>
 <p>也可以传入一个 <code>Cro::HTTP::Client::CookieJar</code> 的实例，这样就可以在客户端的几个实例中共享一个 cookie jar（或者传入添加额外功能的子类）。</p>
-
-<pre><code class="language-raku">my $jar = Cro::HTTP::Client::CookieJar.new;
+<pre><code class="language-raku" data-lang="raku">my $jar = Cro::HTTP::Client::CookieJar.new;
 my $client = Cro::HTTP::Client.new(cookie-jar =&gt; $jar);
 my $json-client = Cro::HTTP::Client.new:
     cookie-jar =&gt; $jar,
     content-type =&gt; 'application/json';
-</code></pre>
-
-<p>要在请求中包含一组特定的 cookie，请在进行reuqest请求时使用 <code>cookies</code> 命名参数将它们传递给哈希：</p>
-
-<pre><code class="language-raku">my $resp = await $client.get: 'http://somesite.com/',
+</code></pre><p>要在请求中包含一组特定的 cookie，请在进行reuqest请求时使用 <code>cookies</code> 命名参数将它们传递给哈希：</p>
+<pre><code class="language-raku" data-lang="raku">my $resp = await $client.get: 'http://somesite.com/',
     cookies =&gt; {
         session =&gt; $fake-session-id
     };
-</code></pre>
-
-<p>以这种方式传递的 Cookie 将覆盖 cookie jar 中的任何 cookie。</p>
-
+</code></pre><p>以这种方式传递的 Cookie 将覆盖 cookie jar 中的任何 cookie。</p>
 <p>要获取响应设置的 cookie，请在 <code>Cro::HTTP::Response</code> 对象上使用 cookie 方法，该方法返回一个 <code>Cro::HTTP::Cookie</code> 对象列表。</p>
-
 <h2 id="重定向">重定向</h2>
-
 <p>默认情况下，<code>Cro::HTTP::Client</code> 将遵循 HTTP 重定向响应，强制执行 5 个重定向限制以避免循环重定向。如果有 5 个以上的重定向，<code>X::Cro::HTTP::Client::TooManyRedirects</code> 将被抛出。</p>
-
 <p>可以在构建新的 <code>Cro::HTTP::Client</code> 时或在每个请求的基础上配置此行为，并且每个请求设置都会覆盖在构建时配置的行为。无论哪种情况，都是使用后面的命名参数完成的。</p>
-
-<pre><code class="language-raku">:follow         # follow redirects (up to 5 times per request)
+<pre><code class="language-raku" data-lang="raku">:follow         # follow redirects (up to 5 times per request)
 :!follow        # never follow redirects
 :follow(2)      # follow redirects (up to 2 times per request)
 :follow(10)     # follow redirects (up to 10 times per request)
-</code></pre>
-
-<p>目前 301,307 和 308 重定向的处理方式相同，永久重定向不会缓存。他们保留原始的请求方法。不管最初的请求方法如何，302 和 303 会导致发出 GET 请求。</p>
-
+</code></pre><p>目前 301,307 和 308 重定向的处理方式相同，永久重定向不会缓存。他们保留原始的请求方法。不管最初的请求方法如何，302 和 303 会导致发出 GET 请求。</p>
 <h2 id="认证">认证</h2>
-
 <p>基本认证和承载认证均由 <code>Cro::HTTP::Client</code> 直接支持。这些可以在实例化客户端或每个请求（将覆盖实例上配置的）时进行配置。</p>
-
 <p>对于基本身份验证，请将 <code>auth</code> 选项与包含用户名和密码的哈希值一起传递。</p>
-
-<pre><code class="language-raku">auth =&gt; {
+<pre><code class="language-raku" data-lang="raku">auth =&gt; {
     username =&gt; $user,
     password =&gt; $password
 }
-</code></pre>
-
-<p>对于承载认证，传递一个包含承载的 <code>auth</code> 散列选项：</p>
-
-<pre><code class="language-raku">auth =&gt; { bearer =&gt; $jwt }
-</code></pre>
-
-<p>未能正确传递用户名和密码或承载将导致 <code>X::Cro::Client::InvalidAuth</code> 异常。</p>
-
+</code></pre><p>对于承载认证，传递一个包含承载的 <code>auth</code> 散列选项：</p>
+<pre><code class="language-raku" data-lang="raku">auth =&gt; { bearer =&gt; $jwt }
+</code></pre><p>未能正确传递用户名和密码或承载将导致 <code>X::Cro::Client::InvalidAuth</code> 异常。</p>
 <p>在这两种情况下，认证信息将随请求立即发送。为了仅在服务器以 401 响应响应初始请求时才发送它，请将 <code>if-ask</code> 选项设置为 <code>True</code>。</p>
-
-<pre><code class="language-raku">auth =&gt; {
+<pre><code class="language-raku" data-lang="raku">auth =&gt; {
     username =&gt; $user,
     password =&gt; $password,
     if-asked =&gt; True
 }
-</code></pre>
-
-<h2 id="持久化连接">持久化连接</h2>
-
+</code></pre><h2 id="持久化连接">持久化连接</h2>
 <p><code>Cro::HTTP::Client</code> 实例默认使用持久化连接。当对同一台服务器发起多个请求时，可以通过不需要每次建立新连接来实现更高的吞吐量。要不使用持久连接，请将 <code>:!persistent</code> 传递给构造函数。当使用类型对象（例如，<code>Cro::HTTP::Client.get($url)</code> 时，将不会使用持久连接缓存.</p>
-
 <h2 id="http-版本">HTTP 版本</h2>
-
 <p>可以在构造函数或发起每个请求时传递 <code>:http</code> 选项来控制应该使用哪个版本的 HTTP。它可以传递单个项目或列表。有效的选项是 <code>1.1</code>（它也会隐式地处理 HTTP/1.0）和 2。</p>
-
-<pre><code class="language-raku">:http&lt;1.1&gt;      # HTTP/1.1 only
+<pre><code class="language-raku" data-lang="raku">:http&lt;1.1&gt;      # HTTP/1.1 only
 :http&lt;2&gt;        # HTTP/2 only
 :http&lt;1.1 2&gt;    # HTTP/1.1 and HTTP/2 (HTTPS only; selected by ALPN)
-</code></pre>
-
-<p>对于 HTTP 请求，默认值为：http <1.1>，对于HTTPS请求，默认值为：http <1.1 2>。使用HTTP <1.1 2>与HTTP连接是不合法的，因为ALPN是决定使用哪种协议的唯一支持机制。</p>
-
+</code></pre><p>对于 HTTP 请求，默认值为：http &lt;1.1&gt;，对于HTTPS请求，默认值为：http &lt;1.1 2&gt;。使用HTTP &lt;1.1 2&gt;与HTTP连接是不合法的，因为ALPN是决定使用哪种协议的唯一支持机制。</p>
 <h2 id="push-promises">Push promises</h2>
-
 <p><code>HTTP/2.0</code> 支持推送 promises，它允许服务器将额外资源作为响应的一部分推送给客户端。默认情况下，<code>Cro::HTTP::Client</code> 将指示远程服务器不发送 push promises。要加入此功能，可以选择：</p>
-
 <ul>
-<li><p>如果创建一个 <code>Cro::HTTP::Client</code> 实例，请将 <code>:push-promises</code> 传递给构造函数，以便为使用客户端实例发起的所有请求启用它们。</p></li>
-
-<li><p>否则，在发出请求时传递 <code>:push-promises</code>（例如，<code>get</code> 方法）。但是，在使用 HTTP/2.0 时，通常很明智的做法是创建一个实例并重用连接来处理多个请求。</p></li>
+<li>
+<p>如果创建一个 <code>Cro::HTTP::Client</code> 实例，请将 <code>:push-promises</code> 传递给构造函数，以便为使用客户端实例发起的所有请求启用它们。</p>
+</li>
+<li>
+<p>否则，在发出请求时传递 <code>:push-promises</code>（例如，<code>get</code> 方法）。但是，在使用 HTTP/2.0 时，通常很明智的做法是创建一个实例并重用连接来处理多个请求。</p>
+</li>
 </ul>
-
 <p>通过调用请求产生的 <code>Cro::HTTP::Response</code> 对象的 <code>push-promises</code> 方法来获得 Push promise。这将返回一个 <code>Supply</code>，它会为服务器发送的每个 push promise 发出一个 <code>Cro::HTTP::PushPromise</code> 实例。其中每个人都有一 <code>response</code> 属性，返回一个 <code>Promise</code>，当 push promise 被满足时，<code>Promise</code> 将被保存在一个 <code>Cro::HTTP::Response</code> 对象中。</p>
-
 <p>因此可以实现请求并获得所有 push promises，如下所示：</p>
-
-<pre><code class="language-raku">react {
+<pre><code class="language-raku" data-lang="raku">react {
     my $client = Cro::HTTP::Client.new(:push-promises);
     my $response = await $client.get($url);
     whenever $response.push-promises -&gt; $prom {
@@ -549,7 +438,6 @@ my $json-client = Cro::HTTP::Client.new:
     }
 }
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -640,7 +528,7 @@ my $json-client = Cro::HTTP::Client.new:
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

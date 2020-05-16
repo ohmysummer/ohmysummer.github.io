@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-06-03-a-guide-to-fanfou-robot/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,56 +231,32 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="使用-raku-轻松活泼地写饭否机器人">使用 Raku 轻松活泼地写饭否机器人</h1>
-
-<p><img src="http://photo1.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/qm/xd_368058.jpg@596w_1l.jpg" alt="img" /></p>
-
+        <h1 id="使用-raku-轻松活泼地写饭否机器人">使用 Raku 轻松活泼地写饭否机器人</h1>
+<p><img src="http://photo1.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/qm/xd_368058.jpg@596w_1l.jpg" alt="img"></p>
 <h2 id="安装-raku">安装 Raku</h2>
-
 <p><a href="https://raku.org">Raku</a> 是一门很有趣的语言。</p>
-
 <p>目前支持 Windows, macOS, Linux 主流操作系统, 首先去官网下载对应的<a href="https://rakudo.org/files">安装包</a>, 然后安装。安装完成后在终端/命令行提示符中输入</p>
-
-<pre><code class="language-shell">raku -v
-</code></pre>
-
-<p>它会打印出 Raku 的版本信息：</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">raku -v
+</code></pre></div><p>它会打印出 Raku 的版本信息：</p>
 <pre><code>This is Rakudo Star version 2018.04.1 built on MoarVM version 2018.04.1
 implementing Raku.c.
-</code></pre>
-
-<p>Rakudo Star 自带了模块管理工具 <a href="https://github.com/ugexe/zef">Zef</a>, 你可以使用 <code>zef --help</code> 查看 zef 的帮助。如果提示 <em>command not found</em> 请检查是否设置好了 <code>PATH</code> 路径。我们会用 Zef 来安装饭否客户端模块。</p>
-
+</code></pre><p>Rakudo Star 自带了模块管理工具 <a href="https://github.com/ugexe/zef">Zef</a>, 你可以使用 <code>zef --help</code> 查看 zef 的帮助。如果提示 <em>command not found</em> 请检查是否设置好了 <code>PATH</code> 路径。我们会用 Zef 来安装饭否客户端模块。</p>
 <h2 id="raku-入门">Raku 入门</h2>
-
 <p>在开始写机器人之前, 需要先了解一点 Raku 的基础语法。</p>
-
 <p><a href="http://zh.rakuintro.com">Raku 入门</a>是 Raku 入门的简明教程, 涵盖了写机器人所需要的基础知识。</p>
-
 <p>想了解更多, 请查看<a href="https://raku.org">官方文档</a>, 或者在 <a href="https://stackoverflow.com/questions/tagged/raku">stackoverflow</a> 上提问。</p>
-
 <h2 id="创建应用">创建应用</h2>
-
 <p>首先需要创建一个新的应用, 去<a href="https://fanfou.com/apps">饭否开放平台</a>申请一个饭否应用。在<strong>创建应用列表</strong>下面可以查看你创建的所有应用, 如果是第一次创建应用, 那么点击<code>创建新应用</code>按钮:</p>
-
-<p><img src="http://photo2.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/ty/6a_476257.jpg@596w_1l.jpg" alt="img" /></p>
-
-<p>在跳转后的<strong>新建一个应用</strong>页面下, 标红星 <code>*</code> 的是必填项：</p>
-
+<p><img src="http://photo2.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/ty/6a_476257.jpg@596w_1l.jpg" alt="img"></p>
+<p>在跳转后的<strong>新建一个应用</strong>页面下, 标红星 <code>* </code> 的是必填项：</p>
 <ul>
 <li>应用名称, 给机器人起一个好听的酷酷的名字。</li>
 <li>应用类型, 选择机器人应用。</li>
 <li>主页, 点击<strong>我的主页</strong>, 复制地址栏中的链接, 就是你的主页。</li>
 <li>描述, 说明你这个应用是做什么用途的。</li>
 </ul>
-
-<p><img src="http://photo3.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/ty/6b_476256.jpg@596w_1l.jpg" alt="img" /></p>
-
+<p><img src="http://photo3.fanfou.com/v1/mss_3d027b52ec5a4d589e68050845611e68/ff/n0/0f/ty/6b_476256.jpg@596w_1l.jpg" alt="img"></p>
 <p>创建完成后会显示如下信息：</p>
-
 <table>
 <thead>
 <tr>
@@ -288,47 +264,35 @@ implementing Raku.c.
 <th>值</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Consumer key</td>
 <td>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
 </tr>
-
 <tr>
 <td>Consumer secret</td>
 <td>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
 </tr>
-
 <tr>
 <td>Request token URL</td>
 <td><a href="https://fanfou.com/oauth/request_token">https://fanfou.com/oauth/request_token</a></td>
 </tr>
-
 <tr>
 <td>Access token URL</td>
 <td><a href="https://fanfou.com/oauth/access_token">https://fanfou.com/oauth/access_token</a></td>
 </tr>
-
 <tr>
 <td>Authorize URL</td>
 <td><a href="https://fanfou.com/oauth/authorize">https://fanfou.com/oauth/authorize</a></td>
 </tr>
 </tbody>
 </table>
-
 <p>注意不要把你的 <strong>Consumer key</strong> 和 <strong>Consumer secret</strong> 泄漏出去, 写饭否机器人的时候会用到这两个东西。</p>
-
 <h2 id="安装模块">安装模块</h2>
-
 <pre><code>zef install FanFou
-</code></pre>
-
-<h2 id="饭否机器人">饭否机器人</h2>
-
+</code></pre><h2 id="饭否机器人">饭否机器人</h2>
 <p>新建一个名为 <code>ai-fan.pl6</code> 的脚本, 内容如下:</p>
-
-<pre><code class="language-raku">use FanFou; # 加载模块
+<pre><code class="language-raku" data-lang="raku">use FanFou; # 加载模块
 my %oauth_consumer = key =&gt; 'your_consumer_key', secret =&gt; 'your_secret_key';
 
 # 获取 client
@@ -345,17 +309,10 @@ say $resp.perl;
 # 发送消息
 my %body = 'status' =&gt; &quot;Hi, fan, I'm a robot written in Raku.&quot;;
 $client.request('/statuses/update', 'POST', %body);
-</code></pre>
-
-<p>拿到 <code>$client</code> 之后, 就可以使用饭否的 <a href="https://github.com/FanfouAPI/FanFouAPIDoc/wiki">API</a> 了。</p>
-
+</code></pre><p>拿到 <code>$client</code> 之后, 就可以使用饭否的 <a href="https://github.com/FanfouAPI/FanFouAPIDoc/wiki">API</a> 了。</p>
 <p>运行：</p>
-
-<pre><code class="language-shell">raku ai-fan.pl6
-</code></pre>
-
-<p>刷新饭否, 就可以看见刚才发的这条消息了。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">raku ai-fan.pl6
+</code></pre></div><p>刷新饭否, 就可以看见刚才发的这条消息了。</p>
 <p>-OFun :)</p>
 
 
@@ -448,7 +405,7 @@ $client.request('/statuses/update', 'POST', %body);
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

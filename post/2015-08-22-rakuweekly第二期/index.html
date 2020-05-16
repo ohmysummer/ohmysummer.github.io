@@ -8,19 +8,21 @@
   <title>Raku Weekly(二)</title>
   <meta property="og:title" content="Raku Weekly(二)" />
   <meta name="twitter:title" content="Raku Weekly(二)" />
-  <meta name="description" content=":my $foo 的作用域和用途 在 *regex*、token 或 rule 中, 定义像下面这样的变量是可能的:
-token directive { :my $foo = &quot;in command&quot;; &lt;command&gt; &lt;subject&gt; &lt;value&gt;? }  在中提到了一点有关该变量的东西, 我引用过来:
+  <meta name="description" content=":my $foo 的作用域和用途 在 regex、token 或 rule 中, 定义像下面这样的变量是可能的:
+token directive {:my $foo = &quot;in command&quot;;&lt;command&gt; &lt;subject&gt; &lt;value&gt;?}在中提到了一点有关该变量的东西, 我引用过来:
  任何 grammar regex 实际上是一种方法, 并且你可以在这样一个子例程中使用一个冒号跟着任何作用域声明符来声明一个变量, 这些声明符包括 my, our, state 和 constant (作为类似的声明符, temp 和 let 也能被识别). 单个语句(直到结尾的分号或行末尾的闭括号为止) 被解析为普通的 Raku 代码:
- token prove-nondeterministic-parsing { :my $threshold = rand; &#39;maybe&#39; \s&#43; &lt;it($threshold)&gt; }  有谁能解释下这段代码的应用场景吗？
-what scope does :my $foo; have? :my $foo 在它所出现的 rule/token/regex 中拥有词法作用域(lexical scope)。你所得到的作用域要么很大要么很小:">
-  <meta property="og:description" content=":my $foo 的作用域和用途 在 *regex*、token 或 rule 中, 定义像下面这样的变量是可能的:
-token directive { :my $foo = &quot;in command&quot;; &lt;command&gt; &lt;subject&gt; &lt;value&gt;? }  在中提到了一点有关该变量的东西, 我引用过来:
+ token prove-nondeterministic-parsing {:my $threshold = rand;&#39;maybe&#39; \s&#43; &lt;it($threshold)&gt;}有谁能解释下这段代码的应用场景吗？
+what scope does :my $foo; have? :my $foo 在它所出现的 rule/token/regex 中拥有词法作用域(lexical scope)。你所得到的作用域要么很大要么很小:
+grammar g {regex r1 {{ my $foo; .">
+  <meta property="og:description" content=":my $foo 的作用域和用途 在 regex、token 或 rule 中, 定义像下面这样的变量是可能的:
+token directive {:my $foo = &quot;in command&quot;;&lt;command&gt; &lt;subject&gt; &lt;value&gt;?}在中提到了一点有关该变量的东西, 我引用过来:
  任何 grammar regex 实际上是一种方法, 并且你可以在这样一个子例程中使用一个冒号跟着任何作用域声明符来声明一个变量, 这些声明符包括 my, our, state 和 constant (作为类似的声明符, temp 和 let 也能被识别). 单个语句(直到结尾的分号或行末尾的闭括号为止) 被解析为普通的 Raku 代码:
- token prove-nondeterministic-parsing { :my $threshold = rand; &#39;maybe&#39; \s&#43; &lt;it($threshold)&gt; }  有谁能解释下这段代码的应用场景吗？
-what scope does :my $foo; have? :my $foo 在它所出现的 rule/token/regex 中拥有词法作用域(lexical scope)。你所得到的作用域要么很大要么很小:">
-  <meta name="twitter:description" content=":my $foo 的作用域和用途 在 *regex*、token 或 rule 中, 定义像下面这样的变量是可能的:
-token directive { :my $foo = &quot;in command&quot;; &lt;command&gt; &lt;subject&gt; &lt;value&gt;? }  在中提到了一点有关该变量的东西, 我引用过来:
- 任何 grammar …">
+ token prove-nondeterministic-parsing {:my $threshold = rand;&#39;maybe&#39; \s&#43; &lt;it($threshold)&gt;}有谁能解释下这段代码的应用场景吗？
+what scope does :my $foo; have? :my $foo 在它所出现的 rule/token/regex 中拥有词法作用域(lexical scope)。你所得到的作用域要么很大要么很小:
+grammar g {regex r1 {{ my $foo; .">
+  <meta name="twitter:description" content=":my $foo 的作用域和用途 在 regex、token 或 rule 中, 定义像下面这样的变量是可能的:
+token directive {:my $foo = &quot;in command&quot;;&lt;command&gt; &lt;subject&gt; &lt;value&gt;?}在中提到了一点有关该变量的东西, 我引用过来:
+ 任何 grammar regex …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -30,7 +32,7 @@ token directive { :my $foo = &quot;in command&quot;; &lt;command&gt; &lt;subject
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2015-08-22-rakuweekly%E7%AC%AC%E4%BA%8C%E6%9C%9F/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -218,7 +220,7 @@ if (!doNotTrack) {
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 4 minutes (671 words)
+  <i class="fa fa-clock-o"></i> 4 minutes (669 words)
   
   
 </span>
@@ -237,37 +239,24 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="my-foo-的作用域和用途"><code>:my $foo</code> 的作用域和用途</h2>
-
-<p>在 *regex*、<em>token</em> 或 <em>rule</em> 中, 定义像下面这样的变量是可能的:</p>
-
-<pre><code class="language-raku">token directive {
+        <h2 id="my-foo-的作用域和用途"><code>:my $foo</code> 的作用域和用途</h2>
+<p>在 <em>regex</em>、<em>token</em> 或 <em>rule</em> 中, 定义像下面这样的变量是可能的:</p>
+<pre><code class="language-raku" data-lang="raku">token directive {
     :my $foo = &quot;in command&quot;;
     &lt;command&gt; &lt;subject&gt; &lt;value&gt;?
 }
-</code></pre>
-
-<p>在中提到了一点有关该变量的东西, 我引用过来:</p>
-
+</code></pre><p>在中提到了一点有关该变量的东西, 我引用过来:</p>
 <blockquote>
 <p>任何 grammar regex 实际上是一种<code>方法</code>, 并且你可以在这样一个子例程中使用一个冒号跟着任何作用域声明符来声明一个变量, 这些声明符包括 <code>my</code>, <code>our</code>, <code>state</code> 和 <code>constant</code> (作为类似的声明符, temp 和 let 也能被识别). 单个语句(直到结尾的分号或行末尾的闭括号为止) 被解析为普通的 Raku 代码:</p>
 </blockquote>
-
-<pre><code class="language-raku">token prove-nondeterministic-parsing {
+<pre><code class="language-raku" data-lang="raku">token prove-nondeterministic-parsing {
     :my $threshold = rand;
     'maybe' \s+ &lt;it($threshold)&gt;
 }
-</code></pre>
-
-<p>有谁能解释下这段代码的应用场景吗？</p>
-
+</code></pre><p>有谁能解释下这段代码的应用场景吗？</p>
 <h3 id="what-scope-does-my-foo-have">what scope does <code>:my $foo;</code> have?</h3>
-
 <p><code>:my $foo</code> 在它所出现的 rule/token/regex 中拥有词法作用域(lexical scope)。你所得到的作用域要么很大要么很小:</p>
-
-<pre><code class="language-raku">grammar g {
+<pre><code class="language-raku" data-lang="raku">grammar g {
     regex r1 {
         { my $foo; ...} # `$foo` 在该 block 的结尾超出作用域。
         ...
@@ -281,32 +270,18 @@ grammar i {
     ...
     regex r999 { ... } # 但是在 r999 中也是。
 }
-</code></pre>
-
-<h3 id="它的用途">它的用途?</h3>
-
+</code></pre><h3 id="它的用途">它的用途?</h3>
 <p>使用 <code>:my $foo;</code> 形式的变量声明以在 rule/token/regex 中声明本地作用域的变量, 如果没有进一步的声明, 那么这些变量能在 rule/token/regex 中的任何地方通过所声明的名字来引用。举个例子, 你可以看看 Rakudo 的 Grammar.nqp 源代码中的 <a href="http://github.com/rakudo/rakudo/blob/nom/src/Raku/Grammar.nqp#L108"><code>token babble</code></a> 中声明的 <code>@extra_tweaks</code> 变量的用法。</p>
-
 <p>使用 <code>:my $*foo;</code> 形式的变量声明来声明动态的词法变量。动态变量能够, 在没有进一步声明的情况下, 在闭合词法作用域和闭合动态作用域中通过它们声明的名字来引用。作为说明, 请查看 <a href="http://github.com/rakudo/rakudo/blob/nom/src/Raku/Grammar.nqp#L4861">the declaration of <code>@*nibbles</code> in Rakudo&rsquo;s Grammar module</a> 和 <a href="http://github.com/rakudo/rakudo/blob/nom/src/Raku/Actions.nqp#L8943">its use in Rakudo&rsquo;s Actions module</a> 。</p>
-
 <h3 id="一般的使用场景">一般的使用场景</h3>
-
 <p>在 <a href="https://en.wikipedia.org/wiki/Regular_expression">regular expressions</a> 中一般不使用 <code>:…</code> 风格的声明。<code>:...;</code> 结构通常用在特别复杂和庞大的 grammars 中。对于这些使用场景, 依靠 Raku 的正则表达式和闭包的一致性是合适的。正是这使得 rule/token/regex 级别的 <code>:...;</code> 变量声明变得正当。</p>
-
 <h3 id="regexes-和-closures-的一致性">Regexes 和 closures 的一致性</h3>
-
 <p>很多 grammars 都是<a href="http://trevorjim.com/python-is-not-context-free/">上下文有关的</a>.</p>
-
 <p>Raku 使 regexes 和 closures 统一了:</p>
-
-<pre><code class="language-raku">say Regex.^mro; (Regex) (Method) (Routine) (Block) (Code) ...
-</code></pre>
-
-<p>mro 是方法解析顺序, 这足以说明 regex 实际上是一种特殊类型的方法(就像方法是一种特殊类型的子例程一样)。</p>
-
-<h2 id="raku-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop-http-stackoverflow-com-questions-36117329-raku-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop"><a href="http://stackoverflow.com/questions/36117329/raku-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop">Raku: is there a phaser that runs only when you fall out of a loop?</a></h2>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+<pre><code class="language-raku" data-lang="raku">say Regex.^mro; (Regex) (Method) (Routine) (Block) (Code) ...
+</code></pre><p>mro 是方法解析顺序, 这足以说明 regex 实际上是一种特殊类型的方法(就像方法是一种特殊类型的子例程一样)。</p>
+<h2 id="raku-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loophttpstackoverflowcomquestions36117329raku-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop"><a href="http://stackoverflow.com/questions/36117329/raku-is-there-a-phaser-that-runs-only-when-you-fall-out-of-a-loop">Raku: is there a phaser that runs only when you fall out of a loop?</a></h2>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 
 use v6.c;
 
@@ -326,11 +301,8 @@ for 1..10 -&gt; $r {
     }
 }
 
-</code></pre>
-
-<p>更优雅的写法:</p>
-
-<pre><code class="language-raku">constant N = 5;
+</code></pre><p>更优雅的写法:</p>
+<pre><code class="language-raku" data-lang="raku">constant N = 5;
 for flat (1..6).roll xx * Z 1..N -&gt; $_, $n {
     print &quot;roll $n: $_ &quot;;
 
@@ -349,11 +321,8 @@ for flat (1..6).roll xx * Z 1..N -&gt; $_, $n {
         default { put &quot;loser :(&quot; }
     }
 }
-</code></pre>
-
-<h2 id="怎么从命令行传递一个复数给-sub-main-http-stackoverflow-com-questions-35872082-how-do-i-pass-a-complex-number-from-the-command-line-to-sub-main"><a href="http://stackoverflow.com/questions/35872082/how-do-i-pass-a-complex-number-from-the-command-line-to-sub-main">怎么从命令行传递一个复数给 sub MAIN?</a></h2>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+</code></pre><h2 id="怎么从命令行传递一个复数给-sub-mainhttpstackoverflowcomquestions35872082how-do-i-pass-a-complex-number-from-the-command-line-to-sub-main"><a href="http://stackoverflow.com/questions/35872082/how-do-i-pass-a-complex-number-from-the-command-line-to-sub-main">怎么从命令行传递一个复数给 sub MAIN?</a></h2>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 
 use v6.c;
 
@@ -361,30 +330,19 @@ sub MAIN($x)
 {
     say &quot;$x squared is { $x*$x }&quot;;
 }
-</code></pre>
-
-<p>我要在命令行中传递一个复数给 MAIN:</p>
-
+</code></pre><p>我要在命令行中传递一个复数给 MAIN:</p>
 <blockquote>
-<pre><code>&gt; % ./square i
-&gt; ```
-
-</code></pre>
-
-<p>Cannot convert string to number: base-10 number must begin with valid digits or &lsquo;.&rsquo; in &lsquo;⏏i&rsquo; (indicated by ⏏)
+<pre><code>% ./square i
+</code></pre></blockquote>
+<pre><code>Cannot convert string to number: base-10 number must begin with valid digits or '.' in '⏏i' (indicated by ⏏)
   in sub MAIN at ./square line 7
-  in block <unit> at ./square line 5</p>
-</blockquote>
+  in block &lt;unit&gt; at ./square line 5
 
-<p>Actually thrown at:
+Actually thrown at:
   in sub MAIN at ./square line 7
-  in block <unit> at ./square line 5</p>
-
-<pre><code>
-当我把脚本变为:
-
-```raku
-#!/usr/bin/env raku
+  in block &lt;unit&gt; at ./square line 5
+</code></pre><p>当我把脚本变为:</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 
 use v6.c;
 
@@ -392,59 +350,39 @@ sub MAIN(Complex $x)
 {
     say &quot;$x squared is { $x*$x }&quot;;
 }
-</code></pre>
+</code></pre><p>它竟然彻底罢工了:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">%</span> <span class="err">.</span><span class="err">/</span><span class="nv">square</span> <span class="n"></span><span class="n">i</span>
+<span class="n"></span><span class="n">Usage:</span>
+  <span class="n"></span><span class="n">square</span> <span class="sr">&lt;x&gt;</span>
 
-<p>它竟然彻底罢工了:</p>
-
-<pre><code class="language-perl">% ./square i
-Usage:
-  square &lt;x&gt;
-
-% ./square 1
-Usage:
-  square &lt;x&gt;
-</code></pre>
-
-<p>一种方法是使用 <a href="http://design.raku.org/S02.html#Coercive_type_declarations">Coercive type declaration</a> (强制类型声明), 从 Str 到 Complex:</p>
-
-<pre><code class="language-raku">sub MAIN(Complex(Str) $x) {
+<span class="nv">%</span> <span class="err">.</span><span class="err">/</span><span class="nv">square</span> <span class="mi">1</span>
+<span class="n"></span><span class="n">Usage:</span>
+  <span class="n"></span><span class="n">square</span> <span class="sr">&lt;x&gt;</span>
+</code></pre></div><p>一种方法是使用 <a href="http://design.raku.org/S02.html#Coercive_type_declarations">Coercive type declaration</a> (强制类型声明), 从 Str 到 Complex:</p>
+<pre><code class="language-raku" data-lang="raku">sub MAIN(Complex(Str) $x) {
     say &quot;$x 的平方为 { $x * $x }&quot;;
 }
-</code></pre>
-
-<p>那么:</p>
-
+</code></pre><p>那么:</p>
 <pre><code>% ./squared.pl 1
 1+0i 的平方为 1+0i
 % ./squared.pl 1+2i
 1+2i 的平方为 -3+4i
-</code></pre>
-
-<p>但是:</p>
-
+</code></pre><p>但是:</p>
 <pre><code>$ ./test.pl6 2
 Usage:
   ./test.p6 &lt;x&gt;
-</code></pre>
-
-<p>所以你真正需要的是把其它 Numeric 类型强转为 Complex 类型:</p>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+</code></pre><p>所以你真正需要的是把其它 Numeric 类型强转为 Complex 类型:</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 
 use v6.c;
 
 sub MAIN ( Complex(Real) $x ) {
     say &quot;$x squared is { $x*$x }&quot;;
 }
-</code></pre>
-
-<p>我使用 Real 而非 Numeric, 因为 Complex 已经涵盖了其它的了。</p>
-
-<h2 id="blessing-a-hash-into-an-object-https-www-reddit-com-r-raku-comments-4aoi82-blessing-a-hash-into-an-object"><a href="https://www.reddit.com/r/raku/comments/4aoi82/blessing_a_hash_into_an_object/">Blessing a Hash into an object</a></h2>
-
+</code></pre><p>我使用 Real 而非 Numeric, 因为 Complex 已经涵盖了其它的了。</p>
+<h2 id="blessing-a-hash-into-an-objecthttpswwwredditcomrrakucomments4aoi82blessing_a_hash_into_an_object"><a href="https://www.reddit.com/r/raku/comments/4aoi82/blessing_a_hash_into_an_object/">Blessing a Hash into an object</a></h2>
 <p>为什么我写的这段代码不对呢？</p>
-
-<pre><code class="language-raku">class WordCount {
+<pre><code class="language-raku" data-lang="raku">class WordCount {
   has %!words; # Tried with both . and !
   method new($string) {
     my %words;
@@ -468,11 +406,8 @@ sub MAIN {
   my $wordCount = WordCount.new($sentence);
   $wordCount.sayCounts();
 }
-</code></pre>
-
-<p>Raku-ify:</p>
-
-<pre><code class="language-raku">use v6;
+</code></pre><p>Raku-ify:</p>
+<pre><code class="language-raku" data-lang="raku">use v6;
 
 class WordCount {
   has Int %.words is default(0);
@@ -493,29 +428,16 @@ class WordCount {
 
 my $word-count = WordCount.new('the boy jumped over the dog');
 say $word-count;
-</code></pre>
-
-<p>散列中的每一项都是一个 <strong>Pair</strong>:</p>
-
-<pre><code class="language-raku">my %w = a =&gt; 1;
+</code></pre><p>散列中的每一项都是一个 <strong>Pair</strong>:</p>
+<pre><code class="language-raku" data-lang="raku">my %w = a =&gt; 1;
 %w.map({ say $_.^name }) # OUTPUT«Pair␤»
+</code></pre><p>所以:</p>
+<pre><code class="language-raku" data-lang="raku">%.words.map({.value ~ &quot; &quot; ~ .key}).join(&quot;\n&quot;)
+</code></pre><p>等价于:</p>
+<pre><code class="language-raku" data-lang="raku">%.words.kv.map( -&gt; $word, $count { &quot;$word $count&quot; } ).join(&quot;\n&quot;)
+</code></pre><p>你还可以使用 sub-signature(子签名)来解构 <code>.map</code> 提供的 <code>Pair</code>：</p>
+<pre><code class="language-raku" data-lang="raku">%.words.map( -&gt; (:key($word), :value($count)) { &quot;$word $count&quot; } ).join(&quot;\n&quot;)
 </code></pre>
-
-<p>所以:</p>
-
-<pre><code class="language-raku">%.words.map({.value ~ &quot; &quot; ~ .key}).join(&quot;\n&quot;)
-</code></pre>
-
-<p>等价于:</p>
-
-<pre><code class="language-raku">%.words.kv.map( -&gt; $word, $count { &quot;$word $count&quot; } ).join(&quot;\n&quot;)
-</code></pre>
-
-<p>你还可以使用 sub-signature(子签名)来解构 <code>.map</code> 提供的 <code>Pair</code>：</p>
-
-<pre><code class="language-raku">%.words.map( -&gt; (:key($word), :value($count)) { &quot;$word $count&quot; } ).join(&quot;\n&quot;)
-</code></pre>
-
 
         
           <div class="blog-tags">
@@ -606,7 +528,7 @@ say $word-count;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

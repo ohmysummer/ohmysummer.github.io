@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-23-%E7%AC%AC%E4%BA%8C%E5%8D%81%E4%B8%89%E5%A4%A9-raku-6%E9%AB%98%E5%B0%94%E5%A4%AB/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,61 +231,32 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="day-23-the-wonders-of-raku-golf-https-rakuadvent-wordpress-com-2017-12-23-day-23-the-wonders-of-raku-golf"><a href="https://rakuadvent.wordpress.com/2017/12/23/day-23-the-wonders-of-raku-golf/">Day 23 – The Wonders of Raku Golf</a></h1>
-
+        <h1 id="day-23--the-wonders-of-raku-golfhttpsrakuadventwordpresscom20171223day-23-the-wonders-of-raku-golf"><a href="https://rakuadvent.wordpress.com/2017/12/23/day-23-the-wonders-of-raku-golf/">Day 23 – The Wonders of Raku Golf</a></h1>
 <p>啊，圣诞节！还有什么比和你的朋友与家人一起坐在桌子旁边玩高尔夫球代码还好呢！ &hellip;等等，什么？</p>
-
 <p>哦，对，这还不是圣诞节。但是你可能想要为它做好准备！</p>
-
 <p>如果你还没有注意到，有一个不错的网站可以玩高尔夫球代码：<a href="https://code-golf.io/">https://code-golf.io/</a>。这个网站很酷的地方是，它不仅仅只支持 perl 6！在撰写本文时，它还支持其他 6 种语言。嗯&hellip;</p>
-
 <p>无论如何，因为我在那个网站的成绩还不错，我会分享一些我觉得最好的解决方案。所有的 trickety-hackety，unicode-cheatery 和 mind-blowety。在我们看来，也许我们甚至会看到即使在代码高尔夫中，perl 6 也非常<a href="https://raw.githubusercontent.com/raku/marketing/master/TablePosters/6lang-Concise/v1--6lang-Concise--square.png">简洁</a>易读。也就是说，如果你很难将你的圣诞愿望放在一张卡片上，那么可能会放得下一行 perl 6 代码。</p>
-
 <p>我不会提供完整的解决方案，不会破坏你的圣诞乐趣，但我会给你足够的提示，以提出有竞争力的解决方案。</p>
-
 <p>这个圣诞节我就是想让你得到一些乐趣。所以你先下载一份 <a href="https://raku.org/downloads/">rakudo</a>，以确保你可以跟随。稍后我们会有一些南瓜派，我们会<a href="https://www.youtube.com/watch?v=Y51JyG7M3dw#t=26s">做一些颂歌</a>。如果您在运行 perl 6 时遇到任何问题，可以在 freenode 上加入 <a href="https://docs.raku.org/webchat.html">＃raku 频道</a>以获得一些帮助。这就是说，<a href="https://code-golf.io/">https://code-golf.io/</a> 本身为你提供了一个很好的编辑器来编写和评估你的代码，所以应该没有问题。</p>
-
 <h2 id="一些基本的例子">一些基本的例子</h2>
-
 <p>让我们以<a href="https://code-golf.io/pascals-triangle">帕斯卡三角形</a>任务为例。我听到了，我听到了！圣诞节前的数学，这太残酷了。残忍，但很有必要。</p>
-
 <p>只有一个你必须知道的基本技巧。如果从 Pascal 三角形中取出任何一行，将它移动一个元素，然后用原始行对结果进行 zip-sum，就会得到下一行！</p>
-
 <p>所以如果你有一行数字：</p>
-
 <pre><code>1 3 3 1
-</code></pre>
-
-<p>你所做的只是把它移到右边：</p>
-
+</code></pre><p>你所做的只是把它移到右边：</p>
 <pre><code>0 1 3 3 1
-</code></pre>
-
-<p>并将其与原始行相加：</p>
-
+</code></pre><p>并将其与原始行相加：</p>
 <pre><code>1 3 3 1
 + + + +
 0 1 3 3 1
 =
 1 4 6 4 1
-</code></pre>
-
-<p>就是如此容易！所以我们还是写代码吧：</p>
-
-<pre><code class="language-raku">for ^16 { put (+combinations($^row,$_) for 0..$row) }
-</code></pre>
-
-<p>你看！简单的很！</p>
-
+</code></pre><p>就是如此容易！所以我们还是写代码吧：</p>
+<pre><code class="language-raku" data-lang="raku">for ^16 { put (+combinations($^row,$_) for 0..$row) }
+</code></pre><p>你看！简单的很！</p>
 <p>哦&hellip;&hellip;等等，这有一个完全不同的解决方案。好吧，让我们来看看：</p>
-
-<pre><code class="language-raku">.put for 1, { |$_,0 Z+ 0,|$_ } ... 16
-</code></pre>
-
-<p>输出：</p>
-
+<pre><code class="language-raku" data-lang="raku">.put for 1, { |$_,0 Z+ 0,|$_ } ... 16
+</code></pre><p>输出：</p>
 <pre><code>1
 1 1
 1 2 1
@@ -302,34 +273,18 @@ if (!doNotTrack) {
 1 13 78 286 715 1287 1716 1716 1287 715 286 78 13 1
 1 14 91 364 1001 2002 3003 3432 3003 2002 1001 364 91 14 1
 1 15 105 455 1365 3003 5005 6435 6435 5005 3003 1365 455 105 15 1
-</code></pre>
-
-<p>啊哈！ 我们做到了。 所以究竟是怎么回事儿？ 那么，在 perl 6 中，你可以用一个非常简单的语法创建 <code>2,4,8 ... ∞</code> 这样的序列。 通常你会让它自己计算序列，但你也可以提供一个代码块来求值。 这太棒了！ 在其他语言中，你经常需要一个带有状态变量的循环，而序列操作符为你做了所有的事情！ 这个功能可能单独需要一篇<a href="https://raku.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll">文章</a>或<a href="https://raku.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll--Part-2">𝍪</a>。</p>
-
+</code></pre><p>啊哈！ 我们做到了。 所以究竟是怎么回事儿？ 那么，在 perl 6 中，你可以用一个非常简单的语法创建 <code>2,4,8 ... ∞</code> 这样的序列。 通常你会让它自己计算序列，但你也可以提供一个代码块来求值。 这太棒了！ 在其他语言中，你经常需要一个带有状态变量的循环，而序列操作符为你做了所有的事情！ 这个功能可能单独需要一篇<a href="https://raku.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll">文章</a>或<a href="https://raku.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll--Part-2">𝍪</a>。</p>
 <p>其余的只是一个 for 循环和 <a href="https://docs.raku.org/routine/put">put</a> 调用。 这里唯一的技巧就是理解它使用的是列表，所以当你指定序列的端点时，它实际上是检查元素的数量。 另外，您需要用 <code>|</code> 来展平列表。</p>
-
 <p>如果删除空格并应用本文中提到的所有技巧，这应该会让您的字符数为 26。 这相当有竞争力。</p>
-
 <p>同样，其他任务通常有相当直接的解决方案。 例如，对于 <a href="https://code-golf.io/evil-numbers">Evil NUmbers</a>，你可以写这样的东西：</p>
-
-<pre><code class="language-raku">.base(2).comb(~1) %% 2 &amp;&amp; .say for ^50
-</code></pre>
-
-<p>删除一些空格，应用一些技巧，你几乎就达到要求了。</p>
-
+<pre><code class="language-raku" data-lang="raku">.base(2).comb(~1) %% 2 &amp;&amp; .say for ^50
+</code></pre><p>删除一些空格，应用一些技巧，你几乎就达到要求了。</p>
 <p>我们再举一个例子：<a href="https://code-golf.io/pangram-grep">Pangram Grep</a>。在这里我们可以使用 <a href="https://docs.raku.org/language/setbagmix">set操作符</a>：</p>
-
-<pre><code class="language-raku">‘a’..‘z’ ⊆ .lc.comb &amp;&amp; .say for @*ARGS
-</code></pre>
-
-<p>基本上，几乎所有的 perl 6 解决方案看起来都是真正的代码。这是额外的-1角色，需要额外的眼睛疼痛，但你没有来这里听简洁，对吧？是时候变脏了。</p>
-
+<pre><code class="language-raku" data-lang="raku">‘a’..‘z’ ⊆ .lc.comb &amp;&amp; .say for @*ARGS
+</code></pre><p>基本上，几乎所有的 perl 6 解决方案看起来都是真正的代码。这是额外的-1角色，需要额外的眼睛疼痛，但你没有来这里听简洁，对吧？是时候变脏了。</p>
 <h2 id="numbers">Numbers</h2>
-
-<p>让我们来谈谈数字吧！ 1 ² ③ ٤ ⅴ ߆…  *咳嗽*。 你看，在 perl 6 中，任何数字字符（具有相应的数值属性）都可以在源代码中使用。 该功能的目的是让我们得到一些好处，如 ½ 和其他整洁的东西，但这意味着，而不是写 50 你可以写 ㊿。 有些高尔夫平台会以 UTF-8 编码来计算字节数，所以看起来你没有赢得任何东西。 但是 <code>1000000000000</code> 和 <code>𖭡</code> 呢？ 在任何情况下，<a href="https://code-golf.io/">code-golf.io</a> 都可以识别 unicode，所以这些字符的长度都是 1。</p>
-
+<p>让我们来谈谈数字吧！ 1 ² ③ ٤ ⅴ ߆…  <em>咳嗽</em>。 你看，在 perl 6 中，任何数字字符（具有相应的数值属性）都可以在源代码中使用。 该功能的目的是让我们得到一些好处，如 ½ 和其他整洁的东西，但这意味着，而不是写 50 你可以写 ㊿。 有些高尔夫平台会以 UTF-8 编码来计算字节数，所以看起来你没有赢得任何东西。 但是 <code>1000000000000</code> 和 <code> 𖭡</code> 呢？ 在任何情况下，<a href="https://code-golf.io/">code-golf.io</a> 都可以识别 unicode，所以这些字符的长度都是 1。</p>
 <p>所以你可能会想，你能用这种方式写出哪些数字？ 你试试看：</p>
-
 <pre><code>-0.5 0.00625 0.025 0.0375 0.05 0.0625 0.083333 0.1
 0.111111 0.125 0.142857 0.15 0.166667 0.1875 0.2
 0.25 0.333333 0.375 0.4 0.416667 0.5 0.583333 0.6
@@ -343,74 +298,35 @@ if (!doNotTrack) {
 80000 90000 100000 200000 216000 300000 400000
 432000 500000 600000 700000 800000 900000 1000000
 100000000 10000000000 1000000000000
-</code></pre>
-
-<p>这意味着，例如，在某些情况下，如果需要否定结果，则可以节省 1 个字符。有很多方法可以使用，我只会提到一个特定的情况。其余的你自己去找，以及如何找到可用于任何特定值的实际字符（提示：循环所有 0x10FFFF 字符并检查它们的 <code>.unival</code>s）。</p>
-
+</code></pre><p>这意味着，例如，在某些情况下，如果需要否定结果，则可以节省 1 个字符。有很多方法可以使用，我只会提到一个特定的情况。其余的你自己去找，以及如何找到可用于任何特定值的实际字符（提示：循环所有 0x10FFFF 字符并检查它们的 <code>.unival</code>s）。</p>
 <p>例如，当打高尔夫时，你想略去不必要的空白，所以也许你会想写一些这样的东西：</p>
-
-<pre><code class="language-raku">say 5max3  # ERROR
-</code></pre>
-
-<p>这当然不起作用，我们也不能责怪编译器没有解决这个混乱问题。但是，试试这个：</p>
-
-<pre><code class="language-raku">say ⑤max③  # OUTPUT: «5␤»
-</code></pre>
-
-<p>哇噢！这在许多其他情况下会起作用。</p>
-
+<pre><code class="language-raku" data-lang="raku">say 5max3  # ERROR
+</code></pre><p>这当然不起作用，我们也不能责怪编译器没有解决这个混乱问题。但是，试试这个：</p>
+<pre><code class="language-raku" data-lang="raku">say ⑤max③  # OUTPUT: «5␤»
+</code></pre><p>哇噢！这在许多其他情况下会起作用。</p>
 <h2 id="条件">条件</h2>
-
 <p>如果有很好的高尔夫语言，但不是 Raku. 我的意思是，看看这个：</p>
-
-<pre><code class="language-ruby">puts 10&lt;30?1:2   # ruby
-</code></pre>
-
-<pre><code class="language-raku">say 10 &lt;30??1!!2 # perl 6
-</code></pre>
-
-<p>Raku 的三元操作符不仅多需要俩个字符，而且 <code>&lt;</code> 运算符周围还要有一些必要的的空白字符！他们有什么问题，对吧？他们怎么敢设计一种无代码高尔夫语言?!</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-ruby" data-lang="ruby"><span class="nb">puts</span> <span class="mi">10</span><span class="o"></span><span class="o">&lt;</span><span class="mi">30</span><span class="o">?</span><span class="mi">1</span><span class="o"></span><span class="p">:</span><span class="mi">2</span>   <span class="o"></span><span class="c1"># ruby</span>
+</code></pre></div><pre><code class="language-raku" data-lang="raku">say 10 &lt;30??1!!2 # perl 6
+</code></pre><p>Raku 的三元操作符不仅多需要俩个字符，而且 <code>&lt;</code> 运算符周围还要有一些必要的的空白字符！他们有什么问题，对吧？他们怎么敢设计一种无代码高尔夫语言?!</p>
 <p>那么，我们可以通过某些方法解决它。其中之一是链式操作符。例如：</p>
-
-<pre><code class="language-raku">say 5&gt;3&gt;say(42)
-</code></pre>
-
-<p>如果 5≤3，则不需要进行其他比较，因此它不会运行它。这样我们可以节省至少一个字符。在略有相关的说明中，请记住，junctions 也可能派上用场：</p>
-
-<pre><code class="language-raku">say ‘yes!’ if 5==3|5
-</code></pre>
-
-<p>当然，不要忘记 unicode 操作符：<code>≥</code>，<code>≤</code>，<code>≠</code>。</p>
-
-<h2 id="打字很难-让我们使用一些预定义的字符串">打字很难，让我们使用一些预定义的字符串！</h2>
-
+<pre><code class="language-raku" data-lang="raku">say 5&gt;3&gt;say(42)
+</code></pre><p>如果 5≤3，则不需要进行其他比较，因此它不会运行它。这样我们可以节省至少一个字符。在略有相关的说明中，请记住，junctions 也可能派上用场：</p>
+<pre><code class="language-raku" data-lang="raku">say ‘yes!’ if 5==3|5
+</code></pre><p>当然，不要忘记 unicode 操作符：<code>≥</code>，<code>≤</code>，<code>≠</code>。</p>
+<h2 id="打字很难让我们使用一些预定义的字符串">打字很难，让我们使用一些预定义的字符串！</h2>
 <p>你不会相信这有时是多么的有用。想要打印所有棋子的名字？好：</p>
-
-<pre><code class="language-raku">say (‘♔’…‘♙’)».uniname».words»[2]
+<pre><code class="language-raku" data-lang="raku">say (‘♔’…‘♙’)».uniname».words»[2]
 #   KING QUEEN ROOK BISHOP KNIGHT PAWN
-</code></pre>
-
-<p>这仅仅节省了几个字符，但有时可以将解决方案的大小减半。但是，不要停在那里，想想错误消息，方法名称等。你还能挽回什么？</p>
-
+</code></pre><p>这仅仅节省了几个字符，但有时可以将解决方案的大小减半。但是，不要停在那里，想想错误消息，方法名称等。你还能挽回什么？</p>
 <h2 id="base-16-base-36-nah-base-0x10ffff">Base 16? Base 36? Nah, Base 0x10FFFF!</h2>
-
-<p><a href="https://code-golf.io/φ">其中一项任务</a>告诉我们打印 φ 的前1000个小数位。那么，这很容易！</p>
-
-<pre><code class="language-raku">say ‘1.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072072041893911374847540880753868917521266338622235369317931800607667263544333890865959395829056383226613199282902678806752087668925017116962070322210432162695486262963136144381497587012203408058879544547492461856953648644492410443207713449470495658467885098743394422125448770664780915884607499887124007652170575179788341662562494075890697040002812104276217711177780531531714101170466659914669798731761356006708748071013179523689427521948435305678300228785699782977834784587822891109762500302696156170025046433824377648610283831268330372429267526311653392473167111211588186385133162038400522216579128667529465490681131715993432359734949850904094762132229810172610705961164562990981629055520852479035240602017279974717534277759277862561943208275051312181562855122248093947123414517022373580577278616008688382952304592647878017889921990270776903895321968198615143780314997411069260886742962267575605231727775203536139362’
-</code></pre>
-
-<p>是的！！！</p>
-
+<p><a href="https://code-golf.io/%CF%86">其中一项任务</a>告诉我们打印 φ 的前1000个小数位。那么，这很容易！</p>
+<pre><code class="language-raku" data-lang="raku">say ‘1.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072072041893911374847540880753868917521266338622235369317931800607667263544333890865959395829056383226613199282902678806752087668925017116962070322210432162695486262963136144381497587012203408058879544547492461856953648644492410443207713449470495658467885098743394422125448770664780915884607499887124007652170575179788341662562494075890697040002812104276217711177780531531714101170466659914669798731761356006708748071013179523689427521948435305678300228785699782977834784587822891109762500302696156170025046433824377648610283831268330372429267526311653392473167111211588186385133162038400522216579128667529465490681131715993432359734949850904094762132229810172610705961164562990981629055520852479035240602017279974717534277759277862561943208275051312181562855122248093947123414517022373580577278616008688382952304592647878017889921990270776903895321968198615143780314997411069260886742962267575605231727775203536139362’
+</code></pre><p>是的！！！</p>
 <p>好吧，这需要 1000 多个字符&hellip;&hellip;当然，我们可以尝试计算它，但这不完全符合<a href="https://rakuadvent.wordpress.com/2017/12/01/">圣诞节的精神</a>。我们想作弊。</p>
-
 <p>如果我们看一下 <a href="https://docs.raku.org/type/Int#method_polymod">polymod</a> 的文档，有一点提示：</p>
-
-<pre><code class="language-raku">my @digits-in-base37 = 9123607.polymod(37 xx *); # Base conversion
-</code></pre>
-
-<p>嗯&hellip;&hellip;这样就给了我们任意数量的数字。我们可以走多高？那么，这取决于我们想要存储数字的形式。鉴于 code-golf.io 计算码位，我们可以使用base 0x10FFFF（即使用所有可用的码位）。或者，在这种情况下，我们将使用base 0x10FFFE，<a href="https://docs.raku.org/language/traps#All_Text_is_Normalized_By_Default">因为</a>：</p>
-
+<pre><code class="language-raku" data-lang="raku">my @digits-in-base37 = 9123607.polymod(37 xx *); # Base conversion
+</code></pre><p>嗯&hellip;&hellip;这样就给了我们任意数量的数字。我们可以走多高？那么，这取决于我们想要存储数字的形式。鉴于 code-golf.io 计算码位，我们可以使用base 0x10FFFF（即使用所有可用的码位）。或者，在这种情况下，我们将使用base 0x10FFFE，<a href="https://docs.raku.org/language/traps#All_Text_is_Normalized_By_Default">因为</a>：</p>
 <pre><code>☠☠☠⚠⚠⚠ WARNING! WARNING! WARNING! ⚠⚠⚠☠☠☠
 THIS WILL MAKE YOUR COMPUTER IMPLODE!
 UNICODE STRINGS ARE SUBJECT TO NORMALIZATION SO YOUR
@@ -418,26 +334,14 @@ DATA WILL NOT BE PRESERVED. HIDE YOUR KIDS, HIDE YOUR
 WIFE. HIDE YOUR KIDS, HIDE YOUR WIFE. HIDE YOUR KIDS,
 HIDE YOUR WIFE. AND HIDE YOUR HUSBAND.
 ☠☠☠⚠⚠⚠ WARNING! WARNING! WARNING! ⚠⚠⚠☠☠☠
-</code></pre>
-
-<p>当应用于我们的常数时，它应该给出这样的东西：</p>
-
+</code></pre><p>当应用于我们的常数时，它应该给出这样的东西：</p>
 <pre><code>󻁾񤍠򷒋󜹕󘶸񙦅񨚑򙯬񗈼𢍟𪱷򡀋𢕍򌠐񘦵𔇆򅳒򑠒󌋩򯫞򶝠򚘣򣥨񫵗𿞸􋻩񱷳󟝐󮃞󵹱񿢖𛒕𺬛󊹛󲝂򺗝𭙪񰕺𝧒򊕆𘝞뎛􆃂򊥍񲽤򩻛󂛕磪󡯮끝򰯬󢽈󼿶󘓥򮀓񽑖򗔝󃢖񶡁􁇘󶪼񌍌񛕄񻊺򔴩寡񿜾񿸶򌰘񡇈򦬽𥵑󧨑򕩃򳴪񾖾򌯎󿥐񱛦𱫞𵪶򁇐󑓮򄨠򾎹𛰑𗋨䨀򡒶𰌡򶟫񦲋𧮁􍰍񲍚񰃦𦅂󎓜󸾧󉦩󣲦򄉼񿒣𸖉񿡥󬯞嗟𧽘񿷦򠍍🼟򇋹񖾷𖏕񟡥󜋝􋯱񤄓򭀢򌝓𱀉𫍡󬥝򈘏򞏡񄙍𪏸࿹𺐅񢻳򘮇𐂇񘚡ந򾩴󜆵𰑕򰏷񛉿򢑬򭕴𨬎󴈂􋵔򆀍񖨸􂳚󽡂󎖪񡉽񕧣񎗎򝤉򡔙񆔈󖾩󅾜񋩟򝼤񯓦󐚉񟯶򄠔𦔏򲔐o
-</code></pre>
-
-<p>我们如何翻转操作？在其中一次 <a href="https://github.com/rakudo/rakudo/wiki/Monthly-Bug-Squash-Day">squashathons</a> 我找到一张关于我以前不知道的功能的票。基本上，票据说 Rakudo 正在做它不应该做的事情，这当然是我们下一次会被滥用的事情。但现在我们处于相对理智的范围之内：</p>
-
-<pre><code class="language-raku">say ‘1.’,:1114110[‘o򲔐𦔏򄠔񟯶󐚉񯓦򝼤񋩟󅾜󖾩񆔈򡔙򝤉񎗎񕧣񡉽󎖪󽡂􂳚񖨸򆀍􋵔󴈂𨬎򭕴򢑬񛉿򰏷𰑕󜆵򾩴ந񘚡𐂇򘮇񢻳𺐅࿹𪏸񄙍򞏡򈘏󬥝𫍡𱀉򌝓򭀢񤄓􋯱󜋝񟡥𖏕񖾷򇋹🼟򠍍񿷦𧽘嗟󬯞񿡥𸖉񿒣򄉼󣲦󉦩󸾧󎓜𦅂񰃦񲍚􍰍𧮁񦲋򶟫𰌡򡒶䨀𗋨𛰑򾎹򄨠󑓮򁇐𵪶𱫞񱛦󿥐򌯎񾖾򳴪򕩃󧨑𥵑򦬽񡇈򌰘񿸶񿜾寡򔴩񻊺񛕄񌍌󶪼􁇘񶡁󃢖򗔝񽑖򮀓󘓥󼿶󢽈򰯬끝󡯮磪󂛕򩻛񲽤򊥍􆃂뎛𘝞򊕆𝧒񰕺𭙪򺗝󲝂󊹛𺬛𛒕񿢖󵹱󮃞󟝐񱷳􋻩𿞸񫵗򣥨򚘣򶝠򯫞󌋩򑠒򅳒𔇆񘦵򌠐𢕍򡀋𪱷𢍟񗈼򙯬񨚑񙦅󘶸󜹕򷒋񤍠󻁾’.ords]
-</code></pre>
-
-<p>请注意，字符串必须相反。除此之外，它看起来非常好。 192 个字符包括解码器。</p>
-
+</code></pre><p>我们如何翻转操作？在其中一次 <a href="https://github.com/rakudo/rakudo/wiki/Monthly-Bug-Squash-Day">squashathons</a> 我找到一张关于我以前不知道的功能的票。基本上，票据说 Rakudo 正在做它不应该做的事情，这当然是我们下一次会被滥用的事情。但现在我们处于相对理智的范围之内：</p>
+<pre><code class="language-raku" data-lang="raku">say ‘1.’,:1114110[‘o򲔐𦔏򄠔񟯶󐚉񯓦򝼤񋩟󅾜󖾩񆔈򡔙򝤉񎗎񕧣񡉽󎖪󽡂􂳚񖨸򆀍􋵔󴈂𨬎򭕴򢑬񛉿򰏷𰑕󜆵򾩴ந񘚡𐂇򘮇񢻳𺐅࿹𪏸񄙍򞏡򈘏󬥝𫍡𱀉򌝓򭀢񤄓􋯱󜋝񟡥𖏕񖾷򇋹🼟򠍍񿷦𧽘嗟󬯞񿡥𸖉񿒣򄉼󣲦󉦩󸾧󎓜𦅂񰃦񲍚􍰍𧮁񦲋򶟫𰌡򡒶䨀𗋨𛰑򾎹򄨠󑓮򁇐𵪶𱫞񱛦󿥐򌯎񾖾򳴪򕩃󧨑𥵑򦬽񡇈򌰘񿸶񿜾寡򔴩񻊺񛕄񌍌󶪼􁇘񶡁󃢖򗔝񽑖򮀓󘓥󼿶󢽈򰯬끝󡯮磪󂛕򩻛񲽤򊥍􆃂뎛𘝞򊕆𝧒񰕺𭙪򺗝󲝂󊹛𺬛𛒕񿢖󵹱󮃞󟝐񱷳􋻩𿞸񫵗򣥨򚘣򶝠򯫞󌋩򑠒򅳒𔇆񘦵򌠐𢕍򡀋𪱷𢍟񗈼򙯬񨚑񙦅󘶸󜹕򷒋񤍠󻁾’.ords]
+</code></pre><p>请注意，字符串必须相反。除此之外，它看起来非常好。 192 个字符包括解码器。</p>
 <p>这对于打印另外可计算的常量来说并不是一个好主意，但考虑到解码器的长度和数据的相对密集的打包率，这在其他任务中很方便。</p>
-
-<h2 id="所有的好事都必须结束-可怕的事情-更是如此">所有的好事都必须结束;可怕的事情 - 更是如此</h2>
-
+<h2 id="所有的好事都必须结束可怕的事情---更是如此">所有的好事都必须结束;可怕的事情 - 更是如此</h2>
 <p>这是关于这篇文章的。更多代码高尔夫技巧我已经启动了这个存储库：<a href="https://github.com/AlexDaniel/6lang-golf-cheatsheet">https://github.com/AlexDaniel/6lang-golf-cheatsheet</a></p>
-
 <p>希望能在 <a href="https://code-golf.io/">https://code-golf.io/</a> 上看到你！无论是否使用 perl 6，我都希望看到我提交的所有内容都被打败了。</p>
 
 
@@ -530,7 +434,7 @@ HIDE YOUR WIFE. AND HIDE YOUR HUSBAND.
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

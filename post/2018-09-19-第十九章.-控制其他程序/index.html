@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-19-%E7%AC%AC%E5%8D%81%E4%B9%9D%E7%AB%A0.-%E6%8E%A7%E5%88%B6%E5%85%B6%E4%BB%96%E7%A8%8B%E5%BA%8F/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,59 +231,31 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第十九章-控制其它程序">第十九章. 控制其它程序</h1>
-
 <p>有时你需要让其他程序为你做一些工作。 Perl 系列语言被称为“互联网的胶水”。开始一个著名的，稳定的，现有的程序比自己重新实现它更容易，更快。本章介绍了许多启动和控制外部程序的方法，以便根据你的意愿对其进行控制。</p>
-
 <h1 id="快速和容易">快速和容易</h1>
-
 <p><code>shell</code> 例程是运行外部命令或程序的快捷方式。它接受参数并在 shell 中运行它，就像你自己输入它一样。此示例使用类 Unix 的 shell 命令列出所有文件：</p>
-
 <pre><code>shell( 'ls -l' );
-</code></pre>
-
-<p>If you were on Windows you’d use a different command. There’s an implicit <code>cmd /c</code> in front of your command:</p>
-
+</code></pre><p>If you were on Windows you’d use a different command. There’s an implicit <code>cmd /c</code> in front of your command:</p>
 <p>如果你在 Windows 上，你会使用不同的命令。命令前面有一个隐式的 <code>cmd /c</code>：</p>
-
 <pre><code>shell( 'dir' );   # actually cmd /c dir
-</code></pre>
-
-<p>此命令的输出将转到程序输出所在的位置（只要你没有将标准输出或错误重定向到其他内容）。</p>
-
+</code></pre><p>此命令的输出将转到程序输出所在的位置（只要你没有将标准输出或错误重定向到其他内容）。</p>
 <p>你可以通过检查 <code>$*DISTRO</code> 变量来选择命令。 <code>Distro</code> 对象有一个 <code>.is-win</code> 方法，如果它认为你的程序在该平台上运行，则返回 <code>True</code>：</p>
-
 <pre><code>my $command = $*DISTRO.is-win ?? 'dir' !! 'ls -l';
 shell( $command );
-</code></pre>
-
-<h6 id="警告">警告</h6>
-
+</code></pre><h6 id="警告">警告</h6>
 <p>注意变量作为 <code>shell</code> 的参数！一定要知道它们里面有什么。如果 shell 中的字符是特殊的，那么它在该值中也是特殊的。稍后详细介绍。</p>
-
 <p><code>shell</code> 返回一个 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象。当你在 sink 上下文中使用它（对结果不执行任何操作）并且命令失败时，<a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象会抛出异常：</p>
-
 <pre><code>shell( '/usr/bin/false' );  # throws X::Proc::Unsuccessful
-</code></pre>
-
-<p>当命令以 <code>0</code> 以外的值退出时，命令“失败”。这是一种 Unix 惯例，其中非零数字表示各种错误条件。并非所有程序都遵循该惯例，如果不遵循，你将不得不做更多的工作。</p>
-
+</code></pre><p>当命令以 <code>0</code> 以外的值退出时，命令“失败”。这是一种 Unix 惯例，其中非零数字表示各种错误条件。并非所有程序都遵循该惯例，如果不遵循，你将不得不做更多的工作。</p>
 <p>你可以保存结果以避免异常。你可以检查 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象以查看发生的情况：</p>
-
 <pre><code>my $proc = shell( '/usr/bin/false' );
 unless $proc.so {
     put &quot;{$proc.command} failed with exit code: {$proc.exitcode}&quot;;
 }
-</code></pre>
-
-<p>这仍然可能不是你想要的。如果你希望它返回非零值，你可能必须自己处理部分过程：</p>
-
+</code></pre><p>这仍然可能不是你想要的。如果你希望它返回非零值，你可能必须自己处理部分过程：</p>
 <pre><code>my $proc = shell( '/usr/bin/true' );
 given $proc {
     unless .exitcode == 1 {
@@ -291,108 +263,61 @@ given $proc {
         X::Proc::Unsuccessful.new.throw;
     }
 }
-</code></pre>
-
-<p>如果你不关心命令是否失败，则可以在返回的对象上调用 <code>.so</code>。这“处理”对象并阻止 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 抛出异常：</p>
-
+</code></pre><p>如果你不关心命令是否失败，则可以在返回的对象上调用 <code>.so</code>。这“处理”对象并阻止 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 抛出异常：</p>
 <pre><code>shell( '/usr/bin/false' ).so
-</code></pre>
-
-<h2 id="引起来的命令">引起来的命令</h2>
-
+</code></pre><h2 id="引起来的命令">引起来的命令</h2>
 <p>有时你想捕获命令的输出或将其保存在变量中。你可以使用带 <code>:x</code> 副词的引用从命令的输出创建一个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>my $output = Q:x{ls -1};
 my $output = q:x{ls -1};
 my $output = qq:x{$command};
-</code></pre>
-
-<p>这些是它们的稍短版本，可以做同样的事情：</p>
-
+</code></pre><p>这些是它们的稍短版本，可以做同样的事情：</p>
 <pre><code>my $output = Qx{dir};
 my $output = qx{dir};
 my $output = qqx{$command};
-</code></pre>
-
-<p>这些仅捕获标准输出。如果要合并标准错误，则需要在 shell 中处理。这适用于 Unix 和 Windows，使用 <code>2&gt;＆1</code> 。这会在句柄到达你的程序之前合并它们：</p>
-
+</code></pre><p>这些仅捕获标准输出。如果要合并标准错误，则需要在 shell 中处理。这适用于 Unix 和 Windows，使用 <code>2&gt;＆1</code> 。这会在句柄到达你的程序之前合并它们：</p>
 <pre><code>my $output = qq:x{$command 2&gt;&amp;1};
-</code></pre>
-
-<h2 id="更安全的命令">更安全的命令</h2>
-
+</code></pre><h2 id="更安全的命令">更安全的命令</h2>
 <p><code>run</code> 例程允许你将命令表示为列表。列表中的第一项是命令名，Raku 直接执行而没有 shell 交互。这个命令并不像它看起来那样令人讨厌，因为没有一个字符对 shell 来说是特殊的。那些分号不会结束命令并启动另一个命令：</p>
-
 <pre><code># don't do this, just in case
 run( '/bin/echo', '-n', ';;;; rm -rf /' );
-</code></pre>
-
-<p>如果你在 shell 中将其作为单个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>输入，则可以启动递归操作以删除所有文件。即使在开玩笑中也不要尝试这个（或者使用带有保存快照的虚拟机！）。</p>
-
+</code></pre><p>如果你在 shell 中将其作为单个<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>输入，则可以启动递归操作以删除所有文件。即使在开玩笑中也不要尝试这个（或者使用带有保存快照的虚拟机！）。</p>
 <p><code>run</code> 返回一个 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象; 以与 <code>shell</code> 相同的方式处理它：</p>
-
 <pre><code>unless run( ... ) {
     put &quot;Command failed&quot;;
 }
-</code></pre>
-
-<p>你可能想要使用没有路径信息的裸命令名：</p>
-
+</code></pre><p>你可能想要使用没有路径信息的裸命令名：</p>
 <pre><code>run( 'echo', '-n', 'Hello' );
-</code></pre>
-
-<p>这也不是特别安全。 <code>run</code> 将在 <code>PATH</code> 环境变量中查找匹配的文件。这是人们可以在你的程序之外设置的东西。有人可能会欺骗你的程序运行一些叫做 <em>echo</em> 的东西。</p>
-
+</code></pre><p>这也不是特别安全。 <code>run</code> 将在 <code>PATH</code> 环境变量中查找匹配的文件。这是人们可以在你的程序之外设置的东西。有人可能会欺骗你的程序运行一些叫做 <em>echo</em> 的东西。</p>
 <p>你可以清除 <code>PATH</code>，强制程序始终指定命令的完整路径：</p>
-
 <pre><code>%*ENV{PATH} = '';  # won't find anything
 run( '/bin/echo', '-n', 'Hello' );
-</code></pre>
-
-<p>将 <code>PATH</code> 设置为你信任且允许的目录可能更容易：</p>
-
+</code></pre><p>将 <code>PATH</code> 设置为你信任且允许的目录可能更容易：</p>
 <pre><code>%*ENV{PATH} = '/bin:/sbin:/usr/bin:/usr/sbin'
 run( 'echo', '-n', 'Hello' );
-</code></pre>
-
-<p>这并不意味着你找到的命令是正确的;有人可能已经篡改过。没有办法提供完美的安全性 - 但你不必太担心。每当你与程序之外的事物进行交互时，请考虑这一点。</p>
-
+</code></pre><p>这并不意味着你找到的命令是正确的;有人可能已经篡改过。没有办法提供完美的安全性 - 但你不必太担心。每当你与程序之外的事物进行交互时，请考虑这一点。</p>
 <p>像 <code>shell</code> 一样，<code>run</code> 返回一个 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象。 <code>:out</code> 参数捕获标准输出并通过 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象使其可用。使用 <code>.slurp</code> 来提取它：</p>
-
 <pre><code>my $proc = run(
     '/bin/some_command', '-n', '-t', $filename
     :out,
     );
 put &quot;Output is ｢{ $proc.out.slurp }｣&quot;;
-</code></pre>
-
-<p><code>:err</code> 参数对错误输出执行相同的操作：</p>
-
+</code></pre><p><code>:err</code> 参数对错误输出执行相同的操作：</p>
 <pre><code>my $proc = run(
     '/bin/some_command', '-n', '-t', $filename
     :out, :err,
     );
 put &quot;Output is ｢{ $proc.out.slurp }｣&quot;;
 put &quot;Error is ｢{ $proc.err.slurp }｣&quot;;
-</code></pre>
-
-<p>如果你不希望它们作为单独的流，你可以合并它们：</p>
-
+</code></pre><p>如果你不希望它们作为单独的流，你可以合并它们：</p>
 <pre><code>my $proc = run(
     '/bin/some_command', '-n', '-t', $filename
     :out, :err, :merge
     );
 put &quot;Output is ｢{ $proc.out.slurp }｣&quot;;
-</code></pre>
-
-<p>你还可以给它其命名参数以控制编码，环境和当前工作目录（以及其他内容）。</p>
-
+</code></pre><p>你还可以给它其命名参数以控制编码，环境和当前工作目录（以及其他内容）。</p>
 <p>练习19.1 使用 <code>run</code> 来获取当前目录的按文件大小排序的文件列表。输出那个长文件列表。 Unix 命令是 <code>ls -lrS</code>，Windows 命令是 <code>cmd /c dir /OS</code>。一旦你开始工作，过滤行只输出那些带有 <code>7</code> 的行。最后，你能让一个程序在两个平台上都能运行吗？</p>
-
 <h2 id="写入到-proc">写入到 Proc</h2>
-
 <p>进程可以从你的程序中接收数据。包括 <code>:in</code> 允许你写入到进程：</p>
-
 <pre><code>my $string = 'Hamadryas perlicus';
 
 my $hex = run 'hexdump', '-C', :in, :out;
@@ -401,10 +326,7 @@ $hex.in.print: $string;
 $hex.in.close;
 
 $hex.out.slurp.put;
-</code></pre>
-
-<p>在此示例中，你将调用一次  <code>.print</code>，然后关闭输出。这对于 <em>hexdump</em> 来说很好，但其他程序可能表现不同。有些人可能会期待一些输入，给你一些输出，然后在你读取之后期望更多的输入。这如何工作取决于具体的程序，有时可能令人发狂：</p>
-
+</code></pre><p>在此示例中，你将调用一次  <code>.print</code>，然后关闭输出。这对于 <em>hexdump</em> 来说很好，但其他程序可能表现不同。有些人可能会期待一些输入，给你一些输出，然后在你读取之后期望更多的输入。这如何工作取决于具体的程序，有时可能令人发狂：</p>
 <pre><code>my $string = 'Hamadryas perlicus';
 
 my $hex = run 'fictional-program', :in, :out;
@@ -412,58 +334,33 @@ $hex.in.print: $string;
 $hex.out.slurp;
 $hex.in.print: $string;
 ...;
-</code></pre>
-
-<p>你可以将一个外部程序的输出重定向到另一个外部程序的输入。此示例获取 <code>raku -v</code> 的输出并使其成为下一个<a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 的输入：</p>
-
+</code></pre><p>你可以将一个外部程序的输出重定向到另一个外部程序的输入。此示例获取 <code>raku -v</code> 的输出并使其成为下一个<a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 的输入：</p>
 <pre><code>my $proc1 = run( 'raku', '-v', :out );
 my $proc2 = run(
     'tr', '-s', Q/[:lower:]/,  Q/[:upper:]/,
     :in($proc1.out)
     );
-</code></pre>
-
-<p>第二个 <code>run</code> 使用外部的 <code>tr</code> 命令将所有小写字母转换为大写字母：</p>
-
+</code></pre><p>第二个 <code>run</code> 使用外部的 <code>tr</code> 命令将所有小写字母转换为大写字母：</p>
 <pre><code>THIS IS RAKUDO STAR VERSION 2018.04 BUILT ON MOARVM VERSION 2018.04
 IMPLEMENTING PERL 6.C.
-</code></pre>
-
-<h1 id="procs">Procs</h1>
-
+</code></pre><h1 id="procs">Procs</h1>
 <p><a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 对象处理 <code>shell</code> 和 <code>run</code>。自己构造对象以获得更多控制。这分两步进行; <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 设置了稍后运行命令的东西：</p>
-
 <pre><code>my $proc = Proc.new: ...;
-</code></pre>
-
-<p>设置捕获并合并标准输出和错误流的通用 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>：</p>
-
+</code></pre><p>设置捕获并合并标准输出和错误流的通用 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>：</p>
 <pre><code>my $proc =  Proc.new: :err, :out, :merge;
-</code></pre>
-
-<p>当你准备好运行命令时，<code>.spawn</code> 它。你生成的进程使用你已经建立的设置。结果是基于程序退出状态的布尔值：</p>
-
+</code></pre><p>当你准备好运行命令时，<code>.spawn</code> 它。你生成的进程使用你已经建立的设置。结果是基于程序退出状态的布尔值：</p>
 <pre><code>unless $proc.spawn: 'echo', '-n', 'Hello' {
     ... # handle the error
 }
-</code></pre>
-
-<p>如果需要不同的设置，请在调用 <code>.spawn</code> 时指定当前工作目录和环境：</p>
-
+</code></pre><p>如果需要不同的设置，请在调用 <code>.spawn</code> 时指定当前工作目录和环境：</p>
 <pre><code>my $worked = $proc.spawn: :cwd($some-dir), :env(%hash);
 unless $worked {
     ... # handle the error
 }
-</code></pre>
-
-<p>练习19.2 创建捕获标准输出和错误的 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>。生成命令以获取目录列表。</p>
-
+</code></pre><p>练习19.2 创建捕获标准输出和错误的 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>。生成命令以获取目录列表。</p>
 <h1 id="异步控制">异步控制</h1>
-
 <p>通过 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>（以及 <code>shell</code> 和 <code>run</code>）执行命令会使程序等待，直到外部程序完成其工作。使用 <a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 允许这些程序在自己的 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 中运行，而程序的其余部分继续运行。</p>
-
 <p>运行外部 <code>find</code> 并等待它遍历所有文件系统可能几乎永远等不到（至少感觉像）：</p>
-
 <pre><code>my $proc = Proc.new: :out;
 $proc.spawn: 'find', '/', '-name', '*.txt';
 
@@ -472,12 +369,8 @@ for $proc.out.lines -&gt; $line {
 }
 
 put 'Finished';
-</code></pre>
-
-<p>运行此程序时，你会看到 <em>find</em> 的所有输出行。完成后，可能需要很长时间，然后你将看到 <code>Finished</code> 消息。你可以异步地执行此操作。</p>
-
-<p>你可以在这些示例中看到 Unix *find*，但你还在第8章中创建了一个类似的目录列表程序，你可以将其用作外部程序来练习使用 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>：</p>
-
+</code></pre><p>运行此程序时，你会看到 <em>find</em> 的所有输出行。完成后，可能需要很长时间，然后你将看到 <code>Finished</code> 消息。你可以异步地执行此操作。</p>
+<p>你可以在这些示例中看到 Unix <em>find</em>，但你还在第8章中创建了一个类似的目录列表程序，你可以将其用作外部程序来练习使用 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a>：</p>
 <pre><code>my $proc = Proc.new: :out;
 $proc.spawn: 'raku', 'dir-listing.p6';
 
@@ -486,10 +379,7 @@ for $proc.out.lines -&gt; $line {
 }
 
 put 'Finished';
-</code></pre>
-
-<p><a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的接口与 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 的有点不同。一旦有了对象，就可以使用第18章中看到的 <a href="https://docs.raku.org/type/Supply.html"><code>Supply</code></a> 和 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 功能。这个例子使用 <code>.lines</code> 将输出分解为行（而不是缓冲区的块），然后轻敲该 <a href="https://docs.raku.org/type/Supply.html"><code>Supply</code></a> 以处理进来的行：</p>
-
+</code></pre><p><a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的接口与 <a href="https://docs.raku.org/type/Proc.html"><code>Proc</code></a> 的有点不同。一旦有了对象，就可以使用第18章中看到的 <a href="https://docs.raku.org/type/Supply.html"><code>Supply</code></a> 和 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 功能。这个例子使用 <code>.lines</code> 将输出分解为行（而不是缓冲区的块），然后轻敲该 <a href="https://docs.raku.org/type/Supply.html"><code>Supply</code></a> 以处理进来的行：</p>
 <pre><code>my $proc = Proc::Async.new: 'find', '/', '-name', '*.txt';
 
 $proc.stdout.lines.Supply.tap: { put $++, ': &lt;', $^line, '&gt;' };
@@ -498,24 +388,16 @@ my $promise = $proc.start;
 put 'Moving on';
 
 await $promise;
-</code></pre>
-
-<p>这是 <a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的简单使用，但你可以将它与你已经看到的并发功能结合使用。调用 <code>.stdout</code> 可以获得输出行，但只能在调用 <code>.start</code> 之后。在<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中执行这两个操作：</p>
-
+</code></pre><p>这是 <a href="https://docs.raku.org/type/Proc::Async.html"><code>Proc::Async</code></a> 的简单使用，但你可以将它与你已经看到的并发功能结合使用。调用 <code>.stdout</code> 可以获得输出行，但只能在调用 <code>.start</code> 之后。在<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中执行这两个操作：</p>
 <pre><code>my $proc = Proc::Async.new: 'find', '/', '-name', '*.txt';
 
 react {
     whenever $proc.stdout.lines { put $_;  }
     whenever $proc.start        { put &quot;Finished&quot;; done }
 };
-</code></pre>
-
-<p><code>.start</code> 返回一个在外部程序完成之前不会保留的 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a>。即使 <code>whenever</code> 在程序开始时运行，<a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 都不会保留到最后，然后 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 就会完成它的工作。</p>
-
+</code></pre><p><code>.start</code> 返回一个在外部程序完成之前不会保留的 <a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a>。即使 <code>whenever</code> 在程序开始时运行，<a href="https://docs.raku.org/type/Promise.html"><code>Promise</code></a> 都不会保留到最后，然后 <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 就会完成它的工作。</p>
 <p>练习19.3 实现异步 <em>find</em> 程序。修改它，使其在找到你在命令行上指定的文件数后停止。报告找到的文件数。</p>
-
 <h1 id="总结">总结</h1>
-
 <p>你可以运行程序并等待它们的输出或在后台触发它们并在它进入时处理它们的输出。扩展它以处理多个程序，你的程序成为外部资源的精细处理程序。你已经看到了它如何工作的机制，但你可以用它来设计更大更好的东西。</p>
 
 
@@ -608,7 +490,7 @@ react {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

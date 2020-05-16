@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Unspace</title>
-  <meta property="og:title" content="Unspace" />
-  <meta name="twitter:title" content="Unspace" />
+  <title>unspace</title>
+  <meta property="og:title" content="unspace" />
+  <meta name="twitter:title" content="unspace" />
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/unspace/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/unspace/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -184,7 +184,7 @@ if (!doNotTrack) {
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#Unspace</h1>
+              <h1>#unspace</h1>
               <hr class="small">
             </div>
           </div>
@@ -225,12 +225,12 @@ if (!doNotTrack) {
                 
                   有些语言例如 C 允许你转义一个换行符使行联合起来. 其它语言(例如正则表达式)因为各种各样的原因, 允许你使用反斜线转义一个空白符. Raku 把这种记法推广到任何种类的空白上. 通过在空白处前置一个 \, 任何相邻的空白(包括注释)都会在解析器面前隐身. 这就是鼎鼎大名的空白隐身( “unspace”).
 在 Perl 中, 一个 unspace 能够抑制任意的几种空白附属物. 例如, 因为 Perl 要求名词和后缀操作符之间不能出现空白, 所以使用 unspace 让你可以把后缀操作符贴线对齐:
-%hash\ {$key} @array\ [$ix] $subref\($arg)  上面的最后一种形式作为一种退化了的 unspace, 即反斜线后面直接跟着后缀. 注意, 反斜线前面不允许有空白, 所以:
-$subref \($arg)  是语法错误(two terms in a row). 而
-foo \($arg)  会被解析为带有 Capture 参数的列表操作:
-foo(\($arg))  然而, 其它形式的 unspace 可能被有效地放在空白之前.
+%hash\ {$key}@array\ [$ix]$subref\($arg)上面的最后一种形式作为一种退化了的 unspace, 即反斜线后面直接跟着后缀. 注意, 反斜线前面不允许有空白, 所以:
+$subref \($arg)是语法错误(two terms in a row). 而
+foo \($arg)会被解析为带有 Capture 参数的列表操作:
+foo(\($arg))然而, 其它形式的 unspace 可能被有效地放在空白之前.
 其它后缀操作符也可能使用 unspace:
-$number\ ++; $number\ --; 1+3\ i; $object\ .say(); $object\#`{ your ad here }.
+$number\ ++;$number\ --;1+3\ i;$object\ .say();$object\#`{ your ad here }.say另外一种 “你看不见这空白” 的正常用法是, 在下一行放上一个点语法形式的后缀:
                   <a href="https://ohmysummer.github.io/post/2016-08-01-unspaces/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -270,19 +270,12 @@ $number\ ++; $number\ --; 1+3\ i; $object\ .say(); $object\#`{ your ad here }.
               </p>
               <div class="post-entry">
                 
-                  
-
-<h2 id="使用链式函数调用">使用链式函数调用</h2>
-
+                  <h2 id="使用链式函数调用">使用链式函数调用</h2>
 <p>考虑最简单的一种情况, 不带小数点的数字:</p>
-
-<pre><code class="language-raku">&quot;1234567890&quot;.comb.reverse.rotor(3,:partial).map(*.join('')).join(',').comb.reverse.join('')  
+<pre><code class="language-raku" data-lang="raku">&quot;1234567890&quot;.comb.reverse.rotor(3,:partial).map(*.join('')).join(',').comb.reverse.join('')  
 # 1,234,567,890
-</code></pre>
-
-<p>使用 <code>\\</code> 转义空白, 使代码对齐:</p>
-
-<pre><code class="language-raku">&quot;1234567890&quot;.comb\
+</code></pre><p>使用 <code>\\</code> 转义空白, 使代码对齐:</p>
+<pre><code class="language-raku" data-lang="raku">&quot;1234567890&quot;.comb\
             .reverse\
             .rotor(3,:partial)\
             .map(*.join(‘’))\
@@ -292,18 +285,11 @@ $number\ ++; $number\ --; 1+3\ i; $object\ .say(); $object\#`{ your ad here }.
             .join(‘’)\
             .say;
 
-</code></pre>
-
-<h2 id="使用正则表达式">使用正则表达式</h2>
-
-<hr />
-
+</code></pre><h2 id="使用正则表达式">使用正则表达式</h2>
+<hr>
 <p>comming soon!</p>
-
 <h2 id="使用-grammar">使用 Grammar</h2>
-
-<hr />
-
+<hr>
 <p>comming soon!</p>
 
                 
@@ -346,39 +332,27 @@ $number\ ++; $number\ --; 1+3\ i; $object\ .say(); $object\#`{ your ad here }.
               </p>
               <div class="post-entry">
                 
-                  
-
-<h2 id="空格最少化">空格最少化</h2>
-
-<hr />
-
+                  <h2 id="空格最少化">空格最少化</h2>
+<hr>
 <p>在数组或散列的开括号(即下标左边的那个括号)之前不允许有空格, 参数列表的圆开括号前面也是不能有空格的. 即:</p>
-
-<pre><code class="language-raku">@deadbeef[$x]         # okay
+<pre><code class="language-raku" data-lang="raku">@deadbeef[$x]         # okay
 %monsters{'cookie'}   # okay
 saymewant('cookie')   # okay
 
 @a       [$b]         # WRONG
 %people  {'john'}     # WRONG
 mewant   ('cookie')   # WRONG
-</code></pre>
-
-<p>这种限制的的几个副作用之一就是条件控制结构的周围不再需要圆括号了:</p>
-
-<pre><code class="language-raku">if $value eq $target {
+</code></pre><p>这种限制的的几个副作用之一就是条件控制结构的周围不再需要圆括号了:</p>
+<pre><code class="language-raku" data-lang="raku">if $value eq $target {
         print &quot;Bullseye!&quot;;
     }
 while $i &lt; 10 { $i++ }
-</code></pre>
-
-<p>然而, 显式的使用 <code>unspace</code> 语法仍然能够让你对齐下标和后缀操作符:</p>
-
-<pre><code class="language-raku">%squirrels{'fluffy'} = Squirrel.new;
+</code></pre><p>然而, 显式的使用 <code>unspace</code> 语法仍然能够让你对齐下标和后缀操作符:</p>
+<pre><code class="language-raku" data-lang="raku">%squirrels{'fluffy'} = Squirrel.new;
 %monsters.{'cookie'} = Monster.new;
 %beatles\.{'ringo'}  = Beatle.new;
 %people\ .{'john'}   = Person.new;
 </code></pre>
-
                 
               </div>
 
@@ -428,7 +402,7 @@ while $i &lt; 10 { $i++ }
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -10,12 +10,12 @@
   <meta name="twitter:title" content="在 Raku 中异步地执行外部程序" />
   <meta name="description" content="Execute an external program with timeout in Raku
 Proc::Async 允许我们异步地执行外部程序。
-my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;); my $res = await $proc.start;  我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
-class Proc::Async::Timeout is Proc::Async { has $.timeout is rw; method start($self: |) { return callsame unless $.timeout; my $killer = Promise.in($.timeout).then: { $self.kill }; my $promise = callsame; Promise.anyof($promise, $killer).then: { $promise.result }; } } my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;sleep 5; warn &#39;end&#39;&quot;); $proc.">
+my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;);my $res = await $proc.start;我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
+class Proc::Async::Timeout is Proc::Async {has $.timeout is rw;method start($self: |) {return callsame unless $.timeout;my $killer = Promise.in($.timeout).then: { $self.kill };my $promise = callsame;Promise.anyof($promise, $killer).then: { $promise.result };}}my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;sleep 5; warn &#39;end&#39;&quot;);$proc.">
   <meta property="og:description" content="Execute an external program with timeout in Raku
 Proc::Async 允许我们异步地执行外部程序。
-my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;); my $res = await $proc.start;  我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
-class Proc::Async::Timeout is Proc::Async { has $.timeout is rw; method start($self: |) { return callsame unless $.timeout; my $killer = Promise.in($.timeout).then: { $self.kill }; my $promise = callsame; Promise.anyof($promise, $killer).then: { $promise.result }; } } my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;sleep 5; warn &#39;end&#39;&quot;); $proc.">
+my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;);my $res = await $proc.start;我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：
+class Proc::Async::Timeout is Proc::Async {has $.timeout is rw;method start($self: |) {return callsame unless $.timeout;my $killer = Promise.in($.timeout).then: { $self.kill };my $promise = callsame;Promise.anyof($promise, $killer).then: { $promise.result };}}my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;sleep 5; warn &#39;end&#39;&quot;);$proc.">
   <meta name="twitter:description" content="Execute an external program with timeout in Raku
 Proc::Async 允许我们异步地执行外部程序。
 my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, …">
@@ -28,7 +28,7 @@ my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &qu
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2015-05-14-%E5%9C%A8raku%E4%B8%AD%E5%BC%82%E6%AD%A5%E5%9C%B0%E6%89%A7%E8%A1%8C%E5%A4%96%E9%83%A8%E7%A8%8B%E5%BA%8F/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -236,16 +236,11 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p><a href="http://ks0608.hatenablog.com/entry/2016/05/17/001826">Execute an external program with timeout in Raku</a></p>
-
 <p>Proc::Async 允许我们异步地执行外部程序。</p>
-
-<pre><code class="language-raku">my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;);
+<pre><code class="language-raku" data-lang="raku">my $proc = Proc::Async.new(&quot;curl&quot;, &quot;-s&quot;, &quot;-o&quot;, &quot;index.html&quot;, &quot;http://www.cpan.org&quot;);
 my $res = await $proc.start;
-</code></pre>
-
-<p>我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：</p>
-
-<pre><code class="language-raku">class Proc::Async::Timeout is Proc::Async {
+</code></pre><p>我们可以在 Proc::Async 中使用超时吗? Proc::Async 没有正式支持该功能，但是我们可以很容易地实现它。看一下这个：</p>
+<pre><code class="language-raku" data-lang="raku">class Proc::Async::Timeout is Proc::Async {
     has $.timeout is rw;
     method start($self: |) {
         return callsame unless $.timeout;
@@ -259,11 +254,8 @@ my $proc = Proc::Async::Timeout.new(&quot;perl&quot;, &quot;-E&quot;, &quot;slee
 $proc.timeout = 1;
 my $res = await $proc.start;
 say &quot;maybe timeout&quot; if $res.signal;
-</code></pre>
-
-<p>你甚至可以这样做：</p>
-
-<pre><code class="language-raku">my $start = Proc::Async.^methods.first(*.name eq &quot;start&quot;);
+</code></pre><p>你甚至可以这样做：</p>
+<pre><code class="language-raku" data-lang="raku">my $start = Proc::Async.^methods.first(*.name eq &quot;start&quot;);
 
 $start.wrap: method ($self: :$timeout, |c) {
     return callwith($self, |c) unless $timeout;
@@ -273,9 +265,7 @@ $start.wrap: method ($self: :$timeout, |c) {
 };
 
 say await Proc::Async.new(&quot;perl&quot;, &quot;-E&quot;, 'sleep 3; say &quot;end&quot;').start(timeout =&gt; 2);
-</code></pre>
-
-<p>哇，哇！如果你发现了更酷的方法，请告诉我。</p>
+</code></pre><p>哇，哇！如果你发现了更酷的方法，请告诉我。</p>
 
 
         
@@ -367,7 +357,7 @@ say await Proc::Async.new(&quot;perl&quot;, &quot;-E&quot;, 'sleep 3; say &quot;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

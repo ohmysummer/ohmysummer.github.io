@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/using-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/using-raku/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -225,8 +225,8 @@ if (!doNotTrack) {
                 
                   捕获 签名不仅仅是语法，它们是含有一列参数对象的 first-class 对象 。同样地，有一种含有参数集的数据结构,叫捕获。捕获有位置和命名两个部分，表现的就像列表和散列。像列表的那部分含有位置参数，而像散列的那部分含有命名参数。
 创建和使用捕获 无论你什么时间写下一个子例程调用，你就隐式地创建了一个捕获。然而，它随即被调用消耗了。有时，你想做一个捕获，存储它，然后将一个或多个子例程应用到它包含的一系列参数上。为了这，使用 n(&hellip;) 语法。
-my @tasks = n(39, 3, action =&gt; { say $^a + $^b }), n(6, 7, action =&gt; { say $^a * $^b });  这里，@tasks数组最后会包含两个捕获，每个捕获各含有两个位置参数和一个命名参数。捕获中的命名参数出现在哪并没有关系，因为他们是按名字传递，而非按位置。就像数组和散列，使用 | ，捕获也能被展平到参数列表中去:
-sub act($left, $right, :$action) { $action($left, $right); } for @tasks -&gt; $task-args { act(|$task-args); }  However, in this case it is specifying the full set of arguments for the call, including both named and positional arguments.
+my @tasks = n(39, 3, action =&gt; { say $^a + $^b }),n(6, 7, action =&gt; { say $^a * $^b });这里，@tasks数组最后会包含两个捕获，每个捕获各含有两个位置参数和一个命名参数。捕获中的命名参数出现在哪并没有关系，因为他们是按名字传递，而非按位置。就像数组和散列，使用 | ，捕获也能被展平到参数列表中去:
+sub act($left, $right, :$action) {$action($left, $right);}for @tasks -&gt; $task-args {act(|$task-args);}However, in this case it is specifying the full set of arguments for the call, including both named and positional arguments.
                   <a href="https://ohmysummer.github.io/post/2016-03-14-using-raku%E4%BA%8C/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -256,7 +256,7 @@ sub act($left, $right, :$action) { $action($left, $right); } for @tasks -&gt; $t
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 13 minutes (2722 words)
+  <i class="fa fa-clock-o"></i> 13 minutes (2724 words)
   
   
 </span>
@@ -264,11 +264,11 @@ sub act($left, $right, :$action) { $action($left, $right); } for @tasks -&gt; $t
               </p>
               <div class="post-entry">
                 
-                  第一章 概要 Comming soon!
-第二章 基础 假设有一场乒乓球比赛，比赛结果以这种格式记录： Player1 Player2 | 3:2 这意味着选手1与选手2的比分为3:2, 你需要一个脚本算出每位选手赢了几场比赛并且胜了几局。 输入数据（存储在一个叫做scores的文件中）像下面这样：
-Beth Ana Charlie Dave Ana Dave | 3:0 Charlie Beth | 3:1 Ana Beth | 2:3 Dave Charlie | 3:0 Ana Charlie | 3:1 Beth Dave | 0:3  第一行是选手清单。随后每一行记录着比赛结果。
+                  第一章 概要  Comming soon!
+第二章 基础  假设有一场乒乓球比赛，比赛结果以这种格式记录： Player1 Player2 | 3:2 这意味着选手1与选手2的比分为3:2, 你需要一个脚本算出每位选手赢了几场比赛并且胜了几局。 输入数据（存储在一个叫做scores的文件中）像下面这样：
+Beth Ana Charlie DaveAna Dave | 3:0Charlie Beth | 3:1Ana Beth | 2:3Dave Charlie | 3:0Ana Charlie | 3:1Beth Dave | 0:3第一行是选手清单。随后每一行记录着比赛结果。
 这里使用Raku给出一种解决方案：
-use v6; my $file = open 'scores'; my @names = $file.get.words ; #get方法读入一行，每调用一次get，读取一行 # &gt; @names.perl # Array.new(&quot;1&quot;, &quot;Beth&quot;, &quot;Ana&quot;, &quot;Charlie&quot;, &quot;Dave&quot;) my %matches; # 赢得比赛次数 my %sets; # 赢得比赛局数 for $file.
+use v6;my $file = open 'scores';my @names = $file.get.words ; #get方法读入一行，每调用一次get，读取一行# &gt; @names.perl # Array.new(&quot;1&quot;, &quot;Beth&quot;, &quot;Ana&quot;, &quot;Charlie&quot;, &quot;Dave&quot;)my %matches; # 赢得比赛次数my %sets; # 赢得比赛局数for $file.
                   <a href="https://ohmysummer.github.io/post/2015-03-14-using-raku%E4%B8%80/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -321,7 +321,7 @@ use v6; my $file = open 'scores'; my @names = $file.get.words ; #get方法读入
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2019-06-22-bubble-sort-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -232,12 +232,9 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>嘿大家好，让我们在 Raku 中实现一些算法。</p>
-
 <p>第一个将是经典的冒泡排序。实质上，您从左到右扫描数据并交换两个相邻的项（如果它们尚未正确排序）。重复这个过程，直到整个数据列表被排序。</p>
-
 <p>这是最初的直接实现：</p>
-
-<pre><code class="language-raku">sub bubble-sort(@data) {
+<pre><code class="language-raku" data-lang="raku">sub bubble-sort(@data) {
     my Bool $done = False;
     while !$done {
         $done = True;
@@ -254,40 +251,21 @@ if (!doNotTrack) {
 my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
 bubble-sort @data;
 say @data;
-</code></pre>
-
-<p>此实现执行就地排序，但您不需要将函数参数声明为 <code>is rw</code>。实际上，编译器会告诉您这是多余的，并将停止进一步编译:</p>
-
+</code></pre><p>此实现执行就地排序，但您不需要将函数参数声明为 <code>is rw</code>。实际上，编译器会告诉您这是多余的，并将停止进一步编译:</p>
 <pre><code>For parameter '@data', '@' sigil containers don't need 'is rw' to be writable
 Can only use 'is rw' on a scalar ('$' sigil) parameter, not '@data'
-</code></pre>
-
-<p>另一个我想更精确地看一下的地方是交换两个数组元素：</p>
-
-<pre><code class="language-raku">(@data[$n - 1], @data[$n]) = (@data[$n], @data[$n - 1]);
-</code></pre>
-
-<p>现在，随着程序准备就绪，我们可以确认它是否正常工作，让我们对其进行转换以使其更具表现力（尽管效率可能稍低）。</p>
-
-<pre><code class="language-shell">$ raku bubble-sort.pl6 
-[1 1 2 2 4 5 7 9 10 46 78]
-</code></pre>
-
-<p>第一步是简化交换代码。在等号的两边，我们使用相同的两个元素，索引 <code>$n</code> 和 <code>$n  -  1</code>。可以在两个元素的列表上调用 <code>reverse</code> 方法并将其赋值给它：</p>
-
-<pre><code class="language-raku">(@data[$n - 1], @data[$n]).=reverse;
-</code></pre>
-
-<p>使用数组切片可以进一步简化：</p>
-
-<pre><code class="language-raku">@data[$n - 1, $n].=reverse;
-</code></pre>
-
-<p>如您所见，不再需要括号。你必须自己回答的唯一问题是，是否用空格包围 <code>.=</code> 运算符。一方面，这是一个方法调用（因此，没有空格），另一方面，它是一个赋值（因此，空格）。</p>
-
+</code></pre><p>另一个我想更精确地看一下的地方是交换两个数组元素：</p>
+<pre><code class="language-raku" data-lang="raku">(@data[$n - 1], @data[$n]) = (@data[$n], @data[$n - 1]);
+</code></pre><p>现在，随着程序准备就绪，我们可以确认它是否正常工作，让我们对其进行转换以使其更具表现力（尽管效率可能稍低）。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ raku bubble-sort.pl6 
+<span class="o">[</span><span class="m">1</span> <span class="m">1</span> <span class="m">2</span> <span class="m">2</span> <span class="m">4</span> <span class="m">5</span> <span class="m">7</span> <span class="m">9</span> <span class="m">10</span> <span class="m">46</span> 78<span class="o">]</span>
+</code></pre></div><p>第一步是简化交换代码。在等号的两边，我们使用相同的两个元素，索引 <code>$n</code> 和 <code>$n  -  1</code>。可以在两个元素的列表上调用 <code>reverse</code> 方法并将其赋值给它：</p>
+<pre><code class="language-raku" data-lang="raku">(@data[$n - 1], @data[$n]).=reverse;
+</code></pre><p>使用数组切片可以进一步简化：</p>
+<pre><code class="language-raku" data-lang="raku">@data[$n - 1, $n].=reverse;
+</code></pre><p>如您所见，不再需要括号。你必须自己回答的唯一问题是，是否用空格包围 <code>.=</code> 运算符。一方面，这是一个方法调用（因此，没有空格），另一方面，它是一个赋值（因此，空格）。</p>
 <p>好的，下一步是什么？当然，<code>if</code> 语句可以写为后缀条件，但 <code>if</code> 块中有两行代码。在这一点上，我可以决定在代码之美和效率之间进行权衡，并摆脱布尔 <code>$done</code> 标志。</p>
-
-<pre><code class="language-raku">sub bubble-sort(@data) {
+<pre><code class="language-raku" data-lang="raku">sub bubble-sort(@data) {
     for 1 .. @data.elems - 1 -&gt; $n {
         if @data[$n - 1] &gt; @data[$n] {
             @data[$n - 1, $n].=reverse;
@@ -295,45 +273,24 @@ Can only use 'is rw' on a scalar ('$' sigil) parameter, not '@data'
     }
     bubble-sort(@data) unless [&lt;=] @data;
 }
-</code></pre>
-
-<p>此步骤还允许删除 <code>while</code> 块。在函数结束时，完成递归调用（再次，可能效率较低，但是谁在乎），并且检查数组是否已经排序的条件现在是显式的：</p>
-
-<pre><code class="language-raku">unless [&lt;=] @data
-</code></pre>
-
-<p>毕竟，现在可以附加 <code>if</code> 后缀：</p>
-
-<pre><code class="language-raku">@data[$n - 1, $n].=reverse if @data[$n - 1] &gt; @data[$n]
-</code></pre>
-
-<p>甚至 <code>for</code> 后缀：</p>
-
-<pre><code class="language-raku">@data[$_ - 1, $_].=reverse
+</code></pre><p>此步骤还允许删除 <code>while</code> 块。在函数结束时，完成递归调用（再次，可能效率较低，但是谁在乎），并且检查数组是否已经排序的条件现在是显式的：</p>
+<pre><code class="language-raku" data-lang="raku">unless [&lt;=] @data
+</code></pre><p>毕竟，现在可以附加 <code>if</code> 后缀：</p>
+<pre><code class="language-raku" data-lang="raku">@data[$n - 1, $n].=reverse if @data[$n - 1] &gt; @data[$n]
+</code></pre><p>甚至 <code>for</code> 后缀：</p>
+<pre><code class="language-raku" data-lang="raku">@data[$_ - 1, $_].=reverse
     if @data[$_ - 1] &gt; @data[$_]
         for 1 .. @data.elems - 1;
-</code></pre>
-
-<p>另外，为什么不像使用函数的其他部分那样使用切片和简化运算符来创建条件：</p>
-
-<pre><code class="language-raku">@data[$_ - 1, $_].=reverse
+</code></pre><p>另外，为什么不像使用函数的其他部分那样使用切片和简化运算符来创建条件：</p>
+<pre><code class="language-raku" data-lang="raku">@data[$_ - 1, $_].=reverse
     if [&gt;] @data[$_ - 1, $_]
         for 1 .. @data.elems - 1;
-</code></pre>
-
-<p>下一步是减小范围 <code>1 .. @ data.elems  -  1</code>，这是可行的，但包含的元素太多，可以删除。 <code>-1</code> 部分可以用开口范围代替：</p>
-
-<pre><code class="language-raku">for 1 ..^ @data.elems;
-</code></pre>
-
-<p>之后 <code>elems</code> 调用就不需要了，Raku 可以为我们做到这一点：</p>
-
-<pre><code class="language-raku">for 1 ..^ @data;
-</code></pre>
-
-<p>这是代码的当前状态：</p>
-
-<pre><code class="language-raku">sub bubble-sort(@data) {
+</code></pre><p>下一步是减小范围 <code>1 .. @ data.elems  -  1</code>，这是可行的，但包含的元素太多，可以删除。 <code>-1</code> 部分可以用开口范围代替：</p>
+<pre><code class="language-raku" data-lang="raku">for 1 ..^ @data.elems;
+</code></pre><p>之后 <code>elems</code> 调用就不需要了，Raku 可以为我们做到这一点：</p>
+<pre><code class="language-raku" data-lang="raku">for 1 ..^ @data;
+</code></pre><p>这是代码的当前状态：</p>
+<pre><code class="language-raku" data-lang="raku">sub bubble-sort(@data) {
     @data[$_ - 1, $_] .= reverse
         if [&gt;] @data[$_ - 1, $_]
             for 1 ..^ @data;
@@ -344,11 +301,8 @@ Can only use 'is rw' on a scalar ('$' sigil) parameter, not '@data'
 my @data = 4, 5, 7, 1, 46, 78, 2, 2, 1, 9, 10;
 bubble-sort @data;
 say @data;
-</code></pre>
-
-<p>在我们暂停之前，下面是另一种可能的修改。通常，Raku 中的递归可以通过 multi-subs 实现。让编译器根据数据完成工作，而不是在函数内部进行分支：</p>
-
-<pre><code class="language-raku">multi sub bubble-sort(@data where [&lt;=] @data) {}
+</code></pre><p>在我们暂停之前，下面是另一种可能的修改。通常，Raku 中的递归可以通过 multi-subs 实现。让编译器根据数据完成工作，而不是在函数内部进行分支：</p>
+<pre><code class="language-raku" data-lang="raku">multi sub bubble-sort(@data where [&lt;=] @data) {}
 
 multi sub bubble-sort(@data where ![&lt;=] @data) {
     @data[$_ - 1, $_] .= reverse
@@ -356,32 +310,22 @@ multi sub bubble-sort(@data where ![&lt;=] @data) {
             for 1 ..^ @data;
     bubble-sort(@data);
 }
-</code></pre>
-
-<p>如果您不喜欢 <code>[&lt;=]</code> 检查（因为它应该扫描整个列表），这里是一个带有另一个循环层的暴力版本：</p>
-
-<pre><code class="language-raku">sub bubble-sort(@data) {
+</code></pre><p>如果您不喜欢 <code>[&lt;=]</code> 检查（因为它应该扫描整个列表），这里是一个带有另一个循环层的暴力版本：</p>
+<pre><code class="language-raku" data-lang="raku">sub bubble-sort(@data) {
     for ^@data {
         @data[$_ - 1, $_] .= reverse
             if [&gt;] @data[$_ - 1, $_] for 1 ..^ @data;
     }
 }
-</code></pre>
-
-<p>可以使用交叉运算符连接两个 <code>for</code> 循环：</p>
-
-<pre><code class="language-raku">sub bubble-sort(@data) {
+</code></pre><p>可以使用交叉运算符连接两个 <code>for</code> 循环：</p>
+<pre><code class="language-raku" data-lang="raku">sub bubble-sort(@data) {
     for ^@data X 1 ..^ @data {
         my $n = $_[1];
         @data[$n - 1, $n] .= reverse if [&gt;] @data[$n - 1, $n];
     }
 }
-</code></pre>
-
-<p>我们邀请您进一步处理此代码。我真的好奇是否以及如何做得更短（例如，如何重用切片）。</p>
-
+</code></pre><p>我们邀请您进一步处理此代码。我真的好奇是否以及如何做得更短（例如，如何重用切片）。</p>
 <p><a href="https://github.com/ash/raku-algorithms/tree/master/sort">GitHub</a> 上提供了上述程序的源代码。</p>
-
 <p>原文： <a href="https://raku.online/2019/06/21/100-bubble-sort-in-perl-6/">https://raku.online/2019/06/21/100-bubble-sort-in-perl-6/</a></p>
 
 
@@ -474,7 +418,7 @@ multi sub bubble-sort(@data where ![&lt;=] @data) {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

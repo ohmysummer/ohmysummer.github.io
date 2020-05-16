@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2019-03-26-perl6-colonoscopy/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,30 +231,20 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="raku-colonoscopy">Raku Colonoscopy</h1>
-
+        <h1 id="raku-colonoscopy">Raku Colonoscopy</h1>
 <p>I promise, this will not hurt. Much&hellip;</p>
-
 <p>In this article we&rsquo;ll look into colons in Raku, where to place them, and what they mean.
 我保证，这不会受到伤害。许多&hellip;</p>
-
 <p>在本文中，我们将研究Raku中的冒号，放置它们的位置以及它们的含义。</p>
-
 <h2 id="sigils">Sigils</h2>
-
 <p>But first a short detour. A newcomer to the Raku universe cannot miss the significance of sigils when dealing with variables. They are:</p>
-
 <ul>
 <li><code>$</code> (Anything)</li>
 <li><code>@</code> (Array)</li>
 <li><code>%</code> (Hash)</li>
 <li><code>&amp;</code> (Callable)</li>
 </ul>
-
 <p>The sigil is part of the variable name, and is not changed depending on the context (as in Perl 5):</p>
-
 <table>
 <thead>
 <tr>
@@ -264,7 +254,6 @@ if (!doNotTrack) {
 <th>Raku Alternate Syntax</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Array</td>
@@ -272,35 +261,30 @@ if (!doNotTrack) {
 <td><code>@a</code></td>
 <td></td>
 </tr>
-
 <tr>
 <td>Array element</td>
 <td><code>$a[0]</code></td>
 <td><code>@a[0]</code></td>
 <td></td>
 </tr>
-
 <tr>
 <td>Array slice</td>
 <td><code>@a[0,1]</code></td>
 <td><code>@a[0,1]</code></td>
 <td></td>
 </tr>
-
 <tr>
 <td>Hash</td>
 <td><code>%h</code></td>
 <td><code>%h</code></td>
 <td></td>
 </tr>
-
 <tr>
 <td>Hash element</td>
 <td><code>$h{'a'}</code></td>
 <td><code>%h{'a'}</code></td>
 <td><code>%h&lt;a&gt;</code></td>
 </tr>
-
 <tr>
 <td>Hash slice</td>
 <td><code>@h{'a', 'b'}</code></td>
@@ -309,83 +293,46 @@ if (!doNotTrack) {
 </tr>
 </tbody>
 </table>
-
 <p>Raku also has Twigils, a secondary character between the sigil and the variable name, that slightly alters the meaning of the variable. We&rsquo;ll not get into that in this article (with one exception, the colon).</p>
-
 <p>See <a href="https://docs.raku.org/language/variables">docs.raku.org/language/variables</a> for more information about Variables, Sigils and Twigils.</p>
-
 <h3 id="namespaces">Namespaces</h3>
-
 <p>A double colon (</p>
-
 <pre><code>::
-</code></pre>
-
-<p>) is used to address a name (variable, procedure or class) in another namespace.</p>
-
+</code></pre><p>) is used to address a name (variable, procedure or class) in another namespace.</p>
 <p>Let us say that the have a module <code>Foo</code> with a procedure <code>bar</code> and a variable <code>$bar</code>. We can access them like this (if the module has made them available for outside code):</p>
-
 <pre><code>use Foo;
 
 Foo::bar;       # A procedure call
 
 say $Foo::bar;  # Accessing a variable
-</code></pre>
-
-<p>We can also use namespaces directly (but it isn&rsquo;t recommended):</p>
-
+</code></pre><p>We can also use namespaces directly (but it isn&rsquo;t recommended):</p>
 <p>File: namespace</p>
-
 <pre><code>my $a = 10;
 my $FOO::BAR::a = 20;
 
 say $a + $FOO::BAR::a;  # -&gt; 30
-</code></pre>
-
-<p>Two colons on their own work as well, and gives us access to meta information about the current scope (as far as I understand it):</p>
-
+</code></pre><p>Two colons on their own work as well, and gives us access to meta information about the current scope (as far as I understand it):</p>
 <pre><code>&gt; say ::
 PseudoStash.new((!UNIT_MARKER =&gt; (!UNIT_MARKER), $=pod =&gt; [],
   $?PACKAGE =&gt; (GLOBAL), $_ =&gt; (Any), ::?PACKAGE =&gt; (GLOBAL),
   EXPORT =&gt; (EXPORT), GLOBALish =&gt; (GLOBAL)))
-</code></pre>
-
-<p>See <a href="https://docs.raku.org/type/PseudoStash">docs.raku.org/type/PseudoStash</a> for information about the PseudoStash type, but be prepared to be (or stay) confused.</p>
-
+</code></pre><p>See <a href="https://docs.raku.org/type/PseudoStash">docs.raku.org/type/PseudoStash</a> for information about the PseudoStash type, but be prepared to be (or stay) confused.</p>
 <h3 id="versioned-modules">Versioned Modules</h3>
-
 <p>A module can have an optional</p>
-
 <p>version</p>
-
 <p>and/or</p>
-
 <p>author</p>
-
 <p>value (and some others). They are affixed after the module name with a single colon, like this:</p>
-
 <pre><code>module Foo:ver&lt;1.00&gt;:auth { ... }
-</code></pre>
-
-<h3 id="inline-perl5">Inline::Perl5</h3>
-
+</code></pre><h3 id="inlineperl5">Inline::Perl5</h3>
 <p>This module makes it possible to use Perl 5 modules. It is used indirectly like this, where «Foo::Bar» is a Perl 5 module:</p>
-
 <pre><code>use Foo::Bar:from&lt;Perl5&gt;;
-</code></pre>
-
-<p>This works for other languages as well. See <a href="https://modules.raku.org/search/?q=inline">modules.raku.org/search/?q=inline</a> for a list of available languages. The support may be incomplete, so read the documentation.</p>
-
+</code></pre><p>This works for other languages as well. See <a href="https://modules.raku.org/search/?q=inline">modules.raku.org/search/?q=inline</a> for a list of available languages. The support may be incomplete, so read the documentation.</p>
 <h3 id="labels">Labels</h3>
-
 <p>A label is just a label. It doesn&rsquo;t do anything by itself.</p>
-
 <p>We cannot use it to jump around in the code, as Raku doesn&rsquo;t have a <code>goto</code>command. But we can use it to jump <em>out of loops</em> (or around in them), with the<code>last</code>, <code>next</code> or <code>redo</code> commands.</p>
-
 <p>Consider the <code>last</code> command without using a label:</p>
-
 <p>File: last</p>
-
 <pre><code>for 1 .. 10 -&gt; $a
 {
   for 1 .. 00 -&gt; $b
@@ -394,12 +341,8 @@ PseudoStash.new((!UNIT_MARKER =&gt; (!UNIT_MARKER), $=pod =&gt; [],
     say &quot;$a $b&quot;;
   }
 }
-</code></pre>
-
-<p>The <code>last</code> will exit the inner loop if the condition is met. We can get it to act on another level if we use a label:</p>
-
+</code></pre><p>The <code>last</code> will exit the inner loop if the condition is met. We can get it to act on another level if we use a label:</p>
 <p>File: last2</p>
-
 <pre><code>outer: for 1 .. 10 -&gt; $a
 {
   inner: for 1 .. 10 -&gt; $b
@@ -408,101 +351,54 @@ PseudoStash.new((!UNIT_MARKER =&gt; (!UNIT_MARKER), $=pod =&gt; [],
     say &quot;$a $b&quot;;
   }
 }
-</code></pre>
-
-<p>This time it exits the outer loop (and the program, as there isn&rsquo;t any more code to execute) when the condition is met.</p>
-
+</code></pre><p>This time it exits the outer loop (and the program, as there isn&rsquo;t any more code to execute) when the condition is met.</p>
 <p>Upper Case letters are normally used for labels, but this will cause an error if you happen to choose a name that is already in use internally by Raku. The label itself isn&rsquo;t a problem, as the trailing colon tells the compiler that it is a label. The usage, where it is used as a bareword causes the problem, and there is no way to fix it.</p>
-
 <p>Some examples:</p>
-
 <ul>
 <li><code>OUTER</code>, which seems perfectly logical as a label name, will give the run time error («Cannot resolve caller next(OUTER:U); &hellip;»), as <code>OUTER</code> is a built-in <a href="https://docs.raku.org/language/packages#index-entry-OUTER_%28package%29">package name</a> and Raku isn&rsquo;t clever enough to spot that it is used as a label in this case.</li>
 <li><code>LAST</code> isn&rsquo;t equally tempting to use, but will give the compilation error («Missing block»), as <code>LAST</code> is a <em>Phaser</em>, expecting a block after it.</li>
 </ul>
-
 <p>See <a href="https://docs.raku.org/language/packages#Pseudo-packages">docs.raku.org/language/packages#Pseudo-packages</a> for more information about Package Names to avoid.</p>
-
 <p>See <a href="https://docs.raku.org/language/phasers">docs.raku.org/language/phasers</a> for more information about Phasers.</p>
-
 <p>If you get an error message when using a label, even if you have avoided reserved packagae Names and Phasers, try changing the name by e.g. appending a digit to it. Or use lower case letters.</p>
-
 <h3 id="numbers">Numbers</h3>
-
 <p>We can specify numbers in any base (from 2 to 16) like this;</p>
-
 <pre><code>my $b = :2&lt;11110000&gt;;  # -&gt; 240   ## A binary (base 2) number
 my $a = :16&lt;FF&gt;;       # -&gt; 255   ## A hexadecimal (base 16) number
-</code></pre>
-
-<p>Note that we can use parens and quotes if we want to make it look like a procedure call:</p>
-
+</code></pre><p>Note that we can use parens and quotes if we want to make it look like a procedure call:</p>
 <pre><code>my $b = :2(&quot;11110000&quot;);  # -&gt; 240   ## A binary (base 2) number
-</code></pre>
-
-<h3 id="pair">Pair</h3>
-
+</code></pre><h3 id="pair">Pair</h3>
 <p>A pair is a single key and value. They are the building blocks of Hashes and named parameters (which we&rsquo;ll get back to).</p>
-
 <p>We can construct a Pair in several ways, using the «fat arrow» (<code>=&gt;</code>):</p>
-
 <pre><code>Pair('key' =&gt; 'value')
 ('key' =&gt; 'value')
 'key' =&gt; 'value'
 key =&gt; 'value'    # As long as the key doesn't contain spaces.
-</code></pre>
-
-<p>We don&rsquo;t <em>have to</em> use the «fat arrow»:</p>
-
+</code></pre><p>We don&rsquo;t <em>have to</em> use the «fat arrow»:</p>
 <pre><code>Pair.new('key', 'value')
-</code></pre>
-
-<p>We can use the special colon syntax, as long as the key doesn&rsquo;t contain spaces:</p>
-
+</code></pre><p>We can use the special colon syntax, as long as the key doesn&rsquo;t contain spaces:</p>
 <pre><code>:key&lt;value&gt;  # The same as «key =&gt; 'value'»
-</code></pre>
-
-<p>We can use parens as well:</p>
-
+</code></pre><p>We can use parens as well:</p>
 <pre><code>:foo(127) # The same as «foo =&gt; 127»
-</code></pre>
-
-<p>If the key uses letters, and the value digits only, we can do this:</p>
-
+</code></pre><p>If the key uses letters, and the value digits only, we can do this:</p>
 <pre><code>:127foo  # The same as  «foo =&gt; 127»
-</code></pre>
-
-<p>If the value is a Boolean, we can shorten it even further:</p>
-
+</code></pre><p>If the value is a Boolean, we can shorten it even further:</p>
 <pre><code>:key    # The same as «key =&gt; True»
 :!key   # The same as «key =&gt; False»
-</code></pre>
-
-<h3 id="variables">Variables</h3>
-
+</code></pre><h3 id="variables">Variables</h3>
 <p>There are three possible locations where we can add a colon to a variable (</p>
-
 <pre><code>$variable
-</code></pre>
-
-<p>):</p>
-
+</code></pre><p>):</p>
 <ul>
 <li>Before the sigil (<code>:$variable</code>)</li>
 <li>Between the sigil and variable name (<code>$:variable</code>)</li>
 <li>After the variable name (<code>$variable:</code>)</li>
 </ul>
-
 <p>And they are all legal.</p>
-
 <h4 id="variable">:$variable</h4>
-
 <p>This is a</p>
-
 <p>named variable</p>
-
 <p>used in a procedure call (or a Pair constructor, as described in the end of this section):</p>
-
 <pre><code>sub foo (:$one, :$two)
 {
   return $one + 2 * $two;
@@ -510,12 +406,8 @@ key =&gt; 'value'    # As long as the key doesn't contain spaces.
 
 say foo(one =&gt; 12, two =&gt;  3);  # -&gt; 18
 say foo(two =&gt;  3, one =&gt; 12);  # -&gt; 18
-</code></pre>
-
-<p>The order doesn&rsquo;t matter.</p>
-
+</code></pre><p>The order doesn&rsquo;t matter.</p>
 <p>If we give the variable the <em>same name</em> as the argument, we can use a short form (shown on the last line):</p>
-
 <pre><code>sub foo (:$one, :$two)
 {
   return $one + 2 * $two;
@@ -526,12 +418,8 @@ my $two = 3;
 
 say foo(one =&gt; $one, two =&gt;  $two);  # -&gt; 18
 say foo(:$one, :$two);               # -&gt; 18
-</code></pre>
-
-<p>Named variables are useful when we have several parameters, as it is possible to mix up the order with normal <em>positional parameters</em>. It is also handy when we have optional parameters, as we can specify just the one(s) we want to use.</p>
-
+</code></pre><p>Named variables are useful when we have several parameters, as it is possible to mix up the order with normal <em>positional parameters</em>. It is also handy when we have optional parameters, as we can specify just the one(s) we want to use.</p>
 <p>If the value of the named argument is <code>True</code>, we can drop the explicit value:</p>
-
 <pre><code>sub debug (:$debug)
 {
   say &quot;Debug&quot; if $debug;
@@ -539,80 +427,41 @@ say foo(:$one, :$two);               # -&gt; 18
 }
 
 my $x = foo(:debug);
-</code></pre>
-
-<p>And we can negate it (with an exclamation mark between the colon and the name), to pass <code>False</code>:</p>
-
+</code></pre><p>And we can negate it (with an exclamation mark between the colon and the name), to pass <code>False</code>:</p>
 <pre><code>my $x = foo(:!debug);
-</code></pre>
-
-<p>Named variables are optional by default, but we can make them mandatory by adding a trailing <code>!</code> (exclamation mark) in the procedure head.</p>
-
+</code></pre><p>Named variables are optional by default, but we can make them mandatory by adding a trailing <code>!</code> (exclamation mark) in the procedure head.</p>
 <p>We can turn any variable into a <code>Pair</code>, with the variable name as the key:</p>
-
 <pre><code>my $age = 14;
 my $p = :$age; 
 say $p; # -&gt; age =&gt; 10
-</code></pre>
-
-<h4 id="variable-1">$:variable</h4>
-
+</code></pre><h4 id="variable-1">$:variable</h4>
 <p>This is a</p>
-
 <p>named placeholder variable</p>
-
 <p>used in procedures where we skipped declaring the arguments in the procedure head:</p>
-
 <pre><code>sub foo
 {
   return $:one + 2 * $:two;
 }
 
 say foo(one =&gt; 12, two =&gt; 3);  # -&gt; 18
-</code></pre>
-
-<p>Note that the names must match - and it will only work if the procedure is specified without a signature (argument list)!</p>
-
+</code></pre><p>Note that the names must match - and it will only work if the procedure is specified without a signature (argument list)!</p>
 <p>This is the one where the colon is a Twigil.</p>
-
-<p>(We can also use <em>placeholder variables</em> for positional arguments, with the <code>^</code>Twigil. See <a href="https://docs.raku.org/language/variables#The_^_twigil">docs.raku.org/language/variables#The_^_twigil</a> for more information.)</p>
-
+<p>(We can also use <em>placeholder variables</em> for positional arguments, with the <code>^</code>Twigil. See <a href="https://docs.raku.org/language/variables#The_%5E_twigil">docs.raku.org/language/variables#The_^_twigil</a> for more information.)</p>
 <h4 id="variable-2">$variable:</h4>
-
 <p>If we have an object</p>
-
 <pre><code>$foo
-</code></pre>
-
-<p>and want to call a method</p>
-
+</code></pre><p>and want to call a method</p>
 <pre><code>bar
-</code></pre>
-
-<p>on it, the usual way is this:</p>
-
+</code></pre><p>on it, the usual way is this:</p>
 <pre><code>$foo.bar;
-</code></pre>
-
-<p>But we can also use a more procedure like syntax, like this:</p>
-
+</code></pre><p>But we can also use a more procedure like syntax, like this:</p>
 <pre><code>bar($foo:);
-</code></pre>
-
-<h3 id="method-call-with-arguments">Method Call with arguments</h3>
-
+</code></pre><h3 id="method-call-with-arguments">Method Call with arguments</h3>
 <p>If we have an object</p>
-
 <pre><code>$foo
-</code></pre>
-
-<p>and want to call a method</p>
-
+</code></pre><p>and want to call a method</p>
 <pre><code>bar
-</code></pre>
-
-<p>on it with some argumenets, the usual way is this:</p>
-
+</code></pre><p>on it with some argumenets, the usual way is this:</p>
 <pre><code>class foo
 {
   ...;
@@ -623,28 +472,15 @@ say foo(one =&gt; 12, two =&gt; 3);  # -&gt; 18
 my $foo1 = foo.new;
 
 $foo1.bar(1, 2);
-</code></pre>
-
-<p>It isn&rsquo;t possible to skip the parens (as we can with a procedure call), but we can use the special <em>colon syntax</em> here as well:</p>
-
+</code></pre><p>It isn&rsquo;t possible to skip the parens (as we can with a procedure call), but we can use the special <em>colon syntax</em> here as well:</p>
 <pre><code>$foo1.bar: 1, 2;
-</code></pre>
-
-<p>The procedure like syntax works here as well, with parens:</p>
-
+</code></pre><p>The procedure like syntax works here as well, with parens:</p>
 <pre><code>bar($foo1: 1, 2);
-</code></pre>
-
-<h3 id="binding">:= (Binding)</h3>
-
+</code></pre><h3 id="-binding">:= (Binding)</h3>
 <p>A normal variable is a</p>
-
 <p>named container</p>
-
 <p>(also called a bucket) that can contain one ore more values, depending on the type.</p>
-
 <p>Binding skips the container, and works directly with the value. When used on a value, this gives a constant:</p>
-
 <pre><code>my $a := 10;
 
 say $a;  # -&gt; 10;
@@ -652,55 +488,32 @@ say $a;  # -&gt; 10;
 $a++;    # Fails.
 Cannot resolve caller postfix:&lt;++&gt;(Int:D); the following candidates
 match the type but require mutable argument ...
-</code></pre>
-
-<p>If we bind to another variable, we get an alias:</p>
-
+</code></pre><p>If we bind to another variable, we get an alias:</p>
 <pre><code>my $a = 10;
 
 my $b := $a; say $b;  # -&gt; 10;
 $a++; say $b;         # -&gt; 11;
 $b++; say $a;         # -&gt; 12;
-</code></pre>
-
-<p>Incrementing <code>$b</code> works, because it has been binded to the container we got from <code>$a</code>.</p>
-
-<h3 id="container-identity">=:= (Container Identity)</h3>
-
+</code></pre><p>Incrementing <code>$b</code> works, because it has been binded to the container we got from <code>$a</code>.</p>
+<h3 id="-container-identity">=:= (Container Identity)</h3>
 <p>This operator returns</p>
-
 <pre><code>True
-</code></pre>
-
-<p>if both argumentes are bound to</p>
-
+</code></pre><p>if both argumentes are bound to</p>
 <p>the same</p>
-
 <p>container:</p>
-
 <pre><code>my $a = 10;
 
 my $b  = 10; say $a =:= $b;  # -&gt; False
 my $c := $a; say $a =:= $c;  # -&gt; True
-</code></pre>
-
-<p>It works even if we don&rsquo;t have any containers (as they are bound to <em>the same value</em>):</p>
-
+</code></pre><p>It works even if we don&rsquo;t have any containers (as they are bound to <em>the same value</em>):</p>
 <pre><code>my $a := 10; my $b := 10;
 
 say $a =:= $b;  # -&gt; True
-</code></pre>
-
-<h3 id="class">::?CLASS</h3>
-
+</code></pre><h3 id="class">::?CLASS</h3>
 <p>This</p>
-
 <p>Compile Time variable</p>
-
 <p>tells us the name of the class we are in:</p>
-
 <p>File: class-doublecolon</p>
-
 <pre><code>class FOO
 {
   method bar { return ::?CLASS; }
@@ -709,47 +522,27 @@ say $a =:= $b;  # -&gt; True
 my FOO $foo = FOO.new;
 
 say $foo.bar;  # -&gt; (FOO)
-</code></pre>
-
-<p>It fails if we are not in a class:</p>
-
+</code></pre><p>It fails if we are not in a class:</p>
 <pre><code>say ::?CLASS;
 ===SORRY!=== Error while compiling:
 No such symbol '::?CLASS'
-</code></pre>
-
-<h3 id="variable-3">::($variable)</h3>
-
+</code></pre><h3 id="variable-3">::($variable)</h3>
 <p>Use this syntax to turn a string into a variable name at runtime:</p>
-
 <p>File: variable-doublecolon</p>
-
 <pre><code>my ($a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10) = &lt;12 9 8 27 75 5 18 21 36 99&gt;;
 
 say &quot;$_: &quot;, ::{ '$a' ~ $_ } for 1 .. 10;
-</code></pre>
-
-<p>The single quotes are essential, as we definitely do not want the string to be interpolated (as <code>$a</code> doesn&rsquo;t exist).</p>
-
+</code></pre><p>The single quotes are essential, as we definitely do not want the string to be interpolated (as <code>$a</code> doesn&rsquo;t exist).</p>
 <p>Use <code>defined</code> if you want to check that the variable exists (is defined), as a «normal» lookup doesn&rsquo;t fail:</p>
-
 <pre><code>say ::{'$a11'};          # -&gt; Nil
 say ::{'$a11'}.defined;  # -&gt; False
 say ::{'$a10'}.defined;  # -&gt; True
-</code></pre>
-
-<p>We can use it to look up variables in other scopes as well. See<a href="https://docs.raku.org/language/packages#Looking_up_names">docs.raku.org/language/packages#Looking_up_names</a> for more information about this topic.</p>
-
-<h3 id="read-only-binding">::= (Read Only Binding)</h3>
-
+</code></pre><p>We can use it to look up variables in other scopes as well. See<a href="https://docs.raku.org/language/packages#Looking_up_names">docs.raku.org/language/packages#Looking_up_names</a> for more information about this topic.</p>
+<h3 id="-read-only-binding">::= (Read Only Binding)</h3>
 <p>This hasn&rsquo;t been implemented yet.</p>
-
 <h3 id="commercial-break">Commercial Break</h3>
-
 <p>This article was written as part of the work on my coming course «</p>
-
 <p>Beginning Raku</p>
-
 <p>».</p>
 
 
@@ -842,7 +635,7 @@ say ::{'$a10'}.defined;  # -&gt; True
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

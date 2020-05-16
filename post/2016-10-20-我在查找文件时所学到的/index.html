@@ -30,7 +30,7 @@ Concurrent::File::Find 现在已经在生态系统中了。我在这里分享几
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-20-%E6%88%91%E5%9C%A8%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6%E6%97%B6%E6%89%80%E5%AD%A6%E5%88%B0%E7%9A%84/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -238,14 +238,10 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p><a href="https://gfldex.wordpress.com/2016/10/02/things-i-found-out-while-finding/">Things I found out while finding</a></p>
-
 <p><a href="https://github.com/gfldex/raku-concurrent-file-find">Concurrent::File::Find</a> 现在已经在<a href="https://github.com/raku/ecosystem">生态系统</a>中了。我在这里分享几点我学到的东西。</p>
-
 <p>在子签名(sub-signature)上使用 where 从句将不会在子签名中提供变量。 如果 where 从句必须对所有参数进行操作，为了检查排他性或其他相互依赖性，那么它必须应用于最后一个参数上。 这个限制设计时就是这样的，所以我告诉了<a href="https://github.com/raku/doc/commit/1f30c682a8486dde594bef6dc05af9ab97f78fa6">文档</a>。 where 从句对捕获没有效果，但原意<a href="https://rt.perl.org/Public/Bug/Display.html?id=129430">不是</a>那样设计的并且第二天 <a href="http://jnthn.net/">jnthn</a> 就修复了它。 我知道抱怨会得到你的关注，但我没想到它是这么快。</p>
-
 <p>我还发现一个叫 <code>.close</code> 的方法, 它几乎总是需要一个 <code>LEAVE</code>。 让我们看一些代码。</p>
-
-<pre><code class="language-raku">sub find-simple ( IO(Str) $dir,
+<pre><code class="language-raku" data-lang="raku">sub find-simple ( IO(Str) $dir,
     :$keep-going = True,
     :$no-thread = False
 ) is export {
@@ -272,34 +268,21 @@ if (!doNotTrack) {
 
     return $channel.list but role :: { method channel { $channel } };
 }
-</code></pre>
-
-<p>这实际上接收由 <code>dir</code> 返回的列表(List)，并通过<a href="https://docs.raku.org/type/Channel">Channel</a>通道返回文件和目录的 <code>IO::Path</code>。 对于任何目录，它会递归到 for-block 中（这就是 <code>».&amp;?BLOCK</code> 的意思）。 因为那些<a href="https://docs.raku.org/type/IO$COLON$COLONPath#File_test_operators">文件测试</a>中的任何一个都可能触发异常，所以我们可能会离开那个 <code>start-block</code>。 如果有一个 Promise，那将在 return 语句背后给我们发回，那里什么也没有。 返回语句实际上在主线程中，并且一些消费者(consumer)将阻塞返回的 <code>.list</code>。</p>
-
-<pre><code class="language-raku">.say for find-simple('/home/you');
-</code></pre>
-
-<p>对于那个通道(Channel)的消费者(consumer)来说，他并不能清楚地知道他可能会被永远地阻塞。 因此如果出现错误, <code>LEAVE</code> 语句能确保通道(Channel)被关闭。</p>
-
+</code></pre><p>这实际上接收由 <code>dir</code> 返回的列表(List)，并通过<a href="https://docs.raku.org/type/Channel">Channel</a>通道返回文件和目录的 <code>IO::Path</code>。 对于任何目录，它会递归到 for-block 中（这就是 <code>».&amp;?BLOCK</code> 的意思）。 因为那些<a href="https://docs.raku.org/type/IO$COLON$COLONPath#File_test_operators">文件测试</a>中的任何一个都可能触发异常，所以我们可能会离开那个 <code>start-block</code>。 如果有一个 Promise，那将在 return 语句背后给我们发回，那里什么也没有。 返回语句实际上在主线程中，并且一些消费者(consumer)将阻塞返回的 <code>.list</code>。</p>
+<pre><code class="language-raku" data-lang="raku">.say for find-simple('/home/you');
+</code></pre><p>对于那个通道(Channel)的消费者(consumer)来说，他并不能清楚地知道他可能会被永远地阻塞。 因此如果出现错误, <code>LEAVE</code> 语句能确保通道(Channel)被关闭。</p>
 <p>将角色混合到 <code>.listified</code> 的通道(Channel)中提供了一个侧通道(side channel)，以把通道(Channel)交给消费者(consumer)，因此可以在该端关闭。</p>
-
-<pre><code class="language-raku">my @l := find-simple(%*ENV&lt;HOME&gt;, :keep-going); # binding to avoid eagerness
+<pre><code class="language-raku" data-lang="raku">my @l := find-simple(%*ENV&lt;HOME&gt;, :keep-going); # binding to avoid eagerness
 
 for @l {
     @l.channel.close if $++ &gt; 5000; # hard-close the channel after 5000 found files
     .say if $++ %% 100 # print every 100th file
 }
-</code></pre>
-
-<p>绑定是必需的，否则那个数组会吃掉整个通道(Channel)，而如果在数组那个位置放一个标量, 我们必须展平它。 请注意匿名状态变量以最不可能的方式计数是多么好。 这是能一起玩的大量 Raku 特性的情况之一。 Sigils 允许指示一个变量，即使它没有名字。   通过 <code>postfix:&lt;++&gt;</code> 在 Any 上进行 Autovivication  会得到一个0，它会增加到1. 因为我们没有一个溢出到本地作用域（第二个 <code>$++</code> 引入一个单独的变量）的名字， 所以我们不需要声明符。 我从来不喜欢短变量，因为他们在移动代码很容易被漏掉。 然后编译器会抱怨缺少声明，或者更糟的是，变量的初始化值是错误的。</p>
-
+</code></pre><p>绑定是必需的，否则那个数组会吃掉整个通道(Channel)，而如果在数组那个位置放一个标量, 我们必须展平它。 请注意匿名状态变量以最不可能的方式计数是多么好。 这是能一起玩的大量 Raku 特性的情况之一。 Sigils 允许指示一个变量，即使它没有名字。   通过 <code>postfix:&lt;++&gt;</code> 在 Any 上进行 Autovivication  会得到一个0，它会增加到1. 因为我们没有一个溢出到本地作用域（第二个 <code>$++</code> 引入一个单独的变量）的名字， 所以我们不需要声明符。 我从来不喜欢短变量，因为他们在移动代码很容易被漏掉。 然后编译器会抱怨缺少声明，或者更糟的是，变量的初始化值是错误的。</p>
 <p>但有问题。 在测试一个干净的虚拟机（Debian Jessie）的时候，我发现 symlink-loops（/sys / 有很多这种东西）会导致 Promised 的线程消耗 100% 的 CPU，而主线程什么都不做。 看起来好像是线程有毛病。 也许结合大量的异常。 我不知道是否会有一个错误。 没有人在合成测试中测试异常垃圾邮件。</p>
-
 <p>这就是 <code>$no-thread</code> 要做的 仅仅把 <code>&amp;start</code> 声明为一个几乎空的点，它将禁用任何线程，并把通道(Channel)变成一个荣耀的数组。</p>
-
 <p>无论如何，写和使用并发代码真的很容易，只要我们通过一个通道(Channel)将 <code>gather/take</code> 转换为 <code>start/send</code> 来传输一个列表。</p>
-
-<p><strong>更新</strong>：我只是设法打<strong><a href="https://gist.github.com/f76cb5e18309eaf8fdf9bf8b458c812e">高尔夫</a></strong>并<strong><a href="https://rt.perl.org/rt3//Public/Bug/Display.html?id=129787">报告</a></strong>错误。 在你读到这儿的时候，它可能已经被修复了。</p>
+<p><strong>更新</strong>：我只是设法打**<a href="https://gist.github.com/f76cb5e18309eaf8fdf9bf8b458c812e">高尔夫</a>**并**<a href="https://rt.perl.org/rt3//Public/Bug/Display.html?id=129787">报告</a>**错误。 在你读到这儿的时候，它可能已经被修复了。</p>
 
 
         
@@ -391,7 +374,7 @@ for @l {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

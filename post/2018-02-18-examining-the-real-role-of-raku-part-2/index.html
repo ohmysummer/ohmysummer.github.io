@@ -10,13 +10,13 @@
   <meta name="twitter:title" content="Examining the Real role of Raku, part 2" />
   <meta name="description" content="今天，我们继续对几天前开始的 Real 角色进行初步探索。
 与其方法一起，角色包含许多子例程（放置在角色之外），它们使用 Real 类型的对象定义中缀运算符。名单不长，所以让我把它复制在这里：
-multi sub infix:&lt;&#43;&gt;(Real \a, Real \b) { a.Bridge &#43; b.Bridge } multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge } multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge } multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge } multi sub infix:&lt;%&gt;(Real \a, Real \b) { a.Bridge % b.Bridge } multi sub infix:&lt;**&gt;(Real \a, Real \b) { a.Bridge ** b.">
+multi sub infix:&lt;&#43;&gt;(Real \a, Real \b) { a.Bridge &#43; b.Bridge }multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge }multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge }multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge }multi sub infix:&lt;%&gt;(Real \a, Real \b) { a.Bridge % b.Bridge }multi sub infix:&lt;**&gt;(Real \a, Real \b) { a.Bridge ** b.">
   <meta property="og:description" content="今天，我们继续对几天前开始的 Real 角色进行初步探索。
 与其方法一起，角色包含许多子例程（放置在角色之外），它们使用 Real 类型的对象定义中缀运算符。名单不长，所以让我把它复制在这里：
-multi sub infix:&lt;&#43;&gt;(Real \a, Real \b) { a.Bridge &#43; b.Bridge } multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge } multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge } multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge } multi sub infix:&lt;%&gt;(Real \a, Real \b) { a.Bridge % b.Bridge } multi sub infix:&lt;**&gt;(Real \a, Real \b) { a.Bridge ** b.">
+multi sub infix:&lt;&#43;&gt;(Real \a, Real \b) { a.Bridge &#43; b.Bridge }multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge }multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge }multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge }multi sub infix:&lt;%&gt;(Real \a, Real \b) { a.Bridge % b.Bridge }multi sub infix:&lt;**&gt;(Real \a, Real \b) { a.Bridge ** b.">
   <meta name="twitter:description" content="今天，我们继续对几天前开始的 Real 角色进行初步探索。
 与其方法一起，角色包含许多子例程（放置在角色之外），它们使用 Real 类型的对象定义中缀运算符。名单不长，所以让我把它复制在这里：
-multi sub infix:&lt;&#43;&gt;(Real \a, Real \b) { a.Bridge &#43; b.Bridge } multi sub infix:&lt;-&gt;(Real \a, …">
+multi sub infix:&lt;&#43;&gt;(Real \a, Real \b) { a.Bridge &#43; b.Bridge }multi sub infix:&lt;-&gt;(Real \a, …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -26,7 +26,7 @@ multi sub infix:&lt;&#43;&gt;(Real \a, Real \b) { a.Bridge &#43; b.Bridge } mult
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-02-18-examining-the-real-role-of-raku-part-2/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -234,10 +234,8 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>今天，我们继续对<a href="https://raku.online/2018/02/15/57-examining-the-real-role-of-perl-6-part-1/">几天前</a>开始的 <code>Real</code> 角色进行初步探索。</p>
-
 <p>与其方法一起，角色包含许多子例程（放置在角色之外），它们使用 <code>Real</code> 类型的对象定义中缀运算符。名单不长，所以让我把它复制在这里：</p>
-
-<pre><code class="language-raku">multi sub infix:&lt;+&gt;(Real \a, Real \b) { a.Bridge + b.Bridge }
+<pre><code class="language-raku" data-lang="raku">multi sub infix:&lt;+&gt;(Real \a, Real \b) { a.Bridge + b.Bridge }
 multi sub infix:&lt;-&gt;(Real \a, Real \b) { a.Bridge - b.Bridge }
 multi sub infix:&lt;*&gt;(Real \a, Real \b) { a.Bridge * b.Bridge }
 multi sub infix:&lt;/&gt;(Real \a, Real \b) { a.Bridge / b.Bridge }
@@ -256,50 +254,31 @@ proto sub infix:&lt;mod&gt;($, $) is pure {*}
 multi sub infix:&lt;mod&gt;(Real $a, Real $b) {
     $a - ($a div $b) * $b;
 }
-</code></pre>
-
-<p>如您所见，大多数操作符都使用 <a href="https://raku.online/2018/02/11/53-going-over-the-bridge-part-1/">Bridge</a> 方法，该方法允许在派生类中使用相同的代码来重新定义该 bridge。</p>
-
+</code></pre><p>如您所见，大多数操作符都使用 <a href="https://raku.online/2018/02/11/53-going-over-the-bridge-part-1/">Bridge</a> 方法，该方法允许在派生类中使用相同的代码来重新定义该 bridge。</p>
 <p>还有一个用于否定的前缀操作：</p>
-
-<pre><code class="language-raku">multi sub prefix:&lt;-&gt;(Real:D \a) { -a.Bridge }
-</code></pre>
-
-<p><code>cis</code> 函数作为类型转换器返回一个复数：</p>
-
-<pre><code class="language-raku">roto sub cis($) {*}
+<pre><code class="language-raku" data-lang="raku">multi sub prefix:&lt;-&gt;(Real:D \a) { -a.Bridge }
+</code></pre><p><code>cis</code> 函数作为类型转换器返回一个复数：</p>
+<pre><code class="language-raku" data-lang="raku">roto sub cis($) {*}
 multi sub cis(Real $a) { $a.cis }
-</code></pre>
-
-<p>试试看：</p>
-
-<pre><code class="language-raku">&gt; cis(pi)
+</code></pre><p>试试看：</p>
+<pre><code class="language-raku" data-lang="raku">&gt; cis(pi)
 -1+1.22464679914735e-16i
 
 &gt; cis(pi).WHAT
 (Complex)
-</code></pre>
-
-<p>有点出色，有一个 <code>atan2</code> 函数：</p>
-
-<pre><code class="language-raku">proto sub atan2($, $?) {*}
+</code></pre><p>有点出色，有一个 <code>atan2</code> 函数：</p>
+<pre><code class="language-raku" data-lang="raku">proto sub atan2($, $?) {*}
 multi sub atan2(Real \a, Real \b = 1e0) { a.Bridge.atan2(b.Bridge) }
 # should really be (Cool, Cool), and then (Cool, Real) and (Real, Cool)
 # candidates, but since Int both conforms to Cool and Real, we'd get lots
 # of ambiguous dispatches. So just go with (Any, Any) for now.
 multi sub atan2( \a, \b = 1e0) { a.Numeric.atan2(b.Numeric) }
-</code></pre>
-
-<p>这有点奇怪，因为它不遵循其他三角函数的实现方式。 <code>atan2</code> 例程也被定义为一种方法：</p>
-
-<pre><code class="language-raku">proto method atan2(|) {*}
+</code></pre><p>这有点奇怪，因为它不遵循其他三角函数的实现方式。 <code>atan2</code> 例程也被定义为一种方法：</p>
+<pre><code class="language-raku" data-lang="raku">proto method atan2(|) {*}
 multi method atan2(Real $x = 1e0) { self.Bridge.atan2($x.Bridge) }
 multi method atan2(Cool $x = 1e0) { self.Bridge.atan2($x.Numeric.Bridge) }
-</code></pre>
-
-<p>所有其他的三角函数只作为 <code>Real</code> 方法存在。其余部分在 <code>src/core/Numeric.pm</code> 文件中定义为独立子例程，例如：</p>
-
-<pre><code class="language-raku">proto sub cos($) is pure {*}
+</code></pre><p>所有其他的三角函数只作为 <code>Real</code> 方法存在。其余部分在 <code>src/core/Numeric.pm</code> 文件中定义为独立子例程，例如：</p>
+<pre><code class="language-raku" data-lang="raku">proto sub cos($) is pure {*}
 multi sub cos(Numeric \x) { x.cos }
 multi sub cos(Cool \x) { x.Numeric.cos }
 
@@ -308,10 +287,7 @@ multi sub cos(Cool \x) { x.Numeric.cos }
 proto sub atan($) is pure {*}
 multi sub atan(Numeric \x) { x.atan }
 multi sub atan(Cool \x) { x.Numeric.atan }
-</code></pre>
-
-<p>还有几个例程，但让我们跳过它们，因为它们非常简单明了。</p>
-
+</code></pre><p>还有几个例程，但让我们跳过它们，因为它们非常简单明了。</p>
 <p>在接下来的部分中，我们将探讨 <code>Real</code> 角色的两个方法：<code>polymod</code> 和 <code>base</code>。敬请关注！</p>
 
 
@@ -404,7 +380,7 @@ multi sub atan(Cool \x) { x.Numeric.atan }
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

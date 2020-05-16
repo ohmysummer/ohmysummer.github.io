@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-05-06-%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,13 +231,9 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>Raku 有一个丰富的内置语法来定义和使用类。</p>
-
+        <p>Raku 有一个丰富的内置语法来定义和使用类。</p>
 <p>默认构造函数允许为创建的对象设置属性：</p>
-
-<pre><code class="language-raku">class Point {
+<pre><code class="language-raku" data-lang="raku">class Point {
     has Int $.x;
     has Int $.y;
 }
@@ -255,11 +251,8 @@ class Rectangle {
 my $r = Rectangle.new(lower =&gt; Point.new(x =&gt; 0, y =&gt; 0), upper =&gt; Point.new(x =&gt; 10, y =&gt; 10));
  
 say $r.area(); # OUTPUT: «100␤» 
-</code></pre>
-
-<p>您也可以提供自己的构建和构建实现。下面更详细的例子展示了 Raku 中依赖处理器的外观。它展示了自定义构造函数，私有属性和公共属性，方法以及签名的各个方面。它代码不多，但结果是有趣和有用的。</p>
-
-<pre><code class="language-raku">class Task {
+</code></pre><p>您也可以提供自己的构建和构建实现。下面更详细的例子展示了 Raku 中依赖处理器的外观。它展示了自定义构造函数，私有属性和公共属性，方法以及签名的各个方面。它代码不多，但结果是有趣和有用的。</p>
+<pre><code class="language-raku" data-lang="raku">class Task {
     has      &amp;!callback;
     has Task @!dependencies;
     has Bool $.done;
@@ -297,86 +290,46 @@ my $eat =
     );
  
 $eat.perform();
-</code></pre>
-
-<h2 id="从类开始">从类开始</h2>
-
+</code></pre><h2 id="从类开始">从类开始</h2>
 <p>和许多其他语言一样，Raku 使用 <code>class</code> 关键字来定义一个类。接下来的块可能包含任意代码，就像其他块一样，但类通常包含状态和行为声明。示例代码包括通过 <code>has</code> 关键字引入的属性（状态）以及通过 <code>method</code> 关键字引入的行为。</p>
-
-<p>声明一个类会创建一个新的*类型对象*，默认情况下，它将被安装到当前包中（就像使用 <code>our</code> 作用域声明的变量一样）。此类型对象是类的“空实例”。例如，<code>Int</code> 和 <code>Str</code> 等类型引用 Raku 内置类之一的类型对象。上面的示例使用类名称 <code>Task</code>，以便其他代码稍后可以引用它，例如通过调用 <code>new</code> 方法来创建类实例。</p>
-
+<p>声明一个类会创建一个新的<em>类型对象</em>，默认情况下，它将被安装到当前包中（就像使用 <code>our</code> 作用域声明的变量一样）。此类型对象是类的“空实例”。例如，<code>Int</code> 和 <code>Str</code> 等类型引用 Raku 内置类之一的类型对象。上面的示例使用类名称 <code>Task</code>，以便其他代码稍后可以引用它，例如通过调用 <code>new</code> 方法来创建类实例。</p>
 <p>您可以使用 <code>.DEFINITE</code> 方法来确定你拥有的是实例还是类型对象：</p>
-
-<pre><code class="language-raku">say Int.DEFINITE; # OUTPUT: «False␤» (type object) 
+<pre><code class="language-raku" data-lang="raku">say Int.DEFINITE; # OUTPUT: «False␤» (type object) 
 say 426.DEFINITE; # OUTPUT: «True␤»  (instance) 
  
 class Foo {};
 say Foo.DEFINITE;     # OUTPUT: «False␤» (type object) 
 say Foo.new.DEFINITE; # OUTPUT: «True␤»  (instance) 
-</code></pre>
-
-<p>你还可以使用类型表情符号来仅接受实例或类型对象：</p>
-
-<pre><code class="language-raku">multi foo (Int:U) { &quot;It's a type object!&quot; }
+</code></pre><p>你还可以使用类型表情符号来仅接受实例或类型对象：</p>
+<pre><code class="language-raku" data-lang="raku">multi foo (Int:U) { &quot;It's a type object!&quot; }
 multi foo (Int:D) { &quot;It's an instance!&quot;   }
 say foo Int; # OUTPUT: «It's a type object!␤» 
 say foo 42;  # OUTPUT: «It's an instance!␤» 
-</code></pre>
-
-<h2 id="状态">状态</h2>
-
+</code></pre><h2 id="状态">状态</h2>
 <p>类块中的前三行声明所有属性（在其他语言中称为字段或实例存储）。就像 <code>my</code> 变量不能从其声明的作用域之外访问一样，属性不能在类的外面访问。这种封装是面向对象设计的关键原则之一。</p>
-
 <p>第一个声明指定回调的实例存储 - 为执行对象表示的任务而调用的一些代码：</p>
-
-<pre><code class="language-raku">has &amp;!callback;
-</code></pre>
-
-<p><code>&amp;</code> sigil 表示该属性代表可调用的内容。 <code>!</code> 字符是一个 *twigil*，或 *secondary sigil*。twigil 组成变量名称的一部分。在这种情况下，<code>!</code> twigil 强调，这个属性对类是私有的。</p>
-
+<pre><code class="language-raku" data-lang="raku">has &amp;!callback;
+</code></pre><p><code>&amp;</code> sigil 表示该属性代表可调用的内容。 <code>!</code> 字符是一个 <em>twigil</em>，或 <em>secondary sigil</em>。twigil 组成变量名称的一部分。在这种情况下，<code>!</code> twigil 强调，这个属性对类是私有的。</p>
 <p>第二个声明也使用私有 twigil：</p>
-
-<pre><code class="language-raku">has Task @!dependencies;
-</code></pre>
-
-<p>然而，这个属性表示一个项目的数组，所以它需要 <code>@</code> sigil。这些项目分别指定一个任务，在完成之前必须先完成这些任务。而且，这个属性的类型声明表明该数组只能包含 <code>Task</code> 类的实例（或者它的某个子类）。</p>
-
+<pre><code class="language-raku" data-lang="raku">has Task @!dependencies;
+</code></pre><p>然而，这个属性表示一个项目的数组，所以它需要 <code>@</code> sigil。这些项目分别指定一个任务，在完成之前必须先完成这些任务。而且，这个属性的类型声明表明该数组只能包含 <code>Task</code> 类的实例（或者它的某个子类）。</p>
 <p>第三个属性表示任务完成的状态：</p>
-
-<pre><code class="language-raku">has Bool $.done;
-</code></pre>
-
-<p>这个标量属性（带有 <code>$</code> sigil）有一个 <code>Bool</code> 类型。而不是 <code>!</code> twigil，使用 <code>.</code> twigil。尽管 Raku 确实对属性进行了封装，但它也可以避免编写访问器方法。替换！与。都声明属性 $!done 和一个名为 done 的访问器方法。就好像你写了：</p>
-
-<pre><code class="language-raku">has Bool $!done;
+<pre><code class="language-raku" data-lang="raku">has Bool $.done;
+</code></pre><p>这个标量属性（带有 <code>$</code> sigil）有一个 <code>Bool</code> 类型。而不是 <code>!</code> twigil，使用 <code>.</code> twigil。尽管 Raku 确实对属性进行了封装，但它也可以避免编写访问器方法。替换！与。都声明属性 $!done 和一个名为 done 的访问器方法。就好像你写了：</p>
+<pre><code class="language-raku" data-lang="raku">has Bool $!done;
 method done() { return $!done }
-</code></pre>
-
-<p>请注意，这不像某些语言允许的那样声明公共属性;你真的得到了一个私有属性和一个方法，而无需手动编写该方法。你可以自由地编写自己的访问器方法，如果你将来需要做一些比返回值更复杂的事情。</p>
-
+</code></pre><p>请注意，这不像某些语言允许的那样声明公共属性;你真的得到了一个私有属性和一个方法，而无需手动编写该方法。你可以自由地编写自己的访问器方法，如果你将来需要做一些比返回值更复杂的事情。</p>
 <p>请注意，使用。 twigil创建了一个方法，将提供对该属性的只读访问权限。如果该对象的用户应该能够重置任务的完成状态（也许再次执行），则可以更改属性声明：</p>
-
-<pre><code class="language-raku">has Bool $.done is rw;
-</code></pre>
-
-<p>rw特征会导致生成的访问器方法返回一些外部代码可以修改的内容以更改该属性的值。</p>
-
+<pre><code class="language-raku" data-lang="raku">has Bool $.done is rw;
+</code></pre><p>rw特征会导致生成的访问器方法返回一些外部代码可以修改的内容以更改该属性的值。</p>
 <p>您还可以为属性提供默认值（对于有和没有访问者的情况，这些默认值同样适用）：</p>
-
-<pre><code class="language-raku">has Bool $.done = False;
-</code></pre>
-
-<p>分配是在对象构建时进行的。此时评估右侧，甚至可以引用早期的属性：</p>
-
-<pre><code class="language-raku">has Task @!dependencies;
+<pre><code class="language-raku" data-lang="raku">has Bool $.done = False;
+</code></pre><p>分配是在对象构建时进行的。此时评估右侧，甚至可以引用早期的属性：</p>
+<pre><code class="language-raku" data-lang="raku">has Task @!dependencies;
 has $.ready = not @!dependencies;
-</code></pre>
-
-<h2 id="静态字段">静态字段?</h2>
-
+</code></pre><h2 id="静态字段">静态字段?</h2>
 <p>Raku 没有静态关键字。尽管如此，任何类都可以声明模块可以做的任何事情，所以使范围变量听起来像是个好主意。</p>
-
-<pre><code class="language-raku">class Singleton {
+<pre><code class="language-raku" data-lang="raku">class Singleton {
     my Singleton $instance;
     method new {!!!}
     submethod instance {
@@ -385,52 +338,32 @@ has $.ready = not @!dependencies;
     }
 }
  
-</code></pre>
-
-<p>由我或我们定义的类属性也可以在声明时初始化，但是我们在这里实现Singleton模式，并且必须在第一次使用时创建对象。预测执行属性初始化的时刻不是100％，因为它可以在编译，运行时或两者期间发生，尤其是在使用use关键字导入类时。</p>
-
-<pre><code class="language-raku">class HaveStaticAttr {
+</code></pre><p>由我或我们定义的类属性也可以在声明时初始化，但是我们在这里实现Singleton模式，并且必须在第一次使用时创建对象。预测执行属性初始化的时刻不是100％，因为它可以在编译，运行时或两者期间发生，尤其是在使用use关键字导入类时。</p>
+<pre><code class="language-raku" data-lang="raku">class HaveStaticAttr {
       my Foo $.foo = some_complicated_subroutine;
 }
-</code></pre>
-
-<p>类属性也可以用辅助sigil声明 - 以类似于对象属性的方式 - 如果属性将被公开，将生成只读访问器。</p>
-
+</code></pre><p>类属性也可以用辅助sigil声明 - 以类似于对象属性的方式 - 如果属性将被公开，将生成只读访问器。</p>
 <h2 id="方法">方法</h2>
-
 <p>虽然属性赋予对象状态，但方法赋予对象行为。我们暂时忽略新方法;这是一种特殊的方法。考虑第二种方法add-dependency，它将一项新任务添加到任务的依赖列表中。</p>
-
-<pre><code class="language-raku">method add-dependency(Task $dependency) {
+<pre><code class="language-raku" data-lang="raku">method add-dependency(Task $dependency) {
     push @!dependencies, $dependency;
 }
-</code></pre>
-
-<p>在许多方面，这看起来很像一个子声明。但是，有两个重要的区别。首先，将此例程声明为方法将其添加到当前类的方法列表中，因此Task类的任何实例都可以使用它调用它。方法调用操作符。其次，一种方法将其调用者放入特殊变量self中。</p>
-
+</code></pre><p>在许多方面，这看起来很像一个子声明。但是，有两个重要的区别。首先，将此例程声明为方法将其添加到当前类的方法列表中，因此Task类的任何实例都可以使用它调用它。方法调用操作符。其次，一种方法将其调用者放入特殊变量self中。</p>
 <p>该方法本身将传入的参数（它必须是Task类的一个实例）并将其推送到invocant的@！dependencies属性上。</p>
-
 <p>执行方法包含依赖性处理程序的主要逻辑：</p>
-
-<pre><code class="language-raku">method perform() {
+<pre><code class="language-raku" data-lang="raku">method perform() {
     unless $!done {
         .perform() for @!dependencies;
         &amp;!callback();
         $!done = True;
     }
 }
-</code></pre>
-
-<p>它不需要参数，而是使用对象的属性。首先，通过检查$！done属性来检查任务是否已经完成。如果是这样，那就没有什么可做的了。</p>
-
+</code></pre><p>它不需要参数，而是使用对象的属性。首先，通过检查$！done属性来检查任务是否已经完成。如果是这样，那就没有什么可做的了。</p>
 <p>否则，该方法执行所有任务的依赖关系，使用for构造遍历@！dependencies属性中的所有项。此迭代将每个项目（每个项目都放置一个Task对象）放入主题变量$ _中。使用 。方法调用操作符而不指定明确的调用者将当前主题用作调用者。因此，迭代构造对当前调用者的@！dependencies属性中的每个Task对象调用.perform（）方法。</p>
-
 <p>在所有的依赖关系完成之后，通过直接调用＆！回调属性来执行当前任务的任务。这是括号的目的。最后，该方法将$！done属性设置为True，以便后续对该对象执行的调用（例如，如果此Task是另一个Task的依赖项）将不会重复该任务。</p>
-
 <h2 id="私有方法">私有方法</h2>
-
 <p>就像属性一样，方法也可以是私有的。私有方法声明带有前缀感叹号。他们被称为自我！随后是方法的名称。要调用另一个类的私有方法，调用类必须被调用类信任。信任关系是用信任声明的，而且要信任的类必须已经声明。调用另一个类的私有方法需要该类的实例和该方法的全限定名称。信任也允许访问私有属性</p>
-
-<pre><code class="language-raku">class B {...}
+<pre><code class="language-raku" data-lang="raku">class B {...}
  
 class C {
     trusts B;
@@ -451,33 +384,19 @@ class B {
  
 C.new.yours-to-use(); # the context of this call is GLOBAL, and not trusted by C 
 B.new.i-am-trusted();
-</code></pre>
-
-<p>信任关系不受继承。要信任全局名称空间，可以使用伪包GLOBAL。</p>
-
+</code></pre><p>信任关系不受继承。要信任全局名称空间，可以使用伪包GLOBAL。</p>
 <h2 id="构造函数">构造函数</h2>
-
 <p>Raku比构造函数领域的许多语言更自由。构造函数是任何返回类实例的东西。而且，构造函数是普通的方法。您从基类Mu继承了一个名为new的默认构造函数，但您可以自由覆盖new，如下例所示：</p>
-
-<pre><code class="language-raku">method new(&amp;callback, *@dependencies) {
+<pre><code class="language-raku" data-lang="raku">method new(&amp;callback, *@dependencies) {
     return self.bless(:&amp;callback, :@dependencies);
 }
-</code></pre>
-
-<p>Raku中的构造函数和C＃和Java等语言中的构造函数最大的不同之处在于，它不是以某种方式为已经神奇创建的对象设置状态，而是由Raku构造函数自己创建对象。最简单的方法是调用也是从Mu继承的祝福方法。 bless方法期望一组命名参数为每个属性提供初始值。</p>
-
+</code></pre><p>Raku中的构造函数和C＃和Java等语言中的构造函数最大的不同之处在于，它不是以某种方式为已经神奇创建的对象设置状态，而是由Raku构造函数自己创建对象。最简单的方法是调用也是从Mu继承的祝福方法。 bless方法期望一组命名参数为每个属性提供初始值。</p>
 <p>该示例的构造函数将位置参数转换为命名参数，以便该类可以为其用户提供一个很好的构造函数。第一个参数是回调（将执行任务的东西）。其余参数是相关的Task实例。构造函数将这些捕获到@dependencies slurpy数组中，并将它们作为命名参数传递给bless（注意：＆callback使用变量的名称 - 减去sigil  - 作为参数的名称）。</p>
-
 <p>私有属性确实是私有的。这意味着bless不允许直接将事物绑定到＆！callback和@！依赖关系。为了做到这一点，我们重写BUILD子方法，这是通过祝福在全新对象上调用的：</p>
-
-<pre><code class="language-raku">submethod BUILD(:&amp;!callback, :@!dependencies) { }
-</code></pre>
-
-<p>由于BUILD在新创建的Task对象的上下文中运行，因此可以操作这些私有属性。这里的技巧是使用私有属性（＆！callback和@！依赖项）作为BUILD参数的绑定目标。零样板初始化！查看对象获取更多信息。</p>
-
+<pre><code class="language-raku" data-lang="raku">submethod BUILD(:&amp;!callback, :@!dependencies) { }
+</code></pre><p>由于BUILD在新创建的Task对象的上下文中运行，因此可以操作这些私有属性。这里的技巧是使用私有属性（＆！callback和@！依赖项）作为BUILD参数的绑定目标。零样板初始化！查看对象获取更多信息。</p>
 <p>BUILD方法负责初始化所有属性，还必须处理默认值：</p>
-
-<pre><code class="language-raku">has &amp;!callback;
+<pre><code class="language-raku" data-lang="raku">has &amp;!callback;
 has @!dependencies;
 has Bool ($.done, $.ready);
 submethod BUILD(
@@ -486,22 +405,13 @@ submethod BUILD(
         :$!done = False,
         :$!ready = not @!dependencies
     ) { }
-</code></pre>
-
-<p>请参阅对象构造以获取更多影响对象构造和属性初始化的选项。</p>
-
+</code></pre><p>请参阅对象构造以获取更多影响对象构造和属性初始化的选项。</p>
 <h2 id="消费我们的类">消费我们的类</h2>
-
 <p>创建一个类后，您可以创建该类的实例。声明一个自定义构造函数提供了一种简单的方式来声明任务及其依赖关系。要创建没有依赖关系的单个任务，请写下：</p>
-
-<pre><code class="language-raku">my $eat = Task.new({ say 'eating dinner. NOM!' });
-</code></pre>
-
-<p>前面的章节解释说，声明类Task在命名空间中安装了一个类型对象。这个类型对象是类的一个“空实例”，特别是没有任何状态的实例。您可以调用该实例的方法，只要它们不尝试访问任何状态;新是一个例子，因为它创建了一个新对象，而不是修改或访问现有对象。</p>
-
+<pre><code class="language-raku" data-lang="raku">my $eat = Task.new({ say 'eating dinner. NOM!' });
+</code></pre><p>前面的章节解释说，声明类Task在命名空间中安装了一个类型对象。这个类型对象是类的一个“空实例”，特别是没有任何状态的实例。您可以调用该实例的方法，只要它们不尝试访问任何状态;新是一个例子，因为它创建了一个新对象，而不是修改或访问现有对象。</p>
 <p>不幸的是，晚餐从未奇迹般地发生。它有依赖任务：</p>
-
-<pre><code class="language-raku">my $eat =
+<pre><code class="language-raku" data-lang="raku">my $eat =
     Task.new({ say 'eating dinner. NOM!' },
         Task.new({ say 'making dinner' },
             Task.new({ say 'buying food' },
@@ -511,25 +421,17 @@ submethod BUILD(
             Task.new({ say 'cleaning kitchen' })
         )
     );
-</code></pre>
-
-<p>注意自定义构造函数和明智的空白使用如何清除任务依赖关系。</p>
-
+</code></pre><p>注意自定义构造函数和明智的空白使用如何清除任务依赖关系。</p>
 <p>最后，perform方法调用按顺序递归调用各种其他依赖项上的perform方法，并给出以下输出：</p>
-
 <pre><code>making some money
 going to the store
 buying food
 cleaning kitchen
 making dinner
 eating dinner. NOM!
-</code></pre>
-
-<h2 id="继承">继承</h2>
-
+</code></pre><h2 id="继承">继承</h2>
 <p>面向对象编程提供了继承的概念，作为代码重用的机制之一。 Raku支持一个类从一个或多个类继承的能力。当一个类从另一个类继承时，它会通知方法调度器遵循继承链寻找一个派发方法。对于通过方法关键字定义的标准方法以及通过其他方式（如属性访问器）生成的方法，都会发生这种情况。</p>
-
-<pre><code class="language-raku">class Employee {
+<pre><code class="language-raku" data-lang="raku">class Employee {
     has $.salary;
 }
  
@@ -542,11 +444,8 @@ class Programmer is Employee {
         ~ $.known_languages[0];
     }
 }
-</code></pre>
-
-<p>现在，Programmer类型的任何对象都可以使用Employee类中定义的方法和访问器，就像它们来自Programmer类一样。</p>
-
-<pre><code class="language-raku">my $programmer = Programmer.new(
+</code></pre><p>现在，Programmer类型的任何对象都可以使用Employee类中定义的方法和访问器，就像它们来自Programmer类一样。</p>
+<pre><code class="language-raku" data-lang="raku">my $programmer = Programmer.new(
     salary =&gt; 100_000,
     known_languages =&gt; &lt;Perl5 Raku Erlang C++&gt;,
     favorite_editor =&gt; 'vim'
@@ -554,13 +453,9 @@ class Programmer is Employee {
  
 say $programmer.code_to_solve('halting problem'), &quot; will get &quot;, $programmer.salary(), &quot;\$&quot;;
 #OUTPUT: «Solving halting problem using vim in Perl5 will get 100000$␤» 
-</code></pre>
-
-<h3 id="重写继承到的方法">重写继承到的方法</h3>
-
+</code></pre><h3 id="重写继承到的方法">重写继承到的方法</h3>
 <p>当然，类可以通过定义它们自己来覆盖由父类定义的方法和属性。下面的例子演示了Baker类覆盖Cook的烹饪方法。</p>
-
-<pre><code class="language-raku">class Cook is Employee {
+<pre><code class="language-raku" data-lang="raku">class Cook is Employee {
     has @.utensils  is rw;
     has @.cookbooks is rw;
  
@@ -598,17 +493,11 @@ $baker.cook('brioche');      # OUTPUT: «Baking a tasty brioche␤»
 say $baker.utensils.perl;    # OUTPUT: «[&quot;self cleaning oven&quot;]␤» 
 say $baker.cookbooks.perl;   # OUTPUT: «[&quot;The Baker's Apprentice&quot;]␤» 
 say $baker.salary;           # OUTPUT: «50000␤» 
-</code></pre>
-
-<p>因为调度员会在Baker上移到父级之前看到厨师的烹饪方法，所以调用Baker的烹饪方法。</p>
-
+</code></pre><p>因为调度员会在Baker上移到父级之前看到厨师的烹饪方法，所以调用Baker的烹饪方法。</p>
 <p>要访问继承链中的方法，请使用重新分派或MOP。</p>
-
 <h2 id="多重继承">多重继承</h2>
-
 <p>如前所述，一个类可以从多个类继承。当一个类从多个类继承时，调度员知道在查找方法时要查看这两个类。 Raku使用C3算法对多个继承层次进行线性化，这比深度优先搜索更好地处理多重继承。</p>
-
-<pre><code class="language-raku">class GeekCook is Programmer is Cook {
+<pre><code class="language-raku" data-lang="raku">class GeekCook is Programmer is Cook {
     method new( *%params ) {
         push( %params&lt;cookbooks&gt;, &quot;Cooking for Geeks&quot; );
         return self.bless(|%params);
@@ -624,17 +513,11 @@ my $geek = GeekCook.new(
  
 $geek.cook('pizza');
 $geek.code_to_solve('P =? NP');
-</code></pre>
-
-<p>现在所有可用于Programmer和Cook类的方法都可以从GeekCook类中获得。</p>
-
+</code></pre><p>现在所有可用于Programmer和Cook类的方法都可以从GeekCook类中获得。</p>
 <p>虽然多重继承是知道和偶尔使用的有用概念，但重要的是要了解有更多有用的OOP概念。当达到多重继承时，最好考虑是否通过使用角色来更好地实现设计，这通常更安全，因为它们强制类作者明确地解决冲突的方法名称。有关角色的更多信息，请参阅角色。</p>
-
-<h2 id="also-声明符">[also]() 声明符</h2>
-
+<h2 id="also-声明符"><a href="">also</a> 声明符</h2>
 <p>通过在特征前加上也可以在类声明主体中列出要继承的类。这也适用于角色组合特质。</p>
-
-<pre><code class="language-raku">class GeekCook {
+<pre><code class="language-raku" data-lang="raku">class GeekCook {
     also is Programmer;
     also is Cook;
     # ... 
@@ -643,55 +526,34 @@ $geek.code_to_solve('P =? NP');
 role A {};
 role B {};
 class C { also does A; also does B }
-</code></pre>
-
-<h2 id="自省">自省</h2>
-
+</code></pre><h2 id="自省">自省</h2>
 <p>自省是在程序中收集有关某些对象的信息的过程，而不是通过阅读源代码，而是通过查询对象（或控制对象）来获取某些属性，例如其类型。</p>
-
 <p>给定一个对象$ o和前面几节的类定义，我们可以问一些问题：</p>
-
-<pre><code class="language-raku">if $o ~~ Employee { say &quot;It's an employee&quot; };
+<pre><code class="language-raku" data-lang="raku">if $o ~~ Employee { say &quot;It's an employee&quot; };
 if $o ~~ GeekCook { say &quot;It's a geeky cook&quot; };
 say $o.WHAT;
 say $o.perl;
 say $o.^methods(:local)».name.join(', ');
 say $o.^name;
-</code></pre>
-
-<p>输出可能如下所示：</p>
-
+</code></pre><p>输出可能如下所示：</p>
 <pre><code>It's an employee
 (Programmer)
 Programmer.new(known_languages =&gt; [&quot;Perl&quot;, &quot;Python&quot;, &quot;Pascal&quot;],
         favorite_editor =&gt; &quot;gvim&quot;, salary =&gt; &quot;too small&quot;)
 code_to_solve, known_languages, favorite_editor
 Programmer
-</code></pre>
-
-<p>前两个测试每个智能匹配类名称。如果对象是该类或继承类，则返回true。因此，所讨论的对象是Employee类，或者是继承它的类，但不是GeekCook。</p>
-
+</code></pre><p>前两个测试每个智能匹配类名称。如果对象是该类或继承类，则返回true。因此，所讨论的对象是Employee类，或者是继承它的类，但不是GeekCook。</p>
 <p>.WHAT方法返回与对象$ o关联的类型对象，它告诉我们$ o的确切类型：在这种情况下是Programmer。</p>
-
 <p>$ o.perl返回一个可以作为Perl代码执行的字符串，并且再现原始对象$ o。虽然这在所有情况下都不能很好地工作，但它对调试简单对象非常有用。 $ o。^ methods（：local）产生一个可以在$ o上调用的方法列表。 ：local命名参数将返回的方法限制为在Programmer类中定义的方法，并排除继承的方法。</p>
-
 <p>使用。^而不是单个点调用方法的语法意味着它实际上是对其元类的一个方法调用，该类是管理Programmer类的属性的类 - 或者您感兴趣的任何其他类。班级也启用了其他反省方式：</p>
-
-<pre><code class="language-raku">say $o.^attributes.join(', ');
+<pre><code class="language-raku" data-lang="raku">say $o.^attributes.join(', ');
 say $o.^parents.map({ $_.^name }).join(', ');
-</code></pre>
-
-<p>最后，$ o。^ name调用元对象的名称方法，这毫不意外地返回类名称。</p>
-
+</code></pre><p>最后，$ o。^ name调用元对象的名称方法，这毫不意外地返回类名称。</p>
 <p>自省对于调试和学习语言和新库非常有用。当一个函数或方法返回一个你不知道的对象时，用.WHAT查找它的类型，用.perl等等来查看它的构造方法，你会很清楚它的返回值是什么。使用。^方法，您可以了解您可以对课程做些什么。</p>
-
 <p>但也有其他应用程序：将对象序列化为一串字节的例程需要知道该对象的属性，可以通过内省查找该对象的属性。</p>
-
 <h2 id="重写默认的-gist-方法">重写默认的 gist 方法</h2>
-
 <p>有些类可能需要它自己的版本，它会覆盖当被调用以提供类的默认表示时被打印的简洁方式。例如，异常可能只想写入有效负载而不是完整对象，以便更清楚发生了什么。但是，每个班级你都可以这样做：</p>
-
-<pre><code class="language-raku">class Cook {
+<pre><code class="language-raku" data-lang="raku">class Cook {
     has @.utensils  is rw;
     has @.cookbooks is rw;
  
@@ -713,10 +575,7 @@ my $cook = Cook.new(
  
 say Cook.gist; # OUTPUT: «⚗Cook⚗» 
 say $cook.gist; # OUTPUT: «⚗ Cooks with spoon ‣ ladle ‣ knife ‣ pan using «Cooking for geeks» and «The French Chef Cookbook»␤»
-</code></pre>
-
-<p>通常你会想定义两个方法，一个用于类，另一个用于实例;在这种情况下，类方法使用alambic符号，下面定义的实例方法聚合了我们在厨师上的数据以叙述方式显示。</p>
-
+</code></pre><p>通常你会想定义两个方法，一个用于类，另一个用于实例;在这种情况下，类方法使用alambic符号，下面定义的实例方法聚合了我们在厨师上的数据以叙述方式显示。</p>
 <ol>
 <li>例如，封闭不容易以这种方式复制;如果你不知道封闭是什么，不要担心。此外，当前的实现方式在倾倒循环数据结构方面存在问题，但预期它们可以在某些时候由.perl正确处理。</li>
 </ol>
@@ -813,7 +672,7 @@ say $cook.gist; # OUTPUT: «⚗ Cooks with spoon ‣ ladle ‣ knife ‣ pan usi
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Add_method on Raku Programming</title>
+    <title>add_method on Raku Programming</title>
     <link>https://ohmysummer.github.io/tags/add_method/</link>
-    <description>Recent content in Add_method on Raku Programming</description>
+    <description>Recent content in add_method on Raku Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 11 Nov 2015 00:00:00 +0000</lastBuildDate>
@@ -19,9 +19,9 @@
       <guid>https://ohmysummer.github.io/post/2015-11-11-%E5%9C%A8raku%E4%B8%AD%E6%80%8E%E4%B9%88%E4%B8%BA%E5%B7%B2%E5%AD%98%E5%9C%A8%E7%9A%84%E7%B1%BB%E6%B7%BB%E5%8A%A0%E6%96%B9%E6%B3%95/</guid>
       <description>How do you add a method to an existing class in Raku? Raku 中怎么为已存在的类添加方法?
 Int 类有一个方法叫做 is-prime, 我想为 Int类型添加其它的方法。
-class MyInt is Int { method is-even () returns Bool:D { return False if self % 2; return True; } } my $n = MyInt.new(138); say $n.is-even;  通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
-method add_method(Metamodel::MethodContainer: $obj, $name, $code)  这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
-Int.^add_method( &#39;is-even&#39;, method () returns Bool:D { return False if self % 2; return True; } ); say 137.</description>
+class MyInt is Int {method is-even () returns Bool:D {return False if self % 2;return True;}}my $n = MyInt.new(138);say $n.is-even;通过类的继承也是一种方法, 但是不是我想要的。Swift 中可以通过扩展来实现, Raku 中有一个 add_method方法:
+method add_method(Metamodel::MethodContainer: $obj, $name, $code)这会给元类(meta class)添加一个方法, 使用 $name 作为调用的方法名。这只会在类型被组合前使用。
+Int.^add_method( &#39;is-even&#39;, method () returns Bool:D {return False if self % 2;return True;} );say 137.</description>
     </item>
     
     <item>
@@ -32,9 +32,9 @@ Int.^add_method( &#39;is-even&#39;, method () returns Bool:D { return False if s
       <guid>https://ohmysummer.github.io/post/2015-05-01-sneaky-methods/</guid>
       <description>Sneaky methods
 就像你想的那样, 在类的定义中可以声明和定义方法。你期望不高的甚至文档中都很少提及是用 my 关键字声明的免费浮点方法。现在为什么你想要:
-my method foo(SomeClass:D:) { self }  明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
-src/core/Bool.pm 32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False }); 33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True }); 35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });  这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
-&amp;lt;a b c&amp;gt;.&amp;amp;(my method ::(List:D) { dd self; self } ).say; # output # (&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;, &amp;quot;c&amp;quot;) # (a b c)  没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .</description>
+my method foo(SomeClass:D:) { self }明显的答案是元对象协议中的 add_method 方法, 在 Rakudo 里你能找到它：
+src/core/Bool.pm32: Bool.^add_method(&#39;pred&#39;, my method pred() { Bool::False });33: Bool.^add_method(&#39;succ&#39;, my method succ() { Bool::True });35: Bool.^add_method(&#39;enums&#39;, my method enums() { self.^enum_values });这种方法还有另外一种更诡异的用法。你可能很想知道在链式方法调用中究竟发生了什么。我们可以扯开最上面的那个表达式并插入一个短的变量, 输出我们的调试, 并且继续链式调用。好的名字很重要并且把它们浪费在一个短变量上没有必要。
+&amp;lt;a b c&amp;gt;.&amp;amp;(my method ::(List:D) { dd self; self } ).say;# output# (&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;, &amp;quot;c&amp;quot;)# (a b c)没有显式调用我们就不能没有名字, 因为 Raku 不允许我们这样做, 所以我们使用了空的作用域 :: 以使解析器高兴。使用一个合适的调用, 我们就不需要它了。还有, 那个匿名方法不是 List 中的一员。我们需要使用后缀 .</description>
     </item>
     
   </channel>

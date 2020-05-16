@@ -9,11 +9,11 @@
   <meta property="og:title" content="S07-Lists" />
   <meta name="twitter:title" content="S07-Lists" />
   <meta name="description" content="push 和 append 的表现不同, push 一次只添加单个参数到列表末端, append 一次可以添加多个参数。
-use v6; my @d = ( [ 1 .. 3 ] ); @d.push( [ 4 .. 6 ] ); @d.push( [ 7 .. 9 ] ); for @d -&gt; $r { say &quot;$r[]&quot;; } # 1 # 2 # 3 # 4 5 6 # 7 8 9 for @d -&gt; $r { say $r.WHAT() } # (Int) # (Int) # (Int) # (Array) 整个数组作为单个参数 # (Array) say @d.">
+use v6;my @d = ( [ 1 .. 3 ] );@d.push( [ 4 .. 6 ] );@d.push( [ 7 .. 9 ] );for @d -&gt; $r {say &#34;$r[]&#34;;}# 1 # 2 # 3 # 4 5 6 # 7 8 9 for @d -&gt; $r { say $r.WHAT() }# (Int) # (Int) # (Int) # (Array) 整个数组作为单个参数 # (Array) say @d.">
   <meta property="og:description" content="push 和 append 的表现不同, push 一次只添加单个参数到列表末端, append 一次可以添加多个参数。
-use v6; my @d = ( [ 1 .. 3 ] ); @d.push( [ 4 .. 6 ] ); @d.push( [ 7 .. 9 ] ); for @d -&gt; $r { say &quot;$r[]&quot;; } # 1 # 2 # 3 # 4 5 6 # 7 8 9 for @d -&gt; $r { say $r.WHAT() } # (Int) # (Int) # (Int) # (Array) 整个数组作为单个参数 # (Array) say @d.">
+use v6;my @d = ( [ 1 .. 3 ] );@d.push( [ 4 .. 6 ] );@d.push( [ 7 .. 9 ] );for @d -&gt; $r {say &#34;$r[]&#34;;}# 1 # 2 # 3 # 4 5 6 # 7 8 9 for @d -&gt; $r { say $r.WHAT() }# (Int) # (Int) # (Int) # (Array) 整个数组作为单个参数 # (Array) say @d.">
   <meta name="twitter:description" content="push 和 append 的表现不同, push 一次只添加单个参数到列表末端, append 一次可以添加多个参数。
-use v6; my @d = ( [ 1 .. 3 ] ); @d.push( [ 4 .. 6 ] ); @d.push( [ 7 .. 9 ] ); for @d -&gt; $r { say &quot;$r[]&quot;; } # 1 # 2 # 3 # 4 5 6 …">
+use v6;my @d = ( [ 1 .. 3 ] );@d.push( [ 4 .. 6 ] );@d.push( [ 7 .. 9 ] );for @d -&gt; $r {say &#34;$r[]&#34;;}# 1 # 2 # 3 # 4 5 …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -23,7 +23,7 @@ use v6; my @d = ( [ 1 .. 3 ] ); @d.push( [ 4 .. 6 ] ); @d.push( [ 7 .. 9 ] ); fo
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-02-12-s07-lists/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -230,384 +230,241 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
+        <p><strong>push</strong> 和 <strong>append</strong> 的表现不同, <strong>push</strong> 一次只添加单个参数到列表末端, <strong>append</strong> 一次可以添加多个参数。</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 
-<p><strong>push</strong> 和 <strong>append</strong> 的表现不同, <strong>push</strong> 一次只添加单个参数到列表末端, <strong>append</strong> 一次可以添加多个参数。</p>
-
-<pre><code class="language-perl">use v6;
-
-my @d = ( [ 1 .. 3 ] );
-@d.push( [ 4 .. 6 ] );
-@d.push( [ 7 .. 9 ] );
+<span class="k">my</span> <span class="nv">@</span><span class="nv">d</span> <span class="o">=</span> <span class="p">(</span> <span class="p">[</span> <span class="mi">1</span> <span class="o">..</span> <span class="mi">3</span> <span class="p">]</span> <span class="p">)</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="nb">push</span><span class="p">(</span> <span class="p">[</span> <span class="mi">4</span> <span class="o">..</span> <span class="mi">6</span> <span class="p">]</span> <span class="p">)</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="nb">push</span><span class="p">(</span> <span class="p">[</span> <span class="mi">7</span> <span class="o">..</span> <span class="mi">9</span> <span class="p">]</span> <span class="p">)</span><span class="p">;</span>
 
 
-for @d -&gt; $r {
-    say &quot;$r[]&quot;;
-}
-# 1
-# 2
-# 3
-# 4 5 6
-# 7 8 9
+<span class="k">for</span> <span class="nv">@</span><span class="nv">d</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">r</span> <span class="p">{</span>
+    <span class="n"></span><span class="n">say</span> <span class="s">&#34;$r[]&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1"># 1</span>
+<span class="c1"># 2</span>
+<span class="c1"># 3</span>
+<span class="c1"># 4 5 6</span>
+<span class="c1"># 7 8 9</span>
 
-for @d -&gt; $r { say $r.WHAT() }
-# (Int)
-# (Int)
-# (Int)
-# (Array) 整个数组作为单个参数
-# (Array)
+<span class="k">for</span> <span class="nv">@</span><span class="nv">d</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">r</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">r</span><span class="o">.</span><span class="n"></span><span class="n">WHAT</span><span class="p">(</span><span class="p">)</span> <span class="p">}</span>
+<span class="c1"># (Int)</span>
+<span class="c1"># (Int)</span>
+<span class="c1"># (Int)</span>
+<span class="c1"># (Array) 整个数组作为单个参数</span>
+<span class="c1"># (Array)</span>
 
-say @d.perl;
-# [1, 2, 3, [4, 5, 6], [7, 8, 9]]
-</code></pre>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>
+<span class="c1"># [1, 2, 3, [4, 5, 6], [7, 8, 9]]</span>
+</code></pre></div><p>使用 <strong>append</strong> 一次能追加多个元素:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 
-<p>使用 <strong>append</strong> 一次能追加多个元素:</p>
+<span class="k">my</span> <span class="nv">@</span><span class="nv">d</span> <span class="o">=</span>  <span class="p">(</span> <span class="p">[</span> <span class="mi">1</span> <span class="o">..</span> <span class="mi">3</span> <span class="p">]</span> <span class="p">)</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="n"></span><span class="n">append</span><span class="p">(</span> <span class="p">[</span> <span class="mi">4</span> <span class="o">..</span> <span class="mi">6</span> <span class="p">]</span> <span class="p">)</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="n"></span><span class="n">append</span><span class="p">(</span> <span class="p">[</span> <span class="mi">7</span> <span class="o">..</span> <span class="mi">9</span> <span class="p">]</span> <span class="p">)</span><span class="p">;</span>
 
-<pre><code class="language-perl">use v6;
-
-my @d =  ( [ 1 .. 3 ] );
-@d.append( [ 4 .. 6 ] );
-@d.append( [ 7 .. 9 ] );
-
-for @d -&gt; $item {
-    say &quot;$item[]&quot;;
-}
-# 打印 1\n2\n3\n4\n5\n6\n7\n8\n9
-# [1, 2, 3, 4, 5, 6, 7, 8, 9]
-</code></pre>
-
-<p>这跟<a href="https://design.raku.org/S07.html#The_single_argument_rule">The single argument rule</a>有关。</p>
-
+<span class="k">for</span> <span class="nv">@</span><span class="nv">d</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">item</span> <span class="p">{</span>
+    <span class="n"></span><span class="n">say</span> <span class="s">&#34;$item[]&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1"># 打印 1\n2\n3\n4\n5\n6\n7\n8\n9</span>
+<span class="c1"># [1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
+</code></pre></div><p>这跟<a href="https://design.raku.org/S07.html#The_single_argument_rule">The single argument rule</a>有关。</p>
 <h2 id="设计大纲">设计大纲</h2>
-
-<hr />
-
+<hr>
 <p>Raku 提供了很多跟列表相关的特性, 包括 <code>eager</code>, <code>lazy</code>, <code>并行计算</code>, 还有紧凑型阵列和多维数组存储。</p>
-
 <h3 id="sequences-vs-lists">Sequences vs. Lists</h3>
-
-<hr />
-
+<hr>
 <p>在 Raku 中, 我们使用项 <code>sequence</code> 来来指某个东西, 当需要的时候产生一个值的序列。即序列是惰性的。注意, 只能要求生成一次。我们使用项<code>list</code>来指能保存值的东西。</p>
-
-<pre><code class="language-perl">(1, 2, 3)    # 列表, 最简单的 list
-[1, 2, 3]    # 数组, Scalar 容器的列表
-|(1, 2)      # a Slip, 一个展开到周围列表中的列表
-$*IN.lines   # a Seq, 一个可以被连续处理的序列
-(^1000).race # a HyperSeq, 一个可以并行处理的序列
-</code></pre>
-
-<h3 id="the-single-argument-rule-https-design-raku-org-s07-html-the-single-argument-rule"><a href="https://design.raku.org/S07.html#The_single_argument_rule">The single argument rule</a></h3>
-
-<hr />
-
-<p>在 Perl 中 <strong>@</strong> 符号标示着 &ldquo;这些&rdquo;(<strong>these</strong>), 而 <strong>$</strong>符号标示着 &ldquo;这个&rdquo;(<strong>the</strong>)。这种<strong>复数</strong>/<strong>单数</strong>的明显差别出现在语言中的各种地方, Perl  中的很多便捷就是来源于这个特点。展平(Flattening)就是 @-like 的东西会在特定上下文中自动把它的值并入周围的列表中。之前这在 Perl 中既功能强大又很有迷惑性。在直截了当的发起知名的&rdquo;单个参数规则&rdquo;之前, Raku 在发展中通过了几次跟 flattening 有关的模仿。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>    <span class="c1"># 列表, 最简单的 list</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>    <span class="c1"># 数组, Scalar 容器的列表</span>
+<span class="o">|</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>      <span class="c1"># a Slip, 一个展开到周围列表中的列表</span>
+<span class="nv">$</span><span class="err">*</span><span class="nv">IN</span><span class="o">.</span><span class="n"></span><span class="n">lines</span>   <span class="c1"># a Seq, 一个可以被连续处理的序列</span>
+<span class="p">(</span><span class="o">^</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">race</span> <span class="c1"># a HyperSeq, 一个可以并行处理的序列</span>
+</code></pre></div><h3 id="the-single-argument-rulehttpsdesignrakuorgs07htmlthe_single_argument_rule"><a href="https://design.raku.org/S07.html#The_single_argument_rule">The single argument rule</a></h3>
+<hr>
+<p>在 Perl 中 <strong>@</strong> 符号标示着 &ldquo;这些&rdquo;(<strong>these</strong>), 而 <strong>$</strong>符号标示着 &ldquo;这个&rdquo;(<strong>the</strong>)。这种<strong>复数</strong>/<strong>单数</strong>的明显差别出现在语言中的各种地方, Perl  中的很多便捷就是来源于这个特点。展平(Flattening)就是 @-like 的东西会在特定上下文中自动把它的值并入周围的列表中。之前这在 Perl 中既功能强大又很有迷惑性。在直截了当的发起知名的&quot;单个参数规则&quot;之前, Raku 在发展中通过了几次跟 flattening 有关的模仿。</p>
 <p>对单个参数规则最好的理解是通过 <strong>for</strong>循环迭代的次数。对于 <strong>for</strong>循环, 要迭代的东西总是被当作单个参数。因此有了单个参数规则这个名字。</p>
-
-<pre><code class="language-perl">for 1, 2, 3   { }   # 含有 3 个元素的列表, 3 次迭代
-for (1, 2, 3) { }   # 含有 3 个元素的列表, 3 次迭代
-for [1, 2, 3] { }   # 含有 3 个元素的数组(存放在 Scalar 中),  3次迭代
-for @a, @b    { }   # 含有 2 个元素的列表, 2 次迭代
-for (@a,)     { }   # 含有 1 个元素的列表, 1 次迭代
-for (@a)      { }   # 含有 @a.elems 个元素的列表, @a.elems 次迭代
-for @a        { }   # 含有 @a.elems 个元素的列表, @a.elems 次迭代
-</code></pre>
-
-<p>前两个是相同的, 因为圆括号事实上不构建列表, 而只是分组。是中缀操作符 <code>infix:&lt;,&gt;</code>组成的列表。第三个也执行了 3 次迭代, 因为在 Raku 中 <code>[...]</code> 构建了一个数组但是没有把它包裹进 <code>Scalar</code> 容器中。第四个会执行 2 次迭代, 因为参数是一个含有两个元素的列表, 而那两个元素恰好是数组, 它俩都有 @ 符号, 但是都没有导致展开。第 五 个同样, <code>infix:&lt;,&gt;</code> 很高兴地组成了只含一个元素的列表。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>   <span class="p">{</span> <span class="p">}</span>   <span class="c1"># 含有 3 个元素的列表, 3 次迭代</span>
+<span class="k">for</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>   <span class="c1"># 含有 3 个元素的列表, 3 次迭代</span>
+<span class="k">for</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="p">{</span> <span class="p">}</span>   <span class="c1"># 含有 3 个元素的数组(存放在 Scalar 中),  3次迭代</span>
+<span class="k">for</span> <span class="nv">@</span><span class="nv">a</span><span class="p">,</span> <span class="nv">@</span><span class="nv">b</span>    <span class="p">{</span> <span class="p">}</span>   <span class="c1"># 含有 2 个元素的列表, 2 次迭代</span>
+<span class="k">for</span> <span class="p">(</span><span class="nv">@</span><span class="nv">a</span><span class="p">,</span><span class="p">)</span>     <span class="p">{</span> <span class="p">}</span>   <span class="c1"># 含有 1 个元素的列表, 1 次迭代</span>
+<span class="k">for</span> <span class="p">(</span><span class="nv">@</span><span class="nv">a</span><span class="p">)</span>      <span class="p">{</span> <span class="p">}</span>   <span class="c1"># 含有 @a.elems 个元素的列表, @a.elems 次迭代</span>
+<span class="k">for</span> <span class="nv">@</span><span class="nv">a</span>        <span class="p">{</span> <span class="p">}</span>   <span class="c1"># 含有 @a.elems 个元素的列表, @a.elems 次迭代</span>
+</code></pre></div><p>前两个是相同的, 因为圆括号事实上不构建列表, 而只是分组。是中缀操作符 <code>infix:&lt;,&gt;</code>组成的列表。第三个也执行了 3 次迭代, 因为在 Raku 中 <code>[...]</code> 构建了一个数组但是没有把它包裹进 <code>Scalar</code> 容器中。第四个会执行 2 次迭代, 因为参数是一个含有两个元素的列表, 而那两个元素恰好是数组, 它俩都有 @ 符号, 但是都没有导致展开。第 五 个同样, <code>infix:&lt;,&gt;</code> 很高兴地组成了只含一个元素的列表。</p>
 <p>单个参数规则也考虑了 Scalar 容器。因此:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>  <span class="c1"># Scalar 容器中的一个列表, 1 次迭代  </span>
+<span class="k">for</span> <span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="p">{</span> <span class="p">}</span>  <span class="c1"># Scalar 容器中的一个数组, 1 次迭代  </span>
+<span class="k">for</span> <span class="nv">$@</span><span class="nv">a</span>        <span class="p">{</span> <span class="p">}</span>  <span class="c1"># Scalar 容器中的一个数组, 1 次迭代  </span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span><span class="o">.</span><span class="n"></span><span class="n">elems</span> <span class="p">}</span>
+<span class="mi">3</span>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">}</span>
+<span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span><span class="o">.</span><span class="n"></span><span class="n">WHAT</span> <span class="p">}</span>
+<span class="p">(</span><span class="n"></span><span class="n">List</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span><span class="o">.</span><span class="n"></span><span class="n">perl</span> <span class="p">}</span>
+<span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
-<pre><code class="language-perl">for $(1, 2, 3) { }  # Scalar 容器中的一个列表, 1 次迭代  
-for $[1, 2, 3] { }  # Scalar 容器中的一个数组, 1 次迭代  
-for $@a        { }  # Scalar 容器中的一个数组, 1 次迭代  
-</code></pre>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">}</span>
+<span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span><span class="o">.</span><span class="n"></span><span class="n">perl</span> <span class="p">}</span>
+<span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span><span class="o">.</span><span class="n"></span><span class="n">WHAT</span> <span class="p">}</span>
+<span class="p">(</span><span class="n"></span><span class="n">Array</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">i</span><span class="o">.</span><span class="n"></span><span class="n">elems</span> <span class="p">}</span>
+<span class="mi">3</span>
 
-<pre><code class="language-perl">&gt; for $(1, 2, 3) -&gt; $i { say $i.elems }
-3
-&gt; for $(1, 2, 3) -&gt; $i { say $i }
-(1 2 3)
-&gt; for $(1, 2, 3) -&gt; $i { say $i.WHAT }
-(List)
-&gt; for $(1, 2, 3) -&gt; $i { say $i.perl }
-$(1, 2, 3)
-
-&gt; for $[1, 2, 3] -&gt; $i { say $i }
-[1 2 3]
-&gt; for $[1, 2, 3] -&gt; $i { say $i.perl }
-$[1, 2, 3]
-&gt; for $[1, 2, 3] -&gt; $i { say $i.WHAT }
-(Array)
-&gt; for $[1, 2, 3] -&gt; $i { say $i.elems }
-3
-
-&gt; my  @a = 1,2,3
-[1 2 3]
-&gt; for $@a -&gt; $a  { say $a.perl }
-$[1, 2, 3]
-</code></pre>
-
-<p>贯穿 Raku 语言, 单个参数规则(<strong>Single argument rule</strong>) 始终如一地被实现了。例如, 我们看 <strong>push</strong> 方法:</p>
-
-<pre><code class="language-perl">@a.push: 1, 2, 3;       # pushes 3 values to @a
-@a.push: [1, 2, 3];     # pushes 1 Array to @a
-@a.push: @b;            # pushes 1 Array to @a
-@a.push: @b,;           # same, trailing comma doesn't make &gt; 1 argument
-@a.push: $(1, 2, 3);    # pushes 1 value (a List) to @a
-@a.push: $[1, 2, 3];    # pushes 1 value (an Array) to @a
-</code></pre>
-
-<p>此外, 列表构造器(例如 <code>infix:&lt;,&gt;</code> 操作符) 和数组构造器(<code>[…]</code>环缀)也遵守这个规则:</p>
-
-<pre><code class="language-perl">    [1, 2, 3]               # Array of 3 elements
-    [@a, @b]                # Array of 2 elements
-    [@a, 1..10]             # Array of 2 elements
-    [@a]                    # Array with the elements of @a copied into it
-    [1..10]                 # Array with 10 elements
-    [$@a]                   # Array with 1 element (@a)
-    [@a,]                   # Array with 1 element (@a)
-    [[1]]                   # Same as [1]
-    [[1],]                  # Array with a single element that is [1]
-    [$[1]]                  # Array with a single element that is [1]
-</code></pre>
-
-<p>所以, 要让最开始的那个例子工作, 使用:</p>
-
-<pre><code class="language-perl">my @d = ( [ 1 .. 3 ], );  # [[1 2 3]]
-@d.push: [ 4 .. 6 ];
-@d.push: [ 7 .. 9 ];
-# [[1 2 3] [4 5 6] [7 8 9]]
-</code></pre>
-
-<p>或者</p>
-
-<pre><code class="language-perl">my @d = ( $[ 1 .. 3 ]);
-@d.push: [ 4 ..6 ];
-@d.push: [ 7 ..9 ];
-</code></pre>
-
-<h2 id="user-level-types">User-level Types</h2>
-
-<hr />
-
+<span class="o">&gt;</span> <span class="k">my</span>  <span class="nv">@</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span>
+<span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;</span> <span class="k">for</span> <span class="nv">$@</span><span class="nv">a</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">a</span>  <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">a</span><span class="o">.</span><span class="n"></span><span class="n">perl</span> <span class="p">}</span>
+<span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+</code></pre></div><p>贯穿 Raku 语言, 单个参数规则(<strong>Single argument rule</strong>) 始终如一地被实现了。例如, 我们看 <strong>push</strong> 方法:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>       <span class="c1"># pushes 3 values to @a</span>
+<span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="p">;</span>     <span class="c1"># pushes 1 Array to @a</span>
+<span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="nv">@</span><span class="nv">b</span><span class="p">;</span>            <span class="c1"># pushes 1 Array to @a</span>
+<span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="nv">@</span><span class="nv">b</span><span class="p">,</span><span class="p">;</span>           <span class="c1"># same, trailing comma doesn&#39;t make &gt; 1 argument</span>
+<span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">;</span>    <span class="c1"># pushes 1 value (a List) to @a</span>
+<span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="p">;</span>    <span class="c1"># pushes 1 value (an Array) to @a</span>
+</code></pre></div><p>此外, 列表构造器(例如 <code>infix:&lt;,&gt;</code> 操作符) 和数组构造器(<code>[…]</code>环缀)也遵守这个规则:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>               <span class="c1"># Array of 3 elements</span>
+    <span class="p">[</span><span class="nv">@</span><span class="nv">a</span><span class="p">,</span> <span class="nv">@</span><span class="nv">b</span><span class="p">]</span>                <span class="c1"># Array of 2 elements</span>
+    <span class="p">[</span><span class="nv">@</span><span class="nv">a</span><span class="p">,</span> <span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span>             <span class="c1"># Array of 2 elements</span>
+    <span class="p">[</span><span class="nv">@</span><span class="nv">a</span><span class="p">]</span>                    <span class="c1"># Array with the elements of @a copied into it</span>
+    <span class="p">[</span><span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="p">]</span>                 <span class="c1"># Array with 10 elements</span>
+    <span class="p">[</span><span class="nv">$@</span><span class="nv">a</span><span class="p">]</span>                   <span class="c1"># Array with 1 element (@a)</span>
+    <span class="p">[</span><span class="nv">@</span><span class="nv">a</span><span class="p">,</span><span class="p">]</span>                   <span class="c1"># Array with 1 element (@a)</span>
+    <span class="p">[</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">]</span>                   <span class="c1"># Same as [1]</span>
+    <span class="p">[</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">,</span><span class="p">]</span>                  <span class="c1"># Array with a single element that is [1]</span>
+    <span class="p">[</span><span class="nv">$</span><span class="err">[</span><span class="nv">1</span><span class="p">]</span><span class="p">]</span>                  <span class="c1"># Array with a single element that is [1]</span>
+</code></pre></div><p>所以, 要让最开始的那个例子工作, 使用:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">d</span> <span class="o">=</span> <span class="p">(</span> <span class="p">[</span> <span class="mi">1</span> <span class="o">..</span> <span class="mi">3</span> <span class="p">]</span><span class="p">,</span> <span class="p">)</span><span class="p">;</span>  <span class="c1"># [[1 2 3]]</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="p">[</span> <span class="mi">4</span> <span class="o">..</span> <span class="mi">6</span> <span class="p">]</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="p">[</span> <span class="mi">7</span> <span class="o">..</span> <span class="mi">9</span> <span class="p">]</span><span class="p">;</span>
+<span class="c1"># [[1 2 3] [4 5 6] [7 8 9]]</span>
+</code></pre></div><p>或者</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">d</span> <span class="o">=</span> <span class="p">(</span> <span class="vg">$[</span> <span class="mi">1</span> <span class="o">..</span> <span class="mi">3</span> <span class="p">]</span><span class="p">)</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="p">[</span> <span class="mi">4</span> <span class="o">..</span><span class="mi">6</span> <span class="p">]</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">d</span><span class="o">.</span><span class="nb">push</span><span class="p">:</span> <span class="p">[</span> <span class="mi">7</span> <span class="o">..</span><span class="mi">9</span> <span class="p">]</span><span class="p">;</span>
+</code></pre></div><h2 id="user-level-types">User-level Types</h2>
+<hr>
 <h3 id="list">List</h3>
-
-<hr />
-
+<hr>
 <p><strong>List</strong> 是不可变的, 可能是无限的, 值的列表。组成 List 最简单的一种方法是使用 <code>infix:&lt;,&gt;</code> 操作符:</p>
-
-<pre><code class="language-perl">1, 2, 3
-</code></pre>
-
-<p><strong>List</strong> 可以被索引, 并且, 假设它是有限的, 也能询问列表中元素的个数:</p>
-
-<pre><code class="language-perl">say (1, 2, 3)[1];    # 2
-say (1, 2, 3).elems; # 3
-</code></pre>
-
-<p>因为<strong>List</strong>是不可变的, 对它进行 push、pop、shift、unshift 或 splice 是不可能的。 <strong>reverse</strong> 和 <strong>rotate</strong> 操作会返回新的 <strong>Lists</strong>。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+</code></pre></div><p><strong>List</strong> 可以被索引, 并且, 假设它是有限的, 也能询问列表中元素的个数:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">;</span>    <span class="c1"># 2</span>
+<span class="n"></span><span class="n">say</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">elems</span><span class="p">;</span> <span class="c1"># 3</span>
+</code></pre></div><p>因为<strong>List</strong>是不可变的, 对它进行 push、pop、shift、unshift 或 splice 是不可能的。 <strong>reverse</strong> 和 <strong>rotate</strong> 操作会返回新的 <strong>Lists</strong>。</p>
 <p>虽然<strong>List</strong>自身是不可变的, 但是它包含的元素可以是可变的, 包括 <code>Scalar</code> 容器:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">$</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$</span><span class="nv">b</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
 
-<pre><code class="language-perl">my $a = 2;
-my $b = 4;
-
-($a, $b)[0]++;
-($a, $b)[1] *= 2;
-say $a; # 3
-say $b; # 8
-</code></pre>
-
-<p>在 <strong>List</strong> 中尝试给不可变值赋值会导致错误:</p>
-
-<pre><code class="language-perl">(1, 2, 3)[0]++; # Dies: 不能给不可变值赋值
-</code></pre>
-
-<h3 id="slip">Slip</h3>
-
-<hr />
-
+<span class="p">(</span><span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">)</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="o">+</span><span class="p">;</span>
+<span class="p">(</span><span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">)</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">a</span><span class="p">;</span> <span class="c1"># 3</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">b</span><span class="p">;</span> <span class="c1"># 8</span>
+</code></pre></div><p>在 <strong>List</strong> 中尝试给不可变值赋值会导致错误:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="o">+</span><span class="p">;</span> <span class="c1"># Dies: 不能给不可变值赋值</span>
+</code></pre></div><h3 id="slip">Slip</h3>
+<hr>
 <p><strong>Slip</strong> 类型是 <strong>List</strong> 的一个子类。<strong>Slip</strong> 会把它的值并入周围的 <strong>List</strong> 中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">elems</span>      <span class="c1"># 3</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n"></span><span class="n">slip</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">elems</span>  <span class="c1"># 4</span>
+</code></pre></div><p>把 <strong>List</strong> 强转为 <strong>Slip</strong> 是可能的, 所以上面的也能写为:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">Slip</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">elems</span> <span class="c1"># 4</span>
+</code></pre></div><p>在不发生 flattening 的地方使用 <strong>Slip</strong> 是一种常见的获取 flattening 的方式:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@</span><span class="nv">b</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">;</span>
 
-<pre><code class="language-perl">(1, (2, 3), 4).elems      # 3
-(1, slip(2, 3), 4).elems  # 4
-</code></pre>
+<span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="n"></span><span class="n">Slip</span><span class="p">,</span> <span class="nv">@</span><span class="nv">b</span><span class="o">.</span><span class="n"></span><span class="n">Slip</span><span class="p">;</span>  <span class="c1"># 5 次迭代</span>
+</code></pre></div><p>这有点啰嗦, 使用 <code>prefix:&lt;|&gt;</code>来做 <strong>Slip</strong> 强转:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@</span><span class="nv">b</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">;</span>
 
-<p>把 <strong>List</strong> 强转为 <strong>Slip</strong> 是可能的, 所以上面的也能写为:</p>
-
-<pre><code class="language-perl">(1, (2, 3).Slip, 4).elems # 4
-</code></pre>
-
-<p>在不发生 flattening 的地方使用 <strong>Slip</strong> 是一种常见的获取 flattening 的方式:</p>
-
-<pre><code class="language-perl">my @a = 1, 2, 3;
-my @b = 4, 5;
-
-.say for @a.Slip, @b.Slip;  # 5 次迭代
-</code></pre>
-
-<p>这有点啰嗦, 使用 <code>prefix:&lt;|&gt;</code>来做 <strong>Slip</strong> 强转:</p>
-
-<pre><code class="language-perl">my @a = 1, 2, 3;
-my @b = 4, 5;
-
-.say for |@a, |@b; # 5 次迭代
-</code></pre>
-
-<p><code>|</code>在如下形式中也很有用:</p>
-
-<pre><code class="language-perl">my @prefixed-values = 0, |@values;
-</code></pre>
-
-<p>这儿, 单个参数规则会使 @prefixed-values 拥有两个元素, 即 0 和 @values。</p>
-
+<span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="o">|</span><span class="nv">@</span><span class="nv">a</span><span class="p">,</span> <span class="o">|</span><span class="nv">@</span><span class="nv">b</span><span class="p">;</span> <span class="c1"># 5 次迭代</span>
+</code></pre></div><p><code>|</code>在如下形式中也很有用:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">prefixed</span><span class="o">-</span><span class="nb">values</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">|</span><span class="nv">@</span><span class="nv">values</span><span class="p">;</span>
+</code></pre></div><p>这儿, 单个参数规则会使 @prefixed-values 拥有两个元素, 即 0 和 @values。</p>
 <p><strong>Slip</strong> 类型也可以用在 <code>map</code>、<code>gather/take</code>、和 <code>lazy</code>循环中。下面是一种 <code>map</code>能把多个值放进它的结果流里面的方法:</p>
-
-<pre><code class="language-perl">my @a = 1, 2;
-say @a.map({ $_ xx 2 }).elems;      # 2
-say @a.map({ |($_ xx 2) }).elems;   # 4
-</code></pre>
-
-<p>因为 <code>$_ xx 2</code> 产生一个含有两个元素的列表(<strong>List</strong>)。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="p">{</span> <span class="nv">$</span><span class="nv">_</span> <span class="n"></span><span class="n">xx</span> <span class="mi">2</span> <span class="p">}</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">elems</span><span class="p">;</span>      <span class="c1"># 2</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="p">{</span> <span class="o">|</span><span class="p">(</span><span class="nv">$</span><span class="nv">_</span> <span class="n"></span><span class="n">xx</span> <span class="mi">2</span><span class="p">)</span> <span class="p">}</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">elems</span><span class="p">;</span>   <span class="c1"># 4</span>
+</code></pre></div><p>因为 <code>$_ xx 2</code> 产生一个含有两个元素的列表(<strong>List</strong>)。</p>
 <h3 id="array">Array</h3>
-
-<hr />
-
+<hr>
 <p><strong>Array</strong> 是 <strong>List</strong> 的一个子类, 把赋值给数组的值放进 Scalar 容器中, 这意味着数组中的值可以被改变。<strong>Array</strong> 是 @-sigil 变量得到的默认类型。</p>
-
-<pre><code class="language-perl">my @a = 1, 2, 3;
-say @a.WHAT;     # (Array)
-@a[1]++;         # Scalar 容器中的值可变
-say @a;          # 1 3 3
-</code></pre>
-
-<p>如果没有 shape 属性, 数组会自动增长:</p>
-
-<pre><code class="language-perl">my @a;
-@a[5] = 42;
-say @a.elems;  # 6
-</code></pre>
-
-<p><strong>Array</strong>支持 <code>push</code>、<code>pop</code>、<code>shift</code>、<code>unshift</code> 和 <code>splice</code>。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="n"></span><span class="n">WHAT</span><span class="p">;</span>     <span class="c1"># (Array)</span>
+<span class="nv">@</span><span class="nv">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="o">+</span><span class="p">;</span>         <span class="c1"># Scalar 容器中的值可变</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">a</span><span class="p">;</span>          <span class="c1"># 1 3 3</span>
+</code></pre></div><p>如果没有 shape 属性, 数组会自动增长:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span><span class="p">;</span>
+<span class="nv">@</span><span class="nv">a</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">a</span><span class="o">.</span><span class="n"></span><span class="n">elems</span><span class="p">;</span>  <span class="c1"># 6</span>
+</code></pre></div><p><strong>Array</strong>支持 <code>push</code>、<code>pop</code>、<code>shift</code>、<code>unshift</code> 和 <code>splice</code>。</p>
 <p>给数组赋值默认是迫切的(<strong>eager</strong>), 并创建一组新的 Scalar 容器:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@</span><span class="nv">b</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">a</span><span class="p">;</span>
 
-<pre><code class="language-perl">my @a = 1, 2, 3;
-my @b = @a;
-
-@a[1]++;
-say @b;  # 1, 2, 3
-</code></pre>
-
-<p>注意, <code>[...]</code> 数组构造器等价于创建然后再赋值给一个匿名数组。</p>
-
+<span class="nv">@</span><span class="nv">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="o">+</span><span class="p">;</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">@</span><span class="nv">b</span><span class="p">;</span>  <span class="c1"># 1, 2, 3</span>
+</code></pre></div><p>注意, <code>[...]</code> 数组构造器等价于创建然后再赋值给一个匿名数组。</p>
 <h3 id="seq">Seq</h3>
-
-<hr />
-
+<hr>
 <p><strong>Seq</strong> 是单次值生产者。大部分列表处理操作返回 <strong>Seq</strong>。</p>
-
-<pre><code class="language-perl">say (1, 2, 3).map(* + 1).^name;  # Seq
-say (1, 2 Z 'a', 'b').^name;     # Seq
-say (1, 1, * + * ... *).^name;   # Seq
-say $*IN.lines.^name;            # Seq
-</code></pre>
-
-<p>因为 <strong>Seq</strong> 默认不会记住它的值(values), 所以 <strong>Seq</strong> 只能被使用一次。例如, 如果存储了一个 <strong>Seq</strong>:</p>
-
-<pre><code class="language-perl">my \seq = (1, 2, 3).map(* + 1);
-</code></pre>
-
-<p>只有第一次迭代会有效, 之后再尝试迭代就会死, 因为值已经被用完了:</p>
-
-<pre><code class="language-perl">for seq { .say }    # 2\n3\n4\n
-for seq { .say }    # Dies: This Seq has already been iterated
-</code></pre>
-
-<p>这意味着你可以确信 for 循环迭代了文件的行:</p>
-
-<pre><code class="language-perl">for open('data').lines {
-    .say if /beer/;
-}
-</code></pre>
-
-<p>这不会把文件中的行保持在内存中。此外设立不会把所有行保持在内存中的处理管道也会很容易:</p>
-
-<pre><code class="language-perl">my \lines   = open('products').lines;
-my \beer    = lines.grep(/beer/);
-my \excited = beer.map(&amp;uc);
-.say for excited;
-</code></pre>
-
-<p>然而, 任何重用 <code>lines</code>、<code>beer</code>、或<code>excited</code> 的尝试都会导致错误。这段程序在性能上等价于:</p>
-
-<pre><code class="language-perl">.say for open('products').lines.grep(/beer/).map(&amp;uc);
-</code></pre>
-
-<p>但是提供了一个给阶段命名的机会。注意使用 Scalar 变量代替也是可以的, 但是单个参数规则需要最终的循环必须为:</p>
-
-<pre><code class="language-perl">.say for |$excited;
-</code></pre>
-
-<p>只要序列没有被标记为 <code>lazy</code>, 把 <strong>Seq</strong> 赋值给数组就会迫切的执行操作并把结果存到数组中。因此, 任何人这样写就不惊讶了:</p>
-
-<pre><code class="language-perl">my @lines   = open('products').lines;
-my @beer    = @lines.grep(/beer/);
-my @excited = @beer.map(&amp;uc);
-.say for @excited;
-</code></pre>
-
-<p>重用这些数组中的任何一个都没问题。当然, 该程序的内存表现完全不同, 并且它会较慢, 因为它创建了所有的额外的 Scalar 容器(导致额外的垃圾回收)和糟糕的位置引用。(我们不得不在程序的生命周期中多次谈论同一个字符串)。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="o">*</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="o">^</span><span class="n"></span><span class="n">name</span><span class="p">;</span>  <span class="c1"># Seq</span>
+<span class="n"></span><span class="n">say</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="n"></span><span class="n">Z</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">)</span><span class="o">.</span><span class="o">^</span><span class="n"></span><span class="n">name</span><span class="p">;</span>     <span class="c1"># Seq</span>
+<span class="n"></span><span class="n">say</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span> <span class="o">+</span> <span class="o">*</span> <span class="o">...</span> <span class="o">*</span><span class="p">)</span><span class="o">.</span><span class="o">^</span><span class="n"></span><span class="n">name</span><span class="p">;</span>   <span class="c1"># Seq</span>
+<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="err">*</span><span class="nv">IN</span><span class="o">.</span><span class="n"></span><span class="n">lines</span><span class="o">.</span><span class="o">^</span><span class="n"></span><span class="n">name</span><span class="p">;</span>            <span class="c1"># Seq</span>
+</code></pre></div><p>因为 <strong>Seq</strong> 默认不会记住它的值(values), 所以 <strong>Seq</strong> 只能被使用一次。例如, 如果存储了一个 <strong>Seq</strong>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="o">\</span><span class="n"></span><span class="n">seq</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="o">*</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>只有第一次迭代会有效, 之后再尝试迭代就会死, 因为值已经被用完了:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="n"></span><span class="n">seq</span> <span class="p">{</span> <span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="p">}</span>    <span class="c1"># 2\n3\n4\n</span>
+<span class="k">for</span> <span class="n"></span><span class="n">seq</span> <span class="p">{</span> <span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="p">}</span>    <span class="c1"># Dies: This Seq has already been iterated</span>
+</code></pre></div><p>这意味着你可以确信 for 循环迭代了文件的行:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">lines</span> <span class="p">{</span>
+    <span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">if</span> <span class="sr">/beer/</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>这不会把文件中的行保持在内存中。此外设立不会把所有行保持在内存中的处理管道也会很容易:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="o">\</span><span class="n"></span><span class="n">lines</span>   <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;products&#39;</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">lines</span><span class="p">;</span>
+<span class="k">my</span> <span class="o">\</span><span class="n"></span><span class="n">beer</span>    <span class="o">=</span> <span class="n"></span><span class="n">lines</span><span class="o">.</span><span class="nb">grep</span><span class="p">(</span><span class="sr">/beer/</span><span class="p">)</span><span class="p">;</span>
+<span class="k">my</span> <span class="o">\</span><span class="n"></span><span class="n">excited</span> <span class="o">=</span> <span class="n"></span><span class="n">beer</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">uc</span><span class="p">)</span><span class="p">;</span>
+<span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="n"></span><span class="n">excited</span><span class="p">;</span>
+</code></pre></div><p>然而, 任何重用 <code>lines</code>、<code>beer</code>、或<code>excited</code> 的尝试都会导致错误。这段程序在性能上等价于:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;products&#39;</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">lines</span><span class="o">.</span><span class="nb">grep</span><span class="p">(</span><span class="sr">/beer/</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">uc</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>但是提供了一个给阶段命名的机会。注意使用 Scalar 变量代替也是可以的, 但是单个参数规则需要最终的循环必须为:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="o">|</span><span class="nv">$</span><span class="nv">excited</span><span class="p">;</span>
+</code></pre></div><p>只要序列没有被标记为 <code>lazy</code>, 把 <strong>Seq</strong> 赋值给数组就会迫切的执行操作并把结果存到数组中。因此, 任何人这样写就不惊讶了:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">lines</span>   <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;products&#39;</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">lines</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@</span><span class="nv">beer</span>    <span class="o">=</span> <span class="nv">@</span><span class="nv">lines</span><span class="o">.</span><span class="nb">grep</span><span class="p">(</span><span class="sr">/beer/</span><span class="p">)</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@</span><span class="nv">excited</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">beer</span><span class="o">.</span><span class="nb">map</span><span class="p">(</span><span class="o">&amp;</span><span class="nb">uc</span><span class="p">)</span><span class="p">;</span>
+<span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="nv">@</span><span class="nv">excited</span><span class="p">;</span>
+</code></pre></div><p>重用这些数组中的任何一个都没问题。当然, 该程序的内存表现完全不同, 并且它会较慢, 因为它创建了所有的额外的 Scalar 容器(导致额外的垃圾回收)和糟糕的位置引用。(我们不得不在程序的生命周期中多次谈论同一个字符串)。</p>
 <p>偶尔, 要求 <strong>Seq</strong> 缓存自身也有用。这可以通过在<strong>Seq</strong> 身上调用 <code>cache</code>方法完成, 这从 <strong>Seq</strong> 得到一个惰性列表并返回它。之后再调用 <code>cache</code>方法会返回同样的惰性列表。注意, 第一次调用 <code>cache</code>方法会被算作消费了<strong>Seq</strong>, 所以如果之前已经发生了迭代它就不再有效, 而且之后任何在调用完 <code>cache</code>的迭代尝试都会失败。只有 <code>.cache</code>方法能被调用多于1 次。</p>
-
 <p><strong>Seq</strong> 不像 <strong>List</strong> 那样遵守 <code>Positional</code> role。 因此, <strong>Seq</strong> 不能被绑定给含有 @ 符号的变量:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">lines</span> <span class="p">:</span><span class="o">=</span> <span class="nv">$</span><span class="err">*</span><span class="nv">IN</span><span class="o">.</span><span class="n"></span><span class="n">lines</span><span class="p">;</span>  <span class="c1"># Dies</span>
+</code></pre></div><p>这样做的一个后果就是, 原生地, 你不能传递 Seq 作为绑定给@符号的参数:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">process</span><span class="p">(@data) {</span>
 
-<pre><code class="language-perl">my @lines := $*IN.lines;  # Dies
-</code></pre>
-
-<p>这样做的一个后果就是, 原生地, 你不能传递 Seq 作为绑定给@符号的参数:</p>
-
-<pre><code class="language-perl">sub process(@data) {
-
-}
-process($*IN.lines);
-</code></pre>
-
-<p>这会极不方便。因此, 签名 binder(它实际使用 ::= 赋值语义而非 :=)会 spot 失败来绑定 @符号参数, 并检查参数是否遵守了 Positional role。 如果遵守了, 那么它会在参数上调用 cache 方法并绑定它的结果代替。</p>
-
+<span class="p">}</span>
+<span class="n"></span><span class="n">process</span><span class="p">(</span><span class="nv">$</span><span class="err">*</span><span class="nv">IN</span><span class="o">.</span><span class="n"></span><span class="n">lines</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>这会极不方便。因此, 签名 binder(它实际使用 ::= 赋值语义而非 :=)会 spot 失败来绑定 @符号参数, 并检查参数是否遵守了 Positional role。 如果遵守了, 那么它会在参数上调用 cache 方法并绑定它的结果代替。</p>
 <h3 id="iterable">Iterable</h3>
-
-<hr />
-
+<hr>
 <p><strong>Seq</strong> 和 <strong>List</strong> 这俩, 还有 Raku 中的各种其它类型, 遵守 <strong>Iterable</strong> role。这个 role 的主要意图是获得一个 <code>iterator</code>方法。中级 Raku 用户很少会关心 <code>iterator</code>方法和它返回什么。</p>
-
 <p><strong>Iterable</strong> 的第二个目的是为了标记出会被按需展开的东西, 使用 <code>flat</code>方法或用在它们身上的函数。</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="nv">@</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@</span><span class="nv">b</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">;</span>
 
-<pre><code class="language-perl">my @a = 1, 2, 3;
-my @b = 4, 5;
-
-for flat @a, @b { }          # 5 次迭代
-say [flat @a, @b].elems;     # 5 次迭代
-</code></pre>
-
-<p><strong>flat</strong> 的另一用途是展开嵌套的列表结构。例如, <strong>Z</strong>(zip)操作符产生一个列表的列表:</p>
-
-<pre><code class="language-perl">say (1, 2 Z 'a', 'b').perl;  # ((1, &quot;a&quot;), (2, &quot;b&quot;)).Seq
-</code></pre>
-
-<p><strong>flat</strong> 能用于展开它们, 这在和使用带有多个参数的尖块 for 循环一块使用时很有用:</p>
-
-<pre><code class="language-perl">for flat 1, 2 Z 'a', 'b' -&gt; $num, $letter  { }
-</code></pre>
-
-<p>注意 <strong>flat</strong> 也涉及 Scalar 容器, 所以:</p>
-
-<pre><code class="language-perl">for flat $(1, 2) { }
-</code></pre>
-
-<p>将只会迭代一次。记住数组把所有东西都存放在 Scalar 容器中, 在数组身上调用 <em>flat</em> 总是和迭代数组自身相同。实际上, 在数组上调用 <em>flat</em> 返回的同一性。</p>
+<span class="k">for</span> <span class="n"></span><span class="n">flat</span> <span class="nv">@</span><span class="nv">a</span><span class="p">,</span> <span class="nv">@</span><span class="nv">b</span> <span class="p">{</span> <span class="p">}</span>          <span class="c1"># 5 次迭代</span>
+<span class="n"></span><span class="n">say</span> <span class="p">[</span><span class="n"></span><span class="n">flat</span> <span class="nv">@</span><span class="nv">a</span><span class="p">,</span> <span class="nv">@</span><span class="nv">b</span><span class="p">]</span><span class="o">.</span><span class="n"></span><span class="n">elems</span><span class="p">;</span>     <span class="c1"># 5 次迭代</span>
+</code></pre></div><p><strong>flat</strong> 的另一用途是展开嵌套的列表结构。例如, <strong>Z</strong>(zip)操作符产生一个列表的列表:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="n"></span><span class="n">Z</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>  <span class="c1"># ((1, &#34;a&#34;), (2, &#34;b&#34;)).Seq</span>
+</code></pre></div><p><strong>flat</strong> 能用于展开它们, 这在和使用带有多个参数的尖块 for 循环一块使用时很有用:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="n"></span><span class="n">flat</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="n"></span><span class="n">Z</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;b&#39;</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">num</span><span class="p">,</span> <span class="nv">$</span><span class="nv">letter</span>  <span class="p">{</span> <span class="p">}</span>
+</code></pre></div><p>注意 <strong>flat</strong> 也涉及 Scalar 容器, 所以:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="n"></span><span class="n">flat</span> <span class="nv">$</span><span class="err">(</span><span class="nv">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+</code></pre></div><p>将只会迭代一次。记住数组把所有东西都存放在 Scalar 容器中, 在数组身上调用 <em>flat</em> 总是和迭代数组自身相同。实际上, 在数组上调用 <em>flat</em> 返回的同一性。</p>
 
 
         
@@ -705,7 +562,7 @@ say [flat @a, @b].elems;     # 5 次迭代
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

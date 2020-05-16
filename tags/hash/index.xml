@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hash on Raku Programming</title>
@@ -19,7 +19,7 @@
       <guid>https://ohmysummer.github.io/post/2018-07-07-hashes-and-maps/</guid>
       <description>关联角色和关联类 关联角色是 Hash 和 Map 以及 MixHash 等其他类的基础。它定义了将在关联类中使用的两种类型; 默认情况下，您可以使用任何内容（字面意思，因为任何 Any 子类的类都可以使用）作为键和 keyof 方法。
 默认情况下，使用 % sigil 声明的任何对象都将获得 Associative 角色，默认情况下将表现为散列，但此角色仅提供上述两种方法，以及默认的 Hash 行为。
-say (%).^name ; # 输出 Hash  相反，如果未混入 Associative 角色，则不能使用 % sigil，但由于此角色没有任何关联属性，因此你必须重新定义散列下标操作符的行为。为此，你必须重写几个函数：
+say (%).^name ; # 输出 Hash 相反，如果未混入 Associative 角色，则不能使用 % sigil，但由于此角色没有任何关联属性，因此你必须重新定义散列下标操作符的行为。为此，你必须重写几个函数：
 class Logger does Associative[Cool,DateTime] { has %.store; method log( Cool $event ) { %.store{ DateTime.new( now ) } = $event; } multi method AT-KEY ( ::?CLASS:D: $key) { my @keys = %.store.keys.grep( /$key/ ); %.store{ @keys }; } multi method EXISTS-KEY (::?</description>
     </item>
     
@@ -30,8 +30,8 @@ class Logger does Associative[Cool,DateTime] { has %.store; method log( Cool $ev
       
       <guid>https://ohmysummer.github.io/post/2018-07-05-%E6%95%A3%E5%88%97%E7%9A%84%E6%95%A3%E5%88%97/</guid>
       <description>如何在 Raku 中声明散列的数字散列？ 默认情况下，散列将所有键转换为字符串。当你的键是可能接近的数字时，会导致问题：
-&amp;gt; my %h; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash %h = {&amp;quot;0.333333&amp;quot; =&amp;gt; 2}  当然，这可以修复如下：
-&amp;gt; my %h{Real}; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash[Any,Real] %h = (my Any %{Real} = 0.333333 =&amp;gt; 2, &amp;lt;1/3&amp;gt; =&amp;gt; 1)  但现在我需要散列的数字散列时，例如 { 1/3 =&amp;gt; { 2/3 =&amp;gt; 1, 0.666667 =&amp;gt; 2 } }。
+&amp;gt; my %h; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash %h = {&amp;quot;0.333333&amp;quot; =&amp;gt; 2} 当然，这可以修复如下：
+&amp;gt; my %h{Real}; %h{1/3} = 1; %h{0.333333} = 2; dd %h; Hash[Any,Real] %h = (my Any %{Real} = 0.333333 =&amp;gt; 2, &amp;lt;1/3&amp;gt; =&amp;gt; 1) 但现在我需要散列的数字散列时，例如 { 1/3 =&amp;gt; { 2/3 =&amp;gt; 1, 0.666667 =&amp;gt; 2 } }。
 &amp;gt; my %h{Real}; %h{1/3}{2/3} = 1; %h{1/3}{0.666667} = 2; dd %h; Hash[Any,Real] %h = (my Any %{Real} = &amp;lt;1/3&amp;gt; =&amp;gt; ${&amp;quot;0.</description>
     </item>
     

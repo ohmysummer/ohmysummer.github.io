@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-03-raku%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,23 +231,14 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p><a href="https://docs.raku.org/language/concurrency">Concurrency</a></p>
-
+        <p><a href="https://docs.raku.org/language/concurrency">Concurrency</a></p>
 <p>与大多数现代编程语言一样，Raku 被设计为<a href="https://en.wikipedia.org/wiki/Concurrent_computing">支持并发</a>（允许多个事件同时发生）和异步编程（有时称为事件驱动或反应式编程 - 即程序某些部分的事件或变化可能会导致程序流异步地改变程序的其它部分）。</p>
-
 <p>Perl 的并发设计的目的是提供一个高层级的，可组合的，一致的接口，而不管如下所述的虚拟机通过工具层怎样为特定操作的系统来实现它。</p>
-
 <p>此外，某些 Perl 的特性可以隐式地以异步的方式操作，所以为了确保这些特性可预测的互通，用户代码应在可能情况下，避免较低层级的并发的 API（即<a href="https://docs.raku.org/type/Thread">线程</a>和<a href="https://docs.raku.org/type/Scheduler">调度器</a>），并使用高层级接口。</p>
-
 <h2 id="high-level-apis">High-level APIs</h2>
-
 <h3 id="promises">Promises</h3>
-
-<p><a href="https://docs.raku.org/type/Promise">Promise</a>（在其他编程环境中也被称为 *future*）封装了在获得 promise 时可能尚未完成或甚至未开始的计算结果。<code>Promise</code> 从 <code>Planned</code> 状态开始, 结果要么是 <code>Kept</code> 状态, 这意味着该 promise 已成功完成, 要么是 <code>Broken</code> 状态, 意味着该 promise 已失败。 通常这就是用户代码需要以并行或异步方式操作的使用最多的功能。</p>
-
-<pre><code class="language-raku">my $p1 = Promise.new;
+<p><a href="https://docs.raku.org/type/Promise">Promise</a>（在其他编程环境中也被称为 <em>future</em>）封装了在获得 promise 时可能尚未完成或甚至未开始的计算结果。<code>Promise</code> 从 <code>Planned</code> 状态开始, 结果要么是 <code>Kept</code> 状态, 这意味着该 promise 已成功完成, 要么是 <code>Broken</code> 状态, 意味着该 promise 已失败。 通常这就是用户代码需要以并行或异步方式操作的使用最多的功能。</p>
+<pre><code class="language-raku" data-lang="raku">my $p1 = Promise.new;
 say $p1.status;       # OUTPUT: «Planned␤»
 $p1.keep('Result');
 say $p1.status;       # OUTPUT: «Kept␤» 
@@ -261,58 +252,38 @@ say $p2.result;       # dies, because the promise has been broken
 
 CATCH { default { say .^name, ': ', .Str } };
 # OUTPUT: «X::AdHoc+{X::Promise::Broken}: oh no␤»
-</code></pre>
-
-<p><code>Promise</code> 通过组合, 例如通过链接(chaining), 通常通过 <a href="https://docs.raku.org/type/Promise#method_then">then</a> 方法获取更多力量:</p>
-
-<pre><code class="language-raku">my $promise1 = Promise.new();
+</code></pre><p><code>Promise</code> 通过组合, 例如通过链接(chaining), 通常通过 <a href="https://docs.raku.org/type/Promise#method_then">then</a> 方法获取更多力量:</p>
+<pre><code class="language-raku" data-lang="raku">my $promise1 = Promise.new();
 my $promise2 = $promise1.then(
     -&gt; $v { say $v.result; &quot;Second Result&quot;}
 );
 $promise1.keep(&quot;First Result&quot;);
 say $promise2.result;   # First Result \n Second Result
-</code></pre>
-
-<p>在这里 <a href="https://docs.raku.org/type/Promise#method_then">then</a> 方法安排代码(即圆括号中的闭包)在第一个 <a href="https://docs.raku.org/type/Promise">Promise</a> 为 kept 或 broken 时执行, 它自身返回一个新的 Promise, 这个新的 Promise 会在执行代码时与结果一块保存。 (如果代码执行失败则 broken ) <code>keep</code> 更改 promise 的状态为 <strong>Kept</strong>, 并设置结果为位置参数。<code>result</code> 阻塞当前执行的线程直到那个 promise 变为 kept 或 broken, 如果它是 kept, 那么它会返回那个结果(即传递给 <code>keep</code> 的值, ) 否则它会根据传递给 <code>break</code> 的值抛出异常。后者的行为如下所示:</p>
-
-<pre><code class="language-raku">my $promise1 = Promise.new();
+</code></pre><p>在这里 <a href="https://docs.raku.org/type/Promise#method_then">then</a> 方法安排代码(即圆括号中的闭包)在第一个 <a href="https://docs.raku.org/type/Promise">Promise</a> 为 kept 或 broken 时执行, 它自身返回一个新的 Promise, 这个新的 Promise 会在执行代码时与结果一块保存。 (如果代码执行失败则 broken ) <code>keep</code> 更改 promise 的状态为 <strong>Kept</strong>, 并设置结果为位置参数。<code>result</code> 阻塞当前执行的线程直到那个 promise 变为 kept 或 broken, 如果它是 kept, 那么它会返回那个结果(即传递给 <code>keep</code> 的值, ) 否则它会根据传递给 <code>break</code> 的值抛出异常。后者的行为如下所示:</p>
+<pre><code class="language-raku" data-lang="raku">my $promise1 = Promise.new();
 my $promise2 = $promise1.then(-&gt; $v { say &quot;Handled but : &quot;; say $v.result});
 $promise1.break(&quot;First Result&quot;);
 try $promise2.result;
 say $promise2.cause;        # Handled but : \n First Result
-</code></pre>
-
-<p>当它在原来的作为参数传递的 promise 上调用 <code>result</code> 方法时, 这里的 <code>break</code> 会导致 <code>then</code> 代码块抛出异常, 这随后会导致第二个 promise 变为 broken, 在它的结果被接收时反过来引发一个异常。然后能从 <code>cause</code> 中访问那个实际的 <a href="https://docs.raku.org/type/Exception">Exception</a> 对象。如果那个 promise 还没有变为 broken, 那么 <code>cause</code> 会引发 <a href="https://docs.raku.org/type/X$COLON$COLONPromise$COLON$COLONCauseOnlyValidOnBroken">X::Promise::CauseOnlyValidOnBroken</a> 异常。</p>
-
+</code></pre><p>当它在原来的作为参数传递的 promise 上调用 <code>result</code> 方法时, 这里的 <code>break</code> 会导致 <code>then</code> 代码块抛出异常, 这随后会导致第二个 promise 变为 broken, 在它的结果被接收时反过来引发一个异常。然后能从 <code>cause</code> 中访问那个实际的 <a href="https://docs.raku.org/type/Exception">Exception</a> 对象。如果那个 promise 还没有变为 broken, 那么 <code>cause</code> 会引发 <a href="https://docs.raku.org/type/X$COLON$COLONPromise$COLON$COLONCauseOnlyValidOnBroken">X::Promise::CauseOnlyValidOnBroken</a> 异常。</p>
 <p><a href="https://docs.raku.org/type/Promise">Promise</a> 也可以安排在未来自动保存(kept):</p>
-
-<pre><code class="language-raku">my $promise1 = Promise.in(5);
+<pre><code class="language-raku" data-lang="raku">my $promise1 = Promise.in(5);
 my $promise2 = $promise1.then(-&gt; $v { say $v.status; 'Second Result' });
 say $promise2.result; # 5 秒后打印出: Kept\n Second Result
-</code></pre>
-
-<p><a href="https://docs.raku.org/type/Promise#method_in">in</a> 方法创建了一个新的 promise 并安排一个新的任务在不早于所提供的秒数内在它身上调用 <code>keep</code>, 返回一个新的 <a href="https://docs.raku.org/type/Promise">Promise</a> 对象。</p>
-
+</code></pre><p><a href="https://docs.raku.org/type/Promise#method_in">in</a> 方法创建了一个新的 promise 并安排一个新的任务在不早于所提供的秒数内在它身上调用 <code>keep</code>, 返回一个新的 <a href="https://docs.raku.org/type/Promise">Promise</a> 对象。</p>
 <p>promises 的一个非常频繁的用法是运行一段代码, 并且一旦它成功地返回就 keep 那个 promise, 或者当那块代码死掉时中断(break)那个 promise。<a href="https://docs.raku.org/type/Promise#method_start">start</a> 方法为此提供了一种快捷方式:</p>
-
-<pre><code class="language-raku">my $promise = Promise.start(
+<pre><code class="language-raku" data-lang="raku">my $promise = Promise.start(
     { my $i = 0; for 1 .. 10 { $i += $_ }; $i}
 );
 say $promise.status;    # Kept
 say $promise.result;    # 55
-</code></pre>
-
-<p>这里返回的 promise 的结果(<code>result</code>)是从代码返回的值。类似地, 如果那段代码失败了(那个 promise 也因此被中断), 那么 <code>cause</code> 会成为抛出的那个 <a href="https://docs.raku.org/type/Exception">Exception</a> 对象:</p>
-
-<pre><code class="language-raku">my $promise = Promise.start({ die &quot;Broken Promise&quot; });
+</code></pre><p>这里返回的 promise 的结果(<code>result</code>)是从代码返回的值。类似地, 如果那段代码失败了(那个 promise 也因此被中断), 那么 <code>cause</code> 会成为抛出的那个 <a href="https://docs.raku.org/type/Exception">Exception</a> 对象:</p>
+<pre><code class="language-raku" data-lang="raku">my $promise = Promise.start({ die &quot;Broken Promise&quot; });
 try $promise.result; # Nil
 say $promise.cause;  # Broken Promise
                      #  in block &lt;unit&gt; at &lt;unknown file&gt; line 1
-</code></pre>
-
-<p>这个模式太常见了以至于它还提供了子例程形式:</p>
-
-<pre><code class="language-raku">my $promise = start {
+</code></pre><p>这个模式太常见了以至于它还提供了子例程形式:</p>
+<pre><code class="language-raku" data-lang="raku">my $promise = start {
     my $i = 0;
     for 1 .. 10 {
         $i += $_
@@ -321,11 +292,8 @@ say $promise.cause;  # Broken Promise
 }
 my $result = await $promise;
 say $result;
-</code></pre>
-
-<p><code>await</code> 几乎等价于在由 <code>start</code> 返回的 promise 对象身上调用 <code>result</code> 但是它也会接受一组 promises 并返回每个 promise 的结果:</p>
-
-<pre><code class="language-raku">my $p1 = start {
+</code></pre><p><code>await</code> 几乎等价于在由 <code>start</code> 返回的 promise 对象身上调用 <code>result</code> 但是它也会接受一组 promises 并返回每个 promise 的结果:</p>
+<pre><code class="language-raku" data-lang="raku">my $p1 = start {
     my $i = 0;
     for 1 .. 10 {
         $i += $_
@@ -341,33 +309,24 @@ my $p2 = start {
 };
 my @result = await $p1, $p2;
 say @result;            # [55 -55]
-</code></pre>
-
-<p>除了 <code>await</code> 之外, 两个类方法把几个 <a href="https://docs.raku.org/type/Promise">Promise</a> 对象合并到一个新的 promise 对象中: 当所有原来的 promises 是 kept 或 broken 时, <code>allof</code> 返回一个 kept 状态的 promise:</p>
-
-<pre><code class="language-raku">my $promise = Promise.allof(
+</code></pre><p>除了 <code>await</code> 之外, 两个类方法把几个 <a href="https://docs.raku.org/type/Promise">Promise</a> 对象合并到一个新的 promise 对象中: 当所有原来的 promises 是 kept 或 broken 时, <code>allof</code> 返回一个 kept 状态的 promise:</p>
+<pre><code class="language-raku" data-lang="raku">my $promise = Promise.allof(
     Promise.in(2),
     Promise.in(3)
 );
 
 await $promise;
 say &quot;All done&quot;; # Should be not much more than three seconds later
-</code></pre>
-
-<p>并且当原 promises 中的任何一个的状态变为 kept 或 broken 时, <code>anyof</code> 返回将为 kept 的新 promise:</p>
-
-<pre><code class="language-raku">my $promise = Promise.anyof(
+</code></pre><p>并且当原 promises 中的任何一个的状态变为 kept 或 broken 时, <code>anyof</code> 返回将为 kept 的新 promise:</p>
+<pre><code class="language-raku" data-lang="raku">my $promise = Promise.anyof(
     Promise.in(3),
     Promise.in(8600)
 );
 
 await $promise;
 say &quot;All done&quot;; # Should be about 3 seconds later
-</code></pre>
-
-<p>不同于 <code>await</code>，然而如果不引用原来的 promise, 那么就访问不了原来状态为 kept 的 promise 的结果，因此当任务的完成或其他方面对于消费者来说比实际结果更重要时，或者当通过其它方式收集结果时。 你可能，例如，您可以创建一个依赖的Promise，它会检查每个原始的 promise：</p>
-
-<pre><code class="language-raku">my @promises;
+</code></pre><p>不同于 <code>await</code>，然而如果不引用原来的 promise, 那么就访问不了原来状态为 kept 的 promise 的结果，因此当任务的完成或其他方面对于消费者来说比实际结果更重要时，或者当通过其它方式收集结果时。 你可能，例如，您可以创建一个依赖的Promise，它会检查每个原始的 promise：</p>
+<pre><code class="language-raku" data-lang="raku">my @promises;
 for 1..5 -&gt; $t {
     push @promises, start {
         sleep $t;
@@ -375,13 +334,9 @@ for 1..5 -&gt; $t {
     };
 }
 say await Promise.allof(@promises).then({ so all(@promises&gt;&gt;.result) });
-</code></pre>
-
-<p>如果所有的 promise 都保持为 True, 那么它会打印 True, 否则会打印 False。</p>
-
+</code></pre><p>如果所有的 promise 都保持为 True, 那么它会打印 True, 否则会打印 False。</p>
 <p>如果你正在创建一个 promise，你打算保持或中断自己，那么在你做之前, 你可能不想要任何可能会收到 promise 以无意（或否则）保持或中断该 promise 的代码。 为了这个目的，就有了方法 <a href="https://docs.raku.org/type/Promise#method_vow">vow</a>，它返回一个 <a href="https://docs.raku.org/type/Vow">Vow</a> 对象，它成为 promise 能被保留或中断的唯一机制。 如果试图直接保持或断开这个 Promise ，则会抛出 <a href="https://docs.raku.org/type/X$COLON$COLONPromise$COLON$COLONVowed">X::Promise::Vowed</a> 异常，只要 <code>vow</code> 对象保持私有，那么 promise 的状态就是安全的：</p>
-
-<pre><code class="language-raku">sub get_promise {
+<pre><code class="language-raku" data-lang="raku">sub get_promise {
     my $promise = Promise.new;
     my $vow = $promise.vow;
     Promise.in(10).then({$vow.keep});
@@ -393,25 +348,16 @@ my $promise = get_promise();
 # Will throw an exception
 # &quot;Access denied to keep/break this Promise; already vowed&quot;
 $promise.keep;
-</code></pre>
-
-<p>返回一个将被自动保存或断开的 promise 的方法，如 <code>in</code> 或 <code>start</code> 将会做到这一点，所以没有必要这样做。</p>
-
+</code></pre><p>返回一个将被自动保存或断开的 promise 的方法，如 <code>in</code> 或 <code>start</code> 将会做到这一点，所以没有必要这样做。</p>
 <h3 id="supplies">Supplies</h3>
-
-<p><a href="https://docs.raku.org/type/Supply">Supply</a> 是异步数据流传输机制，其可以以类似于其他编程语言中的&rdquo;事件&rdquo;的方式同时由一个或多个消费者消费，并且可以被视为开启&rdquo;事件驱动&rdquo;或反应式设计。</p>
-
+<p><a href="https://docs.raku.org/type/Supply">Supply</a> 是异步数据流传输机制，其可以以类似于其他编程语言中的&quot;事件&quot;的方式同时由一个或多个消费者消费，并且可以被视为开启&quot;事件驱动&quot;或反应式设计。</p>
 <p>最简单的是，Supply 是一个消息流，可以有多个通过方法 <code>tap</code> 创建的订阅者，其数据项可以使用 <code>emit</code> 放置。</p>
-
 <p>Supply 可以是现场的(<code>live</code>)或按需的(<code>on-demand</code>)。 现场(<code>live</code>)供应就像电视广播：那些调入(收听/收看)的人不会得到先前发出的值。 点播(<code>on-demand</code>)广播就像 Netflix：每个开始流式传输电影（点击电源）的人，总是从头开始（获取所有的值），不管有多少人正在观看它。 请注意，没有为<code>按需</code>供应保留历史记录，而是为供应的每次点击运行 <code>supply</code> 块。</p>
-
 <blockquote>
 <p>Netflix: 在线观看电影的网站</p>
 </blockquote>
-
 <p>实时供应(<code>live Supply</code>)由 <a href="https://docs.raku.org/type/Supplier">Supplier</a> 工厂创建，每个发出的值在添加时传递给所有活动的 tappers：</p>
-
-<pre><code class="language-raku">my $supplier = Supplier.new;
+<pre><code class="language-raku" data-lang="raku">my $supplier = Supplier.new;
 my $supply   = $supplier.Supply;
 
 $supply.tap( -&gt; $v { say $v });
@@ -419,35 +365,25 @@ $supply.tap( -&gt; $v { say $v });
 for 1 .. 10 {
     $supplier.emit($_); # 1\n2\n3\n4\n5\n6\n7\n8\n9\n10
 }
-</code></pre>
-
-<p>请注意，<code>tap</code> 在供应商<a href="https://docs.raku.org/type/Supplier">Supplier</a>创建的 Supply 对象上调用，并且新值在供应商<a href="https://docs.raku.org/type/Supplier">Supplier</a>上发出。</p>
-
+</code></pre><p>请注意，<code>tap</code> 在供应商<a href="https://docs.raku.org/type/Supplier">Supplier</a>创建的 Supply 对象上调用，并且新值在供应商<a href="https://docs.raku.org/type/Supplier">Supplier</a>上发出。</p>
 <p>或者作为由 <code>supply</code> 关键字创建的按需供应 <a href="https://docs.raku.org/type/Supply">Supply</a>：</p>
-
-<pre><code class="language-raku">my $supply = supply {
+<pre><code class="language-raku" data-lang="raku">my $supply = supply {
     for 1 .. 10 {
         emit($_);
     }
 }
 $supply.tap( -&gt; $v { say $v });
 # 1\n2\n3\n4\n5\n6\n7\n8\n9\n10
-</code></pre>
-
-<p>在这种情况下，供应块中的代码在每次供应返回的供应被窃取时执行，如下所示：</p>
-
-<pre><code class="language-raku">my $supply = supply {
+</code></pre><p>在这种情况下，供应块中的代码在每次供应返回的供应被窃取时执行，如下所示：</p>
+<pre><code class="language-raku" data-lang="raku">my $supply = supply {
     for 1 .. 10 {
         emit($_);
     }
 }
 $supply.tap( -&gt; $v { say &quot;First : $v&quot; });
 $supply.tap( -&gt; $v { say &quot;Second : $v&quot; });
-</code></pre>
-
-<p><code>tap</code> 方法返回一个 <a href="https://docs.raku.org/type/Tap">Tap</a> 对象，它可以用来获取关于 tap 的信息，并且当我们不再对事件感兴趣时关闭它：</p>
-
-<pre><code class="language-raku">my $supplier = Supplier.new;
+</code></pre><p><code>tap</code> 方法返回一个 <a href="https://docs.raku.org/type/Tap">Tap</a> 对象，它可以用来获取关于 tap 的信息，并且当我们不再对事件感兴趣时关闭它：</p>
+<pre><code class="language-raku" data-lang="raku">my $supplier = Supplier.new;
 my $supply   = $supplier.Supply;
 
 my $tap = $supply.tap( -&gt; $v { say $v });
@@ -455,50 +391,33 @@ my $tap = $supply.tap( -&gt; $v { say $v });
 $supplier.emit(&quot;OK&quot;);
 $tap.close;
 $supplier.emit(&quot;Won't trigger the tap&quot;);
-</code></pre>
-
-<p>在供应对象(supply object)上调用 <code>done</code> 调用可以为任何 tap 指定的 <code>done</code> 回调，但不会阻止任何其他事件被发送到流，或者接收它们。</p>
-
+</code></pre><p>在供应对象(supply object)上调用 <code>done</code> 调用可以为任何 tap 指定的 <code>done</code> 回调，但不会阻止任何其他事件被发送到流，或者接收它们。</p>
 <p>方法 <code>interval</code> 返回一个新的按需供应，它会以指定的间隔定期发出一个新事件。 发出的数据是从0开始的整数，对于每个事件递增。 以下代码输出 0 .. 5：</p>
-
-<pre><code class="language-raku">my $supply = Supply.interval(2);
+<pre><code class="language-raku" data-lang="raku">my $supply = Supply.interval(2);
 $supply.tap(-&gt; $v { say $v });
 sleep 10;
-</code></pre>
-
-<p>这也可以使用 <code>react</code> 关键字书写(输出0..4)：</p>
-
-<pre><code class="language-raku">react {
+</code></pre><p>这也可以使用 <code>react</code> 关键字书写(输出0..4)：</p>
+<pre><code class="language-raku" data-lang="raku">react {
     whenever Supply.interval(2) -&gt; $v {
         say $v;
         done() if $v == 4;
     }
 }
-</code></pre>
-
-<p>这里，<a href="https://docs.raku.org/language/concurrency#index-entry-whenever">whenever</a> 关键字使用 <a href="https://docs.raku.org/type/Supply#method_act">.act</a> 从提供的块在 Supply 上创建一个 tap。 当在其中一个 tap 中调用 <code>done()</code> 时，退出 <code>react</code> 块。</p>
-
+</code></pre><p>这里，<a href="https://docs.raku.org/language/concurrency#index-entry-whenever">whenever</a> 关键字使用 <a href="https://docs.raku.org/type/Supply#method_act">.act</a> 从提供的块在 Supply 上创建一个 tap。 当在其中一个 tap 中调用 <code>done()</code> 时，退出 <code>react</code> 块。</p>
 <p>第二个参数可以提供给 <code>interval</code>，它指定第一个事件触发之前的延迟（以秒为单位）。 通过 <code>interval</code> 创建的 supply 的每个 tap 都有自0开始的自身序列，如下所示：</p>
-
-<pre><code class="language-raku">my $supply = Supply.interval(2);
+<pre><code class="language-raku" data-lang="raku">my $supply = Supply.interval(2);
 $supply.tap(-&gt; $v { say &quot;First $v&quot; });
 sleep 6;
 $supply.tap(-&gt; $v { say &quot;Second $v&quot;});
 sleep 10;
-</code></pre>
-
-<p>也可以从将要依次发出的值的列表中按需创建 Supply(供给)，因此第一个按需示例（打印1到10）可以写作：</p>
-
-<pre><code class="language-raku">react {
+</code></pre><p>也可以从将要依次发出的值的列表中按需创建 Supply(供给)，因此第一个按需示例（打印1到10）可以写作：</p>
+<pre><code class="language-raku" data-lang="raku">react {
     whenever Supply.from-list(1..10) -&gt; $v {
         say $v;
     }
 }
-</code></pre>
-
-<p>可以使用方法 <code>grep</code> 和 <code>map</code> 分别过滤或转换现有的供应对象(supply object)，以类似具名列表方法的方式创建新供应(supply)：<code>grep</code> 返回这样一个供应(supply)，以至于只有在源流上发出的那些事件的 <code>grep</code> 条件为真时才在第二个 supply 上发出：</p>
-
-<pre><code class="language-raku">my $supplier = Supplier.new;
+</code></pre><p>可以使用方法 <code>grep</code> 和 <code>map</code> 分别过滤或转换现有的供应对象(supply object)，以类似具名列表方法的方式创建新供应(supply)：<code>grep</code> 返回这样一个供应(supply)，以至于只有在源流上发出的那些事件的 <code>grep</code> 条件为真时才在第二个 supply 上发出：</p>
+<pre><code class="language-raku" data-lang="raku">my $supplier = Supplier.new;
 my $supply = $supplier.Supply;
 $supply.tap(-&gt; $v { say &quot;Original : $v&quot; });
 my $odd_supply = $supply.grep({ $_ % 2 });
@@ -508,11 +427,8 @@ $even_supply.tap(-&gt; $v { say &quot;Even : $v&quot; });
 for 0 .. 10 {
     $supplier.emit($_);
 }
-</code></pre>
-
-<p><code>map</code> 返回一个新的 supply(供应)，使得对于发送到原始供应的每个项目，发出作为传递给 <code>map</code> 表达式的结果的新项目：</p>
-
-<pre><code class="language-raku">my $supplier = Supplier.new;
+</code></pre><p><code>map</code> 返回一个新的 supply(供应)，使得对于发送到原始供应的每个项目，发出作为传递给 <code>map</code> 表达式的结果的新项目：</p>
+<pre><code class="language-raku" data-lang="raku">my $supplier = Supplier.new;
 my $supply = $supplier.Supply;
 $supply.tap(-&gt; $v { say &quot;Original : $v&quot; });
 my $half_supply = $supply.map({ $_ / 2 });
@@ -520,48 +436,31 @@ $half_supply.tap(-&gt; $v { say &quot;Half : $v&quot; });
 for 0 .. 10 {
     $supplier.emit($_);
 }
-</code></pre>
-
-<p>如果您需要在 supply(供应)完成时运行一个操作，您可以通过在对 <code>tap</code> 的调用中设置 <code>done</code> 和 <code>quit</code> 选项来完成：</p>
-
-<pre><code class="language-raku">$supply.tap: { ... },
+</code></pre><p>如果您需要在 supply(供应)完成时运行一个操作，您可以通过在对 <code>tap</code> 的调用中设置 <code>done</code> 和 <code>quit</code> 选项来完成：</p>
+<pre><code class="language-raku" data-lang="raku">$supply.tap: { ... },
     done =&gt; { say 'Job is done.' },
     quit =&gt; {
         when X::MyApp::Error { say &quot;App Error: &quot;, $_.message }
     };
-</code></pre>
-
-<p><code>quit</code> 块的工作方式非常类似于 <code>CATCH</code>。 如果异常被标记为由 <code>when</code> 或 <code>default</code> 块看到，那么异常会被捕获并处理。 否则，异常继续沿调用树向上（即，与没有设置 <code>quit</code> 时行为相同）。</p>
-
+</code></pre><p><code>quit</code> 块的工作方式非常类似于 <code>CATCH</code>。 如果异常被标记为由 <code>when</code> 或 <code>default</code> 块看到，那么异常会被捕获并处理。 否则，异常继续沿调用树向上（即，与没有设置 <code>quit</code> 时行为相同）。</p>
 <p>如果你伴随着 <code>whenever</code> 使用 <code>react</code> 或者 <code>supply</code> block 语法，你可以在你的 <code>whenever</code> 块中添加 phasers 来处理来自 tapped supply 的 <code>done</code> 和 <code>quit</code> 消息：</p>
-
-<pre><code class="language-raku">react {
+<pre><code class="language-raku" data-lang="raku">react {
     whenever $supply {
         ...; # your usual supply tap code here
         LAST { say 'Job is done.' }
         QUIT { when X::MyApp::Error { say &quot;App Error: &quot;, $_.message } }
     }
 }
-</code></pre>
-
-<p>这里的行为与在 <code>tap</code> 上设置 <code>done</code> 和 <code>quit</code> 相同。</p>
-
+</code></pre><p>这里的行为与在 <code>tap</code> 上设置 <code>done</code> 和 <code>quit</code> 相同。</p>
 <h3 id="channels">Channels</h3>
-
 <p>通道(<a href="https://docs.raku.org/type/Channel">Channel</a>)是线程安全的队列，可以具有多个读取器和写入器，可以被认为在操作上与“fifo”(先进先出)或命名管道相似，除了它不启用进程间通信之外。 应该注意的是，作为真正的队列，发送到通道的每个值将仅在先读，先服务的基础上对于单个读取器可用：如果想要多个读取器能够接收可能想要发送的每个项目那么请考虑<a href="https://docs.raku.org/type/Supply">Supply</a>。</p>
-
 <p>项目(item)通过方法 <a href="https://docs.raku.org/type/Channel#method_send">send</a> 排队到通道上，方法 <a href="https://docs.raku.org/type/Channel#method_receive">receive</a> 从队列中删除一个项目并返回，如果队列为空，则阻塞它直到发送新项目：</p>
-
-<pre><code class="language-raku">my $channel = Channel.new;
+<pre><code class="language-raku" data-lang="raku">my $channel = Channel.new;
 $channel.send('Channel One');
 say $channel.receive;  # 'Channel One'
-</code></pre>
-
-<p>如果使用 <a href="https://docs.raku.org/type/Channel#method_close">close</a> 方法关闭了通道，那么任何发送(<code>send</code>)都将导致抛出异常 <a href="https://docs.raku.org/type/X$COLON$COLONChannel$COLON$COLONSendOnClosed">X::Channel::SendOnClosed</a>，并且如果队列中没有更多的项目，接收(<code>receive</code>) 将抛出一个 <a href="https://docs.raku.org/type/X$COLON$COLONChannel$COLON$COLONReceiveOnClosed">X::Channel::ReceiveOnClosed</a> 异常。</p>
-
+</code></pre><p>如果使用 <a href="https://docs.raku.org/type/Channel#method_close">close</a> 方法关闭了通道，那么任何发送(<code>send</code>)都将导致抛出异常 <a href="https://docs.raku.org/type/X$COLON$COLONChannel$COLON$COLONSendOnClosed">X::Channel::SendOnClosed</a>，并且如果队列中没有更多的项目，接收(<code>receive</code>) 将抛出一个 <a href="https://docs.raku.org/type/X$COLON$COLONChannel$COLON$COLONReceiveOnClosed">X::Channel::ReceiveOnClosed</a> 异常。</p>
 <p>方法<a href="https://docs.raku.org/type/Channel#method_list">list</a>返回通道上的所有项目，并将阻塞，直到其他项目被排队，除非通道关闭：</p>
-
-<pre><code class="language-raku">my $channel = Channel.new;
+<pre><code class="language-raku" data-lang="raku">my $channel = Channel.new;
 await (^10).map: -&gt; $r {
     start {
         sleep $r;
@@ -572,11 +471,8 @@ $channel.close;
 for $channel.list -&gt; $r {
     say $r;
 }
-</code></pre>
-
-<p>还有从通道返回可用项目的非阻塞方法<a href="https://docs.raku.org/type/Channel#method_poll">poll</a>, 或者, 如果没有项目或通道被关闭则返回 <a href="https://docs.raku.org/type/Nil">Nil</a>，这当然意味着必须检查通道以确定其是否关闭：</p>
-
-<pre><code class="language-raku">my $c = Channel.new;
+</code></pre><p>还有从通道返回可用项目的非阻塞方法<a href="https://docs.raku.org/type/Channel#method_poll">poll</a>, 或者, 如果没有项目或通道被关闭则返回 <a href="https://docs.raku.org/type/Nil">Nil</a>，这当然意味着必须检查通道以确定其是否关闭：</p>
+<pre><code class="language-raku" data-lang="raku">my $c = Channel.new;
 
 # Start three Promises that sleep for 1..3 seconds, and then
 # send a value to our Channel
@@ -613,13 +509,9 @@ loop {
 # Doing some unrelated things...
 # 0 from thread 3 received after 3.01364461 seconds
 # Doing some unrelated things...
-</code></pre>
-
-<p>方法 <a href="https://docs.raku.org/type/Channel#method_closed">closed</a> 返回一个 Promise，当通道关闭时，它将被保存(kept)（因此在布尔上下文中将被计算为 True）。</p>
-
+</code></pre><p>方法 <a href="https://docs.raku.org/type/Channel#method_closed">closed</a> 返回一个 Promise，当通道关闭时，它将被保存(kept)（因此在布尔上下文中将被计算为 True）。</p>
 <p><code>.poll</code> 方法可以与 <code>.receive</code> 方法结合使用，作为一种缓存机制，其中 <code>.poll</code> 返回的值不足是需要获取更多值并加载到通道的信号：</p>
-
-<pre><code class="language-raku">sub get-value {
+<pre><code class="language-raku" data-lang="raku">sub get-value {
     return $c.poll // do { start replenish-cache; $c.receive };
 }
 
@@ -628,11 +520,8 @@ sub replenish-cache {
         $c.send: $_ for slowly-fetch-a-thing();
     }
 }
-</code></pre>
-
-<p>可以使用通道代替前面描述的 <code>whenever</code> 和 <code>react</code> 块中的 <a href="https://docs.raku.org/type/Supply">Supply</a>：</p>
-
-<pre><code class="language-raku">my $channel = Channel.new;
+</code></pre><p>可以使用通道代替前面描述的 <code>whenever</code> 和 <code>react</code> 块中的 <a href="https://docs.raku.org/type/Supply">Supply</a>：</p>
+<pre><code class="language-raku" data-lang="raku">my $channel = Channel.new;
 my $p = start {
     react {
         whenever $channel {
@@ -650,11 +539,8 @@ await (^10).map: -&gt; $r {
 
 $channel.close;
 await $p;
-</code></pre>
-
-<p>还可以使用<a href="https://docs.raku.org/type/Supply#method_Channel">通道方法</a>从<a href="https://docs.raku.org/type/Supply">Supply</a>获得<a href="https://docs.raku.org/type/Channel">通道</a>，该通道方法返回通过 <a href="https://docs.raku.org/type/Supply">Supply</a> 上的 <code>tap</code> 馈送的通道：</p>
-
-<pre><code class="language-raku">my $supplier = Supplier.new;
+</code></pre><p>还可以使用<a href="https://docs.raku.org/type/Supply#method_Channel">通道方法</a>从<a href="https://docs.raku.org/type/Supply">Supply</a>获得<a href="https://docs.raku.org/type/Channel">通道</a>，该通道方法返回通过 <a href="https://docs.raku.org/type/Supply">Supply</a> 上的 <code>tap</code> 馈送的通道：</p>
+<pre><code class="language-raku" data-lang="raku">my $supplier = Supplier.new;
 my $supply   = $supplier.Supply;
 my $channel = $supply.Channel;
 
@@ -675,15 +561,10 @@ await (^10).map: -&gt; $r {
 
 $supplier.done;
 await $p;
-</code></pre>
-
-<p><code>Channel</code> 将返回一个不同的通道，每次调用时都会使用相同的数据。 这可以用于例如将 <a href="https://docs.raku.org/type/Supply">Supply</a> 输出到一个或多个通道以在程序中提供的不同接口。</p>
-
-<h3 id="proc-async">Proc::Async</h3>
-
+</code></pre><p><code>Channel</code> 将返回一个不同的通道，每次调用时都会使用相同的数据。 这可以用于例如将 <a href="https://docs.raku.org/type/Supply">Supply</a> 输出到一个或多个通道以在程序中提供的不同接口。</p>
+<h3 id="procasync">Proc::Async</h3>
 <p><a href="https://docs.raku.org/type/Proc$COLON$COLONAsync">Proc::Async</a> 构建在所描述的设施上以异步方式运行并与外部程序交互：</p>
-
-<pre><code class="language-raku">my $proc = Proc::Async.new('echo', 'foo', 'bar');
+<pre><code class="language-raku" data-lang="raku">my $proc = Proc::Async.new('echo', 'foo', 'bar');
 
 $proc.stdout.tap(-&gt; $v { print &quot;Output: $v&quot; });
 $proc.stderr.tap(-&gt; $v { print &quot;Error:  $v&quot; });
@@ -698,13 +579,9 @@ say &quot;Done.&quot;;
 # Starting...
 # Output: foo bar
 # Done.
-</code></pre>
-
-<p>命令的路径以及命令的任何参数都提供给该构造函数。 该命令将不被执行，直到调用 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_start">start</a>，它将返回一个 Promise，当程序退出时该 Promise 变为 kept 状态。 程序的标准输出和标准错误分别从 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_stdout">stdout</a> 和 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_stderr">stderr</a> 方法中作为 Supply 对象提供，可以根据需要进行分接。</p>
-
+</code></pre><p>命令的路径以及命令的任何参数都提供给该构造函数。 该命令将不被执行，直到调用 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_start">start</a>，它将返回一个 Promise，当程序退出时该 Promise 变为 kept 状态。 程序的标准输出和标准错误分别从 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_stdout">stdout</a> 和 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_stderr">stderr</a> 方法中作为 Supply 对象提供，可以根据需要进行分接。</p>
 <p>如果要写入程序的标准输入，您可以给构造函数提供 <code>:w</code> 副词，并使用方法 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_write">write</a>，<a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_print">print</a> 或 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_say">say</a> 在程序启动后写入打开的管道：</p>
-
-<pre><code class="language-raku">my $proc = Proc::Async.new(:w, 'grep', 'foo');
+<pre><code class="language-raku" data-lang="raku">my $proc = Proc::Async.new(:w, 'grep', 'foo');
 
 $proc.stdout.tap(-&gt; $v { print &quot;Output: $v&quot; });
 
@@ -722,85 +599,46 @@ say &quot;Done.&quot;;
 # Starting...
 # Output: this line has foo
 # Done.
-</code></pre>
-
-<p>一些程序（例如本例中没有文件参数的 <code>grep</code>）在关闭标准输入之前不会退出，因此在完成写入后可以调用 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_close-stdin">close-stdin</a>，以允许由 <code>start</code> 返回的 Promise 的状态变为 kept。</p>
-
+</code></pre><p>一些程序（例如本例中没有文件参数的 <code>grep</code>）在关闭标准输入之前不会退出，因此在完成写入后可以调用 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync#method_close-stdin">close-stdin</a>，以允许由 <code>start</code> 返回的 Promise 的状态变为 kept。</p>
 <h2 id="low-level-apis">Low-level APIs</h2>
-
 <h3 id="threads">Threads</h3>
-
 <p>最低级别的并发接口由 <a href="https://docs.raku.org/type/Thread">Thread</a> 提供。 线程可以被认为是可以最终在处理器上运行的一段代码，其布置几乎完全由虚拟机和/或操作系统完成。 线程应该被考虑，对于所有意图，很大程度上是不受管理的，应避免在用户代码中直接使用它们。</p>
-
 <p>线程可以被创建，然后随后实际运行：</p>
-
-<pre><code class="language-raku">my $thread = Thread.new(code =&gt; { for  1 .. 10  -&gt; $v { say $v }});
+<pre><code class="language-raku" data-lang="raku">my $thread = Thread.new(code =&gt; { for  1 .. 10  -&gt; $v { say $v }});
 # ...
 $thread.run;
-</code></pre>
-
-<p>或者可以在单个调用中创建和运行：</p>
-
-<pre><code class="language-raku">my $thread = Thread.start({ for  1 .. 10  -&gt; $v { say $v }});
-</code></pre>
-
-<p>在这两种情况下，由 <a href="https://docs.raku.org/type/Thread">Thread</a> 对象封装的代码的完成可以用 <code>finish</code> 方法来等待，该方法将阻塞直到线程完成：</p>
-
-<pre><code class="language-raku">$thread.finish;
-</code></pre>
-
-<p>除此之外，没有用于同步或资源共享的其他设施，这主要是为什么应当强调线程不可能直接用于用户代码。</p>
-
+</code></pre><p>或者可以在单个调用中创建和运行：</p>
+<pre><code class="language-raku" data-lang="raku">my $thread = Thread.start({ for  1 .. 10  -&gt; $v { say $v }});
+</code></pre><p>在这两种情况下，由 <a href="https://docs.raku.org/type/Thread">Thread</a> 对象封装的代码的完成可以用 <code>finish</code> 方法来等待，该方法将阻塞直到线程完成：</p>
+<pre><code class="language-raku" data-lang="raku">$thread.finish;
+</code></pre><p>除此之外，没有用于同步或资源共享的其他设施，这主要是为什么应当强调线程不可能直接用于用户代码。</p>
 <h3 id="schedulers">Schedulers</h3>
-
 <p>并发 API 的下一级由实现角色<a href="https://docs.raku.org/type/Scheduler">Scheduler</a>定义的接口的类提供。 调度程序接口的目的是提供一种机制来确定使用哪些资源来运行特定任务以及何时运行它。 大多数较高级别的并发 API 是基于调度器构建的，并且用户代码根本不需要使用它们，尽管一些方法，例如在 <a href="https://docs.raku.org/type/Proc$COLON$COLONAsync">Proc::Async</a>，<a href="https://docs.raku.org/type/Promise">Promise</a> 和 <a href="https://docs.raku.org/type/Supply">Supply</a> 中找到的方法允许您明确地提供调度器。</p>
-
 <p>当前缺省全局调度程序在变量 <code>$*SCHEDULER</code> 中可用。</p>
-
 <p>调度程序的主接口（确实是<a href="https://docs.raku.org/type/Scheduler">Scheduler</a>接口所需的唯一方法）是 <code>cue</code> 方法：</p>
-
-<pre><code class="language-raku">method cue(:&amp;code, Instant :$at, :$in, :$every, :$times = 1; :&amp;catch)
-</code></pre>
-
-<p>这将按照由副词（如在<a href="https://docs.raku.org/type/Scheduler">Scheduler</a>中记录的）所确定的方式使用由调度器实现的执行方案来调度 <code>&amp;code</code> 中的 <code>Callable</code> 以执行。 例如：</p>
-
-<pre><code class="language-raku">my $i = 0;
+<pre><code class="language-raku" data-lang="raku">method cue(:&amp;code, Instant :$at, :$in, :$every, :$times = 1; :&amp;catch)
+</code></pre><p>这将按照由副词（如在<a href="https://docs.raku.org/type/Scheduler">Scheduler</a>中记录的）所确定的方式使用由调度器实现的执行方案来调度 <code>&amp;code</code> 中的 <code>Callable</code> 以执行。 例如：</p>
+<pre><code class="language-raku" data-lang="raku">my $i = 0;
 my $cancellation = $*SCHEDULER.cue({ say $i++}, every =&gt; 2 );
 sleep 20;
-</code></pre>
-
-<p>假设 <code>$*SCHEDULER</code> 没有从默认值改变，将以大约每两秒打印数字0到10（即使用操作系统调度容差）。 在这种情况下，代码将被调度运行，直到程序正常结束，但是该方法返回一个 <a href="https://docs.raku.org/type/Cancellation">Cancellation</a> 对象，它可以用来在正常完成之前取消调度执行：</p>
-
-<pre><code class="language-raku">my $i = 0;
+</code></pre><p>假设 <code>$*SCHEDULER</code> 没有从默认值改变，将以大约每两秒打印数字0到10（即使用操作系统调度容差）。 在这种情况下，代码将被调度运行，直到程序正常结束，但是该方法返回一个 <a href="https://docs.raku.org/type/Cancellation">Cancellation</a> 对象，它可以用来在正常完成之前取消调度执行：</p>
+<pre><code class="language-raku" data-lang="raku">my $i = 0;
 my $cancellation = $*SCHEDULER.cue({ say $i++}, every =&gt; 2 );
 sleep 10;
 $cancellation.cancel;
 sleep 10;
-</code></pre>
-
-<p>应该只输出 0 到 5，</p>
-
+</code></pre><p>应该只输出 0 到 5，</p>
 <p>尽管 <a href="https://docs.raku.org/type/Scheduler">Scheduler</a> 接口提供的所有功能明显优于 <a href="https://docs.raku.org/type/Thread">Thread</a> 提供的，但是通过更高级别的接口可以获得所有的功能，并且不应该有必要直接使用调度器，除非在上述情况下，调度器可以被明确地提供给某些方法。</p>
-
 <p>如果库具有特殊要求，例如 UI 库可能希望所有代码在单个 UI 线程中运行，或者可能需要一些定制的优先级机制，则库可能希望提供备选的调度器实现，然而，被作为标准的实现和下面的描述应该足以满足大多数用户代码。</p>
-
 <h3 id="threadpoolscheduler">ThreadPoolScheduler</h3>
-
 <p><a href="https://docs.raku.org/type/ThreadPoolScheduler">ThreadPoolScheduler</a> 是默认调度程序，它维护一个根据需要分配的线程池，根据需要创建新的线程，直到创建调度程序对象时作为参数给出的最大数目（默认值为16）。如果超过最大值 那么 <code>cue</code> 可以对代码进行排队，直到线程变得可用为止。</p>
-
 <p>Rakudo 允许在程序启动时由环境变量 <code>RAKUDO_MAX_THREADS</code> 在默认调度程序中设置允许的最大线程数。</p>
-
 <h3 id="currentthreadscheduler">CurrentThreadScheduler</h3>
-
 <p><a href="https://docs.raku.org/type/CurrentThreadScheduler">CurrentThreadScheduler</a> 是一个非常简单的调度程序，它将始终调度代码在当前线程上立即运行。 暗示这个调度器的 <code>cue</code> 将阻塞，直到代码完成执行，把它的效用限制在某些特殊情况，如测试。</p>
-
 <h3 id="locks">Locks</h3>
-
 <p>类 <a href="https://docs.raku.org/type/Lock">Lock</a> 在并发环境中提供了保护共享数据的低级机制，并因此是高级 API 中支持线程安全性的关键，这在其他编程语言中有时称为 “Mutex”。 因为较高级别的类（<a href="https://docs.raku.org/type/Promise">Promise</a>，<a href="https://docs.raku.org/type/Supply">Supply</a> 和 <a href="https://docs.raku.org/type/Channel">Channel</a>）在需要时使用 <a href="https://docs.raku.org/type/Lock">Lock</a>，所以用户代码不可能直接使用 Lock。</p>
-
 <p><a href="https://docs.raku.org/type/Lock">Lock</a> 的主接口是方法 <a href="https://docs.raku.org/type/Lock#method_protect">protect</a>，它确保一个代码块（通常称为“临界区”）只能在一个线程中同时执行：</p>
-
-<pre><code class="language-raku">my $lock = Lock.new;
+<pre><code class="language-raku" data-lang="raku">my $lock = Lock.new;
 
 my $a = 0;
 
@@ -815,25 +653,15 @@ await (^10).map: {
 }
 
 say $a; # 10
-</code></pre>
-
-<p><code>protect</code> 返回代码块返回任何东西。</p>
-
+</code></pre><p><code>protect</code> 返回代码块返回任何东西。</p>
 <p>因为 <code>protect</code> 将阻止任何等着要执行临界区的线程，所以代码应该尽可能快。</p>
-
 <h2 id="safety-concerns">Safety Concerns</h2>
-
 <p>一些共享数据并发问题相比其他问题并不明显。 关于这个问题的好文章请看这个<a href="https://6guts.wordpress.com/2014/04/17/racing-to-writeness-to-wrongness-leads/">博客</a>。</p>
-
 <p>要注意的一个特别的问题是当容器自动更新或发生扩展时。 当<a href="https://docs.raku.org/type/Array">数组</a>或<a href="https://docs.raku.org/type/Hash">哈希</a>条目被赋初始值时，底层结构被更改，并且那个操作不是异步安全的。 例如，在这段代码中：</p>
-
-<pre><code class="language-raku">my @array;
+<pre><code class="language-raku" data-lang="raku">my @array;
 my $slot := @array[20];
 $slot = 'foo';
-</code></pre>
-
-<p>第三行是临界区，因为那就是数组被扩展之时。 最简单的解决方法是使用 <code>&lt;Lock&gt;</code> 来保护临界区。 一个可能更好的解决方案是重构代码，以使共享容器不是必需的。</p>
-
+</code></pre><p>第三行是临界区，因为那就是数组被扩展之时。 最简单的解决方法是使用 <code>&lt;Lock&gt;</code> 来保护临界区。 一个可能更好的解决方案是重构代码，以使共享容器不是必需的。</p>
 <blockquote>
 <p>翻译的不够流畅, 大西瓜。</p>
 </blockquote>
@@ -932,7 +760,7 @@ $slot = 'foo';
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

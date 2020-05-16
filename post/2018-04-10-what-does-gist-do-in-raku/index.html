@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-04-10-what-does-gist-do-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -232,10 +232,8 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>当你打印对象的时候, 例如 <code>say $x</code>, Raku 调用 <code>gist</code> 方法. 这个方法是为所有内建类型定义的：对于其中一些类型，它调用 <code>Str</code> 方法，对于某些类型它调用 <code>perl</code> 方法，对于某些类型，它使字符串表示有所不同。</p>
-
 <p>让我们看看如何使用该方法来创建您自己的变体：</p>
-
-<pre><code class="language-raku">class X {
+<pre><code class="language-raku" data-lang="raku">class X {
     has $.value;
 
     method gist {
@@ -247,19 +245,12 @@ my $x = X.new(value =&gt; 42);
 
 say $x; # [42]
 $x.say; # [42]
-</code></pre>
-
-<p>当你调用 <code>say</code> 时，该程序在方括号中打印一个数字：<code>[42]</code>。</p>
-
+</code></pre><p>当你调用 <code>say</code> 时，该程序在方括号中打印一个数字：<code>[42]</code>。</p>
 <p>请注意，双引号字符串中的插值使用 <code>Str</code>，而不是 <code>gist</code>。你可以在这里看到它：</p>
-
-<pre><code class="language-raku">say $x.Str; # X&lt;140586830040512&gt;
+<pre><code class="language-raku" data-lang="raku">say $x.Str; # X&lt;140586830040512&gt;
 say &quot;$x&quot;;   # X&lt;140586830040512&gt;
-</code></pre>
-
-<p>如果您需要自定义插值，请重新定义 <code>Str</code> 方法:</p>
-
-<pre><code class="language-raku">class X {
+</code></pre><p>如果您需要自定义插值，请重新定义 <code>Str</code> 方法:</p>
+<pre><code class="language-raku" data-lang="raku">class X {
     has $.value;
 
     method gist {
@@ -277,9 +268,7 @@ $x.say;     # [42]
 
 say $x.Str; # &quot;42&quot;
 say &quot;$x&quot;;   # &quot;42&quot;
-</code></pre>
-
-<p>现在，我们得到了期望的行为。</p>
+</code></pre><p>现在，我们得到了期望的行为。</p>
 
 
         
@@ -371,7 +360,7 @@ say &quot;$x&quot;;   # &quot;42&quot;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

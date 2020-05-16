@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-28-how-naming-of-variables-works-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,18 +231,11 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>在本系列的第 5 篇文章中，比较 Perl 5 和 Raku，了解在 Raku 中使用 sigils。</p>
-
+        <p>在本系列的第 5 篇文章中，比较 Perl 5 和 Raku，了解在 Raku 中使用 sigils。</p>
 <p>在本系列的前 4 篇文章中，我们比较了 Perl 5 和 Raku，讨论了迁移代码时可能遇到的一些问题，垃圾收集是如何工作的，为什么容器替换了引用，以及在 Raku 中使用(子例程)签名，以及这些与 Perl 5 的区别。</p>
-
 <p>在第 5 篇文章中，我们将查看 Perl 5 和 Raku 之间 sigils(变量名开头的符号)的细微差别。</p>
-
 <h2 id="概览">概览</h2>
-
 <p>让我们从 Perl 5 和 Raku 中的 sigils 的概述开始:</p>
-
 <table>
 <thead>
 <tr>
@@ -251,32 +244,27 @@ if (!doNotTrack) {
 <th align="center">Raku</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td align="center">@</td>
 <td align="center">Array</td>
 <td align="center">Positional</td>
 </tr>
-
 <tr>
 <td align="center">%</td>
 <td align="center">Hash</td>
 <td align="center">Associative</td>
 </tr>
-
 <tr>
 <td align="center">&amp;</td>
 <td align="center">Subroutine</td>
 <td align="center">Callable</td>
 </tr>
-
 <tr>
 <td align="center">$</td>
 <td align="center">Scalar</td>
 <td align="center">Item</td>
 </tr>
-
 <tr>
 <td align="center">*</td>
 <td align="center">Typeglob</td>
@@ -284,135 +272,78 @@ if (!doNotTrack) {
 </tr>
 </tbody>
 </table>
-
-<h2 id="array-vs-positional">@  (Array vs. Positional)</h2>
-
+<h2 id="--array-vs-positional">@  (Array vs. Positional)</h2>
 <p>当您在 Perl 5 中定义一个数组时，您将创建一个可扩展的标量值列表，并给它一个带有符号 <code>@</code> 的名字:</p>
-
-<pre><code class="language-raku"># Perl 5
+<pre><code class="language-raku" data-lang="raku"># Perl 5
 my @foo = (1,2,3);
 push @foo, 42;
 say for @foo;  # 1␤2␤3␤42␤
-</code></pre>
-
-<p>当您在 Raku 中定义一个数组时，您将创建一个新的数组对象，并在 lexical pad 中将该名字绑定到条目。所以:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>当您在 Raku 中定义一个数组时，您将创建一个新的数组对象，并在 lexical pad 中将该名字绑定到条目。所以:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 my @foo = 1,2,3;
 push @foo, 42;
 .say for @foo;  # 1␤2␤3␤42␤
-</code></pre>
-
-<p>这在功能上与 Perl 5 相同。然而，第一行是一个语法塘:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>这在功能上与 Perl 5 相同。然而，第一行是一个语法塘:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 my @foo := Array.new( 1,2,3 );
-</code></pre>
-
-<p>它将一个新的数组对象绑定(而不是赋值)到词法定义的名字 <code>@foo</code> 上。Raku 中的 <code>@</code> sigil 表明了一个类型约束: 如果您想用那个 sigil 将某个东西绑定到 lexpad 条目中，它必须执行 Positional 角色。使用 smartmatch 判断一个类是否执行了某个角色并不困难:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>它将一个新的数组对象绑定(而不是赋值)到词法定义的名字 <code>@foo</code> 上。Raku 中的 <code>@</code> sigil 表明了一个类型约束: 如果您想用那个 sigil 将某个东西绑定到 lexpad 条目中，它必须执行 Positional 角色。使用 smartmatch 判断一个类是否执行了某个角色并不困难:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 say Array ~~ Positional;   # True
-</code></pre>
-
-<p>您可以争辩说，Raku 中的所有数组的实现方式都与 Perl 5 中的绑定数组的实现方式相同。这与事实相差不远。在不深入细节的情况下，一个简单的例子可能会澄清这一点。<code>AT-POS</code> 方法是实现 Positional 角色的类的关键方法之一。每当需要访问单个元素时，就会调用此方法。所以，当你写:</p>
-
-<pre><code class="language-raku">say @a[42];
+</code></pre><p>您可以争辩说，Raku 中的所有数组的实现方式都与 Perl 5 中的绑定数组的实现方式相同。这与事实相差不远。在不深入细节的情况下，一个简单的例子可能会澄清这一点。<code>AT-POS</code> 方法是实现 Positional 角色的类的关键方法之一。每当需要访问单个元素时，就会调用此方法。所以，当你写:</p>
+<pre><code class="language-raku" data-lang="raku">say @a[42];
 you are executing:
 
 say @a.AT-POS(42);
-</code></pre>
-
-<p>当然，这不是唯一可以实现的方法;还有很多。</p>
-
+</code></pre><p>当然，这不是唯一可以实现的方法;还有很多。</p>
 <p>与其绑定执行 Positional 角色的类，不如使用 <code>is trait</code> 这样一个特殊的语法。所以不用写：</p>
-
-<pre><code class="language-raku"># Raku
+<pre><code class="language-raku" data-lang="raku"># Raku
 my @a := YourClass.new( 1,2,3 );
-</code></pre>
-
-<p>你可以写:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>你可以写:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 my @a is YourClass = 1,2,3;
-</code></pre>
-
-<p>在 Perl 5 中，绑定数组比“普通”数组慢得多。在 Raku 中，数组在启动时同样很慢。幸运的是，Rakudo Raku 通过内联和“及时”(JITing)操作码来优化热代码路径。(由于优化器的改进，这种情况发生得更快、更频繁和更好)。</p>
-
-<h2 id="hash-vs-associative">% (Hash vs. Associative)</h2>
-
+</code></pre><p>在 Perl 5 中，绑定数组比“普通”数组慢得多。在 Raku 中，数组在启动时同样很慢。幸运的是，Rakudo Raku 通过内联和“及时”(JITing)操作码来优化热代码路径。(由于优化器的改进，这种情况发生得更快、更频繁和更好)。</p>
+<h2 id="-hash-vs-associative">% (Hash vs. Associative)</h2>
 <p>Raku 中的哈希与数组的实现类似;您还可以将它们视为绑定散列(使用 Perl 5 术语)。应该使用关联角色来实现散列，而不是用于实现数组的 Positional 角色。</p>
-
 <p>同样，一个简单的例子可能会有所帮助。<code>AT-KEY</code> 方法是实现关联角色的类的关键方法之一。每当需要访问特定键值时，都会调用此方法。所以，当你写:</p>
-
-<pre><code class="language-raku">say %h&lt;foo&gt;
-</code></pre>
-
-<p>你正执行：</p>
-
-<pre><code class="language-raku">say %h.AT-KEY(&quot;foo&quot;);
-</code></pre>
-
-<p>当然，还有许多其他的方法可以实现。</p>
-
-<h2 id="subroutine-vs-callable">&amp; (Subroutine vs. Callable)</h2>
-
+<pre><code class="language-raku" data-lang="raku">say %h&lt;foo&gt;
+</code></pre><p>你正执行：</p>
+<pre><code class="language-raku" data-lang="raku">say %h.AT-KEY(&quot;foo&quot;);
+</code></pre><p>当然，还有许多其他的方法可以实现。</p>
+<h2 id="-subroutine-vs-callable">&amp; (Subroutine vs. Callable)</h2>
 <p>在 Perl 5 中，只有一种可调用的可执行代码，即子程序:</p>
-
-<pre><code class="language-raku"># Perl 5
+<pre><code class="language-raku" data-lang="raku"># Perl 5
 sub frobnicate { shift ** 2 }
-</code></pre>
-
-<p>如果你想传递子程序作为参数，你需要得到它的一个引用:</p>
-
-<pre><code class="language-raku"># Perl 5
+</code></pre><p>如果你想传递子程序作为参数，你需要得到它的一个引用:</p>
+<pre><code class="language-raku" data-lang="raku"># Perl 5
 sub do_stuff_with {
     my $lambda = shift;
     &amp;$lambda(shift);
 }
 say do_stuff_with( \&amp;frobnicate, 42 );  # 1764
-</code></pre>
-
-<p>在 Raku 中，多种类型的对象可以包含可执行代码。它们的共同之处在于它们使用 <code>Callable</code> 角色。</p>
-
+</code></pre><p>在 Raku 中，多种类型的对象可以包含可执行代码。它们的共同之处在于它们使用 <code>Callable</code> 角色。</p>
 <p><code>&amp;</code> sigil 强制绑定到执行可 <code>Callable</code> 角色的对象，就像 <code>%</code> sigil 绑定到关联角色和 <code>@</code> sigil 绑定到 Positional 角色一样。一个非常接近 Perl 5 的例子是:</p>
-
-<pre><code class="language-raku"># Raku
+<pre><code class="language-raku" data-lang="raku"># Raku
 my &amp;foo = sub ($a,$b) { $a + $b }
 say foo(42,666);  # 708
-</code></pre>
-
-<p>注意，即使变量有 <code>&amp;</code> sigil，也不需要使用它来执行该变量中的代码。实际上，如果您在 <code>BEGIN</code> 代码块中运行代码，那么与普通的子声明没有什么区别:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>注意，即使变量有 <code>&amp;</code> sigil，也不需要使用它来执行该变量中的代码。实际上，如果您在 <code>BEGIN</code> 代码块中运行代码，那么与普通的子声明没有什么区别:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 BEGIN my &amp;foo = sub ($a,$b) { $a + $b } # same as sub foo()
-</code></pre>
-
-<p>与 Perl 5 相反，在 Raku 中，<code>BEGIN</code> 块可以是没有块的单个语句，因此它与外部共享它的词法作用域。但我们将在以后的文章中对此做更多的讨论。</p>
-
+</code></pre><p>与 Perl 5 相反，在 Raku 中，<code>BEGIN</code> 块可以是没有块的单个语句，因此它与外部共享它的词法作用域。但我们将在以后的文章中对此做更多的讨论。</p>
 <p>使用 <code>&amp;</code> sigiered 变量的主要优点是在编译时就知道里面有可执行的东西，即使有些东西还不知道。</p>
-
 <p>还有其他方法可以设置执行代码:</p>
-
-<pre><code class="language-raku"># Raku
+<pre><code class="language-raku" data-lang="raku"># Raku
 my &amp;boo = -&gt; $a, $b { $a + $b }  # same, using a Block with a signature
 my &amp;goo = { $^a + $^b }          # same, using auto-generated signature
 my &amp;woo = * + *;                 # same, using Whatever currying
-</code></pre>
-
-<p>如果你想知道更多：</p>
-
+</code></pre><p>如果你想知道更多：</p>
 <ul>
 <li><a href="https://docs.raku.org/type/Block">Block with a signature</a></li>
 <li><a href="https://docs.raku.org/language/variables#index-entry-%24%5E">Autogenerated signatures</a></li>
 <li><a href="https://docs.raku.org/type/Whatever">Whatever currying</a></li>
 </ul>
-
 <p>你用哪个取决于具体情况和你的喜好。</p>
-
 <p>最后，您还可以在签名中使用 <code>&amp;</code> sigil 来表示被调用方希望在签名中有可执行的内容。这让我们回到本节的前两个代码示例:</p>
-
-<pre><code class="language-raku"># Perl 5
+<pre><code class="language-raku" data-lang="raku"># Perl 5
 sub frobnicate { shift ** 2 }
 sub do_stuff_with {
     my $lambda = shift;
@@ -424,120 +355,73 @@ say do_stuff_with( \&amp;frobnicate, 42 );  # 1764
 sub frobnicate { $^a ** 2 }
 sub do-stuff-with(&amp;lambda, $param) { lambda($param) }
 say do-stuff-with( &amp;frobnicate, 42 );  # 1764
-</code></pre>
-
-<p>注意，在 Raku 中不需要引用;您可以简单地将代码对象(如 <code>&amp;</code> sigil所示)作为参数传递。</p>
-
-<h2 id="scalar-vs-item">$ (Scalar vs. Item)</h2>
-
+</code></pre><p>注意，在 Raku 中不需要引用;您可以简单地将代码对象(如 <code>&amp;</code> sigil所示)作为参数传递。</p>
+<h2 id="-scalar-vs-item">$ (Scalar vs. Item)</h2>
 <p>与 <code>@</code>、<code>%</code> 和 <code>&amp;</code> sigils 相比，<code>$</code> sigil 有点乏味。它不强制做任何类型检查，因此您可以将其绑定到任何类型的对象上。因此，当你写下:</p>
-
-<pre><code class="language-raku"># Raku
+<pre><code class="language-raku" data-lang="raku"># Raku
 my $answer = 42;
-</code></pre>
-
-<p>像这样的东西就会发生：</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>像这样的东西就会发生：</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 my $answer := Scalar.new(42);
-</code></pre>
-
-<p>除了它是 low level 的。因此，如你所想，这个代码不能工作。这就是当你声明标量变量的时候。</p>
-
+</code></pre><p>除了它是 low level 的。因此，如你所想，这个代码不能工作。这就是当你声明标量变量的时候。</p>
 <p>在 Raku 中，<code>$</code> 还表明应该将其中的任何内容视为单个项。因此，即使标量容器中填充了数组对象，在需要迭代的情况下，它也会被认为是单个项:</p>
-
-<pre><code class="language-raku"># Raku
+<pre><code class="language-raku" data-lang="raku"># Raku
 my @foo = 1,2,3;
 my $bar = Array.new(1,2,3);  # alternately: [1,2,3]
 .say for @foo;  # 1␤2␤3␤
 .say for $bar;  # [1 2 3]
-</code></pre>
-
-<p>请注意，后一种情况只执行一次迭代，而前一种情况执行三次迭代。您可以通过在标识符前面加上适当的前缀来表明是否要迭代某个内容:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>请注意，后一种情况只执行一次迭代，而前一种情况执行三次迭代。您可以通过在标识符前面加上适当的前缀来表明是否要迭代某个内容:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 .say for $@foo;  # [1 2 3] , consider the array as an item
 .say for @$bar;  # 1␤2␤3␤  , consider the scalar as a list
-</code></pre>
-
-<p>但也许这把我们带进了线路噪音领域。幸运的是，还有更详细的对等物:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>但也许这把我们带进了线路噪音领域。幸运的是，还有更详细的对等物:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 .say for @foo.item;  # [1 2 3] , consider the array as an item
 .say for $bar.list;  # 1␤2␤3␤  , consider the scalar as a list
-</code></pre>
-
-<h2 id="typeglobs">* (Typeglobs)</h2>
-
+</code></pre><h2 id="-typeglobs">* (Typeglobs)</h2>
 <p>您可能已经注意到，Raku 既没有 <code>*</code> sigil，也没有 typeglobs 的概念。如果你不知道什么是 typeglobs，你不用担心这个。您不需要知道 Perl 5 中复杂的符号表(您可以跳过下一段)就可以很好地完成任务。</p>
-
 <blockquote>
 <p>在 Raku 中，sigil 是存储在<a href="https://en.wikipedia.org/wiki/Symbol_table">符号表</a>中的名字的一部分，而在 Perl 5 中，名字存储时是不带 sigil 的。例如，在 Perl 5 中，如果在程序中引用 <code>$foo</code>，编译器将查找 <code>foo</code>(没有sigil)，然后获取相关信息(这是一个数组)，并在 <code>$</code> sigil 的索引中查找它需要什么。在 Raku 中，如果引用 <code>$foo</code>，编译器将查找 <code>$foo</code> 并直接使用与该键相关的信息。</p>
 </blockquote>
-
 <p>请不要将用于表示 Raku 中的吞噬参数的 <code>*</code> 与 Perl 5 中的 typeglob sigil 混淆——它们彼此无关。</p>
-
 <h2 id="无符号变量">无符号变量</h2>
-
 <p>Perl 5 不支持开箱即用的无符号变量(除了可能的左值子例程之外，但这确实非常笨拙)。</p>
-
 <p>Raku 也不直接支持无符号变量，但是它通过在定义中的名字前加上反斜杠(<code>\</code>)来支持绑定到无符号名上:</p>
-
-<pre><code class="language-raku"># Raku
+<pre><code class="language-raku" data-lang="raku"># Raku
 my \the-answer = 42;
 say the-answer;  # 42
-</code></pre>
-
-<p>因为赋值的右边是一个常量，这和定义一个常量是相同的：</p>
-
-<pre><code class="language-raku"># Perl 5
+</code></pre><p>因为赋值的右边是一个常量，这和定义一个常量是相同的：</p>
+<pre><code class="language-raku" data-lang="raku"># Perl 5
 use constant the_answer =&gt; 42;
 say the_answer;  # 42
 # Raku
 my constant the-answer = 42;
 say the-answer;  # 42
-</code></pre>
-
-<p>如果定义的右边是别的东西会更有趣。像容器一样的东西! 这允许下面的语法技巧来获得无符号变量:</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>如果定义的右边是别的东西会更有趣。像容器一样的东西! 这允许下面的语法技巧来获得无符号变量:</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 my \foo = $ = 41;                # a sigilless scalar variable
 my \bar = @ = 1,2,3,4,5;         # a sigilless array
 my \baz = % = a =&gt; 42, b =&gt; 666; # a sigilless hash
-</code></pre>
-
-<p>这会创建无名词法实体(标量、数组和散列),使用常规语义来初始化它们, 然后绑定结果对象(一个标量容器,一个数组对象,一个哈希对象)到无符号名字上,也可以使用其他 Raku 的普通变量。</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>这会创建无名词法实体(标量、数组和散列),使用常规语义来初始化它们, 然后绑定结果对象(一个标量容器,一个数组对象,一个哈希对象)到无符号名字上,也可以使用其他 Raku 的普通变量。</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 say ++foo;     # 42
 say bar[2];    # 3
 bar[2] = 42;
 say bar[2];    # 42
 say baz&lt;a b&gt;;  # (42 666)
-</code></pre>
-
-<p>当然，这样做会失去 sigils 的所有优势，特别是在插值方面。之后你总是需要在插值中使用 <code>{}</code>。</p>
-
-<pre><code class="language-raku"># Raku
+</code></pre><p>当然，这样做会失去 sigils 的所有优势，特别是在插值方面。之后你总是需要在插值中使用 <code>{}</code>。</p>
+<pre><code class="language-raku" data-lang="raku"># Raku
 say &quot;The answer is {the-answer}.&quot;;  # The answer is 42.
 The equivalent is more cumbersome in most versions of Perl 5:
 
 # Perl 5
 say &quot;The answer is @{[the_answer]}.&quot;;  # The answer is 42.
-</code></pre>
-
-<h2 id="总结">总结</h2>
-
+</code></pre><h2 id="总结">总结</h2>
 <p>在使用 Perl 5 的概念考虑 Raku 中的所有变量时，都可以认为是绑定变量。这使得它们初始化时有点慢。但是在某些基准测试中，运行时优化和 JITting 热代码路径(有时指向机器码)已经使它的速度超过了 Perl 5 变量。</p>
-
 <p>Raku 中的 <code>@</code>、<code>%</code> 和 <code>&amp;</code> 不创建任何特定的对象，而是指示一个类型约束，该类型约束将应用于名称绑定到的对象上。<code>$</code> sigil 在这方面有所不同，因为不需要强制执行类型约束。</p>
-
 <p><code>@</code> 和 <code>$</code> 前缀分别表示列表化和项化，不过使用 <code>.list</code> 和 <code>.item</code> 方法可能更易于阅读。</p>
-
 <p>通过一些语法技巧，您可以在变量名中不使用任何 sigils 来编写 Raku。</p>
-
 <h2 id="原文">原文</h2>
-
 <p><a href="https://opensource.com/article/18/9/using-sigils-perl-6">https://opensource.com/article/18/9/using-sigils-perl-6</a></p>
 
 
@@ -630,7 +514,7 @@ say &quot;The answer is @{[the_answer]}.&quot;;  # The answer is 42.
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

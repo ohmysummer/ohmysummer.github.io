@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-04-new-raku-pod-features-for-the-new-year/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,63 +231,39 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="介绍">介绍</h1>
-
+        <h1 id="介绍">介绍</h1>
 <p>Rakudo NQP 文件包含解析 Raku 输入文件并将其转换为正在运行的 Raku 程序的代码。 本文将重点介绍最近使用 Rakudo NQP 文件时的经验所学到的一些细节。 这项工作涉及实现一些尚未实现的（NYI）Raku POD 功能，我希望尽快合并这些更改。</p>
-
 <h1 id="准备">准备</h1>
-
 <p>使用的 NQP 文件保存在 <a href="https://github.com/rakudo/rakudo/tree/master/src/Raku">https://github.com/rakudo/rakudo/src/Raku</a> 的git存储库中。 有关我的开发设置和工作流的更多背景信息，请参阅 <a href="https://rakuadvent.wordpress.com/2017/12/08/">https://rakuadvent.wordpress.com/2017/12/08/</a> 上的 2017 年 Raku Advent 条目。</p>
-
 <h1 id="背景">背景</h1>
-
 <p>在我实现 NYI POD 功能的过程中，我已经给我添加到 Rakudo 仓库中的文档添加了注释: <a href="https://github.com/rakudo/rakudo/blob/master/docs/rakudo-nqp-and-pod-notes.md">rakudo/docs/rakudo-nqp-and-pod-notes.md</a>。我更新它，因为我发现了可能没有记录的新内容或者可能不容易找到其文档。该文件还包含一份完整的清单，通过我的计算，NYI POD 功能。以下是我已经工作了几个月的 NYI POD 功能列表，我希望在今年或新年初完成（以及每个功能的 roast 测试）:</p>
-
 <ul>
 <li>NYI: %config :numbered 对于段落或分隔的POD块，使用&rsquo;#&lsquo;别名</li>
 <li>NYI: POD 数据块</li>
 <li>NYI: 以defn块术语格式化代码</li>
 </ul>
-
 <p>缺少的项目描述在由 Damian Conway 博士撰写的精美制作的<a href="https://design.raku.org/S26.html">概要S26</a>中，Larry Wall 是多产的得力男人 - 世界知名的 Perl 专家和著名的 Perl 作者。（请注意，现在很少有人在积极研究 POD，我的 NYI 功能列表可能不完整. S26 写得非常密实，如果不高度集中就不容易理解。我花了不少时间试图实现一个我认为已被描述的功能但我误读了文档！）</p>
-
 <p>受许多因素的影响, 这项工作比我预期的时间更长，因为我将简要讨论，希望它可以帮助未来的开发人员。</p>
-
 <h1 id="rakudo-nqp-grammar-和-actions-学到的东西">Rakudo NQP grammar 和 actions: 学到的东西</h1>
-
 <h2 id="match-对象">Match 对象</h2>
-
-<p>在 token 上完成一个 grammar 匹配会产生一个匹配对象。 如果 token 具有与该 token 同名的 action 操作方法，则使用匹配对象作为隐式或显式参数调用该 action 方法。 按照惯例，&rsquo;$/&rsquo; 用作显式参数，但可以使用另一个名称（不要这样做！）。 我不建议依赖隐式参数。 如果需要，可以添加其他参数。</p>
-
+<p>在 token 上完成一个 grammar 匹配会产生一个匹配对象。 如果 token 具有与该 token 同名的 action 操作方法，则使用匹配对象作为隐式或显式参数调用该 action 方法。 按照惯例，&lsquo;$/&rsquo; 用作显式参数，但可以使用另一个名称（不要这样做！）。 我不建议依赖隐式参数。 如果需要，可以添加其他参数。</p>
 <p>请注意，随着解析的继续，匹配数据将保留在匹配对象中，因为它在其他 token 和方法中使用。</p>
-
 <h2 id="断言">断言</h2>
-
 <p>断言在 POD 处理中发现的动态 grammar 中很重要。 在主匹配期间，通常必须选择几种匹配路径。 调试错误使用给我带来很多麻烦的一个例子是在定义分隔文本块的 token 内。</p>
-
 <p>触发问题的测试用例是文件&rsquo;b.t&rsquo;:</p>
-
 <pre><code>=begin pod
 text
 =end pod
 
 my $o = $=pod[0];
 say $o;
-</code></pre>
-
-<p>当我对它运行raku时，我得到了</p>
-
+</code></pre><p>当我对它运行raku时，我得到了</p>
 <pre><code>$ ./raku b.t
 Preceding context expects a term, but found infix = instead.
 Did you make a mistake in Pod syntax?
 at /usr/local/people/tbrowde/mydata/tbrowde-home-bzr/raku/raku-repo-forks/rakudo/b.t:1
 ------&gt; =begin ⏏pod
-</code></pre>
-
-<p>不是很有帮助！ 然后我尝试了：</p>
-
+</code></pre><p>不是很有帮助！ 然后我尝试了：</p>
 <pre><code>$ ./raku b.t --ll-exception b.t
 Preceding context expects a term, but found infix = instead.
 Did you make a mistake in Pod syntax?
@@ -296,125 +272,76 @@ Did you make a mistake in Pod syntax?
  from gen/moar/Raku-Grammar.nqp:301  (blib/Raku/Grammar.moarvm:typed_panic)
  from gen/moar/Raku-Grammar.nqp:3609  (blib/Raku/Grammar.moarvm:)
  ...more files and line numbers...
-</code></pre>
-
-<p>更没用了！ 我尝试手动调查列出的文件，并且无法很好地解密代码以获得线索。</p>
-
+</code></pre><p>更没用了！ 我尝试手动调查列出的文件，并且无法很好地解密代码以获得线索。</p>
 <p>然后我尝试了另一个似乎有效的类似测试用例，文件&rsquo;b2.t&rsquo;：</p>
-
 <pre><code>=begin table
 text
 =end table
 
 my $o = $=pod[0];
 say $o;
-</code></pre>
-
-<p>当我对它运行raku时，我得到了</p>
-
+</code></pre><p>当我对它运行raku时，我得到了</p>
 <pre><code>$ ./raku b2.t
 Pod::Block::Table
   text
-</code></pre>
-
-<p>成功了！</p>
-
+</code></pre><p>成功了！</p>
 <p>但是这个失败的测试案例导致我几周尝试各种调试技术，直到最后，再次查看 Grammar.nqp 中的 <strong>delimited</strong> token 并在心里计算每个子匹配组正在做什么。 然后我仔细查看了包含<strong>断言</strong>的这个组：</p>
-
-<pre><code class="language-raku">[
+<pre><code class="language-raku" data-lang="raku">[
     # defn-line is all text to the newline
     &lt;?{ ~$&lt;type&gt; eq 'defn' }&gt; # &lt;== assertion: this is a 'defn' type
     \s* &lt;defn-line&gt;
 ]
-</code></pre>
-
-<p>在 <strong>delimited</strong> 块 token 定义中，该组是顺序的而不是备选分支的一部分，必须匹配或全部 token 失败。不幸的是，失败的结果是 LTA , 对于这种情况是例外（这在 NQP 中并不常见，并且在其中工作的危险之一），并且我在寻找原因的过程中犯了太长时间的错误。欺骗我的一件事就是认为在一个没有得到满足的小组中的断言就像是&rsquo;?&lsquo;量词意味着忽略失败的匹配。在我仔细研究之后，我认为绝对不是这样！该组是否匹配，因此如果不匹配是可接受的，则量词必须在那里。</p>
-
+</code></pre><p>在 <strong>delimited</strong> 块 token 定义中，该组是顺序的而不是备选分支的一部分，必须匹配或全部 token 失败。不幸的是，失败的结果是 LTA , 对于这种情况是例外（这在 NQP 中并不常见，并且在其中工作的危险之一），并且我在寻找原因的过程中犯了太长时间的错误。欺骗我的一件事就是认为在一个没有得到满足的小组中的断言就像是&rsquo;?&lsquo;量词意味着忽略失败的匹配。在我仔细研究之后，我认为绝对不是这样！该组是否匹配，因此如果不匹配是可接受的，则量词必须在那里。</p>
 <p>当我将 <strong>delimited</strong> token 的代码与 <strong>delimited_table</strong> 块 token 的起作用代码（之前我曾做过很多次）进行比较时，我看到 <strong>delimited_table</strong> 块中的同一匹配组具有&rsquo;?&lsquo;量词。在我给 <strong>delimited</strong> 块 token 中的组添加&rsquo;?&lsquo;后, 坏的测试用例再次起作用！</p>
-
 <h2 id="调试">调试</h2>
-
 <p>对我来说最有用的 grammar 和 actions 调试技术是经典的：print 语句用于显示执行期间变量的值。该方法取决于哪种文件类型以及希望显示的值。以下是一些例子：</p>
-
 <ul>
 <li>1、显示匹配对象的内容：</li>
 </ul>
-
-<pre><code class="language-raku">method do-foo($/) {
+<pre><code class="language-raku" data-lang="raku">method do-foo($/) {
     say(&quot;DEBUG: dumping method 'do-foo' match:&quot;);
     say($/.dump);
 }
-</code></pre>
-
-<ul>
+</code></pre><ul>
 <li>2、显示 grammar 匹配期间的结果</li>
 </ul>
-
-<pre><code class="language-raku">token blah {
+<pre><code class="language-raku" data-lang="raku">token blah {
     \h* $&lt;tok&gt; = [ foo | bar ] # &lt;== note '=' instead of ':='
     { say(&quot;DEBUG: \$&lt;tok&gt; value: '{$&lt;tok&gt;}'&quot;); }
 }
-</code></pre>
-
-<p>请注意，say 语句位于由花括号定义的块内。另请注意，即使在 NQP 源文件中，grammar 中使用的匹配对象的赋值运算符（&rsquo;=&lsquo;）也不是绑定运算符（&rsquo;:=&lsquo;）。</p>
-
+</code></pre><p>请注意，say 语句位于由花括号定义的块内。另请注意，即使在 NQP 源文件中，grammar 中使用的匹配对象的赋值运算符（&lsquo;=&rsquo;）也不是绑定运算符（':=&rsquo;）。</p>
 <h2 id="动态变量">动态变量</h2>
-
 <p>grammar 和 action 大量使用动态变量（带有 <code>*</code> twigil 的变量，例如 <strong>$*IN-DEFN-BLOCK</strong>）。当需要在解析树中深入更改变量时，它们显示了它们的多功能性，并且该值在该解析的剩余部分（调用者）和子解析操作期间保持不变。</p>
-
 <h2 id="make-made-和-ast">make, made 和 ast</h2>
-
 <p>尽管在所有已发表的 Raku 书籍中都有解释，但 grammar 和 action 中使用的术语 “make”，“made” 和 “ast”一直让我很困惑。感谢 Raku 作者 <strong>Moritz Lenz</strong> 对 <strong>IRC#raku-dev</strong> 的问题的进一步解释和回答，他们更清楚了。</p>
-
 <p>基本上，在 action 方法中，使用 <code>make</code> 会将当前值分配给匹配对象的 <code>.ast</code> 属性（或其别名 <code>.made</code>）和方法的名字。因此，给出以下方法：</p>
-
-<pre><code class="language-raku">method do-foo($/) {
+<pre><code class="language-raku" data-lang="raku">method do-foo($/) {
     my $val = 6;
     make $val;
 }
-</code></pre>
-
-<p>或可选地：</p>
-
-<pre><code class="language-raku">method do-foo($/) {
+</code></pre><p>或可选地：</p>
+<pre><code class="language-raku" data-lang="raku">method do-foo($/) {
     $/.ast := 6;
 }
-</code></pre>
-
-<p>我们以后可以用这些惯用法中的一个来获得这个值：</p>
-
-<pre><code class="language-raku">say(&quot;do-foo.ast = {$&lt;do-foo&gt;.ast}&quot;);  # output: 6
+</code></pre><p>我们以后可以用这些惯用法中的一个来获得这个值：</p>
+<pre><code class="language-raku" data-lang="raku">say(&quot;do-foo.ast = {$&lt;do-foo&gt;.ast}&quot;);  # output: 6
 say(&quot;do-foo.ast = {$&lt;do-foo&gt;.made}&quot;); # output: 6
-</code></pre>
-
-<p>选择属性名称 <code>.ast</code> 是误导性的，因为它通常是指抽象语法树（AST），但在这种情况下，它与 AST 无关（尽管它可能具有 QAST 节点或任何其他类型的 NQP 对象值）。</p>
-
+</code></pre><p>选择属性名称 <code>.ast</code> 是误导性的，因为它通常是指抽象语法树（AST），但在这种情况下，它与 AST 无关（尽管它可能具有 QAST 节点或任何其他类型的 NQP 对象值）。</p>
 <p>请注意，分配给 <code>.ast</code> 属性的任何值都可能在 grammar 或 action 的稍后阶段被覆盖或删除。</p>
-
 <h2 id="推迟生成qast节点">推迟生成QAST节点</h2>
-
 <p>有时在现有 grammar 中过早生成QAST节点阻止了正确的POD功能实现。一个例子是POD块的%config部分，它具有稍后解析所需的一些值。我正在做的部分工作需要重新编写%config匹配代码，因此在父对象（通常是POD类）的所有部分都已根据需要进行计算或构建之前，不会生成QAST节点。</p>
-
 <h2 id="隔离pod-only代码">隔离POD-only代码</h2>
-
 <p>当前的 grammar 和 grammar action 代码是复杂的，并且有些谜题，因为插入了块并且超过15年没有再次触及。因此，很难避免合并冲突与大而必要的变化。核心开发人员提出的一个建议是帮助将 POD 代码与其他代码分开，这就是创建一个与其他现有方言类似的单独POD方言（子语言）。我曾经认为这将是一个有用的改变，但现在，在理解了更多的代码后，创建一个单独的POD方言似乎并不是特别有利。但是，将所有 POD-only 代码移动到封闭类或 grammar 块的末尾将有助于在个人合并重叠代码时最小化版本控制意外和冲突。</p>
-
 <p>因此，几个星期前我抓住机会（1）询问了几个关键开发人员，如 @lizmat 和 @jnthn，如果他们对该计划没有问题，（2）创建并测试这样的更改作为拉取请求（PR），（3）合并相当大的PR。不幸的是，这一重大变化令一些开发人员感到意外，并在 IRC#raku-dev 上引发了一些惊讶的评论和投诉！幸运的是，发布经理 @AlexDaniel 运用了他惯用的外交和 git 代码讽刺风度，因为他让人群平静下来，并演示了改变实际上只是一个简单（但很大）的代码转换。所以我即将推出的PR不应该导致合并问题，因为我所知道的其他人都不会在同一个区域工作。</p>
-
 <p>您可以通过在每个文件中搜索 POD-ONLY 来查看 Grammar.nqp 和 Actions.nqp 中 POD-only 代码的起点，您会发现：</p>
-
 <pre><code>#================================================================
 # POD-ONLY CODE HANDLERS
 #================================================================
 # move ALL Pod-only [grammar|action] objects here
 </code></pre>
-
 <h1 id="总结">总结</h1>
-
 <p>我逐渐了解了如何改进 Rakudo Raku grammar 和实现一些 NYI POD 功能的 actions，我希望尽快交付它们。在工作期间，我从困难的方式学到了许多课程，并希望我对 POD 解析的黑暗角落有所了解。</p>
-
 <p>从任何主要编码项目中拿走的最后一课：为合并提交制作，测试和提交小的（即有限的）更改！我在 POD 特征的有时弯曲的解析路径中被包裹起来，我做了太多的改变，并且不能轻易地撤消它们。我希望我不要重蹈覆辙。</p>
-
 <p>我希望你和你的 Rakuish 圣诞快乐和新年快乐，并且用 Charles Dickens 的 Tiny Tim（圣诞颂歌）不朽的话来说，“上帝保佑我们，每一个人！”</p>
 
 
@@ -507,7 +434,7 @@ say(&quot;do-foo.ast = {$&lt;do-foo&gt;.made}&quot;); # output: 6
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

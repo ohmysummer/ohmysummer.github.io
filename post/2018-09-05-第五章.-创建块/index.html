@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-05-%E7%AC%AC%E4%BA%94%E7%AB%A0.-%E5%88%9B%E5%BB%BA%E5%9D%97/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,93 +231,54 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第五章-创建块">第五章. 创建块</h1>
-
 <h2 id="存储-blocks">存储 Blocks</h2>
-
 <p>你可以把 Block 存储在一个变量中而不立即执行它。now 是一个内置项, 它能够给你一个 Instant。使用 := 进行绑定让右侧和左侧一样。这意味着 $block 和 Block 相同:</p>
-
-<pre><code class="language-raku">my $block := { now };
-</code></pre>
-
-<p>你不能对 $block 赋值, 因为没有涉及到容器。</p>
-
+<pre><code class="language-raku" data-lang="raku">my $block := { now };
+</code></pre><p>你不能对 $block 赋值, 因为没有涉及到容器。</p>
 <p>你本没必要绑定到 Block 的。赋值也是可以的, 并且你可以在后面更改值:</p>
-
-<pre><code class="language-raku">my $block = { now };
+<pre><code class="language-raku" data-lang="raku">my $block = { now };
 $block = 'Hamadryas';
-</code></pre>
-
-<p>这不是那么有趣, 因为你可以在你能使用 now 的任何地方使用它。但是计算一个 1 分钟之后的时间的 Block 怎么样？给 now 加上 60 秒：</p>
-
-<pre><code class="language-raku">my $minute-later := { now + 60 };
-</code></pre>
-
-<p>当你执行 Block 的时候, 它的结果是最后一个被求值的表达式的值。使用 () 操作符执行 Block：</p>
-
-<pre><code class="language-raku">put $minute-later();  # some Instant
+</code></pre><p>这不是那么有趣, 因为你可以在你能使用 now 的任何地方使用它。但是计算一个 1 分钟之后的时间的 Block 怎么样？给 now 加上 60 秒：</p>
+<pre><code class="language-raku" data-lang="raku">my $minute-later := { now + 60 };
+</code></pre><p>当你执行 Block 的时候, 它的结果是最后一个被求值的表达式的值。使用 () 操作符执行 Block：</p>
+<pre><code class="language-raku" data-lang="raku">put $minute-later();  # some Instant
 sleep 2;
 put $minute-later();  # some Instant 62 seconds later
-</code></pre>
-
-<p>因为 $block 是一个对象, 你可以像方法那样调用 ()：</p>
-
-<pre><code class="language-raku">put $minute-later.();  # some Instant
+</code></pre><p>因为 $block 是一个对象, 你可以像方法那样调用 ()：</p>
+<pre><code class="language-raku" data-lang="raku">put $minute-later.();  # some Instant
 sleep 2;
 put $minute-later.();  # some Instant 62 seconds later
-</code></pre>
-
-<p>你可以使用 callable 变量来代替标量变量；下面这些使用 &amp; 符号：</p>
-
-<pre><code class="language-raku">my &amp;hour-later := { now + 3_600 };
+</code></pre><p>你可以使用 callable 变量来代替标量变量；下面这些使用 &amp; 符号：</p>
+<pre><code class="language-raku" data-lang="raku">my &amp;hour-later := { now + 3_600 };
 
 put &amp;hour-later();  # some Instant
 sleep 2;
 put &amp;hour-later();  # some Instant an hour later
-</code></pre>
-
-<p>使用 &amp;block 形式你可以在调用的时候不带 &amp; 符号, 甚至不带圆括号：</p>
-
-<pre><code class="language-raku">my &amp;hour-ago := { now - 3_600 };
+</code></pre><p>使用 &amp;block 形式你可以在调用的时候不带 &amp; 符号, 甚至不带圆括号：</p>
+<pre><code class="language-raku" data-lang="raku">my &amp;hour-ago := { now - 3_600 };
 
 put &amp;hour-ago();   # some Instant
 sleep 2;
 put hour-later();  # some Instant two seconds later
 
 put hour-ago;      # some Instant immediately
-</code></pre>
-
-<p>任何一种方式, Block 都不是一个子例程(即将到来的)，所以你不能使用 return（稍后将详细介绍）。它不知道怎么将结果传递给调用它的代码。下面这段代码即使不起作用，它也会编译：</p>
-
-<pre><code class="language-raku">my $block := -&gt; { return now };
-</code></pre>
-
-<p>你会得到一个运行时错误，你会在第十一章了解更多关于它的：</p>
-
+</code></pre><p>任何一种方式, Block 都不是一个子例程(即将到来的)，所以你不能使用 return（稍后将详细介绍）。它不知道怎么将结果传递给调用它的代码。下面这段代码即使不起作用，它也会编译：</p>
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; { return now };
+</code></pre><p>你会得到一个运行时错误，你会在第十一章了解更多关于它的：</p>
 <p>在任何例程外面尝试返回</p>
-
 <h2 id="带参数的-blocks">带参数的 Blocks</h2>
-
 <p>签名定义了 Block 的参数。这包含了你给予 Block 在参数上的个数（参数数量），类型和约束。</p>
-
 <p>如果 Block 没有签名那么它期望零个参数。然而，如果你在 Block 中使用 $_，那么它创建了一个带有单个可选参数的签名：</p>
-
-<pre><code class="language-raku">my $one-arg := { put &quot;The argument was $_&quot; };
+<pre><code class="language-raku" data-lang="raku">my $one-arg := { put &quot;The argument was $_&quot; };
 
 $one-arg();             # The argument was (with warning!)
 $one-arg(5);            # The argument was 5
 $one-arg('Hamadryas');  # The argument was Hamadryas
-</code></pre>
-
-<p>如果你更改那个 $_，那么你就更改了原始值（如果它是可变的）因为隐式的签名让那个参数可写：</p>
-
-<pre><code class="language-raku">my $one-arg := {
+</code></pre><p>如果你更改那个 $_，那么你就更改了原始值（如果它是可变的）因为隐式的签名让那个参数可写：</p>
+<pre><code class="language-raku" data-lang="raku">my $one-arg := {
     put &quot;The argument is $_&quot;;
     $_ = 5;
     };
@@ -326,181 +287,96 @@ my $var = 'Hamadryas';
 say &quot;\$var starts as $var&quot;;
 $one-arg($var);
 say &quot;\$var is now $var&quot;;    
-</code></pre>
-
-<p>输出显示了 Block 更改了变量的值：</p>
-
+</code></pre><p>输出显示了 Block 更改了变量的值：</p>
 <pre><code>$var starts as Hamadryas
 The argument is Hamadryas
 $var is now 5
-</code></pre>
-
-<p>如果你在 Block 中使用 @_，那么你可以传递零个或多个参数：</p>
-
-<pre><code class="language-raku">my $many-args := {
+</code></pre><p>如果你在 Block 中使用 @_，那么你可以传递零个或多个参数：</p>
+<pre><code class="language-raku" data-lang="raku">my $many-args := {
     put &quot;The argument are @_[]&quot;;
     }
 
 $many-args( 'Hamadryas', 'perlicus' );
-</code></pre>
-
-<p>其中 @_ 是一个 Array，但是你必须等到下一章才能看到那些能做些什么。</p>
-
+</code></pre><p>其中 @_ 是一个 Array，但是你必须等到下一章才能看到那些能做些什么。</p>
 <p><strong>练习 5.3</strong></p>
-
 <p>创建一个移除尾部空白并小写化它的参数的 Block。原始值可能更改。当你正态化数据的时候你可能想使用这些东西。</p>
-
 <h2 id="隐式参数">隐式参数</h2>
-
 <p>Blocks 变得更漂亮。你可以在 Block 里面使用占位符变量（或隐式参数）来指定你需要多少个参数：</p>
-
-<pre><code class="language-raku">my $adding-block := { $^a + $^b }
-</code></pre>
-
-<p>^ 表示一个占位符变量，它告诉编译器为 Block 构建一个隐式签名。你的 Blocks 拥有和占位符值同样多的参数个数并且你必须为每一个参数提供一个实参：</p>
-
-<pre><code class="language-raku">my $adding-block := { $^a + $^b };
+<pre><code class="language-raku" data-lang="raku">my $adding-block := { $^a + $^b }
+</code></pre><p>^ 表示一个占位符变量，它告诉编译器为 Block 构建一个隐式签名。你的 Blocks 拥有和占位符值同样多的参数个数并且你必须为每一个参数提供一个实参：</p>
+<pre><code class="language-raku" data-lang="raku">my $adding-block := { $^a + $^b };
 
 $adding-block();           # Nope - too few parameters
 $adding-block( 1 );        # Nope - too few still
 $adding-block( 1, 37 );    # Just right!
 $adding-block( 1, 2, 3 );  # Nope - too many parameters
-</code></pre>
-
-<p>参数是根据它们名字的字典顺序而不是你使用他们的顺序赋值给占位符变量的。下面的这些 Blocks 把两个数相除；不同之处在于它们使用占位符变量的顺序：</p>
-
-<pre><code class="language-raku">my $forward-division  := { $^a / $^b };
+</code></pre><p>参数是根据它们名字的字典顺序而不是你使用他们的顺序赋值给占位符变量的。下面的这些 Blocks 把两个数相除；不同之处在于它们使用占位符变量的顺序：</p>
+<pre><code class="language-raku" data-lang="raku">my $forward-division  := { $^a / $^b };
 my $backward-division := { $^b / $^a };
-</code></pre>
-
-<p>你可以用同样的参数以同样的顺序来调用它们。即使你使用相同的占位符名并且传递相同的参数，但是你得到不同的答案：</p>
-
-<pre><code class="language-raku">put $forward-division( 2, 3 );   # 0.66667
+</code></pre><p>你可以用同样的参数以同样的顺序来调用它们。即使你使用相同的占位符名并且传递相同的参数，但是你得到不同的答案：</p>
+<pre><code class="language-raku" data-lang="raku">put $forward-division( 2, 3 );   # 0.66667
 put $backward-division( 2 ,3 );  # 1.5
-</code></pre>
-
-<p>你可以重用同一个占位符变量而不需要创建额外的参数。下面这个仍然是一个参数并且这个参数和自身相乘：</p>
-
-<pre><code class="language-raku">my $square := { $^a * $^a }
-</code></pre>
-
-<p>调用 .signature 会给你那个 Block 的 Signature 对象。使用 say 输出它会给你一个 .gist 表示：</p>
-
-<pre><code class="language-raku">my $square := { $^a * $^a }
+</code></pre><p>你可以重用同一个占位符变量而不需要创建额外的参数。下面这个仍然是一个参数并且这个参数和自身相乘：</p>
+<pre><code class="language-raku" data-lang="raku">my $square := { $^a * $^a }
+</code></pre><p>调用 .signature 会给你那个 Block 的 Signature 对象。使用 say 输出它会给你一个 .gist 表示：</p>
+<pre><code class="language-raku" data-lang="raku">my $square := { $^a * $^a }
 say $square.signature;   # ($a)
-</code></pre>
-
-<p><strong>练习 5.4</strong></p>
-
+</code></pre><p><strong>练习 5.4</strong></p>
 <p>创建一个使用三个占位符变量的 Block 并计算三个数中的最大的数。 max 例程能帮到你。使用不同的参数运行这个 Block。</p>
-
 <h2 id="显式签名">显式签名</h2>
-
 <p>尖尖的箭头是签名的开始，在签名里面你可以指定你的参数。-&gt; 和 { 之间什么都没有的话，那么你的签名拥有零个参数：</p>
-
-<pre><code class="language-raku">my $block := -&gt; { put &quot;You called this block&quot;; };
-</code></pre>
-
-<p>当你调用这个 Block 的时候你不必指定参数：</p>
-
-<pre><code class="language-raku">put $block();     # No argument, so it works
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; { put &quot;You called this block&quot;; };
+</code></pre><p>当你调用这个 Block 的时候你不必指定参数：</p>
+<pre><code class="language-raku" data-lang="raku">put $block();     # No argument, so it works
 put $block( 2 );  # Error - too many parameters
-</code></pre>
-
-<p>在 -&gt; 和 { 之间定义形参：</p>
-
-<pre><code class="language-raku">my $block := -&gt; $a { put &quot;You called this block with $a&quot;; };
-</code></pre>
-
-<p>签名中形参的顺序决定了实参填充的顺序。如果 $b 是第一个形参，那么它就获取第一个实参。它们的词典顺序不影响：</p>
-
-<pre><code class="language-raku">my $block := -&gt; $b, $a { $a / $b };
+</code></pre><p>在 -&gt; 和 { 之间定义形参：</p>
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; $a { put &quot;You called this block with $a&quot;; };
+</code></pre><p>签名中形参的顺序决定了实参填充的顺序。如果 $b 是第一个形参，那么它就获取第一个实参。它们的词典顺序不影响：</p>
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; $b, $a { $a / $b };
 put $block( 2, 3);  # 1.5
 put $block( 3, 2);  # 0.666667
-</code></pre>
-
-<p>这些参数是位置参数。还有另外一种形式的参数，其中你能指定哪个行参得到哪个实参。这些是命名参数：</p>
-
-<pre><code class="language-raku">my $block := -&gt; :$b, :$a { $a / $b };
+</code></pre><p>这些参数是位置参数。还有另外一种形式的参数，其中你能指定哪个行参得到哪个实参。这些是命名参数：</p>
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; :$b, :$a { $a / $b };
 put $block( b =&gt; 3, a =&gt; 2 );  # 0.666667
 put $block( a =&gt; 3, b =&gt; 2 );  # 1.5
-</code></pre>
-
-<p>你会在第十一章看到更多关于签名的东西，但是这些已经足够你入门了。</p>
-
+</code></pre><p>你会在第十一章看到更多关于签名的东西，但是这些已经足够你入门了。</p>
 <h2 id="类型约束">类型约束</h2>
-
 <p>形参变量可以约束它们允许的类型。下面这个 Block 数值上进行俩个值相除但是它不强制你给它传数字：</p>
-
-<pre><code class="language-raku">my $block := -&gt; $b, $a { $a / $b };
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; $b, $a { $a / $b };
 $block( 1, 2 );
 $block( 'Hamadryas', 'perlicus' );
-</code></pre>
-
-<p>第二个调用失败了：</p>
-
+</code></pre><p>第二个调用失败了：</p>
 <p>Cannot convert string to number: base-10 number must
 begin with valid digits &hellip;</p>
-
 <p>它在 Block 里面失败了。它根本就没到达代码里面。如果你正在做数值操作你应该只允许数字：</p>
-
-<pre><code class="language-raku">my $block := -&gt; Numeric $b, Numeric $a { $a / $b };
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; Numeric $b, Numeric $a { $a / $b };
 
 put $block( 1, 2 );
 put $block( 'Hamadryas', 'perlicus' );
-</code></pre>
-
-<p>第一个调用有效但是第二个调用尝试使用 Str 但是失败了：</p>
-
+</code></pre><p>第一个调用有效但是第二个调用尝试使用 Str 但是失败了：</p>
 <p>2
 Type check failed in binding to parameter &lsquo;$b&rsquo;;
 expected Numeric but got Str (&ldquo;Hamadryas&rdquo;)</p>
-
 <p>如果 Numeric 类型对你来说太宽了，选择另一种类型：</p>
-
-<pre><code class="language-raku">my $block := -&gt; Int $b, Int $a { $a / $b };
-</code></pre>
-
-<p>这仍然有个问题，尽管。那个 Int 约束允许任何智能匹配为 Int 的东西。 Int 类型对象满足这个约束：</p>
-
-<pre><code class="language-raku">$block( Int, 3 ); # 调用仍旧有效
-</code></pre>
-
-<p>这让它通过了形参守卫然后在除法里面失败了。在类型的后面添加一个 :D 来约束参数为一个有定义的值。类型对象总是未定义的：</p>
-
-<pre><code class="language-raku">my $block := -&gt; Int:D $b, Int:D $a { $a / $b };
-</code></pre>
-
-<p>你会在第十一章看到更多关于签名的信息。</p>
-
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; Int $b, Int $a { $a / $b };
+</code></pre><p>这仍然有个问题，尽管。那个 Int 约束允许任何智能匹配为 Int 的东西。 Int 类型对象满足这个约束：</p>
+<pre><code class="language-raku" data-lang="raku">$block( Int, 3 ); # 调用仍旧有效
+</code></pre><p>这让它通过了形参守卫然后在除法里面失败了。在类型的后面添加一个 :D 来约束参数为一个有定义的值。类型对象总是未定义的：</p>
+<pre><code class="language-raku" data-lang="raku">my $block := -&gt; Int:D $b, Int:D $a { $a / $b };
+</code></pre><p>你会在第十一章看到更多关于签名的信息。</p>
 <h2 id="简单子例程">简单子例程</h2>
-
 <p>子例程是带有额外功能的代码块。代替尖尖的箭头，这里你使用 sub：</p>
-
-<pre><code class="language-raku">my $subroutine := sub { put &quot;Called subroutine!&quot; };
-</code></pre>
-
-<p>你以同样的方式执行它：</p>
-
-<pre><code class="language-raku">$subroutine();
-</code></pre>
-
-<p>子例程可以返回值（Block 不能）。调用 Sub 会计算一些值并在所调用的作用域里让你可见。</p>
-
+<pre><code class="language-raku" data-lang="raku">my $subroutine := sub { put &quot;Called subroutine!&quot; };
+</code></pre><p>你以同样的方式执行它：</p>
+<pre><code class="language-raku" data-lang="raku">$subroutine();
+</code></pre><p>子例程可以返回值（Block 不能）。调用 Sub 会计算一些值并在所调用的作用域里让你可见。</p>
 <p>之前的 Blocks 处理了输出。从子例程里处理输出通常不是一种好形式，因为它做了两份工作：计算值然后输出。它不够灵活因为它决定了怎么处理值。返回值让你稍后决定：</p>
-
-<pre><code class="language-raku">my $subroutine := sub { return &quot;Called subroutine!&quot; };
+<pre><code class="language-raku" data-lang="raku">my $subroutine := sub { return &quot;Called subroutine!&quot; };
 put $subroutine();
-</code></pre>
-
-<p>你应该保存结果而不是输出结果：</p>
-
-<pre><code class="language-raku">my $result = $subroutine();
-</code></pre>
-
-<p>return 退出最里层的例程（Sub 的超类）。如果一个 Block 在某种 Routine 之内， 你可以在那个 Block 里面使用一个 return，然后你立即执行该 Block。这会立即结束该子例程：</p>
-
-<pre><code class="language-raku">my $subroutine := sub {
+</code></pre><p>你应该保存结果而不是输出结果：</p>
+<pre><code class="language-raku" data-lang="raku">my $result = $subroutine();
+</code></pre><p>return 退出最里层的例程（Sub 的超类）。如果一个 Block 在某种 Routine 之内， 你可以在那个 Block 里面使用一个 return，然后你立即执行该 Block。这会立即结束该子例程：</p>
+<pre><code class="language-raku" data-lang="raku">my $subroutine := sub {
     -&gt; { # not a sub!
        return &quot;Called subroutine!&quot;
     }.(); # 立即执行
@@ -509,72 +385,44 @@ put $subroutine();
     };
 
 put $subroutine();   # Called subroutine!
-</code></pre>
-
-<p>你很可能在使用 Block 的东西上使用它，例如 if 结构。所有的这些 Blocks 都能使用 return，因为它们在 Routine 之内，它知道如何处理它：</p>
-
-<pre><code class="language-raku">my $subroutine := sub {
+</code></pre><p>你很可能在使用 Block 的东西上使用它，例如 if 结构。所有的这些 Blocks 都能使用 return，因为它们在 Routine 之内，它知道如何处理它：</p>
+<pre><code class="language-raku" data-lang="raku">my $subroutine := sub {
     if now.Int %% 2 { return 'Even' }
     else            { return 'Odd'  }
     };
 
 put $subroutine();
-</code></pre>
-
-<p>do if 只需要一个 return：</p>
-
-<pre><code class="language-raku">my $subroutine := sub {
+</code></pre><p>do if 只需要一个 return：</p>
+<pre><code class="language-raku" data-lang="raku">my $subroutine := sub {
     return do if now.Int %% 2 { 'Even' }
               else            { 'Odd'  }
     };
 
 put $subroutine();    
-</code></pre>
-
-<h2 id="命名子例程">命名子例程</h2>
-
+</code></pre><h2 id="命名子例程">命名子例程</h2>
 <p>子例程可以拥有名字。在 sub 后面指定名字。然后你可以通过子例程的名字执行子例程，和通过它的变量执行一样。它们做同样的事情因为它们实际上是同样的东西：</p>
-
-<pre><code class="language-raku">my $subroutine := sub show-me { return &quot;Called subroutine!&quot; };
+<pre><code class="language-raku" data-lang="raku">my $subroutine := sub show-me { return &quot;Called subroutine!&quot; };
 put $subroutine.(); # Called subroutine!
 put show-me();      # Called subroutine!
-</code></pre>
-
-<p>通常你会把变量也一块儿跳过：</p>
-
-<pre><code class="language-raku">sub show-me { return &quot;Called subroutine!&quot; };
+</code></pre><p>通常你会把变量也一块儿跳过：</p>
+<pre><code class="language-raku" data-lang="raku">sub show-me { return &quot;Called subroutine!&quot; };
 put show-me();      # Called subroutine!
-</code></pre>
-
-<p>要定义子例程的签名，把签名放在子例程名字后面的圆括号中（这和 Block 稍微有点不同）：</p>
-
-<pre><code class="language-raku">sub divide ( Int:D $a, Int:D $b ) { $a / $b }
+</code></pre><p>要定义子例程的签名，把签名放在子例程名字后面的圆括号中（这和 Block 稍微有点不同）：</p>
+<pre><code class="language-raku" data-lang="raku">sub divide ( Int:D $a, Int:D $b ) { $a / $b }
 put divide( 5, 7 );  # 0.714286
-</code></pre>
-
-<p>如果它不会使解析器产生歧义，你可以省略掉圆括号。这是同样的东西：</p>
-
-<pre><code class="language-raku">put divide 5, 7;     # 714286
-</code></pre>
-
-<p>这个子例程定义是一个表达式，就像 Block 那样。如果你在闭合花括号之后还有除了末尾空格之外的其它东西，则需要分号：</p>
-
-<pre><code class="language-raku">sub divide ( Int:D $a, Int:D $b ) { $a / $b }; put divide( 5, 7 );
-</code></pre>
-
-<p>子例程默认是词法作用域的。如果你在 Block 里面定义一个子例程，那么它只存在于 Block 里面。外部作用域不知道 divide 的存在，所以这是错误的：</p>
-
+</code></pre><p>如果它不会使解析器产生歧义，你可以省略掉圆括号。这是同样的东西：</p>
+<pre><code class="language-raku" data-lang="raku">put divide 5, 7;     # 714286
+</code></pre><p>这个子例程定义是一个表达式，就像 Block 那样。如果你在闭合花括号之后还有除了末尾空格之外的其它东西，则需要分号：</p>
+<pre><code class="language-raku" data-lang="raku">sub divide ( Int:D $a, Int:D $b ) { $a / $b }; put divide( 5, 7 );
+</code></pre><p>子例程默认是词法作用域的。如果你在 Block 里面定义一个子例程，那么它只存在于 Block 里面。外部作用域不知道 divide 的存在，所以这是错误的：</p>
 <pre><code>{
     sub divide ( Int:D $a, Int:D $b ) { $a / $b }
     put divide( 5, 7 );
 }
 
 put divide( 3, 2 );  # Error!
-</code></pre>
-
-<p>这和词法变量名拥有同样的优点：你不必知道所有其它的子例程来定义你自己的。这也意味着如果你有一个想要临时替代的子例程，你可以在你需要的作用域里创建你自己的版本：</p>
-
-<pre><code class="language-raku">sub divide ( Int:D $a, Int:D $b ) { $a / $b }
+</code></pre><p>这和词法变量名拥有同样的优点：你不必知道所有其它的子例程来定义你自己的。这也意味着如果你有一个想要临时替代的子例程，你可以在你需要的作用域里创建你自己的版本：</p>
+<pre><code class="language-raku" data-lang="raku">sub divide ( Int:D $a, Int:D $b ) { $a / $b }
 put divide 1, 137;
 
 { # a scope for the fixed version of divide
@@ -585,69 +433,38 @@ sub divide ( Numeric $b, Numeric $a ) {
 
 put divide 1.1, 137.003;    
 }
-</code></pre>
-
-<h2 id="whatever-code">Whatever Code</h2>
-
+</code></pre><h2 id="whatever-code">Whatever Code</h2>
 <p>这一章的目的是为了接触这个遍及语言的有趣的特性。在下面几章你会需要这个特性。</p>
-
 <p><code>Whatever</code>， 也就是 *，是某个东西的替身，你会在之后填充它。填充到它里面的东西决定了它应该是什么。这儿来看看它在表达式中长什么样，让某个东西加上 2:</p>
-
-<pre><code class="language-raku">my $sum = * + 2;
-</code></pre>
-
-<p>你知道这儿的 * 不是用于乘法，因为乘法需要两个操作数。所以发生了什么？编译器认出了 * 并创建了一个 WhateverCode（也叫做形实转换程序）。它是一个没有定义自己的作用域的代码段，但是不被立即执行。它最像带有一个参数的 Block：</p>
-
-<pre><code class="language-raku">my $sum := { $^a + 2 }
-</code></pre>
-
-<p>调用带有一个参数的 WhateverCode 来获取最后的值：</p>
-
-<pre><code class="language-raku">$sum = * + 2;
+<pre><code class="language-raku" data-lang="raku">my $sum = * + 2;
+</code></pre><p>你知道这儿的 * 不是用于乘法，因为乘法需要两个操作数。所以发生了什么？编译器认出了 * 并创建了一个 WhateverCode（也叫做形实转换程序）。它是一个没有定义自己的作用域的代码段，但是不被立即执行。它最像带有一个参数的 Block：</p>
+<pre><code class="language-raku" data-lang="raku">my $sum := { $^a + 2 }
+</code></pre><p>调用带有一个参数的 WhateverCode 来获取最后的值：</p>
+<pre><code class="language-raku" data-lang="raku">$sum = * + 2;
 put $sum( 135 );   # 137
-</code></pre>
-
-<p>获取你想要两个参数。你可以使用两个 * 并且你的 WhateverCode 会接受两个参数：</p>
-
-<pre><code class="language-raku">my $sum = * + *;
+</code></pre><p>获取你想要两个参数。你可以使用两个 * 并且你的 WhateverCode 会接受两个参数：</p>
+<pre><code class="language-raku" data-lang="raku">my $sum = * + *;
 put $sum( 135, 2 );   # 137
-</code></pre>
-
-<p>Whatever * 出现在很多其它有趣的结构中；这是你为什么这么早阅读本书中关于子例程的东西的原因。现在就有两个有趣的用途。</p>
-
+</code></pre><p>Whatever * 出现在很多其它有趣的结构中；这是你为什么这么早阅读本书中关于子例程的东西的原因。现在就有两个有趣的用途。</p>
 <h2 id="subsets">Subsets</h2>
-
 <p>WhateverCode 允许你把代码插入到语句中。你可以用它们来创建更有趣的带有 subset 和 where 的类型。首先定义一个不带约束的新类型。你告诉 subset 你想以哪个已存在的类型开始。下面创建一个和 Int 同样的类型：</p>
-
-<pre><code class="language-raku">subset PositiveInt of Int;
+<pre><code class="language-raku" data-lang="raku">subset PositiveInt of Int;
 my PositiveInt $x = -5;
 put $x;
-</code></pre>
-
-<p>这在运行时检查赋值。你放到 $x 中的类型必须是一个 PositiveInt，但是（目前为止）它和 Int 一样。 -5 是一个 Int 数， 所以这正常工作。</p>
-
+</code></pre><p>这在运行时检查赋值。你放到 $x 中的类型必须是一个 PositiveInt，但是（目前为止）它和 Int 一样。 -5 是一个 Int 数， 所以这正常工作。</p>
 <p>现在通过指定一个带有代码块儿的 where 子句来约束 Int 的合法值：</p>
-
-<pre><code class="language-raku">subset PositiveInt of Int where { $^a &gt; 0 };
+<pre><code class="language-raku" data-lang="raku">subset PositiveInt of Int where { $^a &gt; 0 };
 my PositiveInt $x = -5;
 put $x;
-</code></pre>
-
-<p>当你给 $x 赋值时你会触发运行时类型检查。变量 $x 知道它必须是一个 PositiveInt。它接受一个可能适合 PositiveInt 的值并把它传入 where 子句中的 Block。如果那段代码计算为 True，那么变接受那个值。如果计算结果为 False，你会得到一个错误：</p>
-
+</code></pre><p>当你给 $x 赋值时你会触发运行时类型检查。变量 $x 知道它必须是一个 PositiveInt。它接受一个可能适合 PositiveInt 的值并把它传入 where 子句中的 Block。如果那段代码计算为 True，那么变接受那个值。如果计算结果为 False，你会得到一个错误：</p>
 <p>Type check failed in assignment to $x;
 expected PositiveInt but got Int (-5)</p>
-
 <p>Whatever 允许你省略一些打字。* 会为你做大部分工作。它代表你想要测试的东西。这些不是完整的类型但是表现得像它们本来的那样：</p>
-
-<pre><code class="language-raku">subset PositiveInt of Int where * &gt; 0;
+<pre><code class="language-raku" data-lang="raku">subset PositiveInt of Int where * &gt; 0;
 my PositiveInt $x = -5;
 put $x;
-</code></pre>
-
-<p>一旦你有了 subset，你就能在签名中使用它了。如果参数不是正整数你得到一个运行时错误：</p>
-
-<pre><code class="language-raku">subset PositiveInt of Int where * &gt; 0;
+</code></pre><p>一旦你有了 subset，你就能在签名中使用它了。如果参数不是正整数你得到一个运行时错误：</p>
+<pre><code class="language-raku" data-lang="raku">subset PositiveInt of Int where * &gt; 0;
 
 sub add-numbers ( PositiveInt $n, PositiveInt $m ) {
     $n + $m
@@ -655,23 +472,14 @@ sub add-numbers ( PositiveInt $n, PositiveInt $m ) {
 
 put add-numbers 5, 11;    # 16
 put add-numbers -5, 11;   # Error
-</code></pre>
-
-<p>你不需要定义一个显式的 subset，尽管。你可以在签名中使用 where。当你只需要约束一次时这很有用：</p>
-
-<pre><code class="language-raku">sub add-numbers ( $n where * &gt; 0, $m where * &gt; 0 ) {
+</code></pre><p>你不需要定义一个显式的 subset，尽管。你可以在签名中使用 where。当你只需要约束一次时这很有用：</p>
+<pre><code class="language-raku" data-lang="raku">sub add-numbers ( $n where * &gt; 0, $m where * &gt; 0 ) {
     $n + $m
     }
-</code></pre>
-
-<p>随着你继续你会看到更多的 subsets；不用很多代码来限制值，它们很方便。你还没有读到关于模块的东西，但是 Subset::Common 有几个例子，你可能会决定不错。</p>
-
+</code></pre><p>随着你继续你会看到更多的 subsets；不用很多代码来限制值，它们很方便。你还没有读到关于模块的东西，但是 Subset::Common 有几个例子，你可能会决定不错。</p>
 <p><strong>练习 5.5</strong></p>
-
 <p>使用 subset 创建一个不允许分母为零的 divide 子例程。</p>
-
 <h2 id="总结">总结</h2>
-
 <p>这一章提供了子例程简明介绍和像代码那样的东西。有简单的 Block 以组织代码并定义作用域，还有更复杂的子例程，知道怎么样回传值给它的调用者。它们中的每一个都有复杂的方式来处理参数。这一章让你了解足够的细节，所以你可以在下面几章中使用它们。你会在第十一章看到更强大的子例程特性。</p>
 
 
@@ -764,7 +572,7 @@ put add-numbers -5, 11;   # Error
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

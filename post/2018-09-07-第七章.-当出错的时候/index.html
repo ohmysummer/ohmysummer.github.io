@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-07-%E7%AC%AC%E4%B8%83%E7%AB%A0.-%E5%BD%93%E5%87%BA%E9%94%99%E7%9A%84%E6%97%B6%E5%80%99/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,81 +231,46 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="声明">声明</h1>
-
+        <h1 id="声明">声明</h1>
 <p>本章翻译仅用于 Raku 学习和研究, 请支持电子版或<a href="https://www.amazon.co.uk/Learning-Perl-6-Brian-Foy/dp/149197768X/ref=sr_1_1?ie=UTF8&amp;qid=1536753267&amp;sr=8-1&amp;keywords=Learning+Perl+6">纸质版</a>。</p>
-
 <h1 id="第七章-当出错的时候">第七章. 当出错的时候</h1>
-
 <p>Raku doesn’t always immediately give up when something goes wrong. It can fail softly. If the result of that problem doesn’t affect anything else in the program there’s no need to complain about it. However, the moment it becomes a problem that passive failure demands your attention.</p>
-
 <p>This chapter shows you the error mechanisms and how to deal with them. You’ll see how to handle the problems that your program notices on your behalf as well as detect and report problems on your own.</p>
-
 <p>当出现问题时，Raku 并不总是立即放弃。它可能会轻轻失败。如果该问题的结果不影响程序中的任何其他内容，则无需抱怨它。然而，当它成为问题的那一刻被动失败就要引起你的注意了。</p>
-
 <p>本章向你介绍错误机制以及如何处理它们。你将看到如何处理你的程序以你的名义注意到的问题，以及如何自行检测和报告问题。</p>
-
 <h1 id="异常">异常</h1>
-
 <p>Here’s a bit of code that tries to convert nonnumeric text into a number. Maybe something else didn’t put the right value in the variable:</p>
-
 <p>这里有一些代码试图将非数字文本转换为数字。也许其他东西没有在变量中放入正确的值：</p>
-
 <pre><code>my $m = 'Hello';
 my $value = +$m;
 put 'Hello there!';  # no error, so, works?
-</code></pre>
-
-<p>Your program doesn’t complain because you don’t do anything with the problematic result. Change the program to output the result of what you think was a numeric conversion:</p>
-
+</code></pre><p>Your program doesn’t complain because you don’t do anything with the problematic result. Change the program to output the result of what you think was a numeric conversion:</p>
 <p>你的程序没有抱怨，因为你没有对有问题的结果做任何事情。更改程序以输出你认为是数字转换的结果：</p>
-
 <pre><code>my $m = 'Hello';
 my $value = +$m;
 put $value;
-</code></pre>
-
-<p>Now you get some error output instead:</p>
-
+</code></pre><p>Now you get some error output instead:</p>
 <p>现在你得到一些错误输出：</p>
-
 <pre><code>Cannot convert string to number: base-10 number must
 begin with valid digits or '.' in '⏏Hello' (indicated by ⏏)
     in block &lt;unit&gt; at ... line 2
 
 Actually thrown at:
     in block &lt;unit&gt; at ... line 3
-</code></pre>
-
-<p>Look at that error message. It reports two line numbers. The error occurred on line 2, but it wasn’t until line 3 (the one with <code>put</code>) that it became a problem. That’s the soft failure. What’s actually in <code>$result</code>? It’s a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> object:</p>
-
+</code></pre><p>Look at that error message. It reports two line numbers. The error occurred on line 2, but it wasn’t until line 3 (the one with <code>put</code>) that it became a problem. That’s the soft failure. What’s actually in <code>$result</code>? It’s a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> object:</p>
 <p>看看那条错误信息。它报告两个行号。错误发生在第 2 行，但直到第 3 行（带有 <code>put</code> 的那行）才成为问题。那是软失败。 <code>$result</code> 中的实际内容是什么？这是一个 <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> 对象：</p>
-
 <pre><code>my $m = 'Hello';
 my $value = +$m;
 put &quot;type is {$value.^name}&quot;;  # type is Failure
-</code></pre>
-
-<p>These soft failures can be quite handy in cases where you don’t care if something didn’t work. If you can’t log a message because the logger is broken what are you going to do about it? Log the failure? Similarly, sometimes you don’t care if something fails because that might be a common case. It’s up to you to make those decisions, though.</p>
-
+</code></pre><p>These soft failures can be quite handy in cases where you don’t care if something didn’t work. If you can’t log a message because the logger is broken what are you going to do about it? Log the failure? Similarly, sometimes you don’t care if something fails because that might be a common case. It’s up to you to make those decisions, though.</p>
 <p>The <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> is really a wrapper around an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>, so you need to know about exceptions first.</p>
-
 <p>如果你不关心某些事情是否有效，这些软故障可能非常方便。如果由于记录器坏了而无法记录消息，你打算怎么做呢？记录失败？同样，有时你不关心某些事情是否失败，因为这可能是一种常见的情况。不过，由你决定做出决定。</p>
-
 <p><a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> 实际上是<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>的包装，因此你首先需要了解异常。</p>
-
 <h2 id="捕获异常">捕获异常</h2>
-
 <p>Something that wants to report an exception throws it. You’d say “the subroutine threw an exception.” Some people might say it “raised an exception.” It’s the same thing. If you don’t handle an exception it stops your program.</p>
-
 <p>A <code>try</code> wraps some code and can catch an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>. If it catches an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> it puts it into the <code>$!</code> special variable:</p>
-
 <p>想要报告异常的东西会抛出它。你会说“子程序抛出了异常。” 有些人可能会说它“引发了异常。”这是同样的事情。如果你不处理异常，它将停止你的程序。</p>
-
 <p><code>try</code> 包装一些代码并可以捕获<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>。如果它捕获一个 <a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>，它会将异常放入 <code>$!</code> 特殊变量：</p>
-
 <pre><code>try {
     my $m = 'Hello';
     my $value = +$m;
@@ -314,64 +279,36 @@ put &quot;type is {$value.^name}&quot;;  # type is Failure
 put &quot;ERROR: $!&quot; if $!;
 
 put 'Got to the end.';
-</code></pre>
-
-<p>You catch the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> and your program continues:</p>
-
+</code></pre><p>You catch the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> and your program continues:</p>
 <p>你捕获<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>并你的程序继续：</p>
-
 <pre><code>ERROR: Cannot convert string to number
 Got to the end.
-</code></pre>
-
-<p>With a single line you don’t need the braces:</p>
-
+</code></pre><p>With a single line you don’t need the braces:</p>
 <p>使用单行你不需要大括号：</p>
-
 <pre><code>my $m = 'Hello';
 try my $value = +$m;
-</code></pre>
-
-<p>If the code succeeds <code>try</code> gives back the value. You can move the <code>try</code> to the other side of the assignment:</p>
-
+</code></pre><p>If the code succeeds <code>try</code> gives back the value. You can move the <code>try</code> to the other side of the assignment:</p>
 <p>如果代码成功，则 <code>try</code> 返回值。你可以将 <code>try</code> 移动到赋值的另一侧：</p>
-
 <pre><code>my $m = 'Hello';
 my $value = try +$m;
-</code></pre>
-
-<p>Most <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> types are under <code>X</code> and inherit from <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>—in this example it’s<code>X::Str::Numeric</code>:</p>
-
+</code></pre><p>Most <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> types are under <code>X</code> and inherit from <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>—in this example it’s<code>X::Str::Numeric</code>:</p>
 <p>大多数 <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 类型都在 <code>X</code> 下，并且从 <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 继承 - 在这个例子中，它是 <code>X::Str::Numeric</code>：</p>
-
 <pre><code>put &quot;Exception type is {$!.^name}&quot;;
-</code></pre>
-
-<p>If there was no <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>, the thingy in <code>$!</code> is <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>. This is a bit annoying because <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> inherits from <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> too. The <code>$!</code> in a condition is defined if there was a problem. Use it with <code>given</code> and smart match against the types you want to handle. A <code>default</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> handles anything you don’t:</p>
-
+</code></pre><p>If there was no <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>, the thingy in <code>$!</code> is <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>. This is a bit annoying because <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> inherits from <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a> too. The <code>$!</code> in a condition is defined if there was a problem. Use it with <code>given</code> and smart match against the types you want to handle. A <code>default</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> handles anything you don’t:</p>
 <p>如果没有 <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>，<code>$!</code> 里面的东西就是 <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>。这有点烦人，因为 <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 也继承了 <a href="https://docs.raku.org/type/Any.html"><code>Any</code></a>。 如果出现问题，<code>$!</code> 就处于定义状态。使用 <code>given</code> 和智能匹配你要处理的类型。<code>default</code>  <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> 处理你不需要的任何内容：</p>
-
 <pre><code>put 'Problem was ', do given $! {
     when X::Str::Numeric { ... }
     default { ... }
 };
-</code></pre>
-
-<p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> types use different methods to give you more information. Each type defines a method that makes sense for its error. Look at each type to see which information it captures for you. The <a href="https://docs.raku.org/type/X::Str::Numeric%20"><code>X::Str::Numeric</code></a><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> type knows at which position in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> it discovered the problem:</p>
-
+</code></pre><p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> types use different methods to give you more information. Each type defines a method that makes sense for its error. Look at each type to see which information it captures for you. The <a href="https://docs.raku.org/type/X::Str::Numeric%20"><code>X::Str::Numeric</code></a><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> type knows at which position in the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> it discovered the problem:</p>
 <p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>类型使用不同的方法为你提供更多信息。每种类型都定义了一种对其错误有意义的方法。查看每种类型以查看它为你捕获的信息。 <a href="https://docs.raku.org/type/X::Str::Numeric%20"><code>X::Str::Numeric</code></a> <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>类型知道它在<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>中发现问题的位置：</p>
-
 <pre><code>put 'Problem was ', do given $! {
     when X::Str::Numeric  { &quot;Char at {.pos} is not numeric&quot; }
     when X::Numeric::Real { &quot;Trying to convert to {.target}&quot; }
     default { ... }
 };
-</code></pre>
-
-<p>The <code>$!</code> and <code>given</code> happen outside of the <code>try</code>. A <code>CATCH</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> inside the <code>try</code> can do the same thing. The <a href="https://docs.raku.org/type/X::Str::Numeric%20"><code>X::Str::Numeric</code></a> <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> shows up in <code>$_</code>:</p>
-
+</code></pre><p>The <code>$!</code> and <code>given</code> happen outside of the <code>try</code>. A <code>CATCH</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> inside the <code>try</code> can do the same thing. The <a href="https://docs.raku.org/type/X::Str::Numeric%20"><code>X::Str::Numeric</code></a> <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> shows up in <code>$_</code>:</p>
 <p><code>$!</code>  和 <code>given</code> 发生在 <code>try</code> 之外。 <code>try</code> 中的 <code>CATCH</code> <a href="https://docs.raku.org/type/Block.html"><code>块</code></a>可以做同样的事情。 <a href="https://docs.raku.org/type/X::Str::Numeric%20"><code>X::Str::Numeric</code></a>  <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 出现在 <code>$_</code> 中：</p>
-
 <pre><code>try {
     CATCH {
         when X::Str::Numeric { put &quot;ERROR: {.reason}&quot; }
@@ -383,20 +320,12 @@ my $value = try +$m;
     }
 
 put 'Got to the end.';
-</code></pre>
-
-<p>The <code>X::Str::Numeric</code> <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> is thrown at the line <code>my $value = +$m;</code>, then it skips the rest of the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. Handle this by outputting an error and continuing with the program:</p>
-
+</code></pre><p>The <code>X::Str::Numeric</code> <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> is thrown at the line <code>my $value = +$m;</code>, then it skips the rest of the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. Handle this by outputting an error and continuing with the program:</p>
 <p><code>X::Str::Numeric</code> <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 在 <code>my $value =+ $m;</code> 这一行被抛出，然后跳过<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>的其余部分。通过输出错误并继续执行程序来处理：</p>
-
 <pre><code>ERROR: base-10 number must begin with valid digits or '.'
 Got to the end.
-</code></pre>
-
-<p>Most of these objects inherit from <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> and have a <code>.message</code> method that provides more information. Catch those with <code>default</code> where you can output the name of the type:</p>
-
+</code></pre><p>Most of these objects inherit from <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> and have a <code>.message</code> method that provides more information. Catch those with <code>default</code> where you can output the name of the type:</p>
 <p>这些对象中的大多数都继承自<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>，并且具有提供更多信息的 <code>.message</code> 方法。使用 <code>default</code> 捕获那些异常，你可以输出类型的名称：</p>
-
 <pre><code>try {
     CATCH {
         default { put &quot;Caught {.^name} with ｢{.message}｣&quot; }
@@ -407,39 +336,24 @@ Got to the end.
     }
 
 put &quot;Got to the end.&quot;;
-</code></pre>
-
-<p>Now the output has the same message that the unhandled error showed you:</p>
-
+</code></pre><p>Now the output has the same message that the unhandled error showed you:</p>
 <p>现在输出与未处理的错误显示的消息相同：</p>
-
 <pre><code>Caught X::Str::Numeric with ｢Cannot convert string to number:
 base-10 number must begin with valid digits or '.' in '⏏Hello'
 (indicated by ⏏)｣
 Got to the end.
-</code></pre>
-
-<p>EXERCISE 7.1Divide a number by zero. What <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> type do you get?</p>
-
+</code></pre><p>EXERCISE 7.1Divide a number by zero. What <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> type do you get?</p>
 <p>练习7.1 将数字除以零。你得到什么 <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 类型？</p>
-
 <h2 id="backtraces">Backtraces</h2>
-
 <p>The <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> contains a <a href="https://docs.raku.org/type/Backtrace.html"><code>Backtrace</code></a> object that documents the path of the error. This example has three levels of subroutine calls with some code at the end that throws an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>:</p>
-
 <p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 包含一个 <a href="https://docs.raku.org/type/Backtrace.html"><code>Backtrace</code></a> 对象，用于记录错误的路径。此示例有三个级别的子例程调用，最后的一些代码抛出<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>：</p>
-
 <pre><code>sub top    { middle()    }
 sub middle { bottom()    }
 sub bottom { 5 + &quot;Hello&quot; }
 
 top();
-</code></pre>
-
-<p>You don’t handle the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> in <code>middle</code>, you don’t handle it in <code>top</code>, and finally, you don’t handle it at the top level. The <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> complains and shows you its path through the code:</p>
-
+</code></pre><p>You don’t handle the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> in <code>middle</code>, you don’t handle it in <code>top</code>, and finally, you don’t handle it at the top level. The <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> complains and shows you its path through the code:</p>
 <p>你不在 <code>middle</code> 中处理<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>，你不在顶部处理它，最后，你不在 <code>top</code> 中处理它。 <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 会抱怨并向你展示其代码的路径：</p>
-
 <pre><code>Cannot convert string to number: base-10 number must
 begin with valid digits or '.' in '⏏Hello' (indicated by ⏏)
   in sub bottom at backtrace.p6 line 3
@@ -452,27 +366,17 @@ Actually thrown at:
   in sub middle at backtrace.p6 line 2
   in sub top at backtrace.p6 line 1
   in block &lt;unit&gt; at backtrace.p6 line 5
-</code></pre>
-
-<p>Don’t fret when you see long messages like this. Find the first level of the error and think about that. Work your way through the chain one level at a time. Often a simple fix makes it all go away.</p>
-
+</code></pre><p>Don’t fret when you see long messages like this. Find the first level of the error and think about that. Work your way through the chain one level at a time. Often a simple fix makes it all go away.</p>
 <p>You can handle the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> anywhere in that chain. The simplest option might be to wrap the call to <code>bottom</code> in a <code>try</code>. With a single-line expression you can omit the <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a> around the code. In <code>middle</code>, you don’t specify a <code>CATCH</code> so there’s a default handler that discards the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>:</p>
-
 <p>当你看到像这样的长信息时，不要担心。找出错误的第一级并考虑一下。一次一个层次地通过链条。通常一个简单的修复使它全部消失。</p>
-
 <p>你可以在该链中的任何位置处理<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>。最简单的选择可能是在 <code>try</code> 中将调用包装到 <code>bottom</code>。使用单行表达式，你可以省略代码周围的<a href="https://docs.raku.org/type/Block.html"><code>块</code></a>。在 <code>middle</code> 中，你没有指定 <code>CATCH</code>，因此有一个默认处理程序可以丢弃<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>：</p>
-
 <pre><code>sub top    { middle()      }
 sub middle { try bottom()  }
 sub bottom { 137 + 'Hello' }
 
 put top();
-</code></pre>
-
-<p>That program doesn’t produce an error (or any output). That’s probably not what you want. The middle layer can handle the case where you can’t convert a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to a number by returning the special number <code>NaN</code> (for “not a number”):</p>
-
+</code></pre><p>That program doesn’t produce an error (or any output). That’s probably not what you want. The middle layer can handle the case where you can’t convert a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> to a number by returning the special number <code>NaN</code> (for “not a number”):</p>
 <p>该程序不会产生错误（或任何输出）。这可能不是你想要的。中间层可以通过返回特殊数字 <code>NaN</code> （意思是“非数字”）来处理无法将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>转换为数字的情况：</p>
-
 <pre><code>sub top    { middle() }
 sub middle {
     try {
@@ -484,12 +388,8 @@ sub middle {
 sub bottom { 137 + 'Hello' }
 
 put top();
-</code></pre>
-
-<p>Change the code to make a different error that the <code>CATCH</code> in <code>middle</code> doesn’t handle. Try to divide by zero and convert the result to a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
-
+</code></pre><p>Change the code to make a different error that the <code>CATCH</code> in <code>middle</code> doesn’t handle. Try to divide by zero and convert the result to a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a>:</p>
 <p>更改代码以产生 <code>middle</code> 中的 <code>CATCH</code> 无法处理的其他错误。尝试除以零并将结果转换为<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>：</p>
-
 <pre><code>sub top    { middle() }
 sub middle {
     try {
@@ -501,23 +401,15 @@ sub middle {
 sub bottom { ( 137 / 0 ).Str  }
 
 put top();
-</code></pre>
-
-<p>The <code>CATCH</code> in <code>middle</code> doesn’t handle this new type of error, so the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> interrupts the program at the call to <code>top</code>:</p>
-
+</code></pre><p>The <code>CATCH</code> in <code>middle</code> doesn’t handle this new type of error, so the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> interrupts the program at the call to <code>top</code>:</p>
 <p><code>middle</code> 中的 <code>CATCH</code> 不处理这种新类型的错误，因此<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>在调用 <code>top</code> 时中断程序：</p>
-
 <pre><code>Attempt to divide 137 by zero using div
   in sub bottom at nan.p6 line 12
   in sub middle at nan.p6 line 8
   in sub top at nan.p6 line 4
   in block &lt;unit&gt; at nan.p6 line 14
-</code></pre>
-
-<p>Catch this one inside <code>top</code>. The <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> passes through <code>middle</code>, which has nothing to handle it. Since nothing handles that error it continues up the chain and ends up in <code>top</code>, which handles it by returning the special value <code>Inf</code> (for infinity):</p>
-
+</code></pre><p>Catch this one inside <code>top</code>. The <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> passes through <code>middle</code>, which has nothing to handle it. Since nothing handles that error it continues up the chain and ends up in <code>top</code>, which handles it by returning the special value <code>Inf</code> (for infinity):</p>
 <p>在 <code>top</code> 里面捕获这个异常。<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>通过 <code>middle</code>，没有任何处理它。由于没有处理该错误，它会继续向上链接并最终到达 <code>top</code>，通过返回特殊值 <code>Inf</code> （意思是无穷大）来处理它：</p>
-
 <pre><code>sub top {
     try {
         CATCH {
@@ -538,12 +430,8 @@ sub middle {
 sub bottom { ( 137 / 0 ).Str  }
 
 put top();
-</code></pre>
-
-<p>Extend this process as far up the chain as you like. The next example changes the error by trying to call an undefined method on <code>137</code>:</p>
-
+</code></pre><p>Extend this process as far up the chain as you like. The next example changes the error by trying to call an undefined method on <code>137</code>:</p>
 <p>根据你的喜好将这个过程延伸到链上。下一个示例通过尝试在 <code>137</code> 上调用未定义的方法来更改错误：</p>
-
 <pre><code>sub top {
     try {
         CATCH {
@@ -570,28 +458,15 @@ try {
     }
     top();
 }
-</code></pre>
-
-<p>That’s a new sort of error that you don’t handle so far:</p>
-
+</code></pre><p>That’s a new sort of error that you don’t handle so far:</p>
 <p>到目前为止，这是一种新的错误：</p>
-
 <pre><code>Uncaught exception X::Method::NotFound
-</code></pre>
-
-<p>Sometimes you don’t care about unfound methods. If it’s there you call it and if not you want to ignore it. There’s special syntax for this. If you place a <code>?</code> after the method call dot, you don’t get an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> if the method is not found:</p>
-
+</code></pre><p>Sometimes you don’t care about unfound methods. If it’s there you call it and if not you want to ignore it. There’s special syntax for this. If you place a <code>?</code> after the method call dot, you don’t get an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> if the method is not found:</p>
 <p>有时你不关心未找到的方法。如果它在那里你就调用它，如果不是你就忽略它。这有特殊的语法。如果在方法调用点之后你放一个 <code>?</code>，如果找不到该方法，则不会出现<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>：</p>
-
 <pre><code>sub bottom { 137.?unknown-method }
-</code></pre>
-
-<h2 id="rethrowing-errors">Rethrowing Errors</h2>
-
+</code></pre><h2 id="rethrowing-errors">Rethrowing Errors</h2>
 <p>It gets better. You can catch an exception but not handle it. Modify the <code>CATCH</code> in <code>middle</code> to intercept <code>X::Method::NotFound</code> and output a message, then <code>.rethrow</code> it:</p>
-
 <p>它变得更好了。你可以捕获异常但不处理它。修改 <code>middle</code> 里面的 <code>CATCH</code> 以拦截 <code>X::Method::NotFound</code> 并输出一条消息，然后 <code>.rethrow</code> 它：</p>
-
 <pre><code>sub top    {
     try {
         CATCH {
@@ -622,80 +497,41 @@ try {
     }
     top();
 }
-</code></pre>
-
-<p>You can see that <code>middle</code> was able to do its work but the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> was ultimately handled by <code>top</code>:</p>
-
+</code></pre><p>You can see that <code>middle</code> was able to do its work but the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> was ultimately handled by <code>top</code>:</p>
 <p>你可以看到 <code>middle</code> 能够完成它的工作，但是<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>最终由 <code>top</code> 处理：</p>
-
 <pre><code>What happened?
 Uncaught exception X::Method::NotFound
-</code></pre>
-
-<p>EXERCISE 7.2Implement a subroutine whose only code is <code>...</code>. That denotes code that you intend to fill in later. Call that from another subroutine and catch the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>. What’s the type you get? Can you output your own <a href="https://docs.raku.org/type/Backtrace.html"><code>Backtrace</code></a>?</p>
-
+</code></pre><p>EXERCISE 7.2Implement a subroutine whose only code is <code>...</code>. That denotes code that you intend to fill in later. Call that from another subroutine and catch the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>. What’s the type you get? Can you output your own <a href="https://docs.raku.org/type/Backtrace.html"><code>Backtrace</code></a>?</p>
 <p>练习7.2 实现一个子程序，其唯一的代码是 <code>...</code> 。这表示你打算稍后填写的代码。从另一个子例程调用它并捕获<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>。你得到的是什么类型的？你能输出自己的<a href="https://docs.raku.org/type/Backtrace.html"><code>Backtrace</code></a>吗？</p>
-
 <h2 id="throwing-your-own-exceptions">Throwing Your Own Exceptions</h2>
-
 <p>Up to now you’ve seen exceptions that come from problems in the source code. Those are easy to see without complicating the examples. You can also throw your own <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s. The easiest way is to use <code>die</code> with a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> argument:</p>
-
 <p>到目前为止，你已经看到源代码中存在问题的异常。这些很容易看到，而不会使示例复杂化。你也可以抛出自己的<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>。最简单的方法是使用带有<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>参数的 <code>die</code>：</p>
-
 <pre><code>die 'Something went wrong!';
-</code></pre>
-
-<p>The <code>die</code> subroutine takes the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> as the message for an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> of type <a href="https://docs.raku.org/type/X::AdHoc.html"><code>X::AdHoc</code></a>. That’s a catch-all type for anything that doesn’t have a more appropriate type.</p>
-
+</code></pre><p>The <code>die</code> subroutine takes the <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> as the message for an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> of type <a href="https://docs.raku.org/type/X::AdHoc.html"><code>X::AdHoc</code></a>. That’s a catch-all type for anything that doesn’t have a more appropriate type.</p>
 <p>Dying with a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> is the same as constructing an <a href="https://docs.raku.org/type/X::AdHoc.html"><code>X::AdHoc</code></a>. You can <code>die</code> with a particular <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> type by constructing it yourself:</p>
-
 <p><code>die</code> 子例程将<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>作为 <a href="https://docs.raku.org/type/X::AdHoc.html"><code>X::AdHoc</code></a> 类型的<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>的消息。对于没有更合适类型的任何东西来说，这是一种全能类型。</p>
-
 <p>带有<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>的死亡与构建<a href="https://docs.raku.org/type/X::AdHoc.html"><code>X::AdHoc</code></a>相同。你可以通过自己构建它来使用特定的<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>类型：</p>
-
 <pre><code>die X::AdHoc.new( payload =&gt; &quot;Something went wrong!&quot; );
-</code></pre>
-
-<h6 id="note">NOTE</h6>
-
+</code></pre><h6 id="note">NOTE</h6>
 <p>You’re actually creating a <a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a> here, but you won’t see the <code>=&gt;</code> until <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch09.html#camelia-hashes">Chapter 9</a> or named parameters until <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch11.html#camelia-subroutines">Chapter 11</a>, so take this on faith.</p>
-
 <p>The <code>die</code> is important. Merely constructing the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> does not throw it:</p>
-
 <p>你实际上是在这里创建一个<a href="https://docs.raku.org/type/Pair.html"><code>Pair</code></a>，但在第11章之前你不会看到 <code>=&gt;</code> 或者直到第11章，所以请相信这一点。</p>
-
 <p><code>die</code> 很重要。仅仅构建<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>并不会抛出它：</p>
-
 <pre><code># nothing happens
 X::AdHoc.new( payload =&gt; &quot;Something went wrong!&quot; );
-</code></pre>
-
-<p>You can <code>.throw</code> it yourself if you like, though. This is the same as <code>die</code>:</p>
-
+</code></pre><p>You can <code>.throw</code> it yourself if you like, though. This is the same as <code>die</code>:</p>
 <p>不过，如果你愿意，你可以自己 <code>.throw</code>。这跟 <code>die</code> 是一样的：</p>
-
 <pre><code>X::AdHoc
     .new( payload =&gt; &quot;Something went wrong!&quot; )
     .throw;
-</code></pre>
-
-<p>You can also create <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s of other predefined types. The <a href="https://docs.raku.org/type/X::NYI.html"><code>X::NYI</code></a> type is for features not yetimplemented:</p>
-
+</code></pre><p>You can also create <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s of other predefined types. The <a href="https://docs.raku.org/type/X::NYI.html"><code>X::NYI</code></a> type is for features not yetimplemented:</p>
 <p>你还可以创建其他预定义类型的 <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>。 <a href="https://docs.raku.org/type/X::NYI.html"><code>X::NYI</code></a> 类型用于未实现的功能：</p>
-
 <pre><code>X::NYI.new: features =&gt; 'Something I haven't done yet';
-</code></pre>
-
-<p>EXERCISE 7.3Modify the previous exercise to <code>die</code> with a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> argument. What type do you catch? Further modify that to <code>die</code> with an <code>X::StubCode</code> object that you construct yourself.</p>
-
+</code></pre><p>EXERCISE 7.3Modify the previous exercise to <code>die</code> with a <a href="https://docs.raku.org/type/Str.html"><code>Str</code></a> argument. What type do you catch? Further modify that to <code>die</code> with an <code>X::StubCode</code> object that you construct yourself.</p>
 <p>练习7.3 使用<a href="https://docs.raku.org/type/Str.html"><code>字符串</code></a>参数修改上一个练习。你捕获了什么类型？使用你自己构建的 <code>X::StubCode</code> 对象进一步修改它。</p>
-
 <h2 id="defining-your-own-exception-types">Defining Your Own Exception Types</h2>
-
 <p>It’s a bit early to create subclasses—you’ll see how to do that in <a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch12.html#camelia-classes">Chapter 12</a>—but with a little faith you can do this right away. Base your class on <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> without doing anything else:</p>
-
 <p>创建子类有点早 - 你会在第12章看到如何做到这一点 - 但有一点信心你可以马上做到这一点。将你的类基于<a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>而不做任何其他事情：</p>
-
 <pre><code>class X::MyException is Exception {}
 
 sub my-own-error {
@@ -703,19 +539,11 @@ sub my-own-error {
 }
 
 my-own-error();
-</code></pre>
-
-<p>When you run the <code>my-own-error</code> subroutine it dies with the new error type that you’ve defined:</p>
-
+</code></pre><p>When you run the <code>my-own-error</code> subroutine it dies with the new error type that you’ve defined:</p>
 <p>当你运行 <code>my-own-error</code> 子例程时，它会以你定义的新错误类型失败：</p>
-
 <pre><code>Died with X::MyException
-</code></pre>
-
-<p>Now that your new type exists you can use it in a <code>CATCH</code> (or smart match). Even without any sort of customization its name is enough to tell you what happened:</p>
-
+</code></pre><p>Now that your new type exists you can use it in a <code>CATCH</code> (or smart match). Even without any sort of customization its name is enough to tell you what happened:</p>
 <p>既然你的新类型存在，你可以在 <code>CATCH</code> （或智能匹配）中使用它。即使没有任何自定义，它的名字也足以告诉你发生了什么：</p>
-
 <pre><code>try {
     CATCH {
         when X::MyException { put 'Caught a custom error' }
@@ -723,77 +551,43 @@ my-own-error();
 
 my-own-error();
 }
-</code></pre>
-
-<p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch12.html#camelia-classes">Chapter 12</a> will cover class creation and show you more about what you can do inside a class and how to reuse existing classes.</p>
-
+</code></pre><p><a href="https://www.safaribooksonline.com/library/view/learning-perl-6/9781491977675/ch12.html#camelia-classes">Chapter 12</a> will cover class creation and show you more about what you can do inside a class and how to reuse existing classes.</p>
 <p>第12章将涵盖类的创建，并向你展示更多关于你可以在类中做什么以及如何重用现有类。</p>
-
 <h1 id="failures">Failures</h1>
-
 <p><a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>s are wrappers around unthrown <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s. They’re passive until you try to use them later—hence “soft” exceptions. They don’t interrupt your program until something tries to use them as a normal value. It’s then that they throw their <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s.</p>
-
 <p>As a Boolean a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> is always <code>False</code>. You can “disarm” the <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> by checking it. That might be with an <code>if</code>, with a logical test, or by Booleanizing it with <code>.so</code> or <code>?</code>. All of those mark the <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> as handled and prevent it from implicitly throwing its <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>:</p>
-
 <p><a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> 是围绕unthrown <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 的包装器。它们是被动的，直到你以后尝试使用它们 - 因此是“软”异常。在尝试将它们用作正常值之前，它们不会中断你的程序。然后，他们抛出了他们的异常。</p>
-
 <p>作为布尔值，<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> 始终为 <code>False</code>。你可以通过检查来“解除”<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>。这可能是使用 <code>if</code>，进行逻辑测试，或者使用 <code>.so</code> 或 <code>?</code> 进行布尔化。所有这些都将<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>标记为已处理并阻止它隐式抛出其异常：</p>
-
 <pre><code>my $result = do-something();
 if $result { ... }
 my $did-it-work = ?$results;
-</code></pre>
-
-<p>A <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> is always undefined; maybe you want to set a default value if you encounter one:</p>
-
+</code></pre><p>A <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> is always undefined; maybe you want to set a default value if you encounter one:</p>
 <p><a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> 总是未定义的;也许你想要设置一个默认值，如果你遇到一个：</p>
-
 <pre><code>my $other-result = $result // 0;
-</code></pre>
-
-<p>You can handle a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> yourself without the <code>try</code>. The <code>.exception</code> method extracts that object so you can inspect it:</p>
-
+</code></pre><p>You can handle a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> yourself without the <code>try</code>. The <code>.exception</code> method extracts that object so you can inspect it:</p>
 <p>没有 <code>try</code> 你也可以自己处理<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>。 <code>.exception</code> 方法提取该对象，以便你可以检查它：</p>
-
 <pre><code>unless $result {
     given $result.exception {
         when    X::AdHoc { ... }
         default          { ... }
     }
 }
-</code></pre>
-
-<p>Create your own <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>s by substituting <code>die</code> with <code>fail</code>:</p>
-
+</code></pre><p>Create your own <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>s by substituting <code>die</code> with <code>fail</code>:</p>
 <p>通过将 <code>die</code> 替换为 <code>fail</code> 来创建自己的<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>：</p>
-
 <pre><code>fail &quot;This ends up as an X::AdHoc&quot;;
 
 fail My::X::SomeException.new(
     :payload( 'Something wonderful' ) );
-</code></pre>
-
-<p>When you use <code>fail</code> in a subroutine the <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> object becomes the return value. Instead of <code>die</code>-ing you should probably use <code>fail</code> so that the programmers who use your code can decide for themselves how to handle the problem.</p>
-
+</code></pre><p>When you use <code>fail</code> in a subroutine the <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> object becomes the return value. Instead of <code>die</code>-ing you should probably use <code>fail</code> so that the programmers who use your code can decide for themselves how to handle the problem.</p>
 <p>EXERCISE 7.4Create a subroutine that takes two arguments and returns their sum. If either argument is not a number return a <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> object saying so. How would you handle the <a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>?</p>
-
 <p>在子例程中使用 <code>fail</code> 时，<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a> 对象将成为返回值。你应该使用 <code>fail</code> 而不是 <code>die</code>，以便使用你的代码的程序员可以自己决定如何处理问题。</p>
-
 <p>练习7.4 创建一个带有两个参数并返回其总和的子程序。如果任一参数不是数字，则返回<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>对象。你会如何处理<a href="https://docs.raku.org/type/Failure.html"><code>Failure</code></a>？</p>
-
 <h1 id="warnings">Warnings</h1>
-
 <p>Instead of <code>die</code>-ing you can use <code>warn</code> to give the same message without stopping the program or forcing the program to catch the <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>:</p>
-
 <p>你可以使用 <code>warn</code> 而不是 <code>die</code> 来提供相同的消息，而无需停止程序或强制程序捕获异常：</p>
-
 <pre><code>warn 'Something funny is going on!';
-</code></pre>
-
-<p>Warnings are a type of <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> and you can catch them. They aren’t the same type of exception so they don’t show up in a <code>CATCH</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. They are control exceptions that you catch in a <code>CONTROL</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>:</p>
-
+</code></pre><p>Warnings are a type of <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> and you can catch them. They aren’t the same type of exception so they don’t show up in a <code>CATCH</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>. They are control exceptions that you catch in a <code>CONTROL</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>:</p>
 <p>警告是一种<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>，你可以捕获它们。它们不是同一类型的异常，因此它们不会出现在 <code>CATCH</code> <a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中。它们是你在CONTROL <a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中捕获的控制异常：</p>
-
 <pre><code>try {
     CONTROL {
         put &quot;Caught an exception, in the try&quot;;
@@ -809,51 +603,28 @@ sub do-that-thing-you-do {
     }
     warn &quot;This is a warning&quot;;
 }
-</code></pre>
-
-<p>If you don’t care about the warnings (they are annoying after all) you can wrap the annoying code in a <code>quietly</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>:</p>
-
+</code></pre><p>If you don’t care about the warnings (they are annoying after all) you can wrap the annoying code in a <code>quietly</code> <a href="https://docs.raku.org/type/Block.html"><code>Block</code></a>:</p>
 <p>如果你不关心警告（毕竟它们很烦人），你可以将烦人的代码包装在一个 <code>quietly</code> <a href="https://docs.raku.org/type/Block.html"><code>块</code></a>中：</p>
-
 <pre><code>quietly {
     do-that-thing-you-do();
     }
-</code></pre>
-
-<p>EXERCISE 7.5Modify the previous exercise to <code>warn</code> for each argument that cannot be converted to a number. Once you’ve seen those warnings, further modify the program to ignore the warnings.</p>
-
+</code></pre><p>EXERCISE 7.5Modify the previous exercise to <code>warn</code> for each argument that cannot be converted to a number. Once you’ve seen those warnings, further modify the program to ignore the warnings.</p>
 <p>练习7.5 修改上一个练习，以警告(<code>warn</code>)每个无法转换为数字的参数。一旦看到这些警告，进一步修改程序以忽略警告。</p>
-
 <h1 id="the-wisdom-of-exceptions">The Wisdom of Exceptions</h1>
-
 <p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s can be a contentious subject. Some people love them and some hate them. Since they are a feature, you need to know about them. I want to leave you with some words of caution before you get yourself in too much trouble. Your love/hate relationship with <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s will most likely fluctuate over your career.</p>
-
 <p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s are a way of communicating information. By design this feature expects you to recognize the type of error and handle it appropriately. This implies that you can actually handle the error. If you encounter a situation that your program cannot correct, an <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> might not be the appropriate feature to use.</p>
-
 <p>Even if your program could correct the error, many people don’t expect most programmers to handle errors. Your <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> may be a nuisance that they catch and ignore. Think about that before you spend too much time crafting fine-grained <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> types that cover all situations.</p>
-
 <p>As part of program flow <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s are really a fancy break mechanism. You’re in one bit of code, then suddenly in another. Those cases should truly be exceptional and rare. Anything else that you expect to happen you should handle with normal program flow.</p>
-
 <p>That’s all I’ll say about that. Perhaps you have a different opinion. That’s fine. Read more about this on your own and judge your particular situation.</p>
-
 <p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a> 可能是一个有争议的主题。有些人喜欢他们，有些人讨厌他们。由于它们是一个功能，你需要了解它们。在你遇到太多麻烦之前，我想给你一些谨慎的话。你与<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>的爱/恨关系很可能会在你的职业生涯中波动。</p>
-
 <p><a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>是一种沟通信息的方式。根据设计，此功能要求你识别错误类型并正确地处理它。这意味着你可以正确地处理错误。如果遇到程序无法纠正的情况，则<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>这个功能可能不适用。</p>
-
 <p>即使你的程序可以纠正错误，许多人也不希望大多数程序员处理错误。你的<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>可能是他们捕获和忽视的麻烦。在花费太多时间制作涵盖所有情况的细粒度异常类型之前，请考虑一下。</p>
-
 <p>作为程序流程的一部分，<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>实际上是一种奇特的破坏机制。你在一点代码中，然后突然在另一个代码中。这些情况应该是特殊和罕见的。你期望发生的任何其他事情都应该处理正常的程序流程。</p>
-
 <p>这就是我要说的全部内容。也许你有不同的意见。没关系。自己阅读更多相关信息并判断你的具体情况。</p>
-
 <h1 id="summary">Summary</h1>
-
 <p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s are a feature of Raku, but it doesn’t hit you over the head with them. They can be soft failures until they would actually cause a problem.</p>
-
 <p><a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>是 Raku 的一个功能，但它并没有让你头脑发热。它们可能是软故障，直到它们实际上会导致问题。</p>
-
 <p>Don’t become overwhelmed by the different types of <a href="https://docs.raku.org/type/Exception.html"><code>Exception</code></a>s your program may report. You’ll continue to see these throughout the rest of the book. Use them appropriately (whatever definition you choose) and effectively to note problems in your program. Try to detect those as early as you can.</p>
-
 <p>不要被你的程序可能报告的不同类型的<a href="https://docs.raku.org/type/Exception.html"><code>异常</code></a>所淹没。在本书的其余部分中，你将继续看到这些内容。适当地使用它们（无论你选择何种定义）并有效地记录程序中的问题。尽可能早地检测这些。</p>
 
 
@@ -946,7 +717,7 @@ sub do-that-thing-you-do {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

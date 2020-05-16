@@ -10,21 +10,21 @@
   <meta name="twitter:title" content="HOW 方法" />
   <meta name="description" content="Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?
 我可以在某个对象身上调用 ^methods 方法, 以列出我能调用的方法的名字列表:
-my $object = &#39;Camelia&#39; my @object_methods = $object.^methods; @object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;  ^methods 返回一个列表, 通过对列表中的每个元素调用 .gist 方法, 得到一个人类友好的形式。
+my $object = &#39;Camelia&#39;my @object_methods = $object.^methods;@object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;^methods 返回一个列表, 通过对列表中的每个元素调用 .gist 方法, 得到一个人类友好的形式。
 但是 ^methods 中的 ^ 暗含了 .HOW 方法:
 我想下面这段代码本该有效的, 但是没有:
-my $object = &#39;Camelia&#39;; my @object_objects = $object.HOW.methods;  但是我得到了一个错误:
-Too few positionals passed; expected 2 arguments but got 1 in any methods at gen/moar/m-Metamodel.nqp line 490 in block &lt;unit&gt; at.">
+my $object = &#39;Camelia&#39;;my @object_objects = $object.HOW.methods;但是我得到了一个错误:
+Too few positionals passed; expected 2 arguments but got 1in any methods at gen/moar/m-Metamodel.nqp line 490in block &lt;unit&gt; at.">
   <meta property="og:description" content="Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?
 我可以在某个对象身上调用 ^methods 方法, 以列出我能调用的方法的名字列表:
-my $object = &#39;Camelia&#39; my @object_methods = $object.^methods; @object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;  ^methods 返回一个列表, 通过对列表中的每个元素调用 .gist 方法, 得到一个人类友好的形式。
+my $object = &#39;Camelia&#39;my @object_methods = $object.^methods;@object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;^methods 返回一个列表, 通过对列表中的每个元素调用 .gist 方法, 得到一个人类友好的形式。
 但是 ^methods 中的 ^ 暗含了 .HOW 方法:
 我想下面这段代码本该有效的, 但是没有:
-my $object = &#39;Camelia&#39;; my @object_objects = $object.HOW.methods;  但是我得到了一个错误:
-Too few positionals passed; expected 2 arguments but got 1 in any methods at gen/moar/m-Metamodel.nqp line 490 in block &lt;unit&gt; at.">
+my $object = &#39;Camelia&#39;;my @object_objects = $object.HOW.methods;但是我得到了一个错误:
+Too few positionals passed; expected 2 arguments but got 1in any methods at gen/moar/m-Metamodel.nqp line 490in block &lt;unit&gt; at.">
   <meta name="twitter:description" content="Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?
 我可以在某个对象身上调用 ^methods 方法, 以列出我能调用的方法的名字列表:
-my $object = &#39;Camelia&#39; my @object_methods = $object.^methods; …">
+my $object = &#39;Camelia&#39;my @object_methods = $object.^methods; …">
   <meta name="author" content="焉知非鱼"/>
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
@@ -34,7 +34,7 @@ my $object = &#39;Camelia&#39; my @object_methods = $object.^methods; …">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-07-22-how%E6%96%B9%E6%B3%95/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -241,65 +241,34 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p><a href="http://stackoverflow.com/questions/35819026/why-cant-i-call-the-methods-method-on-a-perl-6s-classhow-object">Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?</a></p>
-
+        <p><a href="http://stackoverflow.com/questions/35819026/why-cant-i-call-the-methods-method-on-a-perl-6s-classhow-object">Why can&rsquo;t I call the methods method on a Raku&rsquo;s ClassHOW object?</a></p>
 <p>我可以在某个对象身上调用 <code>^methods</code> 方法, 以列出我能调用的方法的名字列表:</p>
-
-<pre><code class="language-raku">my $object = 'Camelia'
+<pre><code class="language-raku" data-lang="raku">my $object = 'Camelia'
 my @object_methods = $object.^methods;
 @object_methods.map( {.gist} ).sort.join(&quot;\n&quot;).say;
-</code></pre>
-
-<p><code>^methods</code> 返回一个列表,  通过对列表中的每个元素调用 <code>.gist</code> 方法, 得到一个人类友好的形式。</p>
-
+</code></pre><p><code>^methods</code> 返回一个列表,  通过对列表中的每个元素调用 <code>.gist</code> 方法, 得到一个人类友好的形式。</p>
 <p>但是 <code>^methods</code> 中的 <code>^</code> 暗含了 <code>.HOW</code> 方法:</p>
-
 <p>我想下面这段代码本该有效的, 但是没有:</p>
-
-<pre><code class="language-raku">my $object = 'Camelia';
+<pre><code class="language-raku" data-lang="raku">my $object = 'Camelia';
 my @object_objects = $object.HOW.methods;
-</code></pre>
-
-<p>但是我得到了一个错误:</p>
-
+</code></pre><p>但是我得到了一个错误:</p>
 <pre><code>Too few positionals passed; expected 2 arguments but got 1
   in any methods at gen/moar/m-Metamodel.nqp line 490
   in block &lt;unit&gt; at...
-</code></pre>
-
-<p>通过 <code>.</code> 调用的常规方法把点号左边的调用者作为第一个参数隐式地传递给该方法。通过 <code>.^</code> 调用的元方法传递了两个参数:作为调用者的元对象(meta-object)和作为第一个位置参数的实例:</p>
-
+</code></pre><p>通过 <code>.</code> 调用的常规方法把点号左边的调用者作为第一个参数隐式地传递给该方法。通过 <code>.^</code> 调用的元方法传递了两个参数:作为调用者的元对象(meta-object)和作为第一个位置参数的实例:</p>
 <p>举个例子:</p>
-
-<pre><code class="language-raku">$obj.^can('sqrt')
-</code></pre>
-
-<p>就是下面这段代码的语法糖:</p>
-
-<pre><code class="language-raku">$obj.HOW.can($obj, 'sqrt')
-</code></pre>
-
-<p>在你的例子中, 你应该写作:</p>
-
-<pre><code class="language-raku">my @object_methods = $object.HOW.methods($object);
-</code></pre>
-
-<h2 id="d-和-d-之间的区别">:D 和 :D: 之间的区别</h2>
-
-<hr />
-
+<pre><code class="language-raku" data-lang="raku">$obj.^can('sqrt')
+</code></pre><p>就是下面这段代码的语法糖:</p>
+<pre><code class="language-raku" data-lang="raku">$obj.HOW.can($obj, 'sqrt')
+</code></pre><p>在你的例子中, 你应该写作:</p>
+<pre><code class="language-raku" data-lang="raku">my @object_methods = $object.HOW.methods($object);
+</code></pre><h2 id="d-和-d-之间的区别">:D 和 :D: 之间的区别</h2>
+<hr>
 <p>在一段定义 <code>shift</code> 子例程的Raku 代码里:</p>
-
-<pre><code class="language-raku">multi sub    shift(Array:D)
+<pre><code class="language-raku" data-lang="raku">multi sub    shift(Array:D)
 multi method shift(Array:D:)
-</code></pre>
-
-<p>我知道 <code>:D</code> 意味着 <code>Array</code>是 <code>defined</code> (有定义的)而非 <code>Any</code> 或 <code>nil</code>, 但是 <code>:D:</code> 是什么意思呢? 文档中真的很难找到。</p>
-
+</code></pre><p>我知道 <code>:D</code> 意味着 <code>Array</code>是 <code>defined</code> (有定义的)而非 <code>Any</code> 或 <code>nil</code>, 但是 <code>:D:</code> 是什么意思呢? 文档中真的很难找到。</p>
 <p><code>D</code>后面的冒号表示方法的调用者作为第一个参数被隐式地传入进来。如果你想在签名中使用显式的参数(例如给它添加一个诸如 :D 的类型笑脸或者给它一个更具描述性的名字), 你需要使用 <code>:</code> 而非 <code>,</code> 以把它和剩余的参数列表分割开。这甚至在空列表时也是必要的, 所以这能消除含有常规位置参数的签名中的歧义。</p>
-
 <p>更多信息, 请查看<a href="http://design.raku.org/S06.html#Invocant_parameters">Invocant_parameters</a>。</p>
 
 
@@ -392,7 +361,7 @@ multi method shift(Array:D:)
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -12,14 +12,14 @@
 它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西, Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。
 GLE 意图强调性能和列表和相关类型操作的一致性问题。改变这样的基本数据类型将会很痛苦。
 通常 Perl 5 这样展开列表:
-% perl -dE 1 -MData::Dumper [...snip...] DB&lt;1&gt; @foos=((1,2),3) DB&lt;2&gt; say Dumper \@foos $VAR1 = [ 1, 2, 3 ];  开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
+% perl -dE 1 -MData::Dumper[...snip...]DB&lt;1&gt; @foos=((1,2),3)DB&lt;2&gt; say Dumper \@foos$VAR1 = [1,2,3];开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
 这样做和很多边界情况不一致并且 Rakudo 内部大量使用了一种叫做 Parcel 的数据类型, 之后 Parcel 被认为是一个 Bad Idea(糟糕的设计) — 主要是因为性能问题。
 2015 年 7 月, Patrick 导入了一个涵盖 &ldquo;Synopsis 7&rdquo; 的孪生设计草案, 随后的月份中它变成官方的 S07。">
   <meta property="og:description" content="Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
 它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西, Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。
 GLE 意图强调性能和列表和相关类型操作的一致性问题。改变这样的基本数据类型将会很痛苦。
 通常 Perl 5 这样展开列表:
-% perl -dE 1 -MData::Dumper [...snip...] DB&lt;1&gt; @foos=((1,2),3) DB&lt;2&gt; say Dumper \@foos $VAR1 = [ 1, 2, 3 ];  开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
+% perl -dE 1 -MData::Dumper[...snip...]DB&lt;1&gt; @foos=((1,2),3)DB&lt;2&gt; say Dumper \@foos$VAR1 = [1,2,3];开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。
 这样做和很多边界情况不一致并且 Rakudo 内部大量使用了一种叫做 Parcel 的数据类型, 之后 Parcel 被认为是一个 Bad Idea(糟糕的设计) — 主要是因为性能问题。
 2015 年 7 月, Patrick 导入了一个涵盖 &ldquo;Synopsis 7&rdquo; 的孪生设计草案, 随后的月份中它变成官方的 S07。">
   <meta name="twitter:description" content="Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。
@@ -34,7 +34,7 @@ GLE 意图强调性能和列表和相关类型操作的一致性问题。改变�
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-08-12-%E5%A4%A7%E5%88%97%E8%A1%A8%E9%87%8D%E6%9E%84/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -241,82 +241,48 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。</p>
-
+        <p>Raku 最近(2015.9)经历的最大的变化就是 Great List Refactor(GLR), 俗称大列表重构。</p>
 <p>它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西,  Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。</p>
-
 <p>GLE 意图强调性能和列表和相关类型操作的一致性问题。改变这样的基本数据类型将会很痛苦。</p>
-
 <p>通常 Perl 5 这样展开列表:</p>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">%</span> <span class="nv">perl</span> <span class="o">-</span><span class="n"></span><span class="n">dE</span> <span class="mi">1</span> <span class="o">-</span><span class="n"></span><span class="nn">MData::</span><span class="n"></span><span class="n">Dumper</span>
 
-<pre><code class="language-perl">% perl -dE 1 -MData::Dumper
+<span class="p">[</span><span class="o">...</span><span class="n"></span><span class="n">snip</span><span class="o">...</span><span class="p">]</span>
+<span class="n"></span><span class="n">DB</span><span class="sr">&lt;1&gt;</span> <span class="nv">@</span><span class="nv">foos</span><span class="o">=</span><span class="p">(</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 
-[...snip...]
-DB&lt;1&gt; @foos=((1,2),3)
-
-DB&lt;2&gt; say Dumper \@foos
-$VAR1 = [
-    1,
-    2,
-    3
-];
-</code></pre>
-
-<p>开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。</p>
-
+<span class="n"></span><span class="n">DB</span><span class="sr">&lt;2&gt;</span> <span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">Dumper</span> <span class="o">\</span><span class="nv">@</span><span class="nv">foos</span>
+<span class="nv">$</span><span class="nv">VAR1</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mi">1</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">,</span>
+    <span class="mi">3</span>
+<span class="p">]</span><span class="p">;</span>
+</code></pre></div><p>开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。</p>
 <p>这样做和很多边界情况不一致并且 Rakudo 内部大量使用了一种叫做 <code>Parcel</code> 的数据类型, 之后 Parcel 被认为是一个 Bad Idea(糟糕的设计) —  主要是因为性能问题。</p>
-
 <p>2015 年 7 月, Patrick 导入了一个涵盖 &ldquo;Synopsis 7&rdquo; 的孪生设计草案, 随后的月份中它变成官方的 S07。</p>
-
 <p>8 月份对于 GLR 是很繁忙的一个月。乔纳森.华盛顿在 Rakudo 仓库下开启了一个单独的 GLR 分支。很多人在那个分支下协同工作。同时在 IRC 频道有俩个机器人, Camelia 和 GLRelia(后者跟踪 GLR 分支)。所以人们能很快尝试并比较在新旧系统中代码的行为。大量的变化和诸如 panda 的软件不得不进行修补以保持功能。</p>
-
 <p><strong>Parcel</strong> 数据类型变成了 <strong>List</strong>（它是不可变的并使用圆括号）而数组是 List 的一个可变子类, 它使用方括号。数组不再拥有隐式的列表展平行为。简单的数组可以使用 <code>.flat</code>方法进行展平。</p>
-
 <h3 id="pre-glr">Pre GLR</h3>
-
-<hr />
-
-<pre><code class="language-raku">my @array = 1,(2,3),4;       # 1 2 3 4
+<hr>
+<pre><code class="language-raku" data-lang="raku">my @array = 1,(2,3),4;       # 1 2 3 4
 @array.elems.say;            # 4   
-</code></pre>
-
-<h3 id="post-glr">Post GLR</h3>
-
-<hr />
-
-<pre><code class="language-raku">my @array = 1,(2,3),4;        # [1 (2 3) 4]
+</code></pre><h3 id="post-glr">Post GLR</h3>
+<hr>
+<pre><code class="language-raku" data-lang="raku">my @array = 1,(2,3),4;        # [1 (2 3) 4]
 @array.elems.say;             # 3
 
 my @array = (1,(2,3),4).flat; # [1 2 3 4]
-</code></pre>
-
-<p>把列表滑进(Slip)数组中也是可行的:</p>
-
-<pre><code class="language-raku">my @a = 1, (2, 3).Slip, 4;    # [1 2 3 4]
-</code></pre>
-
-<p>还有:</p>
-
-<pre><code class="language-raku">my @a = 1, |(2,3), 4;         # [1 2 3 4]
-</code></pre>
-
-<p>序列(只能够被耗费<strong>一次</strong>)被引入:</p>
-
-<pre><code class="language-raku">my $grep = (1..4).grep(*&gt;2);  # (3 4)
+</code></pre><p>把列表滑进(Slip)数组中也是可行的:</p>
+<pre><code class="language-raku" data-lang="raku">my @a = 1, (2, 3).Slip, 4;    # [1 2 3 4]
+</code></pre><p>还有:</p>
+<pre><code class="language-raku" data-lang="raku">my @a = 1, |(2,3), 4;         # [1 2 3 4]
+</code></pre><p>序列(只能够被耗费<strong>一次</strong>)被引入:</p>
+<pre><code class="language-raku" data-lang="raku">my $grep = (1..4).grep(*&gt;2);  # (3 4)
 $grep.^name.say;              # Seq
-</code></pre>
-
-<p>而 <code>.cache</code>方法能用于阻止 Seq 的消费。</p>
-
+</code></pre><p>而 <code>.cache</code>方法能用于阻止 Seq 的消费。</p>
 <h3 id="the-single-argument-rule">The Single Argument Rule</h3>
-
-<hr />
-
-<p>传递给诸如 *for*循环迭代器的参数遵守&rdquo;the single arg rule&rdquo;, 意思是即使第一眼看上去是以多个参数出现的, 也会被当作单个参数。通常这会让 <em>for</em> 表现得如程序员所期望的那样除了带有尾随逗号的例子。</p>
-
-<pre><code class="language-raku">my @a = 1,2,3;
+<hr>
+<p>传递给诸如 <em>for</em>循环迭代器的参数遵守&quot;the single arg rule&rdquo;, 意思是即使第一眼看上去是以多个参数出现的, 也会被当作单个参数。通常这会让 <em>for</em> 表现得如程序员所期望的那样除了带有尾随逗号的例子。</p>
+<pre><code class="language-raku" data-lang="raku">my @a = 1,2,3;
 my ($i, $j);
 for (@a) {
     $i++;
@@ -328,9 +294,7 @@ for (@a,) { # 这实际上是单个元素列表(single element list)
 
 say :$i.gist;  # =&gt; 3
 say :$j.gist;  # =&gt; 1
-</code></pre>
-
-<p>S07 在 2015年9月份被乔纳森-华盛顿重写了。结果就是 S07经历了很多改变。<em>Parcel</em> 被移除了, 重新引入进来, 并且最终又被移除了!</p>
+</code></pre><p>S07 在 2015年9月份被乔纳森-华盛顿重写了。结果就是 S07经历了很多改变。<em>Parcel</em> 被移除了, 重新引入进来, 并且最终又被移除了!</p>
 
 
         
@@ -424,7 +388,7 @@ say :$j.gist;  # =&gt; 1
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

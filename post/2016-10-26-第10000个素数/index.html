@@ -28,7 +28,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-10-26-%E7%AC%AC10000%E4%B8%AA%E7%B4%A0%E6%95%B0/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -235,19 +235,13 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>到目前为止(2016.10.26), Raku 的速度相比 Perl 5/Python 的差距还是很大的。以打印从 1 开始计数的第 10000 个素数为例, 使用如下版本的 Rakudo:</p>
-
+        <p>到目前为止(2016.10.26), Raku 的速度相比 Perl 5/Python 的差距还是很大的。以打印从 1 开始计数的第 10000 个素数为例, 使用如下版本的 Rakudo:</p>
 <blockquote>
 <p>This is Rakudo version 2016.07.1 built on MoarVM version 2016.07 implementing Raku.c.</p>
 </blockquote>
-
 <p>从程序执行耗费的时间来看, Raku 实在慢的如蜗牛。</p>
-
 <h2 id="并发打印第10000个素数">并发打印第10000个素数</h2>
-
-<pre><code class="language-raku">sub find-prime($count) {
+<pre><code class="language-raku" data-lang="raku">sub find-prime($count) {
     my $channel = Channel.new;
 
     my $promise = start {
@@ -268,15 +262,10 @@ my @primes = find-prime(110000);
 
 say @primes[10000];
 say now - INIT now;
-</code></pre>
-
-<p>上面的并发查找素数, 用时 <strong>35</strong> 秒多! <a href="https://raw.githubusercontent.com/raku/specs/master/S14-roles-and-parametric-types.pod">but</a> 的作用类似于 <code>does</code>。</p>
-
-<h2 id="gather-take-版">gather/take 版</h2>
-
+</code></pre><p>上面的并发查找素数, 用时 <strong>35</strong> 秒多! <a href="https://raw.githubusercontent.com/raku/specs/master/S14-roles-and-parametric-types.pod">but</a> 的作用类似于 <code>does</code>。</p>
+<h2 id="gathertake-版">gather/take 版</h2>
 <p><code>gather/take</code> 类似于 Python 中的 <code>yield</code> , 用于惰性求值。</p>
-
-<pre><code class="language-raku">my @vals = lazy gather {
+<pre><code class="language-raku" data-lang="raku">my @vals = lazy gather {
     for ^Inf {
         take $_ if .is-prime;
     }
@@ -284,15 +273,10 @@ say now - INIT now;
 
 say @vals[10000];
 say now - INIT now;
-</code></pre>
-
-<p>用时 25 秒多, 比并发版本的要快一点。</p>
-
+</code></pre><p>用时 25 秒多, 比并发版本的要快一点。</p>
 <h2 id="普通版本">普通版本</h2>
-
 <p>如果不使用 <code>is-prime</code> 函数, 查找第 10000 个素数就巨慢:</p>
-
-<pre><code class="language-raku">lazy gather {
+<pre><code class="language-raku" data-lang="raku">lazy gather {
      CANDIDATE: for  2 .. 110000 -&gt; $candidate {
     	 for  2 .. sqrt $candidate  -&gt; $divisor {
     		next CANDIDATE if $candidate % $divisor == 0;
@@ -303,11 +287,8 @@ say now - INIT now;
 
 say @vals[10000];
 say now - INIT now;
-</code></pre>
-
-<p>下面这个 <code>lazy gather</code> 根本没有起作用, 原因是 feed 运算符还没实现 lazy 求值? - 巨慢。</p>
-
-<pre><code class="language-raku">lazy gather {
+</code></pre><p>下面这个 <code>lazy gather</code> 根本没有起作用, 原因是 feed 运算符还没实现 lazy 求值? - 巨慢。</p>
+<pre><code class="language-raku" data-lang="raku">lazy gather {
     for ^Inf {
       take $_ if .is-prime;
     }
@@ -315,11 +296,8 @@ say now - INIT now;
 
 say @vals[10000];
 say now - INIT now;
-</code></pre>
-
-<p>没有使用 <code>is-prime</code> 函数的普通指数运算也会巨慢:</p>
-
-<pre><code class="language-raku"> my @vals = lazy gather {
+</code></pre><p>没有使用 <code>is-prime</code> 函数的普通指数运算也会巨慢:</p>
+<pre><code class="language-raku" data-lang="raku"> my @vals = lazy gather {
     for 1..110000 {
       take $_ if (2 ** ($_ - 1) % $_ == 1 || $_ == 2);
      }
@@ -328,7 +306,6 @@ say now - INIT now;
  say @vals[10000];
  say now - INIT now;
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -427,7 +404,7 @@ say now - INIT now;
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

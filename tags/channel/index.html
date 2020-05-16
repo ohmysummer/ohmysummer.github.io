@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/channel/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/channel/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -230,7 +230,7 @@ if (!doNotTrack) {
                   Ping Pang in Raku 使用 channels 在线程之间传递消息是一种管理并发的简单方法。
 一位朋友最近向我展示了一个很酷的程序，用 elixir 来演示消息传递 - 两个线程通过来回传递递增的数字来计数。快速搜索出现了一些例子。
 我决定在 Raku 中实现这个。这就是我想出来的→
-my ($ping, $pong) = Channel.new xx 2; sub ping { while $ping.receive -&gt; $n { say &quot;ping $n (thread #{$*THREAD.id})&quot;; $pong.send: $n + 1; } } sub pong { while $pong.receive -&gt; $n { last if $n &gt;= 5; say &quot;pong $n (thread #{$*THREAD.id})&quot;; $ping.send: $n + 1; } } $ping.send: 1; await Promise.anyof( (start ping), (start pong) );  $ping 和 $pong 都是 channel。子程序 ping 和 pong 从它们相应的 channel 接收并发送到另一个。
+my ($ping, $pong) = Channel.new xx 2; sub ping { while $ping.receive -&gt; $n { say &quot;ping $n (thread #{$*THREAD.id})&quot;; $pong.send: $n + 1; } } sub pong { while $pong.receive -&gt; $n { last if $n &gt;= 5; say &quot;pong $n (thread #{$*THREAD.id})&quot;; $ping.send: $n + 1; } } $ping.send: 1; await Promise.anyof( (start ping), (start pong) ); $ping 和 $pong 都是 channel。子程序 ping 和 pong 从它们相应的 channel 接收并发送到另一个。
                   <a href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-raku/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -272,12 +272,13 @@ my ($ping, $pong) = Channel.new xx 2; sub ping { while $ping.receive -&gt; $n { 
               </p>
               <div class="post-entry">
                 
-                  class Channel {}  Channel 是一个线程安全的队列，可帮助你将一个或多个生产者的一系列对象发送给一个或多个消费者。每个对象将仅到达由调度程序选择的一个这样的消费者。如果只有一个消费者和一个生产者，则保证保留对象的顺序。在 Channel 上发送是非阻塞的。
-my $c = Channel.new; await (^10).map: { start { my $r = rand; sleep $r; $c.send($r); } } $c.close; say $c.list;  可以在并发页面中找到更多示例。
+                  class Channel {} Channel 是一个线程安全的队列，可帮助你将一个或多个生产者的一系列对象发送给一个或多个消费者。每个对象将仅到达由调度程序选择的一个这样的消费者。如果只有一个消费者和一个生产者，则保证保留对象的顺序。在 Channel 上发送是非阻塞的。
+my $c = Channel.new; await (^10).map: { start { my $r = rand; sleep $r; $c.send($r); } } $c.close; say $c.list; 可以在并发页面中找到更多示例。
 方法 send 方法 定义为：
-method send(Channel:D: \item)  将项目排入频道。如果通道已经关闭，则抛出类型X :: Channel :: SendOnClosed的异常。此调用不会阻止等待使用者获取该对象。对可排队的项目数量没有设定限制，因此应注意防止失控排队。
-my $c = Channel.new; $c.send(1); $c.send([2, 3, 4, 5]); $c.close; say $c.list; # OUTPUT: «(1 [2 3 4 5])␤»  receive 方法 定义为：
-method receive(Channel:D:)  从频道接收和删除项目。如果没有项目存在，它会阻塞，等待来自另一个线程的发送。
+method send(Channel:D: \item) 将项目排入频道。如果通道已经关闭，则抛出类型X :: Channel :: SendOnClosed的异常。此调用不会阻止等待使用者获取该对象。对可排队的项目数量没有设定限制，因此应注意防止失控排队。
+my $c = Channel.new; $c.send(1); $c.send([2, 3, 4, 5]); $c.close; say $c.list; # OUTPUT: «(1 [2 3 4 5])␤» receive 方法 定义为：
+method receive(Channel:D:) 从频道接收和删除项目。如果没有项目存在，它会阻塞，等待来自另一个线程的发送。
+如果通道已关闭，并且已经删除了最后一项，或者在接收等待项目到达时调用了close，则抛出类型X :: Channel :: ReceiveOnClosed的异常。
                   <a href="https://ohmysummer.github.io/post/2018-07-08-class-channel/" class="post-read-more">[Read More]</a>
                 
               </div>
@@ -414,7 +415,7 @@ sub find-simple ( IO(Str) $dir, :$keep-going = True, :$no-thread = False ) is ex
 与大多数现代编程语言一样，Raku 被设计为支持并发（允许多个事件同时发生）和异步编程（有时称为事件驱动或反应式编程 - 即程序某些部分的事件或变化可能会导致程序流异步地改变程序的其它部分）。
 Perl 的并发设计的目的是提供一个高层级的，可组合的，一致的接口，而不管如下所述的虚拟机通过工具层怎样为特定操作的系统来实现它。
 此外，某些 Perl 的特性可以隐式地以异步的方式操作，所以为了确保这些特性可预测的互通，用户代码应在可能情况下，避免较低层级的并发的 API（即线程和调度器），并使用高层级接口。
-High-level APIs Promises Promise（在其他编程环境中也被称为 *future*）封装了在获得 promise 时可能尚未完成或甚至未开始的计算结果。Promise 从 Planned 状态开始, 结果要么是 Kept 状态, 这意味着该 promise 已成功完成, 要么是 Broken 状态, 意味着该 promise 已失败。 通常这就是用户代码需要以并行或异步方式操作的使用最多的功能。
+High-level APIs Promises Promise（在其他编程环境中也被称为 future）封装了在获得 promise 时可能尚未完成或甚至未开始的计算结果。Promise 从 Planned 状态开始, 结果要么是 Kept 状态, 这意味着该 promise 已成功完成, 要么是 Broken 状态, 意味着该 promise 已失败。 通常这就是用户代码需要以并行或异步方式操作的使用最多的功能。
 my $p1 = Promise.new; say $p1.status; # OUTPUT: «Planned␤» $p1.keep('Result'); say $p1.status; # OUTPUT: «Kept␤» say $p1.result; # OUTPUT: «Result␤» # (since it has been kept, a result is available!) my $p2 = Promise.new; $p2.break('oh no'); say $p2.
                   <a href="https://ohmysummer.github.io/post/2016-10-03-raku%E4%B8%AD%E7%9A%84%E5%B9%B6%E5%8F%91/" class="post-read-more">[Read More]</a>
                 
@@ -470,7 +471,7 @@ my $p1 = Promise.new; say $p1.status; # OUTPUT: «Planned␤» $p1.keep('Result'
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

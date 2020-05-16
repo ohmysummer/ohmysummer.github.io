@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/tags/s/" />
   <link rel="alternate" href="https://ohmysummer.github.io/tags/s/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -227,7 +227,7 @@ if (!doNotTrack) {
 来自 Perl 5 背景的我， 第一次使用 Raku 的非破坏性替换操作符 S/// 的经历就像下面这样:
 进展会更好的。我不但会改善错误信息，而且会解释当前的所有事情。
 智能匹配 我有问题的原因是因为，看到外形相似的操作符，我就简单地把 Perl 5 中的绑定操作符(=~)转换为 Raku 中的智能匹配操作符(~~) 还期望它能正常工作。事实上我是异想天开。S/// 操作符没有文档，并且结合令人困惑的(那个时候)警告信息，这就是我痛苦的根源：
-my $orig = 'meowmix'; my $new = $orig ~~ S/me/c/; say $new; # OUTPUT warning: # Smartmatch with S/// can never succeed  这个丑陋的警告说这儿的 ~~ 操作符是个错误的选择并且确实如此。~~ 操作符不是 Perl 5 的 =~ 操作符的等价物。~~ 智能操作符把它左边的东西起了个叫做 $_ 的别名，然后 ~~ 计算它右侧的东西，然后在右侧这个东西身上调用 .ACCEPTS($_) 方法。这就是所有的魔法。
+my $orig = 'meowmix';my $new = $orig ~~ S/me/c/;say $new;# OUTPUT warning:# Smartmatch with S/// can never succeed这个丑陋的警告说这儿的 ~~ 操作符是个错误的选择并且确实如此。~~ 操作符不是 Perl 5 的 =~ 操作符的等价物。~~ 智能操作符把它左边的东西起了个叫做 $_ 的别名，然后 ~~ 计算它右侧的东西，然后在右侧这个东西身上调用 .ACCEPTS($_) 方法。这就是所有的魔法。
 所以上面的例子实际上发生了:
  我们到达 S/// 的时候， $orig 被起了个叫做 $_ 的别名。 S/// 非破坏性地在 $_ 身上执行了替换并返回那个结果字符串。这是智能匹配将要操作的东西。 智能匹配，按照 Str 与 Str 相匹配的规则，会根据替换是否发生来给出 True 或 False（令人困惑的是，True 意味着没发生）  结果一路下来，我们并没有得到我们想要的：替换过的字符串。
                   <a href="https://ohmysummer.github.io/post/2016-01-28-raku%E4%B8%AD%E7%9A%84s%E6%93%8D%E4%BD%9C%E7%AC%A6/" class="post-read-more">[Read More]</a>
@@ -282,7 +282,7 @@ my $orig = 'meowmix'; my $new = $orig ~~ S/me/c/; say $new; # OUTPUT warning: # 
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

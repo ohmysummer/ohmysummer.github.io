@@ -11,13 +11,15 @@
   <meta name="description" content="Keys are optional Keys are optional
 在我探索一个并发的 File::Find 模块时我发现我需要一组排序用的参数(例如 Bool)和互相排斥的参数。枚举相当易于组合, 把好用的名字引入到作用域中(直接地或通过 export)并且应该让相互排斥变得容易。容易的那部分有点幼稚因为类型化的吞噬参数尚未支持(还没有)。如果没有容易的方式, 肯定会有一个可行的困难的方式。
 首先, 我们定义两个枚举用作要查找的选项。
-package Find { enum Type (&lt;File Dir Symlink&gt;); enum Options (&lt;Recursive Keep-going&gt;); }  现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。
-&#43;@options where { @options.all (elem) (Find::Type::.values (|) Find::Options::.values) &amp;&amp; (&#43;(@options.grep: * ~~ Find::Type) &lt;= 1 or die &quot;can only check for one type at a time&quot;) }  在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。">
+package Find { enum Type (&lt;File Dir Symlink&gt;); enum Options (&lt;Recursive Keep-going&gt;); } 现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。
+&#43;@options where { @options.all (elem) (Find::Type::.values (|) Find::Options::.values) &amp;&amp; (&#43;(@options.grep: * ~~ Find::Type) &lt;= 1 or die &quot;can only check for one type at a time&quot;) } 在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。
+my Bool $recursive = any(@options) ~~ Find::Recursive; my %tests = Find::File =&gt; {so .">
   <meta property="og:description" content="Keys are optional Keys are optional
 在我探索一个并发的 File::Find 模块时我发现我需要一组排序用的参数(例如 Bool)和互相排斥的参数。枚举相当易于组合, 把好用的名字引入到作用域中(直接地或通过 export)并且应该让相互排斥变得容易。容易的那部分有点幼稚因为类型化的吞噬参数尚未支持(还没有)。如果没有容易的方式, 肯定会有一个可行的困难的方式。
 首先, 我们定义两个枚举用作要查找的选项。
-package Find { enum Type (&lt;File Dir Symlink&gt;); enum Options (&lt;Recursive Keep-going&gt;); }  现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。
-&#43;@options where { @options.all (elem) (Find::Type::.values (|) Find::Options::.values) &amp;&amp; (&#43;(@options.grep: * ~~ Find::Type) &lt;= 1 or die &quot;can only check for one type at a time&quot;) }  在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。">
+package Find { enum Type (&lt;File Dir Symlink&gt;); enum Options (&lt;Recursive Keep-going&gt;); } 现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。
+&#43;@options where { @options.all (elem) (Find::Type::.values (|) Find::Options::.values) &amp;&amp; (&#43;(@options.grep: * ~~ Find::Type) &lt;= 1 or die &quot;can only check for one type at a time&quot;) } 在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。
+my Bool $recursive = any(@options) ~~ Find::Recursive; my %tests = Find::File =&gt; {so .">
   <meta name="twitter:description" content="Keys are optional Keys are optional
 在我探索一个并发的 File::Find 模块时我发现我需要一组排序用的参数(例如 Bool)和互相排斥的参数。枚举相当易于组合, 把好用的名字引入到作用域中(直接地或通过 export)并且应该让相互排斥变得容易。容易的那部分有点幼稚因为类型化的吞噬参数尚未支持(还没有)。如果没有容易的方式, 肯定会有一个可行的困难的方式。 …">
   <meta name="author" content="焉知非鱼"/>
@@ -29,7 +31,7 @@ package Find { enum Type (&lt;File Dir Symlink&gt;); enum Options (&lt;Recursive
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-26-%E9%94%AE%E6%98%AF%E5%8F%AF%E9%80%89%E7%9A%84/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -236,43 +238,26 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h2 id="keys-are-optional">Keys are optional</h2>
-
+        <h2 id="keys-are-optional">Keys are optional</h2>
 <p><a href="https://gfldex.wordpress.com/2016/09/22/keys-are-optional/">Keys are optional</a></p>
-
 <p>在我探索一个并发的 File::Find 模块时我发现我需要一组排序用的参数(例如 Bool)和互相排斥的参数。枚举相当易于组合, 把好用的名字引入到作用域中(直接地或通过 export)并且应该让相互排斥变得容易。容易的那部分有点幼稚因为类型化的吞噬参数尚未支持(还没有)。如果没有容易的方式, 肯定会有一个可行的困难的方式。</p>
-
 <p>首先, 我们定义两个枚举用作要查找的选项。</p>
-
-<pre><code class="language-raku">package Find {
+<pre><code class="language-raku" data-lang="raku">package Find {
   enum Type (&lt;File Dir Symlink&gt;);
   enum Options (&lt;Recursive Keep-going&gt;);
 }
-</code></pre>
-
-<p>现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。</p>
-
-<pre><code class="language-raku">+@options where {
+</code></pre><p>现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。</p>
+<pre><code class="language-raku" data-lang="raku">+@options where {
   @options.all (elem) (Find::Type::.values (|) Find::Options::.values)
   &amp;&amp; (+(@options.grep: * ~~ Find::Type) &lt;= 1 or die &quot;can only check for one type at a time&quot;)
 }
-</code></pre>
-
-<p>在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。</p>
-
-<pre><code class="language-raku">my Bool $recursive = any(@options) ~~ Find::Recursive;
+</code></pre><p>在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。</p>
+<pre><code class="language-raku" data-lang="raku">my Bool $recursive = any(@options) ~~ Find::Recursive;
 my %tests = Find::File =&gt; {so .f}, Find::Dir =&gt; {so .d}, Find::Symlink =&gt; {so .l};
 @tests.append(%tests{@options.grep: * ~~ Find::Type});
-</code></pre>
-
-<p>然后在它的参数列表的末尾那个子例程使用一组 flags 来调用。</p>
-
+</code></pre><p>然后在它的参数列表的末尾那个子例程使用一组 flags 来调用。</p>
 <pre><code>find(%*ENV&lt;HOME&gt;, include =&gt; {.extension eq 'txt'}, exclude =&gt; ['cfg', /.xml $/] , Find::File, Find::Recursive, Find::Keep-going);
-</code></pre>
-
-<p>同样在具名参数上那也可以有同样的可能, 但是在一个 where 从句中我找不到方法来处理独占。我喜欢在签名中处理尽可能多的参数因为它让写文档变得更加容易了。使用换行符把所有的参数分开然后把类型约束和 where 从句转换成普通的英语。还有, 让枚举作为 flags 感觉很 Raku 而那正是这篇博客所谈论的。</p>
+</code></pre><p>同样在具名参数上那也可以有同样的可能, 但是在一个 where 从句中我找不到方法来处理独占。我喜欢在签名中处理尽可能多的参数因为它让写文档变得更加容易了。使用换行符把所有的参数分开然后把类型约束和 where 从句转换成普通的英语。还有, 让枚举作为 flags 感觉很 Raku 而那正是这篇博客所谈论的。</p>
 
 
         
@@ -364,7 +349,7 @@ my %tests = Find::File =&gt; {so .f}, Find::Dir =&gt; {so .d}, Find::Symlink =&g
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

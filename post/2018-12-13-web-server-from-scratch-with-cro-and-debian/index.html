@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-12-13-web-server-from-scratch-with-cro-and-debian/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,83 +231,42 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>我和圣诞老人​​谈过，他说他不知道如何在 <strong>Debian</strong> 上安装 <strong>Cro</strong>，所以我对自己说：我要帮助他。</p>
-
+        <p>我和圣诞老人​​谈过，他说他不知道如何在 <strong>Debian</strong> 上安装 <strong>Cro</strong>，所以我对自己说：我要帮助他。</p>
 <p>如果您对 <strong>Apache</strong> 等 Web 服务器有一些经验，并且您已经听说过 <strong>Raku</strong> 强大的并发/响应方面，那么您肯定有兴趣了解 <a href="https://cro.services/">Cro 服务</a>。这篇文章的受众是<strong>具有 Debian 基本经验的人</strong>，或者在 <strong>Raku</strong> 新手&hellip;就像圣诞老人一样。</p>
-
 <p><strong>Cro</strong> 是一个 <strong>Raku 模块</strong>，它提供了轻松构建反应式和并发服务所需的一切，例如：Web 服务器。</p>
-
 <p>在这篇文章中，我们将看到如何在 <strong>Debian</strong> 中安装 <strong>Cro</strong>，这是最受欢迎的 Linux 发行版之一。然后，我将解释 <strong>Cro</strong> 的演示示例。</p>
-
 <p>我们将使用 <strong>Debian 9,64 位</strong>（Stretch），我们将在安装后启动它。</p>
-
 <h2 id="安装-rakudo-raku-编译器">安装 Rakudo Raku 编译器</h2>
-
 <p><a href="https://rakudo.org/">Rakudo</a> 是 <strong>Cro</strong> 模块运行的当前 <strong>Raku</strong> 编译器。安装 <strong>Rakudo</strong> 的常规方法是安装 <a href="https://rakudo.org/files">Rakudo Star</a>，但我更喜欢快速的方式：<a href="https://github.com/nxadm/rakudo-pkg">rakudo-pkg</a> &hellip;&hellip;怎么样？只需从此 <a href="https://github.com/nxadm/rakudo-pkg#direct-downloads">repo</a> 下载并安装相应的 <strong>Debian 软件包</strong>。在我们的例子中，是来自 <strong>Debian 9, 64位</strong>的 <strong>.deb</strong> 文件。</p>
-
 <p>使用 <strong>Debian</strong> 中的 root 用户，我们可以在 root home 中为 <strong>Rakudo</strong> 创建一个包文件夹，进入这个目录，下载 <strong>Debian 9, 64 位</strong>的当前 <strong>Rakudo</strong> 包，并安装它。就我而言：</p>
-
-<pre><code class="language-raku">mkdir ~/rakudo-packages &amp;&amp; cd $_
+<pre><code class="language-raku" data-lang="raku">mkdir ~/rakudo-packages &amp;&amp; cd $_
 wget https://github.com/nxadm/rakudo-pkg/releases/download/v2018.10-02/rakudo-pkg-Debian9_2018.10-02_amd64.deb
 dpkg -i rakudo-pkg-Debian9_2018.10-02_amd64.deb
-</code></pre>
-
-<p><strong>Rakudo</strong> 运行时编译器和相关工具现在安装在 <strong>/opt/rakudo-pkg</strong> 文件夹中。在 <strong>export PATH</strong> 行之前，让所有用户在 <strong>/etc/profile</strong> 文件中插入以下行：</p>
-
+</code></pre><p><strong>Rakudo</strong> 运行时编译器和相关工具现在安装在 <strong>/opt/rakudo-pkg</strong> 文件夹中。在 <strong>export PATH</strong> 行之前，让所有用户在 <strong>/etc/profile</strong> 文件中插入以下行：</p>
 <pre><code>PATH=$PATH:/opt/rakudo-pkg/bin
-</code></pre>
-
-<p>最后运行：</p>
-
-<pre><code class="language-shell">source /etc/profile
-</code></pre>
-
-<p>为所有用户重新加载 <strong>Debian</strong> 配置文件。</p>
-
+</code></pre><p>最后运行：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="nb">source</span> /etc/profile
+</code></pre></div><p>为所有用户重新加载 <strong>Debian</strong> 配置文件。</p>
 <p>输入 <strong>raku -v</strong>:</p>
-
-<pre><code class="language-shell">raku -v
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">raku -v
 This is Rakudo version 2018.10 built on MoarVM version 2018.10
 implementing Raku.c.
-</code></pre>
-
-<p>欢迎来到 <strong>Rakudo Raku!</strong></p>
-
+</code></pre></div><p>欢迎来到 <strong>Rakudo Raku!</strong></p>
 <h2 id="安装-cro-服务">安装 Cro 服务</h2>
-
 <p><strong>Cro</strong> 是 Raku 模块，<strong>Zef</strong> 是已经安装的当前 <strong>Raku</strong> 模块管理器。我们来安装 <strong>Cro</strong> 吧！</p>
-
 <p>首先，我们将安装一些 <strong>Cro 包依赖项</strong>，例如 <strong>git</strong> 来连接和下载来自 Cro 相关存储库的文件，<strong>libssl-dev</strong> 以提供对安全套接字层的支持，<strong>build-essential</strong> 用于构建在安装期间 <strong>Cro</strong> 所使用的一些依赖项：</p>
-
-<pre><code class="language-shell">apt-get install git libssl-dev build-essential
-</code></pre>
-
-<p>如果您位于仅允许 Web 流量（端口80和443）的防火墙下，它将阻止 <strong>git</strong> 协议使用的端口，并且 <strong>Cro</strong> 安装将失败。要避免这种情况，请键入：</p>
-
-<pre><code class="language-shell">git config --global url.&quot;https://&quot;.insteadOf git://
-</code></pre>
-
-<p>这告诉 <strong>git</strong> 使用 <strong>https</strong> 而不是 <strong>git</strong> 协议来连接 git 远程仓库。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">apt-get install git libssl-dev build-essential
+</code></pre></div><p>如果您位于仅允许 Web 流量（端口80和443）的防火墙下，它将阻止 <strong>git</strong> 协议使用的端口，并且 <strong>Cro</strong> 安装将失败。要避免这种情况，请键入：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">git config --global url.<span class="s2">&#34;https://&#34;</span>.insteadOf git://
+</code></pre></div><p>这告诉 <strong>git</strong> 使用 <strong>https</strong> 而不是 <strong>git</strong> 协议来连接 git 远程仓库。</p>
 <p>现在我们准备用 <strong>Zef</strong>（及其所有依赖项）安装 <strong>Cro</strong>：</p>
-
-<pre><code class="language-shell">zef install cro
-</code></pre>
-
-<p>如果在测试阶段安装失败，请尝试：</p>
-
-<pre><code class="language-shell">zef install --/test cro
-</code></pre>
-
-<p>如果 <strong>Cro</strong> 安装正确完成，<strong>Cro</strong> 就准备好了。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">zef install cro
+</code></pre></div><p>如果在测试阶段安装失败，请尝试：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">zef install --/test cro
+</code></pre></div><p>如果 <strong>Cro</strong> 安装正确完成，<strong>Cro</strong> 就准备好了。</p>
 <h2 id="cro-实战">Cro 实战</h2>
-
 <p>让我们继续演示脚本。创建一个工作区文件夹，输入它并将下面的代码粘贴到名为 <strong>server.p6</strong> 的新文件中：</p>
-
-<pre><code class="language-raku">use Cro::HTTP::Router;
+<pre><code class="language-raku" data-lang="raku">use Cro::HTTP::Router;
 use Cro::HTTP::Server;
 
 my $application = route {
@@ -321,36 +280,19 @@ my Cro::Service $hello = Cro::HTTP::Server.new(:host&lt;0.0.0.0&gt;, :port&lt;10
 $hello.start;
 
 react whenever signal(SIGINT) { $hello.stop; exit; }
-</code></pre>
-
-<p>这个脚本有 <strong>4个部分</strong>：</p>
-
+</code></pre><p>这个脚本有 <strong>4个部分</strong>：</p>
 <p>“use”使<strong>路由</strong>和<strong>服务</strong>类可用于下面。</p>
-
-<p><strong>$application</strong> 是包含我们的 Web 应用程序的路由逻辑的对象，接收数据并将数据从客户端分发到我们的服务器。在这种情况下，<strong>get  -&gt;&lsquo;greet&rsquo;，$name</strong> 映射来自客户端 Web 浏览器的传入 URL <strong>/greet/Ramiro</strong>，在对象 <strong>$name</strong> 中推送 Ramiro。然后将代码转换为花括号 {}，返回响应 HTTP 请求头 <strong>content &lsquo;text/plain&rsquo;</strong> 和 HTTP 请求体 <strong>Hello, Ramiro!</strong> 到客户端 Web 浏览器。在一个严肃的应用程序中，在这部分中将会调用应用程序本身，并且它将等待响应，如示例所示。</p>
-
-<p><strong>$hello</strong> 是一个服务对象，它使传入的数据通过新的侦听套接字传递给我们的 <strong>$application</strong>。它有3个参数，<strong>:host<0.0.0.0></strong> 是服务启动的 localhost, <strong>:port<10000></strong> 是用于监听传入数据的端口，<strong>$application</strong> 是我们的Web 应用程序。 下面的行 <strong>$hello.start</strong> 开始侦听。</p>
-
+<p><strong>$application</strong> 是包含我们的 Web 应用程序的路由逻辑的对象，接收数据并将数据从客户端分发到我们的服务器。在这种情况下，<strong>get  -&gt;'greet&rsquo;，$name</strong> 映射来自客户端 Web 浏览器的传入 URL <strong>/greet/Ramiro</strong>，在对象 <strong>$name</strong> 中推送 Ramiro。然后将代码转换为花括号 {}，返回响应 HTTP 请求头 <strong>content &lsquo;text/plain&rsquo;</strong> 和 HTTP 请求体 <strong>Hello, Ramiro!</strong> 到客户端 Web 浏览器。在一个严肃的应用程序中，在这部分中将会调用应用程序本身，并且它将等待响应，如示例所示。</p>
+<p><strong>$hello</strong> 是一个服务对象，它使传入的数据通过新的侦听套接字传递给我们的 <strong>$application</strong>。它有3个参数，<strong>:host&lt;0.0.0.0&gt;</strong> 是服务启动的 localhost, <strong>:port&lt;10000&gt;</strong> 是用于监听传入数据的端口，<strong>$application</strong> 是我们的Web 应用程序。 下面的行 <strong>$hello.start</strong> 开始侦听。</p>
 <p><strong>react whenever</strong> 等待按下 CTRL-C 时停止 Web 服务。</p>
-
 <p>现在是从 shell 运行 Web 服务的时刻：</p>
-
-<pre><code class="language-shell">raku server.p6
-</code></pre>
-
-<p>现在您需要知道服务器主机的当前 IP 地址，尝试使用 <strong>ip addr</strong>。我的 Ip 地址是: <strong>192.168.1.48</strong>。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">raku server.p6
+</code></pre></div><p>现在您需要知道服务器主机的当前 IP 地址，尝试使用 <strong>ip addr</strong>。我的 Ip 地址是: <strong>192.168.1.48</strong>。</p>
 <p>然后，从同一网络中的其他主机，打开 Web 浏览器并键入（在我这儿）：</p>
-
-<pre><code class="language-shell">http://192.168.1.48:10000/greet/Ramiro
-</code></pre>
-
-<p>答案应该是 <strong>Hello, Ramiro!</strong></p>
-
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">http://192.168.1.48:10000/greet/Ramiro
+</code></pre></div><p>答案应该是 <strong>Hello, Ramiro!</strong></p>
 <h2 id="总结">总结</h2>
-
 <p>从 <strong>Debian</strong> 的新安装开始，我们已经了解了如何安装 <strong>Cro</strong> 并运行演示脚本。现在，您已准备好继续使用 Cro 文档，并发现 <strong>Raku</strong> 可提供的最有前途的并发/异步服务平台。</p>
-
 <p>我希望在阅读这篇文章并查看 <a href="https://cro.services/docs">Cro 文档</a>后，圣诞老人可以将他的网站迁移到 Cro Services。</p>
 
 
@@ -443,7 +385,7 @@ react whenever signal(SIGINT) { $hello.stop; exit; }
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

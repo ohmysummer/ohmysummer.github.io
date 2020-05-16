@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-08-03-ping-pang-in-raku/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,17 +231,11 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="ping-pang-in-raku">Ping Pang in Raku</h1>
-
+        <h1 id="ping-pang-in-raku">Ping Pang in Raku</h1>
 <p>使用 channels 在线程之间传递消息是一种管理并发的简单方法。</p>
-
 <p>一位朋友最近向我展示了一个很酷的程序，用 elixir 来演示消息传递 - 两个线程通过来回传递递增的数字来计数。快速搜索出现了一些<a href="https://github.com/oelizondo/pingpong/blob/master/pingpong.exs">例子</a>。</p>
-
 <p>我决定在 Raku 中实现这个。这就是我想出来的→</p>
-
-<pre><code class="language-raku">my ($ping, $pong) = Channel.new xx 2;
+<pre><code class="language-raku" data-lang="raku">my ($ping, $pong) = Channel.new xx 2;
  
 sub ping {
    while $ping.receive -&gt; $n {
@@ -263,26 +257,17 @@ await Promise.anyof(
  (start ping),
  (start pong)
 );
-</code></pre>
-
-<p><code>$ping</code> 和 <code>$pong</code> 都是 channel。子程序 ping 和 pong 从它们相应的 channel 接收并发送到另一个。</p>
-
+</code></pre><p><code>$ping</code> 和 <code>$pong</code> 都是 channel。子程序 ping 和 pong 从它们相应的 channel 接收并发送到另一个。</p>
 <p>如果你运行它，你会看到从 1 到 5 的数字。</p>
-
 <pre><code>ping 1 (thread #3)
 pong 2 (thread #4)
 ping 3 (thread #3)
 pong 4 (thread #4)
 ping 5 (thread #3)
-</code></pre>
-
-<p>接下来我想封装一些常见的行为。这是一个发送和接收的乒乓球“玩家” - 所以让我们创建一个 <strong>Player</strong> 类。</p>
-
+</code></pre><p>接下来我想封装一些常见的行为。这是一个发送和接收的乒乓球“玩家” - 所以让我们创建一个 <strong>Player</strong> 类。</p>
 <p>我想 “ping” 和 “pong” 是每个玩家的球拍发出的声音，因为他们击球，所以我添加了一个 <code>$.sound</code> 属性。并且 <code>$.opponent</code> 属性代表每个玩家的对手。</p>
-
 <p><code>$.channel</code> 是处理（即方法委派）发送和接收方法的另一个属性。</p>
-
-<pre><code class="language-raku">class Player {
+<pre><code class="language-raku" data-lang="raku">class Player {
     has $.sound;
     has $.opponent is rw;
     has $.channel handles &lt;send receive&gt; = Channel.new;
@@ -304,26 +289,19 @@ my ($ping,$pong) = &lt;ping pong&gt;.map: { Player.new(:$^sound) }
 ($ping, $pong)&gt;&gt;.play;
 $ping.send: 1;
 await $pong.promise;
-</code></pre>
-
-<p>运行这个给我们类似于最后一个：</p>
-
+</code></pre><p>运行这个给我们类似于最后一个：</p>
 <pre><code>ping 1 (thread #3)
 pong 2 (thread #4)
 ping 3 (thread #3)
 pong 4 (thread #4)
 ping 5 (thread #3)
-</code></pre>
-
-<p>现在让我们更像乒乓球：</p>
-
+</code></pre><p>现在让我们更像乒乓球：</p>
 <ul>
 <li>有四分之一的机会错过球。</li>
 <li>第一个到第一个胜利，你必须赢两个。</li>
 <li>每五点，切换谁服务。</li>
 </ul>
-
-<pre><code class="language-raku">class Player {
+<pre><code class="language-raku" data-lang="raku">class Player {
     has $.sound handles 'Str';
     has $.opponent is rw;
     has $.channel handles &lt;send receive&gt; = Channel.new;
@@ -367,9 +345,7 @@ repeat {
  
 say &quot;\nWinner: &quot; ~ %score.invert.Hash{ %score.values.max };
 say &quot;Final Score: &quot; ~ %score{@sounds}.join(' to ');
-</code></pre>
-
-<pre><code>ping 1 pong 2 ping 3 pong 4 Miss by ping. Score: 0 to 1
+</code></pre><pre><code>ping 1 pong 2 ping 3 pong 4 Miss by ping. Score: 0 to 1
 ping 1 pong 2 ping 3 pong 4 ping 5 Miss by pong. Score: 1 to 1
 ping 1 Miss by pong. Score: 2 to 1
 ping 1 pong 2 Miss by ping. Score: 2 to 2
@@ -396,19 +372,14 @@ pong 1 ping 2 Miss by pong. Score: 11 to 9
 
 Winner: ping
 Final Score: 11 to 9
-</code></pre>
-
-<p>一些评论和注意事项：</p>
-
+</code></pre><p>一些评论和注意事项：</p>
 <ul>
 <li><strong>$.sound</strong> 处理字符串化。</li>
 <li>如果 <em>promise</em> 是 <strong>Kept</strong> 的，循环退出，所以玩家错过了。</li>
-<li><strong>&gt;&gt;</strong> 与 » 相同 - 这就像 <strong>map</strong>。</li>
+<li><strong>&raquo;</strong> 与 » 相同 - 这就像 <strong>map</strong>。</li>
 <li><strong>在@sounds</strong> 中添加另一个条目会设置一个消息传递循环。</li>
 </ul>
-
 <h2 id="结论和进一步的想法">结论和进一步的想法</h2>
-
 <ul>
 <li>Channel 是在线程之间传递消息的好方法。</li>
 <li>Channels 和 Promises 可以是对象的属性。</li>
@@ -505,7 +476,7 @@ Final Score: 11 to 9
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

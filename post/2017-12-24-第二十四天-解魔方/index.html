@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2017-12-24-%E7%AC%AC%E4%BA%8C%E5%8D%81%E5%9B%9B%E5%A4%A9-%E8%A7%A3%E9%AD%94%E6%96%B9/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,71 +231,39 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="day-24-solving-a-rubik-s-cube-https-rakuadvent-wordpress-com-2017-12-24"><a href="https://rakuadvent.wordpress.com/2017/12/24/">Day 24 – Solving a Rubik’s Cube</a></h1>
-
+        <h1 id="day-24--solving-a-rubiks-cubehttpsrakuadventwordpresscom20171224"><a href="https://rakuadvent.wordpress.com/2017/12/24/">Day 24 – Solving a Rubik’s Cube</a></h1>
 <h2 id="介绍">介绍</h2>
-
 <p>我在圣诞节的愿望清单上有一个速度魔方，我真的很兴奋。 :)我想分享一些Raku代码的热情。</p>
-
 <p>我在89年从高中毕业，所以我恰好是在青少年时期拥有魔方的合适年龄。我记得试图在巴士上炫耀，让我的时间缩短到不到一分钟。我在80年代从当地的一家玩具店拿到了一本小册子，其中展示了一个关于如何解决我记忆的立方体的算法。我再也没有这本小册子了。多年来我一直坚持，但从来没有达到竞争水平。</p>
-
 <p>在过去的几个月里，YouTube根据我对立体声频道的兴趣，向我推荐了一些立方体视频;看到世界纪录在5秒以内，使我一分钟的旧时间看起来很慢。</p>
-
 <p>我所讲过的每个人都可以解决魔方问题，他们使用的算法与我所学的算法不同，而在立体魔法中讨论的方法却与众不同。不过，这种先进的版本似乎被定期制定世界记录的人们普遍使用。</p>
-
 <p>拾取这个算法并不难，我找到了几个视频，尤其是描述如何解决最后一层的视频。这样做了几天之后，我将步骤转录为几个笔记，其中列出了步骤列表，以及每个步骤的关键部分：所需的方向，然后是该步骤的各个转弯。然后，我可以参考我的笔记本的一个页面，而不是一个30分钟的视频，并且在几天后，记住了以下步骤：能够从记谱法移动到仅仅做这些移动是一个很大的加速。</p>
-
 <p>一周后，我能够在两分钟内使用新方法可靠地解决问题;退后一步，但在休息时间里一周的努力并不坏。从那以后（几个星期后），我一直下到1:20以下。再次，这是初学者的方法，没有任何先进的技术，而且我可以在不查看立方体的情况下完成各个算法步骤。 （尽管如此，我仍然有很长的路要走。）</p>
-
 <h2 id="符号">符号</h2>
-
 <p>关于移动符号的快速注释 - 考虑到您将立方体的一边保持在顶部，一边朝向您，相对边是：</p>
-
 <pre><code>L (Left) R (Right) U (Up) D (Down) F (Front) B (Back)
 </code></pre>
-
-<p>如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个&rdquo;，那就意味着逆时针方向，所以R&rsquo;会让最上面的部分下来，而R会让底部的部分出现。</p>
-
+<p>如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个&rsquo;'，那就意味着逆时针方向，所以R'会让最上面的部分下来，而R会让底部的部分出现。</p>
 <p>此外，您可能必须翻转两次，写成U2; （顺时针或逆时针无关紧要，因为它从起点开始为180º。）</p>
-
 <h2 id="算法">算法</h2>
-
 <p>我正在使用的初学者算法有以下基本步骤：</p>
-
 <p>1.白色十字架2.白色拐角3.第二层4.黄色十字架5.黄色边缘6.黄色拐角7.定位黄色拐角</p>
-
 <p>如果您对每个步骤的具体内容感到好奇，您可以浏览Rubik的wiki或上面链接的YouTube视频。该算法的更高级版本（由Jessica Fridrich提供的CFOP）允许您合并步骤，具有处理特定立方体状态的特定“快捷方式”，或者解决任何颜色作为第一面，而不仅仅是白色。</p>
-
 <h2 id="设计一个模块">设计一个模块</h2>
-
 <p>当我开始研究这个模块时，我知道我希望能够以某种熟悉算法的人熟悉的方式展示每一步所需的位置，并且让各个步骤也是自然的，就像是：</p>
-
 <pre><code>F.R.U.Rʼ.Uʼ.Fʼ 
 </code></pre>
-
 <p>我也希望能够转储立方体的现有状态;现在作为文本，但最终也能够将其与视觉表示相结合，</p>
-
 <p>我们需要能够判断立方体是否已解决;我们需要能够检查相对于当前方向的棋子，并且能够改变我们的方向。</p>
-
 <p>由于我要开始渲染立方体状态的能力，然后快速添加转向两侧的能力，我选择了一个内部结构，使其变得相当容易。</p>
-
 <h2 id="代码">代码</h2>
-
 <p>github上提供了该模块的最新版本。这里介绍的代码来自最初的版本。</p>
-
 <p>Raku允许您创建Enumerations，因此您可以在代码中使用实际的单词而不是查找值，所以让我们从一些我们需要的内容开始：</p>
-
-<pre><code class="language-raku">enum Side «:Up('U') :Down('D') :Front('F') :Back('B') :Left('L') :Right('R')»;
+<pre><code class="language-raku" data-lang="raku">enum Side «:Up('U') :Down('D') :Front('F') :Back('B') :Left('L') :Right('R')»;
 enum Colors «:Red('R') :Green('G') :Blue('B') :Yellow('Y') :White('W') :Orange('O')»;
-</code></pre>
-
-<p>有了这个语法，我们可以直接在我们的代码中使用Up，并且它的关联值是U.</p>
-
+</code></pre><p>有了这个语法，我们可以直接在我们的代码中使用Up，并且它的关联值是U.</p>
 <p>我们需要一个类，以便我们可以存储属性并拥有方法，所以我们的类定义具有：</p>
-
-<pre><code class="language-raku">class Cube::Three {
+<pre><code class="language-raku" data-lang="raku">class Cube::Three {
     has %!Sides;
     ...
     submethod BUILD() {
@@ -304,10 +272,7 @@ enum Colors «:Red('R') :Green('G') :Blue('B') :Yellow('Y') :White('W') :Orange(
         ...
     }
 }
-</code></pre>
-
-<p>我们有一个属性，一个叫做％.Sides的Hash;每个键对应于其中一个Enum边。该值是Colors的9元素数组。数组上的每个元素对应于立方体上的一个位置。默认情况下，顶部的白色和正面的红色将在此处显示颜色和单元格位置，并带有数字和颜色。 （白色，红色是前面）</p>
-
+</code></pre><p>我们有一个属性，一个叫做％.Sides的Hash;每个键对应于其中一个Enum边。该值是Colors的9元素数组。数组上的每个元素对应于立方体上的一个位置。默认情况下，顶部的白色和正面的红色将在此处显示颜色和单元格位置，并带有数字和颜色。 （白色，红色是前面）</p>
 <pre><code>         W0 W1 W2
          W3 W4 W5
          W6 W7 W8
@@ -317,11 +282,8 @@ G0 G3 G6 R0 R3 R6 B0 B3 B6 B0 B3 B6
          Y0 Y1 Y2
          Y3 Y4 Y5
          Y6 Y7 Y8
-</code></pre>
-
-<p>我添加的第一种方法是做每个脸部顺时针转动。</p>
-
-<pre><code class="language-raku">method F {
+</code></pre><p>我添加的第一种方法是做每个脸部顺时针转动。</p>
+<pre><code class="language-raku" data-lang="raku">method F {
     self!rotate-clockwise(Front);
     self!fixup-sides([
         Pair.new(Up,    [6,7,8]),
@@ -331,36 +293,22 @@ G0 G3 G6 R0 R3 R6 B0 B3 B6 B0 B3 B6
     ]);
     self;
 }
-</code></pre>
-
-<p>这个公共方法调用两个私有方法（用！表示）;一个顺时针方向旋转一个侧面，第二个取对的列表，其中键是一个侧面，并且该值是一个位置列表。如果您想象顺时针旋转立方体的顶部，您可以看到位置正在从一个换成另一个。</p>
-
+</code></pre><p>这个公共方法调用两个私有方法（用！表示）;一个顺时针方向旋转一个侧面，第二个取对的列表，其中键是一个侧面，并且该值是一个位置列表。如果您想象顺时针旋转立方体的顶部，您可以看到位置正在从一个换成另一个。</p>
 <p>请注意，我们从方法中返回自己;这允许我们按照原始设计中的方式调用方法调用。</p>
-
 <p>单面的顺时针旋转显示正在传递的原始面，并使用阵列切片来改变原始面的顺序。</p>
-
-<pre><code class="language-raku"># 0 1 2    6 3 0
+<pre><code class="language-raku" data-lang="raku"># 0 1 2    6 3 0
 # 3 4 5 -&gt; 7 4 1
 # 6 7 8    8 5 2
 method !rotate-clockwise(Side \side) {
     %!Sides{side}[0,1,2,3,5,6,7,8] = %!Sides{side}[6,3,0,7,1,8,5,2];
 }
-</code></pre>
-
-<p>要为移动添加其余的符号，我们添加一些简单的包装方法：</p>
-
-<pre><code class="language-raku">method F2 { self.F.F; }
+</code></pre><p>要为移动添加其余的符号，我们添加一些简单的包装方法：</p>
+<pre><code class="language-raku" data-lang="raku">method F2 { self.F.F; }
 method Fʼ { self.F.F.F; }
-</code></pre>
-
-<p>F2只需要移动两次; F&rsquo;作弊：3个权利左转。</p>
-
+</code></pre><p>F2只需要移动两次; F'作弊：3个权利左转。</p>
 <p>在这一点上，我必须确保我的回合正在做他们应该做的事情，所以我添加了一个gist方法（当一个对象用say输出时被调用）。</p>
-
-<pre><code class="language-raku">say Cube::Three.new.U2.D2.F2.B2.R2.L2;
-</code></pre>
-
-<pre><code>      W Y W
+<pre><code class="language-raku" data-lang="raku">say Cube::Three.new.U2.D2.F2.B2.R2.L2;
+</code></pre><pre><code>      W Y W
       Y W Y
       W Y W
 G B G R O R B G B O R O
@@ -369,11 +317,8 @@ G B G R O R B G B O R O
       Y W Y
       W Y W
       Y W Y
-</code></pre>
-
-<p>gist 的源代码是：</p>
-
-<pre><code class="language-raku">method gist {
+</code></pre><p>gist 的源代码是：</p>
+<pre><code class="language-raku" data-lang="raku">method gist {
     my $result;
     $result = %!Sides{Up}.rotor(3).join(&quot;\n&quot;).indent(6);
     $result ~= &quot;\n&quot;;
@@ -388,41 +333,33 @@ G B G R O R B G B O R O
     $result ~= %!Sides{Down}.rotor(3).join(&quot;\n&quot;).indent(6);
     $result;
 }
-</code></pre>
-
-<p>有几件事要注意：</p>
-
+</code></pre><p>有几件事要注意：</p>
 <ul>
-<li><p>使用.rotor（3）将9单元阵列分解为3个3单元列表。</p></li>
-
-<li><p>.indent（6）预先在Up和Down两边加上空格。</p></li>
-
-<li><p>（0,3,6）&gt;&gt; + &gt;&gt; $ row，这会增加列表中的每个值</p></li>
+<li>
+<p>使用.rotor（3）将9单元阵列分解为3个3单元列表。</p>
+</li>
+<li>
+<p>.indent（6）预先在Up和Down两边加上空格。</p>
+</li>
+<li>
+<p>（0,3,6）&raquo; + &raquo; $ row，这会增加列表中的每个值</p>
+</li>
 </ul>
-
 <p>这个要点非常适合逐步检查，但为了调试，我们需要一些更紧凑的东西：</p>
-
-<pre><code class="language-raku">method dump {
+<pre><code class="language-raku" data-lang="raku">method dump {
     gather for (Up, Front, Right, Back, Left, Down) -&gt; $side {
         take %!Sides{$side}.join('');
     }.join('|');
 }
-</code></pre>
-
-<p>这将按照特定的顺序在边上迭代，然后使用gather take语法收集每一边的字符串表示形式，然后使用|将它们连接在一起。现在我们可以编写像：</p>
-
-<pre><code class="language-raku">use Test; use Cube::Three;
+</code></pre><p>这将按照特定的顺序在边上迭代，然后使用gather take语法收集每一边的字符串表示形式，然后使用|将它们连接在一起。现在我们可以编写像：</p>
+<pre><code class="language-raku" data-lang="raku">use Test; use Cube::Three;
 my $a = Cube::Three.new();
 is $a.R.U2.Rʼ.Uʼ.R.Uʼ.Rʼ.Lʼ.U2.L.U.Lʼ.U.L.dump,
     'WWBWWWWWB|RRRRRRRRW|BBRBBBBBO|OOWOOOOOO|GGGGGGGGG|YYYYYYYYY',
     'corners rotation';
-</code></pre>
-
-<p>这实际上是算法最后一步中使用的方法。通过这个调试输出，我可以拍摄一个原始的立方体，自己动手，然后将生成的立方体状态快速转录成字符串进行测试。</p>
-
+</code></pre><p>这实际上是算法最后一步中使用的方法。通过这个调试输出，我可以拍摄一个原始的立方体，自己动手，然后将生成的立方体状态快速转录成字符串进行测试。</p>
 <p>虽然计算机不一定需要旋转立方体，但如果我们可以旋转立方体，则会更容易遵循该算法，因此我们为六个可能的旋转中的每一个添加一个，例如：</p>
-
-<pre><code class="language-raku">method rotate-F-U {
+<pre><code class="language-raku" data-lang="raku">method rotate-F-U {
      self!rotate-clockwise(Right);
      self!rotate-counter-clockwise(Left);
 
@@ -439,39 +376,27 @@ is $a.R.U2.Rʼ.Uʼ.R.Uʼ.Rʼ.Lʼ.U2.L.U.Lʼ.U.L.dump,
      self!rotate-counter-clockwise(Back);
      self;
 }
-</code></pre>
-
-<p>当我们将立方体从正面转到向上时，我们将左侧和右侧旋转到位。由于细胞的方向随着我们改变面部而改变，因为我们从面部到面部复制细胞，我们也可能需要旋转它们以确保它们最终以正确的方向朝向。和以前一样，我们返回自我以允许方法链接。</p>
-
+</code></pre><p>当我们将立方体从正面转到向上时，我们将左侧和右侧旋转到位。由于细胞的方向随着我们改变面部而改变，因为我们从面部到面部复制细胞，我们也可能需要旋转它们以确保它们最终以正确的方向朝向。和以前一样，我们返回自我以允许方法链接。</p>
 <p>在我们开始测试时，我们需要确保我们可以知道何时立方体已解决;我们不关心立方体的方向，所以我们验证中心颜色与脸上的所有其他颜色相匹配：</p>
-
-<pre><code class="language-raku">method solved {
+<pre><code class="language-raku" data-lang="raku">method solved {
     for (Up, Down, Left, Right, Back, Front) -&gt; $side {
         return False unless
             %!Sides{$side}.all eq %!Sides{$side}[4];
     }
     return True;
 }
-</code></pre>
-
-<p>对于每一侧，我们使用一侧的所有颜色的交界处与中心细胞进行比较（总是位置4）。我们很早就失败了，只有通过所有方面才能成功。</p>
-
+</code></pre><p>对于每一侧，我们使用一侧的所有颜色的交界处与中心细胞进行比较（总是位置4）。我们很早就失败了，只有通过所有方面才能成功。</p>
 <p>接下来，我添加了一种方法来搅乱魔方，所以我们可以考虑实施一种解决方法。</p>
-
-<pre><code class="language-raku">method scramble {
+<pre><code class="language-raku" data-lang="raku">method scramble {
     my @random = &lt;U D F R B L&gt;.roll(100).squish[^10];
     for @random -&gt; $method {
         my $actual = $method ~ (&quot;&quot;, &quot;2&quot;, &quot;ʼ&quot;).pick(1);
         self.&quot;$actual&quot;();
     }
 }
-</code></pre>
-
-<p>这需要六个基本方法名称，挑选一堆随机值，然后挤压它们（确保连续没有模糊），然后选取前10个值。然后，我们可能会添加一个2或&rsquo;。最后，我们使用间接方法语法按名称调用各个方法。</p>
-
+</code></pre><p>这需要六个基本方法名称，挑选一堆随机值，然后挤压它们（确保连续没有模糊），然后选取前10个值。然后，我们可能会添加一个2或&rsquo;。最后，我们使用间接方法语法按名称调用各个方法。</p>
 <p>最后，我准备好开始解决问题了！这就是事情变得复杂的地方。初学者方法的第一步经常被描述为直观的。这意味着它很容易解释&hellip;&hellip;但不容易编码。所以，扰流警报，截至本文发布时，解决的第一步就完成了。对于第一步的完整算法，请查看链接的github网站。</p>
-
-<pre><code class="language-raku">method solve {
+<pre><code class="language-raku" data-lang="raku">method solve {
     self.solve-top-cross;
 }
 
@@ -493,13 +418,9 @@ method solve-top-cross {
         # Move pieces from the bottom to the top
     }
 }
-</code></pre>
-
-<p>请注意非常具体的检查，看看我们是否完成;我们使用一个词汇子来弥补复杂性 - 虽然我们在这里有一个相当内部的检查，但是我们可以看到，我们可能想要将这个抽象描述为可以说“这个边缘部分是正确的”。首先，我们将坚持单个单元格。</p>
-
+</code></pre><p>请注意非常具体的检查，看看我们是否完成;我们使用一个词汇子来弥补复杂性 - 虽然我们在这里有一个相当内部的检查，但是我们可以看到，我们可能想要将这个抽象描述为可以说“这个边缘部分是正确的”。首先，我们将坚持单个单元格。</p>
 <p>目前解决十字架的内容长达100多行，所以我不会经历所有的步骤。这是“简单”部分</p>
-
-<pre><code class="language-raku">my @middle-edges =
+<pre><code class="language-raku" data-lang="raku">my @middle-edges =
     [Front, Right],
     [Right, Back],
     [Back,  Left],
@@ -532,17 +453,11 @@ for @middle-edges -&gt; $edge {
         next MAIN;
     }
 }
-</code></pre>
-
-<p>在真正的立方体上进行这一部分时，您可以旋转立方体而不考虑侧面部件，然后将十字架放在适当位置。为了让算法更“友好”一点，我们让这些中心保持在这个位置;我们将上侧旋转到位，然后将单个侧面旋转到顶部位置，然后将上侧旋转回原始位置。</p>
-
+</code></pre><p>在真正的立方体上进行这一部分时，您可以旋转立方体而不考虑侧面部件，然后将十字架放在适当位置。为了让算法更“友好”一点，我们让这些中心保持在这个位置;我们将上侧旋转到位，然后将单个侧面旋转到顶部位置，然后将上侧旋转回原始位置。</p>
 <p>这里有一些有趣的代码是.first（&hellip;，：k）语法，它说找到匹配的第一个元素，然后返回匹配的位置。然后，我们可以在有序列表中查找事物，以便计算双方的相对位置。</p>
-
 <p>请注意，解决方法只调用公共方法来转动立方体;虽然我们使用原始自省来获取立方体状态，但我们只使用“合法”的方式来解决问题。</p>
-
 <p>有了这个方法的完整版本，我们现在用这个程序来解决白十字：</p>
-
-<pre><code class="language-raku">#!/usr/bin/env raku
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
 
 use Cube::Three;
 my $cube = Cube::Three.new();
@@ -551,10 +466,7 @@ say $cube;
 say '';
 $cube.solve;
 say $cube;
-</code></pre>
-
-<p>它在给定这组移动的情况下产生这个输出（F&rsquo;B2B2LR&rsquo;U&rsquo;RF&rsquo;D2B2）。首先是争夺战，然后是解决白十字的版本。</p>
-
+</code></pre><p>它在给定这组移动的情况下产生这个输出（F&rsquo;B2B2LR&rsquo;U&rsquo;RF&rsquo;D2B2）。首先是争夺战，然后是解决白十字的版本。</p>
 <pre><code>    W G G
       Y W W
       Y Y Y
@@ -574,14 +486,9 @@ O O R Y O W O O R W Y B
       G G B
       B Y Y
       Y B B
-</code></pre>
-
-<p>这个例子打印出用来进行争夺的动作，显示乱数立方体，“解决”这个难题（在撰写本文时，它只是白色的十字），然后打印出立方体的新状态。</p>
-
+</code></pre><p>这个例子打印出用来进行争夺的动作，显示乱数立方体，“解决”这个难题（在撰写本文时，它只是白色的十字），然后打印出立方体的新状态。</p>
 <p>请注意，随着我们的进一步发展，这些步骤变得不那么“直观”，并且根据我的估计，编码更容易。例如，最后一步需要检查四个部分的方向，必要时旋转立方体，然后执行14步移动。 （在上面的测试中显示）。</p>
-
 <p>希望我对Cubing和Raku的喜爱让你期待你的下一个项目！</p>
-
 <p>对于未来的读者，我将在模块解决完成后的评论中注明。</p>
 
 
@@ -674,7 +581,7 @@ O O R Y O W O O R W Y B
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

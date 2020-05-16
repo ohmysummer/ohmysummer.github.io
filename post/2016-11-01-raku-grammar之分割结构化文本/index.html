@@ -10,11 +10,11 @@
   <meta name="twitter:title" content="Raku Grammar 之分割结构化文本" />
   <meta name="description" content="如何使用 Grammar 分割一个有规律的文本文件? 首先这个文本有规律, 但是却是多行的。 我想将这样的文档分为独立的. 比如下面这个例子, 我想将他们分成3个独立的文本, 每个文本包含: [时间] Title 以及下面的 content lines. 实际的文件会有上千个, 最终输出的文本的名字是按照括号里面的时间来。
 sample.txt
-[28/04/2015 12:32] Title1 content line 1 content line 2 content line 3 content line 4 content line 5 balabala balabala [28/04/2015 12:16] Title2 content line 6 balabala content line 7 [27/04/2015 17:30] ​Title3 content line 8 content line 9 content line 10  下面是解析：
+[28/04/2015 12:32] Title1 content line 1 content line 2 content line 3 content line 4 content line 5 balabala balabala [28/04/2015 12:16] Title2 content line 6 balabala content line 7 [27/04/2015 17:30] ​Title3 content line 8 content line 9 content line 10 下面是解析：
 use Grammar::Tracer; # 开启 Grammar 调试有助于排错 grammar StructedText { token TOP { ^ &lt;entry&gt;&#43; $ } token entry { &lt;head&gt; \s* # 每一项有一个标题 &lt;line&gt;&#43; \s* # 每个标题下面有很多行 } token head { &#39;[&#39; &lt;datetime&gt; &#39;]&#39; \s&#43; &lt;title&gt; } token datetime { &lt;filedate&gt; \s&#43; &lt;filetime&gt; } token filedate { [\d&#43;]&#43; % &#39;/&#39; } token filetime { [\d&#43;]&#43; % &#39;:&#39; } token title { \N&#43; } token line { [ &lt;!">
   <meta property="og:description" content="如何使用 Grammar 分割一个有规律的文本文件? 首先这个文本有规律, 但是却是多行的。 我想将这样的文档分为独立的. 比如下面这个例子, 我想将他们分成3个独立的文本, 每个文本包含: [时间] Title 以及下面的 content lines. 实际的文件会有上千个, 最终输出的文本的名字是按照括号里面的时间来。
 sample.txt
-[28/04/2015 12:32] Title1 content line 1 content line 2 content line 3 content line 4 content line 5 balabala balabala [28/04/2015 12:16] Title2 content line 6 balabala content line 7 [27/04/2015 17:30] ​Title3 content line 8 content line 9 content line 10  下面是解析：
+[28/04/2015 12:32] Title1 content line 1 content line 2 content line 3 content line 4 content line 5 balabala balabala [28/04/2015 12:16] Title2 content line 6 balabala content line 7 [27/04/2015 17:30] ​Title3 content line 8 content line 9 content line 10 下面是解析：
 use Grammar::Tracer; # 开启 Grammar 调试有助于排错 grammar StructedText { token TOP { ^ &lt;entry&gt;&#43; $ } token entry { &lt;head&gt; \s* # 每一项有一个标题 &lt;line&gt;&#43; \s* # 每个标题下面有很多行 } token head { &#39;[&#39; &lt;datetime&gt; &#39;]&#39; \s&#43; &lt;title&gt; } token datetime { &lt;filedate&gt; \s&#43; &lt;filetime&gt; } token filedate { [\d&#43;]&#43; % &#39;/&#39; } token filetime { [\d&#43;]&#43; % &#39;:&#39; } token title { \N&#43; } token line { [ &lt;!">
   <meta name="twitter:description" content="如何使用 Grammar 分割一个有规律的文本文件? 首先这个文本有规律, 但是却是多行的。 我想将这样的文档分为独立的. 比如下面这个例子, 我想将他们分成3个独立的文本, 每个文本包含: [时间] Title 以及下面的 content lines. 实际的文件会有上千个, 最终输出的文本的名字是按照括号里面的时间来。
 sample.txt
@@ -28,7 +28,7 @@ sample.txt
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-11-01-raku-grammar%E4%B9%8B%E5%88%86%E5%89%B2%E7%BB%93%E6%9E%84%E5%8C%96%E6%96%87%E6%9C%AC/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -237,9 +237,7 @@ if (!doNotTrack) {
       <article role="main" class="blog-post">
         <p>如何使用 Grammar 分割一个有规律的文本文件? 首先这个文本有规律, 但是却是多行的。
 我想将这样的文档分为独立的. 比如下面这个例子, 我想将他们分成3个独立的文本, 每个文本包含: [时间] Title 以及下面的 content lines. 实际的文件会有上千个, 最终输出的文本的名字是按照括号里面的时间来。</p>
-
 <p><strong>sample.txt</strong></p>
-
 <pre><code>[28/04/2015 12:32] Title1
 
 content line 1
@@ -262,11 +260,8 @@ content line 7
 content line 8
 content line 9
 content line 10
-</code></pre>
-
-<p>下面是解析：</p>
-
-<pre><code class="language-raku">use Grammar::Tracer;
+</code></pre><p>下面是解析：</p>
+<pre><code class="language-raku" data-lang="raku">use Grammar::Tracer;
 # 开启 Grammar 调试有助于排错
 
 grammar StructedText {
@@ -309,21 +304,14 @@ if $parsed {
     }
 
 }
-</code></pre>
-
-<p><code>ast</code> 和 <code>made</code> 一样, 都是使用孩子节点上已经制造好的(<code>make</code>)的 ast, 处理后再附件到(<code>$/.make</code>)父节点的 <code>$/</code> 上。
-例如, 我们的 <code>TOP</code> 在使用 <code>entry</code> 时, 需要从 entry 中取回 ast (<code>$&lt;entry&gt;».ast</code>) 供它附加.而 method entry 中用到了 <code>&lt;head&gt;</code>, 这时 <head> 一定是制造好了的(<code>make</code>), 我们现在要用它, 就使用 <code>.ast</code> 语法来取回这个 ast 片段, 同理, method entry 中用到了 <code>$line</code>, 则子节点 <code>$line</code> 已经为我们制造好了(<code>method line($/)  { $/.make: ~$/ }</code>), 使用时用 <code>.made</code> 方法取回就行了。</p>
-
+</code></pre><p><code>ast</code> 和 <code>made</code> 一样, 都是使用孩子节点上已经制造好的(<code>make</code>)的 ast, 处理后再附件到(<code>$/.make</code>)父节点的 <code>$/</code> 上。
+例如, 我们的 <code>TOP</code> 在使用 <code>entry</code> 时, 需要从 entry 中取回 ast (<code>$&lt;entry&gt;».ast</code>) 供它附加.而 method entry 中用到了 <code>&lt;head&gt;</code>, 这时 <!-- raw HTML omitted --> 一定是制造好了的(<code>make</code>), 我们现在要用它, 就使用 <code>.ast</code> 语法来取回这个 ast 片段, 同理, method entry 中用到了 <code>$line</code>, 则子节点 <code>$line</code> 已经为我们制造好了(<code>method line($/)  { $/.make: ~$/ }</code>), 使用时用 <code>.made</code> 方法取回就行了。</p>
 <p>总而言之, TOP 是树根的话, 那么这一级会取回所有的 AST 块,  而它的孩子节点会依次取回下一节点的 AST 块, 逐级逐级的准备好(<code>make</code>)数据块, 然后再逐级往上附加数据块。</p>
-
 <pre><code>28-04-2015 12-32
 28-04-2015 12-16
 27-04-2015 17-30
-</code></pre>
-
-<p>完整的代码如下:</p>
-
-<pre><code class="language-raku">grammar StructedText {
+</code></pre><p>完整的代码如下:</p>
+<pre><code class="language-raku" data-lang="raku">grammar StructedText {
     token TOP { ^ &lt;entry&gt;+ $ }
     token entry {
         &lt;head&gt; \s*   # 每一项有一个标题
@@ -368,7 +356,6 @@ if $parsed {
 
 }
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -459,7 +446,7 @@ if $parsed {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

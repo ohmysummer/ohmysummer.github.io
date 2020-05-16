@@ -10,11 +10,11 @@
   <meta name="twitter:title" content="These keys are LTA" />
   <meta name="description" content="在折腾枚举作为子例程布尔选项的时候, 我发现默认的错误信息不够酷。
  Constraint type check failed for parameter &#39;@options&#39;  让错误信息变得更具体有点困难。我们来创建几个 exceptions 来告诉我们当东西出错时究竟发生了什么。
-class X::Paramenter::Exclusive is Exception { has $.type; method message { &quot;Parameters of {$.type.perl} are mutual exclusive&quot; } }  现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
+class X::Paramenter::Exclusive is Exception { has $.type; method message { &quot;Parameters of {$.type.perl} are mutual exclusive&quot; } } 现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
 &amp;&amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&gt; Find::Type) ) class X::Parameter::UnrecognisedOption is Exception { has $.type; has $.unrecognised; method message { &quot;Option { $.unrecognised } not any of { $.type.map({ (.^name ~ &#39;::&#39;) xx * Z~ .">
   <meta property="og:description" content="在折腾枚举作为子例程布尔选项的时候, 我发现默认的错误信息不够酷。
  Constraint type check failed for parameter &#39;@options&#39;  让错误信息变得更具体有点困难。我们来创建几个 exceptions 来告诉我们当东西出错时究竟发生了什么。
-class X::Paramenter::Exclusive is Exception { has $.type; method message { &quot;Parameters of {$.type.perl} are mutual exclusive&quot; } }  现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
+class X::Paramenter::Exclusive is Exception { has $.type; method message { &quot;Parameters of {$.type.perl} are mutual exclusive&quot; } } 现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
 &amp;&amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&gt; Find::Type) ) class X::Parameter::UnrecognisedOption is Exception { has $.type; has $.unrecognised; method message { &quot;Option { $.unrecognised } not any of { $.type.map({ (.^name ~ &#39;::&#39;) xx * Z~ .">
   <meta name="twitter:description" content="在折腾枚举作为子例程布尔选项的时候, 我发现默认的错误信息不够酷。
  Constraint type check failed for parameter &#39;@options&#39;  让错误信息变得更具体有点困难。我们来创建几个 exceptions 来告诉我们当东西出错时究竟发生了什么。
@@ -28,7 +28,7 @@ class X::Paramenter::Exclusive is Exception { has …">
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -236,24 +236,18 @@ if (!doNotTrack) {
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>在折腾枚举作为子例程布尔选项的时候, 我发现默认的错误信息不够酷。</p>
-
 <ul>
 <li><code>Constraint type check failed for parameter '@options'</code></li>
 </ul>
-
 <p>让错误信息变得更具体有点困难。我们来创建几个 exceptions 来告诉我们当东西出错时究竟发生了什么。</p>
-
-<pre><code class="language-raku">class X::Paramenter::Exclusive is Exception {
+<pre><code class="language-raku" data-lang="raku">class X::Paramenter::Exclusive is Exception {
 has $.type;
     method message {
         &quot;Parameters of {$.type.perl} are mutual exclusive&quot;
     }
 }
-</code></pre>
-
-<p>现在我们能检查 <em>Find::Type</em> 的选项是否是独占的从而抛出异常。</p>
-
-<pre><code class="language-raku">&amp;&amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&gt; Find::Type) )
+</code></pre><p>现在我们能检查 <em>Find::Type</em> 的选项是否是独占的从而抛出异常。</p>
+<pre><code class="language-raku" data-lang="raku">&amp;&amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&gt; Find::Type) )
 
 class X::Parameter::UnrecognisedOption is Exception {
     has $.type;
@@ -262,32 +256,20 @@ class X::Parameter::UnrecognisedOption is Exception {
         &quot;Option { $.unrecognised } not any of { $.type.map({ (.^name ~ '::') xx * Z~ .enums.keys.flat }).flat.join(', ') }&quot;
     }
 }
-</code></pre>
-
-<p>因为枚举对类型而言是容器, 我们能使用集合操作符来检查并挑选出不匹配的选项(基本上, +options 吞噬的任何东西我们都不知道)。</p>
-
-<pre><code class="language-raku">or fail X::Parameter::UnrecognisedOption.new(type =&gt; (Find::Type, Find::Options),
+</code></pre><p>因为枚举对类型而言是容器, 我们能使用集合操作符来检查并挑选出不匹配的选项(基本上, +options 吞噬的任何东西我们都不知道)。</p>
+<pre><code class="language-raku" data-lang="raku">or fail X::Parameter::UnrecognisedOption.new(type =&gt; (Find::Type, Find::Options),
     unrecognised =&gt; .item ∖ (|Find::Type::.values, |Find::Options::.values) )
-</code></pre>
-
-<p>把错误信息拼接在一块儿有点复杂因为我们可以在一个给定的枚举中得到所有枚举键的一个列表, 除了那些不知道它们的限定名的。 我们不得不在枚举名的前面手动前置一个 <code>::</code>。</p>
-
-<pre><code class="language-raku">class X::Parameter::UnrecognisedOption is Exception {
+</code></pre><p>把错误信息拼接在一块儿有点复杂因为我们可以在一个给定的枚举中得到所有枚举键的一个列表, 除了那些不知道它们的限定名的。 我们不得不在枚举名的前面手动前置一个 <code>::</code>。</p>
+<pre><code class="language-raku" data-lang="raku">class X::Parameter::UnrecognisedOption is Exception {
     has $.type;
     has $.unrecognised;
     method message {
         &quot;Option { $.unrecognised } not any of { $.type.map: { (.^name ~ '::') xx * Z~ .enums.keys.flat } }&quot;
     }
 }
-</code></pre>
-
-<p>这导致了一个更令人惊叹的错误信息:</p>
-
+</code></pre><p>这导致了一个更令人惊叹的错误信息:</p>
 <pre><code>Option 42 not any of Type::File, Type::Dir, Type::Symlink, Options::Recursive, Options::Keep-going
-</code></pre>
-
-<p>这看起来都很普通。我们拥有一个参数化的吞噬参数, 它带有一个或多个枚举而那些枚举可能拥有一个 flag 告诉它们是否用作单选按钮。听起来这个 idiom 会很适合这个模块。</p>
-
+</code></pre><p>这看起来都很普通。我们拥有一个参数化的吞噬参数, 它带有一个或多个枚举而那些枚举可能拥有一个 flag 告诉它们是否用作单选按钮。听起来这个 idiom 会很适合这个模块。</p>
 <blockquote>
 <p>翻译的不好, 最好看原文。</p>
 </blockquote>
@@ -382,7 +364,7 @@ class X::Parameter::UnrecognisedOption is Exception {
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

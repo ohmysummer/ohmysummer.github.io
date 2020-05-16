@@ -20,7 +20,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="generator" content="Hugo 0.53" />
+  <meta name="generator" content="Hugo 0.63.2" />
   <link rel="canonical" href="https://ohmysummer.github.io/post/2018-09-13-toptic-variable/" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
@@ -231,27 +231,16 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="变量">$_ 变量</h1>
-
+        <h1 id="_-变量">$_ 变量</h1>
 <p><code>$_</code> 是主题变量。它是<strong>没有显式签名</strong>的块的默认参数，因此 <code>for @array {...}</code> 和 <code>given $var {...}</code> 这样的构造通过调用块绑定到 <code>$_</code>。</p>
-
 <h2 id="for">for</h2>
-
-<pre><code class="language-raku">for &lt;a b c&gt; { say $_ }  # sets $_ to 'a', 'b' and 'c' in turn
+<pre><code class="language-raku" data-lang="raku">for &lt;a b c&gt; { say $_ }  # sets $_ to 'a', 'b' and 'c' in turn
 say $_ for &lt;a b c&gt;;     # same, even though it's not a block
-</code></pre>
-
-<h2 id="given">given</h2>
-
-<pre><code class="language-raku">given 'a'   { say $_ }  # sets $_ to 'a'
+</code></pre><h2 id="given">given</h2>
+<pre><code class="language-raku" data-lang="raku">given 'a'   { say $_ }  # sets $_ to 'a'
 say $_ given 'a';       # same, even though it's not a block
-</code></pre>
-
-<p>设置默认的主题变量可以省去很多打字：</p>
-
-<pre><code class="language-raku">for Date.new('2018-01-01') .. Date.new('2018-01-07') {
+</code></pre><p>设置默认的主题变量可以省去很多打字：</p>
+<pre><code class="language-raku" data-lang="raku">for Date.new('2018-01-01') .. Date.new('2018-01-07') {
   printf(&quot;%04d%02d%02d%02d%02d%02d\n&quot;, .year, .month, .day, .hour, .minute, .second) given .DateTime
 }
 
@@ -262,11 +251,8 @@ say $_ given 'a';       # same, even though it's not a block
 # 20180105000000
 # 20180106000000
 # 20180107000000
-</code></pre>
-
-<p>对象初始化：</p>
-
-<pre><code class="language-raku">class Employee {
+</code></pre><p>对象初始化：</p>
+<pre><code class="language-raku" data-lang="raku">class Employee {
     subset Salary         of Real where * &gt; 0;
     subset NonEmptyString of Str  where * ~~ /\S/; 
 
@@ -291,18 +277,11 @@ given $employee {
 }
 
 say $employee;
-</code></pre>
-
-<h2 id="regex">regex</h2>
-
+</code></pre><h2 id="regex">regex</h2>
 <p>在方法上调用 <code>$_</code> 可以通过省略变量名来缩的更短：</p>
-
-<pre><code class="language-raku">.say;                   # same as $_.say
-</code></pre>
-
-<p><code>m/regex/</code> 和 <code>/regex/</code> 正则匹配 <code>$_</code> 而 <code>s/regex/subst/</code> 替换作用于 <code>$_</code>：</p>
-
-<pre><code class="language-raku">say &quot;Looking for strings with non-alphabetic characters...&quot;;
+<pre><code class="language-raku" data-lang="raku">.say;                   # same as $_.say
+</code></pre><p><code>m/regex/</code> 和 <code>/regex/</code> 正则匹配 <code>$_</code> 而 <code>s/regex/subst/</code> 替换作用于 <code>$_</code>：</p>
+<pre><code class="language-raku" data-lang="raku">say &quot;Looking for strings with non-alphabetic characters...&quot;;
 for &lt;ab:c d$e fgh ij*&gt; {
     .say if m/&lt;-alpha&gt;/;
 }
@@ -311,63 +290,43 @@ for &lt;ab:c d$e fgh ij*&gt; {
 #          ab:c
 #          d$e
 #          ij*␤»
-</code></pre>
-
-<h2 id="with-without">with/without</h2>
-
+</code></pre><h2 id="withwithout">with/without</h2>
 <p>with 不引入块时也能设置 <code>$_</code> 主题变量：</p>
-
-<pre><code class="language-raku">say $_ with 42; # 42
+<pre><code class="language-raku" data-lang="raku">say $_ with 42; # 42
 .say with 42;   # 42
-</code></pre>
-
-<p>with/without 会把条件设置为 <code>$_</code>：</p>
-
-<pre><code class="language-raku"># The below code says &quot;Found a at 0&quot;
+</code></pre><p>with/without 会把条件设置为 <code>$_</code>：</p>
+<pre><code class="language-raku" data-lang="raku"># The below code says &quot;Found a at 0&quot;
 my $s = &quot;abc&quot;;
 with   $s.index(&quot;a&quot;) { say &quot;Found a at $_&quot; }
 orwith $s.index(&quot;b&quot;) { say &quot;Found b at $_&quot; }
 orwith $s.index(&quot;c&quot;) { say &quot;Found c at $_&quot; }
 else                 { say &quot;Didn't find a, b or c&quot; }
-</code></pre>
-
-<h2 id="when">when</h2>
-
+</code></pre><h2 id="when">when</h2>
 <p><code>when</code> 语句使主题变量 <code>$_</code> 和所提供的表达式进行智能匹配，以使在指定匹配的时候能检查值、正则表达式和类型：</p>
-
-<pre><code class="language-raku">for 42, 43, &quot;foo&quot;, 44, &quot;bar&quot; {
+<pre><code class="language-raku" data-lang="raku">for 42, 43, &quot;foo&quot;, 44, &quot;bar&quot; {
     when Int { .say }
     when /:i ^Bar/ { .say }
     default  { say &quot;Not an Int or a Bar&quot; }
 }
 # OUTPUT: «42␤43␤Not an Int or a Bar␤44␤Bar␤»
-</code></pre>
-
-<pre><code class="language-shell">&gt; for ('Swift', 'PHP', 'Python', 'Perl')  { .say if  Str }
+</code></pre><div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">&gt; <span class="k">for</span> <span class="o">(</span><span class="s1">&#39;Swift&#39;</span>, <span class="s1">&#39;PHP&#39;</span>, <span class="s1">&#39;Python&#39;</span>, <span class="s1">&#39;Perl&#39;</span><span class="o">)</span>  <span class="o">{</span> .say <span class="k">if</span>  Str <span class="o">}</span>
 Nil
-&gt; for ('Swift', 'PHP', 'Python', 'Perl')  { .say if  $_ ~~ Str }
+&gt; <span class="k">for</span> <span class="o">(</span><span class="s1">&#39;Swift&#39;</span>, <span class="s1">&#39;PHP&#39;</span>, <span class="s1">&#39;Python&#39;</span>, <span class="s1">&#39;Perl&#39;</span><span class="o">)</span>  <span class="o">{</span> .say <span class="k">if</span>  <span class="nv">$_</span> ~~ Str <span class="o">}</span>
 Swift
 PHP
 Python
 Perl
 
-for ('Swift', 'PHP', 'Python', 'Perl')  { .say when Str }
+<span class="k">for</span> <span class="o">(</span><span class="s1">&#39;Swift&#39;</span>, <span class="s1">&#39;PHP&#39;</span>, <span class="s1">&#39;Python&#39;</span>, <span class="s1">&#39;Perl&#39;</span><span class="o">)</span>  <span class="o">{</span> .say when Str <span class="o">}</span>
 Swift
 PHP
 Python
 Perl
-</code></pre>
-
-<p>列表解析：</p>
-
-<pre><code class="language-raku">(.ord when /7$/ for 1..99)
-</code></pre>
-
-<h2 id="when-和-if">when 和 if</h2>
-
+</code></pre></div><p>列表解析：</p>
+<pre><code class="language-raku" data-lang="raku">(.ord when /7$/ for 1..99)
+</code></pre><h2 id="when-和-if">when 和 if</h2>
 <p><code>when</code> 块类似于 <code>if</code> 块，并且其中一个或两个都可以在外部块中使用，它们也都具有“语句修饰符”形式。但是如何处理相同的外部块中的代码是有区别的：当执行 <code>when</code> 块时，控制被传递到封闭块并忽略后面的语句; 但是当执行 <code>if</code> 块时，执行以下语句。 （注意，还有其他方法可以修改其他部分中讨论的每个的默认行为。）以下示例应说明 <code>if</code> 或 <code>when</code> 块的默认行为，假设 <code>if</code> 或 <code>when</code> 块中不包含特殊退出或其他副作用语句：</p>
-
-<pre><code class="language-raku">{
+<pre><code class="language-raku" data-lang="raku">{
     if X {...} # if X is true in boolean context, block is executed
     # following statements are executed regardless
 }
@@ -376,14 +335,10 @@ Perl
                  # and control passes to the outer block
     # following statements are NOT executed
 }
-</code></pre>
-
-<p>如果上面的 <code>if</code> 和 <code>when</code> 块出现在文件范围内，则在每种情况下都会执行以下语句。</p>
-
+</code></pre><p>如果上面的 <code>if</code> 和 <code>when</code> 块出现在文件范围内，则在每种情况下都会执行以下语句。</p>
 <p>有一个 <code>when</code> 有而 <code>if</code> 没有的功能：<code>when</code> 的布尔上下文测试默认为 <code>$_ ~~</code> 而 <code>if</code> 不是。这影响人们怎么在不带 <code>$_</code> 值的 <code>when</code> 块中使用 <code>X</code>
 （在那种情况下， 它是 <code>Any</code>，并且 <code>Any</code> 和 <code>True</code> 智能匹配：<code>Any ~~ True</code> 产生 <code>True</code> ）。请看下面的例子：</p>
-
-<pre><code class="language-raku">{
+<pre><code class="language-raku" data-lang="raku">{
     my $a = 1;
     my $b = True;
     when $a    { say 'a' }; # no output
@@ -391,23 +346,14 @@ Perl
                             # which matches with Any)
     when $b    { say 'b' }; # no output (this statement won't be run)
 }
-</code></pre>
-
-<p>最后，<code>when</code> 的语句修饰符形式不影响如下语句在另一个块内部或外部的执行：</p>
-
-<pre><code class="language-raku">say &quot;foo&quot; when X; # if X is true statement is executed
+</code></pre><p>最后，<code>when</code> 的语句修饰符形式不影响如下语句在另一个块内部或外部的执行：</p>
+<pre><code class="language-raku" data-lang="raku">say &quot;foo&quot; when X; # if X is true statement is executed
                   # following statements are not affected
-</code></pre>
-
-<h2 id="签名">签名</h2>
-
+</code></pre><h2 id="签名">签名</h2>
 <p>块的<strong>默认签名</strong>是一个名为 <code>$_</code> 的位置参数：</p>
-
-<pre><code class="language-raku">my &amp;block =  { 'oi' };
+<pre><code class="language-raku" data-lang="raku">my &amp;block =  { 'oi' };
 &amp;block.signature.say; # (;; $_? is raw)
-</code></pre>
-
-<pre><code class="language-raku">my class Employee {
+</code></pre><pre><code class="language-raku" data-lang="raku">my class Employee {
    has Str $.name;
    has Rat $.wage;
 }
@@ -421,11 +367,8 @@ my @team = $boss, $driver, $worker, $salesman;
 
 say @team.sort({.wage} )».name;
 .name.say for @team.sort: {.wage};
-</code></pre>
-
-<p>块里面会默认有一个 <code>$_</code>：</p>
-
-<pre><code class="language-raku">my $tiles := (&lt; T S R E A N D &gt;).Bag;
+</code></pre><p>块里面会默认有一个 <code>$_</code>：</p>
+<pre><code class="language-raku" data-lang="raku">my $tiles := (&lt; T S R E A N D &gt;).Bag;
 my $total := $tiles.total;
 
 my @results = lazy '/usr/share/dict/SOWPODS'.IO.lines.grep: {
@@ -440,7 +383,6 @@ for @results -&gt; $word {
 
 say &quot;\n&quot; ~ &quot;Found {@results.elems} words in {now - INIT now} seconds&quot;;
 </code></pre>
-
 
         
           <div class="blog-tags">
@@ -531,7 +473,7 @@ say &quot;\n&quot; ~ &quot;Found {@results.elems} words in {now - INIT now} seco
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.53</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
           
         </p>
       </div>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Key on Raku Programming</title>
+    <title>key on Raku Programming</title>
     <link>https://ohmysummer.github.io/tags/key/</link>
-    <description>Recent content in Key on Raku Programming</description>
+    <description>Recent content in key on Raku Programming</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Mon, 26 Sep 2016 12:17:59 +0000</lastBuildDate>
@@ -18,7 +18,7 @@
       
       <guid>https://ohmysummer.github.io/post/2016-09-26-i-left-my-keys-in-a-side-channel/</guid>
       <description>当我尝试把选项聚合到一个模块中时我无意中发现了一个常见问题的简洁解决办法。我想拥有一个子例程作为吞噬具名参数、做一些检查、并且要么返回 True 以满足那个 where 从句, 要么死掉并抛出一个合适的错误信息的 where 从句。 那很简单但是不彻底。那个 where 从句没有提供它所检查的参数的名字, 这需要拥有一个合适的错误信息。我们来简化下代码。
-sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {}  子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Raku 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
+sub checker(*%colon-keys){ sub ($value-from-where-clause) { True } } sub f( *%h where checker(:a, :b, :c) ) {} 子例程 checker 在 where 从句真正检测任何东西之前被调用。在 Raku 中 where 从句是一种句法。如果提供一个表达式，它会调用该表达式，并保持它的返回值然后针对 %h 的值做实际检查。这并不在编译时发生，且返回值不进行缓存。在我们的例子中返回一个接受一个参数(where需要的)的匿名子例程，并且必须返回 True 以让 where 从句的检查通过。
 如你所见 checker 接收一组冒号对(colon-pairs)。剩下的问题我们能提供给我们可能要输出的异常，特别的附加信息。如果我们希望该参数是可选的，避免奇怪的语法。我们可以有一个可选的位置，但我们就不能在checker中混合位置和具名参数。存储该值将是微不足道，因为返回的匿名子例程可以具有闭包变量。我们只需要填充它。幸运的是，子返回作为引用返回，然后由那个 where 从句调用。我们可以偷偷加进另一个呼叫，只要我们大家别忘了把代码引用返回给匿名子例程(sub)。
 返回引用给同一个对象是通过链式方法调用完成的。通常情况下，当事情在 Raku 的领地上变得复杂时，我们就混入一个 role 好了。然后，我们有了一个可以返回自身的方法。
 use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$closure-variable, $value-from-where-clause]; $value-from-where-clause == $i or die &amp;quot;bad value $value-from-where-clause for $closure-variable&amp;quot; } but role :: { method side-channel($second-value){ $closure-variable = $second-value; self } } } sub f($a where g(42).</description>
@@ -32,7 +32,7 @@ use v6; sub g($i){ my $closure-variable; sub ($value-from-where-clause) { say [$
       <guid>https://ohmysummer.github.io/post/2016-09-26-these-keys-are-lta/</guid>
       <description>在折腾枚举作为子例程布尔选项的时候, 我发现默认的错误信息不够酷。
  Constraint type check failed for parameter &#39;@options&#39;  让错误信息变得更具体有点困难。我们来创建几个 exceptions 来告诉我们当东西出错时究竟发生了什么。
-class X::Paramenter::Exclusive is Exception { has $.type; method message { &amp;quot;Parameters of {$.type.perl} are mutual exclusive&amp;quot; } }  现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
+class X::Paramenter::Exclusive is Exception { has $.type; method message { &amp;quot;Parameters of {$.type.perl} are mutual exclusive&amp;quot; } } 现在我们能检查 Find::Type 的选项是否是独占的从而抛出异常。
 &amp;amp;&amp;amp; ( exclusive-argument(@options, Find::Type) or fail X::Paramenter::Exclusive.new(type =&amp;gt; Find::Type) ) class X::Parameter::UnrecognisedOption is Exception { has $.type; has $.unrecognised; method message { &amp;quot;Option { $.unrecognised } not any of { $.type.map({ (.^name ~ &#39;::&#39;) xx * Z~ .</description>
     </item>
     
@@ -45,8 +45,9 @@ class X::Paramenter::Exclusive is Exception { has $.type; method message { &amp;
       <description>Keys are optional Keys are optional
 在我探索一个并发的 File::Find 模块时我发现我需要一组排序用的参数(例如 Bool)和互相排斥的参数。枚举相当易于组合, 把好用的名字引入到作用域中(直接地或通过 export)并且应该让相互排斥变得容易。容易的那部分有点幼稚因为类型化的吞噬参数尚未支持(还没有)。如果没有容易的方式, 肯定会有一个可行的困难的方式。
 首先, 我们定义两个枚举用作要查找的选项。
-package Find { enum Type (&amp;lt;File Dir Symlink&amp;gt;); enum Options (&amp;lt;Recursive Keep-going&amp;gt;); }  现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。
-+@options where { @options.all (elem) (Find::Type::.values (|) Find::Options::.values) &amp;amp;&amp;amp; (+(@options.grep: * ~~ Find::Type) &amp;lt;= 1 or die &amp;quot;can only check for one type at a time&amp;quot;) }  在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。</description>
+package Find { enum Type (&amp;lt;File Dir Symlink&amp;gt;); enum Options (&amp;lt;Recursive Keep-going&amp;gt;); } 现在我们可以让一个 where 从句首先检查吞噬数组的所有成员要么是 Find::Type 类型要么是 Find::Options 类型。然后我们可以检查 Find::Options 拥有多少个元素。因为如果有太多的话只有一个我们可以抱怨独占。
++@options where { @options.all (elem) (Find::Type::.values (|) Find::Options::.values) &amp;amp;&amp;amp; (+(@options.grep: * ~~ Find::Type) &amp;lt;= 1 or die &amp;quot;can only check for one type at a time&amp;quot;) } 在主体中我们可以使用 junctions 和智能匹配来检查选项是否出现。
+my Bool $recursive = any(@options) ~~ Find::Recursive; my %tests = Find::File =&amp;gt; {so .</description>
     </item>
     
     <item>
