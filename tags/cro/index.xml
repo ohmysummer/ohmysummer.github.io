@@ -17,12 +17,7 @@
       <pubDate>Thu, 02 Aug 2018 22:54:18 +0800</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2018-08-02-%E4%BD%BF%E7%94%A8cro%E5%88%9B%E5%BB%BA%E5%8D%95%E9%A1%B5%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/</guid>
-      <description>使用 Cro 创建单页应用 本教程将介绍如何使用 Cro 作为后端构建简单的单页应用程序。对于前端，我们将使用 webpack，ES6，React 和 Redux。你不需要事先了解这些信息，但如果您想在自己的应用程序中很好地使用它们，则需要进一步阅读。
-代码可以在这里获取。在教程的各个阶段，提交了当前的状态。仓库历史记录与教程完全匹配，因此你可以使用它来获取各步骤变更的概述，或者如果你试图通过从头开始构建这些东西，可以知道你错过了什么。
-你需要什么  要安装 Cro (请参阅本指南获取相关帮助) 要安装 npm (即 Node.js 的包管理器, 我们要用它来获取需要的包来构建前端); 在基于 Debian 的 Linux 发行版上，只需 sudo apt install npm。  我们要构建什么 所以我们正在举办美食节或者啤酒节。或者任何带有一堆我们可以尝试的东西的活动。但是&amp;hellip;尝试什么？如果有这样一些应用程序就好了，人们可以留下他们关于什么火和什么不火的提示，我们可以实时看到他们。如果在去过的上一届啤酒节上有过这样的东西，我可能会幸免于那杯绿茶啤酒&amp;hellip;&amp;hellip;
-所以, 我们会制作一个单页应用程序以支持:
- 提交新的提示 (POST 到后端) 现场发布最新提示 (通过网络套接字提供) 能够同意或不同意某提示 (也是 POST) 能够看到按照最愉快到最不愉快 (通过 GE T获取) 排序的提示列表  Stubbing 后端 给应用程序想一个有创意的名称。我叫它 &amp;ldquo;tipsy&amp;rdquo;。然后使用 cro stub 来存根 HTTP 应用程序。为了简单起见，我们将跳过 HTTPS（也就是HTTP/2.0），但会包含 Web 套接字支持。
-$ cro stub http tipsy tipsy Stubbing a HTTP Service &#39;tipsy&#39; in &#39;tipsy&#39;.</description>
+      <description>使用 Cro 创建单页应用 本教程将介绍如何使用 Cro 作为后端构建简单的单页应用程序。对于前端，我们将使用 webpack，ES6，React 和 Redux。你不需要事先了解这些信息，但如果您想在自己的应用程序中很好地使用它们，则需要进一步阅读。</description>
     </item>
     
     <item>
@@ -31,10 +26,7 @@ $ cro stub http tipsy tipsy Stubbing a HTTP Service &#39;tipsy&#39; in &#39;tips
       <pubDate>Sat, 14 Jul 2018 17:14:59 +0800</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2018-07-14-cro-http-test/</guid>
-      <description>Cro::HTTP::Test 原则上可以通过使用 Cro::HTTP::Server托管应用程序, 使用 Cro::HTTP::Client向其发出请求, 并使用标准 Test 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：
- 为发出测试请求和检查结果提供更方便的 API 跳过网络并将 Cro::TCP 对象从客户端管道传递到服务器管道, 反之亦然  基本示例 给定模块 MyService::Routes, 如下所示：
-sub routes() is export { route { get -&amp;gt; { content &#39;text/plain&#39;, &#39;Nothing to see here&#39;; } post -&amp;gt; &#39;add&#39; { request-body &#39;application-json&#39; =&amp;gt; -&amp;gt; (:$x!, :$y!) { content &#39;application/json&#39;, { :result($x + $y) }; } } } } 我们可以像这样编写测试：
-use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#39;/&#39;), status =&amp;gt; 200, content-type =&amp;gt; &#39;text/plain&#39;, body =&amp;gt; /nothing/; test-given &#39;/add&#39;, { test post(json =&amp;gt; { :x(37), :y(5) }), status =&amp;gt; 200, json =&amp;gt; { :result(42) }; test post(json =&amp;gt; { :x(37) }), status =&amp;gt; 400; test get(json =&amp;gt; { :x(37) }), status =&amp;gt; 405; } } done-testing; 设置要测试的服务 test-service 函数有两个候选者。</description>
+      <description>Cro::HTTP::Test 原则上可以通过使用 Cro::HTTP::Server托管应用程序, 使用 Cro::HTTP::Client向其发出请求, 并使用标准 Test 库检查结果来编写 Cro HTTP 服务的测试。该库使编写此类测试更容易, 并通过以下方式更快地执行它们：</description>
     </item>
     
     <item>
@@ -43,14 +35,7 @@ use Cro::HTTP::Test; use MyService::Routes; test-service routes(), { test get(&#
       <pubDate>Mon, 16 Apr 2018 10:54:24 +0200</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2018-04-16-cro-http-client/</guid>
-      <description>Cro::HTTP::Client Cro::HTTP::Client 类提供了一个灵活的 HTTP 和 HTTPS 客户端实现，可以从简单到更复杂的情况进行扩展。它可以通过两种方式消费：
-通过对类型对象（ Cro::HTTP::Client.get($url) ）进行调用。这对于一次性请求很有用，但在向同一服务器发出多个请求时（例如使用 keep-alive）不提供连接重用。
-通过创建一个 Cro::HTTP::Client 实例。默认情况下，这可以重用连接池。它还可以配置默认的 base URL，传递的默认授权数据，甚至是插入到请求/响应处理管道中的中间件。 Cro::HTTP::Client 实例可以并发地使用。
-一般来说，如果您打算发起一次性请求，请使用类型对象。如果您要向同一台服务器或一组服务器发出很多请求，请创建一个实例。
-默认情况下，HTTPS 请求将使用 ALPN 来协商是否执行 HTTP/2 或 HTTP/1.1，并且 HTTP 请求将始终使用 HTTP/1.1。
-发起基本请求 可以在类型对象或 Cro::HTTP::Client 的实例上调用 get，post，put，delete，patch 和 head 方法。他们都会返回一个 Promise，如果请求成功则会被保留(kept), 如果失败则被毁掉(broken)。
-my $resp = await Cro::HTTP::Client.get(&#39;https://www.raku.org/&#39;); 响应($resp) 是一个 Cro::HTTP::Response 对象。它将在请求头可用时立即生成;请求体可能尚未收到。默认情况下，错误（4xx和5xx状态码）将导致遵守 X::Cro::HTTP::Error 角色的异常，该角色具有包含 Cro::HTTP::Response 对象的 response 属性。
-my $resp = await Cro::HTTP::Client.delete($product-url); CATCH { when X::Cro::HTTP::Error { if .response.status == 404 { say &amp;quot;Product not found!</description>
+      <description>Cro::HTTP::Client Cro::HTTP::Client 类提供了一个灵活的 HTTP 和 HTTPS 客户端实现，可以从简单到更复杂的情况进行扩展。它可以通过两种方式消费：</description>
     </item>
     
   </channel>

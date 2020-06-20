@@ -17,12 +17,7 @@
       <pubDate>Sat, 04 Aug 2018 20:33:08 +0800</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2018-08-04-intro-into-raku-regexes-and-grammars/</guid>
-      <description>tpm-regex.raku.party
-STATUS QUO: PCRE “Perl 兼容的正则表达式”非常神秘，但许多语言只是盲目地遵循现状。
-它们是 &amp;lt;?!, &amp;lt;=?!, or &amp;lt;!#?@$%^( 吗？
-/(?&amp;lt;!foo)bar(?=baz)/ 更好的正则表达式语法 Raku 并不害怕拒绝现状。
-/&amp;lt;!after foo&amp;gt; bar &amp;lt;before baz&amp;gt;/ 空格可以自由使用 文字字符串：字母数字字符可以按原样使用。 其他的字符，只需使用引号或反斜杠：
-say so &amp;quot;I ♥ Raku&amp;quot; ~~ /I \♥ Raku/; # False say so &amp;quot;I ♥ Raku&amp;quot; ~~ / &#39;I ♥ Raku&#39; /; # True say so &amp;quot;I ♥ Raku&amp;quot; ~~ / I #`(BTW, you can use inline,) &amp;quot; ♥ &amp;quot; &amp;quot;Raku&amp;quot; # as well as end-of-line comments /; # True 文本内容的变量 默认设置是将内容与纯文本匹配。将变量放入尖括号中以将其解释为正则表达式。</description>
+      <description>tpm-regex.raku.party</description>
     </item>
     
     <item>
@@ -31,16 +26,7 @@ say so &amp;quot;I ♥ Raku&amp;quot; ~~ /I \♥ Raku/; # False say so &amp;quot
       <pubDate>Mon, 04 Dec 2017 10:08:24 +0200</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2017-12-04-%E7%AC%AC%E5%9B%9B%E5%A4%A9-%E4%BD%BF%E7%94%A8grammars%E8%BF%9B%E8%A1%8C%E8%A7%A3%E6%9E%90/</guid>
-      <description>第四天-使用 Grammars 进行解析 下面是从 Parsing with Raku Regexes and Grammars: A Recursive Descent into Parsing 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。
-这本书马上就要出版了。至少该书的电子版这个月应该可以购买, 纸质版的可以在 亚马逊 预定了。原本最迟会在 2018 年元月发出, 但是幸运的是, 圣诞节你就可以看到了。
-下面你会看到第九章, 使用 Grammars 进行解析。前面的章节详细探讨了创建正则表达式块儿、正则表达式怎么和 Raku 代码进行交互、匹配对象、正则力学、常用正则技术，还有重用和组合正则。你可以通过阅读正则表达式官方文档来获取更多关于正则的背景。
-后面的章节涵盖了 action 类和对象, 怎么报告高质量的解析错误, Unicode 支持, 最后还有三个案例研究。
-现在, 尽情享受吧！
-Grammar 是众人皆知的用于解析的瑞士军刀。
-在本章中，我们将更详细地探讨它们。 最重要的是，我们将讨论如何利用他们的威力。
-理解 Grammars Grammars 实现了自顶向下的解析方法。 入口点，通常是 TOP regex 正则表达式，它知道粗粒度的结构，并调用下降到繁复细节的更深一步的正则表达式。 也会涉及到递归。 例如，如果解析算术表达式，则操作符可以是一对括号内的任意表达式。
-这是一个自顶向下的结构，或者更确切地说是一个递归下降分析方法。 如果不涉及回溯，我们称之为预测分析法，因为在字符串中的每个位置，我们确切地知道我们在寻找什么 - 我们可以预测下一个 token 将会是什么（即使我们只能预测它可能是一组可选分支的其中之一）。
-结果匹配树在结构上完全对应于 grammar 中正则表达式的调用结构。 让我们考虑解析一个只包含运算符 *，+和用于分组的括号的算术表达式：</description>
+      <description>第四天-使用 Grammars 进行解析 下面是从 Parsing with Raku Regexes and Grammars: A Recursive Descent into Parsing 这本书里面提取出来的一章, 作者是 Moritz Lenz, 由 Apress Media 出版社出版。版权经过允许。</description>
     </item>
     
     <item>
@@ -49,13 +35,7 @@ Grammar 是众人皆知的用于解析的瑞士军刀。
       <pubDate>Fri, 05 Feb 2016 10:54:24 +0200</pubDate>
       
       <guid>https://ohmysummer.github.io/post/2016-02-05-raku-grammars/</guid>
-      <description>Grammars Grammars - 一组具名 regexes 组成正式的 grammar
-Grammars 是一个很强大的工具用于析构文本并通常返回数据结构。
-例如, Raku 是使用 Raku 风格 grammar 解析并执行的。
-对普通 Raku 使用者更实用的一个例子是 JSON::Tiny模块, 它能反序列化任何合法的 JSON 文件, 而反序列代码只有不到 100 行, 还能扩展。
-Grammars 允许你把 regexes 组织到一块儿, 就像类(class) 中组织方法那样。
-具名正则 (Named Regexes) 　grammars 的主要组成部分是 regexes。 而 Raku 的 regexes语法不在该文档的讨论范围, 具名正则(named regexes) 有它自己的特殊语法, 这跟子例程(subroutine) 的定义很像:
-my regex number { \d+ [ \. \d+ ]? } # 普通 regex 中空格被忽略, [] 是非捕获组 上面的代码使用 my 关键字指定了本地作用域的 regex, 因为具名正则(named regexes) 通常用在 grammars 里面。</description>
+      <description>Grammars Grammars - 一组具名 regexes 组成正式的 grammar</description>
     </item>
     
   </channel>

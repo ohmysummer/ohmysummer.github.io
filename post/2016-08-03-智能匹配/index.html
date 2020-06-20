@@ -1,46 +1,204 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh" itemscope itemtype="http://schema.org/WebPage">
   <head>
+    
+
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>智能匹配</title>
-  <meta property="og:title" content="智能匹配" />
+  <title>智能匹配 - Raku Programming</title>
+  <meta name="description" content="智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上.">
+  <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Raku Programming",
+    
+    "url": "https:\/\/ohmysummer.github.io\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "https:\/\/ohmysummer.github.io\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/ohmysummer.github.io\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D\/",
+          "name": "智能匹配"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "焉知非鱼"
+  },
+  "headline": "智能匹配",
+  "description" : "智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上.",
+  "inLanguage" : "zh",
+  "wordCount":  3405 ,
+  "datePublished" : "2016-08-03T00:00:00",
+  "dateModified" : "2016-08-03T00:00:00",
+  "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
+  "keywords" : [ "smartmatch, 智能匹配" ],
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/ohmysummer.github.io\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="智能匹配" />
+<meta property="og:description" content="智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上.">
+<meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Raku Programming" />
+
   <meta name="twitter:title" content="智能匹配" />
-  <meta name="description" content="智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上. 在下面的表格中, $_ 代表 ~~ 操作符的左侧, 或者作为 given 的参数, 或者作为其它主题化的参数. X 代表 ~~ 操作符右侧要匹配的模式, 或者在 when 后面的模式.(实际上, ~~ 操作符充当着一个小型的主题; 即, 为了右侧的计算, 它把 $_ 绑定到左侧的值上. 使用底层的 .ACCEPTS 形式来避免这种主题化.)
-第一节包含了含有享有特权的语法; 如果匹配能通过那些条目之一完成, 那它就会那样做. 这些特别的语法是通过它们的形式而非它们的类型进行分派的. 否则就使用表格中的剩余部分,并且匹配会根据普通的方法分派规则进行分派. 允许优化器(optimizer)假定编译时之后没有定义额外的匹配操作符, 所以, 如果在编译时模式类型就显而易见的, 那么跳转表(jump table)可以被优化. 然而, 这部分表格的语法仍然有点特权的, 跟 ~~ 操作符一样, 是 Perl 中少有的几个不使用多重分派的操作符之一. 相反, 基于类型的智能匹配会被单个地分派给属于 X 模式对象的底层方法.
-换句话说, 智能匹配首先根据模式(pattern)的形式或类型(下面的X)进行分派(dispatch), 然后那个模式自身决定是否和怎样注意主题($_)的类型. 所以, 下面表格中的第二列就是初始列. 第一列中的 Any 条目标示了模式要么不关心主题的类型, 要么把那个条目作为默认值, 因为上面列出的更具体的类型不匹配.
-$_ X Type of Match Implied Match if (given $_)====== ===== ===================== ===================Any True ~~ True (parsewarn on literal token)Any False ~~ False match (parsewarn on literal token)Any Match ~~ Successful match (parsewarn on literal token)Any Nil ~~ Benign failure (parsewarn on literal token)Any Failure Failure type check (okay, matches against type)Any * block signature match block successfully binds to |$_Any Callable:($) item sub truth X($_)S03-smartmatch/any-callable.">
-  <meta property="og:description" content="智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上. 在下面的表格中, $_ 代表 ~~ 操作符的左侧, 或者作为 given 的参数, 或者作为其它主题化的参数. X 代表 ~~ 操作符右侧要匹配的模式, 或者在 when 后面的模式.(实际上, ~~ 操作符充当着一个小型的主题; 即, 为了右侧的计算, 它把 $_ 绑定到左侧的值上. 使用底层的 .ACCEPTS 形式来避免这种主题化.)
-第一节包含了含有享有特权的语法; 如果匹配能通过那些条目之一完成, 那它就会那样做. 这些特别的语法是通过它们的形式而非它们的类型进行分派的. 否则就使用表格中的剩余部分,并且匹配会根据普通的方法分派规则进行分派. 允许优化器(optimizer)假定编译时之后没有定义额外的匹配操作符, 所以, 如果在编译时模式类型就显而易见的, 那么跳转表(jump table)可以被优化. 然而, 这部分表格的语法仍然有点特权的, 跟 ~~ 操作符一样, 是 Perl 中少有的几个不使用多重分派的操作符之一. 相反, 基于类型的智能匹配会被单个地分派给属于 X 模式对象的底层方法.
-换句话说, 智能匹配首先根据模式(pattern)的形式或类型(下面的X)进行分派(dispatch), 然后那个模式自身决定是否和怎样注意主题($_)的类型. 所以, 下面表格中的第二列就是初始列. 第一列中的 Any 条目标示了模式要么不关心主题的类型, 要么把那个条目作为默认值, 因为上面列出的更具体的类型不匹配.
-$_ X Type of Match Implied Match if (given $_)====== ===== ===================== ===================Any True ~~ True (parsewarn on literal token)Any False ~~ False match (parsewarn on literal token)Any Match ~~ Successful match (parsewarn on literal token)Any Nil ~~ Benign failure (parsewarn on literal token)Any Failure Failure type check (okay, matches against type)Any * block signature match block successfully binds to |$_Any Callable:($) item sub truth X($_)S03-smartmatch/any-callable.">
-  <meta name="twitter:description" content="智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上. 在下面的表格中, $_ 代表 ~~ 操作符的左侧, 或者作为 given 的参数, 或者作为其它主题化的参数. X 代表 ~~ 操作符右侧要匹配的模式, 或者在 when 后面的模式.(实际上, ~~ 操作符充当着一个小型的主题; 即, 为了右侧的计算, 它把 $_ 绑定到左侧的值上. …">
-  <meta name="author" content="焉知非鱼"/>
-  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:description" content="智能匹配 智能匹配通常作用在当前”主题”(topic)上, 即作用在 $_ 变量上.">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://ohmysummer.github.io/post/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Raku Programming" />
-
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta name="generator" content="Hugo 0.63.2" />
-  <link rel="canonical" href="https://ohmysummer.github.io/post/2016-08-03-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/" />
-  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Raku Programming</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg"></span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Raku Programming" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Raku Programming" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
 
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+
+    
 
 
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
@@ -87,109 +245,12 @@ $_ X Type of Match Implied Match if (given $_)====== ===== ====================
     </div>
 </div>
 
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'ohmycloudy', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
 
-</head>
-
-  <body>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="https://ohmysummer.github.io/">Raku Programming</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="main-navbar">
-      <ul class="nav navbar-nav navbar-right">
-        
-          
-            <li>
-              <a title="博客" href="/">博客</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="归档" href="/categories">归档</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="关于" href="/page/about/">关于</a>
-            </li>
-          
-        
-          
-            <li>
-              <a title="标签" href="/tags">标签</a>
-            </li>
-          
-        
-
-        
-
-        
-          <li>
-            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
-              <span class="hidden-sm hidden-md hidden-lg">Search</span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-
-    <div class="avatar-container">
-      <div class="avatar-img-border">
-        
-          <a title="Raku Programming" href="https://ohmysummer.github.io/">
-            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Raku Programming" />
-          </a>
-        
-      </div>
-    </div>
-
-  </div>
-</nav>
-
-
-
-  <div id="modalSearch" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Search Raku Programming</h4>
-        </div>
-        <div class="modal-body">
-          <gcse:search></gcse:search>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-    
   
   
   
+
+
 
 
 
@@ -199,27 +260,37 @@ if (!doNotTrack) {
   <header class="header-section ">
     
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>智能匹配</h1>
-                
-                
-                  <span class="post-meta">
+              
+                <h1>智能匹配</h1>
+              
+              
+              
+              
+                <span class="post-meta">
   
   
-  <i class="fa fa-calendar-o"></i>&nbsp; Posted on August 3, 2016
+  <i class="fas fa-calendar"></i>&nbsp;
   
   
-  &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 16 minutes (3405 words)
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;16&nbsp;
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;3405&nbsp;
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;焉知非鱼
+    
   
   
 </span>
 
-                
+
+              
             </div>
           </div>
         </div>
@@ -813,18 +884,35 @@ all(True, True)
         
 
         
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also"></h4>
+                  <ul>
+                
+                
+                    <li><a href="/post/2016-02-19-raku%E4%B8%AD%E7%9A%84%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D/">Raku 中的智能匹配</a></li>
+                
+              </ul>
+
+          
+        
       </article>
 
       
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2016-08-02-raku-types-%E6%88%90%E4%BA%BA%E4%B9%8B%E7%BE%8E/" data-toggle="tooltip" data-placement="top" title="Raku Types--成人之美">&larr; Previous Post</a>
+              <a href="https://ohmysummer.github.io/post/2016-08-02-raku-types-%E6%88%90%E4%BA%BA%E4%B9%8B%E7%BE%8E/" data-toggle="tooltip" data-placement="top" title="Raku Types--成人之美">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2016-08-09-%E5%BC%95%E5%8F%B7%E7%BB%93%E6%9E%84/" data-toggle="tooltip" data-placement="top" title="引号结构">Next Post &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2016-08-09-%E5%BC%95%E5%8F%B7%E7%BB%93%E6%9E%84/" data-toggle="tooltip" data-placement="top" title="引号结构"> &rarr;</a>
             </li>
           
         </ul>
@@ -833,6 +921,7 @@ all(True, True)
 
       
         
+          
           <div class="disqus-comments">
             <div id="disqus_thread"></div>
 <script type="application/javascript">
@@ -855,6 +944,7 @@ all(True, True)
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
           </div>
+          
         
         
       
@@ -863,7 +953,8 @@ all(True, True)
   </div>
 </div>
 
-    <footer>
+      
+<footer>
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -871,12 +962,10 @@ all(True, True)
           
           
           <li>
-            
-            <a href="https://ohmysummer.github.io/index.xml" title="RSS">
-            
+            <a href="" title="RSS">
               <span class="fa-stack fa-lg">
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
               </span>
             </a>
           </li>
@@ -889,29 +978,36 @@ all(True, True)
             
           
 
-          <span style="color: red;">❤</span>&nbsp;Raku
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://ohmysummer.github.io/">Raku Programming</a>
+            with <span style="color: red;">❤</span>
+          
         </p>
         
         <p class="credits theme-by text-muted">
-          <a href="http://gohugo.io">Hugo v0.63.2</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
           
         </p>
       </div>
     </div>
   </div>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
 <script src="https://ohmysummer.github.io/js/main.js"></script>
 <script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
 <script> hljs.initHighlightingOnLoad(); </script>
-<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
-<script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
 
 
 <script>
@@ -930,6 +1026,9 @@ all(True, True)
 
 
 
+
+
+    
   </body>
 </html>
 
