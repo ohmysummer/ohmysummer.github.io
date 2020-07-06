@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Parse with Raku Regexes and Grammars - Raku Programming</title>
-  <meta name="description" content="楽土">
+  <title>感觉像一个 bug - Raku Programming</title>
+  <meta name="description" content="It felt like a bug">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2019-07-31-parse-with-raku-regexes-and-grammars\/",
-          "name": "Parse with raku regexes and grammars"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-06-20-it-felt-like-a-bug\/",
+          "name": "感觉像一个 bug"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Parse with Raku Regexes and Grammars",
-  "description" : "启动翻译。",
+  "headline": "感觉像一个 bug",
+  "description" : "IO::Path 提供了不少关于文件的信息。缺少的是它的真实类型。文件的结尾是有欺骗性的。在文件的操作系统上，我们可以得到一个清晰的图像。Shelling 用 file -b -i 获取 mimetype 有点慢，所以我试着在文件名列表上添加一个 .",
   "inLanguage" : "zh",
-  "wordCount":  1 ,
-  "datePublished" : "2019-07-31T20:22:08",
-  "dateModified" : "2019-07-31T20:22:08",
+  "wordCount":  129 ,
+  "datePublished" : "2020-07-06T18:51:56",
+  "dateModified" : "2020-07-06T18:51:56",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
-  "keywords" : [ "Raku" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2019-07-31-parse-with-raku-regexes-and-grammars\/",
+  "keywords" : [ "rakulang" ],
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-06-20-it-felt-like-a-bug\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,15 +78,15 @@
 }
 </script>
 
-<meta property="og:title" content="Parse with Raku Regexes and Grammars" />
-<meta property="og:description" content="楽土">
+<meta property="og:title" content="感觉像一个 bug" />
+<meta property="og:description" content="It felt like a bug">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2019-07-31-parse-with-raku-regexes-and-grammars/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-06-20-it-felt-like-a-bug/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Parse with Raku Regexes and Grammars" />
-  <meta name="twitter:description" content="楽土">
+  <meta name="twitter:title" content="感觉像一个 bug" />
+  <meta name="twitter:description" content="It felt like a bug">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -265,12 +265,12 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Parse with Raku Regexes and Grammars</h1>
+                <h1>感觉像一个 bug</h1>
               
               
               
                 
-                  <h2 class="post-subheading">楽土</h2>
+                  <h2 class="post-subheading">It felt like a bug</h2>
                 
               
               
@@ -283,7 +283,7 @@ if (!doNotTrack) {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;129&nbsp;
   
   
     
@@ -308,13 +308,38 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>启动翻译。</p>
+        <p><code>IO::Path</code> 提供了不少关于文件的信息。缺少的是它的真实类型。文件的结尾是有欺骗性的。在<a href="https://en.wikipedia.org/wiki/File_(command)">文件</a>的操作系统上，我们可以得到一个清晰的图像。Shelling 用 <code>file -b -i</code> 获取 mimetype 有点慢，所以我试着在文件名列表上添加一个 <code>.hyper.map</code>，并混入一个角色到 <code>IO::Path</code>。我踩到了一些感觉像 bug 但又不是的东西。以下是 golfed 的代码来说明这个问题。</p>
+<pre><code class="language-raku" data-lang="raku">my @list = 1..10;
+my @results;
+@results = @list[^24].hyper(:degree(2), :batch(1)).map({
+    my $type = run('/bin/ls', :out).out.slurp.chars;
+    $_ but role Mime { has $.mime = $type }
+});
+</code></pre><p>Rakudo 似乎试图与角色形成一个闭包，但却释放了存储在某个地方的数据。只有当线程使事情变慢时，这种情况才会明显。这是一种罕见的情况，语法是有效的，但语义是错误的。因此，Raku 的语法可以解析它，但编译器不能对这个匹配做任何有用的事情。在某种程度上，编译器能够处理这种情况而不发生崩溃，这是很高的评价。但是，如果能有一个警告就更好了。正如 <a href="http://www.jnthn.net/">jnthn</a> 所<a href="https://colabti.org/irclogger/irclogger_log/raku-dev?date=2020-06-18#l370">指出</a>的，这不是使用角色的正确方式。</p>
+<p>因为有一个正确的方法来处理这种情况。我们需要定义一个带有参数的角色，作为我们属性的默认值。</p>
+<pre><code class="language-raku" data-lang="raku">sub get-filetype(IO() $_){ run('/usr/bin/file', '-b', '-i', .basename, :out).out.slurp }
+role Mime[$type] { has $.mime = $type }
+@results = @list[^24].hyper(:degree(2), :batch(1)).map({
+    my $type = run('/bin/ls', :out).out.slurp.chars;
+    $_ but Mime[$type]
+});
+</code></pre><p>我没能使用匿名参数角色。我们可以定义一个，把它存储在标量中，但不能实例化它。在标量上使用下标 <code>[]</code>(以及许多其他东西)会告诉语法，假设我们要使用 Positional。</p>
+<pre><code class="language-raku" data-lang="raku">my $R = role :: [$t] {};
+dd $R;
+dd $R[42];
+# OUTOUT: &lt;anon|10&gt; $R = &lt;anon|10&gt;
+#         Could not instantiate role '&lt;anon|10&gt;':
+#         Too few positionals passed; expected 2 arguments but got 1
+</code></pre><p>有一种方法可以使用 MOP 来实现。我确实在 <code>Metamodel::ParametricRoleHOW</code> 中找到了<a href="https://github.com/rakudo/rakudo/blob/e1cefecc927ddc864591d16915735a28c37e78ac/src/Perl6/Metamodel/ParametricRoleHOW.nqp#L50">正确的</a>方法，但没能搞清楚如何使用。如果你确实知道如何使用 <code>.^parameterize</code> 请提供一个代码片段）。</p>
+<p>并非真正的闭包形成角色，似乎是语法可以处理，但编译器不能处理的情况。这就留下了一个问题，那就是如何记录一个不应该存在的东西。这是一个陷阱，我们有一个章节来处理<a href="https://docs.raku.org/language/traps">这些</a>问题。但是这个放在离角色描述很远的地方。前两个 pull 请求已经写好了，接下来还需要写更多。</p>
+<p>我很高兴文档是用支持超链接的语言写的。如果用书这种线性的东西来描述 Raku 这个网络，那是相当困难的。</p>
+<p>by <a href="https://gfldex.wordpress.com/2020/06/20/it-felt-like-a-bug/">gfldex</a></p>
 
 
         
           <div class="blog-tags">
             
-              <a href="https://ohmysummer.github.io//tags/raku/">Raku</a>&nbsp;
+              <a href="https://ohmysummer.github.io//tags/rakulang/">rakulang</a>&nbsp;
             
           </div>
         
@@ -331,15 +356,15 @@ if (!doNotTrack) {
                   <ul>
                 
                 
-                    <li><a href="/post/2020-06-30-sequence/">数列</a></li>
+                    <li><a href="/post/2020-07-06-unrecursing/">非递归</a></li>
                 
-                    <li><a href="/post/2019-07-16-encode-decode/">Encode-Decode</a></li>
+                    <li><a href="/post/2020-06-22-wat-freeness/">Wat Freeness</a></li>
                 
-                    <li><a href="/post/2019-06-29-odd-even-sort-in-raku/">Raku 中的 奇偶排序</a></li>
+                    <li><a href="/post/2020-05-26-watching-new-arrivals/">监控新访客</a></li>
                 
-                    <li><a href="/post/2019-06-27-pancake-sort-in-raku/">Raku 中的煎饼排序</a></li>
+                    <li><a href="/post/2020-05-25-returning-the-right-amount/">2020 05 25 Returning the Right Amount</a></li>
                 
-                    <li><a href="/post/2019-06-28-gnome-sort-in-raku/">Raku 中的 Gnome sort</a></li>
+                    <li><a href="/post/2020-07-04-piping-made-easy/">管道变得简单</a></li>
                 
               </ul>
 
@@ -351,12 +376,12 @@ if (!doNotTrack) {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2019-07-16-encode-decode/" data-toggle="tooltip" data-placement="top" title="Encode-Decode">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-05-26-watching-new-arrivals/" data-toggle="tooltip" data-placement="top" title="监控新访客">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2020-05-14-autorotating-logs/" data-toggle="tooltip" data-placement="top" title="自动切割日志"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-06-22-wat-freeness/" data-toggle="tooltip" data-placement="top" title="Wat Freeness"> &rarr;</a>
             </li>
           
         </ul>
