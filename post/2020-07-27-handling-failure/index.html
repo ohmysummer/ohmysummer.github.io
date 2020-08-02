@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Goto the Last Fifo - Raku Programming</title>
+  <title>处理异常 - Raku Programming</title>
   <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
-          "name": "Goto the last fifo"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-07-27-handling-failure\/",
+          "name": "处理异常"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Goto the Last Fifo",
-  "description" : "我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。",
+  "headline": "处理异常",
+  "description" : "经过一番反反复复，我找到了一个实用的方法来处理 Shell::Piping 中的错误条件。这个实用的方法是有多个方法。一个进程确实有一个 exitinteger(称为代码，因为它可能很神秘)和文本输出到 STDERR 来表示出了问题。有时我们需要粗心的错误处理，有时我们需要研究文本输出并对其做出反应。",
   "inLanguage" : "zh",
-  "wordCount":  115 ,
-  "datePublished" : "2017-09-13T12:41:45",
-  "dateModified" : "2017-09-13T12:41:45",
+  "wordCount":  98 ,
+  "datePublished" : "2020-08-02T19:15:43",
+  "dateModified" : "2020-08-02T19:15:43",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-07-27-handling-failure\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Goto the Last Fifo" />
+<meta property="og:title" content="处理异常" />
 <meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2017-09-13-goto-the-last-fifo/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-07-27-handling-failure/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Goto the Last Fifo" />
+  <meta name="twitter:title" content="处理异常" />
   <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
@@ -265,7 +265,7 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Goto the Last Fifo</h1>
+                <h1>处理异常</h1>
               
               
               
@@ -283,7 +283,7 @@ if (!doNotTrack) {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;115&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;98&nbsp;
   
   
     
@@ -308,34 +308,29 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。</p>
-<p>Linux 和朋友们自带的 fifos 也有同样的作用。创建一个 fifo，设置访问权限，然后开始从那个伪文件中读取。在 Perl 5 中非常容易做到。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo; open($fifo, &quot;+);
-while (&lt;$fifo&gt;) {
-    do-things-with $_;
+        <p>经过一番反反复复，我找到了一个实用的方法来处理 <a href="https://github.com/gfldex/raku-shell-piping">Shell::Piping</a> 中的错误条件。这个实用的方法是有多个方法。一个进程确实有一个 exitinteger(称为代码，因为它可能很神秘)和文本输出到 STDERR 来表示出了问题。有时我们需要粗心的错误处理，有时我们需要研究文本输出并对其做出反应。</p>
+<p>我发现了一个非常好的方法，使用 Junction 和 Raku 的类型系统来从错误处理中去除一些模板。将两者结合起来，我们可以创建一个灵活的类型。</p>
+<pre><code class="language-raku" data-lang="raku">class Exitcode {
+    has $.value;
+    has $.command;
+    method Numeric { $.value }
+    method Str { $.command }
 }
-</code></pre><p>Rakudo 对 fifos 还不是很了解，结果在读取一个没有数据的 fifo 时，它并没有阻止。经过一番摸索，我找到了一个解决这个问题的方法。</p>
-<pre><code class="language-raku" data-lang="raku">      1 use v6.c;
-      2
-      3 # `mkfifo radio-fifo-in`
-      4 # `echo &quot;foo&quot; &gt; radio-fifo-in`
-      5 # `echo &quot;foo^D&quot; &gt; radio-fifo-in`
-      6
-      7 my $fifo-in = open(„radio-fifo-in“, :r);
-      8
-      9 LABEL: loop {
-     10     react {
-     11         whenever supply { .emit for $fifo-in.lines } {
-     12             say .Str;
-     13             last LABEL if /‚^D‘/;
-     14         }
-     15     }
-     16 }
-</code></pre><p>我知道了 <code>whenever</code> 反应到 <code>last</code>，今天晚些时候会教给 docs。幸运的是 Perl 6 有了标签，所以我们可以告诉 <code>last</code> 要去哪里。</p>
-<p>更新：scovit 发现了一个简短的表达式，它与 Perl 5 的行为非常接近。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo = open(&quot;radio-fifo-in&quot;, :r);
-while defined $_ = $fifo.get { .say }
-</code></pre><p>by <a href="https://gfldex.wordpress.com/2017/09/13/goto-the-last-fifo/">gfldex</a></p>
+</code></pre><p>所以这个类产生的对象既是一个数字又是一个文本。实际看的是什么，要看是谁在看。我们可以使用 <code>infix:&lt;~~&gt;</code> 来决定使用哪个比较运算符。</p>
+<pre><code class="language-raku" data-lang="raku">say $ex ~~ 42 &amp;&amp; $ex ~~ ‚find‘; # OUTPUT: True
+</code></pre><p>这还是挺啰嗦的。我们可以用 Juncttion，因为它结合得比 <code>~~</code> 较紧。</p>
+<pre><code class="language-raku" data-lang="raku">say $ex ~~ 42 &amp; ‚find‘; # OUTPUT: True
+</code></pre><p>现在，我们可以 <code>CATCH</code> 一个异常，并缩小管道中的命令，很容易失败。</p>
+<pre><code class="language-raku" data-lang="raku">CATCH {
+    when X::Shell::NonZeroExitcode {
+        given .exitcode {
+            when 42 &amp; ‚find‘ {
+                warn ‚Oh now! We found the answer!‘;
+            }
+        }
+    }
+}
+</code></pre><p>并不是所有模块的用户都可能喜欢使用 <code>Exception</code>。所以我们在 <a href="https://github.com/gfldex/raku-shell-piping">Shell::Pipe</a> 对象中使用一个构造来创建一个 Failure 从 <code>.sink</code> 返回。如果调用了 <code>Shell::Pipe.exitcode</code> 方法，我们就会认为用户是在用手处理它们。然后，我们可以调用 <code>.handled</code> 来&quot;中止&quot;这个 <code>Exception</code>。这一点必须简单，否则可能会被跳过。因此，在 <code>Exitcode</code> 这个类中，强转器方法的使用很不寻常。</p>
 
 
         
@@ -378,12 +373,12 @@ while defined $_ = $fifo.get { .say }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-08-20-preparations-for-your/" data-toggle="tooltip" data-placement="top" title="Preparations for Your">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-07-24-mimicing-quotes/" data-toggle="tooltip" data-placement="top" title="模仿引号">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-07-29-augmenting-with-exitcode/" data-toggle="tooltip" data-placement="top" title="带退出码的增强"> &rarr;</a>
             </li>
           
         </ul>

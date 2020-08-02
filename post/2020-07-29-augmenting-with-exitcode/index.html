@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Goto the Last Fifo - Raku Programming</title>
+  <title>带退出码的增强 - Raku Programming</title>
   <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
-          "name": "Goto the last fifo"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-07-29-augmenting-with-exitcode\/",
+          "name": "带退出码的增强"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Goto the Last Fifo",
-  "description" : "我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。",
+  "headline": "带退出码的增强",
+  "description" : "在我的上一篇文章中，我找到了一个很好的方法来匹配 exitcode。我想把它扩展到与 STDERR 匹配，如果 exitcode 是非零。我已经有了一种方法来捕获一个管道的所有错误流。",
   "inLanguage" : "zh",
-  "wordCount":  115 ,
-  "datePublished" : "2017-09-13T12:41:45",
-  "dateModified" : "2017-09-13T12:41:45",
+  "wordCount":  238 ,
+  "datePublished" : "2020-08-02T19:23:37",
+  "dateModified" : "2020-08-02T19:23:37",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-07-29-augmenting-with-exitcode\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Goto the Last Fifo" />
+<meta property="og:title" content="带退出码的增强" />
 <meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2017-09-13-goto-the-last-fifo/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-07-29-augmenting-with-exitcode/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Goto the Last Fifo" />
+  <meta name="twitter:title" content="带退出码的增强" />
   <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
@@ -265,7 +265,7 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Goto the Last Fifo</h1>
+                <h1>带退出码的增强</h1>
               
               
               
@@ -280,10 +280,10 @@ if (!doNotTrack) {
   <i class="fas fa-calendar"></i>&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;2&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;115&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;238&nbsp;
   
   
     
@@ -308,34 +308,61 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。</p>
-<p>Linux 和朋友们自带的 fifos 也有同样的作用。创建一个 fifo，设置访问权限，然后开始从那个伪文件中读取。在 Perl 5 中非常容易做到。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo; open($fifo, &quot;+);
-while (&lt;$fifo&gt;) {
-    do-things-with $_;
+        <p>在我的上一篇文章中，我找到了一个很好的方法来匹配 exitcode。我想把它扩展到与 STDERR 匹配，如果 exitcode 是非零。我已经有了一种方法来捕获一个管道的所有错误流。</p>
+<pre><code class="language-raku" data-lang="raku">px&lt;find /tmp» |» px&lt;your-script-here&gt; |» @a :stderr(Capture);
+</code></pre><p>我使用 <code>Capture</code>（类型对象）的方式和我们使用 <code>*</code> 或 Whatever 一样。它只是表示，神奇的东西应该发生。这个神奇的东西归结为把所有 <code>STDERR</code> 流粘到一个二维数组中。如果我想处理错误，我可能想对 exitcode、shell 命令的名称和它输出到 <code>STDERR</code> 的部分进行匹配。像下面这样的语法会很好。</p>
+<pre><code class="language-raku" data-lang="raku">my $ex = Exitcode.new: :STDERR(&lt;abc def ghi&gt;), :exitint(42), :command&lt;find&gt;;
+given $ex {
+    when ‚find‘ &amp; 42 &amp; /def\s(\S+)/ {
+        note „find terminated with 42 and $0“;
+    }
 }
-</code></pre><p>Rakudo 对 fifos 还不是很了解，结果在读取一个没有数据的 fifo 时，它并没有阻止。经过一番摸索，我找到了一个解决这个问题的方法。</p>
-<pre><code class="language-raku" data-lang="raku">      1 use v6.c;
-      2
-      3 # `mkfifo radio-fifo-in`
-      4 # `echo &quot;foo&quot; &gt; radio-fifo-in`
-      5 # `echo &quot;foo^D&quot; &gt; radio-fifo-in`
-      6
-      7 my $fifo-in = open(„radio-fifo-in“, :r);
-      8
-      9 LABEL: loop {
-     10     react {
-     11         whenever supply { .emit for $fifo-in.lines } {
-     12             say .Str;
-     13             last LABEL if /‚^D‘/;
-     14         }
-     15     }
-     16 }
-</code></pre><p>我知道了 <code>whenever</code> 反应到 <code>last</code>，今天晚些时候会教给 docs。幸运的是 Perl 6 有了标签，所以我们可以告诉 <code>last</code> 要去哪里。</p>
-<p>更新：scovit 发现了一个简短的表达式，它与 Perl 5 的行为非常接近。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo = open(&quot;radio-fifo-in&quot;, :r);
-while defined $_ = $fifo.get { .say }
-</code></pre><p>by <a href="https://gfldex.wordpress.com/2017/09/13/goto-the-last-fifo/">gfldex</a></p>
+</code></pre><p>事实证明，在 Junction 中得到对 <code>Str</code>、<code>Numeric</code> 和 <code>Regex</code> 的匹配是很容易做到的。我们需要做的就是增强 <code>Regex</code>。</p>
+<pre><code class="language-raku" data-lang="raku">augment class Regex {
+    multi method ACCEPTS(Regex:D: Shell::Piping::Exitcode:D $ex) {
+        ?$ex.STDERR.join(„\n“).match(self)
+    }
+}
+
+augment class Int {
+    multi method ACCEPTS(Int:D: Shell::Piping::Exitcode:D $ex) {
+        self.ACCEPTS($ex.exitint)
+    }
+}
+
+augment class Str {
+    multi method ACCEPTS(Str:D: Shell::Piping::Exitcode:D $ex) {
+        self.ACCEPTS($ex.command)
+    }
+}
+</code></pre><p>这只对匹配有效。我无法用这种方式将 <code>(\S+)</code> 捕获到 <code>$0</code>。我们知道并喜欢 <code>Str.match</code> 能做到这一点-看起来很容易。让我们从它那里<del>偷</del>学代码吧!</p>
+<pre><code class="language-raku" data-lang="raku">proto method match(|) { $/ := nqp::getlexcaller('$/'); {*} }
+</code></pre><p>所以 <code>.match</code> 要做的第一件事就是将本地的 <code>$/</code> 与调用者的 <code>$/</code> 绑定。因此，任何对本地版本的改变都会实际改变调用者的版本。我试着模仿了一下，但没有成功。无论是 nqp 方式还是稍微干净的 Raku 方式都不行。</p>
+<pre><code class="language-raku" data-lang="raku">augment class Regex {
+    multi method ACCEPTS(Regex:D: Shell::Piping::Exitcode:D $ex) {
+         CALLER::&lt;$/&gt; := $/;
+
+        ?$ex.STDERR.join(„\n“).match(self)
+    }
+}
+</code></pre><p>至少在 <code>given/when</code> 块中不行。简单的说 <code>$ex ~~ defs(\S+);</code> 在全局作用域内就能正常工作。我甚至得到了一个错误信息：<code>OUTER</code> 中不存在 <code>\$</code>。考虑到根据定义，它应该存在于每一个块中，这很奇怪。</p>
+<p>我们可以用下面的构造来检查调用者的词法作用域。</p>
+<pre><code class="language-raku" data-lang="raku">say CALLER::.keys;
+say Backtrace.new.gist;
+</code></pre><p>这将输出词法和有多少堆栈帧。而事实上，<code>given/when</code> 确实引入了一个额外的栈帧，它包含 <code>$_</code> 但不包含 <code>$/</code>（以及其他一些零碎的东西）。由于 caller 是一个 Stash，什么是转半的 Hash，我们可以像往常一样使用 <code>:existence</code>，再增加一个 caller。</p>
+<pre><code class="language-raku" data-lang="raku">augment class Regex {
+    multi method ACCEPTS(Regex:D: Shell::Piping::Exitcode:D $ex) {
+        CALLER::&lt;$/&gt;:exists ?? (CALLER::&lt;$/&gt; := $/) !! (CALLER::CALLER::&lt;$/&gt; := $/);
+
+        ?$ex.STDERR.join(„\n“).match(self)
+    }
+}
+</code></pre><p>现在，它的工作原理与设想的一样。</p>
+<p>然而-实际上 HOWEVER-我正在增强一个内置类。这是有风险的。我不是一个人。我们得到了一个 ircbot，可以在生态系统的源代码中 grep。</p>
+<pre><code>20:01 &lt; gfldex&gt; greppable6: augment class
+20:01 &lt; greppable6&gt; gfldex, 49 lines, 26 modules: https://gist.github.com/4088b5b8e7b51d94276b15500c240a5f
+</code></pre><p>当我们编写模块时，我们会引入自定义名称所在的作用域。一个模块的用户可以决定将这些名字导入到用户控制的作用域中。当我们增强模块时，我们将一个新的名字引入到一个全局的作用域中。如果两个模块有相同的想法会怎样？如果注入的方法实际上是一个多，那么它很可能会工作。但它不一定要这样。当两个或更多的 <code>multi</code> 候选者具有相同的优先权时，第一个被发现的将获胜。通过在一个非 <code>multi</code> 上使用 <code>augment</code>，我们有机会得到一个错误信息。如果我们通过 <code>MOP</code> 添加一个方法，我们就不会。如果我想在 <code>when</code> 语句或代码块中允许智能匹配，我需要提供在 <code>~~</code> 的 LHS 上有我的自定义类的能力。所以没有办法绕过 <code>augment</code>。我甚至可以说，这就是在语言设计中加入 <code>augment</code> 的原因。当我们考虑到 Raku 越来越不年轻，语言版本不断增加时，情况就会变得更糟。一个测试马虎的模块可能会与语言版本增加的新方法发生碰撞。我们是否应该在 <code>compunit</code> 中强制执行一个带有语言版本的使用语句，并带有一个增强语句？</p>
+<p>这真的困扰着我。我们可以使用 <code>META6</code> 并添加字段 <code>augments: &quot;Cool,Int,Regex&quot;</code>。这样 zef 就有机会发现碰撞并提供一个警告。遗憾的是，我们没有办法强制执行这个功能（因为 <code>EVAL</code>）。我会花更多的时间来思考这个问题，可能会开始一个<a href="https://github.com/Raku/problem-solving">解决问题</a>的问题。</p>
 
 
         
@@ -366,7 +393,7 @@ while defined $_ = $fifo.get { .say }
                 
                     <li><a href="/post/2020-07-31-dogfood-time/">狗粮时间</a></li>
                 
-                    <li><a href="/post/2020-07-29-augmenting-with-exitcode/">带退出码的增强</a></li>
+                    <li><a href="/post/2020-07-27-handling-failure/">处理异常</a></li>
                 
               </ul>
 
@@ -378,12 +405,12 @@ while defined $_ = $fifo.get { .say }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-08-20-preparations-for-your/" data-toggle="tooltip" data-placement="top" title="Preparations for Your">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-07-27-handling-failure/" data-toggle="tooltip" data-placement="top" title="处理异常">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-07-31-dogfood-time/" data-toggle="tooltip" data-placement="top" title="狗粮时间"> &rarr;</a>
             </li>
           
         </ul>

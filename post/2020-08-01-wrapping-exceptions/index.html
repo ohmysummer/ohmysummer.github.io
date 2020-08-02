@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Goto the Last Fifo - Raku Programming</title>
+  <title>包裹异常 - Raku Programming</title>
   <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
-          "name": "Goto the last fifo"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-08-01-wrapping-exceptions\/",
+          "name": "包裹异常"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Goto the Last Fifo",
-  "description" : "我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。",
+  "headline": "包裹异常",
+  "description" : "如前所述，我希望减少 Shell::Piping 中简单的错误处理。下面的内容太长了，不适合放在终端的单行中。",
   "inLanguage" : "zh",
-  "wordCount":  115 ,
-  "datePublished" : "2017-09-13T12:41:45",
-  "dateModified" : "2017-09-13T12:41:45",
+  "wordCount":  154 ,
+  "datePublished" : "2020-08-02T19:55:39",
+  "dateModified" : "2020-08-02T19:55:39",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-08-01-wrapping-exceptions\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Goto the Last Fifo" />
+<meta property="og:title" content="包裹异常" />
 <meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2017-09-13-goto-the-last-fifo/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-08-01-wrapping-exceptions/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Goto the Last Fifo" />
+  <meta name="twitter:title" content="包裹异常" />
   <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
@@ -265,7 +265,7 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Goto the Last Fifo</h1>
+                <h1>包裹异常</h1>
               
               
               
@@ -283,7 +283,7 @@ if (!doNotTrack) {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;115&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;154&nbsp;
   
   
     
@@ -308,34 +308,44 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。</p>
-<p>Linux 和朋友们自带的 fifos 也有同样的作用。创建一个 fifo，设置访问权限，然后开始从那个伪文件中读取。在 Perl 5 中非常容易做到。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo; open($fifo, &quot;+);
-while (&lt;$fifo&gt;) {
-    do-things-with $_;
+        <p>如前所述，我希望减少 <a href="https://github.com/gfldex/raku-shell-piping">Shell::Piping</a> 中简单的错误处理。下面的内容太长了，不适合放在终端的单行中。</p>
+<pre><code class="language-raku" data-lang="raku">CATCH {
+    when X::Shell::CommandNotFound {
+        when .cmd ~~ ‚commonmarker‘ {
+            put ‚Please install commonmarker with `gem install commonmarker`.‘;
+            exit 2;
+        }
+        default {
+            .rethrow;
+        }
+    }
 }
-</code></pre><p>Rakudo 对 fifos 还不是很了解，结果在读取一个没有数据的 fifo 时，它并没有阻止。经过一番摸索，我找到了一个解决这个问题的方法。</p>
-<pre><code class="language-raku" data-lang="raku">      1 use v6.c;
-      2
-      3 # `mkfifo radio-fifo-in`
-      4 # `echo &quot;foo&quot; &gt; radio-fifo-in`
-      5 # `echo &quot;foo^D&quot; &gt; radio-fifo-in`
-      6
-      7 my $fifo-in = open(„radio-fifo-in“, :r);
-      8
-      9 LABEL: loop {
-     10     react {
-     11         whenever supply { .emit for $fifo-in.lines } {
-     12             say .Str;
-     13             last LABEL if /‚^D‘/;
-     14         }
-     15     }
-     16 }
-</code></pre><p>我知道了 <code>whenever</code> 反应到 <code>last</code>，今天晚些时候会教给 docs。幸运的是 Perl 6 有了标签，所以我们可以告诉 <code>last</code> 要去哪里。</p>
-<p>更新：scovit 发现了一个简短的表达式，它与 Perl 5 的行为非常接近。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo = open(&quot;radio-fifo-in&quot;, :r);
-while defined $_ = $fifo.get { .say }
-</code></pre><p>by <a href="https://gfldex.wordpress.com/2017/09/13/goto-the-last-fifo/">gfldex</a></p>
+</code></pre><p>我们在第3行有一个条件，第4行有一个 <code>print</code> 语句。剩下的就是样板。我想出的最短的语法是这样的。</p>
+<pre><code class="language-raku" data-lang="raku">X::Shell::CommandNotFound.refine({.cmd eq ‚commonmarker‘}, {„Please install ⟨{.cmd}⟩ in ⟨{.path}⟩.“});
+X::Shell::CommandNotFound.refine({.cmd eq ‚raku‘}, {„Please run `apt install rakudo`.“});
+</code></pre><p>我想修改 <code>CommandNotFound</code> 后面的类型对象，因为模块会创建它们的实例，并在我拦截它们之前抛出它们。当然我可以抓住它们。但整个练习是为了摆脱 <code>catch</code> 块。在模块内部为任何异常添加一个方法，从而在编译时和运行时添加一个方法会很好。我们可以通过一个 trait 来实现。</p>
+<pre><code class="language-raku" data-lang="raku">multi sub trait_mod:&lt;is&gt;(Exception:U $ex, :$refineable) {
+    $ex.HOW.add_method($ex, ‚refine‘, my method (&amp;cond, &amp;message) {
+        $ex.WHO::&lt;@refinements&gt;.append: &amp;cond, &amp;message;
+        state $wrapped;
+        $ex.HOW.find_method($ex, ‚message‘).wrap(my method {
+            my @refinements := self.WHO::&lt;@refinements&gt;;
+            for @refinements -&gt; &amp;cond, &amp;message {
+                if cond(self) {
+                    return message(self);
+                }
+            }
+            nextsame
+        }) unless $wrapped;
+        $wrapped = True;
+    });
+}
+</code></pre><p>特质是一个花哨的子例程，它可以接受类型对象或其他静态对象(Raku 是一种动态语言，没有静态的东西)并对其进行操作。这可以是包装-一个变相的 <code>MOP</code> 操作-或者实际的 <code>MOP</code> 调用。这个重新定义的特质通过在类型的 <code>package</code> 部分的 <code>autovification</code> 增加了一个名为 <code>@refinements</code> 的类属性。这被隐藏在伪方法 <code>.WHO.WHO</code> 后面。然后，它增加了一个方法，它接受一对 <code>Callable</code>，并将它们存储在 <code>@refinements</code> 中。类型对象原来的 <code>.message</code> 方法被封装了，除非已经这样做了。这是由一个状态变量控制的。</p>
+<p>封装后的 <code>.message</code> 将调用第一个可调用的方法，并期望返回一个 <code>Bool</code>。如果那个 <code>Bool</code> 为 <code>True</code>，则会调用第二个可调用的方法。两者都会被调用一个异常实例。</p>
+<p>该 trait 不会 <code>.^compose</code> 它被调用的类型对象。这是（目前）需要的，因为下面的情况。</p>
+<pre><code class="language-raku" data-lang="raku">class X::Shell::CommandNotFound is Exception is refineable { ... }
+</code></pre><p>这个特性实际上是在 <code>Exception</code> 上调用的。这样做的原因是，新增的方法 <code>.refine</code> 没有任何阴影。因此，我们可以在编译后使用这个方法等待它被调用来完成我们需要做的事情。如果没有条件匹配，包装器通过 <code>nextsame</code> 有一个落入。</p>
+<p>我想我还没有把所有的角落情况都覆盖到。这需要进一步测试。面向用户的语法可以保持原样，因为 traits 是解样板化。特质本身可能会变得更复杂。但这也没什么。负担应该是在实现者这边。</p>
 
 
         
@@ -360,13 +370,13 @@ while defined $_ = $fifo.get { .say }
                 
                     <li><a href="/post/2020-08-01-dropin-replacement/">Dropin Replacement</a></li>
                 
-                    <li><a href="/post/2020-08-01-wrapping-exceptions/">包裹异常</a></li>
-                
                     <li><a href="/post/2020-07-31-concurrent-dogfood/">并发的狗粮</a></li>
                 
                     <li><a href="/post/2020-07-31-dogfood-time/">狗粮时间</a></li>
                 
                     <li><a href="/post/2020-07-29-augmenting-with-exitcode/">带退出码的增强</a></li>
+                
+                    <li><a href="/post/2020-07-27-handling-failure/">处理异常</a></li>
                 
               </ul>
 
@@ -378,12 +388,12 @@ while defined $_ = $fifo.get { .say }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-08-20-preparations-for-your/" data-toggle="tooltip" data-placement="top" title="Preparations for Your">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-07-31-concurrent-dogfood/" data-toggle="tooltip" data-placement="top" title="并发的狗粮">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-08-01-dropin-replacement/" data-toggle="tooltip" data-placement="top" title="Dropin Replacement"> &rarr;</a>
             </li>
           
         </ul>

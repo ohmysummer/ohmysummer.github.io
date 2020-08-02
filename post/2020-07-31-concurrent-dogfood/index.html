@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Goto the Last Fifo - Raku Programming</title>
+  <title>并发的狗粮 - Raku Programming</title>
   <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
-          "name": "Goto the last fifo"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-07-31-concurrent-dogfood\/",
+          "name": "并发的狗粮"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Goto the Last Fifo",
-  "description" : "我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。",
+  "headline": "并发的狗粮",
+  "description" : "我在 Raku 项目中使用 zef --verbose test .",
   "inLanguage" : "zh",
-  "wordCount":  115 ,
-  "datePublished" : "2017-09-13T12:41:45",
-  "dateModified" : "2017-09-13T12:41:45",
+  "wordCount":  97 ,
+  "datePublished" : "2020-08-02T19:44:55",
+  "dateModified" : "2020-08-02T19:44:55",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-07-31-concurrent-dogfood\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Goto the Last Fifo" />
+<meta property="og:title" content="并发的狗粮" />
 <meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2017-09-13-goto-the-last-fifo/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-07-31-concurrent-dogfood/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Goto the Last Fifo" />
+  <meta name="twitter:title" content="并发的狗粮" />
   <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
@@ -265,7 +265,7 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Goto the Last Fifo</h1>
+                <h1>并发的狗粮</h1>
               
               
               
@@ -283,7 +283,7 @@ if (!doNotTrack) {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;115&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;97&nbsp;
   
   
     
@@ -308,34 +308,25 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。</p>
-<p>Linux 和朋友们自带的 fifos 也有同样的作用。创建一个 fifo，设置访问权限，然后开始从那个伪文件中读取。在 Perl 5 中非常容易做到。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo; open($fifo, &quot;+);
-while (&lt;$fifo&gt;) {
-    do-things-with $_;
+        <p>我在 Raku 项目中使用 <code>zef --verbose test .</code> 在 Makefile 中用 F2 键触发运行测试。虽然 zef 很好，但它也<del>很慢</del>，还不是很快。如果它能并行运行测试，可能会更快一些。因为我把测试分成了不同的文件，所以并发运行它们并不难。最大的障碍是收集所有的输出，并在不混行的情况下显示它们。有了 <a href="https://github.com/gfldex/raku-shell-piping">Shell::Piping</a>，这确实非常容易。</p>
+<pre><code class="language-raku" data-lang="raku">constant NL = $?NL;
+my &amp;RED = { &quot;\e[31m$_\e[0m&quot; };
+my &amp;BOLD = { &quot;\e[1m$_\e[0m&quot; };
+
+&amp;RED = &amp;BOLD = { $_ } unless $*OUT.t;
+
+sub run-test(IO::Path $file where { .e &amp; .f }) {
+    my @out;
+    my @err;
+    my $failed;
+    px«raku -Ilib $file» |» @out :stderr(@err) :done({$failed = .exitcodes.so});
+
+    („Testing: {$file}“.&amp;BOLD, @out, @err».&amp;RED).flat.join(NL);
 }
-</code></pre><p>Rakudo 对 fifos 还不是很了解，结果在读取一个没有数据的 fifo 时，它并没有阻止。经过一番摸索，我找到了一个解决这个问题的方法。</p>
-<pre><code class="language-raku" data-lang="raku">      1 use v6.c;
-      2
-      3 # `mkfifo radio-fifo-in`
-      4 # `echo &quot;foo&quot; &gt; radio-fifo-in`
-      5 # `echo &quot;foo^D&quot; &gt; radio-fifo-in`
-      6
-      7 my $fifo-in = open(„radio-fifo-in“, :r);
-      8
-      9 LABEL: loop {
-     10     react {
-     11         whenever supply { .emit for $fifo-in.lines } {
-     12             say .Str;
-     13             last LABEL if /‚^D‘/;
-     14         }
-     15     }
-     16 }
-</code></pre><p>我知道了 <code>whenever</code> 反应到 <code>last</code>，今天晚些时候会教给 docs。幸运的是 Perl 6 有了标签，所以我们可以告诉 <code>last</code> 要去哪里。</p>
-<p>更新：scovit 发现了一个简短的表达式，它与 Perl 5 的行为非常接近。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo = open(&quot;radio-fifo-in&quot;, :r);
-while defined $_ = $fifo.get { .say }
-</code></pre><p>by <a href="https://gfldex.wordpress.com/2017/09/13/goto-the-last-fifo/">gfldex</a></p>
+</code></pre><p>我向 raku 出壳，让它运行单个测试文件。STDOUT 和 STDERR 的流最终会被写入 Array。然后，这些流按照正确的顺序合并，并添加一些颜色。现在我必须得到文件列表，并并行运行测试。</p>
+<pre><code class="language-raku" data-lang="raku">.put for dir(‚t/‘).grep(*.extension eq ‚t‘).sort.hyper(:batch(1), :degree(12)).map(*.&amp;run-test);
+</code></pre><p>由于 <code>.hyper</code> 的魔力，输出是以正确的顺序放出的。用一个 raku 进程，测试需要 11.3s。用 12 个线程的话，就降到了 3s。我将立即在 vim 中把绑定改为 F2!。</p>
+<p>整个脚本可以在<a href="https://raw.githubusercontent.com/gfldex/bin/master/raku-test-all">这里</a>找到，<a href="https://github.com/gfldex/raku-shell-piping">Shell::Piping</a> 在<a href="https://github.com/gfldex/raku-shell-piping">这里</a>找到。后者将很快登陆生态系统。</p>
 
 
         
@@ -362,11 +353,11 @@ while defined $_ = $fifo.get { .say }
                 
                     <li><a href="/post/2020-08-01-wrapping-exceptions/">包裹异常</a></li>
                 
-                    <li><a href="/post/2020-07-31-concurrent-dogfood/">并发的狗粮</a></li>
-                
                     <li><a href="/post/2020-07-31-dogfood-time/">狗粮时间</a></li>
                 
                     <li><a href="/post/2020-07-29-augmenting-with-exitcode/">带退出码的增强</a></li>
+                
+                    <li><a href="/post/2020-07-27-handling-failure/">处理异常</a></li>
                 
               </ul>
 
@@ -378,12 +369,12 @@ while defined $_ = $fifo.get { .say }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-08-20-preparations-for-your/" data-toggle="tooltip" data-placement="top" title="Preparations for Your">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-07-31-dogfood-time/" data-toggle="tooltip" data-placement="top" title="狗粮时间">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-08-01-wrapping-exceptions/" data-toggle="tooltip" data-placement="top" title="包裹异常"> &rarr;</a>
             </li>
           
         </ul>

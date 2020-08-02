@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Goto the Last Fifo - Raku Programming</title>
+  <title>狗粮时间 - Raku Programming</title>
   <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
-          "name": "Goto the last fifo"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-07-31-dogfood-time\/",
+          "name": "狗粮时间"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Goto the Last Fifo",
-  "description" : "我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。",
+  "headline": "狗粮时间",
+  "description" : "Shell::Piping 现在已经拥有了我列表中的所有功能。所以是时候使用它了。我还需要以 README.",
   "inLanguage" : "zh",
-  "wordCount":  115 ,
-  "datePublished" : "2017-09-13T12:41:45",
-  "dateModified" : "2017-09-13T12:41:45",
+  "wordCount":  171 ,
+  "datePublished" : "2020-08-02T19:39:37",
+  "dateModified" : "2020-08-02T19:39:37",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-07-31-dogfood-time\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Goto the Last Fifo" />
+<meta property="og:title" content="狗粮时间" />
 <meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2017-09-13-goto-the-last-fifo/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-07-31-dogfood-time/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Goto the Last Fifo" />
+  <meta name="twitter:title" content="狗粮时间" />
   <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
@@ -265,7 +265,7 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Goto the Last Fifo</h1>
+                <h1>狗粮时间</h1>
               
               
               
@@ -283,7 +283,7 @@ if (!doNotTrack) {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;115&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;171&nbsp;
   
   
     
@@ -308,34 +308,63 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。</p>
-<p>Linux 和朋友们自带的 fifos 也有同样的作用。创建一个 fifo，设置访问权限，然后开始从那个伪文件中读取。在 Perl 5 中非常容易做到。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo; open($fifo, &quot;+);
-while (&lt;$fifo&gt;) {
-    do-things-with $_;
+        <p><a href="https://github.com/gfldex/raku-shell-piping">Shell::Piping</a> 现在已经拥有了我列表中的所有功能。所以是时候使用它了。我还需要以  README.md 的形式编写文档。如果能把它渲染成 HTML 而不推送到 github 上就更好了。事实证明，有一个 ruby <a href="https://github.com/gjtorikian/commonmarker">gem</a> 可以把一个<a href="https://github.github.com/gfm/">漂亮的 Markdown</a> 文件转换成 HTML 片段。我已经有了一个脚本，可以把 HTML 嵌入到一个 HTML 页面中，并努力使其可以打印。</p>
+<pre><code class="language-raku" data-lang="raku">#! /usr/bin/env raku
+
+use v6;
+
+put q:to/EOH/;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;style&gt;
+      body {
+        margin: auto; margin-top: 4em; max-width: 80em;
+      }
+
+      @media print {
+        @page { margin: 4em; }
+        p { break-inside: avoid; break-before: avoid; }
+        h3 { break-after: avoid; break-before: avoid; }
+        h2 { break-after: avoid-page; break-before: auto; }
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+EOH
+put $*ARGFILES.slurp;
+put ‚  &lt;/body&gt;‘;
+put ‚&lt;/html&gt;‘;
+</code></pre><p>因为这个脚本是通过 <code>$*ARGFILES</code> 从 STDIN 中获取输入，所以它适合成为 unix 管道的一部分。手工启动这样一个管道是非常麻烦的。写入 README.md 可以创建所有需要决定的数据以及如何创建 README.html。</p>
+<pre><code class="language-raku" data-lang="raku">#! /usr/bin/env raku
+
+use v6;
+use Shell::Piping;
+
+react whenever Supply.merge(Promise.in(0).Supply, ‚.‘.IO.watch) {
+    say &quot;something changed&quot;;
+    for dir(‚.‘).grep(*.ends-with('.md')) {
+        my $src = .IO;
+        my $dst = $src.extension(‚html‘);
+        if $src.modified &gt; (try $dst.modified // 0) {
+            my @html;
+#`[MARK]    px«commonmarker $src» |» px&lt;html-container&gt; |» $dst;
+            say ‚spurted!‘;
+        }
+    }
 }
-</code></pre><p>Rakudo 对 fifos 还不是很了解，结果在读取一个没有数据的 fifo 时，它并没有阻止。经过一番摸索，我找到了一个解决这个问题的方法。</p>
-<pre><code class="language-raku" data-lang="raku">      1 use v6.c;
-      2
-      3 # `mkfifo radio-fifo-in`
-      4 # `echo &quot;foo&quot; &gt; radio-fifo-in`
-      5 # `echo &quot;foo^D&quot; &gt; radio-fifo-in`
-      6
-      7 my $fifo-in = open(„radio-fifo-in“, :r);
-      8
-      9 LABEL: loop {
-     10     react {
-     11         whenever supply { .emit for $fifo-in.lines } {
-     12             say .Str;
-     13             last LABEL if /‚^D‘/;
-     14         }
-     15     }
-     16 }
-</code></pre><p>我知道了 <code>whenever</code> 反应到 <code>last</code>，今天晚些时候会教给 docs。幸运的是 Perl 6 有了标签，所以我们可以告诉 <code>last</code> 要去哪里。</p>
-<p>更新：scovit 发现了一个简短的表达式，它与 Perl 5 的行为非常接近。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo = open(&quot;radio-fifo-in&quot;, :r);
-while defined $_ = $fifo.get { .say }
-</code></pre><p>by <a href="https://gfldex.wordpress.com/2017/09/13/goto-the-last-fifo/">gfldex</a></p>
+</code></pre><p>MARKed 行给我节省了十几行代码，不算错误处理。大多数错误会通过让 <a href="https://github.com/gfldex/raku-shell-piping">Shell::Pipe</a> 抛出异常来产生错误信息。既然我们不能轻易地进行跨语言边界的依赖，那就提醒我未来的自己需要什么。</p>
+<pre><code class="language-raku" data-lang="raku">CATCH {
+    when X::Shell::CommandNotFound {
+        when .cmd ~~ ‚commonmarker‘ {
+            put ‚Please install commonmarker with `gem install commonmarker`.‘;
+            exit 2;
+        }
+        default {
+            .rethrow;
+        }
+    }
+}
+</code></pre><p>可以说是一个异常。有 <code>X::Shell::CommandNotFound</code> 类型的对象和一个条件。如果条件没有满足，我们使用已经提供的异常。否则我们就用一个更好的消息来替换。我相信这是一个值得思考的补丁。可能还有更多的模板需要删除。</p>
 
 
         
@@ -364,9 +393,9 @@ while defined $_ = $fifo.get { .say }
                 
                     <li><a href="/post/2020-07-31-concurrent-dogfood/">并发的狗粮</a></li>
                 
-                    <li><a href="/post/2020-07-31-dogfood-time/">狗粮时间</a></li>
-                
                     <li><a href="/post/2020-07-29-augmenting-with-exitcode/">带退出码的增强</a></li>
+                
+                    <li><a href="/post/2020-07-27-handling-failure/">处理异常</a></li>
                 
               </ul>
 
@@ -378,12 +407,12 @@ while defined $_ = $fifo.get { .say }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-08-20-preparations-for-your/" data-toggle="tooltip" data-placement="top" title="Preparations for Your">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-07-29-augmenting-with-exitcode/" data-toggle="tooltip" data-placement="top" title="带退出码的增强">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-07-31-concurrent-dogfood/" data-toggle="tooltip" data-placement="top" title="并发的狗粮"> &rarr;</a>
             </li>
           
         </ul>

@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Goto the Last Fifo - Raku Programming</title>
+  <title>摆脱模板 - Raku Programming</title>
   <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
-          "name": "Goto the last fifo"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-07-18-deboilerplating\/",
+          "name": "摆脱模板"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Goto the Last Fifo",
-  "description" : "我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。",
+  "headline": "摆脱模板",
+  "description" : "我同意 Damian 的观点，link:https:\/\/youtu.",
   "inLanguage" : "zh",
-  "wordCount":  115 ,
-  "datePublished" : "2017-09-13T12:41:45",
-  "dateModified" : "2017-09-13T12:41:45",
+  "wordCount":  235 ,
+  "datePublished" : "2020-07-19T06:11:18",
+  "dateModified" : "2020-07-19T06:11:18",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-07-18-deboilerplating\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Goto the Last Fifo" />
+<meta property="og:title" content="摆脱模板" />
 <meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2017-09-13-goto-the-last-fifo/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-07-18-deboilerplating/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Goto the Last Fifo" />
+  <meta name="twitter:title" content="摆脱模板" />
   <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
@@ -265,7 +265,7 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Goto the Last Fifo</h1>
+                <h1>摆脱模板</h1>
               
               
               
@@ -280,10 +280,10 @@ if (!doNotTrack) {
   <i class="fas fa-calendar"></i>&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;2&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;115&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;235&nbsp;
   
   
     
@@ -308,34 +308,51 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。</p>
-<p>Linux 和朋友们自带的 fifos 也有同样的作用。创建一个 fifo，设置访问权限，然后开始从那个伪文件中读取。在 Perl 5 中非常容易做到。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo; open($fifo, &quot;+);
-while (&lt;$fifo&gt;) {
-    do-things-with $_;
+        <p>我同意 Damian 的观点，link:https://youtu.be/fVnmYzJfy5s?t=66[嫉妒显然是一种美德]。我们应该把自夸也加到这个名单上。如果我们从不告诉别人，那么我们可以不费吹灰之力就把事情做得很简单，这有什么好处呢？因此有了这篇博客。</p>
+<p>在研究 <code>Shell::Piping</code> 的时候，我意识到许多语言都使用操作符或操作符重载来摆脱大量的模板。请允许我夸夸其谈地说明一下。</p>
+<pre><code class="language-raku" data-lang="raku">my $find = Proc::Async.new('/usr/bin/find', '/tmp');
+my $sort = Proc::Async.new('/usr/bin/sort', :w);
+
+$find.stdout.lines.tap: -&gt; $l {
+    once await $sort.ready;
+    $sort.write: „$l\n“.encode if $l ~~ /a/;
 }
-</code></pre><p>Rakudo 对 fifos 还不是很了解，结果在读取一个没有数据的 fifo 时，它并没有阻止。经过一番摸索，我找到了一个解决这个问题的方法。</p>
-<pre><code class="language-raku" data-lang="raku">      1 use v6.c;
-      2
-      3 # `mkfifo radio-fifo-in`
-      4 # `echo &quot;foo&quot; &gt; radio-fifo-in`
-      5 # `echo &quot;foo^D&quot; &gt; radio-fifo-in`
-      6
-      7 my $fifo-in = open(„radio-fifo-in“, :r);
-      8
-      9 LABEL: loop {
-     10     react {
-     11         whenever supply { .emit for $fifo-in.lines } {
-     12             say .Str;
-     13             last LABEL if /‚^D‘/;
-     14         }
-     15     }
-     16 }
-</code></pre><p>我知道了 <code>whenever</code> 反应到 <code>last</code>，今天晚些时候会教给 docs。幸运的是 Perl 6 有了标签，所以我们可以告诉 <code>last</code> 要去哪里。</p>
-<p>更新：scovit 发现了一个简短的表达式，它与 Perl 5 的行为非常接近。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo = open(&quot;radio-fifo-in&quot;, :r);
-while defined $_ = $fifo.get { .say }
-</code></pre><p>by <a href="https://gfldex.wordpress.com/2017/09/13/goto-the-last-fifo/">gfldex</a></p>
+my $handle-sort-output = start { put $sort.stdout.lines.join(„\n“); }
+my $sort-started = $sort.start;
+{
+    await $find.start;
+    CATCH { default { } }
+}
+$sort.close-stdin;
+
+await $handle-sort-output;
+</code></pre><p>所以我们基本上是 <code>find /tmp | grep &quot;a&quot; | sort</code>。Sort 有点不寻常，因为它要等 STDIN 被关闭后才开始做任何事情。我们不使用 <code>grep</code>，而是自己做过滤。如果我们不会的话，我们可以直接掏钱，省去我们的麻烦。我找到了一个用更少的代码来做同样的事情的方法。</p>
+<pre><code class="language-raku" data-lang="raku">$find |&gt; -&gt; $l { $l ~~ /a/ ?? $l !! Nil } |&gt; $sort :quiet;
+</code></pre><p>纵观 Raku 的link:https://docs.raku.org/language/operators[运算符]，这种模式随处可见。尤其是超运算符，用一个表达式取代了一个循环和/或一连串的方法调用。下标也是如此。</p>
+<pre><code class="language-raku" data-lang="raku">my %a = flat (1..12) Z &lt;January February March April May June July August September October November December&gt;;
+say %a&lt;3 5 7&gt;;
+# OUTPUT: (March May July)
+</code></pre><p>这里后环缀运算符遍历 3、5、7，并对每个元素调用 <code>%a</code> 上的 <code>.AT-KEY</code>。结果以产生的值的列表形式返回。如果我们要动手来做，6行代码就够了。</p>
+<p><code>Proc::Async</code> 的一个实例只能运行一次。当在 Raku 中使用 shell 脚本时，这可能会成为一种负担。我需要一种方法来声明一个例程（或者行为像例程的东西），它将从相同的参数集创建对象。我的目标是以下几点。</p>
+<pre><code class="language-raku" data-lang="raku">Shell::&lt;&amp;ls&gt; = px&lt;ls -l&gt;;
+Shell::&lt;&amp;grep&gt; = px&lt;grep&gt;;
+Shell::ls |&gt; Shell::grep('a');
+</code></pre><p>如果我没有踩到一个 link:https://github.com/rakudo/rakudo/issues/3799[bug] 的话，这个是很容易实现的。所以现在 <code>px &lt;grep&gt;</code> 中需要多一个空格。当我在做这件事的时候，我在 <code>px</code> 中增加了一些错误检查。如果相关文件不在那里，也不能执行，那么尝试启动 shell 命令就没有什么意义。</p>
+<p>然而，简单的错误处理很容易添加，因为我依靠 <code>infix</code> 来构建管道。与后环缀相比，它们得到了 Rakudo 的良好支持。</p>
+<pre><code class="language-raku" data-lang="raku">multi sub handle-stderr(|) { };
+multi sub handle-stderr(0, $line) { say „ERR stream find: $line“ };
+$find |&gt; $errorer |&gt; $sort :done({ say .exitcode if .exitcode }) :stderr(&amp;handle-stderr);
+</code></pre><p>副词 <code>:stderr</code> 在 <code>Shell::Pipe</code> 中注册了一个回调，当管道成员中的任何 STDERR 的行时，该回调就会被调用。作为第一个参数，该回调接收产生该行的命令的位置。通过使用 <code>multi</code>，我们可以将正确的处理程序的选择卸载给编译器。在签名中的单个 <code>|</code> 声明一个默认的候选者，它将捕获所有其他未处理的输出到 STDERR。操作符在这里并没有什么作用。</p>
+<pre><code class="language-raku" data-lang="raku">my multi infix:«|&gt;»(Shell::Pipe:D $pipe where $pipe.pipees.tail ~~ Shell::Pipe::BlockContainer, Proc::Async:D $in, :&amp;done? = Code, :$stderr? = CodeOrChannel, Bool :$quiet    ?) {
+     ...
+     $pipe.done = &amp;done;
+     $pipe.stderr = $stder;
+     $pipe.quiet = $quiet;
+     ...
+}
+</code></pre><p>它只是将 <code>Shell::Pipe</code> 对象的一个公共属性设置为提供的回调。所以我在这里使用的模式其实很简单。使用一个 <code>infix</code> 将两个操作数变成一个中间类型。如果在该类型上使用了更多的 infix，则对其状态进行添加。副词用来触发可选行为。然后，编译器将在该中介上调用 <code>.sink</code> 来设置任何动作。正如本篇博文中的第一个例子所显示的那样，运动实际上可以是相当复杂的。然而我们可以通过定义一个自定义的操作符，将其隐藏在非常粗略的语法背后。</p>
+<p>我设法实现了任何我需要的东西，开始把整个事情变成一个模块。对该模块的自动测试将是一个小小的挑战。幸运的是，正如 jnthn 善意地link:https://colabti.org/irclogger/irclogger_log/raku?date=2020-07-14#l107[指出]的那样，Raku 很适合测试崩溃。</p>
+<p>从link:https://rakudoweekly.blog/2020/07/13/2020-28-bridges-7/[周刊]的情况来看，我们正在制作更多的博客文章，然后是前所未有的。我欢迎这个举动。我们没有理由对 Raku 谦虚。去吧，去炫耀吧!</p>
 
 
         
@@ -378,12 +395,12 @@ while defined $_ = $fifo.get { .say }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-08-20-preparations-for-your/" data-toggle="tooltip" data-placement="top" title="Preparations for Your">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2019-05-31-whatever-whenever-does/" data-toggle="tooltip" data-placement="top" title="无论何时何地">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-07-24-mimicing-quotes/" data-toggle="tooltip" data-placement="top" title="模仿引号"> &rarr;</a>
             </li>
           
         </ul>

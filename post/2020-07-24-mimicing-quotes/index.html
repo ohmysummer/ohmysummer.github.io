@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Goto the Last Fifo - Raku Programming</title>
+  <title>模仿引号 - Raku Programming</title>
   <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
-          "name": "Goto the last fifo"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-07-24-mimicing-quotes\/",
+          "name": "模仿引号"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Goto the Last Fifo",
-  "description" : "我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。",
+  "headline": "模仿引号",
+  "description" : "我对缩短代码的追求进展顺利。有一件事还是挺啰嗦的，那就是对象创建。为了让管道充满生命，我们需要 Proc::Async 的实例。",
   "inLanguage" : "zh",
-  "wordCount":  115 ,
-  "datePublished" : "2017-09-13T12:41:45",
-  "dateModified" : "2017-09-13T12:41:45",
+  "wordCount":  182 ,
+  "datePublished" : "2020-08-02T19:01:20",
+  "dateModified" : "2020-08-02T19:01:20",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2017-09-13-goto-the-last-fifo\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-07-24-mimicing-quotes\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,14 +78,14 @@
 }
 </script>
 
-<meta property="og:title" content="Goto the Last Fifo" />
+<meta property="og:title" content="模仿引号" />
 <meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2017-09-13-goto-the-last-fifo/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-07-24-mimicing-quotes/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Goto the Last Fifo" />
+  <meta name="twitter:title" content="模仿引号" />
   <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
@@ -265,7 +265,7 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Goto the Last Fifo</h1>
+                <h1>模仿引号</h1>
               
               
               
@@ -283,7 +283,7 @@ if (!doNotTrack) {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;115&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;182&nbsp;
   
   
     
@@ -308,34 +308,60 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>我一直很欣赏 sysfs 的优雅。你把一个文本写到一个文件里，然后和运行在内核空间的函数对话。只要你知道如何处理文件，你就可以改变系统的行为和重用访问控制机制，而不需要任何特殊的工具。脚本和转储（部分）系统状态是非常容易的。</p>
-<p>Linux 和朋友们自带的 fifos 也有同样的作用。创建一个 fifo，设置访问权限，然后开始从那个伪文件中读取。在 Perl 5 中非常容易做到。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo; open($fifo, &quot;+);
-while (&lt;$fifo&gt;) {
-    do-things-with $_;
+        <p>我对缩短代码的追求进展顺利。有一件事还是挺啰嗦的，那就是对象创建。为了让管道充满生命，我们需要 <code>Proc::Async</code> 的实例。</p>
+<pre><code class="language-raku" data-lang="raku">my $find = Proc::Async.new: &lt;/usr/bin/find /tmp&gt;;
+</code></pre><p>正如我前面所<a href="https://gfldex.wordpress.com/2020/07/18/deboilerplating/">展示</a>的操作符是去样板化。我们将需要那个目前要去 <code>.new</code> 的参数列表。如果能把其他的东西减少到只有两个字母，那就更好了。让我们定义一个子例程前缀来做到这一点。</p>
+<pre><code class="language-raku" data-lang="raku">sub prefix:&lt;px&gt;(List:D \l) is looser(&amp;infix:&lt;,&gt;) { say ‚Proc::Async.new: &lt;‘, l.Str, ‚&gt;‘; };
+
+px&lt;/usr/bin/find /tmp&gt;; # OUTPUT Proc::Async.new: &lt;/usr/bin/find /tmp&gt;
+px ‚/usr/bin/find‘, ‚/tmp‘; # OUTPUT Proc::Async.new: &lt;/usr/bin/find /tmp&gt;
+</code></pre><p>通过使用 <code>is looser(&amp;infix:&lt;,&gt;)</code>，我们告诉编译器创建一个 List，然后用一种有趣的语法调用名为 <code>px</code> 的子例程。通过这样做，我们模仿了用于实现 <code>qx</code> 的引号结构，并且能够留下一个空格。不过有一个问题。</p>
+<pre><code>px«/usr/bin/find /tmp»;
+
+# OUTPUT:
+# ===SORRY!=== Error while compiling /home/dex/projects /raku/lib/raku-shell-piping/EVAL_0
+# Two terms in a row
+# at /home/dex/projects/raku/lib/raku-shell-piping/EVAL_0:1
+# ------&gt; px«/usr/⏏bin/find /tmp;
+#     expecting any of:
+#         infix
+#         infix stopper
+#         statement end
+#         statement modifier
+#         statement modifier loop
+</code></pre><p>这里的 grammar 似乎很混乱。既然有一种替代方法可以用内插的方式列出引号，我将继续进行错误修复。</p>
+<p>我通过 <a href="https://github.com/rakudo/rakudo/issues/3799">R#3799</a> 的唠叨取得了成果，并提供了一个解决这个问题的办法。</p>
+<pre><code class="language-raku" data-lang="raku">class C {
+    has $.state is rw;
 }
-</code></pre><p>Rakudo 对 fifos 还不是很了解，结果在读取一个没有数据的 fifo 时，它并没有阻止。经过一番摸索，我找到了一个解决这个问题的方法。</p>
-<pre><code class="language-raku" data-lang="raku">      1 use v6.c;
-      2
-      3 # `mkfifo radio-fifo-in`
-      4 # `echo &quot;foo&quot; &gt; radio-fifo-in`
-      5 # `echo &quot;foo^D&quot; &gt; radio-fifo-in`
-      6
-      7 my $fifo-in = open(„radio-fifo-in“, :r);
-      8
-      9 LABEL: loop {
-     10     react {
-     11         whenever supply { .emit for $fifo-in.lines } {
-     12             say .Str;
-     13             last LABEL if /‚^D‘/;
-     14         }
-     15     }
-     16 }
-</code></pre><p>我知道了 <code>whenever</code> 反应到 <code>last</code>，今天晚些时候会教给 docs。幸运的是 Perl 6 有了标签，所以我们可以告诉 <code>last</code> 要去哪里。</p>
-<p>更新：scovit 发现了一个简短的表达式，它与 Perl 5 的行为非常接近。</p>
-<pre><code class="language-raku" data-lang="raku">my $fifo = open(&quot;radio-fifo-in&quot;, :r);
-while defined $_ = $fifo.get { .say }
-</code></pre><p>by <a href="https://gfldex.wordpress.com/2017/09/13/goto-the-last-fifo/">gfldex</a></p>
+
+my \px = C.new;
+
+multi postcircumfix:&lt;{ }&gt;(C:D, $s, Bool :$adverb = False) {
+    Proc::Async.new: $s;
+}
+
+multi postcircumfix:&lt;{ }&gt;(C:D, @a, Bool :$adverb = False) {
+    Proc::Async.new: @a;
+}
+
+multi infix:&lt;|»&gt;(Proc::Async:D $l, Proc::Async:D $r, :$different-adverb = &quot;non-given&quot;) {
+    dd $l;
+    dd $r;
+}
+
+px&lt;ls&gt;;
+px«ls»;
+my $a = 42;
+px&lt;ls 1 2 3 $a&gt;;
+px«ls $a»;
+px«ls $a»:adverb;
+
+px{'foo' ~ 41.succ};
+
+px«ls $a»:adverb |» (px«sort»:adverb) :different-adverb(42);
+</code></pre><p>这提供了我所需要的所有模拟 <code>qx</code> 的各种形式。C 的实例被用作编译器的占位符，它的状态可以是全局的，适用于所有对 <code>postcircumfix:&lt;{ }&gt;(C:D,...)</code> 的调用。这在以后可能会很方便。</p>
+<p><a href="https://github.com/gfldex/raku-shell-piping">Shell::Piping</a> 到目前为止已经引起了 3 个 bug 报告。我确实觉得自己是第一个踩到这个沼泽地的人。如果我没能成功，请抱着我的朋友们删除我的浏览器历史记录。</p>
 
 
         
@@ -378,12 +404,12 @@ while defined $_ = $fifo.get { .say }
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2017-08-20-preparations-for-your/" data-toggle="tooltip" data-placement="top" title="Preparations for Your">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-07-18-deboilerplating/" data-toggle="tooltip" data-placement="top" title="摆脱模板">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2017-09-15-%E5%BC%80%E5%90%AFdisqus%E8%AF%84%E8%AE%BA/" data-toggle="tooltip" data-placement="top" title="开启 Disqus 评论"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-07-27-handling-failure/" data-toggle="tooltip" data-placement="top" title="处理异常"> &rarr;</a>
             </li>
           
         </ul>
