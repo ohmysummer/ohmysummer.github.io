@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>我们可以做得更多 - Raku Programming</title>
-  <meta name="description" content="We can do more">
+  <title>tailgrep - Raku Programming</title>
+  <meta name="description" content="楽土">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-06-26-we-can-do-more\/",
-          "name": "我们可以做得更多"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-08-25-tailgrep\/",
+          "name": "Tailgrep"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "我们可以做得更多",
-  "description" : "DataKinds 继续着他对 Python 之道的教育翻译，以蝴蝶的方式。他的追求是展示如何在 Raku 中做一些在 Python 中完成的事情。一如既往，TIMTOWTDI 适用。",
+  "headline": "tailgrep",
+  "description" : "tailgrep 跟随一个文件, 过滤行, 观察 spinner.",
   "inLanguage" : "zh",
-  "wordCount":  144 ,
-  "datePublished" : "2020-06-26T19:25:49",
-  "dateModified" : "2020-06-26T19:25:49",
+  "wordCount":  445 ,
+  "datePublished" : "2020-08-26T10:02:52",
+  "dateModified" : "2020-08-26T10:02:52",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-06-26-we-can-do-more\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-08-25-tailgrep\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,15 +78,15 @@
 }
 </script>
 
-<meta property="og:title" content="我们可以做得更多" />
-<meta property="og:description" content="We can do more">
+<meta property="og:title" content="tailgrep" />
+<meta property="og:description" content="楽土">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2020-06-26-we-can-do-more/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-08-25-tailgrep/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="我们可以做得更多" />
-  <meta name="twitter:description" content="We can do more">
+  <meta name="twitter:title" content="tailgrep" />
+  <meta name="twitter:description" content="楽土">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -265,12 +265,12 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>我们可以做得更多</h1>
+                <h1>tailgrep</h1>
               
               
               
                 
-                  <h2 class="post-subheading">We can do more</h2>
+                  <h2 class="post-subheading">楽土</h2>
                 
               
               
@@ -280,10 +280,10 @@ if (!doNotTrack) {
   <i class="fas fa-calendar"></i>&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;3&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;144&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;445&nbsp;
   
   
     
@@ -308,38 +308,140 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>DataKinds <a href="https://datakinds.github.io/2020/06/25/explaining-raku-using-itertools">继续</a>着他对 Python 之道的教育翻译，以蝴蝶的方式。他的追求是展示如何在 Raku 中做一些在 Python 中完成的事情。一如既往，TIMTOWTDI <a href="https://www.reddit.com/r/rakulang/comments/hfvjjg/explaining_raku_using_pythons_itertools/">适用</a>。</p>
-<p>从这些例子可以看出，Raku 不缺少 Python 能提供的任何东西。很高兴知道这一点，但是如果你不能做更多的事情，你为什么要转换呢？所以，让我们来探索一下 Raku 能做得更好的地方。</p>
-<p>对于一个 Positional 容器，我们希望将每个偶数元素与每个不偶数元素进行切换。将元素1与元素2翻转，然后将元素3与元素4翻转，以此类推。我们还希望为不可能做到这一点的情况提供一个合理的错误信息。Rakudo 提供并使用 <code>X::Parameter</code> 命名空间。所以我们的自定义异常自然而然地就出现在这里了。</p>
-<pre><code class="language-raku" data-lang="raku">class X::Parameter::UnevenElementList is Exception {
-    method message {
-        'Positional with uneven elements in where clause.'
-    }
+        <h1 id="tailgrephttpsblogmatatuorgtailgrep"><a href="https://blog.matatu.org/tailgrep">tailgrep</a></h1>
+<h2 id="跟随一个文件-过滤行-观察-spinner">跟随一个文件, 过滤行, 观察 spinner.</h2>
+<p>我有时会使用 <code>tail -f</code> 来观察文件，还可以使用 grep 输出特定的短语。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ tail -f /var/log/nginx/access.log <span class="p">|</span> grep special
+1.2.3.4 - - <span class="o">[</span>29/Aug/2018 -0400<span class="o">]</span> <span class="s2">&#34;GET /special&#34;</span>…
+█
+</code></pre></div><p>例如，我可能会在 nginx 日志文件中查找 URL。我可能会启动一个屏幕会话，将输出结果发送到日志中，然后在一个长时间运行的命令中过滤短语。或者使用我最近了解到的脚本来生成 shell 会话的实时日志。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ screen -L
+$ script -F /tmp/out
+$ <span class="nb">echo</span> <span class="s2">&#34;Read me back the last line&#34;</span>
+$ tail -f screenlog.0 <span class="p">|</span> grep Read
+Read me back the last line
+█
+</code></pre></div><p>在一个完美的世界里，这就是我所需要的一切。但有时事情会出错。 Web 服务器停止了。长时间运行的命令被杀死。而 <code>tail -f | grep</code> 并不能帮我意识到输出已经停止。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ tail -f /tmp/out <span class="p">|</span> grep Read
+Read me back the last line
+█
+</code></pre></div><p>如果能有一个旋转器来显示输出<a href="https://blog.matatu.org/spinner.gif">仍在</a>产生, 那就更好了。</p>
+<p>如果在没有输出的情况下，旋转器停止旋转也会很好。</p>
+<pre><code>/
+</code></pre><p>所以，这是有一个小程序来实现这一目标。我把它叫做 <code>tailgrep</code>。</p>
+<p>我没有重新实现 <strong>tail</strong> - 我懒得考虑打开并搜索文件的结尾 - 我只是制作了一个 <strong>Proc::Async</strong> 对象然后看标准输出。</p>
+<p>有一些微妙之处 - <strong>whenever</strong> 看起来像一个循环, 但不是。它设置了回调。而 <strong>react</strong> 声明了一个事件循环。 <strong>start</strong> 把它放在一个单独的线程中。</p>
+<p>另外，你还得把顺序搞对。先创建 <strong>Proc::Async</strong> 对象，然后调用 <code>.stdout</code> 来创建一个 <strong>Supply</strong>。使用 <strong>whenever</strong> 在事件循环上设置回调。然后启动(<strong>start</strong>)这个过程。</p>
+<p>它返回一个你可以等待(<strong>await</strong>)的 <strong>Promise</strong>。</p>
+<p>还有什么。</p>
+<p><code>shell &quot;tput 'civis'&quot;; </code> 和 cnorm）使光标不可见(或可见)。 <strong>signal</strong>（SIGINT）是每当按下 <code>^C</code> 时调用的另一个 <strong>Supply</strong>（即接收到 sigint 信号）。</p>
+<p><code>&lt; &gt;</code> 将字符串拆分为数组。 <code>&lt;&lt; ... &gt;&gt;</code> 进行插值。 <code>$++</code> 维护一个状态变量并(后)增加它。</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
+ 
+sub spinner() {
+  &lt;\ - | - / -&gt;[$++ % 6]
 }
-</code></pre><p>现在，我们需要一个 sub，在一个位置参数中取一个 Positional，并对其进行类型检查。我们将把这个类型检查移到一个名字恰当的 sub 中。如果没有必要，我们不需要降低可读性。在 <code>where</code> 子句中使用 <code>Callable</code> 容器在文档中没有。我稍后会检查 <a href="https://github.com/raku/roast#readme">Roast</a>，如果需要的话，我会提交一个问题。</p>
-<pre><code class="language-raku" data-lang="raku">sub swap-each-pair(@a is raw where &amp;check-for-even-elements ) {
-    sub check-for-even-elements {
-        .elems %% 2
-        || X::Parameter::UnevenElementList.new.throw
+ 
+sub MAIN($expr, $filename) {
+  shell &quot;tput 'civis'&quot;;
+  my $proc = Proc::Async.new:
+    &lt;&lt;tail -f $filename&gt;&gt;;
+  my $out = $proc.stdout;
+  start react {
+    whenever $out.lines.grep( / &quot;$expr&quot; / ) {
+      .say
     }
-
-    for @a &lt;-&gt; $a, $b {
-        ($a, $b) = ($b, $a)
+    whenever $out.lines {
+      print spinner() ~ &quot;\r&quot;;
     }
+    whenever signal(SIGINT) {
+      shell 'tput cnorm';
+      exit;
+    }
+  }
+  await $proc.start;
 }
+</code></pre><p>还有更好的：</p>
+<pre><code class="language-raku" data-lang="raku">$ tailgrep special /var/log/nginx/access.log
+1.2.3.4 - - [29/Aug/2018 -0400] &quot;GET /special&quot;…
+</code></pre><p><img src="https://blog.matatu.org/spinner.gif" alt="img"></p>
+<p>哦，对了，<strong>MAIN($expr，$filename)</strong> 声明了参数和命令行参数，并且还生成一个使用信息，当你使用 <strong>-h</strong> 添加启动程序时, 这个信息就会显示出来。</p>
+<pre><code class="language-raku" data-lang="raku">$ ./tailgrep -h
+Usage:
+  ./tailgrep &lt;expr&gt; &lt;filename&gt;
+</code></pre><p>对于 25 行代码来说还不错，但让我们再多做一点。</p>
+<p>首先，我想确保文件已存在。要做到这一点，我在 <code>$filename</code> 参数上添加了一个约束。</p>
+<pre><code class="language-raku" data-lang="raku">sub MAIN($expr, $filename where *.IO.e) {
+</code></pre><p>如果几秒钟内没有输出，我们也写一条消息。</p>
+<p>我们再做一个 <code>Supply</code>, 每秒钟调用一个小的例程来检查。</p>
+<pre><code class="language-raku" data-lang="raku">my $last-seen = DateTime.now;
+...
+  whenever $out.lines {
+    print spinner() ~ &quot;\r&quot;;
+    $last-seen = DateTime.now;
+  }
+  whenever Supply.interval(1) {
+    if DateTime.now - $last-seen &gt; $wait {
+      say &quot;--no lines for $wait seconds--&quot;;
+    }
+  }
+</code></pre><p>我们所说的&quot;几秒钟&quot;指的是命令行上给出的任何数值，但是默认为 2。</p>
+<pre><code class="language-raku" data-lang="raku">sub MAIN(
+  $expr,                   #= what to search for
+  $filename where *.IO.e,  #= a filename to grep
+  Numeric :$wait = 2,      #= when to notify
+) {
+</code></pre><p>我有没有说过, 附加在参数上的内联注释会成为帮助输出中的消息?</p>
+<p>或者说命名的参数(以 <code>:</code> 开头的参数)会变成命名的命令行参数？</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">./tailgrep -h
+Usage:
+  ./tailgrep <span class="o">[</span>--wait<span class="o">=</span>&lt;Numeric&gt;<span class="o">]</span> &lt;expr&gt; &lt;filename&gt;
 
-my @l = 1..6;
-@l.&amp;swap-each-pair;
-say @l;
-</code></pre><p>我把 <code>where</code> 子句放到 <code>MAIN</code> 子句中，以避免污染我的脚本的全局命名空间。在一个模块中，我们可以把它放在外面，然后重复使用。参数 <code>Array</code> 被标记为 <code>is raw</code>。这有点多余，因为无论如何，<code>@-sigiled</code> 的参数都是按引用调用的。通过这样做，我明确了这个子是要做一个突变器的。如果你是一个 Haskell 的爱好者，你可能要看开了。<code>&lt;-&gt;</code> 指针对所有的参数应用的 <code>is rw</code>。这使得我们可以用一个解构赋值来修改 <code>@a</code> 的元素。</p>
-<p>为 <code>where</code> 子句 sub 使用一个好的名字，并抛出一个异常，我们会得到一个有用的错误信息与堆栈跟踪。我们必须这样做，否则就会害怕 <a href="https://github.com/rakudo/rakudo/issues?q=is%3Aissue+is%3Aopen+label%3ALTA">LTA 标签</a>。</p>
-<pre><code>Positional with uneven elements in where clause.
-  in sub check-for-even-elements at /home/dex/tmp/tmp.raku line 28
-  in sub swap-each-pair at /home/dex/tmp/tmp.raku line 26
-  in block &lt;unit&gt; at /home/dex/tmp/tmp.raku line 38
-</code></pre><p>这两种语言都是后期绑定的，没有严格的类型检查。在一个庞大的代码库中，这可能会咬伤你。在这种情况下，在战略点上进行类型和值检查，并提供错误信息，实际上有助于调试，是非常有帮助的。</p>
-<p>Raku 得到了很多功能，使模块作者的生活变得更轻松，他们想让模块用户的生活更轻松。也许有人会认为，语言设计者以前写过 CPAN 模块。</p>
-<p>by <a href="https://gfldex.wordpress.com/2020/06/26/we-can-do-more/">gfldex</a>.</p>
+    &lt;expr&gt;              what to search <span class="k">for</span>
+    &lt;filename&gt;          a filename to grep
+    --wait<span class="o">=</span>&lt;Numeric&gt;    when to notify
+</code></pre></div><p>这就是我的想法，但为了好玩，我还决定寻找一些更好的 unicode spinners，并添加一些颜色。对于这些功能，我需要使用一些可能需要单独安装的模块。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">zef install JSON::Fast Terminal::ANSIColor
+</code></pre></div><p>所以，我在<a href="https://github.com/sindresorhus/cli-spinners">这里</a>找到了一些 spinners，带有一个很好的 JSON 文件，所以我们只需下载它并将其存储在本地。</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/e nü
+use JSON::Fast;
+use Terminal::ANSIColor;
+ 
+my @frames = &lt; / - | - \ - &gt;;
+sub spinner {
+  @frames[$++ % +@frames];
+}
+ 
+sub download-spinners {
+    my $store = &quot;{ %*ENV&lt;HOME&gt; }/.spinners.json&quot;;
+    unless $store.IO.e {
+        say &quot;downloading spinners&quot;;
+        my $url='https://raw.githubusercontent.com'
+          ~ '/sindresorhus/cli-spinners'
+          ~ '/HEAD/spinners.json';
+        shell &quot;curl -s $url &gt; $store&quot;;
+    }
+    from-json( $store.IO.slurp );
+}
+</code></pre><p>另外多重分派也很方便 - 另一个分派候选者的命名布尔参数可以显示所有 spinners 的列表。</p>
+<pre><code class="language-raku" data-lang="raku">multi MAIN(
+    Bool :$list-spinners!, #= list spinners
+) {
+    say download-spinners.keys.sort.join(&quot;\t&quot;);
+}
+...
+</code></pre><p><a href="https://gist.github.com/bduggan/7de0d4d8767fd4e067752df1249542f5">这里</a>是带有花哨的 unicode spinners 的最终程序。<a href="https://gist.github.com/bduggan/8c5c2dba39cfdb52ff1f1598b28b11b5">这里</a> 是一个不那么花哨的程序(没有依赖)。</p>
+<p>如果你想尝试一下，这里有一些方便的网址供 curling。</p>
+<pre><code class="language-raku" data-lang="raku">curl -L https://git.io/fA8MV &gt; ~/bin/tg-fancy
+curl -L https://git.io/fA8MM &gt; ~/bin/tailgrep
+</code></pre><p>执行 <code>chmod +x</code>, 完了。</p>
+<p><img src="https://blog.matatu.org/fancy2.gif" alt="img"></p>
+<h2 id="结论">结论</h2>
+<ul>
+<li>混合和匹配你的 CLI 实用工具以获得乐趣，以改善你的生活质量。</li>
+<li>线程、Promise 和 Supplies 是异步编程的方便工具。</li>
+<li>Spinners 不只是用于烦躁不安。有时他们很有用。</li>
+</ul>
 
 
         
@@ -362,8 +464,6 @@ say @l;
                   <ul>
                 
                 
-                    <li><a href="/post/2020-08-25-tailgrep/">tailgrep</a></li>
-                
                     <li><a href="/post/2020-08-25-a-bettter-terminal-automator/">一个更好的终端自动装置</a></li>
                 
                     <li><a href="/post/2020-08-17-defined-or-dynvar/">Defined or Dynvar</a></li>
@@ -371,6 +471,8 @@ say @l;
                     <li><a href="/post/2020-08-17-guarding-dynamics/">Guarding Dynamics</a></li>
                 
                     <li><a href="/post/2020-08-17-whereceptions/">Whereceptions</a></li>
+                
+                    <li><a href="/post/2020-08-01-dropin-replacement/">Dropin Replacement</a></li>
                 
               </ul>
 
@@ -382,13 +484,9 @@ say @l;
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2020-06-24-a-raku-riddle/" data-toggle="tooltip" data-placement="top" title="Raku 谜语">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-08-25-a-bettter-terminal-automator/" data-toggle="tooltip" data-placement="top" title="一个更好的终端自动装置">&larr; </a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://ohmysummer.github.io/post/2020-06-30-sequence/" data-toggle="tooltip" data-placement="top" title="数列"> &rarr;</a>
-            </li>
           
         </ul>
       
