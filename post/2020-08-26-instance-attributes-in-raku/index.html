@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Raku 中的实例属性 - Raku Programming</title>
+  <meta name="description" content="楽土">
+  <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Raku Programming",
+    
+    "url": "https:\/\/ohmysummer.github.io\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "https:\/\/ohmysummer.github.io\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/ohmysummer.github.io\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-08-26-instance-attributes-in-raku\/",
+          "name": "Raku 中的实例属性"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "焉知非鱼"
+  },
+  "headline": "Raku 中的实例属性",
+  "description" : "Raku 中的实例属性 在 Raku 中, 默认情况下, 一个对象的方法是完全可以访问的, 但它的数据（作为属性）不能在类外直接访问, 除非明确指定。为了从外部读取、写入或两者都能访问数据, 你必须以某种方式将其公开。你允许对一个对象的数据进行何种级别的访问, 主要取决于你声明它的属性的方式。",
+  "inLanguage" : "zh",
+  "wordCount":  826 ,
+  "datePublished" : "2020-08-26T22:45:42",
+  "dateModified" : "2020-08-26T22:45:42",
+  "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
+  "keywords" : [ "rakulang" ],
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-08-26-instance-attributes-in-raku\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/ohmysummer.github.io\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="Raku 中的实例属性" />
+<meta property="og:description" content="楽土">
+<meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-08-26-instance-attributes-in-raku/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Raku Programming" />
+
+  <meta name="twitter:title" content="Raku 中的实例属性" />
+  <meta name="twitter:description" content="楽土">
+  <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
+  <meta name="twitter:card" content="summary" />
+  <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.63.2" />
+  <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://ohmysummer.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://ohmysummer.github.io/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'ohmycloudy', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://ohmysummer.github.io/">Raku Programming</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="博客" href="/">博客</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="归档" href="/categories">归档</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="关于" href="/page/about/">关于</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="标签" href="/tags">标签</a>
+            </li>
+          
+        
+
+        
+
+        
+          <li>
+            <a href="#modalSearch" data-toggle="modal" data-target="#modalSearch" style="outline: none;">
+              <span class="hidden-sm hidden-md hidden-lg"></span> <span id="searchGlyph" class="glyphicon glyphicon-search"></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Raku Programming" href="https://ohmysummer.github.io/">
+            <img class="avatar-img" src="https://ohmysummer.github.io/img/rakudo.png" alt="Raku Programming" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+  <div id="modalSearch" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <gcse:search></gcse:search>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Raku 中的实例属性</h1>
+              
+              
+              
+                
+                  <h2 class="post-subheading">楽土</h2>
+                
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;4&nbsp;
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;826&nbsp;
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;焉知非鱼
+    
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="raku-中的实例属性">Raku 中的实例属性</h2>
+<p>在 Raku 中, 默认情况下, 一个对象的方法是完全可以访问的, 但它的数据（作为属性）不能在类外直接访问, 除非明确指定。为了从外部读取、写入或两者都能访问数据, 你必须以某种方式将其公开。你允许对一个对象的数据进行何种级别的访问, 主要取决于你声明它的属性的方式。</p>
+<h3 id="-twigil"><code>$!</code> twigil</h3>
+<p>让我们从一个简单的 Raku 类定义的例子开始。</p>
+<pre><code class="language-raku" data-lang="raku"># person01.raku
+class Person {
+    has $!name;
+}
+
+my $john = Person.new(name =&gt; 'Suth'); # 默认地, 传递给 new
+                                       # 的参数必须是命名的(键值对儿)
+put $john.name; #=&gt; Error: No such method 'name' for invocant
+                # of type 'Person'.
+</code></pre><p>在这个例子中, 你既不能通过新的构造函数设置一个属性的值（例如, john 的名字）, 也不能检索它, 因为它根本没有被设置过。用<code>$!</code> twigil 声明的属性是私有的, 只能在类内通过! 这意味着即使是默认的 <code>new</code> 构造函数也不能在对象构造过程中用来设置一个显式的 <code>$!</code>-declared属性。</p>
+<p>一个直接的解决方案是通过为我们的类实现一个 <a href="https://docs.perl6.org/routine/TWEAK"><code>TWEAK</code></a> 子方法来自己处理属性初始化。在 Raku 中, 在对象构造的不同阶段会调用多个例程, <code>TWEAK</code> 是其中最后一个。我不会去细说细节, 但简而言之, <code>TWEAK</code> 子方法允许你根据其他属性或实例变量的值为实例变量赋值。</p>
+<pre><code class="language-raku" data-lang="raku"># person02.raku
+class Person {
+    has $!name;
+
+    submethod TWEAK( :$name ) {
+        $!name = $name;
+    }
+
+    =begin comment
+    Our TWEAK implementation involves simply setting up the attribute without 
+    any validation/modification of the argument so the previous submethod
+    could be reduced to:
+
+    submethod TWEAK( :$!name ) { }
+
+    with the attribute being set up right in the TWEAK's signature. 
+    :$!name is the colon-pair version of $!name =&gt; $name.
+    =end comment
+
+}
+
+my $john = Person.new(name =&gt; 'John');
+put $john.name; #=&gt; Error: No such method 'name' for invocant
+                # of type 'Person'.
+</code></pre><p>在这里, 我们已经创建了一个 <code>TWEAK</code> 子方法, 它接受一个命名参数（例如：<code>:$name</code>）, 并使用它来设置 <code>$!name</code> 属性。在我们到达这一点之前, 构造函数（在本例中为 <code>new</code>）将其命名参数提供给 <a href="https://docs.perl6.org/routine/bless"><code>bless</code></a> 方法, 该方法建立对象并将其传递给 <a href="https://docs.perl6.org/routine/BUILD"><code>BUILD</code></a> 子方法。之后, <code>BUILD</code> 将返回对象, 或者将其转到下一个也是最后一个阶段, 即 <code>TWEAK</code> 子方法, 如果它存在的话。</p>
+<p>此时, 我们应该能够在对象构造时正确设置 <code>$!name</code> 属性, 但我们还远不能从类外访问它。我们必须创建一个 setter (或 getter）方法来实现这一目的。</p>
+<pre><code class="language-raku" data-lang="raku"># person03.raku
+class Person {
+    has $!name;
+    
+    submethod TWEAK( :$name ) {
+        $!name = $name;
+    }
+    
+    # Our accessor method
+    method get-name {
+        $!name
+    }
+}
+
+my $john = Person.new(name =&gt; 'John');
+put $john.get-name; #=&gt; «John␤»
+</code></pre><p>最后, 我们已经能够:</p>
+<ul>
+<li>
+<p>通过 <code>TWEAK</code> 子方法在对象构造过程中设置一个属性, 并自己处理属性的初始化。诚然, 这只是一个简单的演示, 但在对象构造时使用 <code>TWEAK</code> 对属性进行更复杂的操作也是同样的步骤。</p>
+</li>
+<li>
+<p>在通过方法构造对象后, 检索属性的值。</p>
+</li>
+</ul>
+<p>这是一个有教育意义的、有深度的练习。然而, 我们经历这一切的主要原因是为了展示 Raku 通过使用下一节中介绍的构造, 为你免费提供了多少东西。让我们从 <code>$.twigil</code> 开始。</p>
+<h3 id="-twigil-1"><code>$.</code> twigil</h3>
+<p>用 <code>$.</code> twigil 声明一个属性主要有两件事。</p>
+<ul>
+<li>
+<p>允许我们在构建对象的时候用 <code>new</code> 设置属性, 以及</p>
+</li>
+<li>
+<p>允许我们通过在属性名称后创建的方法从类外访问该属性。这个访问者方法是由 Raku 自动创建的。</p>
+</li>
+</ul>
+<p>让我们看看我们更新的例子。</p>
+<pre><code class="language-raku" data-lang="raku"># person04.raku
+class Person {
+    has $.name;
+}
+
+my $alina = Person.new(name =&gt; 'Alina');
+
+# The method is named after its attribute
+put $alina.name; #=&gt; «Alina␤»
+</code></pre><p>正如你所看到的, 对于这样一个简单的类, 我们去掉了所有不必要的模板。值得注意的是, 属性仍然必须用 <code>!</code> 来访问。我们可以把 <code>$.twigil</code> 看作是同时创建了一个私有属性（<code>$!attr</code>）和一个只读访问器方法（<code>attr()</code>）。事实上, 我们可以在类内部用它的访问器访问一个属性的值, 但我们不会直接访问属性, 而是通过方法调用。因此, 根据你的目标, 你可能会倾向于直接访问一个属性, 或者如果存在的话, 在类内部通过它的访问器访问。</p>
+<h3 id="is-rw-trait"><code>is rw</code> trait</h3>
+<p>在 Raku 中, <em>trait</em> 被定义为附加在对象和类上的编译器钩子, 用于修改它们的默认行为、功能或表示。</p>
+<p>为了简单起见, 我们只限于修改对象的属性, 但如果你想了解更多关于不同的 trait 以及如何实现你自己的 trait, 请前往<a href="https://docs.perl6.org/language/traits">文档</a>。</p>
+<p>假设我们不仅想从一个对象中读取数据, 而且还想改变它。像往常一样, 一个显而易见的解决方案是声明一个允许我们这样做的方法。这种改变对象属性的方法被称为 setter, 它通常会接受一个参数, 并将其应用于一个特定的属性。</p>
+<pre><code class="language-raku" data-lang="raku"># person05.raku
+class Person {
+    has $.name;
+
+    # Set the $!name with the provided argument
+    method set-name( $name ) {
+        $!name = $name
+    }
+}
+
+my $p1 = Person.new(name =&gt; 'Joe');
+put $p1.name; #=&gt; «Joe␤»
+
+# Changing the person's name
+$p1.set-name('Alua');
+
+put $p1.name; #=&gt; «Alua␤»
+</code></pre><p>不过, 按照 Raku 的标准, 这还是太辛苦了。Raku 希望我们快乐, 最重要的是, 懒惰。因此, 它为我们提供了 <code>is rw</code> 特质来解决这个特殊的问题。这个特性将一个属性标记为读/写, 而不是默认的 <code>is readonly</code> 特性。当 <code>is rw</code> 被应用到属性时, 该属性的默认访问器（由 <code>$.</code> 提供）将返回一个可写的值。现在让我们相应地更新我们的类。</p>
+<pre><code class="language-raku" data-lang="raku"># person06.raku
+class Person {
+    has $.name is rw;
+}
+
+my $p1 = Person.new(name =&gt; 'Jana');
+put $p1.name; #=&gt; «Jana␤»
+
+# Changing the person's name
+$p1.name = 'Alua';
+
+put $p1.name; #=&gt; «Alua␤»
+</code></pre><p>就这样, 我们摆脱了我们的自定义设置器。</p>
+<p>请记住, 返回的是一个可写的值, 因此语法从使用方法调用(例如, <code>$p1.name('Alua')</code>)变为通过方法调用直接分配给对象的属性(例如, <code>$p1.name = 'Alua'</code>)。</p>
+<h3 id="更多特性">更多特性</h3>
+<h4 id="is-default-trait"><code>is default</code> trait</h4>
+<p>默认情况下, 将 <code>Nil</code> 分配给一个读/写属性会将其设置为 <code>Any</code>。然而, 我们可能有兴趣使用一个更有意义的默认值。例如, 对于我们的 <code>Person</code> 类, 我们可以使用 <code>John</code> 作为这个人的默认名。</p>
+<pre><code class="language-raku" data-lang="raku"># person07.raku
+class Person {
+    has $.name is default('John') is rw;
+}
+
+# Attribute not set at construction so it gets its default value
+my $p1 = Person.new();
+put $p1.name; #=&gt; «John␤»
+
+# Setting the attribute
+my $p2 = Person.new(name =&gt; 'Ruth');
+put $p2.name; #=&gt; «Ruth␤»
+
+# Reverting it back to its default value
+$p2.name = Nil;
+put $p2.name; #=&gt; «John␤»
+</code></pre><h4 id="is-required-trait"><code>is required</code> trait</h4>
+<p>正如我们在前面的例子中看到的那样（例如, <code>my $p1 = Person.new();</code>）, 我们不需要在对象构造过程中立即提供属性的值。与你想象的不同, 这并不是因为我们使用了 <code>is default</code> 特性。事实上, 属性不需要在对象构造过程中进行设置, 因为默认的 <code>new</code> 构造函数期待命名参数, 而且它们默认是可选的。当然, 如果没有提供任何属性, 属性就不会有它们的值, 但编译器不会因为你不提供它们而大喊大叫。这时 <code>is required</code> 特性就派上用场了, 它将在实例化对象时标记该属性要用一个值来填充；如果没有这样做, 就会导致运行时错误。</p>
+<pre><code class="language-raku" data-lang="raku"># person08.raku
+class Person {
+    has $.name is required;
+}
+
+# This works fine...
+my $p1 = Person.new(name =&gt; 'Rob');
+$p1.name; #=&gt; «Rob␤»
+
+my $p2 = Person.new(); # Runtime error: The attribute '$!name' is required,
+                       # but you did not provide a value for it.
+</code></pre><p>正如你所想的那样, 如果将 <code>is default</code> 和 <code>is required</code> 这两个特性连在一起使用, 就会导致 <code>is default</code> 不生效, 因为这样做意味着属性有一个默认值, 因此, 在构建对象时不需要初始化它。</p>
+<h4 id="is-deprecated-trait"><code>is DEPRECATED</code> trait</h4>
+<p>在某些情况下, 有些属性可能对客户端代码不再有用, 但你可能出于某种原因想保留它们。在 Raku 中, 你可以做到这一点, 并且仍然让客户端知道这些属性已经被废弃了。为此, 你可以使用 <code>is DEPRECATED</code> trait 来标记一个属性为废弃的。你也可以提供一个消息告诉客户端应该使用什么来代替。让我们为我们的 <code>Person</code> 类添加更多具体的属性, 并阻止客户端使用 <code>$.name</code> 属性。</p>
+<pre><code class="language-raku" data-lang="raku"># person09.raku
+class Person {
+    has $.name is DEPRECATED(&quot;'firstname' and 'lastname'&quot;);
+    has $.firstname is required;
+    has $.lastname is required;
+}
+
+# Initialization won't trigger the warning...
+my $rf = Person.new(
+    name      =&gt; 'Richard Feynman',
+    firstname =&gt; 'Richard',
+    lastname  =&gt; 'Feynman',
+);
+
+# ...the usage will do, which will send it to STDERR.
+put $rf.name;
+</code></pre><p>程序运行后, 打印出以下信息。</p>
+<pre><code>Richard Feynman
+Saw 1 occurrence of deprecated code.
+================================================================================
+Method name (from Person) seen at:
+  person09.raku, line 16
+Please use 'firstname' and 'lastname' instead.
+--------------------------------------------------------------------------------
+Please contact the author to have these occurrences of deprecated code
+adapted, so that this message will disappear!
+</code></pre><h3 id="私有方法">私有方法</h3>
+<p>在一开始, 我们提到 Raku 对象的方法是公开的。然而, 我们也可以将方法声明为私有方法, 在这种情况下, 它们只能在类中被调用。私有方法的声明就像一个公共方法一样, 但是方法的名称是用 <code>!</code> 前缀的。它们对于将任务分解成更小的子任务, 并将它们的操作限制在类内的其他方法上是非常有用的。让我们用一个不同的例子来展示它们。</p>
+<pre><code class="language-raku" data-lang="raku"># sodamach.raku
+class SodaMachine { 
+    has Int $.coke-cans;
+    has Int $.sprite-cans;
+    has Int $.fanta-cans;
+    
+    has $!cost-per-can = 1.15;
+
+    # Public method body using the private method
+    method get-total-cost {
+       self!get-total-cans * $!cost-per-can;
+    }
+
+    # Notice the ! in front of the method
+    method !get-total-cans {
+        $!coke-cans + $!sprite-cans + $!fanta-cans;
+    }
+}
+
+my SodaMachine $machine .= new:
+    coke-cans   =&gt; 5,
+    sprite-cans =&gt; 12,
+    fanta-cans  =&gt; 8
+;
+
+put $machine.get-total-cost; #=&gt; 28.75
+
+put $machine.get-total-cans; #=&gt; Error: No such method 'get-total-cans'
+                             # for invocant of type 'SodaMachine'.
+</code></pre><p>正如你所看到的, 私有方法在类内部的调用对象（<code>self</code>）上用 <code>!</code> 来调用。</p>
+<h3 id="结束语">结束语</h3>
+<p>正如我们在这篇文章中所证明的那样, Raku 为你提供了几种声明属性的方式, 并根据你的特定需求来定制它们。从对外界隐藏一切的对象到对数据更加慈善的对象, 在 Raku 中, 一切都可以被接受。</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://ohmysummer.github.io//tags/rakulang/">rakulang</a>&nbsp;
+            
+          </div>
+        
+
+        
+
+        
+          
+            
+          
+
+          
+                  <h4 class="see-also"></h4>
+                  <ul>
+                
+                
+                    <li><a href="/post/2020-08-26-to-be-called-as-a-sub-or-method/">要作为子程序调用还是作为方法调用</a></li>
+                
+                    <li><a href="/post/2020-08-26-containers-in-raku/">Containers in Raku</a></li>
+                
+                    <li><a href="/post/2020-08-25-tailgrep/">tailgrep</a></li>
+                
+                    <li><a href="/post/2020-08-25-a-bettter-terminal-automator/">一个更好的终端自动装置</a></li>
+                
+                    <li><a href="/post/2020-08-17-defined-or-dynvar/">Defined or Dynvar</a></li>
+                
+              </ul>
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://ohmysummer.github.io/post/2020-08-26-to-be-called-as-a-sub-or-method/" data-toggle="tooltip" data-placement="top" title="要作为子程序调用还是作为方法调用">&larr; </a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "ohmysummer" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+          
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+      
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+          
+          <li>
+            <a href="" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="https://ohmysummer.github.io/">焉知非鱼</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2020
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://ohmysummer.github.io/">Raku Programming</a>
+            with <span style="color: red;">❤</span>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="https://ohmysummer.github.io/js/main.js"></script>
+<script src="https://ohmysummer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://ohmysummer.github.io/js/load-photoswipe.js"></script>
+
+
+
+<script>
+  (function() {
+    var cx = '009072066163920799339:qwme9vkotxk';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+
+
+
+
+
+
+
+    
+  </body>
+</html>
+
