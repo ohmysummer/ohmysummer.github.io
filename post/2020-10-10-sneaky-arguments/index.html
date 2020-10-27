@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>沉默不语 - Raku Programming</title>
-  <meta name="description" content="Ungolden silence">
+  <title>鬼鬼祟祟的参数 - Raku Programming</title>
+  <meta name="description" content="Sneaky Arguments">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-05-27-ungolden-silence\/",
-          "name": "沉默不语"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-10-10-sneaky-arguments\/",
+          "name": "鬼鬼祟祟的参数"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "沉默不语",
-  "description" : "在我寻求用 Raku 替换 Bash 的过程中，我尝试使用 qx，但失败了。对我来说，它没有工作，因为 qx 失败的方式是错误的。在底层，Rakudo 通过一些语法魔法来实现它，在 core.",
+  "headline": "鬼鬼祟祟的参数",
+  "description" : "在玩 .",
   "inLanguage" : "zh",
-  "wordCount":  211 ,
-  "datePublished" : "2020-05-27T17:29:03",
-  "dateModified" : "2020-05-27T17:29:03",
+  "wordCount":  226 ,
+  "datePublished" : "2020-10-27T21:22:31",
+  "dateModified" : "2020-10-27T21:22:31",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-05-27-ungolden-silence\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-10-10-sneaky-arguments\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,15 +78,15 @@
 }
 </script>
 
-<meta property="og:title" content="沉默不语" />
-<meta property="og:description" content="Ungolden silence">
+<meta property="og:title" content="鬼鬼祟祟的参数" />
+<meta property="og:description" content="Sneaky Arguments">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2020-05-27-ungolden-silence/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-10-10-sneaky-arguments/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="沉默不语" />
-  <meta name="twitter:description" content="Ungolden silence">
+  <meta name="twitter:title" content="鬼鬼祟祟的参数" />
+  <meta name="twitter:description" content="Sneaky Arguments">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -265,12 +265,12 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>沉默不语</h1>
+                <h1>鬼鬼祟祟的参数</h1>
               
               
               
                 
-                  <h2 class="post-subheading">Ungolden silence</h2>
+                  <h2 class="post-subheading">Sneaky Arguments</h2>
                 
               
               
@@ -280,10 +280,10 @@ if (!doNotTrack) {
   <i class="fas fa-calendar"></i>&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;2&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;211&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;226&nbsp;
   
   
     
@@ -308,47 +308,80 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>在我寻求用 Raku 替换 Bash 的过程中，我尝试使用 <code>qx</code>，但失败了。对我来说，它没有工作，因为 <code>qx</code> 失败的方式是错误的。在底层，Rakudo 通过一些语法魔法来实现它，在 <a href="https://github.com/rakudo/rakudo/blob/master/src/core.c/Proc.pm6#L258">core.c/Proc.pm6</a> 中转发到 <code>qx</code>，如下所示。</p>
-<pre><code class="language-raku" data-lang="raku">sub QX($cmd, :$cwd = $*CWD, :$env) is implementation-detail {
-    my $proc := Proc.new(:out);
-    $proc.shell($cmd, :$cwd, :$env);
-    $proc.out.slurp(:close) // Failure.new(&quot;Unable to read from '$cmd'&quot;)
-}
-</code></pre><p>这将返回一个空的 Str，一个非空的 Str 或一个 Failure 对象。所以这可以是 defined but False, defined but True 或 undefined but False。当 shell 启动的 shell 意外地关闭了它的 STDOUT 描述符时，我们会得到未定义的情况。我们可以得到一些即使命令成功也是 False 的东西，也可以得到一些如果命令失败也是 True 的东西。在 Unix 上，沉默是金。除非你提供 <code>-v</code> 或 <code>--verbose</code>，否则任何不需要输出的命令都不应该输出。如果有什么问题，一个非零的退出代码会被返回，如果可能的话，一些东西会被写入 STDERR。<code>QX</code> 会忽略退出代码，STDERR 会转发到 <code>$*ERR</code>。所以我们几乎没有机会在事后发现它。</p>
-<p>这种行为会造成难以发现的错误。让我们做一个错别字。</p>
-<pre><code class="language-raku" data-lang="raku">my $s = qx!True!;
-say [$s.?defined, $s.?Bool, $s.?exitcode];
-dd $not-proc;
-</code></pre><div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">/bin/sh: 1: True: not found
-<span class="o">[</span>True False <span class="o">(</span>Any<span class="o">)</span><span class="o">]</span>
-Str <span class="nv">$s</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
-</code></pre></div><p>使用 defined-or 操作符在这里没有帮助。<code>try</code> 也没有用。有人使用 <code>qx</code> 和 <code>try</code> 吗？</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">dex@dexhome:~/projects/raku/rakudo/src$ ack <span class="s1">&#39;QX&#39;</span>
-core.c/Process.pm6
-82: once <span class="k">if</span> !Rakudo::Internals.IS-WIN <span class="o">&amp;&amp;</span> try <span class="o">{</span> qx/id/ <span class="o">}</span> -&gt; <span class="nv">$id</span> <span class="o">{</span>
-</code></pre></div><p>在 Windows 上，这实际上可能会失败，因为预期。在任何其他平台上，我们需要一些合理的东西。</p>
-<pre><code class="language-raku" data-lang="raku">sub sane-QX($cmd, :$cwd = $*CWD, :$env, :$quiet) {
-    my $proc := Proc.new(:out, :err);
-    $proc.shell($cmd, :$cwd, :$env);
-    my $stdout = $proc.out.slurp(:close) // Failure.new(&quot;Unable to read from '$cmd'&quot;);
-    my $stderr = $proc.err.slurp(:close);
-    $*ERR.print: $stderr unless $quiet;
-    if $proc.exitcode != 0 {
-        return &quot;&quot; but role QXFail {
-            method defined { False }
-            method exitcode { $proc.exitcode }
-            method err { $stderr }
-        }
+        <p>在玩 <code>.WHY</code> 的时候，我踏上了一个 ENODOC。<a href="https://docs.raku.org/type/Method">方法</a>指的是<a href="https://docs.raku.org/type/Signature">签名</a>。两者都没有提到方法的默认签名。<a href="https://docs.raku.org/language/functions#index-entry-$PERCENT_SIGN__">自动签名</a>的文档中没有提到 <code>%_</code> 总是被添加到方法中。<a href="https://colabti.org/irclogger/irclogger_log/raku-dev?date=2020-10-08#l31">询问 greppable6</a> 是否提到了这一点，发现方法中 <code>*%_</code> 有很多多余的用法。</p>
+<pre><code class="language-raku" data-lang="raku">my method m1(:$named) {}
+my method m2(:$named, *%_) {}
+
+say &amp;m1.signature;
+say &amp;m2.signature;
+# OUTPUT: (Mu: :$named, *%_)
+          (Mu: :$named, *%_)
+</code></pre><p>我之所以发现这个问题，是 <code>.WHY</code>。在 Raku 中，我们可以添加注释，这些注释附加在后面的语言对象上。</p>
+<pre><code class="language-raku" data-lang="raku">class Commented {
+    #| this is an attribute
+    has $.a-documented-attribute;
+    #| this is a method
+    method works {
+        say ‚working as intended‘;
     }
-    $stdout
+}
+say $c.^can('works')[0].WHY;
+say $c.^attributes[0].WHY;
+# OUTPUT: this is a method
+          this is an attribute
+</code></pre><p>文档中没有<a href="https://docs.raku.org/language/pod#index-entry-declarator_blocks_#%7C">说明</a>如何在运行时访问属性和方法的 <code>WHY</code> 节点。我们必须通过 MOP，因为方法和属性可以在运行时添加到类型对象中。至少对于方法，我找到了一个更好的方法来处理这个问题。</p>
+<pre><code class="language-raku" data-lang="raku">method works {
+    return &amp;?ROUTINE.WHY if %_;
+    say ‚working as intended‘;
+}
+put $c.works(:why);
+</code></pre><p>奇怪的是，这就导致了一个尴尬的情况，那就是我给一个方法添加了一个没有文档的参数，而这个参数会返回该方法的文档。明确地说，我们得到了 trait <code>is implementation-detail</code>。不过被迫使用 <code>multi</code>，让事情变得更加麻烦。</p>
+<pre><code class="language-raku" data-lang="raku">#| No comment! We are sneaky!
+multi method sneaky { say ‚working as intended‘ }
+multi method sneaky('why') is implementation-detail {
+    return self.^lookup('sneaky').candidates[0].WHY;
+}
+say $c.sneaky('why');
+</code></pre><p>这就有一个问题，为什么我需要属性上的 <code>.WHY</code>。我确实同意 JSON 总体上缺乏的<a href="https://nestedtext.org/en/stable/#alternatives">评估</a>。我最大的反对是缺乏注释。对于配置文件来说，能够告诉同事不要让他的手指沾到某一行的脏东西，可以拯救生命。Debian 也很好地利用了这些文件中的注释。如果你不需要为了改变一个值而阅读一个手册页的话，就可以节省很多时间。通过对属性的内联注释，我可以同时表达配置文件中存储的数据结构和如何使用配置文件的说明，而不需要另一个与实际代码不同步的 HEREDOC。我很喜欢 <a href="https://nestedtext.org/en/stable/">NestedText</a> 的结构，正在玩添加类型信息。在 NestedText 中，叶子默认为 <code>Str</code>，所以可以省略。在 Raku 中，我们可以免费获得类型的字符串表示，我们可以直接将它们作为文本添加。</p>
+<p>我可以定义我的配置文件的结构如下。</p>
+<pre><code class="language-raku" data-lang="raku">use Data::TypedNestedText;
+
+class Phone {
+    has $.mobile;
+    has $.home;
+    has $.office;
 }
 
-my $sane = sane-QX(‚True‘);
-say [$sane.?defined, $sane.?Bool, $sane.?exitcode, $sane.?err];
-say sane-QX(‚True‘) // ‚I has a booboo!‘;
-</code></pre><p>我不知道只是把未定义混进去是不是正确的方法。也许用 <code>exitcode</code> 和 STDERR 内容的异常会更好。这样一来，错误处理就可以移到一个 <code>CATCH</code> 块中。</p>
-<p>我会再思考一下，然后提交一个错误报告。如果事实证明当前的实现是需要的，那么文档将需要一些<a href="https://i.imgur.com/MKjKXG1.jpg">警告便签</a>。</p>
-<p>by <a href="https://gfldex.wordpress.com/2020/05/27/ungolden-silence/">gfldex</a>.</p>
+class Contact {
+    has $.name;
+    #| this can be multiline
+    has $.address;
+    has $.phone;
+    has @.additional-roles;
+}
+</code></pre><p>对于输出，我写了一个天真的 deparser，可以产生一个带有类型注释的 NestedText。</p>
+<div class="highlight"><pre class="chroma"><code class="language-txt" data-lang="txt">president[Contact]:
+    # this can be multiline
+    address:
+        &gt; 138 Almond Street
+        &gt; Topika, Kansas 20697
+    name: Katheryn McDaniel
+    phone[Phone]:
+        home: 1-210-555-8470
+        mobile: 1-210-555-5297
+treasurer[Contact]:
+    # this can be multiline
+    address:
+        &gt; 3636 Buffalo Ave
+        &gt; Topika, Kansas 20692
+    name: Fumiko Purvis
+    phone[Phone]:
+        office: 1-268-555-0280
+    additional-roles:
+        - hug task force
+        - Christmas party team
+</code></pre></div><p>这比 JSON 更容易阅读和编辑。编写解析可能不容易。如果事实证明它比预期的更容易，我将很快报告。</p>
+<p>原文链接: <a href="https://gfldex.wordpress.com/2020/10/10/sneaky-arguments/">https://gfldex.wordpress.com/2020/10/10/sneaky-arguments/</a></p>
 
 
         
@@ -373,13 +406,13 @@ say sane-QX(‚True‘) // ‚I has a booboo!‘;
                 
                     <li><a href="/post/2020-09-25-list-breaks-the-chain/">列表断链</a></li>
                 
-                    <li><a href="/post/2020-10-10-sneaky-arguments/">鬼鬼祟祟的参数</a></li>
-                
                     <li><a href="/post/2020-10-27-planned-obsolescence/">计划淘汰</a></li>
                 
                     <li><a href="/post/2020-08-26-instance-attributes-in-raku/">Raku 中的实例属性</a></li>
                 
                     <li><a href="/post/2020-08-26-to-be-called-as-a-sub-or-method/">要作为子程序调用还是作为方法调用</a></li>
+                
+                    <li><a href="/post/2020-08-26-containers-in-raku/">Containers in Raku</a></li>
                 
               </ul>
 
@@ -391,12 +424,12 @@ say sane-QX(‚True‘) // ‚I has a booboo!‘;
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2020-05-25-returning-the-right-amount/" data-toggle="tooltip" data-placement="top" title="归还正确的数量">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-10-27-planned-obsolescence/" data-toggle="tooltip" data-placement="top" title="计划淘汰">&larr; </a>
             </li>
           
           
             <li class="next">
-              <a href="https://ohmysummer.github.io/post/2020-06-06-down-the-error-rabbit-hole/" data-toggle="tooltip" data-placement="top" title="掉入错误的兔子洞"> &rarr;</a>
+              <a href="https://ohmysummer.github.io/post/2020-09-25-list-breaks-the-chain/" data-toggle="tooltip" data-placement="top" title="列表断链"> &rarr;</a>
             </li>
           
         </ul>

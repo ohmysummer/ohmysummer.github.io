@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>沉默不语 - Raku Programming</title>
-  <meta name="description" content="Ungolden silence">
+  <title>列表断链 - Raku Programming</title>
+  <meta name="description" content="List breaks the chain">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-05-27-ungolden-silence\/",
-          "name": "沉默不语"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-09-25-list-breaks-the-chain\/",
+          "name": "列表断链"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "沉默不语",
-  "description" : "在我寻求用 Raku 替换 Bash 的过程中，我尝试使用 qx，但失败了。对我来说，它没有工作，因为 qx 失败的方式是错误的。在底层，Rakudo 通过一些语法魔法来实现它，在 core.",
+  "headline": "列表断链",
+  "description" : "在看 RaycatWhoDat 喜欢 Raku 的时候，我才发现，List of Matches 不是 MatchList。",
   "inLanguage" : "zh",
-  "wordCount":  211 ,
-  "datePublished" : "2020-05-27T17:29:03",
-  "dateModified" : "2020-05-27T17:29:03",
+  "wordCount":  230 ,
+  "datePublished" : "2020-10-27T21:48:29",
+  "dateModified" : "2020-10-27T21:48:29",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-05-27-ungolden-silence\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-09-25-list-breaks-the-chain\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,15 +78,15 @@
 }
 </script>
 
-<meta property="og:title" content="沉默不语" />
-<meta property="og:description" content="Ungolden silence">
+<meta property="og:title" content="列表断链" />
+<meta property="og:description" content="List breaks the chain">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2020-05-27-ungolden-silence/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-09-25-list-breaks-the-chain/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="沉默不语" />
-  <meta name="twitter:description" content="Ungolden silence">
+  <meta name="twitter:title" content="列表断链" />
+  <meta name="twitter:description" content="List breaks the chain">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -265,12 +265,12 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>沉默不语</h1>
+                <h1>列表断链</h1>
               
               
               
                 
-                  <h2 class="post-subheading">Ungolden silence</h2>
+                  <h2 class="post-subheading">List breaks the chain</h2>
                 
               
               
@@ -280,10 +280,10 @@ if (!doNotTrack) {
   <i class="fas fa-calendar"></i>&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;2&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;211&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;230&nbsp;
   
   
     
@@ -308,47 +308,62 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>在我寻求用 Raku 替换 Bash 的过程中，我尝试使用 <code>qx</code>，但失败了。对我来说，它没有工作，因为 <code>qx</code> 失败的方式是错误的。在底层，Rakudo 通过一些语法魔法来实现它，在 <a href="https://github.com/rakudo/rakudo/blob/master/src/core.c/Proc.pm6#L258">core.c/Proc.pm6</a> 中转发到 <code>qx</code>，如下所示。</p>
-<pre><code class="language-raku" data-lang="raku">sub QX($cmd, :$cwd = $*CWD, :$env) is implementation-detail {
-    my $proc := Proc.new(:out);
-    $proc.shell($cmd, :$cwd, :$env);
-    $proc.out.slurp(:close) // Failure.new(&quot;Unable to read from '$cmd'&quot;)
-}
-</code></pre><p>这将返回一个空的 Str，一个非空的 Str 或一个 Failure 对象。所以这可以是 defined but False, defined but True 或 undefined but False。当 shell 启动的 shell 意外地关闭了它的 STDOUT 描述符时，我们会得到未定义的情况。我们可以得到一些即使命令成功也是 False 的东西，也可以得到一些如果命令失败也是 True 的东西。在 Unix 上，沉默是金。除非你提供 <code>-v</code> 或 <code>--verbose</code>，否则任何不需要输出的命令都不应该输出。如果有什么问题，一个非零的退出代码会被返回，如果可能的话，一些东西会被写入 STDERR。<code>QX</code> 会忽略退出代码，STDERR 会转发到 <code>$*ERR</code>。所以我们几乎没有机会在事后发现它。</p>
-<p>这种行为会造成难以发现的错误。让我们做一个错别字。</p>
-<pre><code class="language-raku" data-lang="raku">my $s = qx!True!;
-say [$s.?defined, $s.?Bool, $s.?exitcode];
-dd $not-proc;
-</code></pre><div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">/bin/sh: 1: True: not found
-<span class="o">[</span>True False <span class="o">(</span>Any<span class="o">)</span><span class="o">]</span>
-Str <span class="nv">$s</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
-</code></pre></div><p>使用 defined-or 操作符在这里没有帮助。<code>try</code> 也没有用。有人使用 <code>qx</code> 和 <code>try</code> 吗？</p>
-<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">dex@dexhome:~/projects/raku/rakudo/src$ ack <span class="s1">&#39;QX&#39;</span>
-core.c/Process.pm6
-82: once <span class="k">if</span> !Rakudo::Internals.IS-WIN <span class="o">&amp;&amp;</span> try <span class="o">{</span> qx/id/ <span class="o">}</span> -&gt; <span class="nv">$id</span> <span class="o">{</span>
-</code></pre></div><p>在 Windows 上，这实际上可能会失败，因为预期。在任何其他平台上，我们需要一些合理的东西。</p>
-<pre><code class="language-raku" data-lang="raku">sub sane-QX($cmd, :$cwd = $*CWD, :$env, :$quiet) {
-    my $proc := Proc.new(:out, :err);
-    $proc.shell($cmd, :$cwd, :$env);
-    my $stdout = $proc.out.slurp(:close) // Failure.new(&quot;Unable to read from '$cmd'&quot;);
-    my $stderr = $proc.err.slurp(:close);
-    $*ERR.print: $stderr unless $quiet;
-    if $proc.exitcode != 0 {
-        return &quot;&quot; but role QXFail {
-            method defined { False }
-            method exitcode { $proc.exitcode }
-            method err { $stderr }
-        }
+        <p>在看 RaycatWhoDat <a href="https://colabti.org/irclogger/irclogger_log/raku?date=2020-09-25#l52">喜欢</a> Raku 的时候，我才发现，List of Matches 不是 MatchList。</p>
+<pre><code class="language-raku" data-lang="raku">say 'a1'.match(/ \d /).replace-with('#');
+say 'a1b2'.match(/ \d /, :g).replace-with('#');
+# OUTPUT: a#
+#         No such method 'replace-with' for invocant of type 'List'
+            in block &lt;unit&gt; at /home/dex/tmp/tmp-2.raku line 8
+</code></pre><p>第2次调用 <code>replace-with</code> 会失败，因为带 <code>:g</code> 的 <code>.match</code> 会返回一个 Match 的列表。当然，我们可以玩个简单的游戏，直接使用 <code>sub</code>，当调用 <code>:g</code> 时，它就会做正确的事情。不过这不会是一篇好的博客文章。</p>
+<p>为了让 <code>replace-with</code> 在 List 中工作，我们可以使用 <code>where</code> 从句。任何匹配都会有原始 <code>Str</code> 的副本，但不会有原始 Regex 的副本，所以我们实际上必须建立一个包含所有未匹配的 Str 的列表。这可以通过使用存储在 <code>.from</code> 和 <code>.to</code> 中的索引来完成。</p>
+<pre><code class="language-raku" data-lang="raku">multi sub replace-with(\l where (.all ~~ Match), \r --&gt; Str) {
+    my $orig := l.head.orig;
+    my @unmatched;
+
+    @unmatched.push: $orig.substr(0, l.head.from);
+    for ^(l.elems - 1) -&gt; $idx {
+        @unmatched.push: $orig.substr(l[$idx].to, l[$idx+1].from - l[$idx].to);
     }
-    $stdout
+
+    @unmatched.push: $orig.substr(l.tail.to);
+
+    (@unmatched Z (|(r xx l.elems), |'')).flat.join;
 }
 
-my $sane = sane-QX(‚True‘);
-say [$sane.?defined, $sane.?Bool, $sane.?exitcode, $sane.?err];
-say sane-QX(‚True‘) // ‚I has a booboo!‘;
-</code></pre><p>我不知道只是把未定义混进去是不是正确的方法。也许用 <code>exitcode</code> 和 STDERR 内容的异常会更好。这样一来，错误处理就可以移到一个 <code>CATCH</code> 块中。</p>
-<p>我会再思考一下，然后提交一个错误报告。如果事实证明当前的实现是需要的，那么文档将需要一些<a href="https://i.imgur.com/MKjKXG1.jpg">警告便签</a>。</p>
-<p>by <a href="https://gfldex.wordpress.com/2020/05/27/ungolden-silence/">gfldex</a>.</p>
+say 'a1vvvv2dd3e'.match(/ \d /, :g).&amp;replace-with('#');
+# OUTPUT: a#vvvv#dd#e
+</code></pre><p>如果原始字符串的结尾没有匹配，那么匹配列表就会少一个，无法被直接压缩进去。这也是为什么我必须将替换列表扩展一个空字符串再喂给 <code>Z</code> 的原因。</p>
+<p>所以如果 <code>subst</code> 做的很好，为什么还要用 <code>.replace-with</code> 呢？因为有时我们不得不使用 <code>$/</code>。</p>
+<pre><code class="language-raku" data-lang="raku">if 'a1bb2ccc3e' ~~ m:g/ \d / {
+    say $/.&amp;replace-with('#');
+}
+</code></pre><p>通常我们可以改变代码，但当一个模块的例程返回 Match 或其列表时，我们就没戏了。为了完整起见，我们还需要几个 <code>multies</code>。</p>
+<pre><code class="language-raku" data-lang="raku">multi sub replace-with(Match \m, \r --&gt; Str) {
+    m.replace-with(r);
+}
+
+multi sub replace-with(Match \m, &amp;r --&gt; Str) {
+    m.replace-with(r(m));
+}
+
+multi sub replace-with(\l where (.all ~~ Match), &amp;r) {
+    my $orig := l.head.orig;
+    my @unmatched;
+
+    @unmatched.push: $orig.substr(0, l.head.from);
+    for ^(l.elems - 1) -&gt; $idx {
+        @unmatched.push: $orig.substr(l[$idx].to, l[$idx+1].from - l[$idx].to);
+    }
+
+    @unmatched.push: $orig.substr(l.tail.to);
+
+    (@unmatched Z (|l.map(&amp;r), |'')).flat.join;
+}
+</code></pre><p>即使问题是可以解决的，它仍然困扰着我。我们在 Raku 的很多地方都有 <code>:g</code> 提供相当多的 DWIM。在一些地方，这个概念打破了，几乎所有的地方都与列表有关。往往是 <code>».</code> 来救场。当我们真正需要在列表上工作而不是单个元素时，即使这样也不行。字符串上的方法只是工作，因为在这种情况下，我们刻意避免将字符列表拆开。</p>
+<p>如果你关注这个博客，你就会知道我非常倾向于使用运算符。遗憾的是，<code>.</code>, <code>.?</code> 和 <code>».</code> 并不是我们可以重载的真正的中缀运算符。我们也不能声明以 <code>.</code> 开头的中缀运算符，或者我们可以引入一个操作符，将它的 LHS 变成一个列表，然后对能够处理特定类型列表的 <code>multis</code> 进行调度。</p>
+<p>如果不这样做，我们需要改变 <code>.match</code> 来返回 List 的一个子类，这个子类得到了方法 <code>.replace-with</code>。我们可以把它插入到 Cool 中，但那里已经很拥挤了。</p>
+<p>我们并没有一个很好的方法来增强内置方法的返回值。所以这将不得不在 CORE 中解决。</p>
+<p>原文链接: <a href="https://gfldex.wordpress.com/2020/09/25/list-breaks-the-chain/">https://gfldex.wordpress.com/2020/09/25/list-breaks-the-chain/</a></p>
 
 
         
@@ -371,8 +386,6 @@ say sane-QX(‚True‘) // ‚I has a booboo!‘;
                   <ul>
                 
                 
-                    <li><a href="/post/2020-09-25-list-breaks-the-chain/">列表断链</a></li>
-                
                     <li><a href="/post/2020-10-10-sneaky-arguments/">鬼鬼祟祟的参数</a></li>
                 
                     <li><a href="/post/2020-10-27-planned-obsolescence/">计划淘汰</a></li>
@@ -380,6 +393,8 @@ say sane-QX(‚True‘) // ‚I has a booboo!‘;
                     <li><a href="/post/2020-08-26-instance-attributes-in-raku/">Raku 中的实例属性</a></li>
                 
                     <li><a href="/post/2020-08-26-to-be-called-as-a-sub-or-method/">要作为子程序调用还是作为方法调用</a></li>
+                
+                    <li><a href="/post/2020-08-26-containers-in-raku/">Containers in Raku</a></li>
                 
               </ul>
 
@@ -391,13 +406,9 @@ say sane-QX(‚True‘) // ‚I has a booboo!‘;
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2020-05-25-returning-the-right-amount/" data-toggle="tooltip" data-placement="top" title="归还正确的数量">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-10-10-sneaky-arguments/" data-toggle="tooltip" data-placement="top" title="鬼鬼祟祟的参数">&larr; </a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://ohmysummer.github.io/post/2020-06-06-down-the-error-rabbit-hole/" data-toggle="tooltip" data-placement="top" title="掉入错误的兔子洞"> &rarr;</a>
-            </li>
           
         </ul>
       
