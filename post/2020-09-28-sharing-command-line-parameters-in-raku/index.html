@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Iterating Past the Finish - Raku Programming</title>
-  <meta name="description" content="楽土">
+  <title>在 Raku 中共享命令行参数 - Raku Programming</title>
+  <meta name="description" content="Sharing command line parameters in Raku">
   <meta name="author" content="焉知非鱼"/><script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -44,8 +44,8 @@
         "@type": "ListItem",
         "position": 3,
         "item": {
-          "@id": "https:\/\/ohmysummer.github.io\/post\/2019-01-11-iterating-past-the-finish\/",
-          "name": "Iterating past the finish"
+          "@id": "https:\/\/ohmysummer.github.io\/post\/2020-09-28-sharing-command-line-parameters-in-raku\/",
+          "name": "在 raku 中共享命令行参数"
         }
     }]
 }
@@ -56,15 +56,15 @@
   "author": {
     "name" : "焉知非鱼"
   },
-  "headline": "Iterating Past the Finish",
-  "description" : "前段时间有人提出如何增强(augment) Any 的问题。事实证明，增强部分是有效的，但新增加的方法并没有传播给内置类型的子类型。可以通过对所有类型对象调用 .",
+  "headline": "在 Raku 中共享命令行参数",
+  "description" : "Raku 充满了整洁的小技巧和小宝石，可以让程序员的生活变得更简单（或者至少是整个更有趣）。作为一门奖励掌握的语言，这些可以组合成复杂的解决方案来解决常见的问题，这并不奇怪。",
   "inLanguage" : "zh",
-  "wordCount":  105 ,
-  "datePublished" : "2019-01-11T11:21:31",
-  "dateModified" : "2019-01-11T11:21:31",
+  "wordCount":  346 ,
+  "datePublished" : "2020-10-27T23:21:05",
+  "dateModified" : "2020-10-27T23:21:05",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
   "keywords" : [ "rakulang" ],
-  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2019-01-11-iterating-past-the-finish\/",
+  "mainEntityOfPage" : "https:\/\/ohmysummer.github.io\/post\/2020-09-28-sharing-command-line-parameters-in-raku\/",
   "publisher" : {
     "@type": "Organization",
     "name" : "https:\/\/ohmysummer.github.io\/",
@@ -78,15 +78,15 @@
 }
 </script>
 
-<meta property="og:title" content="Iterating Past the Finish" />
-<meta property="og:description" content="楽土">
+<meta property="og:title" content="在 Raku 中共享命令行参数" />
+<meta property="og:description" content="Sharing command line parameters in Raku">
 <meta property="og:image" content="https://ohmysummer.github.io/img/rakudo.png" />
-<meta property="og:url" content="https://ohmysummer.github.io/post/2019-01-11-iterating-past-the-finish/" />
+<meta property="og:url" content="https://ohmysummer.github.io/post/2020-09-28-sharing-command-line-parameters-in-raku/" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Raku Programming" />
 
-  <meta name="twitter:title" content="Iterating Past the Finish" />
-  <meta name="twitter:description" content="楽土">
+  <meta name="twitter:title" content="在 Raku 中共享命令行参数" />
+  <meta name="twitter:description" content="Sharing command line parameters in Raku">
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -265,12 +265,12 @@ if (!doNotTrack) {
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
               
-                <h1>Iterating Past the Finish</h1>
+                <h1>在 Raku 中共享命令行参数</h1>
               
               
               
                 
-                  <h2 class="post-subheading">楽土</h2>
+                  <h2 class="post-subheading">Sharing command line parameters in Raku</h2>
                 
               
               
@@ -280,10 +280,10 @@ if (!doNotTrack) {
   <i class="fas fa-calendar"></i>&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;1&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;2&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;105&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;346&nbsp;
   
   
     
@@ -308,30 +308,107 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>前段时间有人提出如何<a href="https://docs.perl6.org/language/typesystem#Augmenting_a_class">增强</a>(<code>augment</code>) <code>Any</code> 的<a href="https://stackoverflow.com/questions/52718499/how-to-correctly-augment-any">问题</a>。事实证明，增强部分是有效的，但新增加的方法并没有传播给内置类型的子类型。可以通过对所有类型对象调用 <code>.compose</code> 来强制传播。用 <code>.^mro</code> 获取所有父类的列表，用 <code>∈</code> 进行检查。</p>
-<pre><code class="language-raku" data-lang="raku">augment class Cool { method HTML { HTML.new(self) } }
-if Cool ∈ T.HOW.mro(T) { T.HOW.compose(T); }
-</code></pre><h2 id="我踩到了一条龙">我踩到了一条龙</h2>
-<p>棘手的是要得到所有预定义的类。主要是因为 <code>core::</code> 里有很多东西连调用方法的接口都没有实现。我们可以调用 <code>.DEFINITE</code>，因为那不是方法。所以我们可以剔除所有预定义的对象，剩下的就是类型对象和从 NQP 泄漏到 Perl 6 领域的东西。那些野兽并没有实现 <code>.mro</code>，所以通过 <code>try</code> 的保护，我们可以得到一个所有 Perl 6 类型对象的列表。这些类型对象包含 <code>IterationEnd</code>。因此，我们不能相信 <code>for</code> 或其他任何使用迭代器来循环一个 <code>list</code> 的东西。列表中也有 <code>Slip</code>。我们可以通过到处使用绑定来帮助。</p>
-<pre><code class="language-raku" data-lang="raku">my @a = CORE::.values;
-my @types;
-for 0..^@a.elems -&gt; $i {
-  my \T := @a[$i];
-  try @types[$++] := T if not T.DEFINITE;
+        <p>Raku 充满了整洁的小技巧和小宝石，可以让程序员的生活变得更简单（或者至少是整个更有趣）。作为一门奖励掌握的语言，这些可以组合成复杂的解决方案来解决常见的问题，这并不奇怪。</p>
+<p>这篇文章将用一个这样的例子来说明这一点：在命令行应用程序中共享参数。但首先，我们需要介绍一些允许这样做的整洁的小构件。</p>
+<h2 id="命令行接口">命令行接口</h2>
+<p>Raku <a href="https://docs.raku.org/language/create-cli">内置了对编写命令行接口的支持</a>。如果一个文件有一个 <code>MAIN</code> 子例程，当文件直接执行时，它会自动调用。而且更有趣的是会使用该子例程的签名自动解析命令行参数。</p>
+<p>也就是说，一个名为 <code>cli</code> 的可执行文件，看起来是这样的。</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
+
+sub MAIN ( Str $command, Str $path, Bool :$debug ) {
+    note &quot;Working on $path&quot; if $debug;
+
+    given $command {
+        when 'grep' {
+            .say for $path.IO.lines.grep: /raku/;
+        }
+        when 'count' {
+            say &quot;$_ has { .IO.lines.elems } lines&quot; given $path;
+        }
+        default {
+            say &quot;Unknown command: $command&quot;;
+            say $*USAGE;
+        }
+    }
+}
+</code></pre><p>将导致以下输出:</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ ./cli grep ./cli
+<span class="c1">#!/usr/bin/env raku</span>
+            .say <span class="k">for</span> <span class="nv">$path</span>.IO.lines.grep: /raku/<span class="p">;</span>
+$ ./cli count ./cli
+/home/user/cli has <span class="m">17</span> lines
+$ ./cli
+Usage:
+  /home/user/cli <span class="o">[</span>--debug<span class="o">]</span> &lt;command&gt; &lt;path&gt;
+$ ./cli reverse ./cli
+Unknown command: reverse
+Usage:
+  /home/user/cli <span class="o">[</span>--debug<span class="o">]</span> &lt;command&gt; &lt;path&gt;
+</code></pre></div><h2 id="多重分派">多重分派</h2>
+<p>这是通过 <code>MAIN</code> 子例程中的签名来实现的，它规定了该子例程可以接受哪些参数（当然也规定了不能接受哪些参数，比如我用的那个 <code>--fake-option</code>）。</p>
+<p>但是编译器不仅可以根据函数的签名来判断函数调用是否有效，还可以根据使用的参数来决定调用哪个函数。</p>
+<p>我们可以利用这一点来扩展我们的应用。</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
+
+multi sub MAIN ( 'grep', Str $path, Bool :$debug ) {
+    note &quot;Working on $path&quot; if $debug;
+    .say for $path.IO.lines.grep: /raku/;
 }
 
-for 0..^@types.elems -&gt; $i {
-  my \T := @types[$i];
-  try if Cool ∈ T.HOW.mro(T) {
-    T.HOW.compose(T);
-  }
+multi sub MAIN ( 'count', Str $path, Bool :$debug ) {
+    note &quot;Working on $path&quot; if $debug;
+    say &quot;$_ has { .IO.lines.elems } lines&quot; given $path;
 }
-</code></pre><p>就这样，我们有了。所有&quot;酷&quot;的孩子们都被重新组成(<code>.composed</code>)了。</p>
-<h2 id="这不是魔术">这不是魔术！</h2>
-<p>我学到了一些东西。首先，Perl 6 背后的很多魔法都只是类型检查。任何处理列表迭代或类似构造的东西都是检查 <code>Slip</code> 或 <code>IterationEnd</code>，并分支处理它们的特殊性质。</p>
-<p>其次，有很多接口渗入了规范领域，而这些接口在那里是没有任何作用的。我担心这可能会在以后咬住我们，因为任何有用的接口迟早会被程序员滥用。我更希望 <a href="https://github.com/rakudo/rakudo/tree/master/src/core">Rakudo</a> 的内部运作能够很好的隐藏起来。</p>
-<p>我找到了一个处理令人苦恼的内置类型的方法，所以在核心开发人员修复这个 <a href="https://github.com/rakudo/rakudo/issues/2356">bug</a> 之前不会太久。</p>
-<p>by <a href="https://gfldex.wordpress.com/2019/01/11/iterating-past-the-finish/">gfldex</a>.</p>
+
+multi sub MAIN (
+    Str $command, Str $path, Bool :$debug,
+) is hidden-from-USAGE {
+    note &quot;Working on $path&quot; if $debug;
+    say &quot;Unknown command: $command&quot;;
+    say $*USAGE;
+}
+</code></pre><p>它将保持上述所有调用的行为，但现在会给我们一个不同的帮助信息：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ ./cli --help
+Usage:
+  /home/user/cli <span class="o">[</span>--debug<span class="o">]</span> grep &lt;path&gt;
+  /home/user/cli <span class="o">[</span>--debug<span class="o">]</span> count &lt;path&gt;
+</code></pre></div><p>这个新版本将不同的行为分开，这使得实现一个新的命令变得更加简单。但它也有一些不必要的问题，比如强迫我们在每个条目上重复共享参数，这对于更复杂的应用来说可能会变得非常笨重。</p>
+<p>幸运的是，我们还有另一张王牌。</p>
+<h2 id="子例程原型">子例程原型</h2>
+<p>当声明 <code>multi</code> 子例程时，我们可以通过声明一个 <code>proto</code> 来声明共同的行为。例如，当我们想确保不会意外地将 <code>$path</code> 变成一个 <code>Int</code> 时，这就很有用。但我们也可以在我们的应用程序中使用它：</p>
+<pre><code class="language-raku" data-lang="raku">#!/usr/bin/env raku
+
+proto sub MAIN ( $, Str $path, Bool :$debug, | ) {
+    note &quot;Working on $path&quot; if $debug;
+    {*}
+}
+
+multi sub MAIN ( 'grep', Str $path, *% ) {
+    .say for $path.IO.lines.grep: /raku/;
+}
+
+multi sub MAIN ( 'count', Str $path, *% ) {
+    say &quot;$_ has { .IO.lines.elems } lines&quot; given $path;
+}
+
+multi sub MAIN ( Str $command, Str $path, *% ) is hidden-from-USAGE {
+    say &quot;Unknown command: $command&quot;;
+    say $*USAGE;
+}
+</code></pre><p>该 <code>proto</code> 定义了 <code>MAIN</code> 的一个公共部分，我们可以在其中放置任何共享行为（包括例如我们可能想要对我们现在的全局参数进行的任何初始化）。不幸的是，这确实意味着我们自动生成的使用信息变得稍微不那么好：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">$ ./cli --help
+Usage:
+  /home/user/cli grep &lt;path&gt;
+  /home/user/cli count &lt;path&gt;
+</code></pre></div><h2 id="timtowtdi">TIMTOWTDI</h2>
+<p>一如既往，有不止一种方法，而作为开发者，你要决定哪种方法是最适合你的需求的。</p>
+<p>我只是很高兴 Raku 有所有这些工具供我使用，并给我足够的绳索空间来发展。</p>
+<p>请注意我们如何使用 <code>is-hidden-from-USAGE</code> trait 来告诉 Raku 在生成使用消息时忽略一个特定的子例程。这是另一个 Raku 到处都是的小把戏。</p>
+<p><code>proto</code> 声明末尾的 <code>|</code> 声明了一个<a href="https://docs.raku.org/type/Signature#Capture_parameters">捕获参数</a>，在这种情况下，它的作用是说这个 <code>proto</code> 的具体实现可能会有其他参数（例如，像子命令的特定选项）。</p>
+<p>我在 <code>MAIN</code> 子例程中使用的 <code>*%</code> 是一个 <a href="https://docs.raku.org/type/Signature#Slurpy_(A.K.A._variadic)_parameters">slurpy 参数</a>，它将任何非指定的参数 slurps 进来，让这个签名匹配，即使我不费力地指定一个 <code>:$debug</code> 命名的参数，例如。我本可以用 <code>|</code> 来代替，但那会对使用信息产生一些影响，我想避免这种情况。</p>
+<p>幸运的是，<a href="https://docs.raku.org/language/create-cli#sub_USAGE">我们有办法解决这个问题</a>，我们可以扩展 <code>$*USAGE</code> 中可用的内置消息，或者通过定义我们自己的 <code>USAGE</code> 子例程完全取代它。</p>
+<p>你也可以用单元来为每一个分离的命令定义全文件的 <code>MAIN</code>，然后把顶层文件留给正确的文件来调度!</p>
+<p>原文链接: <a href="https://pinguinorodriguez.cl/blog/raku-argument-parsing/">https://pinguinorodriguez.cl/blog/raku-argument-parsing/</a></p>
 
 
         
@@ -354,8 +431,6 @@ for 0..^@types.elems -&gt; $i {
                   <ul>
                 
                 
-                    <li><a href="/post/2020-09-28-sharing-command-line-parameters-in-raku/">在 Raku 中共享命令行参数</a></li>
-                
                     <li><a href="/post/2020-10-27-dissecting-a-raku-snippet/">剖析一个 Raku 片段</a></li>
                 
                     <li><a href="/post/2020-09-25-list-breaks-the-chain/">列表断链</a></li>
@@ -363,6 +438,8 @@ for 0..^@types.elems -&gt; $i {
                     <li><a href="/post/2020-10-10-sneaky-arguments/">鬼鬼祟祟的参数</a></li>
                 
                     <li><a href="/post/2020-10-27-planned-obsolescence/">计划淘汰</a></li>
+                
+                    <li><a href="/post/2020-08-26-instance-attributes-in-raku/">Raku 中的实例属性</a></li>
                 
               </ul>
 
@@ -374,13 +451,9 @@ for 0..^@types.elems -&gt; $i {
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="https://ohmysummer.github.io/post/2018-12-25-calling-number-names/" data-toggle="tooltip" data-placement="top" title="第二十五天 - 以数之名">&larr; </a>
+              <a href="https://ohmysummer.github.io/post/2020-10-27-dissecting-a-raku-snippet/" data-toggle="tooltip" data-placement="top" title="剖析一个 Raku 片段">&larr; </a>
             </li>
           
-          
-            <li class="next">
-              <a href="https://ohmysummer.github.io/post/2019-01-23-a-picky-caller/" data-toggle="tooltip" data-placement="top" title="a Picky Caller"> &rarr;</a>
-            </li>
           
         </ul>
       
