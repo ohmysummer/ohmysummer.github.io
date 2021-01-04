@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -320,7 +320,7 @@ if (!doNotTrack) {
 <p>关于移动符号的快速注释 - 考虑到您将立方体的一边保持在顶部，一边朝向您，相对边是：</p>
 <pre><code>L (Left) R (Right) U (Up) D (Down) F (Front) B (Back)
 </code></pre>
-<p>如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个&rsquo;'，那就意味着逆时针方向，所以R'会让最上面的部分下来，而R会让底部的部分出现。</p>
+<p>如果在步骤中看到一个单独的字母，如B，则表示顺时针转动该面（相对于立方体的中心，而不是您）。如果你在信里加了一个''，那就意味着逆时针方向，所以R&rsquo;会让最上面的部分下来，而R会让底部的部分出现。</p>
 <p>此外，您可能必须翻转两次，写成U2; （顺时针或逆时针无关紧要，因为它从起点开始为180º。）</p>
 <h2 id="算法">算法</h2>
 <p>我正在使用的初学者算法有以下基本步骤：</p>
@@ -382,7 +382,7 @@ method !rotate-clockwise(Side \side) {
 </code></pre><p>要为移动添加其余的符号，我们添加一些简单的包装方法：</p>
 <pre><code class="language-raku" data-lang="raku">method F2 { self.F.F; }
 method Fʼ { self.F.F.F; }
-</code></pre><p>F2只需要移动两次; F'作弊：3个权利左转。</p>
+</code></pre><p>F2只需要移动两次; F&rsquo;作弊：3个权利左转。</p>
 <p>在这一点上，我必须确保我的回合正在做他们应该做的事情，所以我添加了一个gist方法（当一个对象用say输出时被调用）。</p>
 <pre><code class="language-raku" data-lang="raku">say Cube::Three.new.U2.D2.F2.B2.R2.L2;
 </code></pre><pre><code>      W Y W
@@ -471,7 +471,7 @@ is $a.R.U2.Rʼ.Uʼ.R.Uʼ.Rʼ.Lʼ.U2.L.U.Lʼ.U.L.dump,
         self.&quot;$actual&quot;();
     }
 }
-</code></pre><p>这需要六个基本方法名称，挑选一堆随机值，然后挤压它们（确保连续没有模糊），然后选取前10个值。然后，我们可能会添加一个2或&rsquo;。最后，我们使用间接方法语法按名称调用各个方法。</p>
+</code></pre><p>这需要六个基本方法名称，挑选一堆随机值，然后挤压它们（确保连续没有模糊），然后选取前10个值。然后，我们可能会添加一个2或'。最后，我们使用间接方法语法按名称调用各个方法。</p>
 <p>最后，我准备好开始解决问题了！这就是事情变得复杂的地方。初学者方法的第一步经常被描述为直观的。这意味着它很容易解释&hellip;&hellip;但不容易编码。所以，扰流警报，截至本文发布时，解决的第一步就完成了。对于第一步的完整算法，请查看链接的github网站。</p>
 <pre><code class="language-raku" data-lang="raku">method solve {
     self.solve-top-cross;
@@ -589,15 +589,15 @@ O O R Y O W O O R W Y B
                   <ul>
                 
                 
+                    <li><a href="/post/2021-01-04-raku-performance-and-physics-unit/">Raku 性能和 Physics::Unit</a></li>
+                
+                    <li><a href="/post/2021-internal-indirection/">Internal Indirection</a></li>
+                
                     <li><a href="/post/2020-06-30-sequence/">数列</a></li>
                 
                     <li><a href="/post/2019-07-31-parse-with-raku-regexes-and-grammars/">Parse with Raku Regexes and Grammars</a></li>
                 
                     <li><a href="/post/2019-07-16-encode-decode/">Encode-Decode</a></li>
-                
-                    <li><a href="/post/2019-06-29-odd-even-sort-in-raku/">Raku 中的 奇偶排序</a></li>
-                
-                    <li><a href="/post/2019-06-27-pancake-sort-in-raku/">Raku 中的煎饼排序</a></li>
                 
               </ul>
 
@@ -682,7 +682,7 @@ O O R Y O W O O R W Y B
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

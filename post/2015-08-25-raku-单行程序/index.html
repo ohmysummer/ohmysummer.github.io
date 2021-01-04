@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -349,7 +349,7 @@ if (!doNotTrack) {
 <li>转换到 Windows</li>
 </ol>
 <h3 id="介绍">介绍</h3>
-<p>把 Perl 和其它语言区别开的一件事情是在单行代码中写小程序的能力，即人们所熟知的&quot;单行&rdquo;。在终端里直接键入一个程序比写一个废弃的脚本往往更快。并且单行程序也很强大；它们是羽翼丰满的程序，能够加载外部库，但是也能集成到终端中。你可以在单行程序中输入或输出数据。</p>
+<p>把 Perl 和其它语言区别开的一件事情是在单行代码中写小程序的能力，即人们所熟知的&quot;单行&quot;。在终端里直接键入一个程序比写一个废弃的脚本往往更快。并且单行程序也很强大；它们是羽翼丰满的程序，能够加载外部库，但是也能集成到终端中。你可以在单行程序中输入或输出数据。</p>
 <p>像 Perl 5 一样， Raku支持单行程序。还有就像 Raku 到处清理着 Perl 5 的毒瘤一样，Raku 的单行语法也更好了。它拥有更少的特殊变量和选项因此更容易记忆。这本书提供了很多有用的 Raku 单行例子，从找出文件中得重复行到运行一个 web 服务器，它几乎能做所有事情。尽管 Raku 拥有更少的特殊变量，但是由于它高级的面向对象的语法，Raku 中的大部分单行程序比等价的 Perl 5 单行程序更短。</p>
 <p>这本书可以以多种方式阅读。如果你是单行程序的新手，从教程开始。它带领你掌握单行程序的核心概念；不要担心，一旦你理解了它会很容易。如果你精通 Perl，Bash，或 Sed/Awk，你可以立马开始工作。随意跳过和浏览你所感兴趣的东西。如果有些代码你不理解，那么在终端中试试！这个仓库中包含的无处不在的文件是 example.txt，它会在很多单行程序中用到。</p>
 <p>使用单行编程仅仅是 Raku 擅长的一个范例。这样的代码小而美，但是同时你正学习的是一种生产力技能，记住你正在学的是一种新的编程语言。检查 <a href="raku.org">raku.org</a>网站获取官方文档。</p>
@@ -575,7 +575,7 @@ raku -ne <span class="s1">&#39;say tr/a..zA..Z/A..Za..z/.after&#39;</span> examp
 
 打印唯一的 n-grams
 
-<span class="sb">`</span><span class="sb">`</span><span class="sb">`</span>Bash
+<span class="sb">```</span>Bash
 raku -e <span class="s1">&#39;my $n=2; say &#34;banana&#34;.comb.rotor($n,$n-1).map({[~] @$_}).Set.sort&#39;</span>
 </code></pre></div><p>打印 n-grams 的出现次数：</p>
 <div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -e <span class="s1">&#39;my $n=2; say &#34;banana&#34;.comb.rotor($n,$n-1).map({[~] @$_}).Bag.sort.join(&#34;\n&#34;)&#39;</span>
@@ -678,13 +678,13 @@ raku -pe <span class="s1">&#39;next if ! $_.match(/^\d+$/)&#39;</span> example.t
 </code></pre></div><p>这个单行程序给文件中每一行添加了一个换行符，使用了插值字符串：</p>
 <div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -pe <span class="s1">&#39;$_ ~= &#34;\n&#34;&#39;</span> example.txt
 </code></pre></div><p>在 Windows 上这应该写为：</p>
-<div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -pe <span class="s2">&#34;</span><span class="nv">$_</span><span class="s2"> ~= qq/\n/</span><span class="s2">&#34;</span> example.txt
-</code></pre></div><p>这种情况下，我们想对换行符进行插值，并且不为该行字面地添加反斜线和字符&quot;n&rdquo;，所以我们必须使用 qq。但是你通常也可以像这样在单行程序中使用单引号：</p>
+<div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -pe <span class="s2">&#34;</span><span class="nv">$_</span><span class="s2"> ~= qq/\n/&#34;</span> example.txt
+</code></pre></div><p>这种情况下，我们想对换行符进行插值，并且不为该行字面地添加反斜线和字符&quot;n&quot;，所以我们必须使用 qq。但是你通常也可以像这样在单行程序中使用单引号：</p>
 <div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -e <span class="s1">&#39;say &#34;Hello, World!&#34;&#39;</span>
 </code></pre></div><p>在 Windows 上这应该写为：</p>
 <div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -e <span class="s2">&#34;say &#39;hello, World!&#39;&#34;</span>
 </code></pre></div><p>简单地输出重定向工作起来像基于 Unix 系统那样。 这个单行程序使用 <code>&gt;</code> 把 ASCII 字符索引表打印到一个文件中：</p>
-<div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -e <span class="s2">&#34;</span><span class="s2">say .chr ~ &#39; &#39; ~ </span><span class="nv">$_</span><span class="s2"> for 0..255</span><span class="s2">&#34;</span> &gt; ascii_codes.txt
+<div class="highlight"><pre class="chroma"><code class="language-Bash" data-lang="Bash">raku -e <span class="s2">&#34;say .chr ~ &#39; &#39; ~ </span><span class="nv">$_</span><span class="s2"> for 0..255&#34;</span> &gt; ascii_codes.txt
 </code></pre></div><p>在使用 <code>&gt;</code> 的时候，如果文件不存在就会创建一个。如果文件确实存在，它会被重写。你可能更想追加到文件，使用 <code>&gt;&gt;</code> 代替。</p>
 
 
@@ -784,7 +784,7 @@ raku -pe <span class="s1">&#39;next if ! $_.match(/^\d+$/)&#39;</span> example.t
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

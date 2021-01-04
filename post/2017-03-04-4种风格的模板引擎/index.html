@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -408,14 +408,14 @@ sub grammar_actions_direct ( $template, %fields ) {
     my $actions = Actions.new( fields =&gt; %fields );
     return Grammar.parse($template, :$actions).made;
 }
-</code></pre><p>最重要的是将我们的模板语法定义为 grammar。Grammar 只是一组可以互相调用的命名正则表达式。在&quot;TOP&rdquo;（解析开始的地方）里，我们看到我们的模板是由块组成的。每个块可以是文本或变量。 <em>text</em> 这个正则表达式匹配一切，直到它命中变量 开头（'[&lsquo;字符，让我们假设它在 <em>text</em> 中是禁止的以使事情变得更简单）。<em>variable</em> 这个正则表达式看起来应该和之前的方法类似，但是现在我们以命名方式而不是位置方式捕获变量名。</p>
+</code></pre><p>最重要的是将我们的模板语法定义为 grammar。Grammar 只是一组可以互相调用的命名正则表达式。在&quot;TOP&quot;（解析开始的地方）里，我们看到我们的模板是由块组成的。每个块可以是文本或变量。 <em>text</em> 这个正则表达式匹配一切，直到它命中变量 开头（'[&lsquo;字符，让我们假设它在 <em>text</em> 中是禁止的以使事情变得更简单）。<em>variable</em> 这个正则表达式看起来应该和之前的方法类似，但是现在我们以命名方式而不是位置方式捕获变量名。</p>
 <p>每当相应名字的正则表达式匹配时, Action 类中的同名方法就会被调用。当被调用时，方法从这个正则表达式获得匹配对象（<code>$ /</code>），并可以从该匹配对象中合成(&ldquo;make&rdquo;)某些东西。上层方法在被调用时可以看到这个被合成(&ldquo;made&rdquo;)的某个东西。例如我们的 &ldquo;TOP&rdquo; regexp调 用 &ldquo;text&rdquo; regexp 匹配模板的 &ldquo;Hi&rdquo; 部分和调用 &ldquo;text&rdquo; 方法。这个 &ldquo;text&rdquo; 方法只是 &ldquo;make&rdquo; 这个匹配的字符串供以后使用。然后 &ldquo;TOP&rdquo; regexp 调用与模板的 &ldquo;[VARIABLE name]&rdquo; 部分匹配的 &ldquo;variable&rdquo; regexp。然后调用 &ldquo;variable&rdquo; 方法，并在匹配对象中检查变量名称，并从 %fields 散列值中&quot;make&quot;这个变量的值供以后使用。这将持续到模板字符串结束。然后匹配 &ldquo;TOP&rdquo; 正则表达式，并调用 &ldquo;TOP&rdquo; 方法。这个 &ldquo;TOP&rdquo; 方法可以访问匹配对象中的文本或变量&quot;块&quot;的数组，并查看先前为那些块 &ldquo;make&rdquo; 了什么。所以它所要做的就是把(&ldquo;make&rdquo;)这些值连接在一起。最后，我们从 &ldquo;parse&rdquo; 方法中获得这个 &ldquo;made&rdquo; 模板。让我们来看看基准测试：</p>
 <pre><code>Timing 1000 iterations of grammar_actions_direct_long, grammar_actions_direct_short...
 grammar_actions_direct_long: 149.5412 wallclock secs @ 6.6871/s (n=1000)
 grammar_actions_direct_short: 0.2405 wallclock secs @ 4158.1981/s (n=1000)
 </code></pre><p>我们摆脱了以前方法的两个缺陷。 填充字段时原始模板不会被损坏，这意味着更少的内存复制。 在每个字段的替换期间也没有重新分配内存，因为现在每个 action 方法只是让(&ldquo;make&rdquo;)字符串在稍后被连接。 我们可以轻松通过添加循环，条件和更多的功能来扩展我们的模板语法，只需将一些正则表达式引入 grammar 并在 action 中定义相应的行为。 不幸的是，我们看到一些性能回归，这是因为每次解析模板时，都会创建匹配对象，构建解析树，它必须跟踪所有那些 &ldquo;make&rdquo;/&ldquo;made&rdquo; 值，当它折叠到最终输出。 但这还没完..</p>
 <h2 id="grammars-和-closure-actions">Grammars 和 closure Actions</h2>
-<p>最后，我们达到&quot;boss级&rdquo;，我们必须消灭最后和最大的缺陷 - 重新解析。
+<p>最后，我们达到&quot;boss级&quot;，我们必须消灭最后和最大的缺陷 - 重新解析。
 我的想法是使用之前方法中的 grammars 和 actions，但这一次，我们想生成可执行和可重用的代码，而不是得到直接输出，工作原理如下：</p>
 <pre><code class="language-raku" data-lang="raku">sub ( %fields ) {
     return join '',
@@ -497,15 +497,15 @@ grammar_actions_closures_short: 0.0439 wallclock secs @ 22778.8885/s (n=1000)
                   <ul>
                 
                 
+                    <li><a href="/post/2021-01-04-raku-performance-and-physics-unit/">Raku 性能和 Physics::Unit</a></li>
+                
+                    <li><a href="/post/2021-internal-indirection/">Internal Indirection</a></li>
+                
                     <li><a href="/post/2020-06-30-sequence/">数列</a></li>
                 
                     <li><a href="/post/2019-07-31-parse-with-raku-regexes-and-grammars/">Parse with Raku Regexes and Grammars</a></li>
                 
                     <li><a href="/post/2019-07-16-encode-decode/">Encode-Decode</a></li>
-                
-                    <li><a href="/post/2019-06-29-odd-even-sort-in-raku/">Raku 中的 奇偶排序</a></li>
-                
-                    <li><a href="/post/2019-06-27-pancake-sort-in-raku/">Raku 中的煎饼排序</a></li>
                 
               </ul>
 
@@ -590,7 +590,7 @@ grammar_actions_closures_short: 0.0439 wallclock secs @ 22778.8885/s (n=1000)
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

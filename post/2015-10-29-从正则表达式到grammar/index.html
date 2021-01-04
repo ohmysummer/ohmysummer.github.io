@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -308,10 +308,10 @@ if (!doNotTrack) {
 <p>如果你是正则表达式新人(至少当它们用于 Raku 中时), 那我建议你从这个系列的<a href="http://theperlfisher.blogspot.ro/2016/02/from-regular-expressions-to-grammars-pt.html">第一部分</a>开始。那些掌握了一定正则表达式的人可以跳过<a href="http://theperlfisher.blogspot.ro/2016/02/from-regular-expressions-to-grammars-pt_20.html">上周</a>的文章。现在, 继续演示!</p>
 <h2 id="上周轶事">上周轶事</h2>
 <p>我们开始开发一个接收诸如</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Hey, did you konw a = &#34;</span> <span class="o">+</span> <span class="nx">a</span> <span class="o">+</span> <span class="s2">&#34;?&#34;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Hey, did you konw a = &#34;</span> <span class="o">+</span> <span class="nx">a</span> <span class="o">+</span> <span class="s2">&#34;?&#34;</span><span class="p">);</span>
 </code></pre></div><p>Javascript 表达式的 Raku 编译器, 并把这段代码转换为 <a href="http://raku.org/">Rakudo Perl</a> 那样的编译器能运行的 Raku 代码。在我们开始之前, 想想转换后的 Raku 代码看起来是什么样的可能会是个好主意。如果你已经知道了 Perl 5, 那么你应该熟悉这样的代码。</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"> <span class="k">my</span> <span class="nv">$</span><span class="nv">a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
- <span class="n"></span><span class="n">say</span> <span class="s">&#34;Hey, did you konw a = &#34;</span> <span class="o">~</span> <span class="nv">$</span><span class="nv">a</span> <span class="o">~</span> <span class="s">&#34;?&#34;</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"> <span class="k">my</span> <span class="nv">$a</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+ <span class="n">say</span> <span class="s">&#34;Hey, did you konw a = &#34;</span> <span class="o">~</span> <span class="nv">$a</span> <span class="o">~</span> <span class="s">&#34;?&#34;</span><span class="p">;</span>
 </code></pre></div><p>我们将需要确保我们的正则表达式捕获到了 Javascript 的要素。如果你还记得上一次, 我们使用这样一组正则表达式来捕获我们的文本:</p>
 <pre><code class="language-raku" data-lang="raku"> my rule Number                { \d+                                                          };
  my rule Variable              { \w+                                                          };
@@ -350,7 +350,7 @@ if (!doNotTrack) {
 </code></pre><p>我们现在能看到我们的目标, 数字 3, 仅仅实在更下面的一层。和上次一样, 我们能够添加表达式左侧的东西, 所以我们就动手吧。</p>
 <pre><code class="language-raku" data-lang="raku">say $/&lt;Assignment-Expression&gt;&lt;Number&gt;;
   ｢3｣
-</code></pre><p>我们几乎得到我们想要的了。 「」  挡道, 所以我们在这儿把值转换回数字。我把转换(cast)用引号扩起来, 因为它不是C/C++ 程序员那样认为的&quot;casting&rdquo;。我们想做的大约等价于 <code>sscanf(str,&quot;%d&quot;,&amp;num)</code>, 但是在 Raku 中, 这个操作符更加简单:</p>
+</code></pre><p>我们几乎得到我们想要的了。 「」  挡道, 所以我们在这儿把值转换回数字。我把转换(cast)用引号扩起来, 因为它不是C/C++ 程序员那样认为的&quot;casting&quot;。我们想做的大约等价于 <code>sscanf(str,&quot;%d&quot;,&amp;num)</code>, 但是在 Raku 中, 这个操作符更加简单:</p>
 <pre><code class="language-raku" data-lang="raku">say +$/&lt;Assignment-Expression&gt;&lt;Number&gt;;
   3
 </code></pre><p>如果不深入更多细节, 那么 <code>$/</code> 是一个里面藏着隐式数字、字符串和布尔值的对象。前面添加的 <code>+</code> 把隐藏在 <code>$/</code> 对象中的数字显示出来了。</p>
@@ -570,7 +570,7 @@ say $j.parse(
 </code></pre><h2 id="到哪里去">到哪里去</h2>
 <p>一个简单但整洁的更改是你可以扩展 Assignment-Expression 来既接收数字又接收字符串。上次我们谈论了 rules 中的轮试,所以这个提示应该足够让你开始了:</p>
 <pre><code class="language-raku" data-lang="raku">rule Assignment-Expression { var &lt;Variable&gt; '=' (&lt;Number&gt; | &lt;String&gt;) }
-</code></pre><p>你必须修改下 Assignment-Expression 方法以使它起作用。或者你可以狡猾一点然后发现( <!-- raw HTML omitted --> | <!-- raw HTML omitted --> ) 可以转换为它自己的小的普通的 &ldquo;Term&rdquo; rule, &ldquo;rule Term { <!-- raw HTML omitted --> | <!-- raw HTML omitted --> }&quot;, 然后添加一个 action &ldquo;method Term($/) { make $/<!-- raw HTML omitted --> or $/<!-- raw HTML omitted -->}&rdquo; 而只在 Assignment-Expression 中修改一个东西。</p>
+</code></pre><p>你必须修改下 Assignment-Expression 方法以使它起作用。或者你可以狡猾一点然后发现( <!-- raw HTML omitted --> | <!-- raw HTML omitted --> ) 可以转换为它自己的小的普通的 &ldquo;Term&rdquo; rule, &ldquo;rule Term { <!-- raw HTML omitted --> | <!-- raw HTML omitted --> }&rdquo;, 然后添加一个 action &ldquo;method Term($/) { make $/<!-- raw HTML omitted --> or $/<!-- raw HTML omitted -->}&rdquo; 而只在 Assignment-Expression 中修改一个东西。</p>
 
 
         
@@ -688,7 +688,7 @@ say $j.parse(
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

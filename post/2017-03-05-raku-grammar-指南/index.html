@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -334,7 +334,7 @@ if (!doNotTrack) {
 </code></pre><p>现在，你可能想知道，如果我让所有这些定义的正则表达式只返回他们的结果，那么这该如何帮助在字符串中向前或向后解析东西呢，或需要从多个那样的正则表达式组合的东西。 ..这就是 grammar action 发挥作用的地方。</p>
 <p>对于你的 grammar 中匹配的每个“方法”，你会得到一个可调用的动作，用那个匹配你可以做一些有趣或聪明的事情。 你还可以得到一个最重要的 action，你可以使用这个 action 把它们捆绑在一起，并自定义构建一个你可能想要返回的数据结构，其中所有疯狂的字符串解析在你很好的排序和定义的数据结构是有意义的。 默认情况下，此 over-arching 方法称为 TOP。 我们也会得到更多的。</p>
 <h3 id="技术概览">技术概览</h3>
-<p>Grammars  就像类那样定义, 除了使用 <code>grammar</code> 关键字代替 <code>class</code>. grammars 中的「methods」叫做 <em>regex</em>, <em>token</em>, 或 <em>rule</em>。虽然 Regex 方法慢但是彻底 &ndash; 它们会在字符串中向后查看并真的尝试匹配。Token 方法更快一点并且它们忽略空白。Rule 方法和 token 方法一样, 但是它们在你的&quot;regex&rdquo; 定义中消费空白。</p>
+<p>Grammars  就像类那样定义, 除了使用 <code>grammar</code> 关键字代替 <code>class</code>. grammars 中的「methods」叫做 <em>regex</em>, <em>token</em>, 或 <em>rule</em>。虽然 Regex 方法慢但是彻底 &ndash; 它们会在字符串中向后查看并真的尝试匹配。Token 方法更快一点并且它们忽略空白。Rule 方法和 token 方法一样, 但是它们在你的&quot;regex&quot; 定义中消费空白。</p>
 <p>当方法(regex, token 或 rule)在 grammar 中匹配后, 匹配到的字符串被放入最终将返回的 Match 对象中, 并且它将使用与您选择命名的方法相同的名称。</p>
 <pre><code class="language-raku" data-lang="raku">grammar My::Gram {
   token TOP { &lt;thingy&gt; .* }
@@ -376,7 +376,7 @@ say $match;
  data =&gt; ｢7/notify｣» 
 </code></pre><p>当然，可以使用 <code>$match&lt;subject&gt;</code> 或 <code>$match&lt;command&gt;</code> 或 <code>$match&lt;data&gt;</code> 直接访问数据以返回解析的值。 它们每个都包含可以进一步工作的匹配对象，或强制转换为字符串（<code>$match&lt;command&gt;.Str</code>）</p>
 <h3 id="添加一点灵活性">添加一点灵活性</h3>
-<p>到目前为止，REST语法将处理检索，删除和更新。 但是，create 命令没有第三部分（数据部分）。 这意味着如果我们尝试解析 creat URL，我们的 Grammar 将无法匹配。 为了避免这种情况，我们需要使最后一个数据位置匹配可选，以及它前面的&rsquo;/'。 这很容易通过为分组的&rsquo;/&lsquo;和 TOP token 的数据组件添加一个问号来表示它们的可选性质，就像一个普通的正则表达式那样。 所以现在我们有：</p>
+<p>到目前为止，REST语法将处理检索，删除和更新。 但是，create 命令没有第三部分（数据部分）。 这意味着如果我们尝试解析 creat URL，我们的 Grammar 将无法匹配。 为了避免这种情况，我们需要使最后一个数据位置匹配可选，以及它前面的'/'。 这很容易通过为分组的'/&lsquo;和 TOP token 的数据组件添加一个问号来表示它们的可选性质，就像一个普通的正则表达式那样。 所以现在我们有：</p>
 <pre><code class="language-raku" data-lang="raku">grammar REST {
     token TOP     { '/' &lt;subject&gt; '/' &lt;command&gt; [ '/' &lt;data&gt; ]? }
     token subject { \w+ }
@@ -428,7 +428,7 @@ token command:sym&lt;delete&gt;   { &lt;sym&gt; }
 </code></pre><p><code>sym</code> 关键字用于创建各种原型正则表达式(proto-regex)选项。每个选项都被命名(例如, <code>sym&lt;update&gt;</code>), 并且为了使用该选项，会使用相同的名字自动生成一个特殊的 <code>&lt;sym&gt;</code> token。</p>
 <p>可以在原型正则表达式选项块中使用 <code>&lt;sym&gt;</code> token 以及其他用户定义的 tokens 来定义特定的“匹配条件”。正则表达式 tokens 是编译过的形式，一旦定义，随后就不能被副词动作(例如: i)修改。因此，由于它是自动生成的，所以特殊的 <code>&lt;sym&gt;</code> token 仅在需要与选项名称完全匹配时才有用。</p>
 <p>如果对于其中一个原型正则表达式选项，出现匹配条件，则整个原型的搜索终止。匹配数据以匹配对象的形式分配给父原型 token。如果使用特殊 <code>&lt;sym&gt;</code> token，并形成全部或部分实际匹配，则将其保留为匹配对象中的子级别，否则它将不存在。</p>
-<p>使用这样的原型正则表达式给了我们很大的灵活性。例如，不是返回 <code>&lt;sym&gt;</code>，在这种情况下是匹配的整个字符串，我们可以输入自己的字符串，或做其他有趣的事情。我们可以用“token subject”方法做同样的事，并将其限制为仅对有效主题（如&rsquo;part'或&rsquo;people'等）进行正确解析。</p>
+<p>使用这样的原型正则表达式给了我们很大的灵活性。例如，不是返回 <code>&lt;sym&gt;</code>，在这种情况下是匹配的整个字符串，我们可以输入自己的字符串，或做其他有趣的事情。我们可以用“token subject”方法做同样的事，并将其限制为仅对有效主题（如&rsquo;part&rsquo;或&rsquo;people&rsquo;等）进行正确解析。</p>
 <h3 id="把我们的-restful-grammar-组合在一块">把我们的 RESTful Grammar 组合在一块</h3>
 <p>目前为止我们的 RESTful URIs 的处理如下:</p>
 <pre><code class="language-raku" data-lang="raku">grammar REST
@@ -736,7 +736,7 @@ G.parse('sub f ( a ) { }');
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

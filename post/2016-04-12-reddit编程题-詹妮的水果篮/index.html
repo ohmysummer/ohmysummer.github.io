@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -415,56 +415,56 @@ sub find-coefficients ($goal, @terms) {
 <li>For the challenge input <em>(solution space = 1,127,153,664)</em> it needs only 4296 iterations, at the cost of several hash lookups per iteration.</li>
 </ul>
 <p>Perl 5 的解决方案。</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1">#可以求解三元以上的，只是个思路，可以推广。</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1">#可以求解三元以上的，只是个思路，可以推广。</span>
 
 <span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
-<span class="c1">#计算二元方程组</span>
-<span class="c1">#2x+3y=21</span>
+<span class="c1">#计算二元方程组</span>
+<span class="c1">#2x+3y=21</span>
 
-<span class="k">my</span> <span class="nv">@</span><span class="nv">number</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@number</span><span class="p">;</span>
 
 <span class="k">while</span><span class="p">(</span><span class="sr">&lt;DATA&gt;</span><span class="p">)</span> <span class="p">{</span>
     <span class="nb">chomp</span><span class="p">;</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$</span><span class="nv">name</span><span class="p">,</span> <span class="nv">$</span><span class="nv">number</span><span class="p">)</span> <span class="o">=</span> <span class="nb">split</span><span class="p">;</span>
-    <span class="nb">push</span> <span class="nv">@</span><span class="nv">number</span><span class="p">,</span><span class="nv">$</span><span class="nv">number</span><span class="p">;</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$number</span><span class="p">)</span> <span class="o">=</span> <span class="nb">split</span><span class="p">;</span>
+    <span class="nb">push</span> <span class="nv">@number</span><span class="p">,</span><span class="nv">$number</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="k">print</span> <span class="s">&#34;@number\n&#34;</span><span class="p">;</span>
- <span class="nv">$</span><span class="nv">_</span><span class="o">=</span><span class="s">&#34;1&#34;</span> <span class="n"></span><span class="n">x</span> <span class="mi">500</span><span class="p">;</span>
-<span class="k">my</span> <span class="nv">%</span><span class="nv">seen</span><span class="p">;</span>
-<span class="k">my</span> <span class="nv">$</span><span class="nv">num</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
-<span class="k">my</span> <span class="nv">$</span><span class="nv">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="nv">$_</span><span class="o">=</span><span class="s">&#34;1&#34;</span> <span class="n">x</span> <span class="mi">500</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">%seen</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$num</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
 
 
-<span class="nv">$</span><span class="nv">_</span><span class="o">=~</span><span class="sr">m</span><span class="sr">{
+<span class="nv">$_</span><span class="o">=~</span><span class="sr">m{
 </span><span class="sr">  (.*)\1{$num}</span>
-  <span class="p">(</span><span class="o">.</span><span class="o">*</span><span class="p">)</span><span class="o">\</span><span class="mi">2</span><span class="p">{</span><span class="mi">40</span><span class="p">}</span>
-  <span class="p">(</span><span class="o">.</span><span class="o">*</span><span class="p">)</span><span class="o">\</span><span class="mi">3</span><span class="p">{</span><span class="mi">96</span><span class="p">}</span>
-  <span class="p">(</span><span class="o">.</span><span class="o">*</span><span class="p">)</span><span class="o">\</span><span class="mi">4</span><span class="p">{</span><span class="mi">253</span><span class="p">}</span>
-  <span class="p">(</span><span class="o">.</span><span class="o">*</span><span class="p">)</span><span class="o">\</span><span class="mi">5</span><span class="p">{</span><span class="mi">398</span><span class="p">}</span>
+  <span class="p">(</span><span class="o">.*</span><span class="p">)</span><span class="o">\</span><span class="mi">2</span><span class="p">{</span><span class="mi">40</span><span class="p">}</span>
+  <span class="p">(</span><span class="o">.*</span><span class="p">)</span><span class="o">\</span><span class="mi">3</span><span class="p">{</span><span class="mi">96</span><span class="p">}</span>
+  <span class="p">(</span><span class="o">.*</span><span class="p">)</span><span class="o">\</span><span class="mi">4</span><span class="p">{</span><span class="mi">253</span><span class="p">}</span>
+  <span class="p">(</span><span class="o">.*</span><span class="p">)</span><span class="o">\</span><span class="mi">5</span><span class="p">{</span><span class="mi">398</span><span class="p">}</span>
 
-  <span class="p">(</span><span class="p">?</span><span class="p">{</span>
-  <span class="k">my</span> <span class="nv">$</span><span class="nv">a</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$</span><span class="nv">1</span><span class="p">;</span>
-  <span class="k">my</span> <span class="nv">$</span><span class="nv">b</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$</span><span class="nv">2</span><span class="p">;</span>
-  <span class="k">my</span> <span class="nv">$</span><span class="nv">x</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$</span><span class="nv">3</span><span class="p">;</span>
-  <span class="k">my</span> <span class="nv">$</span><span class="nv">y</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$</span><span class="nv">4</span><span class="p">;</span>
-  <span class="k">my</span> <span class="nv">$</span><span class="nv">d</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$</span><span class="nv">5</span><span class="p">;</span>
-  <span class="nv">$</span><span class="nv">seen</span><span class="p">{</span><span class="s">&#34;x=$a,y=$b,a=$x,b=$y,d=$d&#34;</span><span class="p">}</span><span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$</span><span class="nv">1</span> <span class="n"></span><span class="n">x</span> <span class="nv">$</span><span class="nv">number</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">)</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$</span><span class="nv">2</span> <span class="n"></span><span class="n">x</span> <span class="nv">$</span><span class="nv">number</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">)</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$</span><span class="nv">3</span> <span class="n"></span><span class="n">x</span> <span class="nv">$</span><span class="nv">number</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="p">)</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$</span><span class="nv">4</span> <span class="n"></span><span class="n">x</span> <span class="nv">$</span><span class="nv">number</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="p">)</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$</span><span class="nv">5</span> <span class="n"></span><span class="n">x</span> <span class="nv">$</span><span class="nv">number</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="p">)</span> <span class="ow">eq</span> <span class="nv">$</span><span class="nv">_</span> <span class="p">;</span>
-  <span class="p">}</span><span class="p">)</span>
-  <span class="p">(</span><span class="p">?</span><span class="o">!</span><span class="p">)</span><span class="p">}</span><span class="n"></span><span class="n">x</span><span class="p">;</span>
+  <span class="p">(?{</span>
+  <span class="k">my</span> <span class="nv">$a</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$1</span><span class="p">;</span>
+  <span class="k">my</span> <span class="nv">$b</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$2</span><span class="p">;</span>
+  <span class="k">my</span> <span class="nv">$x</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$3</span><span class="p">;</span>
+  <span class="k">my</span> <span class="nv">$y</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$4</span><span class="p">;</span>
+  <span class="k">my</span> <span class="nv">$d</span><span class="o">=</span><span class="nb">split</span> <span class="sr">//</span><span class="p">,</span><span class="nv">$5</span><span class="p">;</span>
+  <span class="nv">$seen</span><span class="p">{</span><span class="s">&#34;x=$a,y=$b,a=$x,b=$y,d=$d&#34;</span><span class="p">}</span><span class="o">=</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$1</span> <span class="n">x</span> <span class="nv">$number</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$2</span> <span class="n">x</span> <span class="nv">$number</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$3</span> <span class="n">x</span> <span class="nv">$number</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$4</span> <span class="n">x</span> <span class="nv">$number</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$5</span> <span class="n">x</span> <span class="nv">$number</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="ow">eq</span> <span class="nv">$_</span> <span class="p">;</span>
+  <span class="p">})</span>
+  <span class="p">(?</span><span class="o">!</span><span class="p">)}</span><span class="n">x</span><span class="p">;</span>
 
-<span class="k">foreach</span> <span class="k">my</span> <span class="nv">$</span><span class="nv">result</span> <span class="p">(</span><span class="nb">sort</span> <span class="nb">keys</span> <span class="nv">%</span><span class="nv">seen</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">foreach</span> <span class="k">my</span> <span class="nv">$result</span> <span class="p">(</span><span class="nb">sort</span> <span class="nb">keys</span> <span class="nv">%seen</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">print</span> <span class="s">&#34;$result\n&#34;</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="bp">__DATA__</span>
-<span class="n"></span><span class="n">banana</span> <span class="mi">32</span>
-<span class="n"></span><span class="n">kiwi</span> <span class="mi">41</span>
-<span class="n"></span><span class="n">mango</span> <span class="mi">97</span>
-<span class="n"></span><span class="n">papaya</span> <span class="mi">254</span>
-<span class="n"></span><span class="n">pineapple</span> <span class="mi">399</span>
+<span class="n">banana</span> <span class="mi">32</span>
+<span class="n">kiwi</span> <span class="mi">41</span>
+<span class="n">mango</span> <span class="mi">97</span>
+<span class="n">papaya</span> <span class="mi">254</span>
+<span class="n">pineapple</span> <span class="mi">399</span>
 </code></pre></div>
 
         
@@ -584,7 +584,7 @@ sub find-coefficients ($goal, @terms) {
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

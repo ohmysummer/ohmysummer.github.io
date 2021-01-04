@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -307,243 +307,243 @@ if (!doNotTrack) {
         <p>Protocol 在 Swift 中是一组方法和属性的集合, 可用于代码复用。 Raku 中有与之类似的结构, 叫做 <code>Role</code>, 下面转换一个 Swift 的 Protocol 为 Raku 的 Role, 把部门人员的相关信息打印为一个表格:</p>
 <h2 id="protocol-in-swift">Protocol in Swift</h2>
 <p>　</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nb">import</span> <span class="n"></span><span class="n">UIKit</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nb">import</span> <span class="n">UIKit</span>
 
-<span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">padding</span><span class="p">(</span><span class="n"></span><span class="n">amount:</span> <span class="n"></span><span class="n">Int</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">String</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">paddingString</span> <span class="o">=</span> <span class="s">&#34;&#34;</span>
-    <span class="k">for</span> <span class="n"></span><span class="n">_</span> <span class="n"></span><span class="n">in</span> <span class="mi">0</span><span class="o">..</span><span class="o">&lt;</span><span class="n"></span><span class="n">amount</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">paddingString</span> <span class="o">+=</span> <span class="s">&#34; &#34;</span>
+<span class="n">func</span> <span class="n">padding</span><span class="p">(</span><span class="n">amount:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">paddingString</span> <span class="o">=</span> <span class="s">&#34;&#34;</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="n">in</span> <span class="mi">0</span><span class="o">..&lt;</span><span class="n">amount</span> <span class="p">{</span>
+        <span class="n">paddingString</span> <span class="o">+=</span> <span class="s">&#34; &#34;</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n"></span><span class="n">paddingString</span>
+    <span class="k">return</span> <span class="n">paddingString</span>
 <span class="p">}</span>
 
-<span class="sr">//</span> <span class="n"></span><span class="n">协议</span>
+<span class="sr">//</span> <span class="n">协议</span>
 
-<span class="n"></span><span class="n">protocol</span> <span class="n"></span><span class="n">TabularDataSource</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">numberOfRows:</span> <span class="n"></span><span class="n">Int</span>    <span class="p">{</span> <span class="n"></span><span class="n">get</span> <span class="p">}</span>
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">numberOfColumns:</span> <span class="n"></span><span class="n">Int</span> <span class="p">{</span> <span class="n"></span><span class="n">get</span> <span class="p">}</span>
+<span class="n">protocol</span> <span class="n">TabularDataSource</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">numberOfRows:</span> <span class="n">Int</span>    <span class="p">{</span> <span class="n">get</span> <span class="p">}</span>
+    <span class="n">var</span> <span class="n">numberOfColumns:</span> <span class="n">Int</span> <span class="p">{</span> <span class="n">get</span> <span class="p">}</span>
 
-    <span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">labelForRow</span><span class="p">(</span><span class="n"></span><span class="n">row:</span> <span class="n"></span><span class="n">Int</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">String</span>        <span class="sr">//</span> <span class="n"></span><span class="n">行标签</span>
-    <span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">labelForColumn</span><span class="p">(</span><span class="n"></span><span class="n">column:</span> <span class="n"></span><span class="n">Int</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">String</span>  <span class="sr">//</span> <span class="n"></span><span class="n">列标签</span>
+    <span class="n">func</span> <span class="n">labelForRow</span><span class="p">(</span><span class="n">row:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span>        <span class="sr">//</span> <span class="n">行标签</span>
+    <span class="n">func</span> <span class="n">labelForColumn</span><span class="p">(</span><span class="n">column:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span>  <span class="sr">//</span> <span class="n">列标签</span>
 
-    <span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">itemForRow</span><span class="p">(</span><span class="n"></span><span class="n">row:</span> <span class="n"></span><span class="n">Int</span><span class="p">,</span> <span class="n"></span><span class="n">column:</span> <span class="n"></span><span class="n">Int</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">Int</span> <span class="sr">//</span> <span class="n"></span><span class="n">表格中的单元格</span>
+    <span class="n">func</span> <span class="n">itemForRow</span><span class="p">(</span><span class="n">row:</span> <span class="n">Int</span><span class="p">,</span> <span class="n">column:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span> <span class="sr">//</span> <span class="n">表格中的单元格</span>
 <span class="p">}</span>
 
 
 
-<span class="n"></span><span class="n">struct</span> <span class="n"></span><span class="n">Person</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">name:</span> <span class="n"></span><span class="n">String</span>
-    <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">age:</span> <span class="n"></span><span class="n">Int</span>
-    <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">yearsOfExperience:</span> <span class="n"></span><span class="n">Int</span>
+<span class="n">struct</span> <span class="n">Person</span> <span class="p">{</span>
+    <span class="n">let</span> <span class="n">name:</span> <span class="n">String</span>
+    <span class="n">let</span> <span class="n">age:</span> <span class="n">Int</span>
+    <span class="n">let</span> <span class="n">yearsOfExperience:</span> <span class="n">Int</span>
 <span class="p">}</span>
 
-<span class="sr">//</span> <span class="n"></span><span class="n">让</span> <span class="o">**</span><span class="n"></span><span class="n">Department</span><span class="o">**</span> <span class="n"></span><span class="n">遵守</span> <span class="o">**</span><span class="n"></span><span class="n">TabularDataSource</span><span class="o">**</span><span class="n"></span><span class="n">协议</span>
-<span class="n"></span><span class="n">struct</span> <span class="n"></span><span class="n">Department:</span> <span class="n"></span><span class="n">TabularDataSource</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">name:</span> <span class="n"></span><span class="n">String</span>
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">people</span> <span class="o">=</span> <span class="p">[</span><span class="n"></span><span class="n">Person</span><span class="p">]</span><span class="p">(</span><span class="p">)</span>
+<span class="sr">//</span> <span class="n">让</span> <span class="o">**</span><span class="n">Department</span><span class="o">**</span> <span class="n">遵守</span> <span class="o">**</span><span class="n">TabularDataSource</span><span class="o">**</span><span class="n">协议</span>
+<span class="n">struct</span> <span class="n">Department:</span> <span class="n">TabularDataSource</span> <span class="p">{</span>
+    <span class="n">let</span> <span class="n">name:</span> <span class="n">String</span>
+    <span class="n">var</span> <span class="n">people</span> <span class="o">=</span> <span class="p">[</span><span class="n">Person</span><span class="p">]()</span>
 
-    <span class="n"></span><span class="n">init</span><span class="p">(</span><span class="n"></span><span class="n">name:</span> <span class="n"></span><span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">self</span><span class="o">.</span><span class="n"></span><span class="n">name</span> <span class="o">=</span> <span class="n"></span><span class="n">name</span>
+    <span class="n">init</span><span class="p">(</span><span class="n">name:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">mutating</span> <span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">person:</span> <span class="n"></span><span class="n">Person</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">people</span><span class="o">.</span><span class="n"></span><span class="n">append</span><span class="p">(</span><span class="n"></span><span class="n">person</span><span class="p">)</span>
+    <span class="n">mutating</span> <span class="n">func</span> <span class="n">addPerson</span><span class="p">(</span><span class="n">person:</span> <span class="n">Person</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">people</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="sr">//</span> <span class="n"></span><span class="n">实现协议中声明的属性和方法</span>
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">numberOfRows:</span> <span class="n"></span><span class="n">Int</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n"></span><span class="n">people</span><span class="o">.</span><span class="n"></span><span class="n">count</span>
+    <span class="sr">//</span> <span class="n">实现协议中声明的属性和方法</span>
+    <span class="n">var</span> <span class="n">numberOfRows:</span> <span class="n">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">people</span><span class="o">.</span><span class="n">count</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">numberOfColumns:</span> <span class="n"></span><span class="n">Int</span> <span class="p">{</span>
+    <span class="n">var</span> <span class="n">numberOfColumns:</span> <span class="n">Int</span> <span class="p">{</span>
         <span class="k">return</span> <span class="mi">2</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">labelForRow</span><span class="p">(</span><span class="n"></span><span class="n">row:</span> <span class="n"></span><span class="n">Int</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">String</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n"></span><span class="n">people</span><span class="p">[</span><span class="n"></span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n"></span><span class="n">name</span>
+    <span class="n">func</span> <span class="n">labelForRow</span><span class="p">(</span><span class="n">row:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">people</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">labelForColumn</span><span class="p">(</span><span class="n"></span><span class="n">column:</span> <span class="n"></span><span class="n">Int</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">String</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">switch</span> <span class="n"></span><span class="n">column</span> <span class="p">{</span>
+    <span class="n">func</span> <span class="n">labelForColumn</span><span class="p">(</span><span class="n">column:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">String</span> <span class="p">{</span>
+        <span class="n">switch</span> <span class="n">column</span> <span class="p">{</span>
             <span class="k">case</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="s">&#34;Age&#34;</span>
             <span class="k">case</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="s">&#34;Years of Experence&#34;</span>
-            <span class="n"></span><span class="n">default:</span> <span class="n"></span><span class="n">fatalError</span><span class="p">(</span><span class="s">&#34;Invalid column!&#34;</span><span class="p">)</span>
+            <span class="n">default:</span> <span class="n">fatalError</span><span class="p">(</span><span class="s">&#34;Invalid column!&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">itemForRow</span><span class="p">(</span><span class="n"></span><span class="n">row:</span> <span class="n"></span><span class="n">Int</span><span class="p">,</span> <span class="n"></span><span class="n">column:</span> <span class="n"></span><span class="n">Int</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">Int</span> <span class="p">{</span>
-         <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">person</span> <span class="o">=</span> <span class="n"></span><span class="n">people</span><span class="p">[</span><span class="n"></span><span class="n">row</span><span class="p">]</span> <span class="sr">//</span> <span class="n"></span><span class="n">指定的行</span>
-         <span class="n"></span><span class="n">switch</span> <span class="n"></span><span class="n">column</span> <span class="p">{</span>
-             <span class="k">case</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="n"></span><span class="n">person</span><span class="o">.</span><span class="n"></span><span class="n">age</span>
-             <span class="k">case</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n"></span><span class="n">person</span><span class="o">.</span><span class="n"></span><span class="n">yearsOfExperience</span>
-             <span class="n"></span><span class="n">default:fatalError</span><span class="p">(</span><span class="s">&#34;Invalid column!&#34;</span><span class="p">)</span>
+    <span class="n">func</span> <span class="n">itemForRow</span><span class="p">(</span><span class="n">row:</span> <span class="n">Int</span><span class="p">,</span> <span class="n">column:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Int</span> <span class="p">{</span>
+         <span class="n">let</span> <span class="n">person</span> <span class="o">=</span> <span class="n">people</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="sr">//</span> <span class="n">指定的行</span>
+         <span class="n">switch</span> <span class="n">column</span> <span class="p">{</span>
+             <span class="k">case</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="n">person</span><span class="o">.</span><span class="n">age</span>
+             <span class="k">case</span> <span class="mi">1</span><span class="p">:</span> <span class="k">return</span> <span class="n">person</span><span class="o">.</span><span class="n">yearsOfExperience</span>
+             <span class="n">default:fatalError</span><span class="p">(</span><span class="s">&#34;Invalid column!&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">deparment</span> <span class="o">=</span> <span class="n"></span><span class="n">Department</span><span class="p">(</span><span class="n"></span><span class="n">name:</span> <span class="s">&#34;Engineering&#34;</span><span class="p">)</span>
-<span class="n"></span><span class="n">deparment</span><span class="o">.</span><span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">Person</span><span class="p">(</span><span class="n"></span><span class="n">name:</span> <span class="s">&#34;Joe&#34;</span><span class="p">,</span> <span class="n"></span><span class="n">age:</span> <span class="mi">30</span><span class="p">,</span> <span class="n"></span><span class="n">yearsOfExperience:</span> <span class="mi">6</span><span class="p">)</span><span class="p">)</span>
-<span class="n"></span><span class="n">deparment</span><span class="o">.</span><span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">Person</span><span class="p">(</span><span class="n"></span><span class="n">name:</span> <span class="s">&#34;Karen&#34;</span><span class="p">,</span> <span class="n"></span><span class="n">age:</span> <span class="mi">40</span><span class="p">,</span> <span class="n"></span><span class="n">yearsOfExperience:</span> <span class="mi">18</span><span class="p">)</span><span class="p">)</span>
-<span class="n"></span><span class="n">deparment</span><span class="o">.</span><span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">Person</span><span class="p">(</span><span class="n"></span><span class="n">name:</span> <span class="s">&#34;Fred&#34;</span><span class="p">,</span> <span class="n"></span><span class="n">age:</span> <span class="mi">50</span><span class="p">,</span> <span class="n"></span><span class="n">yearsOfExperience:</span> <span class="mi">20</span><span class="p">)</span><span class="p">)</span>
+<span class="n">var</span> <span class="n">deparment</span> <span class="o">=</span> <span class="n">Department</span><span class="p">(</span><span class="n">name:</span> <span class="s">&#34;Engineering&#34;</span><span class="p">)</span>
+<span class="n">deparment</span><span class="o">.</span><span class="n">addPerson</span><span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="n">name:</span> <span class="s">&#34;Joe&#34;</span><span class="p">,</span> <span class="n">age:</span> <span class="mi">30</span><span class="p">,</span> <span class="n">yearsOfExperience:</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">deparment</span><span class="o">.</span><span class="n">addPerson</span><span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="n">name:</span> <span class="s">&#34;Karen&#34;</span><span class="p">,</span> <span class="n">age:</span> <span class="mi">40</span><span class="p">,</span> <span class="n">yearsOfExperience:</span> <span class="mi">18</span><span class="p">))</span>
+<span class="n">deparment</span><span class="o">.</span><span class="n">addPerson</span><span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="n">name:</span> <span class="s">&#34;Fred&#34;</span><span class="p">,</span> <span class="n">age:</span> <span class="mi">50</span><span class="p">,</span> <span class="n">yearsOfExperience:</span> <span class="mi">20</span><span class="p">))</span>
 
-<span class="sr">//</span> <span class="n"></span><span class="n">传入一个数据源</span>
-<span class="n"></span><span class="n">func</span> <span class="n"></span><span class="n">printTable</span><span class="p">(</span><span class="n"></span><span class="n">dataSource:</span> <span class="n"></span><span class="n">TabularDataSource</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">rowLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..</span><span class="o">&lt;</span> <span class="n"></span><span class="n">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">numberOfRows</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span> <span class="p">{</span> <span class="n"></span><span class="n">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">labelForRow</span><span class="p">(</span><span class="nv">$</span><span class="nv">0</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">columnLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..</span><span class="o">&lt;</span> <span class="n"></span><span class="n">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">numberOfColumns</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span> <span class="p">{</span> <span class="n"></span><span class="n">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">labelForColumn</span><span class="p">(</span><span class="nv">$</span><span class="nv">0</span><span class="p">)</span> <span class="p">}</span>
+<span class="sr">//</span> <span class="n">传入一个数据源</span>
+<span class="n">func</span> <span class="n">printTable</span><span class="p">(</span><span class="n">dataSource:</span> <span class="n">TabularDataSource</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">let</span> <span class="n">rowLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..&lt;</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">numberOfRows</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span> <span class="p">{</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">labelForRow</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">let</span> <span class="n">columnLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..&lt;</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">numberOfColumns</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span> <span class="p">{</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">labelForColumn</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">}</span>
 
-    <span class="sr">//</span> <span class="n"></span><span class="n">创建一个数组存储每个行标签的宽度</span>
-    <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">rowLabelWidths</span> <span class="o">=</span> <span class="n"></span><span class="n">rowLabels</span><span class="o">.</span><span class="nb">map</span> <span class="p">{</span> <span class="nv">$</span><span class="nv">0</span><span class="o">.</span><span class="n"></span><span class="n">characters</span><span class="o">.</span><span class="n"></span><span class="n">count</span> <span class="p">}</span>
+    <span class="sr">//</span> <span class="n">创建一个数组存储每个行标签的宽度</span>
+    <span class="n">let</span> <span class="n">rowLabelWidths</span> <span class="o">=</span> <span class="n">rowLabels</span><span class="o">.</span><span class="nb">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">characters</span><span class="o">.</span><span class="n">count</span> <span class="p">}</span>
 
-    <span class="sr">//</span> <span class="n"></span><span class="n">限定行标签的最大长度</span>
-    <span class="n"></span><span class="n">guard</span> <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">maxRowLabelWidth</span> <span class="o">=</span> <span class="n"></span><span class="n">rowLabelWidths</span><span class="o">.</span><span class="n"></span><span class="n">maxElement</span><span class="p">(</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="sr">//</span> <span class="n">限定行标签的最大长度</span>
+    <span class="n">guard</span> <span class="n">let</span> <span class="n">maxRowLabelWidth</span> <span class="o">=</span> <span class="n">rowLabelWidths</span><span class="o">.</span><span class="n">maxElement</span><span class="p">()</span> <span class="k">else</span> <span class="p">{</span>
         <span class="k">return</span>
     <span class="p">}</span>
 
-    <span class="sr">//</span> <span class="n"></span><span class="n">创建第一行</span><span class="p">,</span> <span class="n"></span><span class="n">包含列标题</span>
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">firstRow</span> <span class="o">=</span> <span class="n"></span><span class="n">padding</span><span class="p">(</span><span class="n"></span><span class="n">maxRowLabelWidth</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#34; |&#34;</span>
+    <span class="sr">//</span> <span class="n">创建第一行</span><span class="p">,</span> <span class="n">包含列标题</span>
+    <span class="n">var</span> <span class="n">firstRow</span> <span class="o">=</span> <span class="n">padding</span><span class="p">(</span><span class="n">maxRowLabelWidth</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#34; |&#34;</span>
 
-    <span class="sr">//</span> <span class="n"></span><span class="n">跟踪每列的宽度</span>
-    <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">columnWidths</span> <span class="o">=</span> <span class="p">[</span><span class="n"></span><span class="n">Int</span><span class="p">]</span><span class="p">(</span><span class="p">)</span>
+    <span class="sr">//</span> <span class="n">跟踪每列的宽度</span>
+    <span class="n">var</span> <span class="n">columnWidths</span> <span class="o">=</span> <span class="p">[</span><span class="n">Int</span><span class="p">]()</span>
 
-    <span class="k">for</span> <span class="n"></span><span class="n">columnLabel</span> <span class="n"></span><span class="n">in</span> <span class="n"></span><span class="n">columnLabels</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">columnHeader</span> <span class="o">=</span> <span class="s">&#34; \(columnLabel) |&#34;</span>
-        <span class="n"></span><span class="n">firstRow</span> <span class="o">+=</span> <span class="n"></span><span class="n">columnHeader</span>
-        <span class="n"></span><span class="n">columnWidths</span><span class="o">.</span><span class="n"></span><span class="n">append</span><span class="p">(</span><span class="n"></span><span class="n">columnHeader</span><span class="o">.</span><span class="n"></span><span class="n">characters</span><span class="o">.</span><span class="n"></span><span class="n">count</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">columnLabel</span> <span class="n">in</span> <span class="n">columnLabels</span> <span class="p">{</span>
+        <span class="n">let</span> <span class="n">columnHeader</span> <span class="o">=</span> <span class="s">&#34; \(columnLabel) |&#34;</span>
+        <span class="n">firstRow</span> <span class="o">+=</span> <span class="n">columnHeader</span>
+        <span class="n">columnWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">columnHeader</span><span class="o">.</span><span class="n">characters</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
     <span class="p">}</span>
-    <span class="k">print</span><span class="p">(</span><span class="n"></span><span class="n">firstRow</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">firstRow</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n"></span><span class="n">i</span> <span class="n"></span><span class="n">in</span> <span class="mi">0</span> <span class="o">..</span><span class="o">&lt;</span> <span class="n"></span><span class="n">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">numberOfRows</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">paddingAmount</span> <span class="o">=</span> <span class="n"></span><span class="n">maxRowLabelWidth</span> <span class="o">-</span> <span class="n"></span><span class="n">rowLabelWidths</span><span class="p">[</span><span class="n"></span><span class="n">i</span><span class="p">]</span>
-        <span class="n"></span><span class="n">var</span> <span class="n"></span><span class="n">out</span> <span class="o">=</span> <span class="n"></span><span class="n">rowLabels</span><span class="p">[</span><span class="n"></span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n"></span><span class="n">padding</span><span class="p">(</span><span class="n"></span><span class="n">paddingAmount</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#34; |&#34;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="n">in</span> <span class="mi">0</span> <span class="o">..&lt;</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">numberOfRows</span> <span class="p">{</span>
+        <span class="n">let</span> <span class="n">paddingAmount</span> <span class="o">=</span> <span class="n">maxRowLabelWidth</span> <span class="o">-</span> <span class="n">rowLabelWidths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">var</span> <span class="n">out</span> <span class="o">=</span> <span class="n">rowLabels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">padding</span><span class="p">(</span><span class="n">paddingAmount</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#34; |&#34;</span>
 
-        <span class="k">for</span> <span class="n"></span><span class="n">j</span> <span class="n"></span><span class="n">in</span> <span class="mi">0</span> <span class="o">..</span><span class="o">&lt;</span> <span class="n"></span><span class="n">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">numberOfColumns</span> <span class="p">{</span>
-            <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">item</span> <span class="o">=</span> <span class="n"></span><span class="n">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">itemForRow</span><span class="p">(</span><span class="n"></span><span class="n">i</span><span class="p">,</span> <span class="n"></span><span class="n">column:</span> <span class="n"></span><span class="n">j</span><span class="p">)</span>
-            <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">itemString</span> <span class="o">=</span> <span class="s">&#34; \(item) |&#34;</span>
-            <span class="n"></span><span class="n">let</span> <span class="n"></span><span class="n">paddingAmount</span> <span class="o">=</span> <span class="n"></span><span class="n">columnWidths</span><span class="p">[</span><span class="n"></span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n"></span><span class="n">itemString</span><span class="o">.</span><span class="n"></span><span class="n">characters</span><span class="o">.</span><span class="n"></span><span class="n">count</span>
-            <span class="n"></span><span class="n">out</span> <span class="o">+=</span> <span class="n"></span><span class="n">padding</span><span class="p">(</span><span class="n"></span><span class="n">paddingAmount</span><span class="p">)</span> <span class="o">+</span> <span class="n"></span><span class="n">itemString</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="n">in</span> <span class="mi">0</span> <span class="o">..&lt;</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">numberOfColumns</span> <span class="p">{</span>
+            <span class="n">let</span> <span class="n">item</span> <span class="o">=</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">itemForRow</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">column:</span> <span class="n">j</span><span class="p">)</span>
+            <span class="n">let</span> <span class="n">itemString</span> <span class="o">=</span> <span class="s">&#34; \(item) |&#34;</span>
+            <span class="n">let</span> <span class="n">paddingAmount</span> <span class="o">=</span> <span class="n">columnWidths</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">itemString</span><span class="o">.</span><span class="n">characters</span><span class="o">.</span><span class="n">count</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">padding</span><span class="p">(</span><span class="n">paddingAmount</span><span class="p">)</span> <span class="o">+</span> <span class="n">itemString</span>
         <span class="p">}</span>
-        <span class="k">print</span><span class="p">(</span><span class="n"></span><span class="n">out</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n"></span><span class="n">printTable</span><span class="p">(</span><span class="n"></span><span class="n">deparment</span><span class="p">)</span>
+<span class="n">printTable</span><span class="p">(</span><span class="n">deparment</span><span class="p">)</span>
 
 </code></pre></div><p>其中的计算属性在 Raku 中可以使用重写属性的方法来完成。</p>
 <h3 id="role-in-raku">Role in Raku</h3>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 
 <span class="k">sub</span> <span class="nf">padding</span><span class="p">(Int $amount) {</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">paddingString</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="p">;</span>
-    <span class="nv">$</span><span class="nv">paddingString</span> <span class="o">~=</span> <span class="s">&#34; &#34;</span> <span class="k">for</span>  <span class="mi">0</span> <span class="o">..</span><span class="o">^</span> <span class="nv">$</span><span class="nv">amount</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$</span><span class="nv">paddingString</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$paddingString</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="p">;</span>
+    <span class="nv">$paddingString</span> <span class="o">~=</span> <span class="s">&#34; &#34;</span> <span class="k">for</span>  <span class="mi">0</span> <span class="o">..^</span> <span class="nv">$amount</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$paddingString</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="c1"># 声明一个接口, 只定义了方法和属性, 没有做实现</span>
-<span class="n"></span><span class="n">role</span> <span class="n"></span><span class="n">TabularDataSource</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">numberOfRows</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">rw</span><span class="p">;</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">numberOfColumns</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">rw</span><span class="p">;</span>
+<span class="c1"># 声明一个接口, 只定义了方法和属性, 没有做实现</span>
+<span class="n">role</span> <span class="n">TabularDataSource</span> <span class="p">{</span>
+    <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">numberOfRows</span> <span class="n">is</span> <span class="n">rw</span><span class="p">;</span>
+    <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">numberOfColumns</span> <span class="n">is</span> <span class="n">rw</span><span class="p">;</span>
 
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">labelForRow</span><span class="p">(</span><span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">row</span><span class="p">)</span>             <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">labelForColumn</span><span class="p">(</span><span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">column</span><span class="p">)</span>       <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">itemForRow</span><span class="p">(</span><span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">row</span><span class="p">,</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">column</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+    <span class="n">method</span> <span class="n">labelForRow</span><span class="p">(</span><span class="n">Int</span> <span class="nv">$row</span><span class="p">)</span>             <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+    <span class="n">method</span> <span class="n">labelForColumn</span><span class="p">(</span><span class="n">Int</span> <span class="nv">$column</span><span class="p">)</span>       <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+    <span class="n">method</span> <span class="n">itemForRow</span><span class="p">(</span><span class="n">Int</span> <span class="nv">$row</span><span class="p">,</span> <span class="n">Int</span> <span class="nv">$column</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Person</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Str</span> <span class="nv">$</span><span class="err">.</span><span class="nv">name</span><span class="p">;</span>
-    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">age</span><span class="p">;</span>
-    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">yearsOfExperience</span><span class="p">;</span>
+<span class="n">class</span> <span class="n">Person</span> <span class="p">{</span>
+    <span class="n">has</span> <span class="n">Str</span> <span class="nv">$</span><span class="err">.</span><span class="nv">name</span><span class="p">;</span>
+    <span class="n">has</span> <span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">age</span><span class="p">;</span>
+    <span class="n">has</span> <span class="n">Int</span> <span class="nv">$</span><span class="err">.</span><span class="nv">yearsOfExperience</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Department</span> <span class="n"></span><span class="n">does</span> <span class="n"></span><span class="n">TabularDataSource</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">name</span><span class="p">;</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">@</span><span class="err">.</span><span class="nv">people</span><span class="p">;</span>
+<span class="n">class</span> <span class="n">Department</span> <span class="n">does</span> <span class="n">TabularDataSource</span> <span class="p">{</span>
+    <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">name</span><span class="p">;</span>
+    <span class="n">has</span> <span class="nv">@</span><span class="err">.</span><span class="nv">people</span><span class="p">;</span>
 
-    <span class="n"></span><span class="n">method</span> <span class="k">new</span><span class="p">(</span><span class="n"></span><span class="n">Str</span> <span class="nv">$</span><span class="nv">name</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">self</span><span class="o">.</span><span class="nb">bless</span><span class="p">(</span><span class="n"></span><span class="n">name</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">name</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">method</span> <span class="k">new</span><span class="p">(</span><span class="n">Str</span> <span class="nv">$name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="o">.</span><span class="nb">bless</span><span class="p">(</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="nv">$name</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="c1"># 实现接口中的方法</span>
+    <span class="c1"># 实现接口中的方法</span>
 
-    <span class="c1"># 重写方法 has $.numberOfRows 其实是 has $!numberOfRows 加上 method numberOfRows() { ... } 方法。</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">numberOfRows</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="o">.</span><span class="n"></span><span class="n">elems</span><span class="p">;</span>
+    <span class="c1"># 重写方法 has $.numberOfRows 其实是 has $!numberOfRows 加上 method numberOfRows() { ... } 方法。</span>
+    <span class="n">method</span> <span class="n">numberOfRows</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="o">.</span><span class="n">elems</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">numberOfColumns</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">method</span> <span class="n">numberOfColumns</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">Person</span> <span class="nv">$</span><span class="nv">person</span><span class="p">)</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">rw</span> <span class="p">{</span>
-        <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="o">.</span><span class="n"></span><span class="n">append</span><span class="p">(</span><span class="nv">$</span><span class="nv">person</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">method</span> <span class="n">addPerson</span><span class="p">(</span><span class="n">Person</span> <span class="nv">$person</span><span class="p">)</span> <span class="n">is</span> <span class="n">rw</span> <span class="p">{</span>
+        <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nv">$person</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="c1"># 如果类遵守了某个 role 但是未实现其中的方法, 则会报错如下:</span>
-    <span class="c1"># Method &#39;labelForRow&#39; must be implemented by Department because it is required by a role</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">labelForRow</span><span class="p">(</span><span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">row</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="p">[</span><span class="nv">$</span><span class="nv">row</span><span class="p">]</span><span class="o">.</span><span class="n"></span><span class="n">name</span><span class="p">;</span>
+    <span class="c1"># 如果类遵守了某个 role 但是未实现其中的方法, 则会报错如下:</span>
+    <span class="c1"># Method &#39;labelForRow&#39; must be implemented by Department because it is required by a role</span>
+    <span class="n">method</span> <span class="n">labelForRow</span><span class="p">(</span><span class="n">Int</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="p">[</span><span class="nv">$row</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">labelForColumn</span><span class="p">(</span><span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">column</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">given</span> <span class="nv">$</span><span class="nv">column</span> <span class="p">{</span>
-            <span class="n"></span><span class="n">when</span> <span class="mi">0</span>  <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;Age&#34;</span> <span class="p">}</span>
-            <span class="n"></span><span class="n">when</span> <span class="mi">1</span>  <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;Years of Experence&#34;</span> <span class="p">}</span>
-            <span class="n"></span><span class="n">default</span> <span class="p">{</span> <span class="nb">die</span><span class="p">(</span><span class="s">&#34;Invalid column!&#34;</span><span class="p">)</span><span class="p">}</span>
+    <span class="n">method</span> <span class="n">labelForColumn</span><span class="p">(</span><span class="n">Int</span> <span class="nv">$column</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">given</span> <span class="nv">$column</span> <span class="p">{</span>
+            <span class="n">when</span> <span class="mi">0</span>  <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;Age&#34;</span> <span class="p">}</span>
+            <span class="n">when</span> <span class="mi">1</span>  <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;Years of Experence&#34;</span> <span class="p">}</span>
+            <span class="n">default</span> <span class="p">{</span> <span class="nb">die</span><span class="p">(</span><span class="s">&#34;Invalid column!&#34;</span><span class="p">)}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">itemForRow</span><span class="p">(</span><span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">row</span><span class="p">,</span> <span class="n"></span><span class="n">Int</span> <span class="nv">$</span><span class="nv">column</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">my</span> <span class="nv">$</span><span class="nv">person</span> <span class="o">=</span> <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="p">[</span><span class="nv">$</span><span class="nv">row</span><span class="p">]</span><span class="p">;</span>
-        <span class="n"></span><span class="n">given</span> <span class="nv">$</span><span class="nv">column</span> <span class="p">{</span>
-            <span class="n"></span><span class="n">when</span> <span class="mi">0</span>  <span class="p">{</span> <span class="k">return</span> <span class="nv">$</span><span class="nv">person</span><span class="o">.</span><span class="n"></span><span class="n">age</span>               <span class="p">}</span>
-            <span class="n"></span><span class="n">when</span> <span class="mi">1</span>  <span class="p">{</span> <span class="k">return</span> <span class="nv">$</span><span class="nv">person</span><span class="o">.</span><span class="n"></span><span class="n">yearsOfExperience</span> <span class="p">}</span>
-            <span class="n"></span><span class="n">default</span> <span class="p">{</span> <span class="nb">die</span><span class="p">(</span><span class="s">&#34;Invalid column&#34;</span><span class="p">)</span>            <span class="p">}</span>
+    <span class="n">method</span> <span class="n">itemForRow</span><span class="p">(</span><span class="n">Int</span> <span class="nv">$row</span><span class="p">,</span> <span class="n">Int</span> <span class="nv">$column</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">my</span> <span class="nv">$person</span> <span class="o">=</span> <span class="nv">@</span><span class="err">!</span><span class="nv">people</span><span class="p">[</span><span class="nv">$row</span><span class="p">];</span>
+        <span class="n">given</span> <span class="nv">$column</span> <span class="p">{</span>
+            <span class="n">when</span> <span class="mi">0</span>  <span class="p">{</span> <span class="k">return</span> <span class="nv">$person</span><span class="o">.</span><span class="n">age</span>               <span class="p">}</span>
+            <span class="n">when</span> <span class="mi">1</span>  <span class="p">{</span> <span class="k">return</span> <span class="nv">$person</span><span class="o">.</span><span class="n">yearsOfExperience</span> <span class="p">}</span>
+            <span class="n">default</span> <span class="p">{</span> <span class="nb">die</span><span class="p">(</span><span class="s">&#34;Invalid column&#34;</span><span class="p">)</span>            <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">my</span> <span class="nv">$</span><span class="nv">department</span> <span class="o">=</span> <span class="n"></span><span class="n">Department</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="s">&#34;Engineering&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nv">$</span><span class="nv">department</span><span class="o">.</span><span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">Person</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n"></span><span class="n">name</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#34;Joe&#34;</span><span class="p">,</span>   <span class="n"></span><span class="n">age</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">30</span><span class="p">,</span> <span class="n"></span><span class="n">yearsOfExperience</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">6</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nv">$</span><span class="nv">department</span><span class="o">.</span><span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">Person</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n"></span><span class="n">name</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#34;Karen&#34;</span><span class="p">,</span> <span class="n"></span><span class="n">age</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">40</span><span class="p">,</span> <span class="n"></span><span class="n">yearsOfExperience</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">18</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nv">$</span><span class="nv">department</span><span class="o">.</span><span class="n"></span><span class="n">addPerson</span><span class="p">(</span><span class="n"></span><span class="n">Person</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n"></span><span class="n">name</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#34;Fred&#34;</span><span class="p">,</span>  <span class="n"></span><span class="n">age</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">50</span><span class="p">,</span> <span class="n"></span><span class="n">yearsOfExperience</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">20</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$department</span> <span class="o">=</span> <span class="n">Department</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="s">&#34;Engineering&#34;</span><span class="p">);</span>
+<span class="nv">$department</span><span class="o">.</span><span class="n">addPerson</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="s">&#34;Joe&#34;</span><span class="p">,</span>   <span class="n">age</span> <span class="o">=&gt;</span> <span class="mi">30</span><span class="p">,</span> <span class="n">yearsOfExperience</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">));</span>
+<span class="nv">$department</span><span class="o">.</span><span class="n">addPerson</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="s">&#34;Karen&#34;</span><span class="p">,</span> <span class="n">age</span> <span class="o">=&gt;</span> <span class="mi">40</span><span class="p">,</span> <span class="n">yearsOfExperience</span> <span class="o">=&gt;</span> <span class="mi">18</span><span class="p">));</span>
+<span class="nv">$department</span><span class="o">.</span><span class="n">addPerson</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="s">&#34;Fred&#34;</span><span class="p">,</span>  <span class="n">age</span> <span class="o">=&gt;</span> <span class="mi">50</span><span class="p">,</span> <span class="n">yearsOfExperience</span> <span class="o">=&gt;</span> <span class="mi">20</span><span class="p">));</span>
 
 <span class="k">sub</span> <span class="nf">printTable</span><span class="p">(TabularDataSource $dataSource) {</span>
-   <span class="k">my</span> <span class="nv">@</span><span class="nv">rowLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..</span><span class="o">^</span> <span class="nv">$</span><span class="nv">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">numberOfRows</span> <span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="p">{</span> <span class="nv">$</span><span class="nv">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">labelForRow</span><span class="p">(</span><span class="nv">$</span><span class="nv">_</span><span class="p">)</span><span class="p">}</span><span class="p">;</span>
-   <span class="k">my</span> <span class="nv">@</span><span class="nv">columnLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..</span><span class="o">^</span> <span class="nv">$</span><span class="nv">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">numberOfColumns</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="p">{</span><span class="nv">$</span><span class="nv">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">labelForColumn</span><span class="p">(</span><span class="nv">$</span><span class="nv">_</span><span class="p">)</span><span class="p">}</span><span class="p">;</span>
+   <span class="k">my</span> <span class="nv">@rowLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..^</span> <span class="nv">$dataSource</span><span class="o">.</span><span class="n">numberOfRows</span> <span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="p">{</span> <span class="nv">$dataSource</span><span class="o">.</span><span class="n">labelForRow</span><span class="p">(</span><span class="nv">$_</span><span class="p">)};</span>
+   <span class="k">my</span> <span class="nv">@columnLabels</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span> <span class="o">..^</span> <span class="nv">$dataSource</span><span class="o">.</span><span class="n">numberOfColumns</span><span class="p">)</span><span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="p">{</span><span class="nv">$dataSource</span><span class="o">.</span><span class="n">labelForColumn</span><span class="p">(</span><span class="nv">$_</span><span class="p">)};</span>
 
-   <span class="k">my</span> <span class="nv">@</span><span class="nv">rowLabelWidths</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">rowLabels</span><span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="p">{</span><span class="nv">$</span><span class="nv">_</span><span class="o">.</span><span class="n"></span><span class="n">chars</span><span class="p">}</span><span class="p">;</span>
-   <span class="k">my</span> <span class="nv">$</span><span class="nv">maxRowLabelWidth</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">rowLabelWidths</span><span class="o">.</span><span class="n"></span><span class="n">max</span> <span class="sr">//</span> <span class="k">return</span><span class="p">;</span>
+   <span class="k">my</span> <span class="nv">@rowLabelWidths</span> <span class="o">=</span> <span class="nv">@rowLabels</span><span class="o">.</span><span class="nb">map</span><span class="p">:</span> <span class="p">{</span><span class="nv">$_</span><span class="o">.</span><span class="n">chars</span><span class="p">};</span>
+   <span class="k">my</span> <span class="nv">$maxRowLabelWidth</span> <span class="o">=</span> <span class="nv">@rowLabelWidths</span><span class="o">.</span><span class="n">max</span> <span class="sr">//</span> <span class="k">return</span><span class="p">;</span>
 
-   <span class="k">my</span> <span class="nv">$</span><span class="nv">firstRow</span> <span class="o">=</span> <span class="n"></span><span class="n">padding</span><span class="p">(</span><span class="nv">$</span><span class="nv">maxRowLabelWidth</span><span class="p">)</span> <span class="o">~</span> <span class="s">&#34; |&#34;</span><span class="p">;</span>
-   <span class="k">my</span> <span class="nv">@</span><span class="nv">columnWidths</span><span class="p">;</span>
+   <span class="k">my</span> <span class="nv">$firstRow</span> <span class="o">=</span> <span class="n">padding</span><span class="p">(</span><span class="nv">$maxRowLabelWidth</span><span class="p">)</span> <span class="o">~</span> <span class="s">&#34; |&#34;</span><span class="p">;</span>
+   <span class="k">my</span> <span class="nv">@columnWidths</span><span class="p">;</span>
 
-   <span class="k">for</span> <span class="nv">@</span><span class="nv">columnLabels</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">columnLabel</span> <span class="p">{</span>
-       <span class="k">my</span> <span class="nv">$</span><span class="nv">columnHeader</span> <span class="o">=</span> <span class="s">&#34; $columnLabel |&#34;</span><span class="p">;</span>
-       <span class="nv">$</span><span class="nv">firstRow</span> <span class="o">~=</span> <span class="nv">$</span><span class="nv">columnHeader</span><span class="p">;</span>
-       <span class="nv">@</span><span class="nv">columnWidths</span><span class="o">.</span><span class="n"></span><span class="n">append</span><span class="p">(</span><span class="nv">$</span><span class="nv">columnHeader</span><span class="o">.</span><span class="n"></span><span class="n">chars</span><span class="p">)</span><span class="p">;</span>
+   <span class="k">for</span> <span class="nv">@columnLabels</span> <span class="o">-&gt;</span> <span class="nv">$columnLabel</span> <span class="p">{</span>
+       <span class="k">my</span> <span class="nv">$columnHeader</span> <span class="o">=</span> <span class="s">&#34; $columnLabel |&#34;</span><span class="p">;</span>
+       <span class="nv">$firstRow</span> <span class="o">~=</span> <span class="nv">$columnHeader</span><span class="p">;</span>
+       <span class="nv">@columnWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nv">$columnHeader</span><span class="o">.</span><span class="n">chars</span><span class="p">);</span>
    <span class="p">}</span>
-   <span class="n"></span><span class="n">say</span><span class="p">(</span><span class="nv">$</span><span class="nv">firstRow</span><span class="p">)</span><span class="p">;</span>
+   <span class="n">say</span><span class="p">(</span><span class="nv">$firstRow</span><span class="p">);</span>
 
-   <span class="k">for</span> <span class="mi">0</span> <span class="o">..</span><span class="o">^</span> <span class="nv">$</span><span class="nv">dataSource</span><span class="o">.</span><span class="n"></span><span class="nn">numberOfRows</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">i</span> <span class="p">{</span>
-        <span class="k">my</span> <span class="nv">$</span><span class="nv">paddingAmount</span> <span class="o">=</span> <span class="nv">$</span><span class="nv">maxRowLabelWidth</span> <span class="o">-</span> <span class="nv">@</span><span class="nv">rowLabelWidths</span><span class="p">[</span><span class="nv">$</span><span class="nv">i</span><span class="p">]</span><span class="p">;</span>
-        <span class="k">my</span> <span class="nv">$</span><span class="nv">out</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">rowLabels</span><span class="p">[</span><span class="nv">$</span><span class="nv">i</span><span class="p">]</span> <span class="o">~</span> <span class="n"></span><span class="n">padding</span><span class="p">(</span><span class="nv">$</span><span class="nv">paddingAmount</span><span class="p">)</span> <span class="o">~</span> <span class="s">&#34; |&#34;</span><span class="p">;</span>
+   <span class="k">for</span> <span class="mi">0</span> <span class="o">..^</span> <span class="nv">$dataSource</span><span class="o">.</span><span class="nn">numberOfRows</span> <span class="o">-&gt;</span> <span class="nv">$i</span> <span class="p">{</span>
+        <span class="k">my</span> <span class="nv">$paddingAmount</span> <span class="o">=</span> <span class="nv">$maxRowLabelWidth</span> <span class="o">-</span> <span class="nv">@rowLabelWidths</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+        <span class="k">my</span> <span class="nv">$out</span> <span class="o">=</span> <span class="nv">@rowLabels</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">~</span> <span class="n">padding</span><span class="p">(</span><span class="nv">$paddingAmount</span><span class="p">)</span> <span class="o">~</span> <span class="s">&#34; |&#34;</span><span class="p">;</span>
 
-        <span class="k">for</span> <span class="mi">0</span> <span class="o">..</span><span class="o">^</span> <span class="nv">$</span><span class="nv">dataSource</span><span class="o">.</span><span class="n"></span><span class="nn">numberOfColumns</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">j</span> <span class="p">{</span>
-            <span class="k">my</span> <span class="nv">$</span><span class="nv">item</span> <span class="o">=</span> <span class="nv">$</span><span class="nv">dataSource</span><span class="o">.</span><span class="n"></span><span class="n">itemForRow</span><span class="p">(</span><span class="nv">$</span><span class="nv">i</span><span class="p">,</span> <span class="nv">$</span><span class="nv">j</span><span class="p">)</span><span class="p">;</span>
-            <span class="k">my</span> <span class="nv">$</span><span class="nv">itemString</span> <span class="o">=</span> <span class="s">&#34; $item |&#34;</span><span class="p">;</span>
-            <span class="k">my</span> <span class="nv">$</span><span class="nv">paddingAmount</span> <span class="o">=</span> <span class="nv">@</span><span class="nv">columnWidths</span><span class="p">[</span><span class="nv">$</span><span class="nv">j</span><span class="p">]</span> <span class="o">-</span> <span class="nv">$</span><span class="nv">itemString</span><span class="o">.</span><span class="n"></span><span class="n">chars</span><span class="p">;</span>
-            <span class="nv">$</span><span class="nv">out</span> <span class="o">~=</span> <span class="n"></span><span class="n">padding</span><span class="p">(</span><span class="nv">$</span><span class="nv">paddingAmount</span><span class="p">)</span> <span class="o">~</span> <span class="nv">$</span><span class="nv">itemString</span><span class="p">;</span>
+        <span class="k">for</span> <span class="mi">0</span> <span class="o">..^</span> <span class="nv">$dataSource</span><span class="o">.</span><span class="nn">numberOfColumns</span> <span class="o">-&gt;</span> <span class="nv">$j</span> <span class="p">{</span>
+            <span class="k">my</span> <span class="nv">$item</span> <span class="o">=</span> <span class="nv">$dataSource</span><span class="o">.</span><span class="n">itemForRow</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$j</span><span class="p">);</span>
+            <span class="k">my</span> <span class="nv">$itemString</span> <span class="o">=</span> <span class="s">&#34; $item |&#34;</span><span class="p">;</span>
+            <span class="k">my</span> <span class="nv">$paddingAmount</span> <span class="o">=</span> <span class="nv">@columnWidths</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">-</span> <span class="nv">$itemString</span><span class="o">.</span><span class="n">chars</span><span class="p">;</span>
+            <span class="nv">$out</span> <span class="o">~=</span> <span class="n">padding</span><span class="p">(</span><span class="nv">$paddingAmount</span><span class="p">)</span> <span class="o">~</span> <span class="nv">$itemString</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="n"></span><span class="n">say</span><span class="p">(</span><span class="nv">$</span><span class="nv">out</span><span class="p">)</span><span class="p">;</span>
+        <span class="n">say</span><span class="p">(</span><span class="nv">$out</span><span class="p">);</span>
    <span class="p">}</span>
 
 <span class="p">}</span>
 
-<span class="n"></span><span class="n">printTable</span><span class="p">(</span><span class="nv">$</span><span class="nv">department</span><span class="p">)</span><span class="p">;</span>
+<span class="n">printTable</span><span class="p">(</span><span class="nv">$department</span><span class="p">);</span>
 
 </code></pre></div><p>role 中的 <code>{ ... }</code> 是 yadayada 操作符, 起占位作用, 表示方法会在别处实现。类中的方法同样也可以这样声明。</p>
 <p>最后输出:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">      <span class="o">|</span> <span class="n"></span><span class="n">Age</span> <span class="o">|</span> <span class="n"></span><span class="n">Years</span> <span class="n"></span><span class="n">of</span> <span class="n"></span><span class="n">Experence</span> <span class="o">|</span>
-<span class="n"></span><span class="n">Joe</span>   <span class="o">|</span>  <span class="mi">30</span> <span class="o">|</span>                  <span class="mi">6</span> <span class="o">|</span>
-<span class="n"></span><span class="n">Karen</span> <span class="o">|</span>  <span class="mi">40</span> <span class="o">|</span>                 <span class="mi">18</span> <span class="o">|</span>
-<span class="n"></span><span class="n">Fred</span>  <span class="o">|</span>  <span class="mi">50</span> <span class="o">|</span>                 <span class="mi">20</span> <span class="o">|</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">      <span class="o">|</span> <span class="n">Age</span> <span class="o">|</span> <span class="n">Years</span> <span class="n">of</span> <span class="n">Experence</span> <span class="o">|</span>
+<span class="n">Joe</span>   <span class="o">|</span>  <span class="mi">30</span> <span class="o">|</span>                  <span class="mi">6</span> <span class="o">|</span>
+<span class="n">Karen</span> <span class="o">|</span>  <span class="mi">40</span> <span class="o">|</span>                 <span class="mi">18</span> <span class="o">|</span>
+<span class="n">Fred</span>  <span class="o">|</span>  <span class="mi">50</span> <span class="o">|</span>                 <span class="mi">20</span> <span class="o">|</span>
 </code></pre></div>
 
         
@@ -640,7 +640,7 @@ if (!doNotTrack) {
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -840,8 +840,8 @@ for 'baA'.match($regex, :overlap) -&gt; $m {
 </code></pre><h3 id="regex-adverbs">Regex Adverbs</h3>
 <p>在正则表达式声明时出现的副词是实际正则表达式的一部分, 并影响 Raku 编译器如何将正则表达式转换为二进制代码。</p>
 <p>例如: <code>:ignorecase (:i)</code> 副词告诉编译器忽略大写, 小写和标题大小写字母之间的区别。</p>
-<p>所以 <code>'a'~~ /A/</code> 是假的, 但 `'a&rsquo; ~~ /:i A /是一个成功的匹配。</p>
-<p>正则表达式副词可以在正则表达式声明之前或之内, 并且仅在词法上影响其后的正则表达式部分。 请注意, 在正则表达式之前出现的正则表达式副词必须出现在将正则表达式引入解析器之后, 如 &lsquo;rx&rsquo; 或 &lsquo;m&rsquo; 或裸的 &lsquo;/'。 但是这样是无效的:</p>
+<p>所以 <code>'a'~~ /A/</code> 是假的, 但 `&lsquo;a&rsquo; ~~ /:i A /是一个成功的匹配。</p>
+<p>正则表达式副词可以在正则表达式声明之前或之内, 并且仅在词法上影响其后的正则表达式部分。 请注意, 在正则表达式之前出现的正则表达式副词必须出现在将正则表达式引入解析器之后, 如 &lsquo;rx&rsquo; 或 &rsquo;m' 或裸的 &lsquo;/'。 但是这样是无效的:</p>
 <pre><code class="language-raku" data-lang="raku">my $rx1 = :i/a/;      # adverb is before the regex is recognized =&gt; exception 
 </code></pre><p>下面这些是等价的:</p>
 <pre><code class="language-raku" data-lang="raku">my $rx1 = rx:i/a/;      # before 
@@ -1065,7 +1065,7 @@ EOI
 say so IniFormat.parse($contents);
 </code></pre><p>除了把所有的正则表达式都放在一个 Grammar 中并把它们变成了 tokens(因为他们不需要回溯) 之外, 有趣的新花样是:</p>
 <pre><code class="language-raku" data-lang="raku">token ws { &lt;!ww&gt; \h* }
-</code></pre><p>这被称为隐式空白解析。 当它不在两个字符之间 (<code>&lt;ww&gt;</code>, 反向的&quot;within word&rdquo; 断言)时匹配, 以及零个或多个水平空格字符。 对水平空白的限制很重要, 因为换行符(它们是垂直空白)定界记录, 不应该被隐式地匹配。</p>
+</code></pre><p>这被称为隐式空白解析。 当它不在两个字符之间 (<code>&lt;ww&gt;</code>, 反向的&quot;within word&quot; 断言)时匹配, 以及零个或多个水平空格字符。 对水平空白的限制很重要, 因为换行符(它们是垂直空白)定界记录, 不应该被隐式地匹配。</p>
 <p>还有一些与空白有关的麻烦潜伏着。 正则表达式 <code>\n+</code> 将不会匹配 <code>\n \n</code> 这样的字符串, 因为两个换行符之间有空白。 要允许这样的输入字符串, 用 <code>\n\s*</code> 代替 <code>\n+</code>。</p>
 <p><a href="https://docs.raku.org/language/regexes">全文完</a></p>
 
@@ -1164,7 +1164,7 @@ say so IniFormat.parse($contents);
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

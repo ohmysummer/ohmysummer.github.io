@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -526,7 +526,7 @@ Sounds like a challenge!
 Quite a bug hive!</p>
 <h2 id="test-it-out">Test It Out</h2>
 <p>Our starting point is to cover each manifestation of the bug with a test.
-Make all the test pass and you know you&rsquo;ve fixed the bug, plus you already have something to place into <a href="https://github.com/raku/roast/">roast</a>, to cover the tickets. My tests ended up looking like this, where I&rsquo;ve used <a href="https://docs.raku.org/syntax/gather%20take"><code>gather</code>/<code>take</code></a> duo to capture what the tickets&rsquo; code printed to the screen:
+Make all the test pass and you know you&rsquo;ve fixed the bug, plus you already have something to place into <a href="https://github.com/raku/roast/">roast</a>, to cover the tickets. My tests ended up looking like this, where I&rsquo;ve used <a href="https://docs.raku.org/syntax/gather%20take"><code>gather</code>/<code>take</code></a> duo to capture what the tickets' code printed to the screen:
 我们的出发点是用一个测试来覆盖每个bug的表现。
 让所有的测试通过，你知道你已经修复了错误，再加上你已经有一些东西要放在[烤]（https://github.com/raku/roast/），以涵盖门票。我的测试看起来像这样，我已经使用了[<code>collect</code> /<code>take</code>]（https://docs.raku.org/syntax/gather%20take）二重奏来捕获票据打印到屏幕：</p>
 <pre><code>use Test;
@@ -584,7 +584,7 @@ subtest 'thunking closure scoping' =&gt; {
 }
 </code></pre>
 <p>When I brought up the first bug in <a href="https://webchat.freenode.net/?channels=#raku-dev">our dev chatroom</a>, jnthn++ pointed out that such bugs are often due to mis-scoped blocks, as <code>p6capturelex</code> op that&rsquo;s involved needs to be called in the immediate outer of the block it references.</p>
-<p>Looking through the tickets, I also spotted skids++'s note that changing a conditional for <code>statement_id</code> in <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9195-L9197">block migrator predicate</a> fixed one of the tickets.
+<p>Looking through the tickets, I also spotted skids++&rsquo;s note that changing a conditional for <code>statement_id</code> in <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9195-L9197">block migrator predicate</a> fixed one of the tickets.
 This wasn&rsquo;t the full story of the fix, as the many still-failing tests showed, but it was a good start.
 当我在[我们的开发聊天室]（https://webchat.freenode.net/?channels=#raku-dev）提出第一个错误时，jnthn ++指出这样的错误通常是由于错误的块，涉及的p6capturelex`需要在它引用的块的外部被调用。</p>
 <p>通过查看票据，我还发现滑块++的注意到，在[block migrator predicate]中更改<code>statement_id</code>的条件（https://github.com/rakudo/rakudo/raklob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9195 -L9197）修正了一张门票。
@@ -645,7 +645,7 @@ get migrated, even though they should</li>
 even though they shouldn&rsquo;t</li>
 </ul>
 <p>The first one is fairly straightforward. Looking at the QAST dump, we see <code>xx</code> thunk has a higher <code>statement_id</code> than the block it was meant to be in.
-This is what skids++'s hint addresses, so we&rsquo;ll change <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9196">the <code>statement_id</code> conditional</a> from <code>==</code> to <code>&gt;=</code> to look for statement IDs higher than our current one as well, since those would be from any substatements, such as our <code>xx</code> inside the positional indexing operator:
+This is what skids++&rsquo;s hint addresses, so we&rsquo;ll change <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9196">the <code>statement_id</code> conditional</a> from <code>==</code> to <code>&gt;=</code> to look for statement IDs higher than our current one as well, since those would be from any substatements, such as our <code>xx</code> inside the positional indexing operator:
 第一个很简单。查看QAST转储，我们看到<code>xx</code> thunk的&rsquo;statement_id<code>比它原本想要的块要高。 这是什么滑动++的提示地址，所以我们会改变[</code>statement_id<code>条件]（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9196）从== ````=``查找比我们当前的语句ID更高的语句ID，因为这些语句可能来自任何子语句，比如位置索引操作符中的</code>xx`：</p>
 <pre><code>($b.ann('statement_id') // -1) &gt;= $migrate_stmt_id
 </code></pre>
@@ -660,7 +660,7 @@ src/Raku/Actions.nqp:9616:            ).annotate_self: 'statement_id', $*STATEME
 src/Raku/World.nqp:256:            $pad.annotate('statement_id', $*STATEMENT_ID);
 </code></pre>
 <p>From the output, we can see the ID is stored in <code>$*STATEMENT_ID</code> dynamic variable, so we&rsquo;ll use that for our annotation <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9574">on the
-<code>WhateverCode</code>'s <code>QAST::Block</code></a>:
+<code>WhateverCode</code>&rsquo;s <code>QAST::Block</code></a>:
 从输出中，我们可以看到ID存储在<code>$ * STATEMENT_ID</code>动态变量中，所以我们将使用它作为我们的注释[在
 <code>WhateverCode`` QAST :: Block</code>]（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L9574）：</p>
 <pre><code>my $block := QAST::Block.new(
@@ -722,8 +722,8 @@ not ok 1 - thunking closure scoping
     ...
 </code></pre>
 <p>Next, let&rsquo;s go to <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L6535-L6560"><code>sub migrate_blocks</code> in <code>Actions.nqp</code></a> and add a bunch of debug dumps inside most of the conditionals.
-This will let us track when a block is compared and to see whether migration occurs. As mentioned earlier, I like to key my dumps on env vars using <code>nqp::getenvhash</code> op, so after modifications my <code>migrate_blocks</code> routine looks like this; note the use of <code>.dump</code> method to dump QAST node guts (tip: <code>.dump</code> method also exists on <code>Raku::Grammar</code>'s match objects!):
-接下来，我们来到[Actions.nqp<code>中的</code>migrate_blocks<code>]（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L6535-L6560），并添加一堆在大多数条件下调试转储。 这将让我们跟踪块的比较时间，并查看是否发生迁移。正如前面所提到的，我喜欢用</code>nqp :: getenvhash<code>运算符在env vars上输入密码，所以在修改后我的</code>migrate_blocks<code>例程看起来像这样;请注意使用</code>.dump<code>方法来转储QAST节点的内容（提示：</code>.dump`方法也存在于&rsquo;Raku :: Grammar'的匹配对象中！</p>
+This will let us track when a block is compared and to see whether migration occurs. As mentioned earlier, I like to key my dumps on env vars using <code>nqp::getenvhash</code> op, so after modifications my <code>migrate_blocks</code> routine looks like this; note the use of <code>.dump</code> method to dump QAST node guts (tip: <code>.dump</code> method also exists on <code>Raku::Grammar</code>&rsquo;s match objects!):
+接下来，我们来到[Actions.nqp<code>中的</code>migrate_blocks<code>]（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L6535-L6560），并添加一堆在大多数条件下调试转储。 这将让我们跟踪块的比较时间，并查看是否发生迁移。正如前面所提到的，我喜欢用</code>nqp :: getenvhash<code>运算符在env vars上输入密码，所以在修改后我的</code>migrate_blocks<code>例程看起来像这样;请注意使用</code>.dump<code>方法来转储QAST节点的内容（提示：</code>.dump`方法也存在于&rsquo;Raku :: Grammar&rsquo;的匹配对象中！</p>
 <pre><code>sub migrate_blocks($from, $to, $predicate?) {
     my @decls := @($from[0]);
     my int $n := nqp::elems(@decls);
@@ -830,7 +830,7 @@ $ G '$*IN_STMT_MOD' src/Raku/Grammar.nqp
 1338:        | &lt;EXPR&gt; :dba('statement end') { $*IN_STMT_MOD := 1 }
 </code></pre>
 <p>Looks like it&rsquo;s a marker for statement modifier conditions. Statement modifiers have a lot of relevance to our <code>andthen</code> thunks, because <code>$foo with $bar</code> gets turned into <code>$bar andthen $foo</code> during parsing. Since, as we can see in <code>src/Raku/Grammar.nqp</code>, <code>in_stmt_mod</code> annotation gets set for <code>with</code> statement modifiers, we can hypothesize that if we turn our buggy <code>andthen</code> into a <code>with</code>, the bug will disappear:
-看起来这是语句修饰符条件的标记。语句修饰符与我们的'和&rsquo;thunk有很多相关性，因为<code>$ foo with $ bar</code>在解析过程中变成<code>$ bar并且$ foo</code>。正如我们在<code>src / Raku / Grammar.nqp</code>中可以看到的，&lsquo;in_stmt_mod<code>注释是为``with语句修饰符'设置的，我们可以假设如果我们把我们的bug和``然后``变成</code>with`，bug会消失：</p>
+看起来这是语句修饰符条件的标记。语句修饰符与我们的&rsquo;和&rsquo;thunk有很多相关性，因为<code>$ foo with $ bar</code>在解析过程中变成<code>$ bar并且$ foo</code>。正如我们在<code>src / Raku / Grammar.nqp</code>中可以看到的，&lsquo;in_stmt_mod<code>注释是为``with语句修饰符'设置的，我们可以假设如果我们把我们的bug和``然后``变成</code>with`，bug会消失：</p>
 <pre><code>$ ./raku -e 'sub itcavuc ($c) { 42 with try {say $c} };
     itcavuc $_ for 2, 4, 6;'
 2
@@ -840,7 +840,7 @@ $ G '$*IN_STMT_MOD' src/Raku/Grammar.nqp
 <p>And indeed it does! Then, we have a way forward: we need to set <code>in_stmt_mod</code> annotation to a truthy value for just <em>the first</em> argument of <code>andthen</code>
 (and its relatives <code>notandthen</code> and <code>orelse</code>).</p>
 <p>Glancing <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Grammar.nqp#L4650-L4651">at the Grammar</a> it doesn&rsquo;t look like it immediatelly offers a similar opportunity for how <code>in_stmt_mod</code> is set for the <code>with</code> statement modifier. Let&rsquo;s approach it differently. Since we care about this when thunks are created, let&rsquo;s watch for <code>andthen</code> QAST <a href="https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp#L7170">inside <code>sub thunkity_thunk</code> in Actions</a>, then descend into its first kid and add the <code>in_stmt_mod</code> annotation by cheating and using the <code>past_block</code> annotation on <code>QAST::WVal</code> with the thunk that contains the reference to <code>QAST::Block</code> we wish to annotate. The code will look something like this:
-看着[在语法]（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Grammar.nqp#L4650-L4651）它看起来并不像它立即提供了一个类似的机会， in_stmt_mod<code>设置为</code>with<code>语句修饰符。让我们以不同的方式处理。由于我们在创建thunk的时候关心这个，所以让我们来看看在动作中的</code>subthunkity_thunk<code>内是否有</code>Qt<code>（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp ＃L7170），然后下降到它的第一个孩子，通过欺骗和使用</code>QAST :: WVal<code>上的</code>past_block<code>注释添加</code>in_stmt_mod`注释与包含&rsquo;QAST :: Block'引用的thunk我们希望注释。代码将如下所示：</p>
+看着[在语法]（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Grammar.nqp#L4650-L4651）它看起来并不像它立即提供了一个类似的机会， in_stmt_mod<code>设置为</code>with<code>语句修饰符。让我们以不同的方式处理。由于我们在创建thunk的时候关心这个，所以让我们来看看在动作中的</code>subthunkity_thunk<code>内是否有</code>Qt<code>（https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Raku/Actions.nqp ＃L7170），然后下降到它的第一个孩子，通过欺骗和使用</code>QAST :: WVal<code>上的</code>past_block<code>注释添加</code>in_stmt_mod`注释与包含&rsquo;QAST :: Block&rsquo;引用的thunk我们希望注释。代码将如下所示：</p>
 <pre><code>sub mark_blocks_as_andnotelse_first_arg($ast) {
     if $ast &amp;&amp; nqp::can($ast, 'ann') &amp;&amp; $ast.ann('past_block') {
         $ast.ann('past_block').annotate: 'in_stmt_mod', 1;
@@ -1015,7 +1015,7 @@ ZZ1: -----------------
 &amp;&amp; ! $b.ann('andnotelse_thunk')
 &amp;&amp; ($b.ann('statement_id') // -1) &gt;= $migrate_stmt_id
 </code></pre>
-<p>The very first condition prevents our migration, as our block has truthy <code>in_stmt_mod</code> annotation, because it&rsquo;s part of the <code>with</code>'s condition.
+<p>The very first condition prevents our migration, as our block has truthy <code>in_stmt_mod</code> annotation, because it&rsquo;s part of the <code>with</code>&rsquo;s condition.
 At the same time, it <em>does</em> need to be migrated because it&rsquo;s part of the <code>andthen</code> thunk that&rsquo;s inside the statement modifier!</p>
 <p>Since we already have <code>$andnotelse_thunk</code> variable in the vicinity of the migration predicate we can use it to tell us whether we&rsquo;re migrating for the benefit of our <code>andthen</code> thunk and not the statement modifier. However, recall that we&rsquo;ve used the very same <code>in_stmt_mod</code> annotation to mark the first argument of <code>andthen</code> and its brother ops. We need to alter that first.</p>
 <p>And so, the <code>sub mark_blocks_as_andnotelse_first_arg</code> we added earlier becomes:
@@ -1043,7 +1043,7 @@ At the same time, it <em>does</em> need to be migrated because it&rsquo;s part o
 <ul>
 <li><em>Not</em> thunks of actual <code>andthen</code>, <code>notandthen</code>, or <code>orelse</code></li>
 <li><em>Not</em> thunks inside a statement modifier, unless they&rsquo;re inside thunks of <code>andthen</code> or related ops</li>
-<li>If we&rsquo;re considering migrating them inside one of the <code>andthen</code>'s thunks, then also <em>not</em> part of the first argument to <code>andthen</code> (or related ops),.</li>
+<li>If we&rsquo;re considering migrating them inside one of the <code>andthen</code>&rsquo;s thunks, then also <em>not</em> part of the first argument to <code>andthen</code> (or related ops),.</li>
 </ul>
 <p>That&rsquo;s a fancy-pants predicate. Let&rsquo;s compile and see if it gets the job done:</p>
 <ul>
@@ -1116,15 +1116,15 @@ We introspected the generated QAST nodes to specially annotate them, and then us
                   <ul>
                 
                 
+                    <li><a href="/post/2021-01-04-raku-performance-and-physics-unit/">Raku 性能和 Physics::Unit</a></li>
+                
+                    <li><a href="/post/2021-internal-indirection/">Internal Indirection</a></li>
+                
                     <li><a href="/post/2020-06-30-sequence/">数列</a></li>
                 
                     <li><a href="/post/2019-07-31-parse-with-raku-regexes-and-grammars/">Parse with Raku Regexes and Grammars</a></li>
                 
                     <li><a href="/post/2019-07-16-encode-decode/">Encode-Decode</a></li>
-                
-                    <li><a href="/post/2019-06-29-odd-even-sort-in-raku/">Raku 中的 奇偶排序</a></li>
-                
-                    <li><a href="/post/2019-06-27-pancake-sort-in-raku/">Raku 中的煎饼排序</a></li>
                 
               </ul>
 
@@ -1209,7 +1209,7 @@ We introspected the generated QAST nodes to specially annotate them, and then us
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

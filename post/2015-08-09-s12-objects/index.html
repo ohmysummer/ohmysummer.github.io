@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -323,23 +323,23 @@ if (!doNotTrack) {
 <p>类是使用关键字 <code>class</code> 声明的模块。 至于模块, 即公共存储, 接口, 并且类的名字通过包和它的名字来表示, 这总是(但不必须)一个全局的名字。 类是一个模块, 因此能导出东西, 但是类添加了更多的行为来支持 Raku 的标准的基于类的 OO。</p>
 <p>作为类型对象(type object), 类名代表了它的类型的所有可能值, 因此在计算那种类型的普通对象能做什么时, 类型对象能用作任何属于该类型的&quot;真实&quot;对象的代理。 类对象是一个对象, 但是它不是一个类(<code>Class</code>), 因为 Raku 中没有强制性的 <code>Class</code> 类, 还因为在Raku 中类型对象被认为是未定义的。 我们想基于类的和基于原型的 OO 编程这两个都支持。所以, 所有的元编程是通过当前对象的 <code>HOW</code> 对象来完成的, 这可以把元编程代理给任何它喜欢的元模型上。 然而, 默认地, 从 <code>Mu</code> 派生的对象支持相当标准的基于类的模型。</p>
 <p>有两种基本的类声明语法:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="n"></span><span class="n">unit</span> <span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Foo</span><span class="p">;</span> <span class="c1"># 文件的剩余部分是类的定义</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">foo</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="n">unit</span> <span class="n">class</span> <span class="n">Foo</span><span class="p">;</span> <span class="c1"># 文件的剩余部分是类的定义</span>
+    <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">foo</span>
 
-    <span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Bar</span> <span class="p">{</span> <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">bar</span> <span class="p">}</span> <span class="c1"># block 是类的定义</span>
+    <span class="n">class</span> <span class="n">Bar</span> <span class="p">{</span> <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">bar</span> <span class="p">}</span> <span class="c1"># block 是类的定义</span>
 </code></pre></div><p>第一种形式只有当第一种声明是在一个编译单元(即文件或 EVAL 字符串)中时被允许。</p>
 <p>如果类的主体以一个主操作符为单个<code>prefix:&lt;...&gt;</code>（yada）listop 开始的语句, 那么只引入类名而不定义, 并且在同一个作用域中第二次声明那个类不会抱怨重新定义。（语句修饰符允许在这样的 <code>...</code> 操作符上。）因此你可以向前声明你的类:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">calss</span> <span class="n"></span><span class="n">A</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span> <span class="c1"># 引入 A 作为类名而不定义</span>
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">B</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span> <span class="c1"># 引入 B 作为类名而不定义</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">calss</span> <span class="n">A</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span> <span class="c1"># 引入 A 作为类名而不定义</span>
+<span class="n">class</span> <span class="n">B</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span> <span class="c1"># 引入 B 作为类名而不定义</span>
 
-<span class="k">my</span> <span class="n"></span><span class="n">A</span> <span class="nv">$</span><span class="nv">root</span> <span class="o">.</span><span class="o">=</span> <span class="k">new</span><span class="p">(</span><span class="p">:</span><span class="n"></span><span class="n">a</span><span class="p">(</span><span class="n"></span><span class="n">B</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="k">my</span> <span class="n">A</span> <span class="nv">$root</span> <span class="o">.=</span> <span class="k">new</span><span class="p">(:</span><span class="n">a</span><span class="p">(</span><span class="n">B</span><span class="p">));</span>
 
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">A</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">B</span> <span class="nv">$</span><span class="err">.</span><span class="nv">a</span><span class="p">;</span>
+<span class="n">class</span> <span class="n">A</span> <span class="p">{</span>
+    <span class="n">has</span> <span class="n">B</span> <span class="nv">$</span><span class="err">.</span><span class="nv">a</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">B</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">has</span> <span class="n"></span><span class="n">A</span> <span class="nv">$</span><span class="err">.</span><span class="nv">b</span><span class="p">;</span>
+<span class="n">class</span> <span class="n">B</span> <span class="p">{</span>
+    <span class="n">has</span> <span class="n">A</span> <span class="nv">$</span><span class="err">.</span><span class="nv">b</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>就像这个例子展示的那样, 这允许互相递归类的定义(但是它不允许递归继承)。</p>
 <p>通过 <code>augment</code> 声明符来扩展类也是可以的, 但是那被认为有点不符合常规并且不应用于向前声明。</p>
@@ -360,26 +360,26 @@ if (!doNotTrack) {
 <h3 id="类的特性class-traits">类的特性(Class traits)</h3>
 <hr>
 <p>类的特性使用 <code>is</code> 来设置:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">MyStruct</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">rw</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="n">class</span> <span class="n">MyStruct</span> <span class="n">is</span> <span class="n">rw</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 </code></pre></div><h4 id="单继承">单继承</h4>
 <hr>
 <p><code>isa</code> 也仅仅是一个特性, 碰巧是另一个类:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Dog</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Mammal</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="n">class</span> <span class="n">Dog</span> <span class="n">is</span> <span class="n">Mammal</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 </code></pre></div><h4 id="多重继承">多重继承</h4>
 <hr>
 <p>多重继承使用多个 	<code>is</code> 来指定：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Dog</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Mammal</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Pet</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
-<span class="err">​</span><span class="sb">``</span><span class="sb">`
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">class</span> <span class="n">Dog</span> <span class="n">is</span> <span class="n">Mammal</span> <span class="n">is</span> <span class="n">Pet</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="err">​</span><span class="sb">```
 </span><span class="sb">#### 合成
-</span><span class="sb">Roles 使用 `</span><span class="n"></span><span class="n">does</span><span class="sb">` 代替 `</span><span class="n"></span><span class="n">is</span><span class="sb">`:
-</span><span class="sb">​`</span><span class="sb">``</span><span class="n"></span><span class="n">perl</span>
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Dog</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Mammal</span> <span class="n"></span><span class="n">does</span> <span class="n"></span><span class="n">Pet</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+</span><span class="sb">Roles 使用 `</span><span class="n">does</span><span class="sb">` 代替 `</span><span class="n">is</span><span class="sb">`:
+</span><span class="sb">​```</span><span class="n">perl</span>
+<span class="n">class</span> <span class="n">Dog</span> <span class="n">is</span> <span class="n">Mammal</span> <span class="n">does</span> <span class="n">Pet</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 </code></pre></div><h4 id="also-声明符">also 声明符</h4>
 <hr>
 <p>你也可以使用 <code>also</code> 声明符把这些都放在里面:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Dog</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">also</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Mammal</span><span class="p">;</span>
-    <span class="n"></span><span class="n">also</span> <span class="n"></span><span class="n">does</span> <span class="n"></span><span class="n">Pet</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">class</span> <span class="n">Dog</span> <span class="p">{</span>
+    <span class="n">also</span> <span class="n">is</span> <span class="n">Mammal</span><span class="p">;</span>
+    <span class="n">also</span> <span class="n">does</span> <span class="n">Pet</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>（然而, also 声明符主要用在 roles 中）</p>
 <h3 id="元类metaclasses">元类(Metaclasses)</h3>
@@ -399,36 +399,36 @@ if (!doNotTrack) {
 <h3 id="匿名的类声明">匿名的类声明</h3>
 <hr>
 <p>在匿名的类声明中, 如果需要 <code>::</code> 本身就代表了匿名类的名字:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">class</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>                    <span class="c1"># ok</span>
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Mammal</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>          <span class="c1"># 错误</span>
-<span class="n"></span><span class="n">class</span> <span class="o">::</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Mammal</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>       <span class="c1"># ok</span>
-<span class="n"></span><span class="n">class</span> <span class="p">{</span> <span class="n"></span><span class="n">also</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Mammal</span><span class="p">;</span> <span class="o">...</span> <span class="p">}</span>    <span class="c1"># also ok</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">class</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>                    <span class="c1"># ok</span>
+<span class="n">class</span> <span class="n">is</span> <span class="n">Mammal</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>          <span class="c1"># 错误</span>
+<span class="n">class</span> <span class="o">::</span> <span class="n">is</span> <span class="n">Mammal</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>       <span class="c1"># ok</span>
+<span class="n">class</span> <span class="p">{</span> <span class="n">also</span> <span class="n">is</span> <span class="n">Mammal</span><span class="p">;</span> <span class="o">...</span> <span class="p">}</span>    <span class="c1"># also ok</span>
 </code></pre></div><h3 id="方法">方法</h3>
 <hr>
 <p>方法是类中使用 <code>method</code> 关键字声明的子例程:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">doit</span> <span class="p">(</span><span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">,</span> <span class="nv">$</span><span class="nv">c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
-<span class="n"></span><span class="n">meyhod</span> <span class="n"></span><span class="n">doit</span> <span class="p">(</span><span class="nv">$</span><span class="nv">self:</span> <span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">,</span> <span class="nv">$</span><span class="nv">c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
-<span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">doit</span> <span class="p">(</span><span class="n"></span><span class="n">MyName</span> <span class="nv">$</span><span class="nv">self:</span> <span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">,</span> <span class="nv">$</span><span class="nv">c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
-<span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">doit</span> <span class="p">(</span><span class="o">::</span><span class="p">?</span><span class="n"></span><span class="n">CLASS</span> <span class="nv">$</span><span class="nv">self:</span> <span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">,</span> <span class="nv">$</span><span class="nv">c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">method</span> <span class="n">doit</span> <span class="p">(</span><span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">meyhod</span> <span class="n">doit</span> <span class="p">(</span><span class="nv">$self:</span> <span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">method</span> <span class="n">doit</span> <span class="p">(</span><span class="n">MyName</span> <span class="nv">$self:</span> <span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<span class="n">method</span> <span class="n">doit</span> <span class="p">(</span><span class="o">::</span><span class="p">?</span><span class="n">CLASS</span> <span class="nv">$self:</span> <span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 </code></pre></div><h3 id="调用者">调用者</h3>
 <hr>
 <p>调用者的声明是可选的。你总是使用关键字 <code>self</code>来访问当前调用者。你不需要声明调用者的类型, 因为调用者的词法类是被任何事件知晓的, 因为方法必须声明在调用者的类中, 尽管真实的(虚拟的)类型可能是词法类型派生出来的类型。你可以声明一个限制性更强的类类型, 但是那对于多态可能是坏事儿。你可以显式地使用词法类型来type 调用者, 但是任何为此做的检查会被优化掉，(当前的词法导向的类总是可以命名为 <code>::?CLASS</code> 即使在匿名类中或 roles 中)</p>
 <p><a href="https://github.com/raku/roast/blob/master/S12-attributes/recursive.t#L46-L97">S12-attributes/recursive.t lines 46–97</a></p>
 <p>要标记一个显式的调用者, 在它后面放上一个冒号就好了:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">doit</span> <span class="p">(</span><span class="nv">$</span><span class="nv">x:</span> <span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">,</span> <span class="nv">$</span><span class="nv">c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">method</span> <span class="n">doit</span> <span class="p">(</span><span class="nv">$x:</span> <span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
 </code></pre></div><p>如果你使用数组变量为 Array 类型声明一个显式的调用者, 你可以在列表上下文中直接使用它来生成它的元素</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">push3</span> <span class="p">(</span><span class="nv">@</span><span class="nv">x:</span> <span class="nv">$</span><span class="nv">a</span><span class="p">,</span> <span class="nv">$</span><span class="nv">b</span><span class="p">,</span> <span class="nv">$</span><span class="nv">c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="n"></span><span class="n">any</span><span class="p">(</span><span class="nv">@</span><span class="nv">x</span><span class="p">)</span> <span class="o">...</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">method</span> <span class="n">push3</span> <span class="p">(</span><span class="nv">@x:</span> <span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">,</span> <span class="nv">$c</span><span class="p">)</span> <span class="p">{</span> <span class="o">...</span> <span class="n">any</span><span class="p">(</span><span class="nv">@x</span><span class="p">)</span> <span class="o">...</span> <span class="p">}</span>
 </code></pre></div><p>注意 <code>self</code>项直接指向了方法所调用的对象上, 因此:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">A</span> <span class="n"></span><span class="n">is</span> <span class="n"></span><span class="n">Array</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">method</span> <span class="sr">m</span><span class="sr">()</span> <span class="p">{</span> <span class="o">.</span><span class="n"></span><span class="n">say</span> <span class="k">for</span> <span class="n"></span><span class="n">self</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">class</span> <span class="n">A</span> <span class="n">is</span> <span class="n">Array</span> <span class="p">{</span>
+    <span class="n">method</span> <span class="sr">m()</span> <span class="p">{</span> <span class="o">.</span><span class="n">say</span> <span class="k">for</span> <span class="n">self</span> <span class="p">}</span>
 <span class="p">}</span>
-<span class="n"></span><span class="n">A</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">m</span><span class="p">;</span> <span class="c1"># 1\n2\n\3</span>
+<span class="n">A</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">m</span><span class="p">;</span> <span class="c1"># 1\n2\n\3</span>
 </code></pre></div><p>会打印3行输出。</p>
 <h3 id="私有方法">私有方法</h3>
 <hr>
 <p>私有方法是使用 <code>!</code> 声明的:</p>
 <p>[<a href="https://github.com/raku/roast/blob/master/S12-methods/private.t#L6-L44">S12-methods/private.t lines 6–44</a>]</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">method</span> <span class="o">!</span><span class="n"></span><span class="n">think</span> <span class="p">(</span><span class="n"></span><span class="n">Brain</span> <span class="nv">$</span><span class="nv">self:</span> <span class="nv">$</span><span class="nv">thought</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">method</span> <span class="o">!</span><span class="n">think</span> <span class="p">(</span><span class="n">Brain</span> <span class="nv">$self:</span> <span class="nv">$thought</span><span class="p">)</span>
 </code></pre></div><p>(这样的方法对普通方法调用是完全不可见的, 实际上是使用不同的语法, 即使用 <code>!</code> 代替 <code>.</code> 字符。 看下面。)</p>
 <h3 id="方法作用域">方法作用域</h3>
 <hr>
@@ -438,35 +438,35 @@ if (!doNotTrack) {
 <hr>
 <p>要使用普通的方法分发语义来调用普通的方法, 使用点语法记法或间接对象记法:</p>
 <p><a href="https://github.com/raku/roast/blob/master/S12-methods/instance.t#L13-L243">S12-methods/instance.t lines 13–243</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">$</span><span class="nv">obj</span><span class="o">.</span><span class="n"></span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
-<span class="n"></span><span class="n">doit</span> <span class="nv">$</span><span class="nv">obj:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">$obj</span><span class="o">.</span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">doit</span> <span class="nv">$obj:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
 </code></pre></div><p>间接对象记法现在要求调用者后面要有一个冒号, 即使冒号后面没有参数:</p>
 <p><a href="https://github.com/raku/roast/blob/master/S12-methods/indirect_notation.t#L5-L57">S12-methods/indirect_notation.t lines 5–57</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">$</span><span class="nv">handle</span><span class="o">.</span><span class="nb">close</span><span class="p">;</span>
-<span class="nb">close</span> <span class="nv">$</span><span class="nv">handle:</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">$handle</span><span class="o">.</span><span class="nb">close</span><span class="p">;</span>
+<span class="nb">close</span> <span class="nv">$handle:</span><span class="p">;</span>
 </code></pre></div><p>要拒绝方法调用并且只考虑 subs, 仅仅从调用行那儿省略冒号即可：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nb">close</span><span class="p">(</span><span class="nv">$</span><span class="nv">handle</span><span class="p">)</span><span class="p">;</span>
-<span class="nb">close</span> <span class="nv">$</span><span class="nv">handle</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nb">close</span><span class="p">(</span><span class="nv">$handle</span><span class="p">);</span>
+<span class="nb">close</span> <span class="nv">$handle</span><span class="p">;</span>
 </code></pre></div><p>然而, 这儿内置<code>IO</code>类定义的方法 <code>close （）</code>是导出的, 它默认把 <code>multi sub close (IO)</code> 放在作用域中。因此, 如果 <code>$handle</code>对象是一个 IO 对象的话, 那么上面的两个子例程调用仍旧被转换成方法调用。</p>
 <p>点调用记法可以省略调用者, 如果调用者是 <code>$_</code>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">.</span><span class="n"></span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">.</span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div><p>方法调用使用的是 C3 方法解析顺序。</p>
 <h4 id="花哨的方法调用">花哨的方法调用</h4>
 <hr>
 <p>注意对于私有方法没有对应的记法。</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">!</span><span class="n"></span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>     <span class="c1"># 错, 会被解析为 not(doit(1,2,3))</span>
-<span class="n"></span><span class="n">self</span><span class="o">!</span><span class="n"></span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># ok</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">!</span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>     <span class="c1"># 错, 会被解析为 not(doit(1,2,3))</span>
+<span class="n">self</span><span class="o">!</span><span class="n">doit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># ok</span>
 </code></pre></div><p>对于方法名有几种间接的形式。你可以使用引起的字符串替换标识符, 它会被求值为引起, 引起的结果用作方法名。</p>
 <p><a href="https://github.com/raku/roast/blob/master/S12-methods/indirect_notation.t#L58-L76">S12-methods/indirect_notation.t lines 58–76</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">$</span><span class="nv">obj</span><span class="o">.</span><span class="s">&#34;$methodname&#34;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 使用 $methodname 的内容作为方法名</span>
-<span class="nv">$</span><span class="nv">obj</span><span class="o">.</span><span class="s">&#39;$methodname&#39;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 没有插值; 调用名字中带有 $ 符号的方法</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">$obj</span><span class="o">.</span><span class="s">&#34;$methodname&#34;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 使用 $methodname 的内容作为方法名</span>
+<span class="nv">$obj</span><span class="o">.</span><span class="s">&#39;$methodname&#39;</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># 没有插值; 调用名字中带有 $ 符号的方法</span>
 
-<span class="nv">$</span><span class="nv">obj</span><span class="o">!</span><span class="s">&#34;$methodname&#34;</span><span class="p">(</span><span class="p">)</span> <span class="c1"># 间接调用私有方法名</span>
+<span class="nv">$obj</span><span class="o">!</span><span class="s">&#34;$methodname&#34;</span><span class="p">()</span> <span class="c1"># 间接调用私有方法名</span>
 </code></pre></div><p>在插值中, 双引号形式不可以包含空白。这在双引号中以点结尾的字符串中达到用户期望的那样:</p>
 <p><a href="https://github.com/raku/roast/blob/master/S02-literals/misc-interpolation.t#L96-L120">S02-literals/misc-interpolation.t lines 96–120</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="s">&#34;Foo = $foo.&#34;</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">say</span> <span class="s">&#34;Foo = $foo.&#34;</span><span class="p">;</span>
 </code></pre></div><p>如果你真的想调用带有空格的方法, 那你使用一个闭包插值来进行约束:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="s">&#34;Foo = {$foo.&#34;</span><span class="n"></span><span class="n">a</span> <span class="n"></span><span class="n">method</span><span class="s">&#34;()}&#34;</span><span class="p">;</span> <span class="c1"># OK</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">say</span> <span class="s">&#34;Foo = {$foo.&#34;</span><span class="n">a</span> <span class="n">method</span><span class="s">&#34;()}&#34;</span><span class="p">;</span> <span class="c1"># OK</span>
 </code></pre></div>
 
         
@@ -565,7 +565,7 @@ if (!doNotTrack) {
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

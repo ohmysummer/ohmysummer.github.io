@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -499,7 +499,7 @@ say ~$/[0][1][1]; # khoo
 </ul>
 <h1 id="访问捕获的子模式">访问捕获的子模式</h1>
 <ul>
-<li><code>Match</code> 对象的<strong><code>数组元素</code></strong>要么使用标准的数组访问记法(例如  <code>$/[0]</code>, <code>$/[1]</code>, <code>$/[2]</code> 等.) 要么通过对应的词法作用域<strong><code>数字别名</code></strong>(例如: <code>$0</code>, <code>$1</code>, <code>$2</code>), 所以:</li>
+<li><code>Match</code> 对象的**<code>数组元素</code>**要么使用标准的数组访问记法(例如  <code>$/[0]</code>, <code>$/[1]</code>, <code>$/[2]</code> 等.) 要么通过对应的词法作用域**<code>数字别名</code>**(例如: <code>$0</code>, <code>$1</code>, <code>$2</code>), 所以:</li>
 </ul>
 <p><a href="https://github.com/raku/roast/blob/master/S05-match/capturing-contexts.t#L25-L34"><code>S05-match/capturing-contexts.t lines 25–34</code></a></p>
 <pre><code class="language-raku" data-lang="raku">say &quot;$/[1] was found between $/[0] and $/[2]&quot;;
@@ -510,7 +510,7 @@ say ~$/[0][1][1]; # khoo
 <p>注意, 在 Raku 中, 数字捕获变量从 <code>$0</code> 开始, 而非 <code>$1</code>, 使用 <code>$/</code> 中对应元素的索引中的数字.</p>
 </li>
 <li>
-<p>regex 的 Match 对象(例如 <code>$/</code>)中的<strong><code>数组元素</code></strong>分别存储着<strong>单独的</strong> Match 对象, 这些 Match 对象就是匹配到的<strong><code>子字符串</code></strong>, 并被第一个, 第二个, 第三个, 直到最外面的 subpattern 捕获(非嵌套). 所以这些元素能被看成完全合格的匹配结果. 例如:
+<p>regex 的 Match 对象(例如 <code>$/</code>)中的**<code>数组元素</code>**分别存储着**单独的** Match 对象, 这些 Match 对象就是匹配到的**<code>子字符串</code>**, 并被第一个, 第二个, 第三个, 直到最外面的 subpattern 捕获(非嵌套). 所以这些元素能被看成完全合格的匹配结果. 例如:
 <a href="https://github.com/raku/roast/blob/master/S05-capture/dot.t#L13-L55">S05-capture/dot.t lines 13–55</a></p>
 </li>
 </ul>
@@ -523,18 +523,18 @@ say ~$/[0][1][1]; # khoo
 <p><a href="https://github.com/raku/roast/blob/master/S05-capture/named.t#L16-L25"><code>S05-capture/named.t lines 16–25</code></a></p>
 <ul>
 <li>
-<p>通过嵌套的 subpattern 匹配到的子字符串被赋值给嵌套的 subpattern 的 <strong><code>父 Match 对象</code></strong>里面的<strong><code>数组</code></strong>中, 而不是 <code>$/</code> 的数组中.</p>
+<p>通过嵌套的 subpattern 匹配到的子字符串被赋值给嵌套的 subpattern 的 **<code>父 Match 对象</code><strong>里面的</strong><code>数组</code>**中, 而不是 <code>$/</code> 的数组中.</p>
 </li>
 <li>
 <p>这种行为和 Perl 5 的语义完全不同:</p>
 </li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="c1"># Perl 5...</span>
-    <span class="c1">#</span>
-    <span class="c1"># $1---------------------  $4---------  $5------------------</span>
-    <span class="c1"># |   $2---------------  | |          | | $6----  $7------  |</span>
-    <span class="c1"># |   |         $3--   | | |          | | |     | |       | |</span>
-    <span class="c1"># |   |         |   |  | | |          | | |     | |       | |</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">    <span class="c1"># Perl 5...</span>
+    <span class="c1">#</span>
+    <span class="c1"># $1---------------------  $4---------  $5------------------</span>
+    <span class="c1"># |   $2---------------  | |          | | $6----  $7------  |</span>
+    <span class="c1"># |   |         $3--   | | |          | | |     | |       | |</span>
+    <span class="c1"># |   |         |   |  | | |          | | |     | |       | |</span>
    <span class="sr">m/ ( A (guy|gal|g(\S+)  ) ) (sees|calls) ( (the|a) (gal|guy) ) /x</span><span class="p">;</span>
 </code></pre></div><ul>
 <li>在 Raku 中, 嵌套的圆括号产生可能的<strong>嵌套的捕获</strong></li>
@@ -833,12 +833,12 @@ m/ $1=(&lt;-[:]&gt;*) \:  $0=&lt;.ident&gt; /  # doesn't capture $&lt;ident&gt;
 </code></pre><ul>
 <li>
 <p>这也在 Raku 中提供了一种简单的方式来重建嵌套的 Perl 5 subpatterns 的非嵌套编号语义:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">      <span class="c1"># Perl 5...</span>
-      <span class="c1">#               $1</span>
-      <span class="c1">#  _____________/\___________</span>
-      <span class="c1"># |    $2        $3      $4  |</span>
-      <span class="c1"># |  __/\___   __/\___   /\  |</span>
-      <span class="c1"># | |       | |       | |  | |</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">      <span class="c1"># Perl 5...</span>
+      <span class="c1">#               $1</span>
+      <span class="c1">#  _____________/\___________</span>
+      <span class="c1"># |    $2        $3      $4  |</span>
+      <span class="c1"># |  __/\___   __/\___   /\  |</span>
+      <span class="c1"># | |       | |       | |  | |</span>
      <span class="sr">m/ ( ( [A-E] ) (\d{3,6}) (X?) ) /x</span><span class="p">;</span>
 </code></pre></div></li>
 </ul>
@@ -1437,7 +1437,7 @@ Tobias Leich &lt;email@froggs.de&gt;
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

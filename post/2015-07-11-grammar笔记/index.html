@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -345,21 +345,21 @@ grammar Lines {
 my $parse = Lines.parsefile('test.txt');
 say $parse;
 </code></pre><p>test.txt 的内容如下：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">[</span><span class="n"></span><span class="n">Lue</span><span class="p">,</span> <span class="n"></span><span class="n">Fan</span><span class="p">]</span>
-<span class="p">[</span><span class="n"></span><span class="n">Lou</span><span class="p">,</span> <span class="n"></span><span class="n">Man</span><span class="o">-</span><span class="n"></span><span class="n">Li</span><span class="p">]</span>
-<span class="p">[</span><span class="n"></span><span class="n">Tian</span><span class="p">,</span> <span class="n"></span><span class="n">Mijie</span><span class="p">;</span> <span class="n"></span><span class="n">Zhou</span><span class="p">,</span> <span class="n"></span><span class="n">Lin</span><span class="p">;</span> <span class="n"></span><span class="n">Zou</span><span class="p">,</span> <span class="n"></span><span class="n">Xiao</span><span class="p">;</span> <span class="n"></span><span class="n">Zheng</span><span class="p">,</span> <span class="n"></span><span class="n">Qiaoji</span><span class="p">;</span> <span class="n"></span><span class="n">Luo</span><span class="p">,</span> <span class="n"></span><span class="n">Lingling</span><span class="p">;</span> <span class="n"></span><span class="n">Jiang</span><span class="p">,</span> <span class="n"></span><span class="n">Na</span><span class="p">;</span> <span class="n"></span><span class="n">Lin</span><span class="p">,</span> <span class="n"></span><span class="n">Dunmin</span><span class="p">]</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">[</span><span class="n">Lue</span><span class="p">,</span> <span class="n">Fan</span><span class="p">]</span>
+<span class="p">[</span><span class="n">Lou</span><span class="p">,</span> <span class="n">Man</span><span class="o">-</span><span class="n">Li</span><span class="p">]</span>
+<span class="p">[</span><span class="n">Tian</span><span class="p">,</span> <span class="n">Mijie</span><span class="p">;</span> <span class="n">Zhou</span><span class="p">,</span> <span class="n">Lin</span><span class="p">;</span> <span class="n">Zou</span><span class="p">,</span> <span class="n">Xiao</span><span class="p">;</span> <span class="n">Zheng</span><span class="p">,</span> <span class="n">Qiaoji</span><span class="p">;</span> <span class="n">Luo</span><span class="p">,</span> <span class="n">Lingling</span><span class="p">;</span> <span class="n">Jiang</span><span class="p">,</span> <span class="n">Na</span><span class="p">;</span> <span class="n">Lin</span><span class="p">,</span> <span class="n">Dunmin</span><span class="p">]</span>
 </code></pre></div><p>下面的 Grammar 用于解析一个字符串, 由于 tokens 不能回溯, 所以当解析 <code>$str</code> 时使用了 Grammar 的继承, 重写了 university 这个 token:</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 <span class="k">use</span> <span class="nn">Grammar::Debugger</span><span class="p">;</span>
 
-<span class="k">my</span> <span class="nv">$</span><span class="nv">string</span> <span class="o">=</span> <span class="s">&#34;[Wang, Zhiguo; Zhao, Zhiguo] Hangzhou Normal Univ, Ctr Cognit &amp; Brain Disorders, Hangzhou, Zhejiang, Peoples R China; [Wang, Zhiguo; Theeuwes, Jan] Vrije Univ Amsterdam, Dept Cognit Psychol, Amsterdam, Netherlands&#34;</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$string</span> <span class="o">=</span> <span class="s">&#34;[Wang, Zhiguo; Zhao, Zhiguo] Hangzhou Normal Univ, Ctr Cognit &amp; Brain Disorders, Hangzhou, Zhejiang, Peoples R China; [Wang, Zhiguo; Theeuwes, Jan] Vrije Univ Amsterdam, Dept Cognit Psychol, Amsterdam, Netherlands&#34;</span><span class="p">;</span>
 
-<span class="n"></span><span class="n">grammar</span> <span class="n"></span><span class="nn">University::</span><span class="n"></span><span class="n">Grammar</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">TOP</span>             <span class="p">{</span> <span class="o">^</span> <span class="sr">&lt;university&gt;</span> <span class="nv">$</span>             <span class="err">}</span>
-    <span class="nv">token</span> <span class="n"></span><span class="n">university</span>      <span class="p">{</span> <span class="p">[</span> <span class="sr">&lt;bracket&gt;</span> <span class="sr">&lt;info&gt;</span> <span class="p">]</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;</span><span class="err">;</span> <span class="err">&#39;</span> <span class="err">}</span>
-    <span class="nv">token</span> <span class="n"></span><span class="n">bracket</span>         <span class="p">{</span> <span class="s">&#39;[&#39;</span> <span class="sr">&lt;studentname&gt;</span>  <span class="s">&#39;] &#39;</span>      <span class="p">}</span>
-    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">studentname</span>     <span class="p">{</span> <span class="sr">&lt;stdname=.info&gt;</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;</span><span class="err">;</span> <span class="err">&#39;</span>      <span class="err">}</span>
-    <span class="nv">token</span> <span class="n"></span><span class="n">info</span>            <span class="p">{</span> <span class="sr">&lt;field&gt;</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;</span><span class="p">,</span> <span class="s">&#39;              }
+<span class="n">grammar</span> <span class="nn">University::</span><span class="n">Grammar</span> <span class="p">{</span>
+    <span class="n">token</span> <span class="n">TOP</span>             <span class="p">{</span> <span class="o">^</span> <span class="sr">&lt;university&gt;</span> <span class="nv">$</span>             <span class="err">}</span>
+    <span class="nv">token</span> <span class="n">university</span>      <span class="p">{</span> <span class="p">[</span> <span class="sr">&lt;bracket&gt;</span> <span class="sr">&lt;info&gt;</span> <span class="p">]</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;;</span> <span class="err">&#39;</span> <span class="err">}</span>
+    <span class="nv">token</span> <span class="n">bracket</span>         <span class="p">{</span> <span class="s">&#39;[&#39;</span> <span class="sr">&lt;studentname&gt;</span>  <span class="s">&#39;] &#39;</span>      <span class="p">}</span>
+    <span class="n">token</span> <span class="n">studentname</span>     <span class="p">{</span> <span class="sr">&lt;stdname=.info&gt;</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;;</span> <span class="err">&#39;</span>      <span class="err">}</span>
+    <span class="nv">token</span> <span class="n">info</span>            <span class="p">{</span> <span class="sr">&lt;field&gt;</span><span class="o">+</span> <span class="nv">%</span> <span class="err">&#39;</span><span class="p">,</span> <span class="s">&#39;              }
 </span><span class="s">    token field           { &lt;-[,\]\[;\n]&gt;+               }
 </span><span class="s">}
 </span><span class="s">
@@ -368,13 +368,13 @@ say $parse;
 </span><span class="s">    token university      { &lt;info&gt;+ % &#39;</span><span class="p">;</span> <span class="err">&#39;</span> <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">my</span> <span class="nv">$</span><span class="nv">str</span> <span class="o">=</span> <span class="s">&#34;Zhejiang Univ, Coll Environm &amp; Resources Sci, Dept Resource Sci, Hangzhou 310029, Peoples R China; La Trobe Univ, Dept Agr Sci, Bundoora, Vic 3083, Australia; Hangzhou Normal Coll, Fac Life Sci, Hangzhou, Peoples R China&#34;</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$str</span> <span class="o">=</span> <span class="s">&#34;Zhejiang Univ, Coll Environm &amp; Resources Sci, Dept Resource Sci, Hangzhou 310029, Peoples R China; La Trobe Univ, Dept Agr Sci, Bundoora, Vic 3083, Australia; Hangzhou Normal Coll, Fac Life Sci, Hangzhou, Peoples R China&#34;</span><span class="p">;</span>
 
-<span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="nn">University::</span><span class="n"></span><span class="n">Grammar</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">string</span><span class="p">)</span><span class="p">;</span>
-<span class="c1"># my $parsed = MyUniversity.parse($str);</span>
+<span class="k">my</span> <span class="nv">$parsed</span> <span class="o">=</span> <span class="nn">University::</span><span class="n">Grammar</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nv">$string</span><span class="p">);</span>
+<span class="c1"># my $parsed = MyUniversity.parse($str);</span>
 
-<span class="k">for</span> <span class="nv">@</span><span class="err">(</span><span class="err">$</span><span class="nv">parsed</span><span class="sr">&lt;university&gt;</span><span class="sr">&lt;info&gt;</span><span class="p">)</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">f</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">f</span><span class="sr">&lt;field&gt;</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
+<span class="k">for</span> <span class="nv">@</span><span class="err">($</span><span class="nv">parsed</span><span class="sr">&lt;university&gt;&lt;info&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nv">$f</span> <span class="p">{</span>
+    <span class="n">say</span> <span class="nv">$f</span><span class="sr">&lt;field&gt;</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
 <span class="p">}</span>
 
 </code></pre></div>
@@ -494,7 +494,7 @@ say $parse;
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

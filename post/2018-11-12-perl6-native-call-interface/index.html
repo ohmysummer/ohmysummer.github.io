@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -568,8 +568,8 @@ say nativesizeof(MyStruct2.new);  # 24, ie. sizeof(struct Point) + sizeof(int32_
 } a_string_and_an_int32_t;
 </code></pre><p>这是结构体。 注意我们在那里有怎么得到一个 <code>char *</code>。</p>
 <div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">init_struct</span><span class="p">(</span><span class="n">a_string_and_an_int32_t</span> <span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="n">int32_t</span> <span class="n">int32</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">target</span><span class="o">-</span><span class="o">&gt;</span><span class="n">an_int32</span> <span class="o">=</span> <span class="n">int32</span><span class="p">;</span>
-  <span class="n">target</span><span class="o">-</span><span class="o">&gt;</span><span class="n">a_string</span> <span class="o">=</span> <span class="n">strdup</span><span class="p">(</span><span class="n">str</span><span class="p">)</span><span class="p">;</span>
+  <span class="n">target</span><span class="o">-&gt;</span><span class="n">an_int32</span> <span class="o">=</span> <span class="n">int32</span><span class="p">;</span>
+  <span class="n">target</span><span class="o">-&gt;</span><span class="n">a_string</span> <span class="o">=</span> <span class="n">strdup</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
  
   <span class="k">return</span><span class="p">;</span>
 <span class="p">}</span>
@@ -620,12 +620,12 @@ for 1 ..^ $n {
 constant LIBFOO = &lsquo;/usr/lib/libfoo.so.1&rsquo;;</p>
 <p>sub mysql_affectied_rows( .. ) returns int32 is native(LIBMYSQL);
 sub bar is native(LIBFOO);
-你也可以使用相对路径比如&rsquo;./foo&rsquo;，NativeCall 将会自动根据不同的平台添加对应的扩展名。
+你也可以使用相对路径比如'./foo'，NativeCall 将会自动根据不同的平台添加对应的扩展名。
 注意：native trait 和 constant 都是在编译期求值的，constant类型的变量不要依赖动态变量，比如：</p>
 <p>constant LIBMYSQL = %*ENV&lt;P6LIB_MYSQLCLIENT&gt; || &lsquo;mysqlclient&rsquo;;
 这将在编译期保持给定的值，在一个模块预编译时，LIBMYSQL将会始终保持那个值。</p>
 <h3 id="abiapi版本">ABI/API版本</h3>
-<p>假设你写的原生库为native(&lsquo;foo&rsquo;)， 在类Unix系统下，NativeCall 将会搜索&rsquo;libfoo.so&rsquo;（对于OS X是libfoo.dynlib，win32是foo.dll）。在大多数的现代系统上，将会需要你或者模块的使用者安装开发环境包，因为它们总是建议支持动态库的API/ABI的版本控制，所以&rsquo;libfoo.so'大多数是一个符号链接，并且只被开发包提供。</p>
+<p>假设你写的原生库为native(&lsquo;foo&rsquo;)， 在类Unix系统下，NativeCall 将会搜索&rsquo;libfoo.so'（对于OS X是libfoo.dynlib，win32是foo.dll）。在大多数的现代系统上，将会需要你或者模块的使用者安装开发环境包，因为它们总是建议支持动态库的API/ABI的版本控制，所以&rsquo;libfoo.so&rsquo;大多数是一个符号链接，并且只被开发包提供。</p>
 <p>sub foo is native(&lsquo;foo&rsquo;, v1);         # 将会查找并加载 libfoo.so.1
 sub foo is native(&lsquo;foo&rsquo;, v1.2.3);    # 将会查找并加载 libfoo.so.1.2.3</p>
 <p>my List $lib = (&lsquo;foo&rsquo;, &lsquo;v1&rsquo;);
@@ -670,7 +670,7 @@ sub getpwuid(uint32 $uid)    returns PwStruct     is native(Str) { * }</p>
 <p>注意：请记住，自 Stretch 版本以来，Debian 已经将 MySQL 替换为 MariaDB，因此如果要安装 MySQL，请使用 <a href="https://dev.mysql.com/downloads/repo/apt/">MySQL APT 存储库</a>而不是默认存储库。</p>
 <p>要在 <a href="https://github.com/raku/DBIish/blob/master/examples/mysql.p6">DBIish</a> 中使用 MySQL 示例，您需要在本地安装 MySQL 服务器; 在Debian-esque 系统上，它可以安装如下：</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">wget https://dev.mysql.com/get/mysql-apt-config_0.8.10-1_all.deb
-sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb <span class="c1"># Don&#39;t forget to select 5.6.x</span> 
+sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb <span class="c1"># Don&#39;t forget to select 5.6.x </span>
 sudo apt-get update
 sudo apt-get install mysql-community-server -y
 sudo apt-get install libmysqlclient18 -y
@@ -695,7 +695,7 @@ MessageBoxA(0, &quot;We have NativeCall&quot;, &quot;ohai&quot;, 64);
 <p>Linux 手册提供了有关 C 可调用函数的以下信息：</p>
 <div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="nf">getaddrinfo</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">node</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">service</span><span class="p">,</span>
        <span class="k">const</span> <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="n">hints</span><span class="p">,</span>
-       <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="o">*</span><span class="n">res</span><span class="p">)</span><span class="p">;</span>
+       <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">**</span><span class="n">res</span><span class="p">);</span>
 </code></pre></div><p>该函数返回响应码 0 = 错误，1 = 成功。 数据是从 <code>addrinfo</code> 元素的链表中提取的，第一个元素由 <code>res</code> 指向。</p>
 <p>从 NativeCall 类型表我们知道 <code>int</code> 是 <code>int32</code>。 我们也知道 <code>char *</code> 是 C <code>Str</code> 的形式 C 之一，它简单地映射到 Str。 但是 <code>addrinfo</code> 是一个结构体，这意味着我们需要编写自己的 Type 类。 但是，函数声明很简单：</p>
 <pre><code class="language-raku" data-lang="raku">sub getaddrinfo( Str $node, Str $service, Addrinfo $hints, Pointer $res is rw )
@@ -713,7 +713,7 @@ MessageBoxA(0, &quot;We have NativeCall&quot;, &quot;ohai&quot;, 64);
                <span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="n">ai_addr</span><span class="p">;</span>
                <span class="kt">char</span>            <span class="o">*</span><span class="n">ai_canonname</span><span class="p">;</span>
                <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="n">ai_next</span><span class="p">;</span>
-           <span class="p">}</span><span class="p">;</span>
+           <span class="p">};</span>
 </code></pre></div><p><code>int</code>，<code>char *</code> 部分很简单。 一些研究表明 <code>socklen_t</code> 可以依赖于架构，但是是一个至少32位的无符号整数。 所以 <code>socklen_t</code> 可以映射到 <code>uint32</code> 类型。</p>
 <p>复杂的是 <code>sockaddr</code>，它取决于 <code>ai_socktype</code> 是否是未定义的，INET 还是 INET6（标准的v4 IP 地址或 v6 地址）。</p>
 <p>所以我们创建一个 Raku 类来映射到 C <code>struct addrinfo</code>; 当我们在它的时候，我们还为 <code>SockAddr</code> 创建了另一个类。</p>
@@ -984,7 +984,7 @@ AF_INET6 SOCK_RAW
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

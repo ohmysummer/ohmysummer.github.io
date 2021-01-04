@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -315,7 +315,7 @@ ok <span class="m">1</span> - call with number
 ok <span class="m">2</span> - call with text
 ok <span class="m">3</span> - call with formatted string
 1..3
-</code></pre></div><p>它会告诉我我运行了哪些测试以及它们是否全部通过。就像它的大姐姐Perl 5一样，Raku使用&rsquo;t /&lsquo;目录作为测试文件，并按照惯例使用后缀&rsquo;.t'来区分测试文件和软件包或脚本。它还有一个内置的单元测试模块，我们在上面使用。如果我们正在测试sprintf（）内部，它可能看起来像</p>
+</code></pre></div><p>它会告诉我我运行了哪些测试以及它们是否全部通过。就像它的大姐姐Perl 5一样，Raku使用&rsquo;t /&lsquo;目录作为测试文件，并按照惯例使用后缀&rsquo;.t&rsquo;来区分测试文件和软件包或脚本。它还有一个内置的单元测试模块，我们在上面使用。如果我们正在测试sprintf（）内部，它可能看起来像</p>
 <pre><code class="language-raku" data-lang="raku">use Test;
 
 ok sprintf(1), 'call with number';
@@ -333,18 +333,18 @@ ok 3 - call with formatted string
 1..3
 </code></pre><p>在您的测试中，您可以立即跳转到测试文件的第4行并开始编辑以找出问题所在。当你的测试文件变得越来越大时，这会变得更有用，例如我正在编写的Common Lisp版本（格式）的测试，每个测试文件超过200个测试并且不断增长。</p>
 <p>最后，完成测试只是告诉测试模块我们已经完成了测试，没有更多的测试来了。当你刚刚开始时，这很方便，你不断尝试你的API，添加和更新测试。没有测试计数器来更新每次或任何其他机制来跟踪。</p>
-<p>当然，这是可选的，但其他工具可能会在最后使用&rsquo;1..3'来证明您的测试实际上已经完成。 Jenkins的单元测试和其他系统也可能需要这个工具。</p>
+<p>当然，这是可选的，但其他工具可能会在最后使用'1..3&rsquo;来证明您的测试实际上已经完成。 Jenkins的单元测试和其他系统也可能需要这个工具。</p>
 <h2 id="it-depends">It depends…</h2>
-<p>你对'是'的定义是什么。如果你只关心某件事情的真实性，好的测试是好的，但有时你需要深入一点。 Raku就像它的大姐姐一样可以帮助你。</p>
+<p>你对&rsquo;是&rsquo;的定义是什么。如果你只关心某件事情的真实性，好的测试是好的，但有时你需要深入一点。 Raku就像它的大姐姐一样可以帮助你。</p>
 <pre><code class="language-raku" data-lang="raku">is 1 + 1, 2, 'prop. 54.43, Principia Mathematica';
 </code></pre><p>不只是检查你的测试的真实性，它会检查它的价值。虽然你可以很容易地写这个</p>
 <pre><code>ok 1 + 1 == 2, 'prop. 54.43, Principia Mathematica';
-</code></pre><p>使用是使你的意图明确，你关注的是表达式1 + 1是否等于2;与同一语句的ok版本一样，目前还不清楚您是在测试&rsquo;1 + 1'部分还是'=='运算符。</p>
+</code></pre><p>使用是使你的意图明确，你关注的是表达式1 + 1是否等于2;与同一语句的ok版本一样，目前还不清楚您是在测试'1 + 1&rsquo;部分还是'==&lsquo;运算符。</p>
 <p>这两个测试本身可能占据您测试需求的80％，处理基本列表和哈希时相对安全，如果您真的需要复杂的测试，那么它的大姐姐正在站在脚边，准备处理复杂的哈希阵列组合。</p>
 <h2 id="懒惰和不耐烦">懒惰和不耐烦</h2>
 <p>有时你会有一个巨大的字符串，你只需要检查一下它。</p>
 <pre><code>ok 'Lake Char­gogg­a­gogg­man­chaugg­a­gogg­chau­bun­a­gung­a­maugg' ~~ 'manchau', 'my side';
-</code></pre><p>你当然可以在这里使用~~运算符。就像&rsquo;1 + 1 == 2'一样，但是你的意图可能并不明确。你可以使用类似的方法来明确你的意图。</p>
+</code></pre><p>你当然可以在这里使用~~运算符。就像'1 + 1 == 2&rsquo;一样，但是你的意图可能并不明确。你可以使用类似的方法来明确你的意图。</p>
 <pre><code>like 'Lake Char­gogg­a­gogg­man­chaugg­a­gogg­chau­bun­a­gung­a­maugg',
      /manchau/, 'my side';
 </code></pre><p>并没有~~悬在你的船边。</p>
@@ -392,15 +392,15 @@ is sprintf( &quot;%d, '1' ), '1', &quot;%d formats numbers';
                   <ul>
                 
                 
+                    <li><a href="/post/2021-01-04-raku-performance-and-physics-unit/">Raku 性能和 Physics::Unit</a></li>
+                
+                    <li><a href="/post/2021-internal-indirection/">Internal Indirection</a></li>
+                
                     <li><a href="/post/2020-06-30-sequence/">数列</a></li>
                 
                     <li><a href="/post/2019-07-31-parse-with-raku-regexes-and-grammars/">Parse with Raku Regexes and Grammars</a></li>
                 
                     <li><a href="/post/2019-07-16-encode-decode/">Encode-Decode</a></li>
-                
-                    <li><a href="/post/2019-06-29-odd-even-sort-in-raku/">Raku 中的 奇偶排序</a></li>
-                
-                    <li><a href="/post/2019-06-27-pancake-sort-in-raku/">Raku 中的煎饼排序</a></li>
                 
               </ul>
 
@@ -485,7 +485,7 @@ is sprintf( &quot;%d, '1' ), '1', &quot;%d formats numbers';
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

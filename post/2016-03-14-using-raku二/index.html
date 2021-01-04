@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -397,7 +397,7 @@ access named parameters instead of positional.</p>
  # TODO: generic object unpacking
 </code></pre><h3 id="柯里化">柯里化</h3>
 <hr>
-<p>Consider a module that provided the example from the \Optional Parameters&rdquo; section:</p>
+<p>Consider a module that provided the example from the \Optional Parameters&quot; section:</p>
 <pre><code class="language-raku" data-lang="raku"> sub order-burger( $type, $side? ) { ... };
 </code></pre><p>If you used order-burger repeatedly, but oen with a side of french fries, you might wish
 that the author had also provided a order-burger-and-fries sub. You could easily write
@@ -902,7 +902,7 @@ list: eggs |  milk |  sugar
 end: flour
 </code></pre><h3 id="回溯控制">回溯控制</h3>
 <hr>
-<p>当用 m/\w+ &lsquo;en&rsquo;/ 匹配字符串 oxen时，\w+ 首先匹配全部字符串oxen，因为 +是贪婪的，然后 &lsquo;en&rsquo; 不能匹配任何东西。 \w+ 丢弃一个字符，匹配了 oxe，但是 ‘en'还是不能匹配，\w+ 继续丢弃一个字符，匹配 ox, 然后 &lsquo;en'匹配成功。</p>
+<p>当用 m/\w+ &lsquo;en&rsquo;/ 匹配字符串 oxen时，\w+ 首先匹配全部字符串oxen，因为 +是贪婪的，然后 &lsquo;en&rsquo; 不能匹配任何东西。 \w+ 丢弃一个字符，匹配了 oxe，但是 ‘en&rsquo;还是不能匹配，\w+ 继续丢弃一个字符，匹配 ox, 然后 &lsquo;en&rsquo;匹配成功。</p>
 <p>一个冒号开关（ : ） 可以为之前的量词或分支关闭回溯。 所以 m / \w+: &lsquo;en&rsquo;/不会匹配任何字符串，因为 \w+ 总是吃光所有的单词字符，从不回退。</p>
 <p>:ratchet（防止倒转的制轮装置） 修饰符让整个 正则的回溯功能失效，禁止回溯让 \w+ 总是匹配一个完整的单词:</p>
 <pre><code class="language-raku" data-lang="raku"> # XXX: does actually match, because m/&lt;&amp;dup&gt;/
@@ -1057,7 +1057,7 @@ reveals the named captures. 在前面的例子中, <code>$&lt;dup&gt;</code> 是
 <pre><code class="language-raku" data-lang="raku">rule TOP { ^[ &lt;object&gt; | &lt;array&gt; ]$ }
 </code></pre><p>在这个例子中, TOP rule 锚定了匹配的开始和末尾, 以至于整个字符串是合法的 JSON 格式,以让匹配成功. 在字符串的开头匹配了锚点之后, 正则表达式尝试匹配一个 <code>&lt;array&gt;</code> 或 <code>&lt;object&gt;</code>. 把正则的名字包裹在一对儿尖括号中让正则引擎尝试在同一个 <code>grammar</code> 里通过名字匹配一个正则. 随后的匹配很易懂了, 反映了 JSON 组件出现的可能结构.</p>
 <p>正则可以是递归的. 数组可能包含着值. 反过来值也可以包含数组.这不会引发无限循环,只要正则表达式的每次递归调用消耗至少一个字符. 如果一系列正则相互递归调用彼此,但不在字符串中移动, 递归可能进入无限循环并且永远不会处理 <code>grammar</code> 的其余部分.</p>
-<p>JSON grammar 的例子介绍了目标匹配语法,即能够被呈现为: A ~B C. 在 JSON::Tiny::Grammar中, A 是 &lsquo;{', B 是 &lsquo;}', 而 C 是 <code>&lt;pairlist&gt;</code>. 在波浪线左侧的原子(A) 被正常匹配. 一旦最后的原子匹配, 正则引擎会尝试匹配目标(B). 这里的作用是改变了最后两个原子(B 和 C ) 的匹配顺序, 但是因为 Perl 知道正则引擎应该查找目标, 当目标不匹配时,能给出更好的错误信息. 这对括号结构很有帮助, 因为括号彼此靠的很近.</p>
+<p>JSON grammar 的例子介绍了目标匹配语法,即能够被呈现为: A ~B C. 在 JSON::Tiny::Grammar中, A 是 &lsquo;{&rsquo;, B 是 &lsquo;}&rsquo;, 而 C 是 <code>&lt;pairlist&gt;</code>. 在波浪线左侧的原子(A) 被正常匹配. 一旦最后的原子匹配, 正则引擎会尝试匹配目标(B). 这里的作用是改变了最后两个原子(B 和 C ) 的匹配顺序, 但是因为 Perl 知道正则引擎应该查找目标, 当目标不匹配时,能给出更好的错误信息. 这对括号结构很有帮助, 因为括号彼此靠的很近.</p>
 <p>另外一个新奇的小东西是 proto token 声明:</p>
 <pre><code class="language-raku" data-lang="raku">proto token value { &lt;...&gt; };
 
@@ -1353,7 +1353,7 @@ Table 11.6: 字符串方法/函数
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

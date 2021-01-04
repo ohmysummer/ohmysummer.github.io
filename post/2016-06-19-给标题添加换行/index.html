@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -329,50 +329,50 @@ for dir(test =&gt; /\. md|markdown $/) -&gt; $file {
     $out.close;
 }
 </code></pre><p>其中有段代码比较有意思, 就是:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"> <span class="nv">$</span><span class="nv">line</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/^\s*&#39;```&#39;\s*(\w+)?$/</span> <span class="n"></span><span class="n">fff</span> <span class="nv">$</span><span class="nv">line</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/^\s*&#39;```&#39;\s*$/</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"> <span class="nv">$line</span> <span class="o">~~</span> <span class="sr">/^\s*&#39;```&#39;\s*(\w+)?$/</span> <span class="n">fff</span> <span class="nv">$line</span> <span class="o">~~</span> <span class="sr">/^\s*&#39;```&#39;\s*$/</span><span class="p">;</span>
 </code></pre></div><p>这是用来匹配代码片段的。 它匹配 ``` 标识之间的东西。这能够用于提取代码片段, 假如我有一个叫做 <strong>input.txt</strong> 的文本文件:</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl">
-<span class="c1"># 提取代码片段</span>
+<span class="c1"># 提取代码片段</span>
 　
-<span class="c1">## Flip 和 Flop</span>
+<span class="c1">## Flip 和 Flop</span>
 　
-<span class="n"></span><span class="n">这俩单词是什么鬼</span><span class="p">?</span> <span class="n"></span><span class="n">反转操作符</span><span class="p">?</span> <span class="n"></span><span class="n">看起来很牛的样子</span><span class="p">,</span> <span class="n"></span><span class="n">我</span><span class="sb">`方`</span><span class="n"></span><span class="n">了</span><span class="p">,</span> <span class="n"></span><span class="n">我觉得它像开关</span><span class="err">。</span>
+<span class="n">这俩单词是什么鬼</span><span class="p">?</span> <span class="n">反转操作符</span><span class="p">?</span> <span class="n">看起来很牛的样子</span><span class="p">,</span> <span class="n">我</span><span class="sb">`方`</span><span class="n">了</span><span class="p">,</span> <span class="n">我觉得它像开关</span><span class="err">。</span>
 
-<span class="c1">## 片段1</span>
+<span class="c1">## 片段1</span>
 　
-<span class="s">&#39;&#39;</span><span class="s">&#39;raku
-</span><span class="s">say &#39;</span><span class="n"></span><span class="n">hello</span><span class="s">&#39;;
+<span class="s">&#39;&#39;&#39;raku
+</span><span class="s">say &#39;</span><span class="n">hello</span><span class="s">&#39;;
 </span><span class="s">### 我是 Raku 代码
-</span><span class="s">&#39;</span><span class="s">&#39;&#39;</span>
+</span><span class="s">&#39;&#39;&#39;</span>
 
-<span class="n"></span><span class="n">ff</span> <span class="n"></span><span class="n">还有</span> <span class="o">^</span><span class="n"></span><span class="n">ff</span><span class="err">、</span> <span class="n"></span><span class="n">ff</span><span class="o">^</span> <span class="n"></span><span class="n">和</span> <span class="o">^</span><span class="n"></span><span class="n">ff</span><span class="o">^</span> <span class="n"></span><span class="n">三种变体</span><span class="err">。</span>
+<span class="n">ff</span> <span class="n">还有</span> <span class="o">^</span><span class="n">ff</span><span class="err">、</span> <span class="n">ff</span><span class="o">^</span> <span class="n">和</span> <span class="o">^</span><span class="n">ff</span><span class="o">^</span> <span class="n">三种变体</span><span class="err">。</span>
 
 
-<span class="c1">## 片段2</span>
+<span class="c1">## 片段2</span>
 　
-<span class="s">&#39;&#39;</span><span class="s">&#39; perl
+<span class="s">&#39;&#39;&#39; perl
 </span><span class="s"># 我是 Perl 5 代码
-</span><span class="s">say &#39;</span><span class="n"></span><span class="n">hello</span><span class="s">&#39; ~ &#39;</span><span class="n"></span><span class="n">world</span><span class="s">&#39;;
-</span><span class="s">&#39;</span><span class="s">&#39;&#39;</span>
+</span><span class="s">say &#39;</span><span class="n">hello</span><span class="s">&#39; ~ &#39;</span><span class="n">world</span><span class="s">&#39;;
+</span><span class="s">&#39;&#39;&#39;</span>
 
-<span class="c1"># 片段3</span>
+<span class="c1"># 片段3</span>
 　
-<span class="s">&#39;&#39;</span><span class="s">&#39;
+<span class="s">&#39;&#39;&#39;
 </span><span class="s">fff 用于对付某些特殊情况。
 </span><span class="s">### 这是注释
 </span><span class="s">我只是在测试 ff 和 fff 的不同。显然, fff 更智能点。
-</span><span class="s">&#39;</span><span class="s">&#39;&#39;</span>
+</span><span class="s">&#39;&#39;&#39;</span>
 
 </code></pre></div><p>因为简书对嵌套的 <strong>```</strong> 这种结构处理不好, 所以我使用单引号 <strong>'</strong> 来代替 <strong>`</strong>。我需要提取每对 <strong>```</strong> 之间的内容, 那么:</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 
-<span class="k">my</span> <span class="nv">@</span><span class="nv">lines</span> <span class="o">=</span> <span class="s">&#34;input.txt&#34;</span><span class="o">.</span><span class="n"></span><span class="n">IO</span><span class="o">.</span><span class="n"></span><span class="n">lines</span><span class="p">;</span>
-<span class="k">for</span> <span class="nv">@</span><span class="nv">lines</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">line</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">line</span> <span class="k">if</span> <span class="nv">$</span><span class="nv">line</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/^\s*&#39;```&#39;\s*(\w+)?$/</span> <span class="n"></span><span class="n">ff</span> <span class="nv">$</span><span class="nv">line</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/^\s*&#39;```&#39;\s*$/</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">@lines</span> <span class="o">=</span> <span class="s">&#34;input.txt&#34;</span><span class="o">.</span><span class="n">IO</span><span class="o">.</span><span class="n">lines</span><span class="p">;</span>
+<span class="k">for</span> <span class="nv">@lines</span> <span class="o">-&gt;</span> <span class="nv">$line</span> <span class="p">{</span>
+    <span class="n">say</span> <span class="nv">$line</span> <span class="k">if</span> <span class="nv">$line</span> <span class="o">~~</span> <span class="sr">/^\s*&#39;```&#39;\s*(\w+)?$/</span> <span class="n">ff</span> <span class="nv">$line</span> <span class="o">~~</span> <span class="sr">/^\s*&#39;```&#39;\s*$/</span><span class="p">;</span>
 <span class="p">}</span>
 
 </code></pre></div><p>但是对于片段3, 因为开始标识符和结束标识符都是 <strong>```</strong>,  <code>ff</code> 提取不到, 这时需要用到 <code>fff</code> 了:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"> <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">line</span> <span class="k">if</span> <span class="nv">$</span><span class="nv">line</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/^\s*&#39;```&#39;\s*(\w+)?$/</span> <span class="n"></span><span class="n">fff</span> <span class="nv">$</span><span class="nv">line</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/^\s*&#39;```&#39;\s*$/</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"> <span class="n">say</span> <span class="nv">$line</span> <span class="k">if</span> <span class="nv">$line</span> <span class="o">~~</span> <span class="sr">/^\s*&#39;```&#39;\s*(\w+)?$/</span> <span class="n">fff</span> <span class="nv">$line</span> <span class="o">~~</span> <span class="sr">/^\s*&#39;```&#39;\s*$/</span><span class="p">;</span>
 </code></pre></div><p>如果你连开始和结尾的 <strong>```</strong> 标识符也不想要, 那么使用 <code>^fff^</code>。</p>
 
 
@@ -472,7 +472,7 @@ for dir(test =&gt; /\. md|markdown $/) -&gt; $file {
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

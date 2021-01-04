@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -381,7 +381,7 @@ True
 </code></pre><p>Larry Wall 在采访中表达的 Raku 哲学是, Unicode 符号现在可能很难打字, 但技术会有所改进, 将来你很乐意拥有定义源代码的富有表现力的 Unicode。我个人对 ASCII 变体感到满意 - 在 Raku 的说法中, 它们被称为德克萨斯符号（因为一切都更大, 得到它吗？） - 但也许有些人会发现 Unicode 更容易看到。值得注意的是, 即将推出的 Apple 硬件中有关于电子墨水键盘的传闻, 因此 Larry Wall 可能领先于这一特定曲线。</p>
 <p>早在 20 世纪 80 年代后期, Perl 就将正则表达式引入到编程世界中, 或者至少是人们可能真正想用来捕获和打印东西的非堆栈类型。 Raku 具有 Perl 的正则表达式, 只有一些变化：扩展 Unicode 支持, 移动修改器, 重新分配一些符号, 以及更改空白规则更清晰。他们觉得我更现代, 有更多的呼吸空间。我举几个例子。</p>
 <p>字符类使用 <code>&lt;[]&gt;</code> 而不是 <code>[]</code>,  范围使用 <code>..</code> 而不是 <code>-</code>。所以：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">[</span><span class="n"></span><span class="n">a</span><span class="o">-</span><span class="n"></span><span class="n">zA</span><span class="o">-</span><span class="n"></span><span class="n">Z0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">[</span><span class="n">a</span><span class="o">-</span><span class="n">zA</span><span class="o">-</span><span class="n">Z0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span>
 </code></pre></div><p>现在是</p>
 <pre><code class="language-raku" data-lang="raku">&lt;[ a..z A..Z 0..9 ]&gt;
 </code></pre><p>捕获组仍然使用括号, 但非捕获组现在使用普通方括号。空格现在必须是显式的。所以这：</p>
@@ -389,10 +389,10 @@ True
 </code></pre><p>现在是：</p>
 <pre><code class="language-raku" data-lang="raku">(Male || Female) ' ' [Cat || Dog]
 </code></pre><p>修饰符（<code>i</code> 表示不区分大小写是最重要的）在前面有冒号时可以出现在正则表达式中。例如, 这个 Perl 5 正则表达式：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">(</span><span class="n"></span><span class="n">Male</span><span class="o">|</span><span class="n"></span><span class="n">Female</span><span class="p">)</span> <span class="p">(</span><span class="p">?</span><span class="p">:</span><span class="p">[</span><span class="n"></span><span class="n">Cc</span><span class="p">]</span><span class="p">[</span><span class="n"></span><span class="n">Aa</span><span class="p">]</span><span class="p">[</span><span class="n"></span><span class="n">Tt</span><span class="p">]</span><span class="o">|</span><span class="p">[</span><span class="n"></span><span class="n">Dd</span><span class="p">]</span><span class="p">[</span><span class="n"></span><span class="n">Oo</span><span class="p">]</span><span class="p">[</span><span class="n"></span><span class="n">Gg</span><span class="p">]</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="p">(</span><span class="n">Male</span><span class="o">|</span><span class="n">Female</span><span class="p">)</span> <span class="p">(?:[</span><span class="n">Cc</span><span class="p">][</span><span class="n">Aa</span><span class="p">][</span><span class="n">Tt</span><span class="p">]</span><span class="o">|</span><span class="p">[</span><span class="n">Dd</span><span class="p">][</span><span class="n">Oo</span><span class="p">][</span><span class="n">Gg</span><span class="p">])</span>
 </code></pre></div><p>将被翻译为 Raku：</p>
 <pre><code class="language-raku" data-lang="raku">(Male || Female) ' ' [:i cat || dog]
-</code></pre><p><code>\d</code> 现在匹配 Unicode 数字, 如 ᭕ （巴厘语中的数字五）和 ๓（泰文中的三）。 <code>\w</code> 匹配数字和 Unicode 认为是字母的任何内容, 包括 <code>Ж</code> 和 <code>Θ</code>。 <code>\h</code> 匹配任何 Unicode 定义的水平空白字符; 如果你只想匹配爷爷的ASCII 打字机上的空格, 你可以选择 <code>\c[SPACE], </code>\x[20]<code>或</code>&rsquo; &lsquo;`。</p>
+</code></pre><p><code>\d</code> 现在匹配 Unicode 数字, 如 ᭕ （巴厘语中的数字五）和 ๓（泰文中的三）。 <code>\w</code> 匹配数字和 Unicode 认为是字母的任何内容, 包括 <code>Ж</code> 和 <code>Θ</code>。 <code>\h</code> 匹配任何 Unicode 定义的水平空白字符; 如果你只想匹配爷爷的ASCII 打字机上的空格, 你可以选择 <code>\c[SPACE], </code>\x[20]<code>或</code>' &lsquo;`。</p>
 <p>可以通过传统的 Perl 分组（如 <code>alnum</code> 或 <code>xdigit</code>）或使用 Unicode 通用类别（如 <code>Lu</code>（大写字母）或 <code>Sm</code>（数学符号））来标识字符集：</p>
 <pre><code>&lt;alnum&gt; # traditional character class name, now in angle brackets
 &lt;:Lu&gt; # Unicode General Category, note the colon
@@ -410,7 +410,7 @@ if &quot;Male CAT&quot; ~~ /&lt;sex&gt; \s &lt;species&gt;/ {
     say &quot;Sex: &quot;     ~ $/&lt;sex&gt;;
     say &quot;Species: &quot; ~ $/&lt;species&gt;.lc;
 }
-</code></pre><p>(波浪号是 Raku 的字符串连接操作符; 双波浪号是&quot;智能匹配&rdquo;, 在此上下文中应用正则表达式。)</p>
+</code></pre><p>(波浪号是 Raku 的字符串连接操作符; 双波浪号是&quot;智能匹配&quot;, 在此上下文中应用正则表达式。)</p>
 <p>接下来, 你可以将正则表达式组合成一个 grammar 块, 提供一个名为 <code>TOP</code> 的特殊正则表达式, 它指示解析应该从哪里开始：</p>
 <pre><code class="language-raku" data-lang="raku">grammar Animal {
     regex sex     { &quot;Male&quot;   || &quot;Female&quot; }
@@ -829,15 +829,15 @@ Usage:
                   <ul>
                 
                 
+                    <li><a href="/post/2021-01-04-raku-performance-and-physics-unit/">Raku 性能和 Physics::Unit</a></li>
+                
+                    <li><a href="/post/2021-internal-indirection/">Internal Indirection</a></li>
+                
                     <li><a href="/post/2020-06-30-sequence/">数列</a></li>
                 
                     <li><a href="/post/2019-07-31-parse-with-raku-regexes-and-grammars/">Parse with Raku Regexes and Grammars</a></li>
                 
                     <li><a href="/post/2019-07-16-encode-decode/">Encode-Decode</a></li>
-                
-                    <li><a href="/post/2019-06-29-odd-even-sort-in-raku/">Raku 中的 奇偶排序</a></li>
-                
-                    <li><a href="/post/2019-06-27-pancake-sort-in-raku/">Raku 中的煎饼排序</a></li>
                 
               </ul>
 
@@ -922,7 +922,7 @@ Usage:
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

@@ -57,7 +57,7 @@
     "name" : "焉知非鱼"
   },
   "headline": "第五天 - 使用 Raku 签名解构参数",
-  "description" : "第五天 - 使用 Raku 签名解构参数 在许多其他关键的 Raku 特性中，我认为 Signatures 是众多\x26quot;杀手级\x26quot;特性之一。 它们的功能如此丰富而强大，我怀疑关于如何使用它们可以写一整本书。 我想探索一下我原来忽略但是非常珍惜的一些特定功能。",
+  "description" : "第五天 - 使用 Raku 签名解构参数 在许多其他关键的 Raku 特性中，我认为 Signatures 是众多\u0026quot;杀手级\u0026quot;特性之一。 它们的功能如此丰富而强大，我怀疑关于如何使用它们可以写一整本书。 我想探索一下我原来忽略但是非常珍惜的一些特定功能。",
   "inLanguage" : "zh",
   "wordCount":  395 ,
   "datePublished" : "2017-12-05T10:54:24",
@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -324,22 +324,22 @@ if (!doNotTrack) {
 例如，你可能想要将特定的参数限制为像 Array 这样的 Positional 参数，或者使用相应的 @ 或 ％ 符号将这个参数限制为像 Hash 这样的关联参数。</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">myfunc</span><span class="p">(%h) {</span><span class="o">...</span><span class="p">}</span>
 </code></pre></div><p>现在我可以使用一个散列来调用该函数:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">myfunc</span><span class="p">(</span><span class="nv">%</span><span class="err">(</span> <span class="nv">a</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n"></span><span class="n">b</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="n"></span><span class="n">c</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mf">2.2</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">myfunc</span><span class="p">(</span><span class="nv">%</span><span class="err">(</span> <span class="nv">a</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span> <span class="o">=&gt;</span> <span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=&gt;</span> <span class="mf">2.2</span><span class="p">));</span>
 </code></pre></div><p>如果我想验证那些特定的字段是否存在，我可以把代码放在函数的顶部来做到这一点：</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">myfunc</span><span class="p">(%h) {</span>
-    <span class="nb">die</span> <span class="s">&#34;a must be an Int&#34;</span> <span class="k">unless</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;a&gt;</span> <span class="o">~</span><span class="o">~</span> <span class="n"></span><span class="n">Int</span><span class="p">;</span>
-    <span class="nb">die</span> <span class="s">&#34;b must be a Str&#34;</span>  <span class="k">unless</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;b&gt;</span> <span class="o">~</span><span class="o">~</span> <span class="n"></span><span class="n">Str</span><span class="p">;</span>
-    <span class="nb">die</span> <span class="s">&#34;c must be a Rat&#34;</span>  <span class="k">unless</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;c&gt;</span> <span class="o">~</span><span class="o">~</span> <span class="n"></span><span class="n">Rat</span><span class="p">;</span>
+    <span class="nb">die</span> <span class="s">&#34;a must be an Int&#34;</span> <span class="k">unless</span> <span class="nv">%h</span><span class="sr">&lt;a&gt;</span> <span class="o">~~</span> <span class="n">Int</span><span class="p">;</span>
+    <span class="nb">die</span> <span class="s">&#34;b must be a Str&#34;</span>  <span class="k">unless</span> <span class="nv">%h</span><span class="sr">&lt;b&gt;</span> <span class="o">~~</span> <span class="n">Str</span><span class="p">;</span>
+    <span class="nb">die</span> <span class="s">&#34;c must be a Rat&#34;</span>  <span class="k">unless</span> <span class="nv">%h</span><span class="sr">&lt;c&gt;</span> <span class="o">~~</span> <span class="n">Rat</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>如果我还想简化引用那些字段的方式，我可以将它们赋值给其他变量：</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">sub</span> <span class="nf">myfunc</span><span class="p">(%h) {</span>
-    <span class="nb">die</span> <span class="s">&#34;a must be an Int&#34;</span> <span class="k">unless</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;a&gt;</span> <span class="o">~</span><span class="o">~</span> <span class="n"></span><span class="n">Int</span><span class="p">;</span>
-    <span class="nb">die</span> <span class="s">&#34;b must be a Str&#34;</span>  <span class="k">unless</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;b&gt;</span> <span class="o">~</span><span class="o">~</span> <span class="n"></span><span class="n">Str</span><span class="p">;</span>
-    <span class="nb">die</span> <span class="s">&#34;c must be a Rat&#34;</span>  <span class="k">unless</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;c&gt;</span> <span class="o">~</span><span class="o">~</span> <span class="n"></span><span class="n">Rat</span><span class="p">;</span>
+    <span class="nb">die</span> <span class="s">&#34;a must be an Int&#34;</span> <span class="k">unless</span> <span class="nv">%h</span><span class="sr">&lt;a&gt;</span> <span class="o">~~</span> <span class="n">Int</span><span class="p">;</span>
+    <span class="nb">die</span> <span class="s">&#34;b must be a Str&#34;</span>  <span class="k">unless</span> <span class="nv">%h</span><span class="sr">&lt;b&gt;</span> <span class="o">~~</span> <span class="n">Str</span><span class="p">;</span>
+    <span class="nb">die</span> <span class="s">&#34;c must be a Rat&#34;</span>  <span class="k">unless</span> <span class="nv">%h</span><span class="sr">&lt;c&gt;</span> <span class="o">~~</span> <span class="n">Rat</span><span class="p">;</span>
 
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">a</span> <span class="o">=</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;a&gt;</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">b</span> <span class="o">=</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;b&gt;</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">c</span> <span class="o">=</span> <span class="nv">%</span><span class="nv">h</span><span class="sr">&lt;c&gt;</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$a</span> <span class="o">=</span> <span class="nv">%h</span><span class="sr">&lt;a&gt;</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$b</span> <span class="o">=</span> <span class="nv">%h</span><span class="sr">&lt;b&gt;</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$c</span> <span class="o">=</span> <span class="nv">%h</span><span class="sr">&lt;c&gt;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>有点无聊，对吗？</p>
 <p>Perl 签名参数解构来拯救你了！ 我们可以在子例程签名自身中做所有的事情 - 只要放一个子签名(sub-signature)在后面即可。</p>
@@ -348,12 +348,12 @@ if (!doNotTrack) {
 <p>相当不错，但如果你有<strong>更</strong>复杂的东西呢？</p>
 <p>假如说一块儿有嵌套结构的 JSON，某些部分可能缺失了, 它们需要默认值, 等等。</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">JSON::Fast</span><span class="p">;</span>
-<span class="k">my</span> <span class="nv">$</span><span class="nv">item</span> <span class="o">=</span> <span class="n"></span><span class="n">from</span><span class="o">-</span><span class="n"></span><span class="n">json</span><span class="p">(</span><span class="sx">q:to/END/);
+<span class="k">my</span> <span class="nv">$item</span> <span class="o">=</span> <span class="n">from</span><span class="o">-</span><span class="n">json</span><span class="p">(</span><span class="sx">q:to/END/);
 </span><span class="sx">    {
 </span><span class="sx">        &#34;book&#34; :</span> <span class="p">{</span>
             <span class="s">&#34;title&#34;</span>  <span class="p">:</span> <span class="s">&#34;A Christmas Carol&#34;</span><span class="p">,</span>
             <span class="s">&#34;author&#34;</span> <span class="p">:</span> <span class="s">&#34;Charles Dickens&#34;</span>
-        <span class="p">}</span><span class="p">,</span>
+        <span class="p">},</span>
         <span class="s">&#34;count&#34;</span> <span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
         <span class="s">&#34;tags&#34;</span> <span class="p">:</span> <span class="p">[</span> <span class="s">&#34;christmas&#34;</span><span class="p">,</span> <span class="s">&#34;santa&#34;</span><span class="p">]</span>
     <span class="p">}</span>
@@ -365,34 +365,34 @@ if (!doNotTrack) {
 </code></pre></div><p>现在，在函数体中，我可以将这些部分引用为 <code>$title</code>，<code>$author</code>，<code>$count</code>和 <code>@tags</code>。 为了方便起见，我还将标签分成了 <code>$first-tag</code> 和 <code>@other-tags</code>。</p>
 <h2 id="在块儿中使用签名">在块儿中使用签名</h2>
 <p>当然，签名对于子程序来说是幻想的，但是你也可以在块儿(Block)中使用签名和解构。 假设你有一个上面的 JSON 条目的数组，并希望通过一个 <code>for</code> 循环遍历它们？ 只需在 <code>for</code> 的尖号块中使用解构签名即可：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="nv">@</span><span class="nv">itemlist</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">%</span> <span class="err">(</span><span class="nv">:</span><span class="nv">%</span><span class="nv">book</span> <span class="p">(</span><span class="n"></span><span class="n">Str:D</span> <span class="p">:</span><span class="nv">$</span><span class="nv">title</span><span class="p">,</span> <span class="n"></span><span class="n">Str:D</span> <span class="p">:</span><span class="nv">$</span><span class="nv">author</span><span class="p">)</span><span class="p">,</span> <span class="n"></span><span class="n">Int</span> <span class="p">:</span><span class="nv">$</span><span class="nv">count</span><span class="p">,</span>
-                    <span class="p">:</span><span class="nv">@</span><span class="nv">tags</span> <span class="p">(</span><span class="nv">$</span><span class="nv">first</span><span class="o">-</span><span class="n"></span><span class="n">tag</span><span class="p">,</span> <span class="o">*</span><span class="nv">@</span><span class="nv">other</span><span class="o">-</span><span class="n"></span><span class="n">tags</span><span class="p">)</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="nv">@itemlist</span> <span class="o">-&gt;</span> <span class="nv">%</span> <span class="err">(</span><span class="nv">:%book</span> <span class="p">(</span><span class="n">Str:D</span> <span class="p">:</span><span class="nv">$title</span><span class="p">,</span> <span class="n">Str:D</span> <span class="p">:</span><span class="nv">$author</span><span class="p">),</span> <span class="n">Int</span> <span class="p">:</span><span class="nv">$count</span><span class="p">,</span>
+                    <span class="p">:</span><span class="nv">@tags</span> <span class="p">(</span><span class="nv">$first</span><span class="o">-</span><span class="n">tag</span><span class="p">,</span> <span class="o">*</span><span class="nv">@other</span><span class="o">-</span><span class="n">tags</span><span class="p">))</span>
 <span class="p">{</span>
-    <span class="n"></span><span class="n">say</span> <span class="s">&#34;$title, $author, $count, @tags[], $first-tag, @other-tags[]&#34;</span>
+    <span class="n">say</span> <span class="s">&#34;$title, $author, $count, @tags[], $first-tag, @other-tags[]&#34;</span>
 <span class="p">}</span>
 </code></pre></div><p>注意在这种情况下，我甚至不需要散列本身，所以我省略了散列的名称，仅使用 <code>％</code> 作为匿名散列（关联）。</p>
 <h2 id="你甚至可以解构对象">你甚至可以解构对象!</h2>
 <p>你有没有试过遍历一组对象，你所做的第一件事是调用一些访问器来获取一些属性？ 当然，你可以使用 <code>.attribute</code> 和 主题化的迭代器，但是使用子签名，你可以做更多。</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">Book</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">title</span><span class="p">;</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">author</span><span class="p">;</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">count</span><span class="p">;</span>
-    <span class="n"></span><span class="n">has</span> <span class="nv">@</span><span class="err">.</span><span class="nv">tags</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">class</span> <span class="n">Book</span> <span class="p">{</span>
+    <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">title</span><span class="p">;</span>
+    <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">author</span><span class="p">;</span>
+    <span class="n">has</span> <span class="nv">$</span><span class="err">.</span><span class="nv">count</span><span class="p">;</span>
+    <span class="n">has</span> <span class="nv">@</span><span class="err">.</span><span class="nv">tags</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="k">my</span> <span class="nv">@</span><span class="nv">booklist</span> <span class="o">=</span>
-    <span class="n"></span><span class="n">Book</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n"></span><span class="n">title</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#39;A Christmas Carol&#39;</span><span class="p">,</span>
-             <span class="n"></span><span class="n">author</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#39;Charles Dickens&#39;</span><span class="p">,</span>
-             <span class="n"></span><span class="n">count</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">12</span><span class="p">,</span>
-             <span class="n"></span><span class="n">tags</span> <span class="o">=</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n"></span><span class="n">ghost</span> <span class="n"></span><span class="n">christmas</span><span class="o">&gt;</span><span class="p">)</span><span class="p">,</span>
+<span class="k">my</span> <span class="nv">@booklist</span> <span class="o">=</span>
+    <span class="n">Book</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n">title</span> <span class="o">=&gt;</span> <span class="s">&#39;A Christmas Carol&#39;</span><span class="p">,</span>
+             <span class="n">author</span> <span class="o">=&gt;</span> <span class="s">&#39;Charles Dickens&#39;</span><span class="p">,</span>
+             <span class="n">count</span> <span class="o">=&gt;</span> <span class="mi">12</span><span class="p">,</span>
+             <span class="n">tags</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">christmas</span><span class="o">&gt;</span><span class="p">),</span>
 
-    <span class="n"></span><span class="n">Book</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n"></span><span class="n">title</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#39;A Visit from St. Nicholas&#39;</span><span class="p">,</span>
-             <span class="n"></span><span class="n">author</span> <span class="o">=</span><span class="o">&gt;</span> <span class="s">&#39;Clement Clarke Moore&#39;</span><span class="p">,</span>
-             <span class="n"></span><span class="n">count</span> <span class="o">=</span><span class="o">&gt;</span> <span class="mi">4</span><span class="p">,</span>
-             <span class="n"></span><span class="n">tags</span> <span class="o">=</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n"></span><span class="n">santa</span> <span class="n"></span><span class="n">christmas</span><span class="o">&gt;</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">Book</span><span class="o">.</span><span class="k">new</span><span class="p">(</span><span class="n">title</span> <span class="o">=&gt;</span> <span class="s">&#39;A Visit from St. Nicholas&#39;</span><span class="p">,</span>
+             <span class="n">author</span> <span class="o">=&gt;</span> <span class="s">&#39;Clement Clarke Moore&#39;</span><span class="p">,</span>
+             <span class="n">count</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+             <span class="n">tags</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="n">santa</span> <span class="n">christmas</span><span class="o">&gt;</span><span class="p">);</span>
 
-<span class="k">for</span> <span class="nv">@</span><span class="nv">booklist</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n"></span><span class="n">Book</span> <span class="nv">$</span><span class="nv">b</span> <span class="p">(</span><span class="p">:</span><span class="nv">$</span><span class="nv">title</span><span class="p">,</span><span class="p">:</span><span class="nv">$</span><span class="nv">author</span><span class="p">,</span> <span class="p">:</span><span class="nv">$</span><span class="nv">count</span><span class="p">,</span> <span class="p">:</span><span class="nv">@</span><span class="nv">tags</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">say</span> <span class="s">&#34;$title, $author, $count, @tags[]&#34;</span><span class="p">;</span>
+<span class="k">for</span> <span class="nv">@booklist</span> <span class="o">-&gt;</span> <span class="n">Book</span> <span class="nv">$b</span> <span class="p">(:</span><span class="nv">$title</span><span class="p">,:</span><span class="nv">$author</span><span class="p">,</span> <span class="p">:</span><span class="nv">$count</span><span class="p">,</span> <span class="p">:</span><span class="nv">@tags</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">say</span> <span class="s">&#34;$title, $author, $count, @tags[]&#34;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>如果您想检查类型或定义，或设置默认值，您都可以在签名中正确地执行。 如果您不喜欢对象属性的名称，则可以使用别名来重命名它们, 你开心就行。</p>
 <h2 id="结论">结论</h2>
@@ -494,7 +494,7 @@ if (!doNotTrack) {
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

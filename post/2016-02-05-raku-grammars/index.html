@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -317,55 +317,55 @@ if (!doNotTrack) {
 <h2 id="具名正则-named-regexes">具名正则 (Named Regexes)</h2>
 <p>　
 grammars 的主要组成部分是 <a href="http://doc.raku.org/language/regexes">regexes</a>。 而 Raku 的 <a href="http://doc.raku.org/language/regexes">regexes</a>语法不在该文档的讨论范围, 具名正则(named regexes) 有它自己的特殊语法, 这跟子例程(subroutine) 的定义很像:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="n"></span><span class="n">regex</span> <span class="n"></span><span class="n">number</span> <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">d</span><span class="o">+</span> <span class="p">[</span> <span class="o">\</span><span class="o">.</span> <span class="o">\</span><span class="n"></span><span class="n">d</span><span class="o">+</span> <span class="p">]</span><span class="p">?</span>   <span class="p">}</span>   <span class="c1"># 普通 regex 中空格被忽略, [] 是非捕获组</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="n">regex</span> <span class="n">number</span> <span class="p">{</span> <span class="o">\</span><span class="n">d</span><span class="o">+</span> <span class="p">[</span> <span class="o">\.</span> <span class="o">\</span><span class="n">d</span><span class="o">+</span> <span class="p">]?</span>   <span class="p">}</span>   <span class="c1"># 普通 regex 中空格被忽略, [] 是非捕获组</span>
 </code></pre></div><p>上面的代码使用 <code>my</code> 关键字指定了本地作用域的 regex, 因为具名正则(named regexes) 通常用在 grammars 里面。</p>
 <p>正则有名字了就方便我们在任何地方重用那个正则了:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="s">&#34;32.51&#34;</span> <span class="o">~</span><span class="o">~</span> <span class="o">&amp;</span><span class="n"></span><span class="n">number</span><span class="p">;</span>
-<span class="n"></span><span class="n">say</span> <span class="s">&#34;15 + 4.5&#34;</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/  \s* &#39;+&#39; \s*  /</span>
-<span class="o">&amp;</span><span class="n"></span><span class="n">number</span>           <span class="c1"># my regex number { \d+ [ \. \d+ ]?   }  </span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">say</span> <span class="s">&#34;32.51&#34;</span> <span class="o">~~</span> <span class="o">&amp;</span><span class="n">number</span><span class="p">;</span>
+<span class="n">say</span> <span class="s">&#34;15 + 4.5&#34;</span> <span class="o">~~</span> <span class="sr">/  \s* &#39;+&#39; \s*  /</span>
+<span class="o">&amp;</span><span class="n">number</span>           <span class="c1"># my regex number { \d+ [ \. \d+ ]?   }  </span>
 </code></pre></div><p>为什么用 <code>&amp;number</code>, 对比具名子例程你就知道了:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">&gt;</span> <span class="k">sub</span> <span class="nf">number</span> <span class="p">{</span> <span class="n"></span><span class="n">say</span> <span class="s">&#34;i am a subroutine&#34;</span> <span class="p">}</span>  <span class="c1"># 具名子例程</span>
-<span class="o">&gt;</span> <span class="o">&amp;</span><span class="n"></span><span class="n">number</span>                                 <span class="c1"># sub number () { #`(Sub|140651249646256) ... }</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="o">&gt;</span> <span class="k">sub</span> <span class="nf">number</span> <span class="p">{</span> <span class="n">say</span> <span class="s">&#34;i am a subroutine&#34;</span> <span class="p">}</span>  <span class="c1"># 具名子例程</span>
+<span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">number</span>                                 <span class="c1"># sub number () { #`(Sub|140651249646256) ... }</span>
 </code></pre></div><p><code>&amp;number</code> 就是直接引用了具名的 regex 或 子例程。而在<code>/ /</code> 或 grammars 里面, 引用一个具名正则的语法也很特殊, 就是给名字包裹上 <code>&lt; &gt;</code>。<code>&lt;&gt;</code> 就像引号那样, 当用它引起某个具名正则后, 引用这个 `` 就会把该具名正则插入(带入)到整个正则之中, 就像字符串插值那样：</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 
-<span class="c1"># 具名正则的声明</span>
-<span class="k">my</span> <span class="n"></span><span class="n">regex</span> <span class="n"></span><span class="n">number</span> <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">d</span><span class="o">+</span> <span class="p">[</span> <span class="o">\</span><span class="o">.</span> <span class="o">\</span><span class="n"></span><span class="n">d</span><span class="o">+</span><span class="p">]</span><span class="p">?</span> <span class="p">}</span>  
-<span class="k">my</span> <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">ident</span>  <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">+</span>            <span class="p">}</span>
-<span class="k">my</span> <span class="n"></span><span class="n">rule</span>  <span class="n"></span><span class="n">alpha</span>  <span class="p">{</span> <span class="sr">&lt;[A..Za..z]&gt;</span>   <span class="p">}</span>
+<span class="c1"># 具名正则的声明</span>
+<span class="k">my</span> <span class="n">regex</span> <span class="n">number</span> <span class="p">{</span> <span class="o">\</span><span class="n">d</span><span class="o">+</span> <span class="p">[</span> <span class="o">\.</span> <span class="o">\</span><span class="n">d</span><span class="o">+</span><span class="p">]?</span> <span class="p">}</span>  
+<span class="k">my</span> <span class="n">token</span> <span class="n">ident</span>  <span class="p">{</span> <span class="o">\</span><span class="n">w</span><span class="o">+</span>            <span class="p">}</span>
+<span class="k">my</span> <span class="n">rule</span>  <span class="n">alpha</span>  <span class="p">{</span> <span class="sr">&lt;[A..Za..z]&gt;</span>   <span class="p">}</span>
 
-<span class="c1"># 1.0 通过 &amp; 来引用</span>
-<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">so</span> <span class="s">&#34;12.34&#34;</span> <span class="o">~</span><span class="o">~</span> <span class="o">&amp;</span><span class="n"></span><span class="n">number</span><span class="p">;</span> <span class="c1"># true</span>
+<span class="c1"># 1.0 通过 &amp; 来引用</span>
+<span class="n">say</span> <span class="n">so</span> <span class="s">&#34;12.34&#34;</span> <span class="o">~~</span> <span class="o">&amp;</span><span class="n">number</span><span class="p">;</span> <span class="c1"># true</span>
 
-<span class="c1"># 2.0 在正则构造 // 里使用</span>
-<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">so</span> <span class="s">&#34;12.88 + 0.12&#34;</span> <span class="o">~</span><span class="o">~</span> <span class="sr">/  \s* &#39;+&#39; \s*  /</span><span class="p">;</span> <span class="c1"># true</span>
-<span class="c1"># say so &#34;12.88 + 0.12&#34; ~~ /  \s* &#39;+&#39; \s*  /;</span>
-<span class="c1"># wrong, method &#39;number&#39; not found for invocant of class &#39;Cursor&#39;</span>
+<span class="c1"># 2.0 在正则构造 // 里使用</span>
+<span class="n">say</span> <span class="n">so</span> <span class="s">&#34;12.88 + 0.12&#34;</span> <span class="o">~~</span> <span class="sr">/  \s* &#39;+&#39; \s*  /</span><span class="p">;</span> <span class="c1"># true</span>
+<span class="c1"># say so &#34;12.88 + 0.12&#34; ~~ /  \s* &#39;+&#39; \s*  /;</span>
+<span class="c1"># wrong, method &#39;number&#39; not found for invocant of class &#39;Cursor&#39;</span>
 
-<span class="c1"># 3.0 在 grammar 里面使用</span>
-<span class="n"></span><span class="n">grammar</span> <span class="n"></span><span class="n">EquationParse</span> <span class="p">{</span>
-    <span class="c1"># 这里也不能给 number 起别名, 除非 number 是在 grammar 内部声明的</span>
-     <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">TOP</span> <span class="p">{</span>  <span class="o">\</span><span class="n"></span><span class="n">s</span><span class="o">*</span> <span class="s">&#39;+&#39;</span> <span class="o">\</span><span class="n"></span><span class="n">s</span><span class="o">*</span>  <span class="o">\</span><span class="n"></span><span class="n">s</span><span class="o">*</span> <span class="s">&#39;=&#39;</span> <span class="o">\</span><span class="n"></span><span class="n">s</span><span class="o">*</span>  <span class="p">}</span>
+<span class="c1"># 3.0 在 grammar 里面使用</span>
+<span class="n">grammar</span> <span class="n">EquationParse</span> <span class="p">{</span>
+    <span class="c1"># 这里也不能给 number 起别名, 除非 number 是在 grammar 内部声明的</span>
+     <span class="n">token</span> <span class="n">TOP</span> <span class="p">{</span>  <span class="o">\</span><span class="n">s</span><span class="o">*</span> <span class="s">&#39;+&#39;</span> <span class="o">\</span><span class="n">s</span><span class="o">*</span>  <span class="o">\</span><span class="n">s</span><span class="o">*</span> <span class="s">&#39;=&#39;</span> <span class="o">\</span><span class="n">s</span><span class="o">*</span>  <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="c1"># 等式解析</span>
-<span class="k">my</span> <span class="nv">$</span><span class="nv">expr</span> <span class="o">=</span> <span class="n"></span><span class="n">EquationParse</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="s">&#34;12.88 + 0.12 = 13.00&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">expr</span><span class="p">;</span>
+<span class="c1"># 等式解析</span>
+<span class="k">my</span> <span class="nv">$expr</span> <span class="o">=</span> <span class="n">EquationParse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#34;12.88 + 0.12 = 13.00&#34;</span><span class="p">);</span>
+<span class="n">say</span> <span class="nv">$expr</span><span class="p">;</span>
 
 </code></pre></div><p>声明具名正则不是只有一个 <code>regex</code> 声明符, 实际上 , regex 声明符用的最少, 大多数时候, 都是使用 <code>token</code> 或 <code>rule</code> 声明符。token 和 rule 这两个都是 <code>ratcheing</code> (棘轮)的, 这意味着如果匹配失败, 那么匹配引擎就不会回并尝试匹配了。这通常会是你想要的, 但不适用于所有情况:</p>
 <blockquote>
 <p>棘轮用于单向驱动, 防止逆转。</p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="n"></span><span class="n">regex</span> <span class="n"></span><span class="n">works</span><span class="o">-</span><span class="n"></span><span class="n">but</span><span class="o">-</span><span class="n"></span><span class="n">slow</span> <span class="p">{</span> <span class="o">.</span><span class="o">+</span> <span class="sx">q } </span><span class="c1"># 可能会回溯</span>
-<span class="k">my</span> <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">fails</span><span class="o">-</span><span class="n"></span><span class="n">but</span><span class="o">-</span><span class="n"></span><span class="n">fast</span> <span class="p">{</span> <span class="o">.</span><span class="o">+</span> <span class="sx">q } </span><span class="c1"># 不回溯</span>
-<span class="k">my</span> <span class="nv">$</span><span class="nv">s</span> <span class="o">=</span> <span class="s">&#39;Tokens and rules won\&#39;t backtrack, which makes them fail quicker!&#39;</span><span class="p">;</span>
-<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">so</span> <span class="nv">$</span><span class="nv">s</span> <span class="o">~</span><span class="o">~</span> <span class="o">&amp;</span><span class="n"></span><span class="n">works</span><span class="o">-</span><span class="n"></span><span class="n">but</span><span class="o">-</span><span class="n"></span><span class="n">slow</span><span class="p">;</span> <span class="c1"># True</span>
-<span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">so</span> <span class="nv">$</span><span class="nv">s</span> <span class="o">~</span><span class="o">~</span> <span class="o">&amp;</span><span class="n"></span><span class="n">fails</span><span class="o">-</span><span class="n"></span><span class="n">but</span><span class="o">-</span><span class="n"></span><span class="n">fast</span><span class="p">;</span> <span class="c1"># False, .+ 得到了整个字符串但不回溯</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="n">regex</span> <span class="n">works</span><span class="o">-</span><span class="n">but</span><span class="o">-</span><span class="n">slow</span> <span class="p">{</span> <span class="o">.+</span> <span class="sx">q } </span><span class="c1"># 可能会回溯</span>
+<span class="k">my</span> <span class="n">token</span> <span class="n">fails</span><span class="o">-</span><span class="n">but</span><span class="o">-</span><span class="n">fast</span> <span class="p">{</span> <span class="o">.+</span> <span class="sx">q } </span><span class="c1"># 不回溯</span>
+<span class="k">my</span> <span class="nv">$s</span> <span class="o">=</span> <span class="s">&#39;Tokens and rules won\&#39;t backtrack, which makes them fail quicker!&#39;</span><span class="p">;</span>
+<span class="n">say</span> <span class="n">so</span> <span class="nv">$s</span> <span class="o">~~</span> <span class="o">&amp;</span><span class="n">works</span><span class="o">-</span><span class="n">but</span><span class="o">-</span><span class="n">slow</span><span class="p">;</span> <span class="c1"># True</span>
+<span class="n">say</span> <span class="n">so</span> <span class="nv">$s</span> <span class="o">~~</span> <span class="o">&amp;</span><span class="n">fails</span><span class="o">-</span><span class="n">but</span><span class="o">-</span><span class="n">fast</span><span class="p">;</span> <span class="c1"># False, .+ 得到了整个字符串但不回溯</span>
 </code></pre></div><p><code>token</code> 和 <code>rule</code> 的唯一区别就是 <code>rule</code> 声明符会让正则中的 <code>:sigspace</code> 修饰符起效:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">non</span><span class="o">-</span><span class="n"></span><span class="n">space</span><span class="o">-</span><span class="n"></span><span class="n">y</span> <span class="p">{</span> <span class="s">&#39;once&#39;</span> <span class="s">&#39;upon&#39;</span> <span class="s">&#39;a&#39;</span> <span class="s">&#39;time&#39;</span> <span class="p">}</span>
-<span class="k">my</span> <span class="n"></span><span class="n">rule</span> <span class="n"></span><span class="n">space</span><span class="o">-</span><span class="n"></span><span class="n">y</span> <span class="p">{</span> <span class="s">&#39;once&#39;</span> <span class="s">&#39;upon&#39;</span> <span class="s">&#39;a&#39;</span> <span class="s">&#39;time&#39;</span> <span class="p">}</span>
-<span class="n"></span><span class="n">say</span> <span class="s">&#39;onceuponatime&#39;</span>    <span class="o">~</span><span class="o">~</span> <span class="o">&amp;</span><span class="n"></span><span class="n">non</span><span class="o">-</span><span class="n"></span><span class="n">space</span><span class="o">-</span><span class="n"></span><span class="n">y</span><span class="p">;</span>
-<span class="n"></span><span class="n">say</span> <span class="s">&#39;once upon a time&#39;</span> <span class="o">~</span><span class="o">~</span> <span class="o">&amp;</span><span class="n"></span><span class="n">space</span><span class="o">-</span><span class="n"></span><span class="n">y</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">my</span> <span class="n">token</span> <span class="n">non</span><span class="o">-</span><span class="n">space</span><span class="o">-</span><span class="n">y</span> <span class="p">{</span> <span class="s">&#39;once&#39;</span> <span class="s">&#39;upon&#39;</span> <span class="s">&#39;a&#39;</span> <span class="s">&#39;time&#39;</span> <span class="p">}</span>
+<span class="k">my</span> <span class="n">rule</span> <span class="n">space</span><span class="o">-</span><span class="n">y</span> <span class="p">{</span> <span class="s">&#39;once&#39;</span> <span class="s">&#39;upon&#39;</span> <span class="s">&#39;a&#39;</span> <span class="s">&#39;time&#39;</span> <span class="p">}</span>
+<span class="n">say</span> <span class="s">&#39;onceuponatime&#39;</span>    <span class="o">~~</span> <span class="o">&amp;</span><span class="n">non</span><span class="o">-</span><span class="n">space</span><span class="o">-</span><span class="n">y</span><span class="p">;</span>
+<span class="n">say</span> <span class="s">&#39;once upon a time&#39;</span> <span class="o">~~</span> <span class="o">&amp;</span><span class="n">space</span><span class="o">-</span><span class="n">y</span><span class="p">;</span>
 </code></pre></div><h2 id="创建-grammar">创建 Grammar</h2>
 <p>　
 当使用 grammar 关键字而非 class 关键字声明来声明一个类时, 会自动得到以 <a href="https://docs.raku.org/type/Grammar">Grammar</a> 的父类。Grammars 应该只用于解析文本; 如果你想提取复杂的数据, 推荐 <a href="http://doc.raku.org/language/grammars#Action_Objects">action object</a>和 grammar 一块使用。</p>
@@ -440,7 +440,7 @@ say BetterCalculator.parse('2 * 3', actions =&gt; BetterCalculations).made;
 <pre><code class="language-raku" data-lang="raku">rule entry { &lt;key&gt; ’=’ &lt;value&gt; }
 </code></pre><p>等价于:</p>
 <pre><code class="language-raku" data-lang="raku">token entry { &lt;key&gt; &lt;.ws&gt; ’=’ &lt;.ws&gt; &lt;value&gt; &lt;.ws&gt; } # . = non-capturing
-</code></pre><p>默认的 <code>ws</code> 匹配&quot;空白&rdquo;(whitespace), 例如空格序列(不管什么类型)、换行符、unspaces、或 heredocs。</p>
+</code></pre><p>默认的 <code>ws</code> 匹配&quot;空白&quot;(whitespace), 例如空格序列(不管什么类型)、换行符、unspaces、或 heredocs。</p>
 <p>提供你自己的 <code>ws</code> token 是极好的:</p>
 <pre><code class="language-raku" data-lang="raku">grammar Foo {
     rule TOP { \d \d }
@@ -510,79 +510,79 @@ say +DigitMatcher.subparse: '12७१७९०९', args =&gt; \(:!full-unicode)
 <p>这儿有一个例子来说明 grammar 和 action：</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 
-<span class="n"></span><span class="n">grammar</span> <span class="n"></span><span class="n">TestGrammar</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">TOP</span> <span class="p">{</span> <span class="o">^</span> <span class="o">\</span><span class="n"></span><span class="n">d</span><span class="o">+</span> <span class="nv">$</span> <span class="err">}</span>
+<span class="n">grammar</span> <span class="n">TestGrammar</span> <span class="p">{</span>
+    <span class="n">token</span> <span class="n">TOP</span> <span class="p">{</span> <span class="o">^</span> <span class="o">\</span><span class="n">d</span><span class="o">+</span> <span class="nv">$</span> <span class="err">}</span>
 <span class="err">}</span>
 
-<span class="nv">class</span> <span class="n"></span><span class="n">TestActions</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">TOP</span><span class="p">(</span><span class="vg">$/</span><span class="p">)</span> <span class="p">{</span>
-        <span class="vg">$/</span><span class="o">.</span><span class="n"></span><span class="n">make</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="vg">$/</span><span class="p">)</span><span class="p">;</span>  <span class="c1"># 等价于 $/.make: 2 + $/</span>
+<span class="nv">class</span> <span class="n">TestActions</span> <span class="p">{</span>
+    <span class="n">method</span> <span class="n">TOP</span><span class="p">(</span><span class="vg">$/</span><span class="p">)</span> <span class="p">{</span>
+        <span class="vg">$/</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="vg">$/</span><span class="p">);</span>  <span class="c1"># 等价于 $/.make: 2 + $/</span>
     <span class="p">}</span>
 <span class="p">}</span>
-<span class="k">my</span> <span class="nv">$</span><span class="nv">actions</span> <span class="o">=</span> <span class="n"></span><span class="n">TestActions</span><span class="o">.</span><span class="k">new</span><span class="p">;</span> <span class="c1"># 创建 Action 实例</span>
-<span class="k">my</span> <span class="nv">$</span><span class="nv">match</span>   <span class="o">=</span> <span class="n"></span><span class="n">TestGrammar</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;40&#39;</span><span class="p">,</span> <span class="p">:</span><span class="nv">$</span><span class="nv">actions</span><span class="p">)</span><span class="p">;</span>
-<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">match</span><span class="p">;</span>       <span class="c1"># ｢40｣</span>
-<span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">match</span><span class="o">.</span><span class="n"></span><span class="n">made</span><span class="p">;</span>  <span class="c1"># 42</span>
+<span class="k">my</span> <span class="nv">$actions</span> <span class="o">=</span> <span class="n">TestActions</span><span class="o">.</span><span class="k">new</span><span class="p">;</span> <span class="c1"># 创建 Action 实例</span>
+<span class="k">my</span> <span class="nv">$match</span>   <span class="o">=</span> <span class="n">TestGrammar</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;40&#39;</span><span class="p">,</span> <span class="p">:</span><span class="nv">$actions</span><span class="p">);</span>
+<span class="n">say</span> <span class="nv">$match</span><span class="p">;</span>       <span class="c1"># ｢40｣</span>
+<span class="n">say</span> <span class="nv">$match</span><span class="o">.</span><span class="n">made</span><span class="p">;</span>  <span class="c1"># 42</span>
 </code></pre></div><p><code>TestActions</code> 的一个实例变量作为具名参数 <code>actions</code> 被传递给 <code>parse</code> 调用, 然后当 token <code>TOP</code> 匹配成功之后, 就会自动调用方法 <code>TOP</code>, 并传递匹配对象(match object) 作为方法的参数。</p>
 <p>为了让参数是匹配对象更清楚, 上面的例子使用 <code>$/</code> 作为 action 方法的参数名, 尽管那仅仅是一个方便的约定, 跟内在无关。 <code>$match</code> 也可以。(尽管使用 <code>$/</code>可以提供把 <code>$</code>作为<code>$/</code>的缩写的优势。)</p>
 <p>下面是一个更有说服力的例子:</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">v6</span><span class="p">;</span>
 
-<span class="n"></span><span class="n">grammar</span> <span class="n"></span><span class="n">KeyValuePairs</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">TOP</span> <span class="p">{</span>
-        <span class="p">[</span><span class="sr">&lt;pair&gt;</span> <span class="o">\</span><span class="n"></span><span class="n">n</span><span class="o">+</span><span class="p">]</span><span class="o">*</span>
+<span class="n">grammar</span> <span class="n">KeyValuePairs</span> <span class="p">{</span>
+    <span class="n">token</span> <span class="n">TOP</span> <span class="p">{</span>
+        <span class="p">[</span><span class="sr">&lt;pair&gt;</span> <span class="o">\</span><span class="n">n</span><span class="o">+</span><span class="p">]</span><span class="o">*</span>
     <span class="p">}</span>
  
-    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">ws</span> <span class="p">{</span>
-        <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">*</span>
+    <span class="n">token</span> <span class="n">ws</span> <span class="p">{</span>
+        <span class="o">\</span><span class="n">h</span><span class="o">*</span>
     <span class="p">}</span>
  
-    <span class="n"></span><span class="n">rule</span> <span class="n"></span><span class="n">pair</span> <span class="p">{</span>
+    <span class="n">rule</span> <span class="n">pair</span> <span class="p">{</span>
         <span class="sr">&lt;key=.identifier&gt;</span> <span class="s">&#39;=&#39;</span> <span class="sr">&lt;value=.identifier&gt;</span>
     <span class="p">}</span>
-    <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">identifier</span> <span class="p">{</span>
-        <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">+</span>
+    <span class="n">token</span> <span class="n">identifier</span> <span class="p">{</span>
+        <span class="o">\</span><span class="n">w</span><span class="o">+</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n"></span><span class="n">class</span> <span class="n"></span><span class="n">KeyValuePairsActions</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">pair</span>      <span class="p">(</span><span class="vg">$/</span><span class="p">)</span> <span class="p">{</span>
-        <span class="vg">$/</span><span class="o">.</span><span class="n"></span><span class="n">make:</span> <span class="nv">$</span><span class="err">&lt;</span><span class="nv">key</span><span class="o">&gt;</span><span class="o">.</span><span class="n"></span><span class="n">made</span> <span class="o">=</span><span class="o">&gt;</span> <span class="nv">$</span><span class="err">&lt;</span><span class="nv">value</span><span class="o">&gt;</span><span class="o">.</span><span class="n"></span><span class="n">made</span>
+<span class="n">class</span> <span class="n">KeyValuePairsActions</span> <span class="p">{</span>
+    <span class="n">method</span> <span class="n">pair</span>      <span class="p">(</span><span class="vg">$/</span><span class="p">)</span> <span class="p">{</span>
+        <span class="vg">$/</span><span class="o">.</span><span class="n">make:</span> <span class="nv">$</span><span class="err">&lt;</span><span class="nv">key</span><span class="o">&gt;.</span><span class="n">made</span> <span class="o">=&gt;</span> <span class="nv">$</span><span class="err">&lt;</span><span class="nv">value</span><span class="o">&gt;.</span><span class="n">made</span>
     <span class="p">}</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">identifier</span><span class="p">(</span><span class="vg">$/</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1"># 子例程 `make` 和在 $/ 上调用 .make 相同</span>
-        <span class="n"></span><span class="n">make</span> <span class="o">~</span><span class="vg">$/</span>
+    <span class="n">method</span> <span class="n">identifier</span><span class="p">(</span><span class="vg">$/</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1"># 子例程 `make` 和在 $/ 上调用 .make 相同</span>
+        <span class="n">make</span> <span class="o">~</span><span class="vg">$/</span>
     <span class="p">}</span>
-    <span class="n"></span><span class="n">method</span> <span class="n"></span><span class="n">TOP</span> <span class="p">(</span><span class="nv">$</span><span class="nv">match</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1"># TOP 方法的参数可以使用任意变量名, 而不仅仅是 $/ </span>
-        <span class="nv">$</span><span class="nv">match</span><span class="o">.</span><span class="n"></span><span class="n">make:</span> <span class="nv">$</span><span class="nv">match</span><span class="sr">&lt;pair&gt;</span><span class="err">»</span><span class="o">.</span><span class="n"></span><span class="n">made</span>
+    <span class="n">method</span> <span class="n">TOP</span> <span class="p">(</span><span class="nv">$match</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1"># TOP 方法的参数可以使用任意变量名, 而不仅仅是 $/ </span>
+        <span class="nv">$match</span><span class="o">.</span><span class="n">make:</span> <span class="nv">$match</span><span class="sr">&lt;pair&gt;</span><span class="err">»</span><span class="o">.</span><span class="n">made</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">my</span> <span class="nv">$</span><span class="nv">res</span> <span class="o">=</span> <span class="n"></span><span class="n">KeyValuePairs</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="sx">q:to/EOI/, :</span><span class="n"></span><span class="n">actions</span><span class="p">(</span><span class="n"></span><span class="n">KeyValuePairsActions</span><span class="p">)</span><span class="p">)</span><span class="o">.</span><span class="n"></span><span class="n">made</span><span class="p">;</span>
-    <span class="n"></span><span class="n">second</span><span class="o">=</span><span class="n"></span><span class="n">b</span>
-    <span class="n"></span><span class="n">hits</span><span class="o">=</span><span class="mi">42</span>
-    <span class="n"></span><span class="n">perl</span><span class="o">=</span><span class="mi">6</span>
-    <span class="n"></span><span class="n">EOI</span>
-<span class="k">for</span> <span class="nv">@$</span><span class="nv">res</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">p</span> <span class="p">{</span>
-    <span class="n"></span><span class="n">say</span> <span class="s">&#34;Key: $p.key()\tValue: $p.value()&#34;</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$res</span> <span class="o">=</span> <span class="n">KeyValuePairs</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="sx">q:to/EOI/, :</span><span class="n">actions</span><span class="p">(</span><span class="n">KeyValuePairsActions</span><span class="p">))</span><span class="o">.</span><span class="n">made</span><span class="p">;</span>
+    <span class="n">second</span><span class="o">=</span><span class="n">b</span>
+    <span class="n">hits</span><span class="o">=</span><span class="mi">42</span>
+    <span class="n">perl</span><span class="o">=</span><span class="mi">6</span>
+    <span class="n">EOI</span>
+<span class="k">for</span> <span class="nv">@$res</span> <span class="o">-&gt;</span> <span class="nv">$p</span> <span class="p">{</span>
+    <span class="n">say</span> <span class="s">&#34;Key: $p.key()\tValue: $p.value()&#34;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>这会输出:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">Key:</span> <span class="n"></span><span class="n">second</span>     <span class="n"></span><span class="n">Value:</span> <span class="n"></span><span class="n">b</span>
-<span class="n"></span><span class="n">Key:</span> <span class="n"></span><span class="n">hits</span>       <span class="n"></span><span class="n">Value:</span> <span class="mi">42</span>
-<span class="n"></span><span class="n">Key:</span> <span class="n"></span><span class="n">perl</span>       <span class="n"></span><span class="n">Value:</span> <span class="mi">6</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">Key:</span> <span class="n">second</span>     <span class="n">Value:</span> <span class="n">b</span>
+<span class="n">Key:</span> <span class="n">hits</span>       <span class="n">Value:</span> <span class="mi">42</span>
+<span class="n">Key:</span> <span class="n">perl</span>       <span class="n">Value:</span> <span class="mi">6</span>
 </code></pre></div><p><code>pair</code> 这个 rule, 解析一对由等号分割的 pair, 并且给 <code>identifier</code> 这个 token 各自起了别名。对应的 action 方法构建了一个 <code>Pair</code> 对象, 并使用子匹配对象(sub match objects)的 <code>.made</code> 属性。这也暴露了一个事实: submatches 的 action 方法在那些调用正则/外部正则之前就被调用。所以 action 方法是按后续调用的。</p>
 <p>名为 <code>TOP</code> 的 action 方法仅仅把由 <code>pair</code> 这个 rule 的多重匹配组成的所有对象收集到一块, 然后以一个列表的方式返回。</p>
 <p>注意 <code>KeyValuePairsActions</code> 是作为一个类型对象(type object)传递给方法 <code>parse</code>的, 这是因为 action 方法中没有一个使用属性(属性只能通过实例来访问)。</p>
 <p>其它情况下, action 方法可能会在属性中保存状态。 那么这当然需要你传递一个实例给 <code>parse</code> 方法。</p>
 <p>注意, <code>token ws</code> 有点特殊: 当 <code>:sigspace</code> 开启的时候(就是我们使用 <code>rule</code>的时候), 我们覆写的 <code>ws</code> 会替换某些空白序列。这就是为什么 <code>rule pair</code> 中等号两边的空格解析没有问题并且闭合 <code>}</code> 之前的空白不会狼吞虎咽地吃下换行符, 因为换行符在 <code>TOP</code> token 已经占位置了, 并且 token 不会回溯。</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1"># ws 的内置定义</span>
-<span class="sr">/ &lt;.ws&gt; /</span>                <span class="c1"># match &#34;whitespace&#34;:</span>
-                         <span class="c1">#   \s+ if it&#39;s between two \w characters,</span>
-                         <span class="c1">#   \s* otherwise</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1"># ws 的内置定义</span>
+<span class="sr">/ &lt;.ws&gt; /</span>                <span class="c1"># match &#34;whitespace&#34;:</span>
+                         <span class="c1">#   \s+ if it&#39;s between two \w characters,</span>
+                         <span class="c1">#   \s* otherwise</span>
 
-<span class="o">&gt;</span> <span class="k">my</span> <span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">ws</span> <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">*</span> <span class="p">}</span> <span class="c1"># 重写 ws 这个内置的 token</span>
-<span class="o">&gt;</span> <span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">so</span> <span class="s">&#34;\n&#34;</span> <span class="o">~</span><span class="o">~</span> <span class="o">&amp;</span><span class="n"></span><span class="n">ws</span> <span class="c1"># True</span>
+<span class="o">&gt;</span> <span class="k">my</span> <span class="n">token</span> <span class="n">ws</span> <span class="p">{</span> <span class="o">\</span><span class="n">h</span><span class="o">*</span> <span class="p">}</span> <span class="c1"># 重写 ws 这个内置的 token</span>
+<span class="o">&gt;</span> <span class="n">say</span> <span class="n">so</span> <span class="s">&#34;\n&#34;</span> <span class="o">~~</span> <span class="o">&amp;</span><span class="n">ws</span> <span class="c1"># True</span>
 </code></pre></div><p>所以 <code>&lt;.ws&gt;</code> 内置的定义是：如果空白在两个 <code>\w</code> 单词字符之间, 则意思为 <code>\s+</code>, 否则为 <code>\s*</code>。 我们可以重写 <code>ws</code> 关于空白的定义, 重新定义我们需要的空白。比如把 <code>ws</code> 定义为 <code>{ \h* }</code> 就是所有水平空白符, 甚至可以将<code>ws</code> 定义为非空白字符。例如: <code>token ws { 'x' }</code></p>
 
 
@@ -682,7 +682,7 @@ say +DigitMatcher.subparse: '12७१७९०९', args =&gt; \(:!full-unicode)
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -315,7 +315,7 @@ if (!doNotTrack) {
 <h1 id="背景">背景</h1>
 <p>在我实现 NYI POD 功能的过程中，我已经给我添加到 Rakudo 仓库中的文档添加了注释: <a href="https://github.com/rakudo/rakudo/blob/master/docs/rakudo-nqp-and-pod-notes.md">rakudo/docs/rakudo-nqp-and-pod-notes.md</a>。我更新它，因为我发现了可能没有记录的新内容或者可能不容易找到其文档。该文件还包含一份完整的清单，通过我的计算，NYI POD 功能。以下是我已经工作了几个月的 NYI POD 功能列表，我希望在今年或新年初完成（以及每个功能的 roast 测试）:</p>
 <ul>
-<li>NYI: %config :numbered 对于段落或分隔的POD块，使用&rsquo;#&lsquo;别名</li>
+<li>NYI: %config :numbered 对于段落或分隔的POD块，使用'#&lsquo;别名</li>
 <li>NYI: POD 数据块</li>
 <li>NYI: 以defn块术语格式化代码</li>
 </ul>
@@ -323,11 +323,11 @@ if (!doNotTrack) {
 <p>受许多因素的影响, 这项工作比我预期的时间更长，因为我将简要讨论，希望它可以帮助未来的开发人员。</p>
 <h1 id="rakudo-nqp-grammar-和-actions-学到的东西">Rakudo NQP grammar 和 actions: 学到的东西</h1>
 <h2 id="match-对象">Match 对象</h2>
-<p>在 token 上完成一个 grammar 匹配会产生一个匹配对象。 如果 token 具有与该 token 同名的 action 操作方法，则使用匹配对象作为隐式或显式参数调用该 action 方法。 按照惯例，&lsquo;$/&rsquo; 用作显式参数，但可以使用另一个名称（不要这样做！）。 我不建议依赖隐式参数。 如果需要，可以添加其他参数。</p>
+<p>在 token 上完成一个 grammar 匹配会产生一个匹配对象。 如果 token 具有与该 token 同名的 action 操作方法，则使用匹配对象作为隐式或显式参数调用该 action 方法。 按照惯例，'$/&rsquo; 用作显式参数，但可以使用另一个名称（不要这样做！）。 我不建议依赖隐式参数。 如果需要，可以添加其他参数。</p>
 <p>请注意，随着解析的继续，匹配数据将保留在匹配对象中，因为它在其他 token 和方法中使用。</p>
 <h2 id="断言">断言</h2>
 <p>断言在 POD 处理中发现的动态 grammar 中很重要。 在主匹配期间，通常必须选择几种匹配路径。 调试错误使用给我带来很多麻烦的一个例子是在定义分隔文本块的 token 内。</p>
-<p>触发问题的测试用例是文件&rsquo;b.t&rsquo;:</p>
+<p>触发问题的测试用例是文件&rsquo;b.t':</p>
 <pre><code>=begin pod
 text
 =end pod
@@ -350,7 +350,7 @@ Did you make a mistake in Pod syntax?
  from gen/moar/Raku-Grammar.nqp:3609  (blib/Raku/Grammar.moarvm:)
  ...more files and line numbers...
 </code></pre><p>更没用了！ 我尝试手动调查列出的文件，并且无法很好地解密代码以获得线索。</p>
-<p>然后我尝试了另一个似乎有效的类似测试用例，文件&rsquo;b2.t&rsquo;：</p>
+<p>然后我尝试了另一个似乎有效的类似测试用例，文件&rsquo;b2.t'：</p>
 <pre><code>=begin table
 text
 =end table
@@ -368,7 +368,7 @@ Pod::Block::Table
     &lt;?{ ~$&lt;type&gt; eq 'defn' }&gt; # &lt;== assertion: this is a 'defn' type
     \s* &lt;defn-line&gt;
 ]
-</code></pre><p>在 <strong>delimited</strong> 块 token 定义中，该组是顺序的而不是备选分支的一部分，必须匹配或全部 token 失败。不幸的是，失败的结果是 LTA , 对于这种情况是例外（这在 NQP 中并不常见，并且在其中工作的危险之一），并且我在寻找原因的过程中犯了太长时间的错误。欺骗我的一件事就是认为在一个没有得到满足的小组中的断言就像是&rsquo;?&lsquo;量词意味着忽略失败的匹配。在我仔细研究之后，我认为绝对不是这样！该组是否匹配，因此如果不匹配是可接受的，则量词必须在那里。</p>
+</code></pre><p>在 <strong>delimited</strong> 块 token 定义中，该组是顺序的而不是备选分支的一部分，必须匹配或全部 token 失败。不幸的是，失败的结果是 LTA , 对于这种情况是例外（这在 NQP 中并不常见，并且在其中工作的危险之一），并且我在寻找原因的过程中犯了太长时间的错误。欺骗我的一件事就是认为在一个没有得到满足的小组中的断言就像是'?&lsquo;量词意味着忽略失败的匹配。在我仔细研究之后，我认为绝对不是这样！该组是否匹配，因此如果不匹配是可接受的，则量词必须在那里。</p>
 <p>当我将 <strong>delimited</strong> token 的代码与 <strong>delimited_table</strong> 块 token 的起作用代码（之前我曾做过很多次）进行比较时，我看到 <strong>delimited_table</strong> 块中的同一匹配组具有&rsquo;?&lsquo;量词。在我给 <strong>delimited</strong> 块 token 中的组添加&rsquo;?&lsquo;后, 坏的测试用例再次起作用！</p>
 <h2 id="调试">调试</h2>
 <p>对我来说最有用的 grammar 和 actions 调试技术是经典的：print 语句用于显示执行期间变量的值。该方法取决于哪种文件类型以及希望显示的值。以下是一些例子：</p>
@@ -386,9 +386,9 @@ Pod::Block::Table
     \h* $&lt;tok&gt; = [ foo | bar ] # &lt;== note '=' instead of ':='
     { say(&quot;DEBUG: \$&lt;tok&gt; value: '{$&lt;tok&gt;}'&quot;); }
 }
-</code></pre><p>请注意，say 语句位于由花括号定义的块内。另请注意，即使在 NQP 源文件中，grammar 中使用的匹配对象的赋值运算符（&lsquo;=&rsquo;）也不是绑定运算符（':=&rsquo;）。</p>
+</code></pre><p>请注意，say 语句位于由花括号定义的块内。另请注意，即使在 NQP 源文件中，grammar 中使用的匹配对象的赋值运算符（'='）也不是绑定运算符（':='）。</p>
 <h2 id="动态变量">动态变量</h2>
-<p>grammar 和 action 大量使用动态变量（带有 <code>*</code> twigil 的变量，例如 <strong>$*IN-DEFN-BLOCK</strong>）。当需要在解析树中深入更改变量时，它们显示了它们的多功能性，并且该值在该解析的剩余部分（调用者）和子解析操作期间保持不变。</p>
+<p>grammar 和 action 大量使用动态变量（带有 <code>*</code> twigil 的变量，例如 *<em>$<em>IN-DEFN-BLOCK</em></em>）。当需要在解析树中深入更改变量时，它们显示了它们的多功能性，并且该值在该解析的剩余部分（调用者）和子解析操作期间保持不变。</p>
 <h2 id="make-made-和-ast">make, made 和 ast</h2>
 <p>尽管在所有已发表的 Raku 书籍中都有解释，但 grammar 和 action 中使用的术语 “make”，“made” 和 “ast”一直让我很困惑。感谢 Raku 作者 <strong>Moritz Lenz</strong> 对 <strong>IRC#raku-dev</strong> 的问题的进一步解释和回答，他们更清楚了。</p>
 <p>基本上，在 action 方法中，使用 <code>make</code> 会将当前值分配给匹配对象的 <code>.ast</code> 属性（或其别名 <code>.made</code>）和方法的名字。因此，给出以下方法：</p>
@@ -535,7 +535,7 @@ say(&quot;do-foo.ast = {$&lt;do-foo&gt;.made}&quot;); # output: 6
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

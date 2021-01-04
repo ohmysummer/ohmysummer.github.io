@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -315,15 +315,15 @@ if (!doNotTrack) {
 <p>没有。</p>
 <p>Raku 以下面的方式来救援：</p>
 <p><a href="https://docs.raku.org/syntax/Creating%20grammars">grammar</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">unit</span> <span class="n"></span><span class="n">grammar</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">unit</span> <span class="n">grammar</span> <span class="n">Santa</span><span class="o">-</span><span class="n">Letter</span><span class="p">;</span>
 
-<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">TOP</span>           <span class="p">{</span> <span class="sr">&lt;dear&gt;</span> <span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;paragraph&gt;</span> <span class="p">[</span><span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;paragraph&gt;</span><span class="p">]</span><span class="o">*</span> <span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;signature&gt;</span><span class="o">\</span><span class="n"></span><span class="n">v</span><span class="o">*</span><span class="p">}</span>
-<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">paragraph</span>     <span class="p">{</span> <span class="sr">&lt;superword&gt;</span><span class="p">[</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">+</span> <span class="sr">&lt;superword&gt;</span><span class="p">]</span><span class="o">+</span> <span class="p">}</span>
-<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">superword</span>     <span class="p">{</span> <span class="sr">&lt;word&gt;</span> <span class="o">|</span> <span class="sr">&lt;enhanced-word&gt;</span>       <span class="p">}</span>
-<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">word</span>          <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">+</span>                            <span class="p">}</span>
-<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">enhanced</span><span class="o">-</span><span class="n"></span><span class="n">word</span> <span class="p">{</span> <span class="sr">&lt;word&gt;</span> <span class="p">[</span><span class="o">\</span><span class="p">,</span><span class="o">|</span><span class="o">\</span><span class="o">.</span><span class="o">|</span><span class="o">\</span><span class="p">:</span><span class="p">]</span>              <span class="p">}</span>
-<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">dear</span>          <span class="p">{</span> <span class="n"></span><span class="n">Dear</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">+</span> <span class="p">[</span><span class="n"></span><span class="n">S</span><span class="o">|</span><span class="n"></span><span class="n">s</span><span class="p">]</span><span class="n"></span><span class="n">anta</span> <span class="p">[</span><span class="o">\</span><span class="p">,</span><span class="o">|</span><span class="o">\</span><span class="p">:</span><span class="p">]</span><span class="p">?</span>    <span class="p">}</span>
-<span class="n"></span><span class="n">token</span> <span class="n"></span><span class="n">signature</span>     <span class="p">{</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">+</span> <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">+</span> <span class="o">\</span><span class="n"></span><span class="n">h</span><span class="o">*</span> <span class="o">\</span><span class="n"></span><span class="n">w</span><span class="o">*</span>                <span class="p">}</span>
+<span class="n">token</span> <span class="n">TOP</span>           <span class="p">{</span> <span class="sr">&lt;dear&gt;</span> <span class="o">\</span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;paragraph&gt;</span> <span class="p">[</span><span class="o">\</span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;paragraph&gt;</span><span class="p">]</span><span class="o">*</span> <span class="o">\</span><span class="n">v</span><span class="o">+</span> <span class="sr">&lt;signature&gt;</span><span class="o">\</span><span class="n">v</span><span class="o">*</span><span class="p">}</span>
+<span class="n">token</span> <span class="n">paragraph</span>     <span class="p">{</span> <span class="sr">&lt;superword&gt;</span><span class="p">[</span> <span class="o">\</span><span class="n">h</span><span class="o">+</span> <span class="sr">&lt;superword&gt;</span><span class="p">]</span><span class="o">+</span> <span class="p">}</span>
+<span class="n">token</span> <span class="n">superword</span>     <span class="p">{</span> <span class="sr">&lt;word&gt;</span> <span class="o">|</span> <span class="sr">&lt;enhanced-word&gt;</span>       <span class="p">}</span>
+<span class="n">token</span> <span class="n">word</span>          <span class="p">{</span> <span class="o">\</span><span class="n">w</span><span class="o">+</span>                            <span class="p">}</span>
+<span class="n">token</span> <span class="n">enhanced</span><span class="o">-</span><span class="n">word</span> <span class="p">{</span> <span class="sr">&lt;word&gt;</span> <span class="p">[</span><span class="o">\</span><span class="p">,</span><span class="o">|\.|\</span><span class="p">:]</span>              <span class="p">}</span>
+<span class="n">token</span> <span class="n">dear</span>          <span class="p">{</span> <span class="n">Dear</span> <span class="o">\</span><span class="n">h</span><span class="o">+</span> <span class="p">[</span><span class="n">S</span><span class="o">|</span><span class="n">s</span><span class="p">]</span><span class="n">anta</span> <span class="p">[</span><span class="o">\</span><span class="p">,</span><span class="o">|\</span><span class="p">:]?</span>    <span class="p">}</span>
+<span class="n">token</span> <span class="n">signature</span>     <span class="p">{</span> <span class="o">\</span><span class="n">h</span><span class="o">+</span> <span class="o">\</span><span class="n">w</span><span class="o">+</span> <span class="o">\</span><span class="n">h</span><span class="o">*</span> <span class="o">\</span><span class="n">w</span><span class="o">*</span>                <span class="p">}</span>
 </code></pre></div><p>该单位向圣诞老人宣布一封致敬的信，其后是一个或多个段落，最后是一个签名，其前面应有一个水平的空格，如 <code>\h</code> 所示。</p>
 <p>像这样的信件：</p>
 <pre><code>Dear Santa:
@@ -334,12 +334,12 @@ So I want a plush Camelia studded with diamonds.
 
  JJ
 </code></pre><p>一个简单的脚本将使用该 grammar 并在单封信中获取签名：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="nn">Santa</span><span class="o">-</span><span class="n">Letter</span><span class="p">;</span>
 
 <span class="k">sub</span> <span class="nf">MAIN</span> <span class="p">( Str $file = &#34;letter.txt&#34; ) {</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">letter</span> <span class="o">=</span><span class="nv">$</span><span class="nv">file</span><span class="o">.</span><span class="n"></span><span class="n">IO</span><span class="o">.</span><span class="n"></span><span class="n">slurp</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">letter</span><span class="p">)</span><span class="p">;</span>
-    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n"></span><span class="n">trim</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$letter</span> <span class="o">=</span><span class="nv">$file</span><span class="o">.</span><span class="n">IO</span><span class="o">.</span><span class="n">slurp</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$parsed</span> <span class="o">=</span> <span class="n">Santa</span><span class="o">-</span><span class="n">Letter</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nv">$letter</span><span class="p">);</span>
+    <span class="n">say</span> <span class="nv">$parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n">trim</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>这很好，很不错，但圣诞老人需要将这些数据与信件和索引一起提供给北极的CRM，同时他不得不与贸易战给他们造成严重破坏的供应商打交道&hellip;所以他叫上他最亲密的IT精灵，来跟他一起做事。</p>
 <p>演讲结束后，IT精灵站在那里，他的耳朵在颤抖。</p>
@@ -355,28 +355,28 @@ So I want a plush Camelia studded with diamonds.
 <p>它（显然）不是首字母缩略词。 Pod6 是一个帮助 Raku 编码人员编写文档的 DSL。 它是一种标记语言，它使用 <code>=</code> 来启动命令和段落级标记。 我们会做到这一点，但目前，Santa 意识到最好的事情之一是它如何与 Raku 本身集成。 因此，他对检查程序进行了第二次迭代：</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1">#| This reads a letter file</span>
 <span class="k">sub</span> <span class="nf">MAIN</span> <span class="p">( Str $file = &#34;letter.txt&#34; ) {</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">letter</span> <span class="o">=</span><span class="nv">$</span><span class="nv">file</span><span class="o">.</span><span class="n"></span><span class="n">IO</span><span class="o">.</span><span class="n"></span><span class="n">slurp</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">letter</span><span class="p">)</span><span class="p">;</span>
-    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n"></span><span class="n">trim</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$letter</span> <span class="o">=</span><span class="nv">$file</span><span class="o">.</span><span class="n">IO</span><span class="o">.</span><span class="n">slurp</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$parsed</span> <span class="o">=</span> <span class="n">Santa</span><span class="o">-</span><span class="n">Letter</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nv">$letter</span><span class="p">);</span>
+    <span class="n">say</span> <span class="nv">$parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n">trim</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>在注释中有一个有趣的标志，<code>|</code>。 该标志将其与注释背后的代码联系起来。 在这种情况下，它是MAIN子例程。</p>
 <p>圣诞老人将该程序发布到了生产环境。 IT精灵试图运行该程序，</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">./get-signed.p6 --help
 </code></pre></div><p>它得到了：</p>
 <div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">Usage:
-  ./get-signed.p6 <span class="o">[</span><span class="o">]</span> -- This reads a letter file
+  ./get-signed.p6 <span class="o">[]</span> -- This reads a letter file
 </code></pre></div><p>“有文档比没有文档更好”，他想。 但这还不够。 他完全使用自由软件进入北极票务系统，并要求提供更多文档并将任务分配给圣诞老人。 圣诞老人大声抗议，但顺从了。</p>
 <div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="c1">#|{ This reads a letter file in text format.</span>
-<span class="n"></span><span class="n">With</span> <span class="k">no</span> <span class="nn">arguments</span><span class="p">,</span> <span class="n"></span><span class="n">it</span> <span class="n"></span><span class="n">will</span> <span class="nb">read</span> <span class="n"></span><span class="n">the</span> <span class="n"></span><span class="n">C</span><span class="sr">&lt;letter.txt&gt;</span> <span class="n"></span><span class="n">file</span><span class="o">.</span>
+<span class="n">With</span> <span class="k">no</span> <span class="nn">arguments</span><span class="p">,</span> <span class="n">it</span> <span class="n">will</span> <span class="nb">read</span> <span class="n">the</span> <span class="n">C</span><span class="sr">&lt;letter.txt&gt;</span> <span class="n">file</span><span class="o">.</span>
 <span class="p">}</span>
 <span class="k">sub</span> <span class="nf">MAIN</span> <span class="p">( Str $file = &#34;letter.txt&#34; ) {</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">letter</span> <span class="o">=</span><span class="nv">$</span><span class="nv">file</span><span class="o">.</span><span class="n"></span><span class="n">IO</span><span class="o">.</span><span class="n"></span><span class="n">slurp</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$</span><span class="nv">parsed</span> <span class="o">=</span> <span class="n"></span><span class="n">Santa</span><span class="o">-</span><span class="n"></span><span class="n">Letter</span><span class="o">.</span><span class="n"></span><span class="n">parse</span><span class="p">(</span><span class="nv">$</span><span class="nv">letter</span><span class="p">)</span><span class="p">;</span>
-    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n"></span><span class="n">trim</span><span class="p">;</span>
-    <span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="err">=</span><span class="nv">pod</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$letter</span> <span class="o">=</span><span class="nv">$file</span><span class="o">.</span><span class="n">IO</span><span class="o">.</span><span class="n">slurp</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$parsed</span> <span class="o">=</span> <span class="n">Santa</span><span class="o">-</span><span class="n">Letter</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nv">$letter</span><span class="p">);</span>
+    <span class="n">say</span> <span class="nv">$parsed</span><span class="sr">&lt;signature&gt;</span><span class="o">.</span><span class="n">trim</span><span class="p">;</span>
+    <span class="n">say</span> <span class="nv">$</span><span class="err">=</span><span class="nv">pod</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">perl</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div><p>当使用 <code>--help</code> 调用时，这会打印相同的消息。 这是文档。 运行时:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">raku</span> <span class="o">-</span><span class="o">-</span><span class="n"></span><span class="n">doc</span> <span class="n"></span><span class="n">get</span><span class="o">-</span><span class="n"></span><span class="n">signed</span><span class="o">.</span><span class="n"></span><span class="n">p6</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">raku</span> <span class="o">--</span><span class="n">doc</span> <span class="n">get</span><span class="o">-</span><span class="n">signed</span><span class="o">.</span><span class="n">p6</span>
 </code></pre></div><p>它打印了:</p>
 <pre><code>sub MAIN(
 	Str $file = &quot;letter.txt&quot;, 
@@ -432,11 +432,11 @@ say Santa-Letter.parse(&quot;Dear Santa\nAll I want for Christmas\nIs you\n Mari
 
 =end code
 </code></pre><p>示例包含在代码块中，从Pod6的角度来看，它们是 <code>Pod::Block::Code</code>对象。 实际上，这是一件好事。 让我们将这一小段代码添加到我们的 grammar 中：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">our</span> <span class="nv">$</span><span class="nv">pod</span> <span class="o">=</span> <span class="nv">$</span><span class="err">=</span><span class="nv">pod</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">our</span> <span class="nv">$pod</span> <span class="o">=</span> <span class="nv">$</span><span class="err">=</span><span class="nv">pod</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
 </code></pre></div><p>Grammar 是类，它们具有类作用域的变量。 我们无法导出 <code>$=pod</code> 变量以避免与其他人发生冲突，但我们可以导出它，然后在我们的程序中使用它：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="nv">$</span><span class="nv">Santa</span><span class="o">-</span><span class="n"></span><span class="nn">Letter::</span><span class="n"></span><span class="n">pod</span><span class="o">.</span><span class="n"></span><span class="n">perl</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">say</span> <span class="nv">$Santa</span><span class="o">-</span><span class="nn">Letter::</span><span class="n">pod</span><span class="o">.</span><span class="n">perl</span><span class="p">;</span>
 </code></pre></div><p>或者，甚至更好， 安装 <code>Data::Dump</code> 并写下这样的东西:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">Dump</span><span class="p">(</span> <span class="nv">$</span><span class="nv">Santa</span><span class="o">-</span><span class="n"></span><span class="nn">Letter::</span><span class="n"></span><span class="n">pod</span><span class="p">,</span> <span class="p">:</span><span class="n"></span><span class="n">indent</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="n"></span><span class="n">max</span><span class="o">-</span><span class="n"></span><span class="n">recursion</span> <span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="n">say</span> <span class="n">Dump</span><span class="p">(</span> <span class="nv">$Santa</span><span class="o">-</span><span class="nn">Letter::</span><span class="n">pod</span><span class="p">,</span> <span class="p">:</span><span class="n">indent</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="p">:</span><span class="mi">3</span><span class="n">max</span><span class="o">-</span><span class="n">recursion</span> <span class="p">);</span>
 </code></pre></div><p>它使用我们声明的 <code>pod</code> 类变量, 并且它是这样打印的:</p>
 <p><img src="https://rakuadvent.files.wordpress.com/2018/12/structure.png" alt="img"></p>
 <p>这个树可以称为POM（Pod对象模型），除了与每个块一起使用的已知的 <code>name</code> 和 <code>config</code> 元数据外，还包括同一级别的Pod6块数组。 每个人都有通用属性和特定属性，例如标题中的级别。 无论如何，有趣的是我们作为示例使用的代码本身可以作为 <code>Pod::Block::Code</code> 对象的内容。</p>
@@ -466,21 +466,21 @@ say &quot;The letter signed by &quot;, Santa-Letter.parse($letter),
     
 =end pod
 </code></pre><p>代码可以在Pod中以不同方式表示。 第一个是已知的; 第二个使用缩进，即Markdown，来表示同一件事情。 我们也可以使用 <code>=for</code> 作为段落块，在这种情况下使用代码类型声明，并将继续直到下一个空白行。 这是一种不需要 <code>=end</code> 指令的缩写方式。 但是还有更多的东西：配置变量 <code>:notest :reason(&quot;Variable defined above&quot;)</code>。 这些配置变量是任意的，我们可以添加任意多个。 他们将转到块的 <code>config</code> 属性，我们可以使用它们。 这正是我们将在此脚本中处理代码示例的内容：</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="nv">$</span><span class="nv">Santa</span><span class="o">-</span><span class="n"></span><span class="nn">Letter::</span><span class="n"></span><span class="n">pod</span><span class="o">.</span><span class="n"></span><span class="nn">contents</span> <span class="o">-</span><span class="o">&gt;</span> <span class="nv">$</span><span class="nv">block</span> <span class="p">{</span>
-    <span class="k">next</span> <span class="k">if</span> <span class="nv">$</span><span class="nv">block</span> <span class="o">!~</span><span class="o">~</span> <span class="n"></span><span class="nn">Pod::Block::</span><span class="n"></span><span class="n">Code</span><span class="p">;</span>
-    <span class="k">if</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">config</span><span class="sr">&lt;notest&gt;</span> <span class="p">{</span>
-        <span class="n"></span><span class="n">say</span> <span class="s">&#34;→ Block\n\t&#34;</span><span class="o">~</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">contents</span>
-            <span class="o">~</span> <span class="s">&#34;\n\t❈ Not tested since \&#39;&#34;</span> <span class="o">~</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">config</span><span class="sr">&lt;reason&gt;</span> <span class="o">~</span> <span class="s">&#34;\&#39;&#34;</span><span class="p">;</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="k">for</span> <span class="nv">$Santa</span><span class="o">-</span><span class="nn">Letter::</span><span class="n">pod</span><span class="o">.</span><span class="nn">contents</span> <span class="o">-&gt;</span> <span class="nv">$block</span> <span class="p">{</span>
+    <span class="k">next</span> <span class="k">if</span> <span class="nv">$block</span> <span class="o">!~~</span> <span class="nn">Pod::Block::</span><span class="n">Code</span><span class="p">;</span>
+    <span class="k">if</span> <span class="nv">$block</span><span class="o">.</span><span class="n">config</span><span class="sr">&lt;notest&gt;</span> <span class="p">{</span>
+        <span class="n">say</span> <span class="s">&#34;→ Block\n\t&#34;</span><span class="o">~</span> <span class="nv">$block</span><span class="o">.</span><span class="n">contents</span>
+            <span class="o">~</span> <span class="s">&#34;\n\t❈ Not tested since \&#39;&#34;</span> <span class="o">~</span> <span class="nv">$block</span><span class="o">.</span><span class="n">config</span><span class="sr">&lt;reason&gt;</span> <span class="o">~</span> <span class="s">&#34;\&#39;&#34;</span><span class="p">;</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="k">my</span> <span class="nv">$</span><span class="nv">code</span> <span class="o">=</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">contents</span><span class="o">.</span><span class="nb">join</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="n"></span><span class="n">say</span> <span class="s">&#34;→ Block\n\t&#34;</span><span class="o">~</span> <span class="nv">$</span><span class="nv">block</span><span class="o">.</span><span class="n"></span><span class="n">contents</span><span class="p">;</span>
-        <span class="n"></span><span class="n">try</span> <span class="p">{</span>
-            <span class="n"></span><span class="n">EVAL</span> <span class="nv">$</span><span class="nv">code</span><span class="p">;</span>
+        <span class="k">my</span> <span class="nv">$code</span> <span class="o">=</span> <span class="nv">$block</span><span class="o">.</span><span class="n">contents</span><span class="o">.</span><span class="nb">join</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">);</span>
+        <span class="n">say</span> <span class="s">&#34;→ Block\n\t&#34;</span><span class="o">~</span> <span class="nv">$block</span><span class="o">.</span><span class="n">contents</span><span class="p">;</span>
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">EVAL</span> <span class="nv">$code</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="p">(</span> <span class="vg">$!</span> <span class="p">)</span> <span class="p">{</span>
-            <span class="n"></span><span class="n">say</span> <span class="s">&#34;\n\t✘ Produces error \&#34;$!\&#34;&#34;</span><span class="p">,</span> <span class="s">&#34;\n&#34;</span> <span class="n"></span><span class="n">xx</span> <span class="mi">2</span><span class="p">;</span>
+            <span class="n">say</span> <span class="s">&#34;\n\t✘ Produces error \&#34;$!\&#34;&#34;</span><span class="p">,</span> <span class="s">&#34;\n&#34;</span> <span class="n">xx</span> <span class="mi">2</span><span class="p">;</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n"></span><span class="n">say</span> <span class="s">&#34;✔ is OK\n&#34;</span><span class="p">;</span>
+            <span class="n">say</span> <span class="s">&#34;✔ is OK\n&#34;</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -611,7 +611,7 @@ say Santa-Letter.parse($letter)
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           

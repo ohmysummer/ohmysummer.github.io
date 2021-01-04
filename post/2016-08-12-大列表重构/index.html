@@ -90,7 +90,7 @@
   <meta name="twitter:image" content="https://ohmysummer.github.io/img/rakudo.png" />
   <meta name="twitter:card" content="summary" />
   <link href='https://ohmysummer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta name="generator" content="Hugo 0.63.2" />
+  <meta name="generator" content="Hugo 0.79.0" />
   <link rel="alternate" href="https://ohmysummer.github.io/index.xml" type="application/rss+xml" title="Raku Programming"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://ohmysummer.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
@@ -308,17 +308,17 @@ if (!doNotTrack) {
 <p>它还很难解释！但是幸好有某些历史背景能帮助我们。 在 2014 年澳大利亚 Perl Workshop 会议上讨论了很多 GLR 的东西,  Patrick Michaud 在它的博客上写了很多关于 GLR 的内容。</p>
 <p>GLE 意图强调性能和列表和相关类型操作的一致性问题。改变这样的基本数据类型将会很痛苦。</p>
 <p>通常 Perl 5 这样展开列表:</p>
-<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">%</span> <span class="nv">perl</span> <span class="o">-</span><span class="n"></span><span class="n">dE</span> <span class="mi">1</span> <span class="o">-</span><span class="n"></span><span class="nn">MData::</span><span class="n"></span><span class="n">Dumper</span>
+<div class="highlight"><pre class="chroma"><code class="language-perl" data-lang="perl"><span class="nv">%</span> <span class="nv">perl</span> <span class="o">-</span><span class="n">dE</span> <span class="mi">1</span> <span class="o">-</span><span class="nn">MData::</span><span class="n">Dumper</span>
 
-<span class="p">[</span><span class="o">...</span><span class="n"></span><span class="n">snip</span><span class="o">...</span><span class="p">]</span>
-<span class="n"></span><span class="n">DB</span><span class="sr">&lt;1&gt;</span> <span class="nv">@</span><span class="nv">foos</span><span class="o">=</span><span class="p">(</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">[</span><span class="o">...</span><span class="n">snip</span><span class="o">...</span><span class="p">]</span>
+<span class="n">DB</span><span class="sr">&lt;1&gt;</span> <span class="nv">@foos</span><span class="o">=</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">3</span><span class="p">)</span>
 
-<span class="n"></span><span class="n">DB</span><span class="sr">&lt;2&gt;</span> <span class="n"></span><span class="n">say</span> <span class="n"></span><span class="n">Dumper</span> <span class="o">\</span><span class="nv">@</span><span class="nv">foos</span>
-<span class="nv">$</span><span class="nv">VAR1</span> <span class="o">=</span> <span class="p">[</span>
+<span class="n">DB</span><span class="sr">&lt;2&gt;</span> <span class="n">say</span> <span class="n">Dumper</span> <span class="o">\</span><span class="nv">@foos</span>
+<span class="nv">$VAR1</span> <span class="o">=</span> <span class="p">[</span>
     <span class="mi">1</span><span class="p">,</span>
     <span class="mi">2</span><span class="p">,</span>
     <span class="mi">3</span>
-<span class="p">]</span><span class="p">;</span>
+<span class="p">];</span>
 </code></pre></div><p>开始, 很多的 Raku 行为都模仿这种展平行为但是在去年年底的时候, 使用 non-flatterning(非展平)行为以保留原始数据结构的用法越来越多。</p>
 <p>这样做和很多边界情况不一致并且 Rakudo 内部大量使用了一种叫做 <code>Parcel</code> 的数据类型, 之后 Parcel 被认为是一个 Bad Idea(糟糕的设计) —  主要是因为性能问题。</p>
 <p>2015 年 7 月, Patrick 导入了一个涵盖 &ldquo;Synopsis 7&rdquo; 的孪生设计草案, 随后的月份中它变成官方的 S07。</p>
@@ -344,7 +344,7 @@ $grep.^name.say;              # Seq
 </code></pre><p>而 <code>.cache</code>方法能用于阻止 Seq 的消费。</p>
 <h3 id="the-single-argument-rule">The Single Argument Rule</h3>
 <hr>
-<p>传递给诸如 <em>for</em>循环迭代器的参数遵守&quot;the single arg rule&rdquo;, 意思是即使第一眼看上去是以多个参数出现的, 也会被当作单个参数。通常这会让 <em>for</em> 表现得如程序员所期望的那样除了带有尾随逗号的例子。</p>
+<p>传递给诸如 <em>for</em>循环迭代器的参数遵守&quot;the single arg rule&quot;, 意思是即使第一眼看上去是以多个参数出现的, 也会被当作单个参数。通常这会让 <em>for</em> 表现得如程序员所期望的那样除了带有尾随逗号的例子。</p>
 <pre><code class="language-raku" data-lang="raku">my @a = 1,2,3;
 my ($i, $j);
 for (@a) {
@@ -456,7 +456,7 @@ say :$j.gist;  # =&gt; 1
 
           &nbsp;&bull;&nbsp;&copy;
           
-            2020
+            2021
           
 
           
