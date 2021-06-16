@@ -57,9 +57,9 @@
     "name" : "焉知非鱼"
   },
   "headline": "Raku Colon Pair",
-  "description" : "原文",
+  "description" : "原文: http:\/\/blogs.",
   "inLanguage" : "zh",
-  "wordCount":  1448 ,
+  "wordCount":  1462 ,
   "datePublished" : "2018-06-19T19:38:05",
   "dateModified" : "2018-06-19T19:38:05",
   "image" : "https:\/\/ohmysummer.github.io\/img\/rakudo.png",
@@ -283,7 +283,7 @@ if (!doNotTrack) {
     &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;7&nbsp;
   
   
-    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1448&nbsp;
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1462&nbsp;
   
   
     
@@ -308,22 +308,22 @@ if (!doNotTrack) {
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p><a href="https://rakudo.party/post/Perl-6-Colonpairoscopy">原文</a></p>
-<p>如果我选择 Raku 编程语言中最普遍的构造，那肯定是 <strong>colonpair</strong>。哈希构造函数，命名参数和参数，副词和正则表达式修饰符 - 都涉及到 colonpair。毫不奇怪，在这样广阔的空间里，构建 colonpair 时会有很多捷径。</p>
-<p>今天，我们将了解所有这些！这样做会让我们看到最简单的以及一些更高级的语言结构，所以如果本文的某些部分让你头脑发热，不要担心 - 你不必一次就知道所有的东西！</p>
+        <p><a href="http://blogs.perl.org/users/zoffix_znet/2018/06/perl-6-colonpairoscopy.html">原文: http://blogs.perl.org/users/zoffix_znet/2018/06/perl-6-colonpairoscopy.html</a></p>
+<p>如果我选择 Raku 编程语言中最普遍的构造，那肯定是 <strong>colonpair</strong>。哈希构造函数，命名参数和 parameters，副词和正则表达式修饰符 - 都涉及到 colonpair。在构建 colonpair 的时候有很多捷径也就不足为奇了，因为它的应用范围太广泛了。</p>
+<p>今天，我们就来学习一下所有的这些东西。如果这篇文章中的某些部分让你抓耳挠腮，不要担心，你不需要一下子就学会所有的东西！我们将研究最简单的和更高级的语言结构。</p>
 <h2 id="第一部分-创建">第一部分: 创建</h2>
 <h3 id="colonwhaaaa">Colonwhaaaa?</h3>
-<p>Colonpair 的名字（通常）来自于 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象构造函数，并且（通常）里面有一个冒号。以下是一些 colonpairs 的例子：</p>
+<p>Colonpair 的名字来自于（通常） <a href="https://docs.raku.org/type/Pair">Pair</a> 对象构造函数，并且（通常）里面有一个冒号。以下是一些 colonpairs 的例子：</p>
 <pre><code class="language-raku" data-lang="raku">:foo,
 :$bar,
 :meow&lt;moo&gt;,
 heh =&gt; hah
 </code></pre><p>最后一个没有冒号，但由于它和其他 colonpairs 基本上是一样的，我个人认为它也是一个 colonpair。</p>
-<p>我们可以通过查看它们的 <a href="https://docs.raku.org/routine/name#(Metamodel::Naming)_method_name">^name</a> 来看到这些 colonpairs 构成 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象：</p>
+<p>我们可以通过查看它们的 <a href="https://docs.raku.org/routine/name#(Metamodel::Naming)_method_name">^name</a> 方法名看到这些 colonpairs 构成了 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象：</p>
 <pre><code class="language-raku" data-lang="raku">say :foo.^name; # OUTPUT: «Pair␤»
-</code></pre><p>但是，在参数列表中使用时，这些 colonpairs 被特殊处理了以表示命名参数。我们将在后面的文章中介绍这一部分。</p>
+</code></pre><p>但是，在参数列表中使用时，这些 colonpairs 被特殊处理了以表示命名参数。我们将在文章的后面讨论这部分内容。</p>
 <h3 id="简写">简写</h3>
-<p>这里有一个完整的可用的 colonpair 列表，你可以在深入之前浏览一下。我知道，它看起来像一个巨大的列表，但这就是我们阅读这篇文章的原因 - 要了解构成这些排列的一般模式。</p>
+<p>在我们深入研究之前，你可以先看一下这个基本还算完整的构造 colonpair 的方法清单。我知道，这看起来是一个巨大的列表，但这正是我们阅读这篇文章的原因&ndash;学习构成所有这些排列组合的一般模式。</p>
 <pre><code class="language-raku" data-lang="raku"># 标准的, take-any-type, 非便捷形式
 :nd(2).say;             # OUTPUT: «nd =&gt; 2␤»
 :foo('foo', 'bar').say; # OUTPUT: «foo =&gt; (foo bar)␤»
@@ -382,24 +382,24 @@ heh =&gt; hah
 :&amp;?foo; # same as :foo(&amp;?foo)
 :&amp;.foo; # same as :foo(&amp;.foo)
 :&amp;!foo; # same as :foo(&amp;!foo)
-</code></pre><p>让我们分解这些并仔细观察！</p>
-<h3 id="标准的任意类型非快捷方式">标准的，任意类型，非快捷方式</h3>
-<p>&ldquo;标准&quot;形式的冒号对由冒号(<code>:</code>)组成，该冒号（:)是用作所创建的 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象的 <a href="https://docs.raku.org/routine/key">.key</a> 的有效术语，然后其中的一组括号是具有 <a href="https://docs.raku.org/routine/value">.value</a> 的表达式的 <a href="https://docs.raku.org/type/Pair">Pair</a>：</p>
+</code></pre><p>让我们把这些拆开来仔细看看吧！</p>
+<h3 id="标准的任意类型非简写方式">标准的，任意类型，非简写方式</h3>
+<p>Colonpair 的&quot;标准&quot;形式包括一个冒号(<code>:</code>)，一个有效的项(term)，作为创建的 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象的 <a href="https://docs.raku.org/routine/key">.key</a>，然后是一组小括号，里面是 <a href="https://docs.raku.org/type/Pair">Pair</a> 的 <a href="https://docs.raku.org/routine/value">.value</a> 表达式。</p>
 <pre><code class="language-raku" data-lang="raku">:nd(2).say;                       # OUTPUT: «nd =&gt; 2␤»
 :foo('foo', 'bar').say;           # OUTPUT: «foo =&gt; (foo bar)␤»
 :foo( %(:42a, :foo&lt;a b c&gt;) ).say; # OUTPUT: «foo =&gt; {a =&gt; 42, foo =&gt; (a b c)}␤»
-</code></pre><p>只要 key 是一个有效的标识符，所有其他形式的 colonpairs 都可以用这种方式编写。对于无效的标识符，您可以简单地使用 <code>.new</code> 方法 &ndash; <code>Pair.new('key'，'value')</code> — 或&quot;胖箭头&quot;语法。</p>
+</code></pre><p>只要 key 是一个有效的标识符，所有其他形式的 colonpairs 都可以用这种方式编写。而对于无效的标识符，你可以简单地使用 <code>.new</code> 方法 &ndash; <code>Pair.new('key'，'value')</code> — 或&quot;胖箭头&quot;语法。</p>
 <h3 id="胖箭头语法">胖箭头语法</h3>
-<p>如果您曾经使用过 Perl 5，就不需要向你再介绍这种语法了：写一个 key - 如果它是一个有效的标识符，它将被自动引用，所以在这些情况下，您可以省略引号，然后写下 <code>=&gt;</code>，然后写下值。如果 key 不是有效的标识符，那么胖箭头是唯一的 operator-involved 的语法，则可以让您用这些键构造 <a href="https://docs.raku.org/type/Pair">Pairs</a>：</p>
+<p>如果你曾经使用过 Perl 5，就不需要再向你介绍这种语法了：写一个 key - 如果它是一个有效的标识符，它会被自动加引号，所以在这些情况下，你可以省略引号，然后你写下 <code>=&gt;</code>，再写下值。如果 key 不是有效的标识符，那么 key 周围的引号是必须的, 胖箭头是唯一涉及运算符的语法，可以让你用这样的键构造 <a href="https://docs.raku.org/type/Pair">Pairs</a>：</p>
 <pre><code class="language-raku" data-lang="raku"># (outer parentheses are here just for the .say call)
 (nd =&gt; 2).say;                      # OUTPUT: «nd =&gt; 2␤»
 (foo =&gt; ('foo', 'bar') ).say;       # OUTPUT: «foo =&gt; (foo bar)␤»
 (foo =&gt; %(:42a, :foo&lt;a b c&gt;) ).say; # OUTPUT: «foo =&gt; {a =&gt; 42, foo =&gt; (a b c)}␤»
 (&quot;the key&quot; =&gt; &quot;the value&quot;).say;     # OUTPUT: «the key =&gt; the value␤»
-</code></pre><p>关于这个表单在参数列表中的表现以及无符号变量和常量有一些额外的规则，我们将在后面的文章中看到。</p>
-<h3 id="布尔值快捷方式">布尔值快捷方式</h3>
-<p>现在我们开始进入捷径！最常用的命名参数是什么？可能要数指定布尔标志。</p>
-<p>总是必须将这些写为 <code>:foo(True)</code> 应该是相当恼人的，所以有一条捷径：完全忽略掉值，如果你想要 <code>:foo(False)</code>，则省略该值，并将<a href="https://rakudo.party/language/operators#index-entry-!_(negation_metaoperator)">取反运算符</a>放在冒号后面：</p>
+</code></pre><p>这种形式在参数列表以及无符号变量和常量中的行为有一些额外的规则，我们将在文章后面看到。</p>
+<h3 id="布尔值简写">布尔值简写</h3>
+<p>现在我们开始进入捷径！命名参数最常见的用途是什么？可能要数指定布尔标志了。</p>
+<p>如果总是要写成 <code>:foo(True)</code>, 那就很烦人了，所以有一种简写方式：完全忽略掉值，如果你想要 <code>:foo(False)</code>，则省略值，并将<a href="https://rakudo.party/language/operators#index-entry-!_(negation_metaoperator)">取反运算符</a>放在冒号后面：</p>
 <pre><code class="language-raku" data-lang="raku"># Booleans
 :foo .say; # OUTPUT: «foo =&gt; True␤»
 :!foo.say; # OUTPUT: «foo =&gt; False␤»
@@ -407,36 +407,36 @@ heh =&gt; hah
 # Equivalent calls:
 some-sub :foo :!bar :ber;
 some-sub foo =&gt; True, bar =&gt; False, ber =&gt; True;
-</code></pre><p>快捷方式的格式要短得多。这也是你可能在副词和正则表达式语法中看到的形式，例如 <code>m//</code> quoter 上的 <code>:g</code> 副词和正则表达式中的 <code>:s</code> / <code>:!s</code> 有意义的空白修饰符：</p>
+</code></pre><p>简写形式要短得多。这也是你在副词和正则表达式语法中可能看到的形式，例如 <code>m//</code> quoter 上的 <code>:g</code> 副词和正则表达式中的 <code>:s</code> / <code>:!s</code> 有意义的空白修饰符：</p>
 <pre><code class="language-raku" data-lang="raku">say &quot;a b c def g h i&quot; ~~ m:g/:s \S \S [:!s \S \s+ \S]/;
 # OUTPUT: «(｢a b c d｣ ｢f g h i｣)␤»
-</code></pre><p>这也是我个人提供的另一个技巧：由于 <a href="https://docs.raku.org/type/Bool">Bool</a> 类型是一个 <a href="https://docs.raku.org/type/Int">Int</a>，所以可以使用布尔快捷键来指定 <a href="https://docs.raku.org/type/Int">Int</a> 值 <code>1</code> 和 <code>0</code>：</p>
+</code></pre><p>这里还有我个人提供的另一个技巧：因为 <a href="https://docs.raku.org/type/Bool">Bool</a> 类型是一个 <a href="https://docs.raku.org/type/Int">Int</a>，所以可以使用布尔简写键来指定 <a href="https://docs.raku.org/type/Int">Int</a> 值 <code>1</code> 和 <code>0</code>：</p>
 <pre><code class="language-raku" data-lang="raku"># set `batch` to `1`:
 ^4 .race(:batch).map: { sleep 1 };
 say now - ENTER now; # OUTPUT: «1.144883␤»
-</code></pre><p>但是，为了清晰起见，您可能希望使用无符号整数的 colonpair 快捷方式，它不是很长。</p>
-<h3 id="无符号整数便捷方式">无符号整数便捷方式</h3>
+</code></pre><p>然而，为了清晰起见，你可能希望使用无符号整数的 colonpair 简写方式，它不是很长。</p>
+<h3 id="无符号整数简写方式">无符号整数简写方式</h3>
 <p>当你用正则表达式匹配东西时，Raku 编程语言可以让你获得第 n 个匹配：</p>
 <pre><code class="language-raku" data-lang="raku">say &quot;first second third&quot; ~~ m:3rd/\S+/;
 # OUTPUT: «｢third｣␤»
-</code></pre><p>正如你现在猜测的那样：在 <code>m//</code> quoter 的 m 之后的第三个副词，用无符号整数捷径写成一个 colonpair。这种形式由冒号和 key 的名称组成，它们之间放置了不带引号的无符号整数值。没有符号，没有小数点，甚至不允许在数字之间用下划线分隔符。</p>
-<p>这种快捷方式的主要用途是具有序号后缀的事物，例如：1st，：2nd，：9th等。它提供了很好的可读性，但个人而言，我对使用此语法的所有无符号整数值没有任何保留，无论关键的名字是。当你第一次遇到这样的语法时，它感觉稍微偏色，但它很快就会增长：</p>
+</code></pre><p>你现在可能已经猜到了：<code>m//</code> quoter 中 m 后面的 <code>:3rd</code> 是副词，写成无符号整数简写方式中的 colonpair。这种形式由冒号和 key 的名称组成，中间是不带引号的无符号整数值。没有符号，没有小数点，甚至不允许在数字之间用下划线分隔符。</p>
+<p>这种简写方式的主要用途是用于带有序号后缀的东西，例如 <code>:1st</code>，<code>:2nd</code>，<code>:9th</code> 等。它提供了很好的可读性，但就我个人而言，我对使用此语法的所有无符号整数值没有任何保留，无论键的名字是什么。当你第一次遇到这样的语法时，感觉有点不伦不类，但它很快就会让你成长：</p>
 <pre><code class="language-raku" data-lang="raku">some-sub :1st :2nd :3rd :42foo :100bar;
 ^4 .race(:1batch).map: { sleep 1 };
-</code></pre><h3 id="hasharraycallable-便捷方式">Hash/Array/Callable 便捷方式</h3>
-<p>使用标准的 colonpair 格式，你可能会注意到一些格式括号太多了：</p>
+</code></pre><h3 id="hasharraycallable-简写方式">Hash/Array/Callable 简写方式</h3>
+<p>使用标准的 colonpair 格式，你可能会注意到有些形式的括号太多了：</p>
 <pre><code class="language-raku" data-lang="raku">:foo(&lt;42&gt;)                 # value is an IntStr allomorph
 :foo(&lt;a b c&gt;)              # value is a List
 :foo([&lt;a b c&gt;])            # value is an Array
 :foo({:42foo, :100bar})    # value is a Hash
 :foo({.contains: 'meows'}) # the value is a Callable
-</code></pre><p>在这些形式中，可以简单地省略外部括号并让内部括号和花括号完成他们的工作：</p>
+</code></pre><p>在这些形式中，你可以简单地省略外面的小括号, 让里面的括号和花括号完成他们的工作：</p>
 <pre><code class="language-raku" data-lang="raku">:foo&lt;42&gt;                   # value is an IntStr allomorph
 :foo&lt;a b c&gt;                # value is a List
 :foo[&lt;a b c&gt;]              # value is an Array
 :foo{:42foo, :100bar}      # value is a Hash
 :foo{.contains: 'meows'}   # the value is a Callable
-</code></pre><p>它看起来更简洁，写起来更简单。 <a href="https://docs.raku.org/type/Hash">Hash</a> 和 <a href="https://docs.raku.org/type/Callable">Callable</a> 都使用与语言中其他地方的 <code>{...}</code> 构造相同的简单规则：如果内容为空，或者包含以 Pair 文字或 %-sigiled 开头的单个列表变量，并且不使用 <code>$_</code> 变量或占位符参数，则创建哈希;否则会创建一个块（可调用）。</p>
+</code></pre><p>它看起来干净多了，写起来也简单多了。<a href="https://docs.raku.org/type/Hash">Hash</a> 和 <a href="https://docs.raku.org/type/Callable">Callable</a> 都使用与语言中其他地方的 <code>{...}</code> 构造相同的简单规则：如果内容为空，或者包含以 Pair 字面值或 %-sigiled 开头的单个列表变量，并且不使用 <code>$_</code> 变量或占位符参数，则创建哈希; 否则会创建一个块（可调用）。</p>
 <p>尖括号形式（<code>:foo&lt;...&gt;</code>）遵循与语言中其他地方使用的尖括号引号相同的规则：</p>
 <pre><code class="language-raku" data-lang="raku">:foo&lt; 42  &gt;.value.^name.say; # OUTPUT: «IntStr␤»
 :foo&lt;meows&gt;.value.^name.say; # OUTPUT: «Str␤»
@@ -450,11 +450,11 @@ say now - ENTER now; # OUTPUT: «1.144883␤»
 <pre><code class="language-raku" data-lang="raku">my $the-thing-with-a-thing = …
 …
 some-sub the-thing-with-a-thing =&gt; $the-thing-with-a-thing;
-</code></pre><p>将您的变量命名为您希望将该变量作为值传递给某个命名参数的方式相当常见。 Raku 编程语言为这种情况提供了恰到好处的 colonpair 快捷方式。只需在变量名前加一个冒号来构造一个冒号对，其中键名与变量的名字相同（不包括sigil），而值则是该变量的值。唯一的问题是变量必须有一个 sigil，所以你不能在 <a href="https://docs.raku.org/language/variables#Sigilless_variables">sigilless</a>或常量的情况下使用这个快捷方式。</p>
+</code></pre><p>将你的变量命名为你希望将该变量作为值传递给某个命名参数的方式相当常见。 Raku 编程语言为这种情况提供了恰到好处的 colonpair 简写。只需在变量名前加一个冒号来构造一个冒号对，其中键名与变量的名字相同（不包括sigil），而值则是该变量的值。唯一的问题是变量必须有一个 sigil，所以你不能在 <a href="https://docs.raku.org/language/variables#Sigilless_variables">sigilless</a>或常量的情况下使用这个简写。</p>
 <pre><code class="language-raku" data-lang="raku">my $the-thing-with-a-thing = …
 …
 some-sub :$the-thing-with-a-thing;
-</code></pre><p>你会注意到，上面的语法看起来像是如何声明一个带有这样一个命名参数的参数 - 一致性是一件好事。支持所有可用的 <a href="https://docs.raku.org/language/variables">sigils 和 twigils</a>，这使得此快捷方式的完整变体列表如下所示：</p>
+</code></pre><p>你会注意到，上面的语法看起来像是如何声明一个带有这样一个命名参数的参数 - 一致性是一件好事。支持所有可用的 <a href="https://docs.raku.org/language/variables">sigils 和 twigils</a>，这使得此简写的完整变体列表如下所示：</p>
 <pre><code class="language-raku" data-lang="raku"># Name and value from variable
 :$foo;  # same as :foo($foo)
 :$*foo; # same as :foo($*foo)
@@ -476,32 +476,32 @@ some-sub :$the-thing-with-a-thing;
 :&amp;?foo; # same as :foo(&amp;?foo)
 :&amp;.foo; # same as :foo(&amp;.foo)
 :&amp;!foo; # same as :foo(&amp;!foo)
-</code></pre><p>这包括了当前可用的 colonpair 快捷方式列表。正如你所看到的，大量的快捷方式被简化为几个简单的模式。但是，这可能不是一直都存在的快捷方式。</p>
+</code></pre><p>当前可用的 colonpair 简写列表到此为止。正如你所看到的，大量的简写被缩减为几个简单的模式。但是，这可能不是所有的简写方式。</p>
 <h3 id="未来">未来</h3>
-<p>虽然目前尚不可用，但以下两种快捷方式可能成为未来语言版本的一部分。</p>
-<p>第一个是间接查找快捷方式。如果你有一个命名变量, 并且该变量的名字在另一个变量中，则可以使用间接查找构造访问第一个变量的值：</p>
+<p>虽然目前还不能使用，但在未来的语言版本中, 以下两种简写可能会成为语言的一部分。</p>
+<p>第一个是间接查找简写方式。如果你有一个命名变量, 并且该变量的名字在另一个变量中，则可以使用间接查找构造访问第一个变量的值：</p>
 <pre><code class="language-raku" data-lang="raku">my $foo = &quot;bar&quot;;
 my %bar = :42foo, :70bar;
 say %::($foo); # OUTPUT: «{bar =&gt; 70, foo =&gt; 42}␤»
-</code></pre><p>如果你斜视，那么间接查找就像是一个 sigely 变量，并且存在用于变量变量的结构对快捷键，所以这对于语言是一致的并且支持间接查找结果对快捷方式是有意义的，看起来像这样，其中值 <code>$foo</code> 包含该 colonpair 的键的名称。</p>
+</code></pre><p>如果你眯起眼镜，间接查找有点像带符号的变量，而带符号的变量的 colonpair 简写是存在的，所以语言的一致性和支持间接查找 colonpair 简写方式是有意义的，它看起来像这样，其中 <code>$foo</code> 的值包含 colonpair 的键的名称。</p>
 <pre><code class="language-raku" data-lang="raku">:%::($foo)
-</code></pre><p>这种形式目前在 <a href="https://github.com/rakudo/rakudo/issues/1532">R＃1532</a> 中被列为简单的未实现的功能，所以它有可能在某一天重见天日。</p>
-<p>第二个可能的未来结构是 <code>:.foo</code> 格式，它在 <a href="https://github.com/rakudo/rakudo/issues/1462">RFC R＃1462</a> 中提出。这个形式在 <code>$_</code> topical 变量上调用 <code>.foo</code> 方法，并使用返回值作为创建的 <a href="https://docs.raku.org/type/Pair">Pair</a> 的值，方法的名称是键的名称。</p>
-<p>当您将一个对象的属性值传递给另一个具有相似命名属性的对象时，这种形式会频繁出现，所以如下所示：</p>
+</code></pre><p>这种形式目前在 <a href="https://github.com/rakudo/rakudo/issues/1532">R#1532</a> 中被列为未实现的功能，所以它很有可能在某一天出现。</p>
+<p>第二个可能的未来结构是 <code>:.foo</code> 格式，它在 <a href="https://github.com/rakudo/rakudo/issues/1462">RFC R#1462</a> 中被提出。这种形式在 <code>$_</code> topical 变量上调用 <code>.foo</code> 方法，并使用返回值作为创建的 <a href="https://docs.raku.org/type/Pair">Pair</a> 的值，而方法的名称就是键的名称。</p>
+<p>当你把一个对象的属性值传递给另一个具有相似命名属性的对象时，这种形式会频繁出现，所以像这样：</p>
 <pre><code class="language-raku" data-lang="raku">Some::Other.new: :foo(.foo) :bar(.bar) :ber(.ber) with $obj
-</code></pre><p>将以这种方式写成快捷方式：</p>
+</code></pre><p>可以简写成这种形式：</p>
 <pre><code class="language-raku" data-lang="raku">Some::Other.new: :.foo :.bar :.ber with $obj
-</code></pre><p>在写这篇文章的时候，这个 RFC 已经被自我拒绝了，但是你永远不知道是否会有更多的调用来引入这个语法。</p>
+</code></pre><p>在写这篇文章的时候，这个 RFC 已经被拒绝了，但是你永远不知道是否会有更多的人呼吁引入这种语法。</p>
 <h1 id="第二部分-使用">第二部分： 使用</h1>
-<p>现在我们熟悉如何编写所有形式的 colonpair，我们来看看它们的一些可用用途，特别是那些有特殊规则的用途。</p>
+<p>现在我们熟悉了如何编写所有形式的 colonpair，让我们来看看它们的一些可用用途，特别是那些有特殊规则的用途。</p>
 <h3 id="参数">参数</h3>
-<p>要指定一个参数应该是一个命名而不是位置参数，只需使用 sigilled 变量冒号对（colonpair）快捷方式：</p>
+<p>要指定一个参数应该是一个命名的而不是位置参数，只需使用带符号的变量冒号对（colonpair）简写：</p>
 <pre><code class="language-raku" data-lang="raku">sub meow($foo, :$bar) {
     say &quot;$foo is positional and $bar is named&quot;;
 }
 meow 42, :100bar; # 42 is positional and 100 is named
 meow :100bar, 42; # 42 is positional and 100 is named
-</code></pre><p>由于参数需要某种变量来绑定他们的东西，几乎所有其他形式的 colonpair 都不可用于参数。这意味着，例如，你不能声明 sigilless 的命名参数，而必须明确地使用 <a href="https://docs.raku.org/type/Signature#index-entry-trait__is_raw">is raw trait</a> 来获得原始性：</p>
+</code></pre><p>由于参数需要某种变量来绑定他们的东西，所以几乎所有其他形式的 colonpair 都不能用于参数中。这意味着，例如，你不能声明无符号的命名参数，而必须明确地使用 <a href="https://docs.raku.org/type/Signature#index-entry-trait__is_raw">is raw trait</a> 来获得原始性：</p>
 <pre><code class="language-raku" data-lang="raku">sub meow (\foo, :$bar is raw) {
     (foo, $bar) = ($bar, foo)
 }
@@ -509,19 +509,19 @@ my $foo = 42;
 my $bar = 100;
 meow $foo, :$bar;
 say [$foo, $bar]; # OUTPUT: «[100 42]»
-</code></pre><p>在参数中可用的另一个 colonpair 形式是用于将多个命名参数别名为相同名称和<a href="https://docs.raku.org/type/Signature#Destructuring_Parameters">参数解构</a>的标准形式：</p>
+</code></pre><p>在参数中还有一种标准的 colonpair 形式, 用于将多个命名参数别名为同一名称和<a href="https://docs.raku.org/type/Signature#Destructuring_Parameters">参数解构</a>：</p>
 <pre><code class="language-raku" data-lang="raku">sub meow (:st(:nd(:rd(:$nth))), Positional :list(($, $second, |))) {
     say [$nth, $second];
 }
 meow :3rd, :list&lt;a b c&gt;; # OUTPUT: «[3 b]»
-</code></pre><p>专业提示：如果您使用的是 Rakudo 编译器，您可能希望轻松使用别名。使用超过 1 级深度的别名会导致编译器切换到慢速路径绑定器，正如名称所示，速度慢大约 10 倍。</p>
-<p>您可以使用的技巧是使用多个参数，每个别名的最大深度为1，然后将它们合并到主体中：</p>
+</code></pre><p>专业提示：如果你使用的是 Rakudo 编译器，你可能希望轻松使用别名。使用超过 1 级深度的别名会导致编译器切换到慢速路径绑定器，正如其名称所暗示的，速度慢大约 10 倍。</p>
+<p>你可以使用的一个技巧是使用多个参数，每个参数的别名最多只有1级，然后将它们合并到主体中：</p>
 <pre><code class="language-raku" data-lang="raku">sub meow (:st(:$nd is copy), :rd(:$nth)) {
     $nd //= $nth;
 }
 </code></pre><h3 id="参数列表">参数列表</h3>
-<p>在参数列表中使用 colonpair 应该有一个单独的部分，因为这个规则足够微妙，足以在<a href="https://docs.raku.org/language/traps#Named_Parameters">语言陷阱部分</a>获得一席之地。该规则涉及程序员可能希望将参数列表中的<a href="https://docs.raku.org/type/Pair">Pair</a> 对象作为命名参数或位置参数传递的问题。</p>
-<p>在大多数情况下，这些 colonpairs 将作为命名参数传递：</p>
+<p>在参数列表中使用 colonpair 值得一个单独的章节，因为这个规则很微妙，足以在<a href="https://docs.raku.org/language/traps#Named_Parameters">语言陷阱部分</a>获得一席之地。这个规则涉及的问题是, 程序员可能希望在参数列表中以命名参数或位置参数的形式传递 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象。</p>
+<p>在大多数情况下，colonpairs 将作为命名参数传递：</p>
 <pre><code class="language-raku" data-lang="raku">sub args {
     say &quot;Positional args are: @_.perl()&quot;;
     say &quot;Named      args are: %_.perl()&quot;;
@@ -531,12 +531,12 @@ args :foo, :50bar, e =&gt; 42;
 # OUTPUT:
 # Positional args are: []
 # Named      args are: {:bar(50), :e(42), :foo}
-</code></pre><p>要将 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象作为位置参数传递，可以执行以下任何操作：</p>
-<p>① 用圆括号包裹整个colonpair 对
-② 在 colonpair 对上调用一些方法，比如 <a href="https://docs.raku.org/routine/self">.self</a> 或 <a href="https://docs.raku.org/routine/Pair">.Pair</a> ; 奇怪的东西，例如在 <code>=&gt;</code> 运算符上使用 <a href="https://docs.raku.org/language/operators#index-entry-R_reverse_metaoperator">R meta op</a> 也适用
-③ 用 <code>foo =&gt; bar</code> 语法引起键
-④ 在 <code>foo =&gt; bar</code> 语法中，使用非有效标识符的键
-⑤ 把你的 <a href="https://docs.raku.org/type/Pair">Pair</a>s 放在一个列表中并用 <code>|</code> &ldquo;操作符&quot;把它滑入该列表中</p>
+</code></pre><p>要传递一个 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象作为位置参数传递，你可以执行以下任何一项：</p>
+<p>① 用圆括号包裹整个 colonpair 对。<br>
+② 在 colonpair 对上调用一些方法，比如 <a href="https://docs.raku.org/routine/self">.self</a> 或 <a href="https://docs.raku.org/routine/Pair">.Pair</a> ; 像在 <code>=&gt;</code> 运算符上使用 <a href="https://docs.raku.org/language/operators#index-entry-R_reverse_metaoperator">R meta op</a> 这种奇怪的东西也适用。<br>
+③ 用 <code>foo =&gt; bar</code> 语法把键引起来。 <br>
+④ 在 <code>foo =&gt; bar</code> 语法中，使用一个不是有效标识符的键。<br>
+⑤ 把你的 <a href="https://docs.raku.org/type/Pair">Pair</a> 放在一个列表中然后用 <code>|</code> 运算符把它塞进该列表中。</p>
 <p>以下是代码形式的选项列表：</p>
 <pre><code class="language-raku" data-lang="raku">my @pairs := :42foo, :70meow;
 args :foo.Pair, (:50bar), &quot;baz&quot; =&gt; &quot;ber&quot;, e R=&gt; 42, 42 =&gt; 42, |@pairs;
@@ -545,8 +545,8 @@ args :foo.Pair, (:50bar), &quot;baz&quot; =&gt; &quot;ber&quot;, e R=&gt; 42, 42
 # Positional args are: [:foo, :bar(50), :baz(&quot;ber&quot;),
 #   42 =&gt; 2.718281828459045e0, 42 =&gt; 42, :foo(42), :meow(70)]
 # Named      args are: {}
-</code></pre><p>如果您是来自其他语言（如 Perl 5），则使用胖箭头（<code>=&gt;</code>）进行键/值分隔，那么编号(3)尤其值得关注。只有在键未加引号且仅当它是有效标识符时，此构造才会作为命名参数传递。</p>
-<p>如果发生这种情况，您必须使用这些构造之一，但希望将它们作为命名参数而不是位置参数，只需将它们包裹在圆括号中并使用 <code>|</code> 前缀&quot;滑入&quot;它们。对于我们在前面的示例中已经滑过的 <a href="https://docs.raku.org/type/Pair">Pair</a>s 的列表，你需要首先将它强制转换为 <a href="https://docs.raku.org/type/Capture">Capture</a> 对象，因为 <a href="https://docs.raku.org/type/Pair">Pair</a> s 填充到 <a href="https://docs.raku.org/type/Capture">Capture</a> 中 - 与列表不同 - 作为命名参数，当 <a href="https://docs.raku.org/type/Capture">Capture</a> 被滑入参数列表时：</p>
+</code></pre><p>如果你来自其他语言, 比如 Perl 5, 使用胖箭头（<code>=&gt;</code>）来分隔键/值，那么编号(3)尤其值得关注。这个结构体只有在键不加引号并且是一个有效的标识符时才会作为一个命名参数被传递。</p>
+<p>如果你必须使用这些构造之一，但又希望将它们作为命名参数而不是位置参数来传递，只需将它们包裹在圆括号中，并使用 <code>|</code> 前缀将它们&quot;塞&quot;进去。对于我们在前面的例子中已经塞进去的 <a href="https://docs.raku.org/type/Pair">Pair</a> 列表，你需要先把它强制变成一个 <a href="https://docs.raku.org/type/Capture">Capture</a> 对象，因为塞进 <a href="https://docs.raku.org/type/Capture">Capture</a> 的 <a href="https://docs.raku.org/type/Pair">Pair</a> - 与列表不同 - 最终会成为命名参数，当 Capture 被塞进参数列表的时候:</p>
 <pre><code class="language-raku" data-lang="raku">my @pairs := :42foo, :70meow;
 args |(:foo.Pair), |(:50bar),   |(&quot;baz&quot; =&gt; &quot;ber&quot;),
      |(e R=&gt; 42),  |(42 =&gt; 42), |@pairs.Capture;
@@ -555,17 +555,17 @@ args |(:foo.Pair), |(:50bar),   |(&quot;baz&quot; =&gt; &quot;ber&quot;),
 # Positional args are: []
 # Named      args are: {&quot;42&quot; =&gt; 42, :bar(50),
 #                      :baz(&quot;ber&quot;), :foo(42), :meow(70)}
-</code></pre><p>可以使用相同的滑动技巧来有条件地提供命名参数：</p>
+</code></pre><p>同样的 slipping 技巧可以用来有条件地提供命名参数。</p>
 <pre><code class="language-raku" data-lang="raku">sub foo (:$bar = 'the default') { say $bar }
 
 my $bar;
 foo |(:bar($_) with $bar);  # OUTPUT: «the default␤»
 $bar = 42;
 foo |(:bar($_) with $bar);  # OUTPUT: «42␤»
-</code></pre><p>如果 <code>$bar</code> 没有被定义(<a href="https://docs.raku.org/routine/defined">defined</a>)，那么 <a href="https://docs.raku.org/language/control#index-entry-control_flow_with_orwith_without-with%2C_orwith%2C_without">with 语句修饰符</a>将返回 <a href="https://docs.raku.org/type/Empty">Empty</a>，当使用 <code>|</code> 滑动时将最终为空，允许参数达到其默认值。由于 <code>|(:)</code> 看起来像是一个侧身忍者，我称之为&quot;忍者神兵&rdquo;。</p>
+</code></pre><p>如果 <code>$bar</code> 没有被定义(<a href="https://docs.raku.org/routine/defined">defined</a>)，那么 <a href="https://docs.raku.org/language/control#index-entry-control_flow_with_orwith_without-with%2C_orwith%2C_without">with 语句修饰符</a>将返回 <a href="https://docs.raku.org/type/Empty">Empty</a>，当使用 <code>|</code> 时, 最终将是空的，允许参数达到其默认值。因为 <code>|(:)</code> 看起来像一个侧身的忍者，所以把这种技术称为&quot;忍者参数&quot;。</p>
 <h3 id="自动引起-以--的形式">自动引起, 以 <code>=&gt;</code> 的形式</h3>
-<p>眼尖的观众可能已经注意到上一节中的 <code>e =&gt; 42</code> colonpair 对使用字母 <code>e</code> 作为键，但是以相反的形式 <code>e R=&gt; 42</code>，<code>e</code> 变成 <code>2.718281828459045e0</code>，因为核心语言把 <code>e</code> 定义作为<a href="https://en.wikipedia.org/wiki/E_%28mathematical_constant%29">欧拉数字</a>。</p>
-<p>它在 <code>e =&gt; 42</code> 形式中 <code>e</code> 仍然是一个普通字符串的原因是因为 <code>=&gt;</code> 构造自动引起了作为有效标识符的键，因此它们总是作为字符串，即使存在同名的常量，无信号变量或子例程：</p>
+<p>眼尖的观众可能已经注意到上一节中的 <code>e =&gt; 42</code> colonpair 对使用字母 <code>e</code> 作为键，然而在反转形式 <code>e R=&gt; 42</code> 中, <code>e</code> 变成了 <code>2.718281828459045e0</code>，因为核心语言把 <code>e</code> 定义为<a href="https://en.wikipedia.org/wiki/E_%28mathematical_constant%29">欧拉数</a>。</p>
+<p>在 <code>e =&gt; 42</code> 形式中, <code>e</code> 仍然是一个普通字符串 e, 原因是 <code>=&gt;</code> 构造会自动引用有效标识符的键，所以它们最终总是会变成字符串，即使存在同名的常量、无符号变量或子例程：</p>
 <pre><code class="language-raku" data-lang="raku">my \meows = '🐱';
 sub ehh { rand }
 say %(
@@ -573,7 +573,7 @@ say %(
     ehh   =&gt; 42,
     τ     =&gt; 'meow',
 ); # OUTPUT: «{ehh =&gt; 42, meows =&gt; moo, τ =&gt; meow}␤»
-</code></pre><p>有很多方法可以避免这种自动引起行为，但我会向你展示一个足够好的方法：在键的周围敲上一对括号：</p>
+</code></pre><p>有很多方法可以避免这种自动引用行为, 但我只给你看一种足够好的方法: 在键的周围加上一对小括号。</p>
 <pre><code class="language-raku" data-lang="raku">my \meows = '🐱';
 sub ehh { rand }
 say %(
@@ -585,9 +585,9 @@ say %(
 #           🐱 =&gt; moo}␤»
 </code></pre><p>简单！</p>
 <h3 id="结论">结论</h3>
-<p>这几乎是关于 colonpair 所有的知识。我们知道它们可以用来构造 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象，用作副词，并用于指定命名参数和参数。</p>
-<p>我们了解了各种快捷方式，例如只用于布尔值 <code>True</code> 的键，把否定运算符或无符号整数放在冒号和键之间以指定布尔值 <code>False</code> 或 <code>Int</code> 值。我们还了解到，如果在值的周围已经存在一组花括号，方括号或尖括号，那么 colonpair 值上的括号可以省略, 并且在变量名前添加一个冒号将会创建一个将使用该变量名称作为键的 colonpair。</p>
-<p>在本文的后半部分，我们在指定命名参数时指定了可用的 colonpair 语法，将 colonpair 作为命名参数或位置参数传递的特点，以及如何通过将其封装在括号中来避免自动引起键。</p>
+<p>这就是关于 colonpair 所有的知识。我们了解了它们可以用来构造 <a href="https://docs.raku.org/type/Pair">Pair</a> 对象，作为副词使用，以及用于指定命名参数和参量。</p>
+<p>我们学习了各种简写，例如只用键来表示于布尔值 <code>True</code>，把否定运算符或无符号整数放在冒号和键之间以指定布尔值 <code>False</code> 或 <code>Int</code> 值。我们还了解到，如果在值的周围已经存在一组花括号，方括号或尖括号，那么 colonpair 值上的括号可以省略, 并且在变量名前添加一个冒号将会创建一个将使用该变量名称作为键的 colonpair。</p>
+<p>在本文的后半部分，我们讨论了在指定命名参数时可用的 colonpair 语法，将 colonpair 作为命名参数或位置参数传递的特殊性，以及如何通过使用小括号中包裹来避免键的自动引用。</p>
 <p>我希望你能发掘这些信息。</p>
 <p>-Ofun</p>
 
